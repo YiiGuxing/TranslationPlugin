@@ -1,0 +1,39 @@
+<idea-plugin version="2">
+  <id>cn.yiiguxing.plugin.translate</id>
+  <name>Translate Plugin</name>
+  <version>1.0</version>
+  <vendor email="yii.guxing@gmail.com">Yii.Guxing</vendor>
+
+  <description><![CDATA[
+      Translate Plugin
+    ]]></description>
+
+  <change-notes><![CDATA[
+
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="TranslateAction" class="cn.yiiguxing.plugin.translate.TranslateAction"
+            text="Translate"
+            description="翻译">
+      <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
+    </action>
+  </actions>
+
+</idea-plugin>
