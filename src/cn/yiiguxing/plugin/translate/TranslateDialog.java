@@ -2,18 +2,15 @@ package cn.yiiguxing.plugin.translate;
 
 
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.ui.FixedComboBoxEditor;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBTextField;
-import org.jdesktop.swingx.autocomplete.AutoCompleteComboBoxEditor;
-import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.PopupMenuListenerAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.PopupMenuEvent;
-import javax.swing.plaf.basic.BasicComboBoxEditor;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
