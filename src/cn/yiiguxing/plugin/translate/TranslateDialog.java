@@ -36,6 +36,7 @@ public class TranslateDialog extends JDialog {
 
     public TranslateDialog() {
         setTitle("Translate");
+        setIconImage(Toolkit.getDefaultToolkit ().getImage("/icon_16.png"));
         setMinimumSize(new Dimension(400, 450));
         setModal(true);
         setLocationRelativeTo(null);
