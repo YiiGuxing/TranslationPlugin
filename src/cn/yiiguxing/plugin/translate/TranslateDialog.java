@@ -1,14 +1,19 @@
 package cn.yiiguxing.plugin.translate;
 
 
+import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.PopupMenuListenerAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.PopupMenuEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.lang.ref.Reference;
@@ -68,6 +73,45 @@ public class TranslateDialog extends JDialog {
         msgPanel.setBackground(background);
         resultText.setBackground(background);
         scrollPane.setBackground(background);
+
+        setComponentPopupMenu();
+    }
+
+    private void setComponentPopupMenu() {
+        JPopupMenu menu = new JPopupMenu();
+
+        JMenuItem copy = new JMenuItem(IconLoader.getIcon("/actions/copy_dark.png"));
+        copy.setText("Copy");
+        copy.addActionListener(e -> {
+            String selectedText = resultText.getSelectedText();
+            if (!Utils.isEmptyString(selectedText)) {
+                CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
+                copyPasteManager.setContents(new StringSelection(selectedText));
+            }
+        });
+
+        JMenuItem query = new JMenuItem(IconLoader.getIcon("/icon_16.png"));
+        query.setText("Query");
+        query.addActionListener(e -> {
+            String selectedText = resultText.getSelectedText();
+            if (!Utils.isEmptyString(selectedText)) {
+                query(selectedText);
+            }
+        });
+
+        menu.add(copy);
+        menu.add(query);
+
+        menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                boolean hasSelectedText = !Utils.isEmptyString(resultText.getSelectedText());
+                copy.setEnabled(hasSelectedText);
+                query.setEnabled(hasSelectedText);
+            }
+        });
+
+        resultText.setComponentPopupMenu(menu);
     }
 
     public void query(String query) {
