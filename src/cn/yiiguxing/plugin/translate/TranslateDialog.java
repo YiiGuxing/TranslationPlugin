@@ -169,6 +169,13 @@ public class TranslateDialog extends JDialog {
         COMBO_BOX_MODEL.insertElementAt(query, 0);
         queryComboBox.setSelectedIndex(0);
 
+        /*
+         * queryComboBox失焦时纠正误触发onQuery后，正常调用query却是不会触发ItemEvent了，需要手动调用onQuery().
+         */
+        if (query.equals(queryComboBox.getSelectedItem())) {
+            onQuery();
+        }
+
         if (COMBO_BOX_MODEL.getSize() > MAX_HISTORIES_SIZE) {
             COMBO_BOX_MODEL.removeElementAt(MAX_HISTORIES_SIZE);
         }
@@ -179,7 +186,14 @@ public class TranslateDialog extends JDialog {
     }
 
     void onQuery() {
-        currentQuery = queryComboBox.getSelectedItem().toString();
+        /*
+         * queryComboBox失焦时会误触发
+         */
+        String text = queryComboBox.getSelectedItem().toString();
+        if (COMBO_BOX_MODEL.getIndexOf(text) < 0)
+            return;
+
+        currentQuery = text;
         if (!Utils.isEmptyString(currentQuery)) {
             currentQuery = currentQuery.trim();
             messageLabel.setForeground(MSG_FOREGROUND);
