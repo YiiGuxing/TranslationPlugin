@@ -46,7 +46,7 @@ public class TranslateDialog extends JDialog {
         InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(stroke, "ESCAPE");
         rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
             }
