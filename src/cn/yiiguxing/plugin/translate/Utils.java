@@ -44,7 +44,7 @@ final class Utils {
     private Utils() {
     }
 
-    public static String getErrorMessage(QueryResult result) {
+    static String getErrorMessage(QueryResult result) {
         if (result.getErrorCode() == QueryResult.ERROR_CODE_NONE)
             return null;
 
@@ -68,7 +68,7 @@ final class Utils {
         return error;
     }
 
-    public static void insertHeader(Document document, QueryResult result) {
+    static void insertHeader(Document document, QueryResult result) {
         String query = result.getQuery();
 
         try {
@@ -108,7 +108,7 @@ final class Utils {
         }
     }
 
-    public static void insertExplain(Document doc, String[] explains) {
+    static void insertExplain(Document doc, String[] explains) {
         if (explains == null || explains.length == 0)
             return;
 
@@ -132,7 +132,7 @@ final class Utils {
         }
     }
 
-    public static void insertWebExplain(Document doc, WebExplain[] webExplains) {
+    static void insertWebExplain(Document doc, WebExplain[] webExplains) {
         if (webExplains == null || webExplains.length == 0)
             return;
 
@@ -157,7 +157,7 @@ final class Utils {
         }
     }
 
-    public static boolean isEmptyString(String str) {
+    static boolean isEmptyString(String str) {
         return null == str || str.trim().length() == 0;
     }
 

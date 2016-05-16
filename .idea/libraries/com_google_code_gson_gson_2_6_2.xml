@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.google.code.gson:gson:2.6.2" type="repository">
+    <properties maven-id="com.google.code.gson:gson:2.6.2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.6.2/gson-2.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.6.2/gson-2.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
