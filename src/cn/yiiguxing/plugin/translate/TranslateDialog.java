@@ -9,6 +9,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
@@ -38,6 +40,18 @@ public class TranslateDialog extends JDialog {
     }
 
     private void initViews() {
+        JRootPane rootPane = this.getRootPane();
+
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(stroke, "ESCAPE");
+        rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
+
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+            }
+        });
+
         queryBtn.addActionListener(e -> onQuery());
         queryText.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
@@ -46,7 +60,7 @@ public class TranslateDialog extends JDialog {
             }
         });
 
-        getRootPane().setDefaultButton(queryBtn);
+        rootPane.setDefaultButton(queryBtn);
         scrollPane.setVerticalScrollBar(scrollPane.createVerticalScrollBar());
 
         JBColor background = new JBColor(new Color(0xFFFFFFFF), new Color(0xFF2B2B2B));
