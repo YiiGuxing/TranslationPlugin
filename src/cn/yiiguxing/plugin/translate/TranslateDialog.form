@@ -16,25 +16,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="41ec5" class="javax.swing.JTextField" binding="queryText">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <toolTipText value=""/>
-            </properties>
-          </component>
-          <component id="db56b" class="javax.swing.JButton" binding="queryBtn">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <icon value="icon_16.png"/>
-              <text value="Query"/>
-            </properties>
-          </component>
           <grid id="ad63a" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -51,7 +32,7 @@
                 </constraints>
                 <properties>
                   <background color="-13948117"/>
-                  <visible value="true"/>
+                  <visible value="false"/>
                 </properties>
                 <border type="empty"/>
                 <children>
@@ -90,6 +71,23 @@
               </scrollpane>
             </children>
           </grid>
+          <component id="70f94" class="javax.swing.JComboBox" binding="queryComboBox">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <editable value="true"/>
+            </properties>
+          </component>
+          <component id="db56b" class="javax.swing.JButton" binding="queryBtn">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icon_16.png"/>
+              <text value="Query"/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>
