@@ -28,7 +28,7 @@
 
   <actions>
     <!-- Add your actions here -->
-    <action id="TranslateAction" class="cn.yiiguxing.plugin.translate.TranslationAction"
+    <action id="TranslationAction" class="cn.yiiguxing.plugin.translate.TranslationAction"
             text="Translate"
             description="翻译">
       <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
