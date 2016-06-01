@@ -17,3 +17,6 @@ IntelliJ IDEA/Android Studio 翻译插件,可中英互译。
 - 或者在编辑器中选择文本后单击鼠标右键，再点击Translate项：
 
   ![截图](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/3.png)
+
+
+- 键盘流的同学可以设置快捷键：Preferences -> Keymap -> 搜索Translate - > 右键 add Keyboard Shortcut.（默认无快捷键，按ESC键可关闭翻译对话框）
