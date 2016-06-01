@@ -43,7 +43,10 @@ public class Translation {
             mCurrentTask = null;
         }
 
-        QueryResult cache = mCache.get(query);
+        QueryResult cache;
+        synchronized (mCache) {
+            cache = mCache.get(query);
+        }
         if (cache != null) {
             if (callback != null) {
                 callback.onQuery(query, cache);
@@ -73,7 +76,9 @@ public class Translation {
                 HttpGet httpGet = new HttpGet(BASIC_URL + URLEncoder.encode(query, "UTF-8"));
                 result = httpClient.execute(httpGet, new YouDaoResponseHandler());
                 if (result != null && result.getErrorCode() != QueryResult.ERROR_CODE_FAIL) {
-                    mCache.put(query, result);
+                    synchronized (mCache) {
+                        mCache.put(query, result);
+                    }
                 }
             } catch (Exception e) {
                 LOG.error("query...", e);
