@@ -15,23 +15,23 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
-public class Translate {
+public class Translation {
 
     @SuppressWarnings("all")
     private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do?keyfrom=Tinkling&key=1977836024&type=data&doctype=json&version=1.1&q=";
     @SuppressWarnings("all")
-    private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translate");
+    private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translation");
 
-    private static final Translate TRANSLATE = new Translate();
+    private static final Translation TRANSLATION = new Translation();
 
     private final LruCache<String, QueryResult> mCache = new LruCache<>(200);
     private Future<?> mCurrentTask;
 
-    private Translate() {
+    private Translation() {
     }
 
-    public static Translate get() {
-        return TRANSLATE;
+    public static Translation get() {
+        return TRANSLATION;
     }
 
     public void search(String query, Callback callback) {

@@ -38,7 +38,7 @@ public class TranslationDialog extends JDialog {
     private String currentQuery;
 
     public TranslationDialog() {
-        setTitle("Translate");
+        setTitle("Translation");
         setMinimumSize(new Dimension(400, 450));
         setModal(true);
         setLocationRelativeTo(null);
@@ -200,7 +200,7 @@ public class TranslationDialog extends JDialog {
             messageLabel.setText("Querying...");
             msgPanel.setVisible(true);
             scrollPane.setVisible(false);
-            Translate.get().search(currentQuery, new QueryCallback(this));
+            Translation.get().search(currentQuery, new QueryCallback(this));
         }
     }
 
@@ -240,7 +240,7 @@ public class TranslationDialog extends JDialog {
         msgPanel.setVisible(false);
     }
 
-    private static class QueryCallback implements Translate.Callback {
+    private static class QueryCallback implements Translation.Callback {
         private final Reference<TranslationDialog> dialogReference;
 
         private QueryCallback(TranslationDialog dialog) {

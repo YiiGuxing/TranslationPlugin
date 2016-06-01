@@ -12,7 +12,7 @@ import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
 public class TranslationAction extends AnAction implements DumbAware {
 
     public TranslationAction() {
-        super("Translate", "Translate", IconLoader.getIcon("/icon_16.png"));
+        super("Translation", "Translation", IconLoader.getIcon("/icon_16.png"));
     }
 
     @Override
