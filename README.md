@@ -8,7 +8,7 @@ IntelliJ IDEA/Android Studio 翻译插件,可中英互译。
 
 ## 使用方法
 
-- 下载TranslationPlugin.zip
+- 下载[TranslationPlugin.zip](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/TranslationPlugin.zip)
 
 - 安装：Preferences -> Plugins -> Install plugin from disk -> 选择TranslationPlugin.zip并安装
 
