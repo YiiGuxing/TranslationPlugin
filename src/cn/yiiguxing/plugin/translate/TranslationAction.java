@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
 
-public class TranslateAction extends AnAction implements DumbAware {
+public class TranslationAction extends AnAction implements DumbAware {
 
-    public TranslateAction() {
+    public TranslationAction() {
         super("Translate", "Translate", IconLoader.getIcon("/icon_16.png"));
     }
 
@@ -19,12 +19,12 @@ public class TranslateAction extends AnAction implements DumbAware {
     public void actionPerformed(AnActionEvent e) {
         Editor editor = getEditor(e);
 
-        TranslateDialog translateDialog = new TranslateDialog();
+        TranslationDialog translationDialog = new TranslationDialog();
         if (editor != null) {
             String selectedText = editor.getSelectionModel().getSelectedText();
-            translateDialog.query(selectedText);
+            translationDialog.query(selectedText);
         }
-        translateDialog.setVisible(true);
+        translationDialog.setVisible(true);
     }
 
     @Nullable

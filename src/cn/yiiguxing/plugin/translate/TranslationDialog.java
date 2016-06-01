@@ -19,7 +19,7 @@ import java.awt.event.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-public class TranslateDialog extends JDialog {
+public class TranslationDialog extends JDialog {
 
     private static final JBColor MSG_FOREGROUND = new JBColor(new Color(0xFF333333), new Color(0xFFBBBBBB));
     private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFEE0000));
@@ -37,7 +37,7 @@ public class TranslateDialog extends JDialog {
 
     private String currentQuery;
 
-    public TranslateDialog() {
+    public TranslationDialog() {
         setTitle("Translate");
         setMinimumSize(new Dimension(400, 450));
         setModal(true);
@@ -241,15 +241,15 @@ public class TranslateDialog extends JDialog {
     }
 
     private static class QueryCallback implements Translate.Callback {
-        private final Reference<TranslateDialog> dialogReference;
+        private final Reference<TranslationDialog> dialogReference;
 
-        private QueryCallback(TranslateDialog dialog) {
+        private QueryCallback(TranslationDialog dialog) {
             this.dialogReference = new WeakReference<>(dialog);
         }
 
         @Override
         public void onQuery(String query, QueryResult result) {
-            TranslateDialog dialog = dialogReference.get();
+            TranslationDialog dialog = dialogReference.get();
             if (dialog != null) {
                 dialog.onPostResult(query, result);
             }
