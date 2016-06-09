@@ -28,7 +28,6 @@ final class Utils {
         StyleConstants.setFontSize(ATTR_QUERY, 18);
         StyleConstants.setForeground(ATTR_QUERY, new JBColor(0xFF333333, 0xFFCC7832));
 
-        StyleConstants.setItalic(ATTR_EXPLAIN, true);
         StyleConstants.setForeground(ATTR_EXPLAIN, new JBColor(0xFF333333, 0xFF8CBCE1));
 
         StyleConstants.setItalic(ATTR_PRE_EXPLAINS, true);
