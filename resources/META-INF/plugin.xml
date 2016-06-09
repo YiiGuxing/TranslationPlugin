@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>cn.yiiguxing.plugin.translate</id>
   <name>Translate Plugin</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <vendor email="yii.guxing@gmail.com">Yii.Guxing</vendor>
 
   <description><![CDATA[
