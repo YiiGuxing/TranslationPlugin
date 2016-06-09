@@ -9,6 +9,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.google.code.gson:gson:2.6.2" level="project" />
   </component>
 </module>

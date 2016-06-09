@@ -1,12 +1,18 @@
 package cn.yiiguxing.plugin.translate;
 
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.ui.JBMenuItem;
+import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.PopupMenuListenerAdapter;
+import com.intellij.ui.awt.RelativePoint;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -19,7 +25,12 @@ import java.awt.event.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-public class TranslationDialog extends JDialog {
+import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
+
+public class TranslationComponent {
+
+    private static final int MIN_WIDTH = 400;
+    private static final int MIN_HEIGHT = 450;
 
     private static final JBColor MSG_FOREGROUND = new JBColor(new Color(0xFF333333), new Color(0xFFBBBBBB));
     private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFEE0000));
@@ -37,35 +48,57 @@ public class TranslationDialog extends JDialog {
 
     private String currentQuery;
 
-    public TranslationDialog() {
-        setTitle("Translation");
-        setMinimumSize(new Dimension(400, 450));
-        setModal(true);
-        setLocationRelativeTo(null);
-        setContentPane(contentPane);
+    private JBPopup translationPopup;
 
+    TranslationComponent() {
         initViews();
+        translationPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(contentPane, null)
+                .setTitle("Translation")
+                .setMinSize(new Dimension(MIN_WIDTH, MIN_HEIGHT))
+                .setCancelOnClickOutside(true)
+                .setCancelOnOtherWindowOpen(true)
+                .setCancelOnWindowDeactivation(true)
+                .setResizable(true)
+                .setMovable(true)
+                .setShowBorder(true)
+                .setShowShadow(true)
+                .setFocusable(true)
+                .setRequestFocus(true)
+                .setKeyEventHandler(keyEvent -> {
+                    if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+                        query(queryComboBox.getEditor().getItem().toString());
+                        return true;
+                    }
+
+                    return false;
+                })
+                .createPopup();
+    }
+
+    void showInBestPositionFor(AnActionEvent e) {
+        Editor editor = EDITOR.getData(e.getDataContext());
+        if (editor != null) {
+            translationPopup.showInBestPositionFor(editor);
+
+            String selectedText = editor.getSelectionModel().getSelectedText();
+            query(selectedText);
+        } else if (e.getProject() != null) {
+            translationPopup.showCenteredInCurrentWindow(e.getProject());
+        } else {
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            Point point = new Point((screenSize.width - MIN_WIDTH) / 2, (screenSize.height - MIN_HEIGHT) / 2);
+            translationPopup.show(new RelativePoint(point));
+        }
+
+        queryComboBox.requestFocus();
     }
 
     private void initViews() {
-        JRootPane rootPane = this.getRootPane();
-
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(stroke, "ESCAPE");
-        rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        });
-
         queryBtn.setEnabled(false);
         queryBtn.addActionListener(e -> query(queryComboBox.getEditor().getItem().toString()));
 
         initQueryComboBox();
 
-        rootPane.setDefaultButton(queryBtn);
         scrollPane.setVerticalScrollBar(scrollPane.createVerticalScrollBar());
 
         JBColor background = new JBColor(new Color(0xFFFFFFFF), new Color(0xFF2B2B2B));
@@ -117,10 +150,9 @@ public class TranslationDialog extends JDialog {
     }
 
     private void setComponentPopupMenu() {
-        JPopupMenu menu = new JPopupMenu();
+        JBPopupMenu menu = new JBPopupMenu();
 
-        JMenuItem copy = new JMenuItem(IconLoader.getIcon("/actions/copy_dark.png"));
-        copy.setText("Copy");
+        JBMenuItem copy = new JBMenuItem("Copy", IconLoader.getIcon("/actions/copy_dark.png"));
         copy.addActionListener(e -> {
             String selectedText = resultText.getSelectedText();
             if (!Utils.isEmptyString(selectedText)) {
@@ -129,8 +161,8 @@ public class TranslationDialog extends JDialog {
             }
         });
 
-        JMenuItem query = new JMenuItem(IconLoader.getIcon("/icon_16.png"));
-        query.setText("Query");
+
+        JBMenuItem query = new JBMenuItem("Query", IconLoader.getIcon("/icon_16.png"));
         query.addActionListener(e -> {
             String selectedText = resultText.getSelectedText();
             if (!Utils.isEmptyString(selectedText)) {
@@ -153,7 +185,7 @@ public class TranslationDialog extends JDialog {
         resultText.setComponentPopupMenu(menu);
     }
 
-    public void query(String query) {
+    void query(String query) {
         if (Utils.isEmptyString(query)) {
             if (COMBO_BOX_MODEL.getSize() > 0) {
                 updateQueryButton();
@@ -185,7 +217,7 @@ public class TranslationDialog extends JDialog {
         queryBtn.setEnabled(!Utils.isEmptyString(queryComboBox.getEditor().getItem().toString()));
     }
 
-    void onQuery() {
+    private void onQuery() {
         /*
          * queryComboBox失焦时会误触发
          */
@@ -204,7 +236,7 @@ public class TranslationDialog extends JDialog {
         }
     }
 
-    void onPostResult(String query, QueryResult result) {
+    private void onPostResult(String query, QueryResult result) {
         if (Utils.isEmptyString(currentQuery) || !currentQuery.equals(query))
             return;
 
@@ -241,15 +273,15 @@ public class TranslationDialog extends JDialog {
     }
 
     private static class QueryCallback implements Translation.Callback {
-        private final Reference<TranslationDialog> dialogReference;
+        private final Reference<TranslationComponent> dialogReference;
 
-        private QueryCallback(TranslationDialog dialog) {
+        private QueryCallback(TranslationComponent dialog) {
             this.dialogReference = new WeakReference<>(dialog);
         }
 
         @Override
         public void onQuery(String query, QueryResult result) {
-            TranslationDialog dialog = dialogReference.get();
+            TranslationComponent dialog = dialogReference.get();
             if (dialog != null) {
                 dialog.onPostResult(query, result);
             }
