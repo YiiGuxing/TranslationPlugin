@@ -63,7 +63,7 @@
                       <autoscrolls value="false"/>
                       <background color="-13948117"/>
                       <editable value="false"/>
-                      <font size="14"/>
+                      <font name="Microsoft YaHei" size="14"/>
                       <margin top="5" left="5" bottom="5" right="5"/>
                     </properties>
                   </component>
@@ -77,6 +77,7 @@
             </constraints>
             <properties>
               <editable value="true"/>
+              <font name="Microsoft YaHei"/>
             </properties>
           </component>
           <component id="db56b" class="javax.swing.JButton" binding="queryBtn">
