@@ -1,15 +1,15 @@
 <idea-plugin version="2">
   <id>cn.yiiguxing.plugin.translate</id>
-  <name>Translate Plugin</name>
+  <name>Translation</name>
   <version>1.1</version>
-  <vendor email="yii.guxing@gmail.com">Yii.Guxing</vendor>
+  <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing/TranslationPlugin">Yii.Guxing</vendor>
 
   <description><![CDATA[
       Translation Plugin
     ]]></description>
 
   <change-notes><![CDATA[
-
+      v1.1:将对Dialog替换为Popup
     ]]>
   </change-notes>
 
