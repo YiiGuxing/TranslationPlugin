@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate;
 
+import com.google.gson.Gson;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import org.apache.http.HttpEntity;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
+@SuppressWarnings("WeakerAccess")
 public class Translation {
 
     @SuppressWarnings("all")
@@ -117,7 +119,7 @@ public class Translation {
                 String json = EntityUtils.toString(entity);
                 LOG.debug(json);
 
-                return JsonHelper.getYouDaoResultEntity(json);
+                return new Gson().fromJson(json, QueryResult.class);
             } else {
                 String message = "Unexpected response status: " + status;
                 LOG.error(message);
