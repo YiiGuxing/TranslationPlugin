@@ -78,21 +78,21 @@ final class Utils {
                 StringBuilder explain = new StringBuilder();
 
                 String pho = be.getPhonetic();
-                if (!isEmptyString(pho)) {
+                if (!isEmptyOrBlankString(pho)) {
                     explain.append("[");
                     explain.append(pho);
                     explain.append("]  ");
                 }
 
                 pho = be.getPhoneticUK();
-                if (!isEmptyString(pho)) {
+                if (!isEmptyOrBlankString(pho)) {
                     explain.append("英[");
                     explain.append(pho);
                     explain.append("]  ");
                 }
 
                 pho = be.getPhoneticUS();
-                if (!isEmptyString(pho)) {
+                if (!isEmptyOrBlankString(pho)) {
                     explain.append("美[");
                     explain.append(pho);
                     explain.append("]");
@@ -113,7 +113,7 @@ final class Utils {
 
         try {
             for (String exp : explains) {
-                if (isEmptyString(exp))
+                if (isEmptyOrBlankString(exp))
                     continue;
 
                 int i = exp.indexOf('.');
@@ -156,8 +156,22 @@ final class Utils {
         }
     }
 
-    static boolean isEmptyString(String str) {
+    static boolean isEmptyOrBlankString(String str) {
         return null == str || str.trim().length() == 0;
+    }
+
+    /**
+     * 单词拆分
+     */
+    static String splitWord(String input) {
+        if (isEmptyOrBlankString(input))
+            return input;
+
+        return input.replace("_", " ")
+                .replaceAll("([A-Z][a-z]+)|([0-9\\W]+)", " $0 ")
+                .replaceAll("[A-Z]{2,}", " $0")
+                .replaceAll("\\s{2,}", " ")
+                .trim();
     }
 
 }

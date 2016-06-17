@@ -148,7 +148,7 @@ public class TranslationDialog extends JDialog {
         JBMenuItem copy = new JBMenuItem("Copy", IconLoader.getIcon("/actions/copy_dark.png"));
         copy.addActionListener(e -> {
             String selectedText = resultText.getSelectedText();
-            if (!Utils.isEmptyString(selectedText)) {
+            if (!Utils.isEmptyOrBlankString(selectedText)) {
                 CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
                 copyPasteManager.setContents(new StringSelection(selectedText));
             }
@@ -158,7 +158,7 @@ public class TranslationDialog extends JDialog {
         JBMenuItem query = new JBMenuItem("Query", IconLoader.getIcon("/icon_16.png"));
         query.addActionListener(e -> {
             String selectedText = resultText.getSelectedText();
-            if (!Utils.isEmptyString(selectedText)) {
+            if (!Utils.isEmptyOrBlankString(selectedText)) {
                 query(selectedText);
             }
         });
@@ -169,7 +169,7 @@ public class TranslationDialog extends JDialog {
         menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                boolean hasSelectedText = !Utils.isEmptyString(resultText.getSelectedText());
+                boolean hasSelectedText = !Utils.isEmptyOrBlankString(resultText.getSelectedText());
                 copy.setEnabled(hasSelectedText);
                 query.setEnabled(hasSelectedText);
             }
@@ -181,20 +181,20 @@ public class TranslationDialog extends JDialog {
     void show(Editor editor) {
         String query = null;
         if (editor != null) {
-            query = editor.getSelectionModel().getSelectedText();
+            query = Utils.splitWord(editor.getSelectionModel().getSelectedText());
         }
 
-        if (Utils.isEmptyString(query))
+        if (Utils.isEmptyOrBlankString(query))
             query = COMBO_BOX_MODEL.getElementAt(0);
 
-        if (!Utils.isEmptyString(query))
+        if (!Utils.isEmptyOrBlankString(query))
             query(query);
 
         setVisible(true);
     }
 
     private void query(String query) {
-        if (Utils.isEmptyString(query)) {
+        if (Utils.isEmptyOrBlankString(query)) {
             if (COMBO_BOX_MODEL.getSize() > 0) {
                 updateQueryButton();
             }
@@ -222,7 +222,7 @@ public class TranslationDialog extends JDialog {
     }
 
     private void updateQueryButton() {
-        queryBtn.setEnabled(!Utils.isEmptyString(queryComboBox.getEditor().getItem().toString()));
+        queryBtn.setEnabled(!Utils.isEmptyOrBlankString(queryComboBox.getEditor().getItem().toString()));
     }
 
     private void onQuery() {
@@ -234,7 +234,7 @@ public class TranslationDialog extends JDialog {
             return;
 
         currentQuery = text;
-        if (!Utils.isEmptyString(currentQuery)) {
+        if (!Utils.isEmptyOrBlankString(currentQuery)) {
             currentQuery = currentQuery.trim();
             messageLabel.setForeground(MSG_FOREGROUND);
             messageLabel.setText("Querying...");
@@ -245,7 +245,7 @@ public class TranslationDialog extends JDialog {
     }
 
     private void onPostResult(String query, QueryResult result) {
-        if (Utils.isEmptyString(currentQuery) || !currentQuery.equals(query))
+        if (Utils.isEmptyOrBlankString(currentQuery) || !currentQuery.equals(query))
             return;
 
         String errorMessage = Utils.getErrorMessage(result);
