@@ -1,18 +1,12 @@
 package cn.yiiguxing.plugin.translate;
 
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.PopupMenuListenerAdapter;
-import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -25,9 +19,7 @@ import java.awt.event.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
-
-public class TranslationComponent {
+public class TranslationDialog extends JDialog {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
@@ -38,6 +30,7 @@ public class TranslationComponent {
     private static final int MAX_HISTORIES_SIZE = 20;
     private static final DefaultComboBoxModel<String> COMBO_BOX_MODEL = new DefaultComboBoxModel<>();
 
+    private JPanel titlePanel;
     private JPanel contentPane;
     private JButton queryBtn;
     private JLabel messageLabel;
@@ -48,54 +41,54 @@ public class TranslationComponent {
 
     private String currentQuery;
 
-    private JBPopup translationPopup;
+    TranslationDialog() {
+        setUndecorated(true);
+        setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+        setModal(false);
+        setLocationRelativeTo(null);
+        setContentPane(contentPane);
 
-    TranslationComponent() {
         initViews();
-        translationPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(contentPane, null)
-                .setTitle("Translation")
-                .setMinSize(new Dimension(MIN_WIDTH, MIN_HEIGHT))
-                .setCancelOnClickOutside(true)
-                .setCancelOnOtherWindowOpen(true)
-                .setCancelOnWindowDeactivation(true)
-                .setResizable(true)
-                .setMovable(true)
-                .setShowBorder(true)
-                .setShowShadow(true)
-                .setFocusable(true)
-                .setRequestFocus(true)
-                .setKeyEventHandler(keyEvent -> {
-                    if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
-                        query(queryComboBox.getEditor().getItem().toString());
-                        return true;
-                    }
 
-                    return false;
-                })
-                .createPopup();
+        addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                if (isShowing()) {
+                    setVisible(false);
+                }
+            }
+        });
     }
 
-    void showInBestPositionFor(AnActionEvent e) {
-        Editor editor = EDITOR.getData(e.getDataContext());
-        if (editor != null) {
-            translationPopup.showInBestPositionFor(editor);
+    private void createUIComponents() {
+        TitlePanel panel = new TitlePanel();
+        panel.setText("Translation");
+        panel.setActive(true);
 
-            String selectedText = editor.getSelectionModel().getSelectedText();
-            query(selectedText);
-        } else if (e.getProject() != null) {
-            translationPopup.showCenteredInCurrentWindow(e.getProject());
-        } else {
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            Point point = new Point((screenSize.width - MIN_WIDTH) / 2, (screenSize.height - MIN_HEIGHT) / 2);
-            translationPopup.show(new RelativePoint(point));
-        }
+        WindowMoveListener window = new WindowMoveListener(panel);
+        panel.addMouseListener(window);
+        panel.addMouseMotionListener(window);
 
-        queryComboBox.requestFocus();
+        titlePanel = panel;
+        titlePanel.requestFocus();
     }
 
     private void initViews() {
+        JRootPane rootPane = this.getRootPane();
+
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(stroke, "ESCAPE");
+        rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+            }
+        });
+
         queryBtn.setEnabled(false);
         queryBtn.addActionListener(e -> query(queryComboBox.getEditor().getItem().toString()));
+        rootPane.setDefaultButton(queryBtn);
 
         initQueryComboBox();
 
@@ -185,7 +178,22 @@ public class TranslationComponent {
         resultText.setComponentPopupMenu(menu);
     }
 
-    void query(String query) {
+    void show(Editor editor) {
+        String query = null;
+        if (editor != null) {
+            query = editor.getSelectionModel().getSelectedText();
+        }
+
+        if (Utils.isEmptyString(query))
+            query = COMBO_BOX_MODEL.getElementAt(0);
+
+        if (!Utils.isEmptyString(query))
+            query(query);
+
+        setVisible(true);
+    }
+
+    private void query(String query) {
         if (Utils.isEmptyString(query)) {
             if (COMBO_BOX_MODEL.getSize() > 0) {
                 updateQueryButton();
@@ -273,15 +281,15 @@ public class TranslationComponent {
     }
 
     private static class QueryCallback implements Translation.Callback {
-        private final Reference<TranslationComponent> dialogReference;
+        private final Reference<TranslationDialog> dialogReference;
 
-        private QueryCallback(TranslationComponent dialog) {
+        private QueryCallback(TranslationDialog dialog) {
             this.dialogReference = new WeakReference<>(dialog);
         }
 
         @Override
         public void onQuery(String query, QueryResult result) {
-            TranslationComponent dialog = dialogReference.get();
+            TranslationDialog dialog = dialogReference.get();
             if (dialog != null) {
                 dialog.onPostResult(query, result);
             }

@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.IconLoader;
 
+import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
+
 public class TranslationAction extends AnAction implements DumbAware {
 
     public TranslationAction() {
@@ -13,6 +15,7 @@ public class TranslationAction extends AnAction implements DumbAware {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        new TranslationComponent().showInBestPositionFor(e);
+        new TranslationDialog().show(EDITOR.getData(e.getDataContext()));
     }
+
 }
