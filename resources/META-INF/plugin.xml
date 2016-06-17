@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>cn.yiiguxing.plugin.translate</id>
   <name>Translation</name>
-  <version>1.1</version>
+  <version>1.2</version>
   <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing/TranslationPlugin">Yii.Guxing</vendor>
 
   <description><![CDATA[
@@ -9,7 +9,11 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      v1.1:将对Dialog替换为Popup
+      v1.2:
+      <ul>
+          <li>支持单词拆分。翻译变量名或方法名时更方便</li>
+          <li>修复Bug</li>
+      </ul>
     ]]>
   </change-notes>
 
