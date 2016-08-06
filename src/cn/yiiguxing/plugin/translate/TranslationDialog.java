@@ -87,7 +87,12 @@ public class TranslationDialog extends JDialog {
         });
 
         queryBtn.setEnabled(false);
-        queryBtn.addActionListener(e -> query(queryComboBox.getEditor().getItem().toString()));
+        queryBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                query(queryComboBox.getEditor().getItem().toString());
+            }
+        });
         rootPane.setDefaultButton(queryBtn);
 
         initQueryComboBox();
@@ -107,7 +112,7 @@ public class TranslationDialog extends JDialog {
     private void initQueryComboBox() {
         queryComboBox.setModel(COMBO_BOX_MODEL);
 
-        JTextField field = (JTextField) queryComboBox.getEditor().getEditorComponent();
+        final JTextField field = (JTextField) queryComboBox.getEditor().getEditorComponent();
         field.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent documentEvent) {
@@ -122,10 +127,13 @@ public class TranslationDialog extends JDialog {
             }
         });
 
-        queryComboBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                updateQueryButton();
-                onQuery();
+        queryComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    updateQueryButton();
+                    onQuery();
+                }
             }
         });
         queryComboBox.setRenderer(new ListCellRendererWrapper<String>() {
@@ -145,21 +153,27 @@ public class TranslationDialog extends JDialog {
     private void setComponentPopupMenu() {
         JBPopupMenu menu = new JBPopupMenu();
 
-        JBMenuItem copy = new JBMenuItem("Copy", IconLoader.getIcon("/actions/copy_dark.png"));
-        copy.addActionListener(e -> {
-            String selectedText = resultText.getSelectedText();
-            if (!Utils.isEmptyOrBlankString(selectedText)) {
-                CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
-                copyPasteManager.setContents(new StringSelection(selectedText));
+        final JBMenuItem copy = new JBMenuItem("Copy", IconLoader.getIcon("/actions/copy_dark.png"));
+        copy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedText = resultText.getSelectedText();
+                if (!Utils.isEmptyOrBlankString(selectedText)) {
+                    CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
+                    copyPasteManager.setContents(new StringSelection(selectedText));
+                }
             }
         });
 
 
-        JBMenuItem query = new JBMenuItem("Query", IconLoader.getIcon("/icon_16.png"));
-        query.addActionListener(e -> {
-            String selectedText = resultText.getSelectedText();
-            if (!Utils.isEmptyOrBlankString(selectedText)) {
-                query(selectedText);
+        final JBMenuItem query = new JBMenuItem("Query", IconLoader.getIcon("/icon_16.png"));
+        query.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedText = resultText.getSelectedText();
+                if (!Utils.isEmptyOrBlankString(selectedText)) {
+                    query(selectedText);
+                }
             }
         });
 

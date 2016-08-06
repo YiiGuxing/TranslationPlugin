@@ -10,7 +10,7 @@ import javax.swing.text.StyleConstants;
 
 final class Utils {
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Utils");
 
     private static final SimpleAttributeSet ATTR_QUERY = new SimpleAttributeSet();

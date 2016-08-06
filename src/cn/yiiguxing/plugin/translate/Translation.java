@@ -97,9 +97,12 @@ public class Translation {
             LOG.info("result: " + result);
 
             final QueryResult postResult = result;
-            ApplicationManager.getApplication().invokeLater(() -> {
-                if (mCallback != null) {
-                    mCallback.onQuery(query, postResult);
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (mCallback != null) {
+                        mCallback.onQuery(query, postResult);
+                    }
                 }
             });
         }
