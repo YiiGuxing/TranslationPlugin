@@ -19,9 +19,9 @@ import java.util.concurrent.Future;
 @SuppressWarnings("WeakerAccess")
 public class Translation {
 
-    @SuppressWarnings("all")
-    private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do?keyfrom=Tinkling&key=1977836024&type=data&doctype=json&version=1.1&q=";
-    @SuppressWarnings("all")
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do?keyfrom=TranslationPlugin&key=1473510108&type=data&doctype=json&version=1.1&q=";
+    @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translation");
 
     private static final Translation TRANSLATION = new Translation();
