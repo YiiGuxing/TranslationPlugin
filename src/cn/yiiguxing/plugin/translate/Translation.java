@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
@@ -20,7 +21,11 @@ import java.util.concurrent.Future;
 public class Translation {
 
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do?keyfrom=TranslationPlugin&key=1473510108&type=data&doctype=json&version=1.1&q=";
+    private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do";
+
+    private static final String DEFAULT_API_NAME = "TranslationPlugin";
+    private static final String DEFAULT_API_KEY = "1473510108";
+
     @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translation");
 
@@ -36,9 +41,14 @@ public class Translation {
         return TRANSLATION;
     }
 
-    public void search(String query, Callback callback) {
-        if (query == null || query.trim().length() == 0)
+    public void query(String query, Callback callback) {
+        if (Utils.isEmptyOrBlankString(query)) {
+            if (callback != null) {
+                callback.onQuery(query, null);
+            }
+
             return;
+        }
 
         if (mCurrentTask != null) {
             mCurrentTask.cancel(true);
@@ -58,6 +68,18 @@ public class Translation {
         }
     }
 
+    static String getQueryUrl(String query) {
+        String encodedQuery = "";
+        try {
+            encodedQuery = URLEncoder.encode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + DEFAULT_API_NAME + "&key=" +
+                DEFAULT_API_KEY + "&q=" + encodedQuery;
+    }
+
     private final class QueryRequest implements Runnable {
 
         private final String mQuery;
@@ -75,7 +97,8 @@ public class Translation {
 
             QueryResult result;
             try {
-                HttpGet httpGet = new HttpGet(BASIC_URL + URLEncoder.encode(query, "UTF-8"));
+                String url = getQueryUrl(query);
+                HttpGet httpGet = new HttpGet(url);
                 result = httpClient.execute(httpGet, new YouDaoResponseHandler());
                 if (result != null && result.getErrorCode() != QueryResult.ERROR_CODE_FAIL) {
                     synchronized (mCache) {
@@ -106,7 +129,6 @@ public class Translation {
                 }
             });
         }
-
     }
 
     private final class YouDaoResponseHandler implements ResponseHandler<QueryResult> {
@@ -129,7 +151,6 @@ public class Translation {
                 throw new ClientProtocolException(message);
             }
         }
-
     }
 
     public interface Callback {

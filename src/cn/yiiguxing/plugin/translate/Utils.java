@@ -44,6 +44,9 @@ final class Utils {
     }
 
     static String getErrorMessage(QueryResult result) {
+        if (result == null)
+            return "Nothing to show";
+
         if (result.getErrorCode() == QueryResult.ERROR_CODE_NONE)
             return null;
 

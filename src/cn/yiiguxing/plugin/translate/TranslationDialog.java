@@ -7,28 +7,24 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
+import java.util.List;
 
-public class TranslationDialog extends JDialog {
+public class TranslationDialog extends JDialog implements TranslationView {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
 
     private static final JBColor MSG_FOREGROUND = new JBColor(new Color(0xFF333333), new Color(0xFFBBBBBB));
     private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFEE0000));
-
-    private static final int MAX_HISTORIES_SIZE = 20;
-    private static final DefaultComboBoxModel<String> COMBO_BOX_MODEL = new DefaultComboBoxModel<>();
 
     private JPanel titlePanel;
     private JPanel contentPane;
@@ -39,7 +35,11 @@ public class TranslationDialog extends JDialog {
     private JScrollPane scrollPane;
     private JComboBox<String> queryComboBox;
 
-    private String currentQuery;
+    private final MyModel mModel;
+    private final TranslationPresenter mTranslationPresenter;
+
+    private String mLastQuery;
+    private boolean mBroadcast;
 
     TranslationDialog() {
         setUndecorated(true);
@@ -47,6 +47,9 @@ public class TranslationDialog extends JDialog {
         setModal(false);
         setLocationRelativeTo(null);
         setContentPane(contentPane);
+
+        mTranslationPresenter = new TranslationPresenter(this);
+        mModel = new MyModel(mTranslationPresenter.getHistory());
 
         initViews();
 
@@ -86,11 +89,10 @@ public class TranslationDialog extends JDialog {
             }
         });
 
-        queryBtn.setEnabled(false);
         queryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                query(queryComboBox.getEditor().getItem().toString());
+                onQueryButtonClick();
             }
         });
         rootPane.setDefaultButton(queryBtn);
@@ -108,17 +110,18 @@ public class TranslationDialog extends JDialog {
         setComponentPopupMenu();
     }
 
-    @SuppressWarnings("unchecked")
+    private void onQueryButtonClick() {
+        String query = resultText.getSelectedText();
+        if (Utils.isEmptyOrBlankString(query)) {
+            query = queryComboBox.getEditor().getItem().toString();
+        }
+        query(query);
+    }
+
     private void initQueryComboBox() {
-        queryComboBox.setModel(COMBO_BOX_MODEL);
+        queryComboBox.setModel(mModel);
 
         final JTextField field = (JTextField) queryComboBox.getEditor().getEditorComponent();
-        field.getDocument().addDocumentListener(new DocumentAdapter() {
-            @Override
-            protected void textChanged(DocumentEvent documentEvent) {
-                updateQueryButton();
-            }
-        });
         field.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -130,8 +133,7 @@ public class TranslationDialog extends JDialog {
         queryComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    updateQueryButton();
+                if (e.getStateChange() == ItemEvent.SELECTED && !mBroadcast) {
                     onQuery();
                 }
             }
@@ -165,15 +167,11 @@ public class TranslationDialog extends JDialog {
             }
         });
 
-
         final JBMenuItem query = new JBMenuItem("Query", IconLoader.getIcon("/icon_16.png"));
         query.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedText = resultText.getSelectedText();
-                if (!Utils.isEmptyOrBlankString(selectedText)) {
-                    query(selectedText);
-                }
+                query(resultText.getSelectedText());
             }
         });
 
@@ -197,78 +195,44 @@ public class TranslationDialog extends JDialog {
         if (editor != null) {
             query = Utils.splitWord(editor.getSelectionModel().getSelectedText());
         }
+        if (Utils.isEmptyOrBlankString(query) && mModel.getSize() > 0) {
+            query = mModel.getElementAt(0);
+        }
 
-        if (Utils.isEmptyOrBlankString(query))
-            query = COMBO_BOX_MODEL.getElementAt(0);
-
-        if (!Utils.isEmptyOrBlankString(query))
-            query(query);
-
+        query(query);
         setVisible(true);
     }
 
     private void query(String query) {
-        if (Utils.isEmptyOrBlankString(query)) {
-            if (COMBO_BOX_MODEL.getSize() > 0) {
-                updateQueryButton();
-            }
-
-            return;
-        }
-
-        resultText.setText("");
-
-        queryComboBox.getEditor().setItem(query);
-        COMBO_BOX_MODEL.removeElement(query);
-        COMBO_BOX_MODEL.insertElementAt(query, 0);
-        queryComboBox.setSelectedIndex(0);
-
-        /*
-         * queryComboBox失焦时纠正误触发onQuery后，正常调用query却是不会触发ItemEvent了，需要手动调用onQuery().
-         */
-        if (query.equals(queryComboBox.getSelectedItem())) {
+        if (!Utils.isEmptyOrBlankString(query)) {
+            queryComboBox.getEditor().setItem(query);
             onQuery();
         }
-
-        if (COMBO_BOX_MODEL.getSize() > MAX_HISTORIES_SIZE) {
-            COMBO_BOX_MODEL.removeElementAt(MAX_HISTORIES_SIZE);
-        }
-    }
-
-    private void updateQueryButton() {
-        queryBtn.setEnabled(!Utils.isEmptyOrBlankString(queryComboBox.getEditor().getItem().toString()));
     }
 
     private void onQuery() {
-        /*
-         * queryComboBox失焦时会误触发
-         */
-        String text = queryComboBox.getSelectedItem().toString();
-        if (COMBO_BOX_MODEL.getIndexOf(text) < 0)
-            return;
-
-        currentQuery = text;
-        if (!Utils.isEmptyOrBlankString(currentQuery)) {
-            currentQuery = currentQuery.trim();
+        String text = queryComboBox.getEditor().getItem().toString();
+        if (!Utils.isEmptyOrBlankString(text) && !text.equals(mLastQuery)) {
+            resultText.setText("");
             messageLabel.setForeground(MSG_FOREGROUND);
             messageLabel.setText("Querying...");
             msgPanel.setVisible(true);
             scrollPane.setVisible(false);
-            Translation.get().search(currentQuery, new QueryCallback(this));
+            mTranslationPresenter.query(text);
         }
     }
 
-    private void onPostResult(String query, QueryResult result) {
-        if (Utils.isEmptyOrBlankString(currentQuery) || !currentQuery.equals(query))
-            return;
+    @Override
+    public void updateHistory() {
+        mBroadcast = true;// 防止递归查询
+        mModel.fireContentsChanged();
+        queryComboBox.setSelectedIndex(0);
+        mBroadcast = false;
+    }
 
-        String errorMessage = Utils.getErrorMessage(result);
-        if (errorMessage != null) {
-            messageLabel.setText(errorMessage);
-            messageLabel.setForeground(MSG_FOREGROUND_ERROR);
-            return;
-        }
-
+    @Override
+    public void showResult(@NotNull String query, @NotNull QueryResult result) {
+        mLastQuery = query;
         Document document = resultText.getDocument();
         try {
             document.remove(0, document.getLength());
@@ -294,20 +258,45 @@ public class TranslationDialog extends JDialog {
         msgPanel.setVisible(false);
     }
 
-    private static class QueryCallback implements Translation.Callback {
-        private final Reference<TranslationDialog> dialogReference;
+    @Override
+    public void showError(@NotNull String error) {
+        messageLabel.setText(error);
+        messageLabel.setForeground(MSG_FOREGROUND_ERROR);
+    }
 
-        private QueryCallback(TranslationDialog dialog) {
-            this.dialogReference = new WeakReference<>(dialog);
+    private static class MyModel extends AbstractListModel<String> implements ComboBoxModel<String> {
+        private final List<String> myFullList;
+        private Object mySelectedItem;
+
+        MyModel(@NotNull List<String> list) {
+            myFullList = list;
         }
 
         @Override
-        public void onQuery(String query, QueryResult result) {
-            TranslationDialog dialog = dialogReference.get();
-            if (dialog != null) {
-                dialog.onPostResult(query, result);
-            }
+        public String getElementAt(int index) {
+            return this.myFullList.get(index);
         }
+
+        @Override
+        public int getSize() {
+            return myFullList.size();
+        }
+
+        @Override
+        public Object getSelectedItem() {
+            return this.mySelectedItem;
+        }
+
+        @Override
+        public void setSelectedItem(Object anItem) {
+            this.mySelectedItem = anItem;
+            this.fireContentsChanged();
+        }
+
+        void fireContentsChanged() {
+            this.fireContentsChanged(this, -1, -1);
+        }
+
     }
 
 }
