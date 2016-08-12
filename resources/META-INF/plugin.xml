@@ -11,6 +11,7 @@
     <change-notes><![CDATA[
       v1.2:
       <ul>
+          <li>添加设置页，配置有道API KEY</li>
           <li>支持单词拆分。翻译变量名或方法名时更方便</li>
           <li>修复Bug</li>
       </ul>
