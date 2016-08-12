@@ -13,6 +13,7 @@ public class QueryResult {
     public static final int ERROR_CODE_UNSUPPORTED_LANG = 40;
     public static final int ERROR_CODE_INVALID_KEY = 50;
     public static final int ERROR_CODE_NO_RESULT = 60;
+    public static final int ERROR_CODE_RESTRICTED = -10;
 
     @SerializedName("query")
     private String query;

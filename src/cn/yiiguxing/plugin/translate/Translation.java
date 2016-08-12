@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import org.apache.http.HttpEntity;
@@ -122,7 +123,7 @@ public class Translation {
                     }
                 }
             } catch (Exception e) {
-                LOG.error("query...", e);
+                LOG.warn("query...", e);
                 result = null;
             } finally {
                 try {
@@ -158,12 +159,21 @@ public class Translation {
                     return null;
 
                 String json = EntityUtils.toString(entity);
-                LOG.debug(json);
+                LOG.info(json);
 
-                return new Gson().fromJson(json, QueryResult.class);
+                try {
+                    return new Gson().fromJson(json, QueryResult.class);
+                } catch (JsonSyntaxException e) {
+                    LOG.warn(e);
+
+                    QueryResult result = new QueryResult();
+                    result.setErrorCode(QueryResult.ERROR_CODE_RESTRICTED);
+
+                    return result;
+                }
             } else {
                 String message = "Unexpected response status: " + status;
-                LOG.error(message);
+                LOG.warn(message);
                 throw new ClientProtocolException(message);
             }
         }

@@ -59,11 +59,14 @@ final class Utils {
 
         String error;
         switch (result.getErrorCode()) {
-            case QueryResult.ERROR_CODE_QUERY_TOO_LONG:
-                error = "Query too long";
+            case QueryResult.ERROR_CODE_RESTRICTED:
+                error = "请求过于频繁，请尝试更换API KEY";
                 break;
             case QueryResult.ERROR_CODE_INVALID_KEY:
-                error = "Invalid key";
+                error = "无效的API KEY";
+                break;
+            case QueryResult.ERROR_CODE_QUERY_TOO_LONG:
+                error = "Query too long";
                 break;
             case QueryResult.ERROR_CODE_UNSUPPORTED_LANG:
                 error = "Unsupported lang";
