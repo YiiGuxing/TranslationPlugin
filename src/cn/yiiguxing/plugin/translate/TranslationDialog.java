@@ -199,8 +199,9 @@ public class TranslationDialog extends JDialog implements TranslationView {
             query = mModel.getElementAt(0);
         }
 
-        query(query);
+        // 先显示,否则在默认主题下查询字符串过长时内容会被拉伸。
         setVisible(true);
+        query(query);
     }
 
     private void query(String query) {
