@@ -1,13 +1,14 @@
 package cn.yiiguxing.plugin.translate;
 
 
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -17,6 +18,9 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.List;
+
+import static cn.yiiguxing.plugin.translate.Utils.getCenterOf;
+import static cn.yiiguxing.plugin.translate.Utils.getWindow;
 
 public class TranslationDialog extends JDialog implements TranslationView {
 
@@ -45,7 +49,6 @@ public class TranslationDialog extends JDialog implements TranslationView {
         setUndecorated(true);
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setModal(false);
-        setLocationRelativeTo(null);
         setContentPane(contentPane);
 
         mTranslationPresenter = new TranslationPresenter(this);
@@ -190,18 +193,25 @@ public class TranslationDialog extends JDialog implements TranslationView {
         resultText.setComponentPopupMenu(menu);
     }
 
-    void show(Editor editor) {
-        String query = null;
-        if (editor != null) {
-            query = Utils.splitWord(editor.getSelectionModel().getSelectedText());
-        }
-        if (Utils.isEmptyOrBlankString(query) && mModel.getSize() > 0) {
-            query = mModel.getElementAt(0);
+    void show(@Nullable Project project, @Nullable String queryText) {
+        if (Utils.isEmptyOrBlankString(queryText) && mModel.getSize() > 0) {
+            queryText = mModel.getElementAt(0);
         }
 
         // 先显示,否则在默认主题下查询字符串过长时内容会被拉伸。
+        showCenteredInCurrentWindow(project);
+        query(queryText);
+    }
+
+    private void showCenteredInCurrentWindow(@Nullable Project project) {
+        Window window = getWindow(project);
+        if (window != null && window.isShowing()) {
+            setLocation(Utils.getCenterOf(window, this));
+        } else {
+            setLocationRelativeTo(null);
+        }
+
         setVisible(true);
-        query(query);
     }
 
     private void query(String query) {

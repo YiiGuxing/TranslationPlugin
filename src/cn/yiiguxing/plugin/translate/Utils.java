@@ -1,12 +1,19 @@
 package cn.yiiguxing.plugin.translate;
 
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import java.awt.*;
 
 final class Utils {
 
@@ -175,6 +182,51 @@ final class Utils {
                 .replaceAll("[A-Z]{2,}", " $0")
                 .replaceAll("\\s{2,}", " ")
                 .trim();
+    }
+
+    @Nullable
+    private static WindowManagerEx getWndManager() {
+        return ApplicationManagerEx.getApplicationEx() != null ? WindowManagerEx.getInstanceEx() : null;
+    }
+
+    @Nullable
+    static Window getWindow(@Nullable Project project) {
+        Window window = null;
+        if (project != null) {
+            WindowManagerEx wndManager = getWndManager();
+            Component focusedComponent = wndManager == null ? null : wndManager.getFocusedComponent(project);
+            if (focusedComponent != null) {
+                Component parent = UIUtil.findUltimateParent(focusedComponent);
+                if (parent instanceof Window) {
+                    window = (Window) parent;
+                }
+            }
+        }
+
+        if (window == null) {
+            window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        }
+        return window;
+    }
+
+    static Point getCenterOf(Component container, Component child) {
+        JComponent component = getTargetComponent(container);
+        Rectangle visibleBounds = component != null ? component.getVisibleRect() : new Rectangle(container.getSize());
+        Point containerScreenPoint = visibleBounds.getLocation();
+        SwingUtilities.convertPointToScreen(containerScreenPoint, container);
+        visibleBounds.setLocation(containerScreenPoint);
+        return UIUtil.getCenterPoint(visibleBounds, child.getSize());
+    }
+
+    private static JComponent getTargetComponent(Component aComponent) {
+        if (aComponent instanceof JComponent) {
+            return (JComponent) aComponent;
+        } else if (aComponent instanceof RootPaneContainer) {
+            return ((RootPaneContainer) aComponent).getRootPane();
+        } else {
+            LOG.error("Cannot find target for:" + aComponent);
+            return null;
+        }
     }
 
 }

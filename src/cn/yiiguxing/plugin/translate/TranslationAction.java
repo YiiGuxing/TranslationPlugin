@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.IconLoader;
 
@@ -15,7 +16,12 @@ public class TranslationAction extends AnAction implements DumbAware {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        new TranslationDialog().show(EDITOR.getData(e.getDataContext()));
+        Editor editor = EDITOR.getData(e.getDataContext());
+        String queryText = null;
+        if (editor != null) {
+            queryText = Utils.splitWord(editor.getSelectionModel().getSelectedText());
+        }
+        new TranslationDialog().show(e.getProject(), queryText);
     }
 
 }
