@@ -23,8 +23,8 @@ public class Translation {
     @SuppressWarnings("SpellCheckingInspection")
     private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do";
 
-    private static final String DEFAULT_API_NAME = "TranslationPlugin";
-    private static final String DEFAULT_API_KEY = "1473510108";
+    private static final String DEFAULT_API_KEY_NAME = "TranslationPlugin";
+    private static final String DEFAULT_API_KEY_VALUE = "1473510108";
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translation");
@@ -76,8 +76,24 @@ public class Translation {
             e.printStackTrace();
         }
 
-        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + DEFAULT_API_NAME + "&key=" +
-                DEFAULT_API_KEY + "&q=" + encodedQuery;
+        String apiKeyName;
+        String apiKeyValue;
+        boolean useDefaultKey = Settings.isUseDefaultKey();
+        if (useDefaultKey) {
+            apiKeyName = DEFAULT_API_KEY_NAME;
+            apiKeyValue = DEFAULT_API_KEY_VALUE;
+        } else {
+            apiKeyName = Settings.getApiKeyName();
+            apiKeyValue = Settings.getApiKeyValue();
+
+            if (Utils.isEmptyOrBlankString(apiKeyName) || Utils.isEmptyOrBlankString(apiKeyValue)) {
+                apiKeyName = DEFAULT_API_KEY_NAME;
+                apiKeyValue = DEFAULT_API_KEY_VALUE;
+            }
+        }
+
+        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + apiKeyName + "&key=" +
+                apiKeyValue + "&q=" + encodedQuery;
     }
 
     private final class QueryRequest implements Runnable {
@@ -100,7 +116,7 @@ public class Translation {
                 String url = getQueryUrl(query);
                 HttpGet httpGet = new HttpGet(url);
                 result = httpClient.execute(httpGet, new YouDaoResponseHandler());
-                if (result != null && result.getErrorCode() != QueryResult.ERROR_CODE_FAIL) {
+                if (result != null && result.getErrorCode() == QueryResult.ERROR_CODE_NONE) {
                     synchronized (mCache) {
                         mCache.put(query, result);
                     }

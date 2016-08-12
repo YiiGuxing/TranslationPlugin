@@ -1,41 +1,42 @@
 <idea-plugin version="2">
-  <id>cn.yiiguxing.plugin.translate</id>
-  <name>Translation</name>
-  <version>1.2</version>
-  <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing/TranslationPlugin">Yii.Guxing</vendor>
+    <id>cn.yiiguxing.plugin.translate</id>
+    <name>Translation</name>
+    <version>1.2</version>
+    <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing/TranslationPlugin">Yii.Guxing</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       Translation Plugin
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       v1.2:
       <ul>
           <li>支持单词拆分。翻译变量名或方法名时更方便</li>
           <li>修复Bug</li>
       </ul>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="141.0"/>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="141.0"/>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <depends>com.intellij.modules.lang</depends>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.Settings"/>
+    </extensions>
 
-  <actions>
-    <!-- Add your actions here -->
-    <action id="TranslationAction" class="cn.yiiguxing.plugin.translate.TranslationAction"
-            text="Translate"
-            description="翻译">
-      <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
-      <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
-    </action>
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+        <action id="TranslationAction" class="cn.yiiguxing.plugin.translate.TranslationAction"
+                text="Translate"
+                description="翻译">
+            <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
+        </action>
+    </actions>
 
 </idea-plugin>

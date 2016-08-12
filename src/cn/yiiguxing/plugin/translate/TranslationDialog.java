@@ -19,9 +19,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.List;
 
-import static cn.yiiguxing.plugin.translate.Utils.getCenterOf;
-import static cn.yiiguxing.plugin.translate.Utils.getWindow;
-
 public class TranslationDialog extends JDialog implements TranslationView {
 
     private static final int MIN_WIDTH = 400;
@@ -204,7 +201,7 @@ public class TranslationDialog extends JDialog implements TranslationView {
     }
 
     private void showCenteredInCurrentWindow(@Nullable Project project) {
-        Window window = getWindow(project);
+        Window window = Utils.getWindow(project);
         if (window != null && window.isShowing()) {
             setLocation(Utils.getCenterOf(window, this));
         } else {
