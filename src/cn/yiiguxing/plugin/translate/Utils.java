@@ -5,7 +5,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -32,7 +34,7 @@ final class Utils {
     static {
         StyleConstants.setItalic(ATTR_QUERY, true);
         StyleConstants.setBold(ATTR_QUERY, true);
-        StyleConstants.setFontSize(ATTR_QUERY, 18);
+        StyleConstants.setFontSize(ATTR_QUERY, JBUI.scaleFontSize(18));
         StyleConstants.setForeground(ATTR_QUERY, new JBColor(0xFF333333, 0xFFCC7832));
 
         StyleConstants.setForeground(ATTR_EXPLAIN, new JBColor(0xFF333333, 0xFF8CBCE1));
@@ -80,11 +82,45 @@ final class Utils {
         return error;
     }
 
-    static void insertHeader(Document document, QueryResult result) {
+    static void insertQueryResultText(@NotNull Document document, @NotNull QueryResult result) {
+        try {
+            document.remove(0, document.getLength());
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Utils.insertHeader(document, result);
+
+        BasicExplain basicExplain = result.getBasicExplain();
+        if (basicExplain != null) {
+            Utils.insertExplain(document, basicExplain.getExplains());
+        } else {
+            Utils.insertExplain(document, result.getTranslation());
+        }
+
+        WebExplain[] webExplains = result.getWebExplains();
+        Utils.insertWebExplain(document, webExplains);
+
+        if (document.getLength() < 1)
+            return;
+
+        try {
+            int offset = document.getLength() - 1;
+            String text = document.getText(offset, 1);
+            if (text.charAt(0) == '\n') {
+                document.remove(offset, 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void insertHeader(Document document, QueryResult result) {
         String query = result.getQuery();
 
         try {
-            document.insertString(document.getLength(), "  " + query + "  \n", ATTR_QUERY);
+            document.insertString(document.getLength(), "  " + query + "\n", ATTR_QUERY);
 
             BasicExplain be = result.getBasicExplain();
             if (be != null) {
@@ -111,16 +147,19 @@ final class Utils {
                     explain.append("]");
                 }
 
-                document.insertString(document.getLength(), explain.toString() + "\n", ATTR_EXPLAIN);
-            }
+                if (explain.length() > 0) {
+                    document.insertString(document.getLength(), explain.toString() + "\n\n", ATTR_EXPLAIN);
+                } else {
+                    document.insertString(document.getLength(), "\n", null);
+                }
 
-            document.insertString(document.getLength(), "\n", null);
+            }
         } catch (BadLocationException e) {
             LOG.error("insertHeader ", e);
         }
     }
 
-    static void insertExplain(Document doc, String[] explains) {
+    private static void insertExplain(Document doc, String[] explains) {
         if (explains == null || explains.length == 0)
             return;
 
@@ -144,7 +183,7 @@ final class Utils {
         }
     }
 
-    static void insertWebExplain(Document doc, WebExplain[] webExplains) {
+    private static void insertWebExplain(Document doc, WebExplain[] webExplains) {
         if (webExplains == null || webExplains.length == 0)
             return;
 

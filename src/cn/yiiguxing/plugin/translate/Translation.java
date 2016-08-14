@@ -133,8 +133,8 @@ public class Translation {
                 }
             }
 
-            LOG.info("query: " + query);
-            LOG.info("result: " + result);
+            System.out.println("query: " + query);
+            System.out.println("result: " + result);
 
             final QueryResult postResult = result;
             ApplicationManager.getApplication().invokeLater(new Runnable() {

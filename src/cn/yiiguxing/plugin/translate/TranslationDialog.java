@@ -12,8 +12,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
@@ -25,7 +23,7 @@ public class TranslationDialog extends JDialog implements TranslationView {
     private static final int MIN_HEIGHT = 450;
 
     private static final JBColor MSG_FOREGROUND = new JBColor(new Color(0xFF333333), new Color(0xFFBBBBBB));
-    private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFEE0000));
+    private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFFF2222));
 
     private JPanel titlePanel;
     private JPanel contentPane;
@@ -241,25 +239,8 @@ public class TranslationDialog extends JDialog implements TranslationView {
     @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
         mLastQuery = query;
-        Document document = resultText.getDocument();
-        try {
-            document.remove(0, document.getLength());
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-            return;
-        }
 
-        Utils.insertHeader(document, result);
-
-        BasicExplain basicExplain = result.getBasicExplain();
-        if (basicExplain != null) {
-            Utils.insertExplain(document, basicExplain.getExplains());
-        } else {
-            Utils.insertExplain(document, result.getTranslation());
-        }
-
-        WebExplain[] webExplains = result.getWebExplains();
-        Utils.insertWebExplain(document, webExplains);
+        Utils.insertQueryResultText(resultText.getDocument(), result);
 
         resultText.setCaretPosition(0);
         scrollPane.setVisible(true);

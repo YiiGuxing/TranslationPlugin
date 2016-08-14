@@ -3,8 +3,6 @@ package cn.yiiguxing.plugin.translate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +48,12 @@ public class TranslationPresenter {
         }
 
         currentQuery = query;
-        Translation.get().query(query, new QueryCallback(this));
+        Translation.get().query(query, new Translation.Callback() {
+            @Override
+            public void onQuery(String query, QueryResult result) {
+                onPostResult(query, result);
+            }
+        });
     }
 
     private void onPostResult(String query, QueryResult result) {
@@ -65,21 +68,4 @@ public class TranslationPresenter {
             mTranslationView.showResult(query, result);
         }
     }
-
-    private static class QueryCallback implements Translation.Callback {
-        private final Reference<TranslationPresenter> presenterReference;
-
-        private QueryCallback(TranslationPresenter presenter) {
-            this.presenterReference = new WeakReference<>(presenter);
-        }
-
-        @Override
-        public void onQuery(String query, QueryResult result) {
-            TranslationPresenter presenter = presenterReference.get();
-            if (presenter != null) {
-                presenter.onPostResult(query, result);
-            }
-        }
-    }
-
 }

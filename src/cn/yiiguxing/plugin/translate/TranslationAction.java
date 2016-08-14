@@ -21,7 +21,12 @@ public class TranslationAction extends AnAction implements DumbAware {
         if (editor != null) {
             queryText = Utils.splitWord(editor.getSelectionModel().getSelectedText());
         }
-        new TranslationDialog().show(e.getProject(), queryText);
+
+        if (!Utils.isEmptyOrBlankString(queryText)) {
+            new TranslationBalloon(editor).showAndQuery(queryText);
+        } else {
+            new TranslationDialog().show(e.getProject(), queryText);
+        }
     }
 
 }
