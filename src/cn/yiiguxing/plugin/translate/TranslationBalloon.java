@@ -1,17 +1,20 @@
 package cn.yiiguxing.plugin.translate;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBEmptyBorder;
+import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,11 +28,18 @@ import java.util.Objects;
 @SuppressWarnings("WeakerAccess")
 public class TranslationBalloon implements TranslationView {
 
+    private static final Icon ICON_PIN = IconLoader.getIcon("/pin.png");
+
+    private static final int MIN_BALLOON_WIDTH = JBUI.scale(150);
+    private static final int MIN_BALLOON_HEIGHT = JBUI.scale(50);
+    private static final int MAX_BALLOON_SIZE = JBUI.scale(600);
+    private static final JBInsets BORDER_INSETS = JBUI.insets(20, 20, 20, 20);
+
     private final JBPanel contentPanel;
     private final GroupLayout layout;
     private final JBLabel label;
 
-    private Balloon balloon;
+    private Balloon myBalloon;
 
     private final TranslationPresenter mTranslationPresenter;
 
@@ -48,7 +58,7 @@ public class TranslationBalloon implements TranslationView {
         label.setText("Querying...");
 
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(label, JBUI.scale(150), GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                .addComponent(label, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
@@ -58,52 +68,20 @@ public class TranslationBalloon implements TranslationView {
     }
 
     @NotNull
-    private Balloon buildBalloon() {
+    private BalloonBuilder buildBalloon() {
         return JBPopupFactory.getInstance()
                 .createDialogBalloonBuilder(contentPanel, null)
                 .setHideOnClickOutside(true)
                 .setShadow(true)
                 .setBlockClicksThroughBalloon(true)
                 .setRequestFocus(true)
-                .setBorderInsets(JBUI.insets(20, 20, 20, 20))
-                .createBalloon();
+                .setBorderInsets(BORDER_INSETS);
     }
 
     public void showAndQuery(@NotNull String queryText) {
-        balloon = buildBalloon();
-        balloon.show(JBPopupFactory.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
+        myBalloon = buildBalloon().setCloseButtonEnabled(false).createBalloon();
+        myBalloon.show(JBPopupFactory.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
         mTranslationPresenter.query(Objects.requireNonNull(queryText, "queryText cannot be null"));
-    }
-
-    private void createTackButton(final BalloonImpl balloon) {
-        balloon.setActionProvider(
-                new BalloonImpl.ActionProvider() {
-                    private BalloonImpl.ActionButton myCloseButton;
-
-                    @NotNull
-                    public List<BalloonImpl.ActionButton> createActions() {
-                        this.myCloseButton = balloon.new ActionButton(AllIcons.Ide.Error, AllIcons.Ide.Link, null, new Consumer<MouseEvent>() {
-                            @Override
-                            public void consume(MouseEvent mouseEvent) {
-
-                            }
-                        });
-                        return Collections.singletonList(this.myCloseButton);
-                    }
-
-                    public void layout(@NotNull Rectangle lpBounds) {
-                        if (this.myCloseButton.isVisible()) {
-                            Icon icon = balloon.getCloseButton();
-                            int iconWidth = icon.getIconWidth();
-                            int iconHeight = icon.getIconHeight();
-                            Rectangle r = new Rectangle(lpBounds.x + lpBounds.width - iconWidth + (int) ((double) iconWidth * 0.3D), lpBounds.y - (int) ((double) iconHeight * 0.3D), iconWidth, iconHeight);
-                            Insets border = balloon.getShadowBorderInsets();
-                            r.x -= border.left;
-                            r.y -= border.top;
-                            this.myCloseButton.setBounds(r);
-                        }
-                    }
-                });
     }
 
     @Override
@@ -113,12 +91,12 @@ public class TranslationBalloon implements TranslationView {
 
     @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
-        if (this.balloon != null) {
-            if (this.balloon.isDisposed()) {
+        if (this.myBalloon != null) {
+            if (this.myBalloon.isDisposed()) {
                 return;
             }
 
-            this.balloon.hide(true);
+            this.myBalloon.hide(true);
         }
 
         contentPanel.remove(label);
@@ -137,13 +115,15 @@ public class TranslationBalloon implements TranslationView {
         scrollPane.setHorizontalScrollBar(scrollPane.createHorizontalScrollBar());
 
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(scrollPane, JBUI.scale(150), GroupLayout.DEFAULT_SIZE, JBUI.scale(600)));
+                .addComponent(scrollPane, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, MAX_BALLOON_SIZE));
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(scrollPane, JBUI.scale(50), GroupLayout.DEFAULT_SIZE, JBUI.scale(600)));
+                .addComponent(scrollPane, MIN_BALLOON_HEIGHT, GroupLayout.DEFAULT_SIZE, MAX_BALLOON_SIZE));
         contentPanel.add(scrollPane);
 
-        final BalloonImpl balloon = (BalloonImpl) buildBalloon();
-        balloon.show(JBPopupFactory.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
+        final BalloonImpl balloon = (BalloonImpl) buildBalloon().createBalloon();
+        RelativePoint showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
+        createPinButton(balloon, showPoint);
+        balloon.show(showPoint, Balloon.Position.below);
 
         // 再刷新一下，尽可能地消除滚动条
         ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -154,13 +134,61 @@ public class TranslationBalloon implements TranslationView {
         });
     }
 
+    private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint) {
+        balloon.setActionProvider(new BalloonImpl.ActionProvider() {
+            private BalloonImpl.ActionButton myPinButton;
+
+            @NotNull
+            public List<BalloonImpl.ActionButton> createActions() {
+                myPinButton = balloon.new ActionButton(ICON_PIN, ICON_PIN, null,
+                        new Consumer<MouseEvent>() {
+                            @Override
+                            public void consume(MouseEvent mouseEvent) {
+                                if (mouseEvent.getClickCount() == 1) {
+                                    balloon.hide(true);
+                                    new TranslationDialog().show(editor.getProject(), null);
+                                }
+                            }
+                        });
+
+                return Collections.singletonList(myPinButton);
+            }
+
+            public void layout(@NotNull Rectangle lpBounds) {
+                if (myPinButton.isVisible()) {
+                    int iconWidth = ICON_PIN.getIconWidth();
+                    int iconHeight = ICON_PIN.getIconHeight();
+                    int margin = JBUI.scale(3);
+                    int x = lpBounds.x + lpBounds.width - iconWidth - margin;
+                    int y = lpBounds.y + margin;
+
+                    Rectangle rectangle = new Rectangle(x, y, iconWidth, iconHeight);
+                    Insets border = balloon.getShadowBorderInsets();
+                    rectangle.x -= border.left;
+
+                    int showX = showPoint.getPoint().x;
+                    int showY = showPoint.getPoint().y;
+                    int offset = JBUI.scale(1);// 误差
+                    if (showX <= lpBounds.x + offset // 右方
+                            || showX >= (lpBounds.x + lpBounds.width - offset) // 左方
+                            || (lpBounds.y >= showY // 下方
+                            || (lpBounds.y + lpBounds.height) <= showY/*上方*/)) {
+                        rectangle.y += border.top;
+                    }
+
+                    myPinButton.setBounds(rectangle);
+                }
+            }
+        });
+    }
+
     @Override
     public void showError(@NotNull String error) {
-        if (balloon == null)
+        if (myBalloon == null)
             return;
 
         label.setForeground(new JBColor(new Color(0xFF333333), new Color(0xFFFF2222)));
         label.setText(error);
-        balloon.revalidate();
+        myBalloon.revalidate();
     }
 }
