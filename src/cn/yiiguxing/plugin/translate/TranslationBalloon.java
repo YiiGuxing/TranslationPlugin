@@ -125,6 +125,7 @@ public class TranslationBalloon implements TranslationView {
 
         JTextPane resultText = new JTextPane();
         resultText.setEditable(false);
+        resultText.setBackground(UIManager.getColor("Panel.background"));
         resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", JBUI.scaleFontSize(14)));
 
         Utils.insertQueryResultText(resultText.getDocument(), result);
@@ -141,7 +142,7 @@ public class TranslationBalloon implements TranslationView {
                 .addComponent(scrollPane, JBUI.scale(50), GroupLayout.DEFAULT_SIZE, JBUI.scale(600)));
         contentPanel.add(scrollPane);
 
-        final Balloon balloon = buildBalloon();
+        final BalloonImpl balloon = (BalloonImpl) buildBalloon();
         balloon.show(JBPopupFactory.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
 
         // 再刷新一下，尽可能地消除滚动条

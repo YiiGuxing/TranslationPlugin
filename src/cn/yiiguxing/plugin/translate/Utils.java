@@ -34,7 +34,7 @@ final class Utils {
     static {
         StyleConstants.setItalic(ATTR_QUERY, true);
         StyleConstants.setBold(ATTR_QUERY, true);
-        StyleConstants.setFontSize(ATTR_QUERY, JBUI.scaleFontSize(18));
+        StyleConstants.setFontSize(ATTR_QUERY, JBUI.scaleFontSize(19));
         StyleConstants.setForeground(ATTR_QUERY, new JBColor(0xFF333333, 0xFFCC7832));
 
         StyleConstants.setForeground(ATTR_EXPLAIN, new JBColor(0xFF333333, 0xFF8CBCE1));
@@ -120,7 +120,11 @@ final class Utils {
         String query = result.getQuery();
 
         try {
-            document.insertString(document.getLength(), "  " + query + "\n", ATTR_QUERY);
+            if (!Utils.isEmptyOrBlankString(query)) {
+                query = query.trim();
+                document.insertString(document.getLength(),
+                        Character.toUpperCase(query.charAt(0)) + query.substring(1) + "\n", ATTR_QUERY);
+            }
 
             BasicExplain be = result.getBasicExplain();
             if (be != null) {
@@ -148,12 +152,11 @@ final class Utils {
                 }
 
                 if (explain.length() > 0) {
-                    document.insertString(document.getLength(), explain.toString() + "\n\n", ATTR_EXPLAIN);
-                } else {
-                    document.insertString(document.getLength(), "\n", null);
+                    document.insertString(document.getLength(), explain.toString() + "\n", ATTR_EXPLAIN);
                 }
-
             }
+
+            document.insertString(document.getLength(), "\n", null);
         } catch (BadLocationException e) {
             LOG.error("insertHeader ", e);
         }
