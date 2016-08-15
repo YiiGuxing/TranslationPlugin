@@ -41,8 +41,10 @@ final class Utils {
 
         StyleConstants.setItalic(ATTR_PRE_EXPLAINS, true);
         StyleConstants.setForeground(ATTR_PRE_EXPLAINS, new JBColor(0xFF333333, 0xFFEAB1FF));
+        StyleConstants.setFontSize(ATTR_PRE_EXPLAINS, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_EXPLAINS, new JBColor(0xFF333333, 0xFFFFC66D));
+        StyleConstants.setFontSize(ATTR_PRE_EXPLAINS, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_WEB_EXPLAIN_TITLE, new JBColor(0xFF333333, 0xFF808080));
         StyleConstants.setForeground(ATTR_WEB_EXPLAIN_KEY, new JBColor(0xFF333333, 0xFF77B767));
