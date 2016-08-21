@@ -2,25 +2,23 @@
 
 Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
 
--------
 
 ![截图1](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/0.png)
 
 ![截图2](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/1.png)
 
--------
 
 ## 使用方法
 
 - **下载**：[**TranslationPlugin-v1.2.jar**](https://github.com/YiiGuxing/TranslationPlugin/raw/master/TranslationPlugin-v1.2.jar)
 
-- **安装**：Settings(OS X:Preferences) -> Plugins -> Install plugin from disk -> 选择TranslationPlugin.jar并安装。
+- **安装**：Settings(OS X:Preferences) -> Plugins -> Install plugin from disk -> 选择TranslationPlugin-v1.2.jar并安装。
 
-- **打开翻译对话框**：点击工具栏上的![图标](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/2.png)图标即可打开翻译对话框。
+- **打开翻译对话框**：点击工具栏上的 ![图标](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/2.png) 图标即可打开翻译对话框。
 
 - **翻译编辑器中选择的文本**：在编辑器中选择文本后单击鼠标右键，再点击Translate项：
 
-  ![截图](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/3.png)
+  ![截图3](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/3.png)
 
 
 - **设置快捷键**：Settings(OS X:Preferences) -> Keymap -> 搜索Translate。搜索结果会有两个，Translate和TranslationDialog，Translate会取当前编辑器中选择的文本进行翻译（截图1），而TranslationDialog只会打开翻译对话框，不会取词。最后在需要添加快捷键项上右键 -> add Keyboard Shortcut 设置快捷键（默认无快捷键，按ESC键可关闭翻译对话框）。
