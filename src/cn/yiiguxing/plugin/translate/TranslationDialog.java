@@ -3,27 +3,38 @@ package cn.yiiguxing.plugin.translate;
 
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.*;
+import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.util.ui.AnimatedIcon;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.List;
 
-public class TranslationDialog extends JDialog implements TranslationView {
+public class TranslationDialog extends DialogWrapper implements TranslationView {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
 
-    private static final JBColor MSG_FOREGROUND = new JBColor(new Color(0xFF333333), new Color(0xFFBBBBBB));
     private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFFF2222));
+
+    private static final Border BORDER_ACTIVE = new LineBorder(new JBColor(JBColor.GRAY, Gray._35));
+    private static final Border BORDER_PASSIVE = new LineBorder(new JBColor(JBColor.LIGHT_GRAY, Gray._75));
 
     private JPanel titlePanel;
     private JPanel contentPane;
@@ -33,6 +44,10 @@ public class TranslationDialog extends JDialog implements TranslationView {
     private JTextPane resultText;
     private JScrollPane scrollPane;
     private JComboBox<String> queryComboBox;
+    private JPanel textPanel;
+    private JPanel processPanel;
+    private AnimatedIcon processIcon;
+    private CardLayout layout;
 
     private final MyModel mModel;
     private final TranslationPresenter mTranslationPresenter;
@@ -40,70 +55,118 @@ public class TranslationDialog extends JDialog implements TranslationView {
     private String mLastQuery;
     private boolean mBroadcast;
 
-    TranslationDialog() {
+    private boolean mLastMoveWasInsideDialog;
+    private final AWTEventListener mAwtActivityListener = new AWTEventListener() {
+
+        @Override
+        public void eventDispatched(AWTEvent e) {
+            if (e instanceof MouseEvent && e.getID() == MouseEvent.MOUSE_MOVED) {
+                final boolean inside = isInside(new RelativePoint((MouseEvent) e));
+                if (inside != mLastMoveWasInsideDialog) {
+                    mLastMoveWasInsideDialog = inside;
+                    ((MyTitlePanel) titlePanel).myButton.repaint();
+                }
+            }
+        }
+    };
+
+    TranslationDialog(@Nullable Project project) {
+        super(project);
         setUndecorated(true);
-        setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setModal(false);
-        setContentPane(contentPane);
+        getPeer().setContentPane(createCenterPanel());
 
         mTranslationPresenter = new TranslationPresenter(this);
         mModel = new MyModel(mTranslationPresenter.getHistory());
 
         initViews();
 
-        addWindowFocusListener(new WindowAdapter() {
+        getRootPane().setOpaque(false);
+
+        Toolkit.getDefaultToolkit().addAWTEventListener(mAwtActivityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        getWindow().addWindowListener(new WindowAdapter() {
             @Override
-            public void windowLostFocus(WindowEvent e) {
-                if (isShowing()) {
-                    setVisible(false);
-                }
+            public void windowClosed(WindowEvent e) {
+                Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
             }
         });
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        contentPane.setPreferredSize(JBUI.size(MIN_WIDTH, MIN_HEIGHT));
+        contentPane.setBorder(BORDER_ACTIVE);
+
+        return contentPane;
     }
 
     private void createUIComponents() {
-        TitlePanel panel = new TitlePanel();
+        final MyTitlePanel panel = new MyTitlePanel();
         panel.setText("Translation");
         panel.setActive(true);
 
-        WindowMoveListener window = new WindowMoveListener(panel);
-        panel.addMouseListener(window);
-        panel.addMouseMotionListener(window);
+        WindowMoveListener windowListener = new WindowMoveListener(panel);
+        panel.addMouseListener(windowListener);
+        panel.addMouseMotionListener(windowListener);
 
-        titlePanel = panel;
-        titlePanel.requestFocus();
-    }
-
-    private void initViews() {
-        JRootPane rootPane = this.getRootPane();
-
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(stroke, "ESCAPE");
-        rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
+        getWindow().addWindowListener(new WindowAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
+            public void windowActivated(WindowEvent e) {
+                panel.setActive(true);
+                contentPane.setBorder(BORDER_ACTIVE);
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                panel.setActive(false);
+                contentPane.setBorder(BORDER_PASSIVE);
             }
         });
 
+        titlePanel = panel;
+        titlePanel.requestFocus();
+
+        processIcon = new ProcessIcon();
+    }
+
+    private boolean isInside(@NotNull RelativePoint target) {
+        Component cmp = target.getOriginalComponent();
+
+        if (!cmp.isShowing()) return true;
+        if (cmp instanceof MenuElement) return false;
+        Window window = this.getWindow();
+        if (UIUtil.isDescendingFrom(cmp, window)) return true;
+        if (!isShowing()) return false;
+        Point point = target.getScreenPoint();
+        SwingUtilities.convertPointFromScreen(point, window);
+        return window.contains(point);
+    }
+
+    private void initViews() {
         queryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 onQueryButtonClick();
             }
         });
-        rootPane.setDefaultButton(queryBtn);
+        getRootPane().setDefaultButton(queryBtn);
 
         initQueryComboBox();
 
+        textPanel.setBorder(BORDER_ACTIVE);
         scrollPane.setVerticalScrollBar(scrollPane.createVerticalScrollBar());
 
         JBColor background = new JBColor(new Color(0xFFFFFFFF), new Color(0xFF2B2B2B));
         messageLabel.setBackground(background);
+        processPanel.setBackground(background);
         msgPanel.setBackground(background);
         resultText.setBackground(background);
         scrollPane.setBackground(background);
+        scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+        layout = (CardLayout) textPanel.getLayout();
+        layout.show(textPanel, "msg");
 
         setComponentPopupMenu();
     }
@@ -188,25 +251,14 @@ public class TranslationDialog extends JDialog implements TranslationView {
         resultText.setComponentPopupMenu(menu);
     }
 
-    void show(@Nullable Project project, @Nullable String queryText) {
-        if (Utils.isEmptyOrBlankString(queryText) && mModel.getSize() > 0) {
-            queryText = mModel.getElementAt(0);
+    public void show() {
+        if (!isShowing()) {
+            super.show();
         }
 
-        // 先显示,否则在默认主题下查询字符串过长时内容会被拉伸。
-        showCenteredInCurrentWindow(project);
-        query(queryText);
-    }
-
-    private void showCenteredInCurrentWindow(@Nullable Project project) {
-        Window window = Utils.getWindow(project);
-        if (window != null && window.isShowing()) {
-            setLocation(Utils.getCenterOf(window, this));
-        } else {
-            setLocationRelativeTo(null);
+        if (mModel.getSize() > 0) {
+            query(mModel.getElementAt(0));
         }
-
-        setVisible(true);
     }
 
     private void query(String query) {
@@ -220,10 +272,8 @@ public class TranslationDialog extends JDialog implements TranslationView {
         String text = queryComboBox.getEditor().getItem().toString();
         if (!Utils.isEmptyOrBlankString(text) && !text.equals(mLastQuery)) {
             resultText.setText("");
-            messageLabel.setForeground(MSG_FOREGROUND);
-            messageLabel.setText("Querying...");
-            msgPanel.setVisible(true);
-            scrollPane.setVisible(false);
+            processIcon.resume();
+            layout.show(textPanel, "process");
             mTranslationPresenter.query(text);
         }
     }
@@ -243,8 +293,8 @@ public class TranslationDialog extends JDialog implements TranslationView {
         Utils.insertQueryResultText(resultText.getDocument(), result);
 
         resultText.setCaretPosition(0);
-        scrollPane.setVisible(true);
-        msgPanel.setVisible(false);
+        layout.show(textPanel, "result");
+        processIcon.suspend();
     }
 
     @Override
@@ -288,4 +338,95 @@ public class TranslationDialog extends JDialog implements TranslationView {
 
     }
 
+    private static final Icon CLOSE_ICON = IconLoader.getIcon("/close.png");
+    private static final Icon CLOSE_PRESSED = IconLoader.getIcon("/closePressed.png");
+
+    private class MyTitlePanel extends TitlePanel {
+
+        final CloseButton myButton;
+
+        MyTitlePanel() {
+            super();
+
+            myButton = new CloseButton();
+            add(myButton, BorderLayout.EAST);
+
+            NonOpaquePanel panel = new NonOpaquePanel();
+            panel.setPreferredSize(myButton.getPreferredSize());
+            add(panel, BorderLayout.WEST);
+
+            setActive(false);
+        }
+
+        @Override
+        public void setActive(boolean active) {
+            super.setActive(active);
+            if (myButton != null) {
+                myButton.setActive(active);
+            }
+        }
+    }
+
+    private class CloseButton extends NonOpaquePanel {
+
+        private boolean isPressedByMouse;
+        private boolean isActive;
+
+        CloseButton() {
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    TranslationDialog.this.dispose();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    isPressedByMouse = true;
+                    CloseButton.this.repaint();
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    isPressedByMouse = false;
+                    CloseButton.this.repaint();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    isPressedByMouse = false;
+                    CloseButton.this.repaint();
+                }
+            });
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(CLOSE_ICON.getIconWidth() + JBUI.scale(4), CLOSE_ICON.getIconHeight());
+        }
+
+        private void setActive(final boolean active) {
+            this.isActive = active;
+            this.repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (hasPaint()) {
+                paintIcon(g, !isActive || isPressedByMouse ? CLOSE_PRESSED : CLOSE_ICON);
+            }
+        }
+
+        private boolean hasPaint() {
+            return getWidth() > 0 && mLastMoveWasInsideDialog;
+        }
+
+        private void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
+            icon.paintIcon(this, g, JBUI.scale(2), (getHeight() - icon.getIconHeight()) / 2);
+        }
+    }
 }

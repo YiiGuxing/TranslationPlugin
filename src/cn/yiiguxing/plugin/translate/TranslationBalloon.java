@@ -13,6 +13,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
+import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.JBEmptyBorder;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
@@ -30,41 +31,44 @@ public class TranslationBalloon implements TranslationView {
 
     private static final Icon ICON_PIN = IconLoader.getIcon("/pin.png");
 
-    private static final int MIN_BALLOON_WIDTH = JBUI.scale(150);
+    private static final int MIN_BALLOON_WIDTH = JBUI.scale(200);
     private static final int MIN_BALLOON_HEIGHT = JBUI.scale(50);
     private static final int MAX_BALLOON_SIZE = JBUI.scale(600);
     private static final JBInsets BORDER_INSETS = JBUI.insets(20, 20, 20, 20);
 
     private final JBPanel contentPanel;
     private final GroupLayout layout;
-    private final JBLabel label;
 
     private Balloon myBalloon;
 
     private final TranslationPresenter mTranslationPresenter;
 
     private final Editor editor;
+    private JPanel processPanel;
+    private AnimatedIcon processIcon;
 
     public TranslationBalloon(@NotNull Editor editor) {
         this.editor = Objects.requireNonNull(editor, "editor cannot be null");
 
         contentPanel = new JBPanel<>();
         layout = new GroupLayout(contentPanel);
+        contentPanel.setOpaque(false);
         contentPanel.setLayout(layout);
 
-        label = new JBLabel();
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setText("Querying...");
-
+        processPanel.setOpaque(false);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(label, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                .addComponent(processPanel, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                .addComponent(processPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
-        contentPanel.add(label);
+        contentPanel.add(processPanel);
+        processIcon.resume();
 
         mTranslationPresenter = new TranslationPresenter(this);
+    }
+
+    private void createUIComponents() {
+        processIcon = new ProcessIcon();
     }
 
     @NotNull
@@ -99,7 +103,9 @@ public class TranslationBalloon implements TranslationView {
             this.myBalloon.hide(true);
         }
 
-        contentPanel.remove(label);
+        contentPanel.remove(0);
+        processIcon.suspend();
+        processIcon.dispose();
 
         JTextPane resultText = new JTextPane();
         resultText.setEditable(false);
@@ -146,7 +152,7 @@ public class TranslationBalloon implements TranslationView {
                             public void consume(MouseEvent mouseEvent) {
                                 if (mouseEvent.getClickCount() == 1) {
                                     balloon.hide(true);
-                                    new TranslationDialog().show(editor.getProject(), null);
+                                    TranslationDialogManager.getInstance().show(editor.getProject());
                                 }
                             }
                         });
@@ -168,11 +174,13 @@ public class TranslationBalloon implements TranslationView {
 
                     int showX = showPoint.getPoint().x;
                     int showY = showPoint.getPoint().y;
-                    int offset = JBUI.scale(1);// 误差
-                    if (showX <= lpBounds.x + offset // 右方
-                            || showX >= (lpBounds.x + lpBounds.width - offset) // 左方
-                            || (lpBounds.y >= showY // 下方
-                            || (lpBounds.y + lpBounds.height) <= showY/*上方*/)) {
+                    // 误差
+                    int offset = JBUI.scale(1);
+                    boolean atRight = showX <= lpBounds.x + offset;
+                    boolean atLeft = showX >= (lpBounds.x + lpBounds.width - offset);
+                    boolean below = lpBounds.y >= showY;
+                    boolean above = (lpBounds.y + lpBounds.height) <= showY;
+                    if (atRight || atLeft || below || above) {
                         rectangle.y += border.top;
                     }
 
@@ -187,8 +195,24 @@ public class TranslationBalloon implements TranslationView {
         if (myBalloon == null)
             return;
 
+        contentPanel.remove(0);
+        processIcon.suspend();
+        processIcon.dispose();
+
+        JBLabel label = new JBLabel();
+        label.setFont(JBUI.Fonts.label(16));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
+        label.setText("Querying...");
+
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(label, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         label.setForeground(new JBColor(new Color(0xFF333333), new Color(0xFFFF2222)));
         label.setText(error);
+        contentPanel.add(label);
+
         myBalloon.revalidate();
     }
 }

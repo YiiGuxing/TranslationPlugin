@@ -11,6 +11,7 @@
     <change-notes><![CDATA[
       v1.2:
       <ul>
+          <li>UI优化</li>
           <li>添加设置页，配置有道API KEY</li>
           <li>支持单词拆分。翻译变量名或方法名时更方便</li>
           <li>修复Bug</li>
@@ -33,9 +34,13 @@
     <actions>
         <!-- Add your actions here -->
         <action id="TranslationAction" class="cn.yiiguxing.plugin.translate.TranslationAction"
-                text="Translate"
+                text="TranslationDialog"
                 description="翻译">
             <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
+        </action>
+        <action id="EditorPopupMenuAction" class="cn.yiiguxing.plugin.translate.EditorPopupMenuAction"
+                text="Translate"
+                description="翻译">
             <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
         </action>
     </actions>
