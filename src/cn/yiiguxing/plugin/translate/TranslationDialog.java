@@ -55,6 +55,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
     private String mLastQuery;
     private boolean mBroadcast;
 
+    private OnDisposeListener mOnDisposeListener;
+
     private boolean mLastMoveWasInsideDialog;
     private final AWTEventListener mAwtActivityListener = new AWTEventListener() {
 
@@ -84,12 +86,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         getRootPane().setOpaque(false);
 
         Toolkit.getDefaultToolkit().addAWTEventListener(mAwtActivityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK);
-        getWindow().addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
-            }
-        });
     }
 
     @Nullable
@@ -251,6 +247,21 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         resultText.setComponentPopupMenu(menu);
     }
 
+    void setOnDisposeListener(OnDisposeListener listener) {
+        mOnDisposeListener = listener;
+    }
+
+    @Override
+    protected void dispose() {
+        Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
+
+        if (mOnDisposeListener != null) {
+            mOnDisposeListener.onDispose();
+        }
+
+        super.dispose();
+    }
+
     public void show() {
         if (!isShowing()) {
             super.show();
@@ -376,7 +387,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
             addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    TranslationDialog.this.dispose();
+                    TranslationDialog.this.close(CLOSE_EXIT_CODE);
                 }
 
                 @Override
@@ -429,4 +440,9 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
             icon.paintIcon(this, g, JBUI.scale(2), (getHeight() - icon.getIconHeight()) / 2);
         }
     }
+
+    interface OnDisposeListener {
+        void onDispose();
+    }
+
 }

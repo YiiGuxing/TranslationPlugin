@@ -1,12 +1,12 @@
 package cn.yiiguxing.plugin.translate;
 
+import cn.yiiguxing.plugin.translate.balloon.BalloonBuilder;
+import cn.yiiguxing.plugin.translate.balloon.BalloonImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
@@ -73,10 +73,10 @@ public class TranslationBalloon implements TranslationView {
 
     @NotNull
     private BalloonBuilder buildBalloon() {
-        return JBPopupFactory.getInstance()
-                .createDialogBalloonBuilder(contentPanel, null)
+        return BalloonBuilder.builder(contentPanel, null)
                 .setHideOnClickOutside(true)
                 .setShadow(true)
+                .setHideOnKeyOutside(true)
                 .setBlockClicksThroughBalloon(true)
                 .setBorderInsets(BORDER_INSETS);
     }

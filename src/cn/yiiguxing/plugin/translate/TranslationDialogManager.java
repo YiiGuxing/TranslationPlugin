@@ -3,9 +3,6 @@ package cn.yiiguxing.plugin.translate;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 @SuppressWarnings("WeakerAccess")
 public class TranslationDialogManager {
 
@@ -23,9 +20,9 @@ public class TranslationDialogManager {
     public void show(@Nullable Project project) {
         if (myShowingDialog == null) {
             myShowingDialog = new TranslationDialog(project);
-            myShowingDialog.getWindow().addWindowListener(new WindowAdapter() {
+            myShowingDialog.setOnDisposeListener(new TranslationDialog.OnDisposeListener() {
                 @Override
-                public void windowClosed(WindowEvent e) {
+                public void onDispose() {
                     myShowingDialog = null;
                 }
             });
