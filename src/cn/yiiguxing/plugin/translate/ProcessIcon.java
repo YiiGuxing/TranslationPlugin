@@ -1,11 +1,11 @@
 package cn.yiiguxing.plugin.translate;
 
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.util.ui.AsyncProcessIcon;
+import com.intellij.util.ui.AnimatedIcon;
 
 import javax.swing.*;
 
-class ProcessIcon extends AsyncProcessIcon {
+class ProcessIcon extends AnimatedIcon {
 
     private static final Icon[] ICONS = {
             IconLoader.getIcon("/process/fs/step_1@2x.png"),
@@ -31,6 +31,6 @@ class ProcessIcon extends AsyncProcessIcon {
     private static final Icon STEP_PASSIVE = IconLoader.getIcon("/process/fs/step_passive@2x.png");
 
     ProcessIcon() {
-        super("Querying Process", ICONS, STEP_PASSIVE);
+        super("Querying Process", ICONS, STEP_PASSIVE, ICONS.length);
     }
 }

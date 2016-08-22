@@ -78,7 +78,6 @@ public class TranslationBalloon implements TranslationView {
                 .setHideOnClickOutside(true)
                 .setShadow(true)
                 .setBlockClicksThroughBalloon(true)
-                .setRequestFocus(true)
                 .setBorderInsets(BORDER_INSETS);
     }
 
