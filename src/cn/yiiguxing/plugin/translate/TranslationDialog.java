@@ -78,7 +78,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         setModal(false);
         getPeer().setContentPane(createCenterPanel());
 
-        mTranslationPresenter = new TranslationPresenter(this);
+        mTranslationPresenter = new TranslationPresenterImpl(this);
         mModel = new MyModel(mTranslationPresenter.getHistory());
 
         initViews();

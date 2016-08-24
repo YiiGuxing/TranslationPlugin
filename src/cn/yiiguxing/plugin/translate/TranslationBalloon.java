@@ -64,7 +64,7 @@ public class TranslationBalloon implements TranslationView {
         contentPanel.add(processPanel);
         processIcon.resume();
 
-        mTranslationPresenter = new TranslationPresenter(this);
+        mTranslationPresenter = new TranslationPresenterImpl(this);
     }
 
     private void createUIComponents() {
