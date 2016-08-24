@@ -362,9 +362,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
             myButton = new CloseButton();
             add(myButton, BorderLayout.EAST);
 
-            NonOpaquePanel panel = new NonOpaquePanel();
-            panel.setPreferredSize(myButton.getPreferredSize());
-            add(panel, BorderLayout.WEST);
+            int offset = JBUI.scale(2);
+            setBorder(new EmptyBorder(0, myButton.getPreferredSize().width + offset, 0, offset));
 
             setActive(false);
         }
@@ -416,7 +415,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(CLOSE_ICON.getIconWidth() + JBUI.scale(4), CLOSE_ICON.getIconHeight());
+            return new Dimension(CLOSE_ICON.getIconWidth(), CLOSE_ICON.getIconHeight());
         }
 
         private void setActive(final boolean active) {
@@ -437,7 +436,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         }
 
         private void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
-            icon.paintIcon(this, g, JBUI.scale(2), (getHeight() - icon.getIconHeight()) / 2);
+            icon.paintIcon(this, g, 0, (getHeight() - icon.getIconHeight()) / 2);
         }
     }
 
