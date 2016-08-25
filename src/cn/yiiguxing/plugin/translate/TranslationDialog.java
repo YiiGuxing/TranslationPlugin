@@ -119,6 +119,12 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
                 contentPane.setBorder(BORDER_PASSIVE);
             }
         });
+        getWindow().addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                queryComboBox.requestFocus();
+            }
+        });
 
         titlePanel = panel;
         titlePanel.requestFocus();
@@ -182,8 +188,12 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         field.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                field.setSelectionStart(0);
-                field.setSelectionEnd(field.getText().length());
+                field.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                field.select(0, 0);
             }
         });
 
@@ -270,6 +280,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         if (mModel.getSize() > 0) {
             query(mModel.getElementAt(0));
         }
+
+        getWindow().requestFocus();
     }
 
     private void query(String query) {
