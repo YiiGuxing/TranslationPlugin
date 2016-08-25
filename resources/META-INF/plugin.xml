@@ -42,7 +42,6 @@
                 text="Translate"
                 description="翻译">
             <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl I"/>
         </action>
     </actions>
 
