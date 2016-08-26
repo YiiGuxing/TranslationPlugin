@@ -75,7 +75,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
                 final KeyEvent ke = (KeyEvent) e;
                 // Close the dialog if ESC is pressed
                 if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    System.out.println("eventDispatched");
                     close(CLOSE_EXIT_CODE);
                 }
             }

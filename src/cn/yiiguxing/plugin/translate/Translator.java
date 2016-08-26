@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
 @SuppressWarnings("WeakerAccess")
-public class Translation {
+public final class Translator {
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do";
@@ -28,18 +28,18 @@ public class Translation {
     private static final String DEFAULT_API_KEY_VALUE = "1473510108";
 
     @SuppressWarnings("SpellCheckingInspection")
-    private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translation");
+    private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translator");
 
-    private static final Translation TRANSLATION = new Translation();
+    private static final Translator TRANSLATOR = new Translator();
 
     private final LruCache<String, QueryResult> mCache = new LruCache<>(200);
     private Future<?> mCurrentTask;
 
-    private Translation() {
+    private Translator() {
     }
 
-    public static Translation get() {
-        return TRANSLATION;
+    public static Translator get() {
+        return TRANSLATOR;
     }
 
     public void query(String query, Callback callback) {
