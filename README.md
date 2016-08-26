@@ -10,7 +10,7 @@ Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
 
 ## 使用方法
 
-- **下载**：[**TranslationPlugin-v1.2.jar**](https://github.com/YiiGuxing/TranslationPlugin/raw/master/TranslationPlugin-v1.2.jar)
+- **下载**：[**TranslationPlugin-v1.2.jar**](https://github.com/YiiGuxing/TranslationPlugin/releases/download/v1.2/TranslationPlugin-v1.2.jar) 或者最新的开发版 [**TranslationPlugin-v1.2.1-SNAPSHOT.jar**](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/TranslationPlugin-v1.2.1-SNAPSHOT.jar)
 
 - **安装**：Settings(OS X:Preferences) -> Plugins -> Install plugin from disk -> 选择TranslationPlugin-v1.2.jar并安装。
 
