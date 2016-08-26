@@ -46,6 +46,7 @@ public class TranslationBalloon implements TranslationView {
     private final Editor editor;
     private JPanel processPanel;
     private AnimatedIcon processIcon;
+    private JLabel queryingLabel;
 
     public TranslationBalloon(@NotNull Editor editor) {
         this.editor = Objects.requireNonNull(editor, "editor cannot be null");
@@ -54,6 +55,8 @@ public class TranslationBalloon implements TranslationView {
         layout = new GroupLayout(contentPanel);
         contentPanel.setOpaque(false);
         contentPanel.setLayout(layout);
+
+        queryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
         processPanel.setOpaque(false);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)

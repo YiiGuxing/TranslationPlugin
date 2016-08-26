@@ -34,7 +34,7 @@
                 </constraints>
                 <properties>
                   <background color="-13948117"/>
-                  <visible value="true"/>
+                  <visible value="false"/>
                 </properties>
                 <border type="empty"/>
                 <children>
@@ -88,7 +88,7 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="d170" class="javax.swing.JLabel">
+                  <component id="d170" class="javax.swing.JLabel" binding="queryingLabel">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>

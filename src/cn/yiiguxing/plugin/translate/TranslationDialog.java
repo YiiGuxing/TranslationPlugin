@@ -47,6 +47,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
     private JPanel textPanel;
     private JPanel processPanel;
     private AnimatedIcon processIcon;
+    private JLabel queryingLabel;
     private CardLayout layout;
 
     private final MyModel mModel;
@@ -169,6 +170,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
 
         layout = (CardLayout) textPanel.getLayout();
         layout.show(textPanel, "msg");
+
+        queryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
         setComponentPopupMenu();
     }
