@@ -48,7 +48,7 @@ class TranslationPresenterImpl implements TranslationPresenter {
         }
 
         currentQuery = query;
-        Translation.get().query(query, new Translation.Callback() {
+        Translator.get().query(query, new Translator.Callback() {
             @Override
             public void onQuery(String query, QueryResult result) {
                 onPostResult(query, result);
