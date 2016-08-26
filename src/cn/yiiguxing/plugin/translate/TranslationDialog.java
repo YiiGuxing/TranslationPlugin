@@ -62,11 +62,21 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
 
         @Override
         public void eventDispatched(AWTEvent e) {
-            if (e instanceof MouseEvent && e.getID() == MouseEvent.MOUSE_MOVED) {
+            final int id = e.getID();
+            if (e instanceof MouseEvent && id == MouseEvent.MOUSE_MOVED) {
                 final boolean inside = isInside(new RelativePoint((MouseEvent) e));
                 if (inside != mLastMoveWasInsideDialog) {
                     mLastMoveWasInsideDialog = inside;
                     ((MyTitlePanel) titlePanel).myButton.repaint();
+                }
+            }
+
+            if (e instanceof KeyEvent && id == KeyEvent.KEY_PRESSED) {
+                final KeyEvent ke = (KeyEvent) e;
+                // Close the dialog if ESC is pressed
+                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    System.out.println("eventDispatched");
+                    close(CLOSE_EXIT_CODE);
                 }
             }
         }
@@ -85,7 +95,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
 
         getRootPane().setOpaque(false);
 
-        Toolkit.getDefaultToolkit().addAWTEventListener(mAwtActivityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        Toolkit.getDefaultToolkit().addAWTEventListener(mAwtActivityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK
+                | AWTEvent.KEY_EVENT_MASK);
     }
 
     @Nullable

@@ -94,6 +94,8 @@ public class TranslationBalloon implements TranslationView {
 
     @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
+        // TODO 同步一下对话框是不是更好呢?如果对话框正在显示的话。
+
         if (this.myBalloon != null) {
             if (this.myBalloon.isDisposed()) {
                 return;
