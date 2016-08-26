@@ -17,7 +17,10 @@ public class TranslationDialogManager {
         return sInstance;
     }
 
-    public void show(@Nullable Project project) {
+    /**
+     * 显示对话框
+     */
+    public void showTranslationDialog(@Nullable Project project) {
         if (myShowingDialog == null) {
             myShowingDialog = new TranslationDialog(project);
             myShowingDialog.setOnDisposeListener(new TranslationDialog.OnDisposeListener() {
@@ -29,6 +32,15 @@ public class TranslationDialogManager {
         }
 
         myShowingDialog.show();
+    }
+
+    /**
+     * 更新当前显示的对话框
+     */
+    public void updateCurrentShowingTranslationDialog() {
+        if (myShowingDialog != null) {
+            myShowingDialog.update();
+        }
     }
 
 }

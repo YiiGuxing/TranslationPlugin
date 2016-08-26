@@ -290,11 +290,16 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
             super.show();
         }
 
-        if (mModel.getSize() > 0) {
-            query(mModel.getElementAt(0));
-        }
-
+        update();
         getWindow().requestFocus();
+    }
+
+    public void update() {
+        if (isShowing()) {
+            if (mModel.getSize() > 0) {
+                query(mModel.getElementAt(0));
+            }
+        }
     }
 
     private void query(String query) {

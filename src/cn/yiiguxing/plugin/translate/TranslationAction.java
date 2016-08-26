@@ -13,7 +13,7 @@ public class TranslationAction extends AnAction implements DumbAware {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        TranslationDialogManager.getInstance().show(e.getProject());
+        TranslationDialogManager.getInstance().showTranslationDialog(e.getProject());
     }
 
 }
