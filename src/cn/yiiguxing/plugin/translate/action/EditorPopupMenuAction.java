@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate;
+package cn.yiiguxing.plugin.translate.action;
 
+import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

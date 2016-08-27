@@ -49,7 +49,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         }
 
         currentQuery = query;
-        Translator.get().query(query, new Translator.Callback() {
+        Translator.getInstance().query(query, new Translator.Callback() {
             @Override
             public void onQuery(String query, QueryResult result) {
                 onPostResult(query, result);

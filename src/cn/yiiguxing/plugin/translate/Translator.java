@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.ui.Settings;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,16 +34,14 @@ public final class Translator {
     @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translator");
 
-    private static final Translator TRANSLATOR = new Translator();
-
     private final LruCache<String, QueryResult> mCache = new LruCache<>(200);
     private Future<?> mCurrentTask;
 
     private Translator() {
     }
 
-    public static Translator get() {
-        return TRANSLATOR;
+    public static Translator getInstance() {
+        return ServiceManager.getService(Translator.class);
     }
 
     public void query(String query, Callback callback) {
@@ -182,7 +182,7 @@ public final class Translator {
     }
 
     public interface Callback {
-        void onQuery(String query, QueryResult result);
+        void onQuery(@Nullable String query, @Nullable QueryResult result);
     }
 
 }

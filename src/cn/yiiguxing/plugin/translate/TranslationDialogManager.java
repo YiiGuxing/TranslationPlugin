@@ -1,13 +1,12 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("WeakerAccess")
 public class TranslationDialogManager {
-
-    private final static TranslationDialogManager sInstance = new TranslationDialogManager();
 
     private TranslationDialog myShowingDialog;
 
@@ -15,7 +14,7 @@ public class TranslationDialogManager {
     }
 
     public static TranslationDialogManager getInstance() {
-        return sInstance;
+        return ServiceManager.getService(TranslationDialogManager.class);
     }
 
     /**
