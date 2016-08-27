@@ -15,11 +15,11 @@ Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
 - 使用**IDEA**内置插件系统:
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
 - 手动:
-  - 下载[最新发布的插件包](https://github.com/YiiGuxing/TranslationPlugin/releases/latest) -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
+  - 下载[`最新发布的插件包`](https://github.com/YiiGuxing/TranslationPlugin/releases/latest) -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
 
 重启**IDEA**.
 
-最新开发版下载: [**TranslationPlugin-v1.2.1-SNAPSHOT.jar**](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/TranslationPlugin-v1.2.1-SNAPSHOT.jar)
+最新开发版下载: [`**TranslationPlugin-v1.2.1-SNAPSHOT.jar**`](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/TranslationPlugin-v1.2.1-SNAPSHOT.jar)
 
 使用
 ------------
