@@ -40,6 +40,10 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private static final Border BORDER_ACTIVE = new LineBorder(new JBColor(JBColor.GRAY, Gray._35));
     private static final Border BORDER_PASSIVE = new LineBorder(new JBColor(JBColor.LIGHT_GRAY, Gray._75));
 
+    private static final String CARD_MSG = "msg";
+    private static final String CARD_PROCESS = "process";
+    private static final String CARD_RESULT = "result";
+
     private JPanel titlePanel;
     private JPanel contentPane;
     private JButton queryBtn;
@@ -183,7 +187,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
         layout = (CardLayout) textPanel.getLayout();
-        layout.show(textPanel, "msg");
+        layout.show(textPanel, CARD_MSG);
 
         queryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
@@ -318,7 +322,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         if (!Utils.isEmptyOrBlankString(text) && !text.equals(mLastQuery)) {
             resultText.setText("");
             processIcon.resume();
-            layout.show(textPanel, "process");
+            layout.show(textPanel, CARD_PROCESS);
             mTranslationPresenter.query(text);
         }
     }
@@ -338,7 +342,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         Utils.insertQueryResultText(resultText.getDocument(), result);
 
         resultText.setCaretPosition(0);
-        layout.show(textPanel, "result");
+        layout.show(textPanel, CARD_RESULT);
         processIcon.suspend();
     }
 
@@ -346,6 +350,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     public void showError(@NotNull String error) {
         messageLabel.setText(error);
         messageLabel.setForeground(MSG_FOREGROUND_ERROR);
+        layout.show(textPanel, CARD_MSG);
     }
 
     private static class MyModel extends AbstractListModel<String> implements ComboBoxModel<String> {
