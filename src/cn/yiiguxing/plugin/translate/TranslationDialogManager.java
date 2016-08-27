@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate;
 
+import cn.yiiguxing.plugin.translate.ui.TranslationDialog;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.balloon;
+package cn.yiiguxing.plugin.translate.ui.balloon;
 
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.Disposable;

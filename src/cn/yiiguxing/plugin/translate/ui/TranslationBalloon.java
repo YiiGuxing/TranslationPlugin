@@ -1,7 +1,12 @@
-package cn.yiiguxing.plugin.translate;
+package cn.yiiguxing.plugin.translate.ui;
 
-import cn.yiiguxing.plugin.translate.balloon.BalloonBuilder;
-import cn.yiiguxing.plugin.translate.balloon.BalloonImpl;
+import cn.yiiguxing.plugin.translate.TranslationContract;
+import cn.yiiguxing.plugin.translate.TranslationDialogManager;
+import cn.yiiguxing.plugin.translate.TranslationPresenter;
+import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
+import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
+import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -27,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("WeakerAccess")
-public class TranslationBalloon implements TranslationView {
+public class TranslationBalloon implements TranslationContract.View {
 
     private static final Icon ICON_PIN = IconLoader.getIcon("/pin.png");
 
@@ -41,7 +46,7 @@ public class TranslationBalloon implements TranslationView {
 
     private Balloon myBalloon;
 
-    private final TranslationPresenter mTranslationPresenter;
+    private final TranslationContract.Presenter mTranslationPresenter;
 
     private final Editor editor;
     private JPanel processPanel;
@@ -67,7 +72,7 @@ public class TranslationBalloon implements TranslationView {
         contentPanel.add(processPanel);
         processIcon.resume();
 
-        mTranslationPresenter = new TranslationPresenterImpl(this);
+        mTranslationPresenter = new TranslationPresenter(this);
     }
 
     private void createUIComponents() {
@@ -213,7 +218,7 @@ public class TranslationBalloon implements TranslationView {
                 .addComponent(label, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        label.setForeground(new JBColor(new Color(0xFF333333), new Color(0xFFFF2222)));
+        label.setForeground(new JBColor(new Color(0xFFFF2222), new Color(0xFFFF2222)));
         label.setText(error);
         contentPanel.add(label);
 

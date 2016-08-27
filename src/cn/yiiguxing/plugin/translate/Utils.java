@@ -1,5 +1,8 @@
 package cn.yiiguxing.plugin.translate;
 
+import cn.yiiguxing.plugin.translate.model.BasicExplain;
+import cn.yiiguxing.plugin.translate.model.QueryResult;
+import cn.yiiguxing.plugin.translate.model.WebExplain;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
@@ -10,7 +13,7 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-final class Utils {
+public final class Utils {
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Utils");
@@ -47,7 +50,7 @@ final class Utils {
     private Utils() {
     }
 
-    static String getErrorMessage(QueryResult result) {
+    public static String getErrorMessage(QueryResult result) {
         if (result == null)
             return "Nothing to show";
 
@@ -77,7 +80,7 @@ final class Utils {
         return error;
     }
 
-    static void insertQueryResultText(@NotNull Document document, @NotNull QueryResult result) {
+    public static void insertQueryResultText(@NotNull Document document, @NotNull QueryResult result) {
         try {
             document.remove(0, document.getLength());
         } catch (BadLocationException e) {
@@ -206,14 +209,14 @@ final class Utils {
         }
     }
 
-    static boolean isEmptyOrBlankString(String str) {
+    public static boolean isEmptyOrBlankString(String str) {
         return null == str || str.trim().length() == 0;
     }
 
     /**
      * 单词拆分
      */
-    static String splitWord(String input) {
+    public static String splitWord(String input) {
         if (isEmptyOrBlankString(input))
             return input;
 

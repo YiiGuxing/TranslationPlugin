@@ -9,16 +9,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      v1.2.1:
       <ul>
-          <li>色彩样式</li>
-      </ul>
-      v1.2:
-      <ul>
-          <li>UI优化</li>
-          <li>添加设置页，配置有道API KEY</li>
-          <li>支持单词拆分。翻译变量名或方法名时更方便</li>
-          <li>修复Bug</li>
+          <li>Color Styles</li>
       </ul>
     ]]>
     </change-notes>
@@ -32,7 +24,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.Settings"/>
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.ui.Settings"/>
     </extensions>
 
     <actions>

@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate;
 
+import cn.yiiguxing.plugin.translate.model.QueryResult;
+import cn.yiiguxing.plugin.translate.ui.Settings;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.application.ApplicationManager;

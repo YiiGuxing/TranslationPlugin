@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate;
+package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.Utils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.WebBrowser;

@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.balloon;
+package cn.yiiguxing.plugin.translate.ui.balloon;
 
 import cn.yiiguxing.plugin.translate.compat.AccessibleContextUtilCompat;
 import cn.yiiguxing.plugin.translate.compat.ScreenReaderCompat;

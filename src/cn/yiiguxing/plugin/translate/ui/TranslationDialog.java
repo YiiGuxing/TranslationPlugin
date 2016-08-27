@@ -1,6 +1,10 @@
-package cn.yiiguxing.plugin.translate;
+package cn.yiiguxing.plugin.translate.ui;
 
 
+import cn.yiiguxing.plugin.translate.TranslationContract;
+import cn.yiiguxing.plugin.translate.TranslationPresenter;
+import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -26,12 +30,12 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.List;
 
-public class TranslationDialog extends DialogWrapper implements TranslationView {
+public class TranslationDialog extends DialogWrapper implements TranslationContract.View {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
 
-    private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFF333333), new Color(0xFFFF2222));
+    private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFFFF2222), new Color(0xFFFF2222));
 
     private static final Border BORDER_ACTIVE = new LineBorder(new JBColor(JBColor.GRAY, Gray._35));
     private static final Border BORDER_PASSIVE = new LineBorder(new JBColor(JBColor.LIGHT_GRAY, Gray._75));
@@ -51,7 +55,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
     private CardLayout layout;
 
     private final MyModel mModel;
-    private final TranslationPresenter mTranslationPresenter;
+    private final TranslationContract.Presenter mTranslationPresenter;
 
     private String mLastQuery;
     private boolean mBroadcast;
@@ -82,13 +86,13 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         }
     };
 
-    TranslationDialog(@Nullable Project project) {
+    public TranslationDialog(@Nullable Project project) {
         super(project);
         setUndecorated(true);
         setModal(false);
         getPeer().setContentPane(createCenterPanel());
 
-        mTranslationPresenter = new TranslationPresenterImpl(this);
+        mTranslationPresenter = new TranslationPresenter(this);
         mModel = new MyModel(mTranslationPresenter.getHistory());
 
         initViews();
@@ -270,7 +274,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         resultText.setComponentPopupMenu(menu);
     }
 
-    void setOnDisposeListener(OnDisposeListener listener) {
+    public void setOnDisposeListener(OnDisposeListener listener) {
         mOnDisposeListener = listener;
     }
 
@@ -470,7 +474,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationView 
         }
     }
 
-    interface OnDisposeListener {
+    public interface OnDisposeListener {
         void onDispose();
     }
 

@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate;
+package cn.yiiguxing.plugin.translate.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.AnimatedIcon;
