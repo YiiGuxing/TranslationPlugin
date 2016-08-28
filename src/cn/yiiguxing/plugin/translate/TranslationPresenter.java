@@ -75,7 +75,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         currentQuery = null;
         String errorMessage = Utils.getErrorMessage(result);
         if (errorMessage != null) {
-            mTranslationView.showError(errorMessage);
+            mTranslationView.showError(query, errorMessage);
         } else {
             mTranslationView.showResult(query, result);
         }

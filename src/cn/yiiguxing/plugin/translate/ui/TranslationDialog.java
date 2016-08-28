@@ -61,7 +61,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private final MyModel mModel;
     private final TranslationContract.Presenter mTranslationPresenter;
 
-    private String mLastQuery;
+    private String mLastSuccessfulQuery;
     private boolean mBroadcast;
 
     private OnDisposeListener mOnDisposeListener;
@@ -325,7 +325,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     private void onQuery() {
         String text = queryComboBox.getEditor().getItem().toString();
-        if (!Utils.isEmptyOrBlankString(text) && !text.equals(mLastQuery)) {
+        if (!Utils.isEmptyOrBlankString(text) && !text.equals(mLastSuccessfulQuery)) {
             resultText.setText("");
             processIcon.resume();
             layout.show(textPanel, CARD_PROCESS);
@@ -339,8 +339,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         mBroadcast = true;// 防止递归查询
         if (updateComboBox) {
             queryComboBox.setSelectedIndex(0);
-        } else if (mLastQuery != null) {
-            mModel.setSelectedItem(mLastQuery);
+        } else if (mLastSuccessfulQuery != null) {
+            mModel.setSelectedItem(mLastSuccessfulQuery);
         }
         mBroadcast = false;
     }
@@ -352,7 +352,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
-        mLastQuery = query;
+        mLastSuccessfulQuery = query;
 
         Utils.insertQueryResultText(resultText.getDocument(), result);
 
@@ -362,7 +362,9 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     }
 
     @Override
-    public void showError(@NotNull String error) {
+    public void showError(@NotNull String query, @NotNull String error) {
+        mLastSuccessfulQuery = null;
+
         messageLabel.setText(error);
         messageLabel.setForeground(MSG_FOREGROUND_ERROR);
         layout.show(textPanel, CARD_MSG);

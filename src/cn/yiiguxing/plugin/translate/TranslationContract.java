@@ -20,7 +20,7 @@ public interface TranslationContract {
 
         void showResult(@NotNull String query, @NotNull QueryResult result);
 
-        void showError(@NotNull String error);
+        void showError(@NotNull String query, @NotNull String error);
     }
 
 }

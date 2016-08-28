@@ -202,7 +202,7 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     @Override
-    public void showError(@NotNull String error) {
+    public void showError(@NotNull String query, @NotNull String error) {
         if (myBalloon == null || myBalloon.isDisposed())
             return;
 
