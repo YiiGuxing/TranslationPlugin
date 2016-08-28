@@ -11,6 +11,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.JBPopupListener;
+import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
@@ -97,13 +99,14 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @Override
     public void updateHistory() {
-        // do nothing
+        TranslationDialog dialog = TranslationDialogManager.getInstance().getCurrentShowingDialog();
+        if (dialog != null) {
+            dialog.updateHistory(false);
+        }
     }
 
     @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
-        TranslationDialogManager.getInstance().updateCurrentShowingTranslationDialog();
-
         if (this.myBalloon != null) {
             if (this.myBalloon.isDisposed()) {
                 return;
@@ -111,6 +114,8 @@ public class TranslationBalloon implements TranslationContract.View {
 
             this.myBalloon.hide(true);
         }
+
+        TranslationDialogManager.getInstance().updateCurrentShowingTranslationDialog();
 
         contentPanel.remove(0);
         processIcon.suspend();
@@ -201,7 +206,7 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @Override
     public void showError(@NotNull String error) {
-        if (myBalloon == null)
+        if (myBalloon == null || myBalloon.isDisposed())
             return;
 
         contentPanel.remove(0);

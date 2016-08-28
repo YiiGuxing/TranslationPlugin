@@ -43,4 +43,16 @@ public class TranslationDialogManager {
         }
     }
 
+    /**
+     * 如果有对话框正在显示，则返回当前显示的对话框，否则返回null.
+     */
+    @Nullable
+    public TranslationDialog getCurrentShowingDialog() {
+        if (myShowingDialog != null && !myShowingDialog.isShowing()) {
+            myShowingDialog = null;
+        }
+
+        return myShowingDialog;
+    }
+
 }
