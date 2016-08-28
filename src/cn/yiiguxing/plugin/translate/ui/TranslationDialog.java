@@ -329,11 +329,14 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     public void updateHistory(boolean updateComboBox) {
         mModel.fireContentsChanged();
+
+        mBroadcast = true;// 防止递归查询
         if (updateComboBox) {
-            mBroadcast = true;// 防止递归查询
             queryComboBox.setSelectedIndex(0);
-            mBroadcast = false;
+        } else if (mLastQuery != null) {
+            mModel.setSelectedItem(mLastQuery);
         }
+        mBroadcast = false;
     }
 
     @Override

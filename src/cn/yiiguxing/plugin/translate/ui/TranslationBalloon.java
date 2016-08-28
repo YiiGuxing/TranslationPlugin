@@ -4,15 +4,13 @@ import cn.yiiguxing.plugin.translate.TranslationContract;
 import cn.yiiguxing.plugin.translate.TranslationDialogManager;
 import cn.yiiguxing.plugin.translate.TranslationPresenter;
 import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
-import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.JBPopupListener;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
@@ -146,7 +144,9 @@ public class TranslationBalloon implements TranslationContract.View {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                balloon.revalidate();
+                if (!balloon.isDisposed()) {
+                    balloon.revalidate();
+                }
             }
         });
     }

@@ -4,6 +4,8 @@ import cn.yiiguxing.plugin.translate.model.QueryResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +35,24 @@ public class TranslationPresenter implements TranslationContract.Presenter {
             return;
 
         query = query.trim();
+        updateHistory(query);
 
+        currentQuery = query;
+
+        // 防止内存泄漏
+        final Reference<TranslationPresenter> presenterRef = new WeakReference<>(this);
+        Translator.getInstance().query(query, new Translator.Callback() {
+            @Override
+            public void onQuery(String query, QueryResult result) {
+                TranslationPresenter presenter = presenterRef.get();
+                if (presenter != null) {
+                    presenter.onPostResult(query, result);
+                }
+            }
+        });
+    }
+
+    private void updateHistory(String query) {
         List<String> history = TranslationPresenter.sHistory;
         int index = history.indexOf(query);
         if (index != 0) {
@@ -47,14 +66,6 @@ public class TranslationPresenter implements TranslationContract.Presenter {
             history.add(0, query);
             mTranslationView.updateHistory();
         }
-
-        currentQuery = query;
-        Translator.getInstance().query(query, new Translator.Callback() {
-            @Override
-            public void onQuery(String query, QueryResult result) {
-                onPostResult(query, result);
-            }
-        });
     }
 
     private void onPostResult(String query, QueryResult result) {
