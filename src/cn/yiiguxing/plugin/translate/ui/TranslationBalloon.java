@@ -99,10 +99,7 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @Override
     public void updateHistory() {
-        TranslationDialog dialog = TranslationDialogManager.getInstance().getCurrentShowingDialog();
-        if (dialog != null) {
-            dialog.updateHistory(false);
-        }
+        TranslationDialogManager.getInstance().notifyHistoriesChanged();
     }
 
     @Override

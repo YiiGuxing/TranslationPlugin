@@ -35,10 +35,17 @@ public class TranslationDialogManager {
     }
 
     /**
+     * 测试是否有正在显示的对话框
+     */
+    public boolean hasShowing() {
+        return myShowingDialog != null && myShowingDialog.isShowing();
+    }
+
+    /**
      * 更新当前显示的对话框
      */
     public void updateCurrentShowingTranslationDialog() {
-        if (myShowingDialog != null) {
+        if (hasShowing()) {
             myShowingDialog.update();
         }
     }
@@ -48,11 +55,20 @@ public class TranslationDialogManager {
      */
     @Nullable
     public TranslationDialog getCurrentShowingDialog() {
-        if (myShowingDialog != null && !myShowingDialog.isShowing()) {
-            myShowingDialog = null;
+        if (!hasShowing()) {
+            return myShowingDialog;
         }
 
-        return myShowingDialog;
+        return null;
+    }
+
+    /**
+     * 通知历史记录变化
+     */
+    public void notifyHistoriesChanged() {
+        if (hasShowing()) {
+            myShowingDialog.updateHistory(false);
+        }
     }
 
 }
