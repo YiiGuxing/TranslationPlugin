@@ -226,15 +226,21 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 }
             }
         });
-        queryComboBox.setRenderer(new ListCellRendererWrapper<String>() {
 
+        queryComboBox.setRenderer(new ListCellRendererWrapper<String>() {
             @Override
             public void customize(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value != null && value.trim().length() > 20) {
-                    String trim = value.trim();
-                    setText(trim.substring(0, 15) + "..." + trim.substring(trim.length() - 3));
+                // 在没有确定大小之前不设置真正的文本，否则控件会被过长的文本撑大
+                if (list.getWidth() == 0) {
+                    setText("");
+                    return;
+                }
+
+                if (value != null) {
+                    setText(value);
+                    setToolTipText(value);
                 } else {
-                    setText(value == null ? "" : value.trim());
+                    setText("");
                 }
             }
         });
