@@ -220,7 +220,7 @@ public final class Utils {
         if (isEmptyOrBlankString(input))
             return input;
 
-        return input.replace("_", " ")
+        return input.replaceAll("[_\\s]+", " ")
                 .replaceAll("([A-Z][a-z]+)|([0-9\\W]+)", " $0 ")
                 .replaceAll("[A-Z]{2,}", " $0")
                 .replaceAll("\\s{2,}", " ")
