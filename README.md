@@ -1,7 +1,7 @@
-Translation Plugin
+Translation
 ==================
 
-Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
+### Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
 
 ![screenshots](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots.gif)
 
