@@ -20,7 +20,6 @@ Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
 
 重启**IDEA**.
 
-最新开发版下载: [**`TranslationPlugin-v1.2.1-SNAPSHOT.jar`**](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/TranslationPlugin-v1.2.1-SNAPSHOT.jar)
 
 使用
 ------------
