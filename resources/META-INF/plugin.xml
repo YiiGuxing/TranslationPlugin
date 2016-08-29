@@ -28,8 +28,9 @@
 
     <change-notes><![CDATA[
       <ul>
-          <li>Color Styles.</li>
-          <li>Fix bug.</li>
+          <li>添加默认主题下的色彩样式</li>
+          <li>一些体验上的优化</li>
+          <li>Bug修复</li>
       </ul>
     ]]>
     </change-notes>
