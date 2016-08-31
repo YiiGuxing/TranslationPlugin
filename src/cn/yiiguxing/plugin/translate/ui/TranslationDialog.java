@@ -10,7 +10,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -165,6 +164,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     }
 
     private void initViews() {
+        queryBtn.setIcon(Icons.Translate);
         queryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,7 +249,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private void setComponentPopupMenu() {
         JBPopupMenu menu = new JBPopupMenu();
 
-        final JBMenuItem copy = new JBMenuItem("Copy", IconLoader.getIcon("/actions/copy_dark.png"));
+        final JBMenuItem copy = new JBMenuItem("Copy", Icons.Copy);
         copy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -261,7 +261,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
             }
         });
 
-        final JBMenuItem query = new JBMenuItem("Query", IconLoader.getIcon("/icon_16.png"));
+        final JBMenuItem query = new JBMenuItem("Query", Icons.Translate);
         query.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -405,9 +405,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     }
 
-    private static final Icon CLOSE_ICON = IconLoader.getIcon("/close.png");
-    private static final Icon CLOSE_PRESSED = IconLoader.getIcon("/closePressed.png");
-
     private class MyTitlePanel extends TitlePanel {
 
         final CloseButton myButton;
@@ -471,7 +468,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(CLOSE_ICON.getIconWidth(), CLOSE_ICON.getIconHeight());
+            return new Dimension(Icons.Close.getIconWidth(), Icons.Close.getIconHeight());
         }
 
         private void setActive(final boolean active) {
@@ -483,7 +480,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (hasPaint()) {
-                paintIcon(g, !isActive || isPressedByMouse ? CLOSE_PRESSED : CLOSE_ICON);
+                paintIcon(g, !isActive || isPressedByMouse ? Icons.ClosePressed : Icons.Close);
             }
         }
 

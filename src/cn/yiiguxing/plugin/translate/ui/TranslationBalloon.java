@@ -11,7 +11,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
@@ -33,8 +32,6 @@ import java.util.Objects;
 
 @SuppressWarnings("WeakerAccess")
 public class TranslationBalloon implements TranslationContract.View {
-
-    private static final Icon ICON_PIN = IconLoader.getIcon("/pin.png");
 
     private static final int MIN_BALLOON_WIDTH = JBUI.scale(200);
     private static final int MIN_BALLOON_HEIGHT = JBUI.scale(50);
@@ -154,10 +151,11 @@ public class TranslationBalloon implements TranslationContract.View {
     private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint) {
         balloon.setActionProvider(new BalloonImpl.ActionProvider() {
             private BalloonImpl.ActionButton myPinButton;
+            private final Icon myIcon = Icons.Pin;
 
             @NotNull
             public List<BalloonImpl.ActionButton> createActions() {
-                myPinButton = balloon.new ActionButton(ICON_PIN, ICON_PIN, null,
+                myPinButton = balloon.new ActionButton(myIcon, myIcon, null,
                         new Consumer<MouseEvent>() {
                             @Override
                             public void consume(MouseEvent mouseEvent) {
@@ -173,8 +171,8 @@ public class TranslationBalloon implements TranslationContract.View {
 
             public void layout(@NotNull Rectangle lpBounds) {
                 if (myPinButton.isVisible()) {
-                    int iconWidth = ICON_PIN.getIconWidth();
-                    int iconHeight = ICON_PIN.getIconHeight();
+                    int iconWidth = myIcon.getIconWidth();
+                    int iconHeight = myIcon.getIconHeight();
                     int margin = JBUI.scale(3);
                     int x = lpBounds.x + lpBounds.width - iconWidth - margin;
                     int y = lpBounds.y + margin;

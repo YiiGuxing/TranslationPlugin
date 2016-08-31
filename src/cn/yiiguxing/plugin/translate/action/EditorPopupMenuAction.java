@@ -1,17 +1,18 @@
 package cn.yiiguxing.plugin.translate.action;
 
 import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.ui.Icons;
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.project.DumbAware;
 
-public class EditorPopupMenuAction extends AnAction {
+public class EditorPopupMenuAction extends AnAction implements DumbAware {
 
     public EditorPopupMenuAction() {
-        super("Translate", "Translate", IconLoader.getIcon("/icon_16.png"));
+        super("Translate", "Translate", Icons.Translate);
     }
 
     @Override
