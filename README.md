@@ -1,5 +1,5 @@
 Translation
-==================
+===========
 
 ### Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
 
@@ -11,7 +11,7 @@ Translation
 
 
 安装
-------------
+----
 
 - 使用**IDEA**内置插件系统:
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
@@ -22,7 +22,7 @@ Translation
 
 
 使用
-------------
+----
 
 1. **打开翻译对话框:**
 
@@ -49,3 +49,19 @@ Translation
    <kbd>Preferences(Settings)</kbd> > <kbd>Other Settings</kbd> > <kbd>Translation</kbd> > <kbd>获取有道API KEY</kbd>
 
    或者 [**点击这里**](http://fanyi.youdao.com/openapi?path=data-mode) 也可申请有道API KEY。
+
+更新日志
+--------
+
+## [v1.2.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.1)(2016-08-29)
+
+- 添加默认主题下的色彩样式
+- 优化
+  - 在翻译话框显示的情况下，同步翻译结果和历史记录。
+  - 历史记录优化——鼠标在翻译文本过长而无法完全展示内容的历史记录条上悬停时，显示全部内容。
+- Bug修复
+  - 在非聚焦状态下按ESC键无法关闭对话框。
+  - 翻译话框无法显示错误信息。
+  - 其他Bug。
+
+[完整的更新历史记录](./CHANGELOG.md)
