@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.action;
 
 import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.compat.SelectWordUtilCompat;
 import cn.yiiguxing.plugin.translate.ui.Icons;
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon;
-import com.intellij.codeInsight.editorActions.SelectWordUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -64,8 +64,9 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
         if (editor != null) {
             SelectionModel selectionModel = editor.getSelectionModel();
             if (!selectionModel.hasSelection()) {
-                List<TextRange> ranges = new ArrayList<>();
-                SelectWordUtil.addWordOrLexemeSelection(false, editor, editor.getCaretModel().getOffset(), ranges);
+                final List<TextRange> ranges = new ArrayList<>();
+                final int offset = editor.getCaretModel().getOffset();
+                SelectWordUtilCompat.addWordOrLexemeSelection(false, editor, offset, ranges);
 
                 if (!ranges.isEmpty()) {
                     TextRange maxRange = null;
