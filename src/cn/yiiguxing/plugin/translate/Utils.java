@@ -8,10 +8,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+import javax.swing.text.*;
 
 public final class Utils {
 
@@ -26,11 +23,13 @@ public final class Utils {
     private static final SimpleAttributeSet ATTR_WEB_EXPLAIN_KEY = new SimpleAttributeSet();
     private static final SimpleAttributeSet ATTR_WEB_EXPLAIN_VALUES = new SimpleAttributeSet();
 
+    private static final int QUERY_FONT_SIZE = 19;
+    private static final int PRE_EXPLAINS_FONT_SIZE = 16;
+    private static final int EXPLAINS_FONT_SIZE = 16;
 
     static {
         StyleConstants.setItalic(ATTR_QUERY, true);
         StyleConstants.setBold(ATTR_QUERY, true);
-        StyleConstants.setFontSize(ATTR_QUERY, JBUI.scaleFontSize(19));
         StyleConstants.setForeground(ATTR_QUERY, new JBColor(0xFFEE6000, 0xFFCC7832));
 
         StyleConstants.setForeground(ATTR_EXPLAIN, new JBColor(0xFF3E7EFF, 0xFF8CBCE1));
@@ -40,7 +39,7 @@ public final class Utils {
         StyleConstants.setFontSize(ATTR_PRE_EXPLAINS, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_EXPLAINS, new JBColor(0xFF170591, 0xFFFFC66D));
-        StyleConstants.setFontSize(ATTR_PRE_EXPLAINS, JBUI.scaleFontSize(16));
+        StyleConstants.setFontSize(ATTR_EXPLAINS, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_WEB_EXPLAIN_TITLE, new JBColor(0xFF707070, 0xFF808080));
         StyleConstants.setForeground(ATTR_WEB_EXPLAIN_KEY, new JBColor(0xFF4C4C4C, 0xFF77B767));
@@ -114,6 +113,13 @@ public final class Utils {
         }
     }
 
+    // 不能静态设置，否则scale改变时不能即时更新
+    @NotNull
+    private static MutableAttributeSet updateFontSize(@NotNull MutableAttributeSet attr, int size) {
+        StyleConstants.setFontSize(attr, JBUI.scaleFontSize(size));
+        return attr;
+    }
+
     private static void insertHeader(Document document, QueryResult result) {
         String query = result.getQuery();
 
@@ -121,7 +127,8 @@ public final class Utils {
             if (!Utils.isEmptyOrBlankString(query)) {
                 query = query.trim();
                 document.insertString(document.getLength(),
-                        Character.toUpperCase(query.charAt(0)) + query.substring(1) + "\n", ATTR_QUERY);
+                        Character.toUpperCase(query.charAt(0)) + query.substring(1) + "\n",
+                        updateFontSize(ATTR_QUERY, QUERY_FONT_SIZE));
             }
 
             BasicExplain be = result.getBasicExplain();
@@ -164,6 +171,8 @@ public final class Utils {
         if (explains == null || explains.length == 0)
             return;
 
+        final MutableAttributeSet attrPre = updateFontSize(ATTR_PRE_EXPLAINS, PRE_EXPLAINS_FONT_SIZE);
+        final MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS, EXPLAINS_FONT_SIZE);
         try {
             for (String exp : explains) {
                 if (isEmptyOrBlankString(exp))
@@ -171,11 +180,11 @@ public final class Utils {
 
                 int i = exp.indexOf('.');
                 if (i > 0) {
-                    doc.insertString(doc.getLength(), exp.substring(0, i + 1), ATTR_PRE_EXPLAINS);
+                    doc.insertString(doc.getLength(), exp.substring(0, i + 1), attrPre);
                     exp = exp.substring(i + 1);
                 }
 
-                doc.insertString(doc.getLength(), exp + '\n', ATTR_EXPLAINS);
+                doc.insertString(doc.getLength(), exp + '\n', attr);
             }
 
             doc.insertString(doc.getLength(), "\n", null);
