@@ -116,7 +116,7 @@ public class TranslationBalloon implements TranslationContract.View {
         JTextPane resultText = new JTextPane();
         resultText.setEditable(false);
         resultText.setBackground(UIManager.getColor("Panel.background"));
-        resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", JBUI.scaleFontSize(14)));
+        resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
 
         Utils.insertQueryResultText(resultText.getDocument(), result);
         resultText.setCaretPosition(0);

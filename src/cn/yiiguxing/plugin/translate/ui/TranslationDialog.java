@@ -183,6 +183,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         processPanel.setBackground(background);
         msgPanel.setBackground(background);
         resultText.setBackground(background);
+        resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
         scrollPane.setBackground(background);
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
