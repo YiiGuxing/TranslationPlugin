@@ -5,11 +5,13 @@ import cn.yiiguxing.plugin.translate.TranslationContract;
 import cn.yiiguxing.plugin.translate.TranslationPresenter;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -63,8 +65,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private String mLastSuccessfulQuery;
     private boolean mBroadcast;
 
-    private OnDisposeListener mOnDisposeListener;
-
     private boolean mLastMoveWasInsideDialog;
     private final AWTEventListener mAwtActivityListener = new AWTEventListener() {
 
@@ -104,6 +104,13 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
         Toolkit.getDefaultToolkit().addAWTEventListener(mAwtActivityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK
                 | AWTEvent.KEY_EVENT_MASK);
+
+        Disposer.register(getDisposable(), new Disposable() {
+            @Override
+            public void dispose() {
+                Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
+            }
+        });
     }
 
     @Nullable
@@ -283,21 +290,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         });
 
         resultText.setComponentPopupMenu(menu);
-    }
-
-    public void setOnDisposeListener(OnDisposeListener listener) {
-        mOnDisposeListener = listener;
-    }
-
-    @Override
-    protected void dispose() {
-        Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
-
-        if (mOnDisposeListener != null) {
-            mOnDisposeListener.onDispose();
-        }
-
-        super.dispose();
     }
 
     public void show() {
@@ -492,10 +484,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         private void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
             icon.paintIcon(this, g, 0, (getHeight() - icon.getIconHeight()) / 2);
         }
-    }
-
-    public interface OnDisposeListener {
-        void onDispose();
     }
 
 }

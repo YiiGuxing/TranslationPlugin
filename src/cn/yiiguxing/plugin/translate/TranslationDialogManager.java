@@ -1,8 +1,10 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("WeakerAccess")
@@ -23,9 +25,9 @@ public class TranslationDialogManager {
     public void showTranslationDialog(@Nullable Project project) {
         if (myShowingDialog == null) {
             myShowingDialog = new TranslationDialog(project);
-            myShowingDialog.setOnDisposeListener(new TranslationDialog.OnDisposeListener() {
+            Disposer.register(myShowingDialog.getDisposable(), new Disposable() {
                 @Override
-                public void onDispose() {
+                public void dispose() {
                     myShowingDialog = null;
                 }
             });
