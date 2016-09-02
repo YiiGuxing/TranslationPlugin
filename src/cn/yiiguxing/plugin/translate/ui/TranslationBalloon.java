@@ -7,20 +7,22 @@ import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.AnimatedIcon;
-import com.intellij.util.ui.JBEmptyBorder;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.*;
+import com.sun.istack.internal.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,47 +40,75 @@ public class TranslationBalloon implements TranslationContract.View {
     private static final int MAX_BALLOON_SIZE = JBUI.scale(600);
     private static final JBInsets BORDER_INSETS = JBUI.insets(20, 20, 20, 20);
 
-    private final JBPanel contentPanel;
-    private final GroupLayout layout;
+    private final JBPanel mContentPanel;
+    private final GroupLayout mLayout;
 
-    private Balloon myBalloon;
+    private Balloon mBalloon;
+    private RelativePoint mTarget;
 
+    private boolean mInterceptDispose;
+    @NotNull
+    private final Disposable mDisposable = new Disposable() {
+        @Override
+        public void dispose() {
+            onDispose();
+        }
+    };
+
+    @NotNull
     private final TranslationContract.Presenter mTranslationPresenter;
 
-    private final Editor editor;
-    private JPanel processPanel;
-    private AnimatedIcon processIcon;
-    private JLabel queryingLabel;
+    @NotNull
+    private final Editor mEditor;
+    @Nullable
+    private final Project mProject;
+    private JPanel mProcessPanel;
+    private AnimatedIcon mProcessIcon;
+    private JLabel mQueryingLabel;
 
     public TranslationBalloon(@NotNull Editor editor) {
-        this.editor = Objects.requireNonNull(editor, "editor cannot be null");
+        mEditor = Objects.requireNonNull(editor, "editor cannot be null");
 
-        contentPanel = new JBPanel<>();
-        layout = new GroupLayout(contentPanel);
-        contentPanel.setOpaque(false);
-        contentPanel.setLayout(layout);
+        mContentPanel = new JBPanel<>();
+        mLayout = new GroupLayout(mContentPanel);
+        mContentPanel.setOpaque(false);
+        mContentPanel.setLayout(mLayout);
 
-        queryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
+        mQueryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
-        processPanel.setOpaque(false);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(processPanel, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(processPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        mProcessPanel.setOpaque(false);
+        mLayout.setHorizontalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(mProcessPanel, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        mLayout.setVerticalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(mProcessPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
-        contentPanel.add(processPanel);
-        processIcon.resume();
+        mContentPanel.add(mProcessPanel);
+        mProcessIcon.resume();
 
         mTranslationPresenter = new TranslationPresenter(this);
+
+        mProject = editor.getProject();
+        if (mProject != null) {
+            Disposer.register(mProject, mDisposable);
+        }
     }
 
     private void createUIComponents() {
-        processIcon = new ProcessIcon();
+        mProcessIcon = new ProcessIcon();
+    }
+
+    @NotNull
+    public Disposable getDisposable() {
+        return mDisposable;
+    }
+
+    private void onDispose() {
+        mBalloon = null;
     }
 
     @NotNull
     private BalloonBuilder buildBalloon() {
-        return BalloonBuilder.builder(contentPanel, null)
+        return BalloonBuilder.builder(mContentPanel, null)
                 .setHideOnClickOutside(true)
                 .setShadow(true)
                 .setHideOnKeyOutside(true)
@@ -87,9 +117,50 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     public void showAndQuery(@NotNull String queryText) {
-        myBalloon = buildBalloon().setCloseButtonEnabled(false).createBalloon();
-        myBalloon.show(JBPopupFactory.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
+        mBalloon = buildBalloon().setCloseButtonEnabled(false).createBalloon();
+        registerDisposer(mBalloon, true);
+
+        mEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+        showBalloon(mBalloon);
+
         mTranslationPresenter.query(Objects.requireNonNull(queryText, "queryText cannot be null"));
+    }
+
+    private void registerDisposer(@NotNull Balloon balloon, final boolean intercept) {
+        if (mProject != null) {
+            Disposer.register(mProject, balloon);
+        }
+        Disposer.register(balloon, new Disposable() {
+            @Override
+            public void dispose() {
+                if (intercept && mInterceptDispose) {
+                    return;
+                }
+
+                Disposer.dispose(mDisposable);
+                mInterceptDispose = false;
+            }
+        });
+    }
+
+    private void showBalloon(@NotNull final Balloon balloon) {
+        final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
+        balloon.show(new PositionTracker<Balloon>(mEditor.getContentComponent()) {
+            @Override
+            public RelativePoint recalculateLocation(Balloon object) {
+                if (mTarget != null && !popupFactory.isBestPopupLocationVisible(mEditor)) {
+                    return mTarget;
+                }
+                final RelativePoint target = popupFactory.guessBestPopupLocation(mEditor);
+                final Point screenPoint = target.getScreenPoint();
+                int y = screenPoint.y;
+                if (target.getPoint().getY() > mEditor.getLineHeight() + balloon.getPreferredSize().getHeight()) {
+                    //y -= mEditor.getLineHeight();
+                }
+                mTarget = new RelativePoint(new Point(screenPoint.x, y));
+                return mTarget;
+            }
+        }, Balloon.Position.below);
     }
 
     @Override
@@ -99,19 +170,22 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
-        if (this.myBalloon != null) {
-            if (this.myBalloon.isDisposed()) {
+        if (mBalloon != null) {
+            if (mBalloon.isDisposed()) {
                 return;
             }
 
-            this.myBalloon.hide(true);
+            mInterceptDispose = true;
+            mBalloon.hide(true);
+        } else {
+            return;
         }
 
         TranslationDialogManager.getInstance().updateCurrentShowingTranslationDialog();
 
-        contentPanel.remove(0);
-        processIcon.suspend();
-        processIcon.dispose();
+        mContentPanel.remove(0);
+        mProcessIcon.suspend();
+        mProcessIcon.dispose();
 
         JTextPane resultText = new JTextPane();
         resultText.setEditable(false);
@@ -126,16 +200,18 @@ public class TranslationBalloon implements TranslationContract.View {
         scrollPane.setVerticalScrollBar(scrollPane.createVerticalScrollBar());
         scrollPane.setHorizontalScrollBar(scrollPane.createHorizontalScrollBar());
 
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        mLayout.setHorizontalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(scrollPane, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, MAX_BALLOON_SIZE));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        mLayout.setVerticalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(scrollPane, MIN_BALLOON_HEIGHT, GroupLayout.DEFAULT_SIZE, MAX_BALLOON_SIZE));
-        contentPanel.add(scrollPane);
+        mContentPanel.add(scrollPane);
 
         final BalloonImpl balloon = (BalloonImpl) buildBalloon().createBalloon();
-        RelativePoint showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
+        RelativePoint showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(mEditor);
         createPinButton(balloon, showPoint);
-        balloon.show(showPoint, Balloon.Position.below);
+        registerDisposer(balloon, false);
+        showBalloon(balloon);
+
 
         // 再刷新一下，尽可能地消除滚动条
         ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -161,7 +237,7 @@ public class TranslationBalloon implements TranslationContract.View {
                             public void consume(MouseEvent mouseEvent) {
                                 if (mouseEvent.getClickCount() == 1) {
                                     balloon.hide(true);
-                                    TranslationDialogManager.getInstance().showTranslationDialog(editor.getProject());
+                                    TranslationDialogManager.getInstance().showTranslationDialog(mEditor.getProject());
                                 }
                             }
                         });
@@ -201,12 +277,12 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @Override
     public void showError(@NotNull String query, @NotNull String error) {
-        if (myBalloon == null || myBalloon.isDisposed())
+        if (mBalloon == null || mBalloon.isDisposed())
             return;
 
-        contentPanel.remove(0);
-        processIcon.suspend();
-        processIcon.dispose();
+        mContentPanel.remove(0);
+        mProcessIcon.suspend();
+        mProcessIcon.dispose();
 
         JBLabel label = new JBLabel();
         label.setFont(JBUI.Fonts.label(16));
@@ -214,14 +290,14 @@ public class TranslationBalloon implements TranslationContract.View {
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setText("Querying...");
 
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        mLayout.setHorizontalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(label, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        mLayout.setVerticalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         label.setForeground(new JBColor(new Color(0xFFFF2222), new Color(0xFFFF2222)));
         label.setText(error);
-        contentPanel.add(label);
+        mContentPanel.add(label);
 
-        myBalloon.revalidate();
+        mBalloon.revalidate();
     }
 }

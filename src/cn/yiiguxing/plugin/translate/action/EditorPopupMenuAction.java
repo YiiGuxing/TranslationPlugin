@@ -4,12 +4,20 @@ import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.compat.SelectWordUtilCompat;
 import cn.yiiguxing.plugin.translate.ui.Icons;
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon;
+import com.intellij.codeInsight.highlighting.HighlightManager;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.sun.istack.internal.Nullable;
 
@@ -27,16 +35,36 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        Editor editor = getEditor(e);
+        if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
+
+        final Editor editor = getEditor(e);
         if (editor != null && hasQueryTextRange()) {
             String queryText = Utils.splitWord(editor.getDocument().getText(mQueryTextRange));
             if (!Utils.isEmptyOrBlankString(queryText)) {
                 SelectionModel selectionModel = editor.getSelectionModel();
+
+                final ArrayList<RangeHighlighter> highlighters = new ArrayList<>();
+                final HighlightManager highlightManager = HighlightManager.getInstance(e.getProject());
                 if (!selectionModel.hasSelection()) {
-                    selectionModel.setSelection(mQueryTextRange.getStartOffset(), mQueryTextRange.getEndOffset());
+                    EditorColorsManager colorsManager = EditorColorsManager.getInstance();
+                    TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+                    highlightManager.addRangeHighlight(editor, mQueryTextRange.getStartOffset(), mQueryTextRange.getEndOffset(), attributes, true, highlighters);
                 }
 
-                new TranslationBalloon(editor).showAndQuery(queryText);
+                TranslationBalloon translationBalloon = new TranslationBalloon(editor);
+                translationBalloon.showAndQuery(queryText);
+
+                System.out.println(highlighters.size());
+                if (!highlighters.isEmpty()) {
+                    Disposer.register(translationBalloon.getDisposable(), new Disposable() {
+                        @Override
+                        public void dispose() {
+                            for (RangeHighlighter highlighter : highlighters) {
+                                highlightManager.removeSegmentHighlighter(editor, highlighter);
+                            }
+                        }
+                    });
+                }
             }
         }
     }
