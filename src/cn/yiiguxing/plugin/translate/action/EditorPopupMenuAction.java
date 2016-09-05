@@ -32,9 +32,9 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
 
     static {
         TextAttributes attributes = new TextAttributes();
-        attributes.setBackgroundColor(new JBColor(new Color(0xFFE7E7E7), new Color(0x444444)));
-        attributes.setEffectType(EffectType.ROUNDED_BOX);
-        attributes.setEffectColor(new JBColor(new Color(0xDEDEDE), new Color(0x4B4B4B)));
+        attributes.setBackgroundColor(new JBColor(new Color(0xFFE4E4FF), new Color(0xFF344134)));
+        attributes.setEffectType(EffectType.LINE_UNDERSCORE);
+        attributes.setEffectColor(new JBColor(0xFFEE6000, 0xFFCC7832));
 
         HIGHLIGHT_ATTRIBUTES = attributes;
     }
