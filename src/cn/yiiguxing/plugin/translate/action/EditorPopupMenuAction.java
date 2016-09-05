@@ -12,19 +12,32 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.ui.JBColor;
 import com.sun.istack.internal.Nullable;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EditorPopupMenuAction extends AnAction implements DumbAware {
+
+    private static final TextAttributes HIGHLIGHT_ATTRIBUTES;
+
+    static {
+        TextAttributes attributes = new TextAttributes();
+        attributes.setBackgroundColor(new JBColor(new Color(0xFFE7E7E7), new Color(0x444444)));
+        attributes.setEffectType(EffectType.ROUNDED_BOX);
+        attributes.setEffectColor(new JBColor(new Color(0xDEDEDE), new Color(0x4B4B4B)));
+
+        HIGHLIGHT_ATTRIBUTES = attributes;
+    }
 
     @Nullable
     private TextRange mQueryTextRange;
@@ -41,21 +54,21 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
         if (editor != null && hasQueryTextRange()) {
             String queryText = Utils.splitWord(editor.getDocument().getText(mQueryTextRange));
             if (!Utils.isEmptyOrBlankString(queryText)) {
-                SelectionModel selectionModel = editor.getSelectionModel();
+                final SelectionModel selectionModel = editor.getSelectionModel();
+                final Project project = e.getProject();
 
                 final ArrayList<RangeHighlighter> highlighters = new ArrayList<>();
-                final HighlightManager highlightManager = HighlightManager.getInstance(e.getProject());
-                if (!selectionModel.hasSelection()) {
-                    EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-                    TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-                    highlightManager.addRangeHighlight(editor, mQueryTextRange.getStartOffset(), mQueryTextRange.getEndOffset(), attributes, true, highlighters);
+                final HighlightManager highlightManager = project == null ? null : HighlightManager.getInstance(project);
+                if (!selectionModel.hasSelection() && highlightManager != null) {
+                    highlightManager.addRangeHighlight(editor, mQueryTextRange.getStartOffset(),
+                            mQueryTextRange.getEndOffset(), HIGHLIGHT_ATTRIBUTES, true, highlighters);
                 }
 
                 TranslationBalloon translationBalloon = new TranslationBalloon(editor);
                 translationBalloon.showAndQuery(queryText);
 
                 System.out.println(highlighters.size());
-                if (!highlighters.isEmpty()) {
+                if (!highlighters.isEmpty() && highlightManager != null) {
                     Disposer.register(translationBalloon.getDisposable(), new Disposable() {
                         @Override
                         public void dispose() {
