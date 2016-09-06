@@ -10,6 +10,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.CaretModel;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.markup.EffectType;
@@ -52,7 +54,9 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
 
         final Editor editor = getEditor(e);
         if (editor != null && hasQueryTextRange()) {
-            String queryText = Utils.splitWord(editor.getDocument().getText(mQueryTextRange));
+            final TextRange queryTextRange = mQueryTextRange;
+
+            final String queryText = Utils.splitWord(editor.getDocument().getText(queryTextRange));
             if (!Utils.isEmptyOrBlankString(queryText)) {
                 final SelectionModel selectionModel = editor.getSelectionModel();
                 final Project project = e.getProject();
@@ -60,14 +64,15 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
                 final ArrayList<RangeHighlighter> highlighters = new ArrayList<>();
                 final HighlightManager highlightManager = project == null ? null : HighlightManager.getInstance(project);
                 if (!selectionModel.hasSelection() && highlightManager != null) {
-                    highlightManager.addRangeHighlight(editor, mQueryTextRange.getStartOffset(),
-                            mQueryTextRange.getEndOffset(), HIGHLIGHT_ATTRIBUTES, true, highlighters);
+                    highlightManager.addRangeHighlight(editor, queryTextRange.getStartOffset(),
+                            queryTextRange.getEndOffset(), HIGHLIGHT_ATTRIBUTES, true, highlighters);
                 }
+
+                moveCaret(editor);
 
                 TranslationBalloon translationBalloon = new TranslationBalloon(editor);
                 translationBalloon.showAndQuery(queryText);
 
-                System.out.println(highlighters.size());
                 if (!highlighters.isEmpty() && highlightManager != null) {
                     Disposer.register(translationBalloon.getDisposable(), new Disposable() {
                         @Override
@@ -79,6 +84,36 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
                     });
                 }
             }
+        }
+    }
+
+    /**
+     * 移动光标到目标字符串中间
+     */
+    private void moveCaret(Editor editor) {
+        final TextRange queryTextRange = mQueryTextRange;
+
+        final CaretModel caretModel = editor.getCaretModel();
+        caretModel.moveToOffset(queryTextRange.getEndOffset());
+
+        int lineNumber = caretModel.getLogicalPosition().line;
+        Document document = editor.getDocument();
+        if (lineNumber >= document.getLineCount()) {
+            return;
+        }
+
+        int caretOffset = editor.getCaretModel().getOffset();
+        int textLength = document.getTextLength();
+        if (caretOffset == textLength) caretOffset--;
+        if (caretOffset < 0) return;
+
+        int line = document.getLineNumber(caretOffset);
+        int lineStartOffset = document.getLineStartOffset(line);
+        int queryStartOffset = queryTextRange.getStartOffset();
+        int queryEndOffset = queryTextRange.getEndOffset();
+
+        if (lineStartOffset <= queryStartOffset) {
+            caretModel.moveToOffset(Math.round((queryStartOffset + queryEndOffset) / 2f));
         }
     }
 
