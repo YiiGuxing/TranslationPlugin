@@ -1,7 +1,7 @@
-Translation [![Gitter][badge-gitter-img]][badge-gitter] [![Jetbrains Plugins][plugin-img]][plugin] [![GitHub release][release-img]][latest-release]
+Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugins][plugin-img]][plugin] [![Gitter][badge-gitter-img]][badge-gitter]
 ===========
 
-### Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
+### IntelliJ IDEA/Android Studio 翻译插件,可中英互译。
 
 ![screenshots](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots.gif)
 
@@ -70,5 +70,5 @@ Translation [![Gitter][badge-gitter-img]][badge-gitter] [![Jetbrains Plugins][pl
 [latest-release]:     https://github.com/YiiGuxing/TranslationPlugin/releases/latest
 [badge-gitter-img]:   https://img.shields.io/gitter/room/YiiGuxing/TranslationPlugin.svg
 [badge-gitter]:       https://gitter.im/TranslationPlugin/Lobby
-[plugin-img]:         https://img.shields.io/badge/plugin-8579-green.svg
+[plugin-img]:         https://img.shields.io/badge/plugin-8579-orange.svg
 [plugin]:             https://plugins.jetbrains.com/plugin/8579
