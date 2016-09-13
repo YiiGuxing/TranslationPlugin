@@ -1,2 +1,5 @@
-.idea/
+.idea/*
+!.idea/compiler.xml
+!/.idea/codeInsightSettings.xml
 out/
+TranslationPlugin.jar
