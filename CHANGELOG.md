@@ -5,6 +5,7 @@
 - UI适配
 - 自动选词
 - 气泡跟随编辑器滚动而滚动
+- 使用Java1.6编译
 
 ## [v1.2.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.1)(2016-08-29)
 
