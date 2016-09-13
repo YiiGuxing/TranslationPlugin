@@ -6,6 +6,10 @@
 - 自动选词
 - 气泡跟随编辑器滚动而滚动
 - 使用Java1.6编译
+- 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
+
+[#13]:https://github.com/YiiGuxing/TranslationPlugin/issues/13 "Translation threw an uncaught PluginException"
+[#14]:https://github.com/YiiGuxing/TranslationPlugin/issues/14 "Translate Error"
 
 ## [v1.2.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.1)(2016-08-29)
 
