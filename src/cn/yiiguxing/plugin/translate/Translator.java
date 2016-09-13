@@ -34,7 +34,7 @@ public final class Translator {
     @SuppressWarnings("SpellCheckingInspection")
     private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translator");
 
-    private final LruCache<String, QueryResult> mCache = new LruCache<>(200);
+    private final LruCache<String, QueryResult> mCache = new LruCache<String, QueryResult>(200);
     private Future<?> mCurrentTask;
 
     private Translator() {

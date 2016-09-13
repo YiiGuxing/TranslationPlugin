@@ -22,15 +22,13 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.*;
-import com.sun.istack.internal.Nullable;
+import org.apache.batik.svggen.font.Point;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @SuppressWarnings("WeakerAccess")
 public class TranslationBalloon implements TranslationContract.View {
@@ -67,9 +65,9 @@ public class TranslationBalloon implements TranslationContract.View {
     private JLabel mQueryingLabel;
 
     public TranslationBalloon(@NotNull Editor editor) {
-        mEditor = Objects.requireNonNull(editor, "editor cannot be null");
+        mEditor = Utils.requireNonNull(editor, "editor cannot be null");
 
-        mContentPanel = new JBPanel<>();
+        mContentPanel = new JBPanel<JBPanel>();
         mLayout = new GroupLayout(mContentPanel);
         mContentPanel.setOpaque(false);
         mContentPanel.setLayout(mLayout);
@@ -123,7 +121,7 @@ public class TranslationBalloon implements TranslationContract.View {
         mEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         showBalloon(mBalloon);
 
-        mTranslationPresenter.query(Objects.requireNonNull(queryText, "queryText cannot be null"));
+        mTranslationPresenter.query(Utils.requireNonNull(queryText, "queryText cannot be null"));
     }
 
     private void registerDisposer(@NotNull Balloon balloon, final boolean intercept) {

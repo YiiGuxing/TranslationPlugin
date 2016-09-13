@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.balloon;
 
+import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.compat.AccessibleContextUtilCompat;
 import cn.yiiguxing.plugin.translate.compat.ScreenReaderCompat;
 import com.intellij.icons.AllIcons;
@@ -55,7 +56,6 @@ import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -210,7 +210,7 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
     private int myShadowSize = Registry.intValue("ide.balloon.shadow.size");
     private ShadowBorderProvider myShadowBorderProvider;
 
-    private final CopyOnWriteArraySet<JBPopupListener> myListeners = new CopyOnWriteArraySet<>();
+    private final CopyOnWriteArraySet<JBPopupListener> myListeners = new CopyOnWriteArraySet<JBPopupListener>();
     private boolean myVisible;
     private PositionTracker<Balloon> myTracker;
     private final int myAnimationCycle;
@@ -429,7 +429,7 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
         myTracker = tracker;
         myTracker.init(this);
 
-        JRootPane root = Objects.requireNonNull(UIUtil.getRootPane(comp));
+        JRootPane root = Utils.requireNonNull(UIUtil.getRootPane(comp));
 
         myVisible = true;
 
@@ -438,9 +438,9 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
         UIUtil.setFutureRootPane(myContent, root);
 
         myFocusManager = IdeFocusManager.findInstanceByComponent(myLayeredPane);
-        final Ref<Component> originalFocusOwner = new Ref<>();
-        final Ref<FocusRequestor> focusRequestor = new Ref<>();
-        final Ref<ActionCallback> proxyFocusRequest = new Ref<>(ActionCallback.DONE);
+        final Ref<Component> originalFocusOwner = new Ref<Component>();
+        final Ref<FocusRequestor> focusRequestor = new Ref<FocusRequestor>();
+        final Ref<ActionCallback> proxyFocusRequest = new Ref<ActionCallback>(ActionCallback.DONE);
 
         boolean mnemonicsFix = myDialogMode && SystemInfo.isMac && Registry.is("ide.mac.inplaceDialogMnemonicsFix");
         if (mnemonicsFix) {
@@ -1224,7 +1224,7 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
         protected abstract Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength);
 
         public Set<AbstractPosition> getOtherPositions() {
-            HashSet<AbstractPosition> all = new HashSet<>();
+            HashSet<AbstractPosition> all = new HashSet<AbstractPosition>();
             all.add(BELOW);
             all.add(ABOVE);
             all.add(AT_RIGHT);

@@ -9,18 +9,17 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class TranslationPresenter implements TranslationContract.Presenter {
     private static final int HISTORY_SIZE = 50;
-    private static final List<String> sHistory = new ArrayList<>(HISTORY_SIZE);
+    private static final List<String> sHistory = new ArrayList<String>(HISTORY_SIZE);
 
     private final TranslationContract.View mTranslationView;
 
     private String currentQuery;
 
     public TranslationPresenter(@NotNull TranslationContract.View view) {
-        this.mTranslationView = Objects.requireNonNull(view, "view cannot be null.");
+        this.mTranslationView = Utils.requireNonNull(view, "view cannot be null.");
     }
 
     @NotNull
@@ -40,7 +39,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         currentQuery = query;
 
         // 防止内存泄漏
-        final Reference<TranslationPresenter> presenterRef = new WeakReference<>(this);
+        final Reference<TranslationPresenter> presenterRef = new WeakReference<TranslationPresenter>(this);
         Translator.getInstance().query(query, new Translator.Callback() {
             @Override
             public void onQuery(String query, QueryResult result) {

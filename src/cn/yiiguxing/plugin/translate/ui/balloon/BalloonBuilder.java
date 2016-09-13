@@ -24,7 +24,7 @@ import java.util.Map;
 @SuppressWarnings({"unused", "WeakerAccess", "SpellCheckingInspection"})
 public class BalloonBuilder implements com.intellij.openapi.ui.popup.BalloonBuilder {
 
-    private final Map<Disposable, List<Balloon>> myStorage = new WeakHashMap<>();
+    private final Map<Disposable, List<Balloon>> myStorage = new WeakHashMap<Disposable, List<Balloon>>();
 
     @Nullable
     private Disposable myAnchor;
@@ -281,7 +281,7 @@ public class BalloonBuilder implements com.intellij.openapi.ui.popup.BalloonBuil
         if (myAnchor != null) {
             List<Balloon> balloons = myStorage.get(myAnchor);
             if (balloons == null) {
-                myStorage.put(myAnchor, balloons = new ArrayList<>());
+                myStorage.put(myAnchor, balloons = new ArrayList<Balloon>());
                 Disposer.register(myAnchor, new Disposable() {
                     @Override
                     public void dispose() {

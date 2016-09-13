@@ -61,7 +61,7 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
                 final SelectionModel selectionModel = editor.getSelectionModel();
                 final Project project = e.getProject();
 
-                final ArrayList<RangeHighlighter> highlighters = new ArrayList<>();
+                final ArrayList<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
                 final HighlightManager highlightManager = project == null ? null : HighlightManager.getInstance(project);
                 if (!selectionModel.hasSelection() && highlightManager != null) {
                     highlightManager.addRangeHighlight(editor, queryTextRange.getStartOffset(),
@@ -140,7 +140,7 @@ public class EditorPopupMenuAction extends AnAction implements DumbAware {
         if (editor != null) {
             SelectionModel selectionModel = editor.getSelectionModel();
             if (!selectionModel.hasSelection()) {
-                final List<TextRange> ranges = new ArrayList<>();
+                final List<TextRange> ranges = new ArrayList<TextRange>();
                 final int offset = editor.getCaretModel().getOffset();
                 SelectWordUtilCompat.addWordOrLexemeSelection(false, editor, offset, ranges);
 
