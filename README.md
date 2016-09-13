@@ -1,4 +1,4 @@
-Translation
+Translation [![Gitter][badge-gitter-img]][badge-gitter] [![Jetbrains Plugins][plugin-img]][plugin] [![GitHub release][release-img]][latest-release]
 ===========
 
 ### Android Studio/IntelliJ IDEA 翻译插件,可中英互译。
@@ -16,7 +16,7 @@ Translation
 - 使用**IDEA**内置插件系统:
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
 - 手动:
-  - 下载[`最新发布的插件包`](https://github.com/YiiGuxing/TranslationPlugin/releases/latest) -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
+  - 下载[`最新发布的插件包`][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
 
 重启**IDEA**.
 
@@ -65,3 +65,10 @@ Translation
   - 其他Bug。
 
 [完整的更新历史记录](./CHANGELOG.md)
+
+[release-img]:        https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg
+[latest-release]:     https://github.com/YiiGuxing/TranslationPlugin/releases/latest
+[badge-gitter-img]:   https://img.shields.io/gitter/room/YiiGuxing/TranslationPlugin.svg
+[badge-gitter]:       https://gitter.im/TranslationPlugin/Lobby
+[plugin-img]:         https://img.shields.io/badge/plugin-8579-green.svg
+[plugin]:             https://plugins.jetbrains.com/plugin/8579
