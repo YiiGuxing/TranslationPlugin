@@ -52,6 +52,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private JPanel msgPanel;
     private JTextPane resultText;
     private JScrollPane scrollPane;
+    @SuppressWarnings("Since15")
     private JComboBox<String> queryComboBox;
     private JPanel textPanel;
     private JPanel processPanel;
@@ -363,6 +364,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         layout.show(textPanel, CARD_MSG);
     }
 
+    @SuppressWarnings("Since15")
     private static class MyModel extends AbstractListModel<String> implements ComboBoxModel<String> {
         private final List<String> myFullList;
         private Object mySelectedItem;
