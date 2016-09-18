@@ -80,7 +80,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 }
             }
 
-            if (e instanceof KeyEvent && id == KeyEvent.KEY_PRESSED) {
+            if (e instanceof KeyEvent && id == KeyEvent.KEY_RELEASED) {
                 final KeyEvent ke = (KeyEvent) e;
                 // Close the dialog if ESC is pressed
                 if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
