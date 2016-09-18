@@ -7,9 +7,11 @@
 - 气泡跟随编辑器滚动而滚动
 - 使用Java1.6编译
 - 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
+- 修复: 与ideaVim插件ESC键冲突问题 [#18][#18]
 
 [#13]:https://github.com/YiiGuxing/TranslationPlugin/issues/13 "Translation threw an uncaught PluginException"
 [#14]:https://github.com/YiiGuxing/TranslationPlugin/issues/14 "Translate Error"
+[#18]:https://github.com/YiiGuxing/TranslationPlugin/issues/18 "对话框在非聚焦状态下按ESC键关闭对话框的问题"
 
 ## [v1.2.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.1)(2016-08-29)
 
