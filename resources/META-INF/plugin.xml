@@ -71,6 +71,10 @@
                 description="翻译">
             <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
         </action>
+        <action id="TranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
+                text="Translate(Inclusive)" description="翻译（自动从最大范围内取词，忽略选择）"/>
+        <action id="ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
+                text="Translate(Exclusive)" description="翻译（自动取单个词，忽略选择）"/>
     </actions>
 
 </idea-plugin>
