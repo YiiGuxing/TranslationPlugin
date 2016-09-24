@@ -150,13 +150,21 @@ public class TranslationBalloon implements TranslationContract.View {
                 if (mTarget != null && !popupFactory.isBestPopupLocationVisible(mEditor)) {
                     return mTarget;
                 }
+
                 final RelativePoint target = popupFactory.guessBestPopupLocation(mEditor);
+                Rectangle visibleArea = mEditor.getScrollingModel().getVisibleArea();
+                Point point = new Point(visibleArea.x, visibleArea.y);
+                SwingUtilities.convertPointToScreen(point, getComponent());
+
                 final Point screenPoint = target.getScreenPoint();
-                int y = screenPoint.y;
-                if (target.getPoint().getY() > mEditor.getLineHeight() + balloon.getPreferredSize().getHeight()) {
-                    //y -= mEditor.getLineHeight();
+                int y = screenPoint.y - point.y;
+                if (mTarget != null && y + balloon.getPreferredSize().getHeight() > visibleArea.height) {
+                    //FIXME 只是判断垂直方向，没有判断水平方向，但水平方向问题不是很大。
+                    //FIXME 垂直方向上也只是判断Balloon显示在下方的情况，还是有些小问题。
+                    return mTarget;
                 }
-                mTarget = new RelativePoint(new Point(screenPoint.x, y));
+
+                mTarget = new RelativePoint(new Point(screenPoint.x, screenPoint.y));
                 return mTarget;
             }
         }, Balloon.Position.below);
@@ -224,6 +232,7 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint) {
+        // FIXME 由于现在的Balloon是可以移动的，所以showPoint不再那么准确了，可以会使得PinButton显示位置不对。
         balloon.setActionProvider(new BalloonImpl.ActionProvider() {
             private BalloonImpl.ActionButton myPinButton;
             private final Icon myIcon = Icons.Pin;
