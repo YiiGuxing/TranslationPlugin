@@ -3,11 +3,11 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 
 ### IntelliJ IDEA/Android Studio 翻译插件,可中英互译。
 
-![screenshots](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots.gif)
+![screenshots](./images/screenshots.gif)
 
-![截图1](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/0.png)
+![截图1](./images/0.png)
 
-![截图2](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/1.png)
+![截图2](./images/1.png)
 
 
 安装
@@ -26,13 +26,13 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 
 1. **打开翻译对话框:**
 
-   点击工具栏上的 ![图标](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/2.png) 图标即可打开翻译对话框。
+   点击工具栏上的 ![图标](./images/2.png) 图标即可打开翻译对话框。
 
 2. **翻译编辑器中选择的文本**:
 
    在编辑器中 <kbd>选择文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
 
-   ![截图3](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/3.png)
+   ![截图3](./images/3.png)
 
 3. **设置快捷键:**
 
@@ -42,7 +42,7 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 
    <kbd>Preferences(Settings)</kbd> > <kbd>Other Settings</kbd> > <kbd>Translation</kbd>。 由于有道的API在查询请求数量上存在限制，如果在1小时内查询请求次数达到一定数量后将会暂时禁止查询一段时间（大概1小时）。如果很多人同时使用同一个KEY，可能会很容易就达到了限制条件，这就可以通过使用自己的KEY来避免（一人一个KEY基本足够用了）。
 
-   ![截图4](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/4.png)
+   ![截图4](./images/4.png)
 
 5. **如何获取有道API KEY？**
 
