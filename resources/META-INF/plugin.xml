@@ -31,7 +31,7 @@
     <change-notes><![CDATA[
       <ul>
           <li>优化：UI适配</li>
-          <li>功能增强：自动取词（<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#Actions">详细说明</a>）</li>
+          <li>功能增强：自动取词（<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions">详细说明</a>）</li>
           <li>功能增强：气泡跟随编辑器滚动而滚动</li>
           <li>修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/13">#13</a> <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/14">#14</a></li>
           <li>修复: 与ideaVim插件ESC键冲突问题 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/18">#18</a></li>

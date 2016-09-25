@@ -67,7 +67,7 @@ Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Tran
 ## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)
 
 - UI适配
-- 自动取词（[详细说明](#Actions)）
+- 自动取词（[详细说明](#actions)）
 - 气泡跟随编辑器滚动而滚动
 - 使用Java1.6编译
 - 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
