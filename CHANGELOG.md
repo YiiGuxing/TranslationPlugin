@@ -1,9 +1,9 @@
 # Change Log
 
-## Dev
+## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)
 
 - UI适配
-- 自动选词
+- 自动取词
 - 气泡跟随编辑器滚动而滚动
 - 使用Java1.6编译
 - 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]

@@ -53,16 +53,18 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 更新日志
 --------
 
-## [v1.2.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.1)(2016-08-29)
+## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)
 
-- 添加默认主题下的色彩样式
-- 优化
-  - 在翻译话框显示的情况下，同步翻译结果和历史记录。
-  - 历史记录优化——鼠标在翻译文本过长而无法完全展示内容的历史记录条上悬停时，显示全部内容。
-- Bug修复
-  - 在非聚焦状态下按ESC键无法关闭对话框。
-  - 翻译话框无法显示错误信息。
-  - 其他Bug。
+- UI适配
+- 自动取词（[详细说明](#Actions)）
+- 气泡跟随编辑器滚动而滚动
+- 使用Java1.6编译
+- 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
+- 修复: 与ideaVim插件ESC键冲突问题 [#18][#18]
+
+[#13]:https://github.com/YiiGuxing/TranslationPlugin/issues/13 "Translation threw an uncaught PluginException"
+[#14]:https://github.com/YiiGuxing/TranslationPlugin/issues/14 "Translate Error"
+[#18]:https://github.com/YiiGuxing/TranslationPlugin/issues/18 "对话框在非聚焦状态下按ESC键关闭对话框的问题"
 
 [完整的更新历史记录](./CHANGELOG.md)
 

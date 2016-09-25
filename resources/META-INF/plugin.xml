@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
@@ -21,21 +21,21 @@
       <ul>
       <li>选择需要翻译的文本 > 点击鼠标右键 > 点击Translate.</li>
       <li>你可以直接翻译如"getTranslatedString"和"HELLO_WORLD"这样的文本。</li>
-      <li>为翻译操作设置一个快捷键:Preferences(Settings) > Keymap > 搜索Translate > 添加快捷键。</li>
       <ul/>
-
+      <a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#使用">详细用法</a>
+      <br/>
       <br/>
       <i>Compiled with Java 1.6</i>
     ]]></description>
 
     <change-notes><![CDATA[
       <ul>
-          <li>添加默认主题下的色彩样式</li>
-          <li>优化：在翻译对话框显示的情况下，同步翻译结果和翻译历史记录。</li>
-          <li>历史记录优化：鼠标在翻译文本过长而无法完全展示内容的历史记录条上悬停时，显示全部内容。</li>
-          <li>Bug修复：在非聚焦状态下按ESC键无法关闭对话框。</li>
-          <li>Bug修复：翻译话框无法显示错误信息。</li>
-          <li>其他Bug修复。</li>
+          <li>优化：UI适配</li>
+          <li>功能增强：自动取词（<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#Actions">详细说明</a>）</li>
+          <li>功能增强：气泡跟随编辑器滚动而滚动</li>
+          <li>修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/13">#13</a> <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/14">#14</a></li>
+          <li>修复: 与ideaVim插件ESC键冲突问题 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/18">#18</a></li>
+          <li>使用Java1.6编译</li>
       </ul>
 
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
