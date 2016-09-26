@@ -28,7 +28,7 @@ Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Tran
 - **Translation:<kbd>Alt + 0</kbd>** 打开翻译对话框，默认显示在工具栏上。
 - **Translate:<kbd>Alt + 1</kbd>** 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则以最大范围自动取词。此Action默认显示在编辑器右键菜单上。
   ![Translate](./images/action1.gif)
-- **Translate(Inclusive)<kbd>Alt + 2</kbd>:** 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
+- **Translate(Inclusive):<kbd>Alt + 2</kbd>** 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
   ![Translate(Inclusive)](./images/action2.gif)
 - **Translate(Exclusive):<kbd>Alt + 3</kbd>** 取词并翻译。自动取单个词，忽略手动选择的文本。
   ![Translate(Exclusive)](./images/action3.gif)
@@ -45,6 +45,8 @@ Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Tran
    在编辑器中 <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
 
    ![翻译](./images/3.png)
+
+   或者使用快捷键翻译，默认快捷键见 **[Actions](#actions)**
 
 3. **设置快捷键:**
 
