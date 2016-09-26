@@ -65,16 +65,22 @@
                 text="Translation"
                 description="打开翻译对话框">
             <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt 0"/>
         </action>
         <action id="EditorPopupMenuAction" class="cn.yiiguxing.plugin.translate.action.EditorPopupMenuAction"
                 text="Translate"
                 description="翻译">
             <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt 1"/>
         </action>
         <action id="TranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
-                text="Translate(Inclusive)" description="翻译（以最大范围自动取词，忽略手动选择的文本）"/>
+                text="Translate(Inclusive)" description="翻译（以最大范围自动取词，忽略手动选择的文本）">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt 2"/>
+        </action>
         <action id="ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
-                text="Translate(Exclusive)" description="翻译（自动取单个词，忽略手动选择的文本）"/>
+                text="Translate(Exclusive)" description="翻译（自动取单个词，忽略手动选择的文本）">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt 3"/>
+        </action>
     </actions>
 
 </idea-plugin>
