@@ -50,7 +50,7 @@ Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Tran
 
 3. **设置快捷键:**
 
-   <kbd>Preferences(Settings)</kbd> > <kbd>Keymap</kbd> > <kbd>搜索Translation</kbd>。在需要添加快捷键Action上 <kbd>右键</kbd> > <kbd>add Keyboard Shortcut...</kbd> 设置快捷键（默认无快捷键，按<kbd>ESC</kbd>键可关闭气泡和翻译对话框）。
+   <kbd>Preferences(Settings)</kbd> > <kbd>Keymap</kbd> > <kbd>搜索Translation</kbd>。在需要添加快捷键Action上 <kbd>右键</kbd> > <kbd>add Keyboard Shortcut...</kbd> 设置快捷键（按<kbd>ESC</kbd>键可关闭气泡和翻译对话框）。
 
    ![keymap](./images/keymap.png)
 
