@@ -20,6 +20,7 @@
       General Usage Instructions:
       <ul>
       <li>选择需要翻译的文本 > 点击鼠标右键 > 点击Translate.</li>
+      <li>或者使用快捷键Alt + 0/1/2/3/4进行翻译。</li>
       <li>你可以直接翻译如"getTranslatedString"和"HELLO_WORLD"这样的文本。</li>
       <ul/>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#使用">详细用法</a>
@@ -33,6 +34,7 @@
           <li>优化：UI适配</li>
           <li>功能增强：自动取词（<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions">详细说明</a>）</li>
           <li>功能增强：气泡跟随编辑器滚动而滚动</li>
+          <li>功能增强：添加默认快捷键，见<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions">Actions</a></li>
           <li>修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/13">#13</a> <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/14">#14</a></li>
           <li>修复: 与ideaVim插件ESC键冲突问题 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/18">#18</a></li>
           <li>使用Java1.6编译</li>
@@ -66,20 +68,24 @@
                 description="打开翻译对话框">
             <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt 0"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD0"/>
         </action>
         <action id="EditorPopupMenuAction" class="cn.yiiguxing.plugin.translate.action.EditorPopupMenuAction"
                 text="Translate"
                 description="翻译">
             <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt 1"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD1"/>
         </action>
         <action id="TranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
                 text="Translate(Inclusive)" description="翻译（以最大范围自动取词，忽略手动选择的文本）">
             <keyboard-shortcut keymap="$default" first-keystroke="alt 2"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD2"/>
         </action>
         <action id="ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
                 text="Translate(Exclusive)" description="翻译（自动取单个词，忽略手动选择的文本）">
             <keyboard-shortcut keymap="$default" first-keystroke="alt 3"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD3"/>
         </action>
     </actions>
 

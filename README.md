@@ -23,14 +23,14 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 Actions
 -------
 
-Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Translate</kbd>, <kbd>Translate(Inclusive)</kbd> 和 <kbd>Translate(Exclusive)</kbd>.
+Translation有四个Action，它们分别是：`Translation`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
 
-- **Translation:<kbd>Alt + 0</kbd>** 打开翻译对话框，默认显示在工具栏上。
-- **Translate:<kbd>Alt + 1</kbd>** 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则以最大范围自动取词。此Action默认显示在编辑器右键菜单上。
+- **Translation:** <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
+- **Translate:** <kbd>Alt + 1</kbd> 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则以最大范围自动取词。此Action默认显示在编辑器右键菜单上。
   ![Translate](./images/action1.gif)
-- **Translate(Inclusive):<kbd>Alt + 2</kbd>** 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
+- **Translate(Inclusive):** <kbd>Alt + 2</kbd> 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
   ![Translate(Inclusive)](./images/action2.gif)
-- **Translate(Exclusive):<kbd>Alt + 3</kbd>** 取词并翻译。自动取单个词，忽略手动选择的文本。
+- **Translate(Exclusive):** <kbd>Alt + 3</kbd> 取词并翻译。自动取单个词，忽略手动选择的文本。
   ![Translate(Exclusive)](./images/action3.gif)
 
 使用
@@ -46,9 +46,9 @@ Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Tran
 
    ![翻译](./images/3.png)
 
-   或者使用快捷键翻译，默认快捷键见 **[Actions](#actions)**
+   或者使用快捷键<kbd>Alt + 0/1/2/3/4</kbd>进行翻译，详见 **[Actions](#actions)**
 
-3. **设置快捷键:**
+3. **自定义快捷键:**
 
    <kbd>Preferences(Settings)</kbd> > <kbd>Keymap</kbd> > <kbd>搜索Translation</kbd>。在需要添加快捷键Action上 <kbd>右键</kbd> > <kbd>add Keyboard Shortcut...</kbd> 设置快捷键（按<kbd>ESC</kbd>键可关闭气泡和翻译对话框）。
 
@@ -74,6 +74,7 @@ Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Tran
 - UI适配
 - 自动取词（[详细说明](#actions)）
 - 气泡跟随编辑器滚动而滚动
+- 添加默认快捷键，见[Actions](#actions)
 - 使用Java1.6编译
 - 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
 - 修复: 与ideaVim插件ESC键冲突问题 [#18][#18]
