@@ -25,12 +25,12 @@ Actions
 
 Translation有四个Action，它们分别是：<kbd>Translation</kbd>, <kbd>Translate</kbd>, <kbd>Translate(Inclusive)</kbd> 和 <kbd>Translate(Exclusive)</kbd>.
 
-- **Translation:** 打开翻译对话框，默认显示在工具栏上。
-- **Translate:** 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则以最大范围自动取词。此Action默认显示在编辑器右键菜单上。
+- **Translation:<kbd>Alt + 0</kbd>** 打开翻译对话框，默认显示在工具栏上。
+- **Translate:<kbd>Alt + 1</kbd>** 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则以最大范围自动取词。此Action默认显示在编辑器右键菜单上。
   ![Translate](./images/action1.gif)
-- **Translate(Inclusive):** 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
+- **Translate(Inclusive)<kbd>Alt + 2</kbd>:** 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
   ![Translate(Inclusive)](./images/action2.gif)
-- **Translate(Exclusive):** 取词并翻译。自动取单个词，忽略手动选择的文本。
+- **Translate(Exclusive):<kbd>Alt + 3</kbd>** 取词并翻译。自动取单个词，忽略手动选择的文本。
   ![Translate(Exclusive)](./images/action3.gif)
 
 使用
