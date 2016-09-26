@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -20,6 +21,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +43,9 @@ public class TranslationBalloon implements TranslationContract.View {
 
     private final JBPanel mContentPanel;
     private final GroupLayout mLayout;
+    private JPanel mProcessPanel;
+    private AnimatedIcon mProcessIcon;
+    private JLabel mQueryingLabel;
 
     private Balloon mBalloon;
     private RelativePoint mTarget;
@@ -61,12 +66,13 @@ public class TranslationBalloon implements TranslationContract.View {
     private final Editor mEditor;
     @Nullable
     private final Project mProject;
-    private JPanel mProcessPanel;
-    private AnimatedIcon mProcessIcon;
-    private JLabel mQueryingLabel;
+    private final RangeMarker mCaretRangeMarker;
 
-    public TranslationBalloon(@NotNull Editor editor) {
+    public TranslationBalloon(@NotNull Editor editor, @NotNull RangeMarker caretRangeMarker) {
         mEditor = Utils.requireNonNull(editor, "editor cannot be null");
+        mCaretRangeMarker = Utils.requireNonNull(caretRangeMarker, "caretRangeMarker cannot be null");
+
+        updateCaretPosition();
 
         mContentPanel = new JBPanel<JBPanel>();
         mLayout = new GroupLayout(mContentPanel);
@@ -96,6 +102,13 @@ public class TranslationBalloon implements TranslationContract.View {
         mProcessIcon = new ProcessIcon();
     }
 
+    private void updateCaretPosition() {
+        if (mCaretRangeMarker.isValid()) {
+            int offset = Math.round((mCaretRangeMarker.getStartOffset() + mCaretRangeMarker.getEndOffset()) / 2f);
+            mEditor.putUserData(PopupFactoryImpl.ANCHOR_POPUP_POSITION, mEditor.offsetToVisualPosition(offset));
+        }
+    }
+
     @NotNull
     public Disposable getDisposable() {
         return mDisposable;
@@ -103,6 +116,7 @@ public class TranslationBalloon implements TranslationContract.View {
 
     private void onDispose() {
         mBalloon = null;
+        mCaretRangeMarker.dispose();
     }
 
     @NotNull
@@ -150,6 +164,8 @@ public class TranslationBalloon implements TranslationContract.View {
                 if (mTarget != null && !popupFactory.isBestPopupLocationVisible(mEditor)) {
                     return mTarget;
                 }
+
+                updateCaretPosition();
 
                 final RelativePoint target = popupFactory.guessBestPopupLocation(mEditor);
                 Rectangle visibleArea = mEditor.getScrollingModel().getVisibleArea();
@@ -213,12 +229,12 @@ public class TranslationBalloon implements TranslationContract.View {
                 .addComponent(scrollPane, MIN_BALLOON_HEIGHT, GroupLayout.DEFAULT_SIZE, MAX_BALLOON_SIZE));
         mContentPanel.add(scrollPane);
 
+        updateCaretPosition();
         final BalloonImpl balloon = (BalloonImpl) buildBalloon().createBalloon();
         RelativePoint showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(mEditor);
         createPinButton(balloon, showPoint);
         registerDisposer(balloon, false);
         showBalloon(balloon);
-
 
         // 再刷新一下，尽可能地消除滚动条
         ApplicationManager.getApplication().invokeLater(new Runnable() {

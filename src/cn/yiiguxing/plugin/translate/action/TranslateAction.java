@@ -10,10 +10,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -86,9 +83,8 @@ public class TranslateAction extends AnAction implements DumbAware {
                             queryTextRange.getEndOffset(), HIGHLIGHT_ATTRIBUTES, true, highlighters);
                 }
 
-                moveCaret(editor);
-
-                TranslationBalloon translationBalloon = new TranslationBalloon(editor);
+                RangeMarker caretRangeMarker = createCaretRangeMarker(editor);
+                TranslationBalloon translationBalloon = new TranslationBalloon(editor, caretRangeMarker);
                 translationBalloon.showAndQuery(queryText);
 
                 if (!highlighters.isEmpty() && highlightManager != null) {
@@ -105,35 +101,13 @@ public class TranslateAction extends AnAction implements DumbAware {
         }
     }
 
-    /**
-     * 移动光标到目标字符串中间
-     */
-    private void moveCaret(Editor editor) {
-        final TextRange queryTextRange = mQueryTextRange;
+    @NotNull
+    private RangeMarker createCaretRangeMarker(@NotNull Editor editor) {
+        RangeMarker myCaretRangeMarker = editor.getDocument().createRangeMarker(Utils.requireNonNull(mQueryTextRange));
+        myCaretRangeMarker.setGreedyToLeft(true);
+        myCaretRangeMarker.setGreedyToRight(true);
 
-        final CaretModel caretModel = editor.getCaretModel();
-        //noinspection ConstantConditions
-        caretModel.moveToOffset(queryTextRange.getEndOffset());
-
-        int lineNumber = caretModel.getLogicalPosition().line;
-        Document document = editor.getDocument();
-        if (lineNumber >= document.getLineCount()) {
-            return;
-        }
-
-        int caretOffset = editor.getCaretModel().getOffset();
-        int textLength = document.getTextLength();
-        if (caretOffset == textLength) caretOffset--;
-        if (caretOffset < 0) return;
-
-        int line = document.getLineNumber(caretOffset);
-        int lineStartOffset = document.getLineStartOffset(line);
-        int queryStartOffset = queryTextRange.getStartOffset();
-        int queryEndOffset = queryTextRange.getEndOffset();
-
-        if (lineStartOffset <= queryStartOffset) {
-            caretModel.moveToOffset(Math.round((queryStartOffset + queryEndOffset) / 2f));
-        }
+        return myCaretRangeMarker;
     }
 
     @Nullable
