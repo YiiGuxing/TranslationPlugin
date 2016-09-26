@@ -69,9 +69,8 @@ public class TranslateAction extends AnAction implements DumbAware {
 
         final Editor editor = getEditor(e);
         if (editor != null && hasQueryTextRange()) {
-            final TextRange queryTextRange = mQueryTextRange;
+            final TextRange queryTextRange = Utils.requireNonNull(mQueryTextRange);
 
-            //noinspection ConstantConditions
             final String queryText = Utils.splitWord(editor.getDocument().getText(queryTextRange));
             if (!Utils.isEmptyOrBlankString(queryText)) {
                 final Project project = e.getProject();
