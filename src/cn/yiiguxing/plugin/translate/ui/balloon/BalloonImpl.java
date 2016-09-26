@@ -181,8 +181,21 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
                     if (myHideOnKey && !SwingUtilities.isDescendingFrom(ke.getComponent(), myComp)) {
                         doHide = true;
                     }
-                    if (doHide)
+                    if (doHide) {
                         hide();
+                        return;
+                    }
+                }
+            }
+
+            if ((myHideOnKey || myHideListener != null) && e instanceof KeyEvent && id == KeyEvent.KEY_RELEASED) {
+                final KeyEvent ke = (KeyEvent) e;
+                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    if (myHideListener != null) {
+                        myHideListener.run();
+                    } else {
+                        hide();
+                    }
                 }
             }
         }
