@@ -69,7 +69,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 更新日志
 --------
 
-## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)
+## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)(2016-09-27)
 
 - UI适配
 - 自动取词（[详细说明](#actions)）
