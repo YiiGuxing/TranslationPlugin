@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.TranslationPresenter;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -148,7 +149,12 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         getWindow().addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
-                queryComboBox.requestFocus();
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        queryComboBox.requestFocus();
+                    }
+                });
             }
         });
 
