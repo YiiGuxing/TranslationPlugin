@@ -152,6 +152,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
+                        // 放到这里是因为在Android Studio上第一次显示会被queryBtn抢去焦点。
                         queryComboBox.requestFocus();
                     }
                 });
