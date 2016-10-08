@@ -31,8 +31,7 @@ public final class Translator {
     private static final String DEFAULT_API_KEY_NAME = "TranslationPlugin";
     private static final String DEFAULT_API_KEY_VALUE = "1473510108";
 
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final Logger LOG = Logger.getInstance("#cn.yiiguxing.plugin.translate.Translator");
+    private static final Logger LOG = Logger.getInstance("#" + Translator.class.getCanonicalName());
 
     private final LruCache<String, QueryResult> mCache = new LruCache<String, QueryResult>(200);
     private Future<?> mCurrentTask;

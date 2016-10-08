@@ -78,5 +78,15 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         } else {
             mTranslationView.showResult(query, result);
         }
+
+
+        // tts test
+        if (result != null && result.getBasicExplain() != null) {
+            if (result.getBasicExplain().getPhoneticUK() != null) {
+                Speech.toSpeech(result.getQuery(), Speech.Phonetic.UK);
+            } else if (result.getBasicExplain().getPhoneticUS() != null) {
+                Speech.toSpeech(result.getQuery(), Speech.Phonetic.US);
+            }
+        }
     }
 }
