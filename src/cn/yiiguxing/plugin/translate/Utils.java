@@ -135,25 +135,25 @@ public final class Utils {
             if (be != null) {
                 StringBuilder explain = new StringBuilder();
 
+                String phoUK = be.getPhoneticUK();
+                if (!isEmptyOrBlankString(phoUK)) {
+                    explain.append("英[");
+                    explain.append(phoUK);
+                    explain.append("]  ");
+                }
+
+                String phoUS = be.getPhoneticUS();
+                if (!isEmptyOrBlankString(phoUS)) {
+                    explain.append("美[");
+                    explain.append(phoUS);
+                    explain.append("]");
+                }
+
                 String pho = be.getPhonetic();
-                if (!isEmptyOrBlankString(pho)) {
+                if (!isEmptyOrBlankString(pho) && explain.length() == 0) {
                     explain.append("[");
                     explain.append(pho);
                     explain.append("]  ");
-                }
-
-                pho = be.getPhoneticUK();
-                if (!isEmptyOrBlankString(pho)) {
-                    explain.append("英[");
-                    explain.append(pho);
-                    explain.append("]  ");
-                }
-
-                pho = be.getPhoneticUS();
-                if (!isEmptyOrBlankString(pho)) {
-                    explain.append("美[");
-                    explain.append(pho);
-                    explain.append("]");
                 }
 
                 if (explain.length() > 0) {
