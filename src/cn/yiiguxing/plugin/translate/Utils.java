@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public final class Utils {
@@ -93,7 +94,7 @@ public final class Utils {
             return;
         }
 
-        Utils.insertHeader(textPane, document, result);
+        Utils.insertHeader(document, result);
 
         BasicExplain basicExplain = result.getBasicExplain();
         if (basicExplain != null) {
@@ -126,7 +127,7 @@ public final class Utils {
         return attr;
     }
 
-    private static void insertHeader(@NotNull JTextPane textPane, @NotNull Document document, QueryResult result) {
+    private static void insertHeader(@NotNull Document document, QueryResult result) {
         String query = result.getQuery();
 
         try {
@@ -143,13 +144,13 @@ public final class Utils {
 
                 String phoUK = be.getPhoneticUK();
                 if (!isEmptyOrBlankString(phoUK)) {
-                    insertPhonetic(textPane, document, result.getQuery(), phoUK, Speech.Phonetic.UK);
+                    insertPhonetic(document, result.getQuery(), phoUK, Speech.Phonetic.UK);
                     hasPhonetic = true;
                 }
 
                 String phoUS = be.getPhoneticUS();
                 if (!isEmptyOrBlankString(phoUS)) {
-                    insertPhonetic(textPane, document, result.getQuery(), phoUS, Speech.Phonetic.US);
+                    insertPhonetic(document, result.getQuery(), phoUS, Speech.Phonetic.US);
                     hasPhonetic = true;
                 }
 
@@ -170,8 +171,7 @@ public final class Utils {
         }
     }
 
-    private static void insertPhonetic(@NotNull JTextPane textPane,
-                                       @NotNull Document document,
+    private static void insertPhonetic(@NotNull Document document,
                                        @NotNull final String query,
                                        @NotNull String phoneticText,
                                        @NotNull final Speech.Phonetic phonetic) throws BadLocationException {
@@ -193,7 +193,11 @@ public final class Utils {
                 }
             }
         });
-        textPane.insertComponent(iconButton);
+        iconButton.setAlignmentY(.88f);
+        iconButton.setMaximumSize(new Dimension(Icons.Speech.getIconWidth(), Icons.Speech.getIconHeight()));
+        SimpleAttributeSet a = new SimpleAttributeSet();
+        StyleConstants.setComponent(a, iconButton);
+        document.insertString(document.getLength(), " ", a);
     }
 
     private static void insertExplain(Document doc, String[] explains) {
