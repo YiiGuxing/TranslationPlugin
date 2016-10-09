@@ -124,7 +124,7 @@
               <focusPainted value="true"/>
               <focusTraversalPolicyProvider value="false"/>
               <focusable value="true"/>
-              <icon value="translate.png"/>
+              <icon value="icons/translate.png"/>
               <opaque value="true"/>
               <text value="Query"/>
             </properties>

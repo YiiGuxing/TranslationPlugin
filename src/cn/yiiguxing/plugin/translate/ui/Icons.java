@@ -14,12 +14,12 @@ public final class Icons {
     private Icons() {
     }
 
-    public static final Icon Translate = IconLoader.getIcon("/translate.png");
-    public static final Icon Pin = IconLoader.getIcon("/pin.png");
+    public static final Icon Translate = IconLoader.getIcon("/icons/translate.png");
+    public static final Icon Pin = IconLoader.getIcon("/icons/pin.png");
     public static final Icon Copy = AllIcons.Actions.Copy;
-    public static final Icon Close = IconLoader.getIcon("/close.png");
-    public static final Icon ClosePressed = IconLoader.getIcon("/closePressed.png");
-    public static final Icon Speech = IconLoader.getIcon("/speech.png");
-    public static final Icon SpeechPressed = IconLoader.getIcon("/speechPressed.png");
+    public static final Icon Close = IconLoader.getIcon("/icons/close.png");
+    public static final Icon ClosePressed = IconLoader.getIcon("/icons/closePressed.png");
+    public static final Icon Speech = IconLoader.getIcon("/icons/speech.png");
+    public static final Icon SpeechPressed = IconLoader.getIcon("/icons/speechPressed.png");
 
 }
