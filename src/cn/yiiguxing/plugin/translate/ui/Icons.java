@@ -19,5 +19,7 @@ public final class Icons {
     public static final Icon Copy = AllIcons.Actions.Copy;
     public static final Icon Close = IconLoader.getIcon("/close.png");
     public static final Icon ClosePressed = IconLoader.getIcon("/closePressed.png");
+    public static final Icon Speech = IconLoader.getIcon("/speech.png");
+    public static final Icon SpeechPressed = IconLoader.getIcon("/speechPressed.png");
 
 }
