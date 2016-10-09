@@ -3,12 +3,17 @@ package cn.yiiguxing.plugin.translate;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.model.WebExplain;
+import cn.yiiguxing.plugin.translate.ui.IconButton;
+import cn.yiiguxing.plugin.translate.ui.Icons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.JBColor;
+import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.event.MouseEvent;
 
 public final class Utils {
 
@@ -79,7 +84,8 @@ public final class Utils {
         return error;
     }
 
-    public static void insertQueryResultText(@NotNull Document document, @NotNull QueryResult result) {
+    public static void insertQueryResultText(@NotNull JTextPane textPane, @NotNull QueryResult result) {
+        Document document = textPane.getDocument();
         try {
             document.remove(0, document.getLength());
         } catch (BadLocationException e) {
@@ -87,7 +93,7 @@ public final class Utils {
             return;
         }
 
-        Utils.insertHeader(document, result);
+        Utils.insertHeader(textPane, document, result);
 
         BasicExplain basicExplain = result.getBasicExplain();
         if (basicExplain != null) {
@@ -120,7 +126,7 @@ public final class Utils {
         return attr;
     }
 
-    private static void insertHeader(Document document, QueryResult result) {
+    private static void insertHeader(@NotNull JTextPane textPane, @NotNull Document document, QueryResult result) {
         String query = result.getQuery();
 
         try {
@@ -133,31 +139,28 @@ public final class Utils {
 
             BasicExplain be = result.getBasicExplain();
             if (be != null) {
-                StringBuilder explain = new StringBuilder();
+                boolean hasPhonetic = false;
 
                 String phoUK = be.getPhoneticUK();
                 if (!isEmptyOrBlankString(phoUK)) {
-                    explain.append("英[");
-                    explain.append(phoUK);
-                    explain.append("]  ");
+                    insertPhonetic(textPane, document, result.getQuery(), phoUK, Speech.Phonetic.UK);
+                    hasPhonetic = true;
                 }
 
                 String phoUS = be.getPhoneticUS();
                 if (!isEmptyOrBlankString(phoUS)) {
-                    explain.append("美[");
-                    explain.append(phoUS);
-                    explain.append("]");
+                    insertPhonetic(textPane, document, result.getQuery(), phoUS, Speech.Phonetic.US);
+                    hasPhonetic = true;
                 }
 
                 String pho = be.getPhonetic();
-                if (!isEmptyOrBlankString(pho) && explain.length() == 0) {
-                    explain.append("[");
-                    explain.append(pho);
-                    explain.append("]  ");
+                if (!isEmptyOrBlankString(pho) && !hasPhonetic) {
+                    document.insertString(document.getLength(), "[" + pho + "]", ATTR_EXPLAIN);
+                    hasPhonetic = true;
                 }
 
-                if (explain.length() > 0) {
-                    document.insertString(document.getLength(), explain.toString() + "\n", ATTR_EXPLAIN);
+                if (hasPhonetic) {
+                    document.insertString(document.getLength(), "\n", null);
                 }
             }
 
@@ -165,6 +168,32 @@ public final class Utils {
         } catch (BadLocationException e) {
             LOG.error("insertHeader ", e);
         }
+    }
+
+    private static void insertPhonetic(@NotNull JTextPane textPane,
+                                       @NotNull Document document,
+                                       @NotNull final String query,
+                                       @NotNull String phoneticText,
+                                       @NotNull final Speech.Phonetic phonetic) throws BadLocationException {
+        String insert;
+        if (phonetic == Speech.Phonetic.UK) {
+            insert = "英[";
+        } else {
+            insert = "美[";
+        }
+
+        insert += phoneticText + "]";
+        document.insertString(document.getLength(), insert, ATTR_EXPLAIN);
+
+        IconButton iconButton = new IconButton(Icons.Speech, Icons.SpeechPressed, new Consumer<MouseEvent>() {
+            @Override
+            public void consume(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 1) {
+                    Speech.toSpeech(query, phonetic);
+                }
+            }
+        });
+        textPane.insertComponent(iconButton);
     }
 
     private static void insertExplain(Document doc, String[] explains) {

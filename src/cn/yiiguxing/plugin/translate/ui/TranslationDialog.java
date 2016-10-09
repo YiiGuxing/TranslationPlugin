@@ -15,7 +15,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.util.Consumer;
 import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -355,7 +355,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
         mLastSuccessfulQuery = query;
 
-        Utils.insertQueryResultText(resultText.getDocument(), result);
+        Utils.insertQueryResultText(resultText, result);
 
         resultText.setCaretPosition(0);
         layout.show(textPanel, CARD_RESULT);
@@ -432,67 +432,23 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         }
     }
 
-    private class CloseButton extends NonOpaquePanel {
-
-        private boolean isPressedByMouse;
-        private boolean isActive;
+    private class CloseButton extends IconButton {
 
         CloseButton() {
-            addMouseListener(new MouseListener() {
+            super(Icons.Close, Icons.ClosePressed, new Consumer<MouseEvent>() {
                 @Override
-                public void mouseClicked(MouseEvent e) {
-                    TranslationDialog.this.close(CLOSE_EXIT_CODE);
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    isPressedByMouse = true;
-                    CloseButton.this.repaint();
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    isPressedByMouse = false;
-                    CloseButton.this.repaint();
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    isPressedByMouse = false;
-                    CloseButton.this.repaint();
+                public void consume(MouseEvent mouseEvent) {
+                    if (mouseEvent.getClickCount() == 1) {
+                        TranslationDialog.this.close(CLOSE_EXIT_CODE);
+                    }
                 }
             });
         }
 
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(Icons.Close.getIconWidth(), Icons.Close.getIconHeight());
+        protected boolean hasPaint() {
+            return super.hasPaint() && mLastMoveWasInsideDialog;
         }
 
-        private void setActive(final boolean active) {
-            this.isActive = active;
-            this.repaint();
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (hasPaint()) {
-                paintIcon(g, !isActive || isPressedByMouse ? Icons.ClosePressed : Icons.Close);
-            }
-        }
-
-        private boolean hasPaint() {
-            return getWidth() > 0 && mLastMoveWasInsideDialog;
-        }
-
-        private void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
-            icon.paintIcon(this, g, 0, (getHeight() - icon.getIconHeight()) / 2);
-        }
     }
 
 }

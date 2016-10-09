@@ -215,7 +215,7 @@ public class TranslationBalloon implements TranslationContract.View {
         resultText.setBackground(UIManager.getColor("Panel.background"));
         resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
 
-        Utils.insertQueryResultText(resultText.getDocument(), result);
+        Utils.insertQueryResultText(resultText, result);
         resultText.setCaretPosition(0);
 
         JBScrollPane scrollPane = new JBScrollPane(resultText);
