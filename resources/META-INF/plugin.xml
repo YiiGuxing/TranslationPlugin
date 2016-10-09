@@ -52,8 +52,9 @@
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.ui.Settings"/>
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Settings"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.ui.SettingsConfigurable"/>
 
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Translator"
                             serviceImplementation="cn.yiiguxing.plugin.translate.Translator"/>

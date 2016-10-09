@@ -1,11 +1,11 @@
 package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Utils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.WebBrowser;
 import com.intellij.ide.browsers.WebBrowserManager;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.Configurable;
@@ -24,15 +24,11 @@ import java.awt.event.ItemListener;
  * 设置
  */
 @SuppressWarnings("WeakerAccess")
-public class Settings implements Configurable, ItemListener {
+public class SettingsConfigurable implements Configurable, ItemListener {
 
     private static final String URL = "http://fanyi.youdao.com/openapi?path=data-mode";
 
-    private static final String API_KEY_NAME = "TranslationPlugin.API_KEY_NAME";
-    private static final String API_KEY_VALUE = "TranslationPlugin.API_KEY_VALUE";
-    private static final String API_KEY_USER_DEFAULT = "TranslationPlugin.API_KEY_USER_DEFAULT";
-
-    private static final boolean DEFAULT_USER_DEFAULT_KEY = true;
+    private final Settings settings;
 
     private JPanel contentPane;
     @SuppressWarnings("unused")
@@ -40,6 +36,10 @@ public class Settings implements Configurable, ItemListener {
     private JTextField keyNameField;
     private JTextField keyValueField;
     private JCheckBox checkBox;
+
+    public SettingsConfigurable() {
+        settings = Settings.getInstance();
+    }
 
     @Nls
     @Override
@@ -92,9 +92,8 @@ public class Settings implements Configurable, ItemListener {
     private void useDefaultKey() {
         if (Utils.isEmptyOrBlankString(keyNameField.getText())
                 && Utils.isEmptyOrBlankString(keyValueField.getText())) {
-            PropertiesComponent component = PropertiesComponent.getInstance();
-            component.setValue(API_KEY_NAME, null);
-            component.setValue(API_KEY_VALUE, null);
+            settings.setApiKeyName(null);
+            settings.setApiKeyValue(null);
         }
 
         keyNameField.setText("Default");
@@ -104,11 +103,9 @@ public class Settings implements Configurable, ItemListener {
     }
 
     private void useCustomKey() {
-        PropertiesComponent component = PropertiesComponent.getInstance();
-
-        keyNameField.setText(component.getValue(API_KEY_NAME, ""));
+        keyNameField.setText(settings.getApiKeyName());
         keyNameField.setEnabled(true);
-        keyValueField.setText(component.getValue(API_KEY_VALUE, ""));
+        keyValueField.setText(settings.getApiKeyValue());
         keyValueField.setEnabled(true);
     }
 
@@ -120,39 +117,25 @@ public class Settings implements Configurable, ItemListener {
 
     @Override
     public void apply() throws ConfigurationException {
-        PropertiesComponent component = PropertiesComponent.getInstance();
-
         boolean validKey = !Utils.isEmptyOrBlankString(keyNameField.getText())
                 && !Utils.isEmptyOrBlankString(keyValueField.getText());
         boolean useDefault = checkBox.isSelected();
         if (!useDefault) {
-            component.setValue(API_KEY_NAME, keyNameField.getText());
-            component.setValue(API_KEY_VALUE, keyValueField.getText());
+            settings.setApiKeyName(keyNameField.getText());
+            settings.setApiKeyValue(keyValueField.getText());
         }
 
-        component.setValue(API_KEY_USER_DEFAULT, useDefault || !validKey, DEFAULT_USER_DEFAULT_KEY);
+        settings.setUseDefaultKey(useDefault || !validKey);
     }
 
     @Override
     public void reset() {
-        checkBox.setSelected(isUseDefaultKey());
+        checkBox.setSelected(settings.isUseDefaultKey());
     }
 
     @Override
     public void disposeUIResources() {
         checkBox.removeItemListener(this);
-    }
-
-    public static boolean isUseDefaultKey() {
-        return PropertiesComponent.getInstance().getBoolean(API_KEY_USER_DEFAULT, DEFAULT_USER_DEFAULT_KEY);
-    }
-
-    public static String getApiKeyName() {
-        return PropertiesComponent.getInstance().getValue(API_KEY_NAME, "");
-    }
-
-    public static String getApiKeyValue() {
-        return PropertiesComponent.getInstance().getValue(API_KEY_VALUE, "");
     }
 
 }

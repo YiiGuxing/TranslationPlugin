@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.model.QueryResult;
-import cn.yiiguxing.plugin.translate.ui.Settings;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.application.ApplicationManager;
@@ -78,15 +77,16 @@ public final class Translator {
             e.printStackTrace();
         }
 
+        Settings settings = Settings.getInstance();
+
         String apiKeyName;
         String apiKeyValue;
-        boolean useDefaultKey = Settings.isUseDefaultKey();
-        if (useDefaultKey) {
+        if (settings.isUseDefaultKey()) {
             apiKeyName = DEFAULT_API_KEY_NAME;
             apiKeyValue = DEFAULT_API_KEY_VALUE;
         } else {
-            apiKeyName = Settings.getApiKeyName();
-            apiKeyValue = Settings.getApiKeyValue();
+            apiKeyName = settings.getApiKeyName();
+            apiKeyValue = settings.getApiKeyValue();
 
             if (Utils.isEmptyOrBlankString(apiKeyName) || Utils.isEmptyOrBlankString(apiKeyValue)) {
                 apiKeyName = DEFAULT_API_KEY_NAME;
