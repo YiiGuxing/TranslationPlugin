@@ -79,7 +79,7 @@ public class IconButton extends NonOpaquePanel {
         return getWidth() > 0;
     }
 
-    private void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
+    protected void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
         icon.paintIcon(this, g, 0, (getHeight() - icon.getIconHeight()) / 2);
     }
 

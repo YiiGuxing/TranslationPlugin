@@ -3,8 +3,7 @@ package cn.yiiguxing.plugin.translate;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.model.WebExplain;
-import cn.yiiguxing.plugin.translate.ui.IconButton;
-import cn.yiiguxing.plugin.translate.ui.Icons;
+import cn.yiiguxing.plugin.translate.ui.PhoneticButton;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Consumer;
@@ -13,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public final class Utils {
@@ -181,23 +179,19 @@ public final class Utils {
         } else {
             insert = "美[";
         }
-
         insert += phoneticText + "]";
         document.insertString(document.getLength(), insert, ATTR_EXPLAIN);
 
-        IconButton iconButton = new IconButton(Icons.Speech, Icons.SpeechPressed, new Consumer<MouseEvent>() {
+        SimpleAttributeSet attr = new SimpleAttributeSet();
+        StyleConstants.setComponent(attr, new PhoneticButton(new Consumer<MouseEvent>() {
             @Override
             public void consume(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() == 1) {
                     Speech.toSpeech(query, phonetic);
                 }
             }
-        });
-        iconButton.setAlignmentY(.88f);
-        iconButton.setMaximumSize(new Dimension(Icons.Speech.getIconWidth(), Icons.Speech.getIconHeight()));
-        SimpleAttributeSet a = new SimpleAttributeSet();
-        StyleConstants.setComponent(a, iconButton);
-        document.insertString(document.getLength(), " ", a);
+        }));
+        document.insertString(document.getLength(), " ", attr);
     }
 
     private static void insertExplain(Document doc, String[] explains) {
