@@ -1,5 +1,10 @@
+
 Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugins][plugin-img]][plugin] [![Gitter][badge-gitter-img]][badge-gitter]
 ===========
+
+[![Version](http://phpstorm.espend.de/badge/8579/version)][plugin]
+[![Downloads](http://phpstorm.espend.de/badge/8579/downloads)][plugin]
+[![Downloads last month](http://phpstorm.espend.de/badge/8579/last-month)][plugin]
 
 ### IntelliJ IDEA/Android Studio 翻译插件,可中英互译。
 
@@ -20,6 +25,7 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 
 重启**IDEA**.
 
+
 Actions
 -------
 
@@ -32,6 +38,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
   ![Translate(Inclusive)](./images/action2.gif)
 - **Translate(Exclusive):** <kbd>Alt + 3</kbd> 取词并翻译。自动取单个词，忽略手动选择的文本。
   ![Translate(Exclusive)](./images/action3.gif)
+
 
 使用
 ----
@@ -66,6 +73,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
    或者 [**点击这里**](http://fanyi.youdao.com/openapi?path=data-mode) 也可申请有道API KEY。
 
+
 更新日志
 --------
 
@@ -77,9 +85,9 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
 [完整的更新历史记录](./CHANGELOG.md)
 
-[release-img]:        https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg
-[latest-release]:     https://github.com/YiiGuxing/TranslationPlugin/releases/latest
-[badge-gitter-img]:   https://img.shields.io/gitter/room/YiiGuxing/TranslationPlugin.svg
-[badge-gitter]:       https://gitter.im/TranslationPlugin/Lobby
-[plugin-img]:         https://img.shields.io/badge/plugin-8579-orange.svg
-[plugin]:             https://plugins.jetbrains.com/plugin/8579
+[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg
+[latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
+[badge-gitter-img]: https://img.shields.io/gitter/room/YiiGuxing/TranslationPlugin.svg
+[badge-gitter]: https://gitter.im/TranslationPlugin/Lobby
+[plugin-img]: https://img.shields.io/badge/plugin-8579-orange.svg
+[plugin]: https://plugins.jetbrains.com/plugin/8579
