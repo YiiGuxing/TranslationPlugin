@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBMenuItem;
@@ -29,7 +28,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.List;
 
@@ -253,11 +251,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         copy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedText = resultText.getSelectedText();
-                if (!Utils.isEmptyOrBlankString(selectedText)) {
-                    CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
-                    copyPasteManager.setContents(new StringSelection(selectedText));
-                }
+                resultText.copy();
             }
         });
 

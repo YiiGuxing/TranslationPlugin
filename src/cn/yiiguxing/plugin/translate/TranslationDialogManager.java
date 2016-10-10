@@ -22,7 +22,7 @@ public class TranslationDialogManager {
     /**
      * 显示对话框
      */
-    public void showTranslationDialog(@Nullable Project project) {
+    public TranslationDialog showTranslationDialog(@Nullable Project project) {
         if (myShowingDialog == null) {
             myShowingDialog = new TranslationDialog(project);
             Disposer.register(myShowingDialog.getDisposable(), new Disposable() {
@@ -34,6 +34,7 @@ public class TranslationDialogManager {
         }
 
         myShowingDialog.show();
+        return myShowingDialog;
     }
 
     /**

@@ -13,10 +13,13 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.JBMenuItem;
+import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.PopupMenuListenerAdapter;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
@@ -28,7 +31,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
@@ -236,6 +242,8 @@ public class TranslationBalloon implements TranslationContract.View {
         registerDisposer(balloon, false);
         showBalloon(balloon);
 
+        setPopupMenu(balloon, resultText);
+
         // 再刷新一下，尽可能地消除滚动条
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
@@ -245,6 +253,41 @@ public class TranslationBalloon implements TranslationContract.View {
                 }
             }
         });
+    }
+
+    private void setPopupMenu(final Balloon balloon, final JTextPane textPane) {
+        final JBPopupMenu menu = new JBPopupMenu();
+
+        final JBMenuItem copy = new JBMenuItem("Copy", Icons.Copy);
+        copy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textPane.copy();
+            }
+        });
+
+        final JBMenuItem query = new JBMenuItem("Query", Icons.Translate);
+        query.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedText = textPane.getSelectedText();
+                TranslationDialogManager.getInstance().showTranslationDialog(mEditor.getProject()).query(selectedText);
+                balloon.hide(true);
+            }
+        });
+
+        menu.add(copy);
+        menu.add(query);
+        menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                boolean hasSelectedText = !Utils.isEmptyOrBlankString(textPane.getSelectedText());
+                copy.setEnabled(hasSelectedText);
+                query.setEnabled(hasSelectedText);
+            }
+        });
+
+        textPane.setComponentPopupMenu(menu);
     }
 
     private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint) {
