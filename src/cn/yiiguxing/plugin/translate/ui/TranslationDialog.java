@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.TranslationContract;
 import cn.yiiguxing.plugin.translate.TranslationPresenter;
 import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -242,24 +243,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 }
             }
         });
-
-        queryComboBox.setRenderer(new ListCellRendererWrapper<String>() {
-            @Override
-            public void customize(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-                // 在没有确定大小之前不设置真正的文本，否则控件会被过长的文本撑大
-                if (list.getWidth() == 0) {
-                    setText("");
-                    return;
-                }
-
-                if (value != null) {
-                    setText(value);
-                    setToolTipText(value);
-                } else {
-                    setText("");
-                }
-            }
-        });
+        queryComboBox.setRenderer(new ComboRenderer());
     }
 
     private void setComponentPopupMenu() {
@@ -405,6 +389,46 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
             this.fireContentsChanged(this, -1, -1);
         }
 
+    }
+
+    private final class ComboRenderer extends ListCellRendererWrapper<String> {
+        private final StringBuilder builder = new StringBuilder();
+
+        @Override
+        public void customize(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+            if (list.getWidth() == 0 // 在没有确定大小之前不设置真正的文本,否则控件会被过长的文本撑大.
+                    || Utils.isEmptyOrBlankString(value)) {
+                setText("");
+            } else {
+                setRenderText(value);
+            }
+        }
+
+        private void setRenderText(@NotNull String value) {
+            final QueryResult cache = mTranslationPresenter.getCache(value);
+            if (cache != null) {
+                StringBuilder builder = this.builder;
+                BasicExplain basicExplain = cache.getBasicExplain();
+                String[] translation = basicExplain != null ? basicExplain.getExplains() : cache.getTranslation();
+
+                builder.setLength(0);
+                builder.append(value);
+                if (translation != null && translation.length > 0) {
+                    builder.append("  -  ");
+                    for (String tran : translation) {
+                        builder.append(tran);
+                        builder.append("; ");
+                    }
+                    builder.setLength(builder.length() - 2);
+                }
+
+                setText(builder.toString());
+                setToolTipText(builder.toString());
+            } else {
+                setText(value);
+                setToolTipText(value);
+            }
+        }
     }
 
     private class MyTitlePanel extends TitlePanel {

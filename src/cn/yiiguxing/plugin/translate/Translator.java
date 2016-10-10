@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -40,6 +41,13 @@ public final class Translator {
 
     public static Translator getInstance() {
         return ServiceManager.getService(Translator.class);
+    }
+
+    @Nullable
+    public QueryResult getCache(@NotNull String query) {
+        synchronized (mCache) {
+            return mCache.get(query);
+        }
     }
 
     public void query(String query, Callback callback) {

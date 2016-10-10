@@ -12,6 +12,9 @@ public interface TranslationContract {
         @NotNull
         List<String> getHistory();
 
+        @Nullable
+        QueryResult getCache(String query);
+
         void query(@Nullable String query);
     }
 

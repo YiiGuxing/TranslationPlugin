@@ -14,11 +14,13 @@ public class TranslationPresenter implements TranslationContract.Presenter {
     private static final int HISTORY_SIZE = 50;
     private static final List<String> sHistory = new ArrayList<String>(HISTORY_SIZE);
 
+    private final Translator mTranslator;
     private final TranslationContract.View mTranslationView;
 
     private String currentQuery;
 
     public TranslationPresenter(@NotNull TranslationContract.View view) {
+        mTranslator = Translator.getInstance();
         this.mTranslationView = Utils.requireNonNull(view, "view cannot be null.");
     }
 
@@ -26,6 +28,15 @@ public class TranslationPresenter implements TranslationContract.Presenter {
     @Override
     public List<String> getHistory() {
         return Collections.unmodifiableList(sHistory);
+    }
+
+    @Nullable
+    @Override
+    public QueryResult getCache(String query) {
+        if (Utils.isEmptyOrBlankString(query))
+            return null;
+
+        return mTranslator.getCache(query);
     }
 
     @Override
@@ -40,7 +51,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
 
         // 防止内存泄漏
         final Reference<TranslationPresenter> presenterRef = new WeakReference<TranslationPresenter>(this);
-        Translator.getInstance().query(query, new Translator.Callback() {
+        mTranslator.query(query, new Translator.Callback() {
             @Override
             public void onQuery(String query, QueryResult result) {
                 TranslationPresenter presenter = presenterRef.get();
