@@ -4,6 +4,7 @@
 
 - 发音朗读
 - UI优化
+- 气泡中添加右键操作菜单
 - 历史记录列表中显示简要的翻译信息
 
 ## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)(2016-09-27)

@@ -81,6 +81,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
 - 发音朗读
 - UI优化
+- 气泡中添加右键操作菜单
 - 历史记录列表中显示简要的翻译信息
 
 [完整的更新历史记录](./CHANGELOG.md)
