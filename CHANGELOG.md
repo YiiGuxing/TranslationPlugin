@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.3.0
+
+- 发音朗读
+- UI优化
+- 历史记录列表中显示简要的翻译信息
+
 ## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)(2016-09-27)
 
 - UI适配

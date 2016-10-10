@@ -69,19 +69,11 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 更新日志
 --------
 
-## [v1.2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2)(2016-09-27)
+## v1.3.0
 
-- UI适配
-- 自动取词（[详细说明](#actions)）
-- 气泡跟随编辑器滚动而滚动
-- 添加默认快捷键，见[Actions](#actions)
-- 使用Java1.6编译
-- 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
-- 修复: 与ideaVim插件ESC键冲突问题 [#18][#18]
-
-[#13]:https://github.com/YiiGuxing/TranslationPlugin/issues/13 "Translation threw an uncaught PluginException"
-[#14]:https://github.com/YiiGuxing/TranslationPlugin/issues/14 "Translate Error"
-[#18]:https://github.com/YiiGuxing/TranslationPlugin/issues/18 "对话框在非聚焦状态下按ESC键关闭对话框的问题"
+- 发音朗读
+- UI优化
+- 历史记录列表中显示简要的翻译信息
 
 [完整的更新历史记录](./CHANGELOG.md)
 
