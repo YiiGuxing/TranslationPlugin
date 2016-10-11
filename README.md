@@ -12,9 +12,6 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 
 ![截图1](./images/0.png)
 
-![截图2](./images/1.png)
-
-
 安装
 ----
 
