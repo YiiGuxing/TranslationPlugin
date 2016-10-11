@@ -54,7 +54,7 @@ public class TranslationBalloon implements TranslationContract.View {
     private JLabel mQueryingLabel;
 
     private Balloon mBalloon;
-    private RelativePoint mTarget;
+    private RelativePoint mTargetLocation;
 
     private boolean mInterceptDispose;
     @NotNull
@@ -167,8 +167,8 @@ public class TranslationBalloon implements TranslationContract.View {
         balloon.show(new PositionTracker<Balloon>(mEditor.getContentComponent()) {
             @Override
             public RelativePoint recalculateLocation(Balloon object) {
-                if (mTarget != null && !popupFactory.isBestPopupLocationVisible(mEditor)) {
-                    return mTarget;
+                if (mTargetLocation != null && !popupFactory.isBestPopupLocationVisible(mEditor)) {
+                    return mTargetLocation;
                 }
 
                 updateCaretPosition();
@@ -180,14 +180,14 @@ public class TranslationBalloon implements TranslationContract.View {
 
                 final Point screenPoint = target.getScreenPoint();
                 int y = screenPoint.y - point.y;
-                if (mTarget != null && y + balloon.getPreferredSize().getHeight() > visibleArea.height) {
+                if (mTargetLocation != null && y + balloon.getPreferredSize().getHeight() > visibleArea.height) {
                     //FIXME 只是判断垂直方向，没有判断水平方向，但水平方向问题不是很大。
                     //FIXME 垂直方向上也只是判断Balloon显示在下方的情况，还是有些小问题。
-                    return mTarget;
+                    return mTargetLocation;
                 }
 
-                mTarget = new RelativePoint(new Point(screenPoint.x, screenPoint.y));
-                return mTarget;
+                mTargetLocation = new RelativePoint(new Point(screenPoint.x, screenPoint.y));
+                return mTargetLocation;
             }
         }, Balloon.Position.below);
     }
@@ -291,7 +291,6 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint) {
-        // FIXME 由于现在的Balloon是可以移动的，所以showPoint不再那么准确了，可以会使得PinButton显示位置不对。
         balloon.setActionProvider(new BalloonImpl.ActionProvider() {
             private BalloonImpl.ActionButton myPinButton;
             private final Icon myIcon = Icons.Pin;
@@ -324,8 +323,10 @@ public class TranslationBalloon implements TranslationContract.View {
                     Insets border = balloon.getShadowBorderInsets();
                     rectangle.x -= border.left;
 
-                    int showX = showPoint.getPoint().x;
-                    int showY = showPoint.getPoint().y;
+                    // FIXME 由于现在的Balloon是可以移动的，所以showPoint不再那么准确了，可以会使得PinButton显示位置不对。
+                    RelativePoint location = mTargetLocation != null ? mTargetLocation : showPoint;
+                    int showX = location.getPoint().x;
+                    int showY = location.getPoint().y;
                     // 误差
                     int offset = JBUI.scale(1);
                     boolean atRight = showX <= lpBounds.x + offset;
