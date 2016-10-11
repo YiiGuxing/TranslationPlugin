@@ -29,7 +29,7 @@ Actions
 Translation有四个Action，它们分别是：`Translation`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
 
 - **Translation:** <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
-- **Translate:** <kbd>Alt + 1</kbd> 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则以最大范围自动取词。此Action默认显示在编辑器右键菜单上。
+- **Translate:** <kbd>Alt + 1</kbd> 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。此Action默认显示在编辑器右键菜单上。
   ![Translate](./images/action1.gif)
 - **Translate(Inclusive):** <kbd>Alt + 2</kbd> 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
   ![Translate(Inclusive)](./images/action2.gif)
@@ -62,13 +62,15 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
    <kbd>Preferences(Settings)</kbd> > <kbd>Other Settings</kbd> > <kbd>Translation</kbd>。 由于有道的API在查询请求数量上存在限制，如果在1小时内查询请求次数达到一定数量后将会暂时禁止查询一段时间（大概1小时）。如果很多人同时使用同一个KEY，可能会很容易就达到了限制条件，这就可以通过使用自己的KEY来避免（一人一个KEY基本足够用了）。
 
-   ![Settings](./images/4.png)
-
 5. **如何获取有道API KEY？**
 
    <kbd>Preferences(Settings)</kbd> > <kbd>Other Settings</kbd> > <kbd>Translation</kbd> > <kbd>获取有道API KEY</kbd>
 
    或者 [**点击这里**](http://fanyi.youdao.com/openapi?path=data-mode) 也可申请有道API KEY。
+
+6. **Settings(Preferences)**
+
+   ![Settings](./images/4.png)
 
 
 更新日志
@@ -79,6 +81,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 - 发音朗读
 - UI优化
 - 气泡中添加右键操作菜单
+- 右键菜单翻译操作取词模式配置
 - 历史记录列表中显示简要的翻译信息
 
 [完整的更新历史记录](./CHANGELOG.md)
