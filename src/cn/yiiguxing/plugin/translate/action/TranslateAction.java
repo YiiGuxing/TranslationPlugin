@@ -38,21 +38,17 @@ public class TranslateAction extends AnAction implements DumbAware {
         HIGHLIGHT_ATTRIBUTES = attributes;
     }
 
-    @Nullable
-    private final AutoSelectionMode mAutoSelectionMode;
     private final boolean mCheckSelection;
 
     @Nullable
     private TextRange mQueryTextRange;
 
     /**
-     * @param autoSelectionMode 取词模式
-     * @param checkSelection    指定是否检查手动选择的文本。<code>true</code> - 如果有手动选择文本，
-     *                          则忽略<code>autoSelectionMode</code>, <code>false</code> - 将忽略手动选择的文本。
+     * @param checkSelection 指定是否检查手动选择的文本。<code>true</code> - 如果有手动选择文本，
+     *                       则忽略<code>autoSelectionMode</code>, <code>false</code> - 将忽略手动选择的文本。
      */
-    public TranslateAction(@NotNull AutoSelectionMode autoSelectionMode, boolean checkSelection) {
+    public TranslateAction(boolean checkSelection) {
         super(Icons.Translate);
-        mAutoSelectionMode = Utils.requireNonNull(autoSelectionMode, "selectionMode cannot be null.");
         mCheckSelection = checkSelection;
     }
 
@@ -60,7 +56,15 @@ public class TranslateAction extends AnAction implements DumbAware {
      * 自动从最大范围内取词，忽略选择
      */
     public TranslateAction() {
-        this(AutoSelectionMode.INCLUSIVE, false);
+        this(false);
+    }
+
+    /**
+     * 返回取词模式
+     */
+    @NotNull
+    protected AutoSelectionMode getAutoSelectionMode() {
+        return AutoSelectionMode.INCLUSIVE;
     }
 
     @Override
@@ -136,7 +140,10 @@ public class TranslateAction extends AnAction implements DumbAware {
             } else {
                 final ArrayList<TextRange> ranges = new ArrayList<TextRange>();
                 final int offset = editor.getCaretModel().getOffset();
-                final boolean exclusiveMode = mAutoSelectionMode == AutoSelectionMode.EXCLUSIVE;
+
+                final AutoSelectionMode selectionMode = Utils.requireNonNull(getAutoSelectionMode(),
+                        "Method getAutoSelectionMode() can not return null.");
+                final boolean exclusiveMode = selectionMode == AutoSelectionMode.EXCLUSIVE;
 
                 SelectWordUtilCompat.addWordOrLexemeSelection(exclusiveMode, editor, offset, ranges);
 
@@ -160,17 +167,4 @@ public class TranslateAction extends AnAction implements DumbAware {
         return queryRange;
     }
 
-    /**
-     * 取词模式
-     */
-    public enum AutoSelectionMode {
-        /**
-         * 只取一个词
-         */
-        EXCLUSIVE,
-        /**
-         * 最大范围内取词
-         */
-        INCLUSIVE
-    }
 }

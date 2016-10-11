@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.WebBrowser;
@@ -14,6 +15,7 @@ import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -28,6 +30,9 @@ public class SettingsConfigurable implements Configurable, ItemListener {
 
     private static final String URL = "http://fanyi.youdao.com/openapi?path=data-mode";
 
+    private static final int INDEX_INCLUSIVE = 0;
+    private static final int INDEX_EXCLUSIVE = 1;
+
     private final Settings settings;
 
     private JPanel contentPane;
@@ -36,6 +41,7 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     private JTextField keyNameField;
     private JTextField keyValueField;
     private JCheckBox checkBox;
+    private JComboBox autoSelectionMode;
 
     public SettingsConfigurable() {
         settings = Settings.getInstance();
@@ -109,10 +115,20 @@ public class SettingsConfigurable implements Configurable, ItemListener {
         keyValueField.setEnabled(true);
     }
 
+    @NotNull
+    private AutoSelectionMode getAutoSelectionMode() {
+        if (autoSelectionMode.getSelectedIndex() == INDEX_INCLUSIVE) {
+            return AutoSelectionMode.INCLUSIVE;
+        } else {
+            return AutoSelectionMode.EXCLUSIVE;
+        }
+    }
+
     @Override
     public boolean isModified() {
-        return !Utils.isEmptyOrBlankString(keyNameField.getText())
-                && !Utils.isEmptyOrBlankString(keyValueField.getText());
+        return (!Utils.isEmptyOrBlankString(keyNameField.getText())
+                && !Utils.isEmptyOrBlankString(keyValueField.getText()))
+                || (settings.getAutoSelectionMode() != getAutoSelectionMode());
     }
 
     @Override
@@ -126,11 +142,14 @@ public class SettingsConfigurable implements Configurable, ItemListener {
         }
 
         settings.setUseDefaultKey(useDefault || !validKey);
+        settings.setAutoSelectionMode(getAutoSelectionMode());
     }
 
     @Override
     public void reset() {
         checkBox.setSelected(settings.isUseDefaultKey());
+        autoSelectionMode.setSelectedIndex(settings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
+                ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);
     }
 
     @Override

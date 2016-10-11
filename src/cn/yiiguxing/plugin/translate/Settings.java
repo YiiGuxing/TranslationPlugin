@@ -1,10 +1,12 @@
 package cn.yiiguxing.plugin.translate;
 
+import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,6 +18,8 @@ public class Settings implements PersistentStateComponent<Settings> {
     private boolean useDefaultKey = true;
     private String apiKeyName;
     private String apiKeyValue;
+    @NotNull
+    private AutoSelectionMode autoSelectionMode = AutoSelectionMode.INCLUSIVE;
 
     /**
      * Get the instance of this service.
@@ -35,6 +39,21 @@ public class Settings implements PersistentStateComponent<Settings> {
     @Override
     public void loadState(Settings state) {
         XmlSerializerUtil.copyBean(state, this);
+    }
+
+    /**
+     * 返回自动取词模式
+     */
+    @NotNull
+    public AutoSelectionMode getAutoSelectionMode() {
+        return autoSelectionMode;
+    }
+
+    /**
+     * 设置自动取词模式
+     */
+    public void setAutoSelectionMode(@NotNull AutoSelectionMode autoSelectionMode) {
+        this.autoSelectionMode = Utils.requireNonNull(autoSelectionMode, "autoSelectionMode can not be null.");
     }
 
     /**
@@ -58,14 +77,23 @@ public class Settings implements PersistentStateComponent<Settings> {
         return this.apiKeyName;
     }
 
+    /**
+     * 设置API KEY name.
+     */
     public void setApiKeyName(String apiKeyName) {
         this.apiKeyName = apiKeyName;
     }
 
+    /**
+     * 返回API KEY value.
+     */
     public String getApiKeyValue() {
         return this.apiKeyValue;
     }
 
+    /**
+     * 设置API KEY value.
+     */
     public void setApiKeyValue(String apiKeyValue) {
         this.apiKeyValue = apiKeyValue;
     }
