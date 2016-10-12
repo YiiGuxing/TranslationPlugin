@@ -387,6 +387,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     private final class ComboRenderer extends ListCellRendererWrapper<String> {
         private final StringBuilder builder = new StringBuilder();
+        private final StringBuilder tipBuilder = new StringBuilder();
 
         @Override
         public void customize(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -399,32 +400,46 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         }
 
         private void setRenderText(@NotNull String value) {
+            final StringBuilder builder = this.builder;
+            final StringBuilder tipBuilder = this.tipBuilder;
+
+            builder.setLength(0);
+            tipBuilder.setLength(0);
+
+            builder.append("<html><b>")
+                    .append(value)
+                    .append("</b>");
+            tipBuilder.append(builder);
+
             final QueryResult cache = mTranslationPresenter.getCache(value);
             if (cache != null) {
-                StringBuilder builder = this.builder;
                 BasicExplain basicExplain = cache.getBasicExplain();
                 String[] translation = basicExplain != null ? basicExplain.getExplains() : cache.getTranslation();
 
-                builder.setLength(0);
-                builder.append("<html><b>")
-                        .append(value)
-                        .append("</b>");
                 if (translation != null && translation.length > 0) {
                     builder.append("  -  <i>");
+                    tipBuilder.append("<p/>");
+
                     for (String tran : translation) {
                         builder.append(tran)
                                 .append("; ");
+                        tipBuilder.append(tran)
+                                .append("<br/>");
                     }
-                    builder.setLength(builder.length() - 2);
-                    builder.append("</i></html>");
-                }
 
-                setText(builder.toString());
-                setToolTipText(builder.toString());
-            } else {
-                setText(value);
-                setToolTipText(value);
+                    builder.setLength(builder.length() - 2);
+                    builder.append("</i>");
+
+                    tipBuilder.setLength(builder.length() - 5);
+                    tipBuilder.append("</i>");
+                }
             }
+
+            builder.append("</html>");
+            setText(builder.toString());
+
+            tipBuilder.append("</html>");
+            setToolTipText(tipBuilder.toString());
         }
     }
 
