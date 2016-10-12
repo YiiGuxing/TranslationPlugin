@@ -23,7 +23,7 @@
       <li>或者使用快捷键Alt + 0/1/2/3/4进行翻译。</li>
       <li>你可以直接翻译如"getTranslatedString"和"HELLO_WORLD"这样的文本。</li>
       <ul/>
-      <a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2">详细用法</a>
+      <a href="https://github.com/YiiGuxing/TranslationPlugin/wiki">详细说明文档</a>
       <br/>
       <br/>
       <i>Compiled with Java 1.6</i>
