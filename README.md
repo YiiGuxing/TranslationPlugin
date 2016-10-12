@@ -79,7 +79,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
 ## v1.3.0
 
-- 发音朗读
+- 单词朗读
 - UI优化
 - 气泡中添加右键操作菜单
 - 右键菜单翻译操作取词模式配置

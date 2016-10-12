@@ -1,8 +1,8 @@
 # Change Log
 
-## v1.3.0
+## [v1.3.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.0)(2016-10-12)
 
-- 发音朗读
+- 单词朗读
 - UI优化
 - 气泡中添加右键操作菜单
 - 右键菜单翻译操作取词模式配置

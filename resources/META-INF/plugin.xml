@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>1.2.2</version>
+    <version>1.3.0</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
@@ -31,13 +31,11 @@
 
     <change-notes><![CDATA[
       <ul>
-          <li>优化：UI适配</li>
-          <li>功能增强：自动取词（<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions">详细说明</a>）</li>
-          <li>功能增强：气泡跟随编辑器滚动而滚动</li>
-          <li>功能增强：添加默认快捷键，见<a href="https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions">Actions</a></li>
-          <li>修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/13">#13</a> <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/14">#14</a></li>
-          <li>修复: 与ideaVim插件ESC键冲突问题 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/18">#18</a></li>
-          <li>使用Java1.6编译</li>
+          <li>单词朗读</li>
+          <li>UI优化</li>
+          <li>气泡中添加右键操作菜单</li>
+          <li>右键菜单翻译操作取词模式配置</li>
+          <li>历史记录列表中显示简要的翻译信息</li>
       </ul>
 
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
