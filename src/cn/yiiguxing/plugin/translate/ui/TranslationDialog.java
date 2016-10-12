@@ -406,14 +406,17 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 String[] translation = basicExplain != null ? basicExplain.getExplains() : cache.getTranslation();
 
                 builder.setLength(0);
-                builder.append(value);
+                builder.append("<html><b>")
+                        .append(value)
+                        .append("</b>");
                 if (translation != null && translation.length > 0) {
-                    builder.append("  -  ");
+                    builder.append("  -  <i>");
                     for (String tran : translation) {
-                        builder.append(tran);
-                        builder.append("; ");
+                        builder.append(tran)
+                                .append("; ");
                     }
                     builder.setLength(builder.length() - 2);
+                    builder.append("</i></html>");
                 }
 
                 setText(builder.toString());
