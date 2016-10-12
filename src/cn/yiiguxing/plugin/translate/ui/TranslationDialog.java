@@ -417,7 +417,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 String[] translation = basicExplain != null ? basicExplain.getExplains() : cache.getTranslation();
 
                 if (translation != null && translation.length > 0) {
-                    builder.append("  -  <i>");
+                    builder.append("  -  <i><small>");
                     tipBuilder.append("<p/>");
 
                     for (String tran : translation) {
@@ -428,7 +428,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                     }
 
                     builder.setLength(builder.length() - 2);
-                    builder.append("</i>");
+                    builder.append("</small></i>");
 
                     tipBuilder.setLength(builder.length() - 5);
                     tipBuilder.append("</i>");
