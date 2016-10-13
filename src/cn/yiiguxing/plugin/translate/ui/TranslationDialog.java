@@ -418,13 +418,11 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
                 if (translation != null && translation.length > 0) {
                     builder.append("  -  <i><small>");
-                    tipBuilder.append("<p/>");
+                    tipBuilder.append("<p/><i>");
 
                     for (String tran : translation) {
-                        builder.append(tran)
-                                .append("; ");
-                        tipBuilder.append(tran)
-                                .append("<br/>");
+                        builder.append(tran).append("; ");
+                        tipBuilder.append(tran).append("<br/>");
                     }
 
                     builder.setLength(builder.length() - 2);
