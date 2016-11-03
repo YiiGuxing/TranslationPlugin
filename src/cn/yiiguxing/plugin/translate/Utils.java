@@ -76,7 +76,7 @@ public final class Utils {
                 break;
             case QueryResult.ERROR_CODE_NO_RESULT:
             default:
-                error = "Nothing to show";
+                error = isEmptyOrBlankString(result.getMessage()) ? "Nothing to show" : result.getMessage();
                 break;
         }
 

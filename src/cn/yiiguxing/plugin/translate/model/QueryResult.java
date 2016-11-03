@@ -22,6 +22,8 @@ public class QueryResult {
     @SerializedName("translation")
     private String[] translation;
 
+    private String message;
+
     @SerializedName("basic")
     private BasicExplain basicExplain;
     @SerializedName("web")
@@ -48,6 +50,14 @@ public class QueryResult {
 
     public void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String[] getTranslation() {
@@ -104,10 +114,14 @@ public class QueryResult {
 
     @Override
     public String toString() {
-        return "QueryResult [query=" + query + ", errorCode=" + errorCode
-                + ", translation=" + Arrays.toString(translation)
-                + ", basicExplain=" + basicExplain + ", webExplains="
-                + Arrays.toString(webExplains) + "]";
+        return "QueryResult{" +
+                "query='" + query + '\'' +
+                ", errorCode=" + errorCode +
+                ", translation=" + Arrays.toString(translation) +
+                ", message='" + message + '\'' +
+                ", basicExplain=" + basicExplain +
+                ", webExplains=" + Arrays.toString(webExplains) +
+                '}';
     }
 
 }

@@ -6,14 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import com.intellij.util.io.HttpRequests;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +24,7 @@ public final class Translator {
     private static final String DEFAULT_API_KEY_NAME = "TranslationPlugin";
     private static final String DEFAULT_API_KEY_VALUE = "1473510108";
 
-    private static final Logger LOG = Logger.getInstance("#" + Translator.class.getCanonicalName());
+    private static final Logger LOGGER = Logger.getInstance("#" + Translator.class.getCanonicalName());
 
     private final LruCache<String, QueryResult> mCache = new LruCache<String, QueryResult>(200);
     private Future<?> mCurrentTask;
@@ -119,26 +112,32 @@ public final class Translator {
         @Override
         public void run() {
             final String query = mQuery;
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+            final String url = getQueryUrl(query);
 
-            QueryResult result;
+            QueryResult result = null;
             try {
-                String url = getQueryUrl(query);
-                HttpGet httpGet = new HttpGet(url);
-                result = httpClient.execute(httpGet, new YouDaoResponseHandler());
-                if (result != null && result.getErrorCode() == QueryResult.ERROR_CODE_NONE) {
-                    synchronized (mCache) {
-                        mCache.put(query, result);
-                    }
+                String json = HttpRequests.request(url).readString(null);
+                LOGGER.info(json);
+
+                if (!Utils.isEmptyOrBlankString(json)) {
+                    result = new Gson().fromJson(json, QueryResult.class);
                 }
-            } catch (Exception e) {
-                LOG.warn("query...", e);
-                result = null;
-            } finally {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            } catch (IOException e) {
+                LOGGER.warn(e);
+
+                result = new QueryResult();
+                result.setErrorCode(QueryResult.ERROR_CODE_FAIL);
+                result.setMessage(e.getMessage());
+            } catch (JsonSyntaxException e) {
+                LOGGER.warn(e);
+
+                result = new QueryResult();
+                result.setErrorCode(QueryResult.ERROR_CODE_RESTRICTED);
+            }
+
+            if (result != null && result.getErrorCode() == QueryResult.ERROR_CODE_NONE) {
+                synchronized (mCache) {
+                    mCache.put(query, result);
                 }
             }
 
@@ -154,37 +153,6 @@ public final class Translator {
                     }
                 }
             });
-        }
-    }
-
-    private final class YouDaoResponseHandler implements ResponseHandler<QueryResult> {
-
-        @Override
-        public QueryResult handleResponse(HttpResponse response) throws IOException {
-            int status = response.getStatusLine().getStatusCode();
-            if (status >= 200 && status < 300) {
-                HttpEntity entity = response.getEntity();
-                if (entity == null)
-                    return null;
-
-                String json = EntityUtils.toString(entity);
-                LOG.info(json);
-
-                try {
-                    return new Gson().fromJson(json, QueryResult.class);
-                } catch (JsonSyntaxException e) {
-                    LOG.warn(e);
-
-                    QueryResult result = new QueryResult();
-                    result.setErrorCode(QueryResult.ERROR_CODE_RESTRICTED);
-
-                    return result;
-                }
-            } else {
-                String message = "Unexpected response status: " + status;
-                LOG.warn(message);
-                throw new ClientProtocolException(message);
-            }
         }
     }
 
