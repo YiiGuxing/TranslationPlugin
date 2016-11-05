@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.TranslationContract;
-import cn.yiiguxing.plugin.translate.TranslationDialogManager;
 import cn.yiiguxing.plugin.translate.TranslationPresenter;
+import cn.yiiguxing.plugin.translate.TranslationUiManager;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
@@ -57,6 +57,7 @@ public class TranslationBalloon implements TranslationContract.View {
     private RelativePoint mTargetLocation;
 
     private boolean mInterceptDispose;
+    private boolean mDisposed;
     @NotNull
     private final Disposable mDisposable = new Disposable() {
         @Override
@@ -121,8 +122,19 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     private void onDispose() {
+        mDisposed = true;
         mBalloon = null;
         mCaretRangeMarker.dispose();
+    }
+
+    public void hide() {
+        if (!mDisposed) {
+            mDisposed = true;
+            if (mBalloon != null) {
+                mBalloon.hide();
+            }
+            Disposer.dispose(mDisposable);
+        }
     }
 
     @NotNull
@@ -152,7 +164,7 @@ public class TranslationBalloon implements TranslationContract.View {
         Disposer.register(balloon, new Disposable() {
             @Override
             public void dispose() {
-                if (intercept && mInterceptDispose) {
+                if (mDisposed || (intercept && mInterceptDispose)) {
                     return;
                 }
 
@@ -194,7 +206,7 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @Override
     public void updateHistory() {
-        TranslationDialogManager.getInstance().notifyHistoriesChanged();
+        TranslationUiManager.getInstance().notifyHistoriesChanged();
     }
 
     @Override
@@ -210,7 +222,11 @@ public class TranslationBalloon implements TranslationContract.View {
             return;
         }
 
-        TranslationDialogManager.getInstance().updateCurrentShowingTranslationDialog();
+        if (mDisposed) {
+            return;
+        }
+
+        TranslationUiManager.getInstance().updateCurrentShowingTranslationDialog();
 
         mContentPanel.remove(0);
         mProcessIcon.suspend();
@@ -241,8 +257,9 @@ public class TranslationBalloon implements TranslationContract.View {
         createPinButton(balloon, showPoint);
         registerDisposer(balloon, false);
         showBalloon(balloon);
-
         setPopupMenu(balloon, resultText);
+
+        mBalloon = balloon;
 
         // 再刷新一下，尽可能地消除滚动条
         ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -271,7 +288,7 @@ public class TranslationBalloon implements TranslationContract.View {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedText = textPane.getSelectedText();
-                TranslationDialogManager.getInstance().showTranslationDialog(mEditor.getProject()).query(selectedText);
+                TranslationUiManager.getInstance().showTranslationDialog(mEditor.getProject()).query(selectedText);
                 balloon.hide(true);
             }
         });
@@ -303,7 +320,7 @@ public class TranslationBalloon implements TranslationContract.View {
                             public void consume(MouseEvent mouseEvent) {
                                 if (mouseEvent.getClickCount() == 1) {
                                     balloon.hide(true);
-                                    TranslationDialogManager.getInstance().showTranslationDialog(mEditor.getProject());
+                                    TranslationUiManager.getInstance().showTranslationDialog(mEditor.getProject());
                                 }
                             }
                         });

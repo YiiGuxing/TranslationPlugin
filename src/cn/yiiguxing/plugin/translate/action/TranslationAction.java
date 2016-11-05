@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.action;
 
-import cn.yiiguxing.plugin.translate.TranslationDialogManager;
+import cn.yiiguxing.plugin.translate.TranslationUiManager;
 import cn.yiiguxing.plugin.translate.ui.Icons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -14,7 +14,7 @@ public class TranslationAction extends AnAction implements DumbAware {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        TranslationDialogManager.getInstance().showTranslationDialog(e.getProject());
+        TranslationUiManager.getInstance().showTranslationDialog(e.getProject());
     }
 
 }

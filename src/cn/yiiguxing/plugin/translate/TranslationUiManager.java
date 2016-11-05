@@ -1,27 +1,52 @@
 package cn.yiiguxing.plugin.translate;
 
+import cn.yiiguxing.plugin.translate.ui.TranslationBalloon;
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("WeakerAccess")
-public class TranslationDialogManager {
+public class TranslationUiManager {
 
+    private TranslationBalloon myShowingBalloon;
     private TranslationDialog myShowingDialog;
 
-    private TranslationDialogManager() {
+    private TranslationUiManager() {
     }
 
-    public static TranslationDialogManager getInstance() {
-        return ServiceManager.getService(TranslationDialogManager.class);
+    public static TranslationUiManager getInstance() {
+        return ServiceManager.getService(TranslationUiManager.class);
+    }
+
+    public TranslationBalloon showTranslationBalloon(@NotNull Editor editor,
+                                                     @NotNull RangeMarker caretRangeMarker,
+                                                     @NotNull String queryText) {
+        if (myShowingBalloon != null) {
+            myShowingBalloon.hide();
+        }
+
+        myShowingBalloon = new TranslationBalloon(editor, caretRangeMarker);
+        Disposer.register(myShowingBalloon.getDisposable(), new Disposable() {
+            @Override
+            public void dispose() {
+                myShowingBalloon = null;
+            }
+        });
+        myShowingBalloon.showAndQuery(queryText);
+
+        return myShowingBalloon;
     }
 
     /**
      * 显示对话框
      */
+    @NotNull
     public TranslationDialog showTranslationDialog(@Nullable Project project) {
         if (myShowingDialog == null) {
             myShowingDialog = new TranslationDialog(project);
@@ -40,7 +65,7 @@ public class TranslationDialogManager {
     /**
      * 测试是否有正在显示的对话框
      */
-    public boolean hasShowing() {
+    public boolean hasTranslationDialogShowing() {
         return myShowingDialog != null && myShowingDialog.isShowing();
     }
 
@@ -48,7 +73,7 @@ public class TranslationDialogManager {
      * 更新当前显示的对话框
      */
     public void updateCurrentShowingTranslationDialog() {
-        if (hasShowing()) {
+        if (hasTranslationDialogShowing()) {
             myShowingDialog.update();
         }
     }
@@ -58,7 +83,7 @@ public class TranslationDialogManager {
      */
     @Nullable
     public TranslationDialog getCurrentShowingDialog() {
-        if (!hasShowing()) {
+        if (!hasTranslationDialogShowing()) {
             return myShowingDialog;
         }
 
@@ -69,7 +94,7 @@ public class TranslationDialogManager {
      * 通知历史记录变化
      */
     public void notifyHistoriesChanged() {
-        if (hasShowing()) {
+        if (hasTranslationDialogShowing()) {
             myShowingDialog.updateHistory(false);
         }
     }

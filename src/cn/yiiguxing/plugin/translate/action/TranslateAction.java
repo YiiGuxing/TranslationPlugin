@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action;
 
+import cn.yiiguxing.plugin.translate.TranslationUiManager;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.compat.SelectWordUtilCompat;
 import cn.yiiguxing.plugin.translate.ui.Icons;
@@ -10,7 +11,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.RangeMarker;
+import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -87,8 +90,8 @@ public class TranslateAction extends AnAction implements DumbAware {
                 }
 
                 RangeMarker caretRangeMarker = createCaretRangeMarker(editor);
-                TranslationBalloon translationBalloon = new TranslationBalloon(editor, caretRangeMarker);
-                translationBalloon.showAndQuery(queryText);
+                TranslationBalloon translationBalloon = TranslationUiManager.getInstance()
+                        .showTranslationBalloon(editor, caretRangeMarker, queryText);
 
                 if (!highlighters.isEmpty() && highlightManager != null) {
                     Disposer.register(translationBalloon.getDisposable(), new Disposable() {
