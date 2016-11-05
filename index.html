@@ -4,166 +4,38 @@
     <meta charset="UTF-8">
     <title>TranslationPlugin by YiiGuxing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link rel="icon" type="image/png" href="./images/icon.png"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
-<section class="page-header">
+<div class="main-content">
     <h1 class="project-name">TranslationPlugin</h1>
     <h2 class="project-tagline">IntelliJ IDEA/Android Studio 翻译插件，支持中英互译、单词朗读。</h2>
-    <a href="https://github.com/YiiGuxing/TranslationPlugin" class="btn">View on GitHub</a>
-    <a href="#install" class="btn">开始使用</a>
-</section>
+    <div class="index_starWrap">
+        <div class="index_star">
+            <a class="index_star_inner" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+                Star me on Github</a>
+        </div>
+    </div>
+    <a href="https://github.com/YiiGuxing/TranslationPlugin" class="btn" ondragstart="return false;">GitHub</a>
+    <a href="https://github.com/YiiGuxing/TranslationPlugin/wiki/%E5%AE%89%E8%A3%85" class="btn"
+       ondragstart="return false;">开始使用</a>
 
-<section class="main-content">
-    <p><a href="https://github.com/YiiGuxing/TranslationPlugin/releases/latest"><img
-            src="https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg" alt="GitHub release"></a> <a
-            href="https://plugins.jetbrains.com/plugin/8579"><img
-            src="https://img.shields.io/badge/plugin-8579-orange.svg" alt="Jetbrains Plugins"></a> <a
-            href="https://gitter.im/TranslationPlugin/Lobby"><img
-            src="https://img.shields.io/gitter/room/YiiGuxing/TranslationPlugin.svg" alt="Gitter"></a></p>
+    <div id="version" class="project-version"></div>
+    <script>
+        $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
+            var version = data ? data["tag_name"] : null;
+            if (version) {
+                $("#version").text("当前版本：" + version);
+            }
+        });
+    </script>
 
-    <p><a href="https://plugins.jetbrains.com/plugin/8579"><img src="http://phpstorm.espend.de/badge/8579/version"
-                                                                alt="Version"></a>
-        <a href="https://plugins.jetbrains.com/plugin/8579"><img src="http://phpstorm.espend.de/badge/8579/downloads"
-                                                                 alt="Downloads"></a>
-        <a href="https://plugins.jetbrains.com/plugin/8579"><img src="http://phpstorm.espend.de/badge/8579/last-month"
-                                                                 alt="Downloads last month"></a></p>
-
-    <p><img src="./images/screenshots.gif" alt="screenshots"></p>
-
-    <h2>
-        <a id="install" class="anchor" aria-hidden="true" href="#install"><span aria-hidden="true"
-                                                                                class="octicon octicon-link"></span></a>安装
-    </h2>
-
-    <ul>
-        <li>使用<strong>IDEA</strong>内置插件系统:
-            <ul>
-                <li>
-                    <kbd>Preferences(Settings)</kbd> &gt; <kbd>Plugins</kbd> &gt; <kbd>Browse repositories...</kbd> &gt;
-                    <kbd>搜索并找到"Translation"</kbd> &gt; <kbd>Install Plugin</kbd>
-                </li>
-            </ul>
-        </li>
-        <li>手动:
-            <ul>
-                <li>下载<a href="https://github.com/YiiGuxing/TranslationPlugin/releases/latest"><code>最新发布的插件包</code></a>
-                    -&gt; <kbd>Preferences(Settings)</kbd> &gt; <kbd>Plugins</kbd> &gt; <kbd>Install plugin from
-                        disk...</kbd>
-                </li>
-            </ul>
-        </li>
-    </ul>
-
-    <p>重启<strong>IDEA</strong>.</p>
-
-    <h2>
-        <a id="actions" class="anchor" href="#actions" aria-hidden="true"><span aria-hidden="true"
-                                                                                class="octicon octicon-link"></span></a>Actions
-    </h2>
-
-    <p>Translation有四个Action，它们分别是：<code>Translation</code>, <code>Translate</code>, <code>Translate(Inclusive)</code> 和
-        <code>Translate(Exclusive)</code>.</p>
-
-    <ul>
-        <li>
-            <strong>Translation:</strong> <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
-            <img src="./images/action0.gif" alt="Translate">
-        </li>
-        <li>
-            <strong>Translate:</strong> <kbd>Alt + 1</kbd>
-            取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。此Action默认显示在编辑器右键菜单上。
-            <img src="./images/action1.gif" alt="Translate">
-        </li>
-        <li>
-            <strong>Translate(Inclusive):</strong> <kbd>Alt + 2</kbd> 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
-            <img src="./images/action2.gif" alt="Translate(Inclusive)">
-        </li>
-        <li>
-            <strong>Translate(Exclusive):</strong> <kbd>Alt + 3</kbd> 取词并翻译。自动取单个词，忽略手动选择的文本。
-            <img src="./images/action3.gif" alt="Translate(Exclusive)">
-        </li>
-    </ul>
-
-    <h2>
-        <a id="usage" class="anchor" href="#usage" aria-hidden="true">
-            <span aria-hidden="true" class="octicon octicon-link"></span></a>使用
-    </h2>
-
-    <ol>
-        <li>
-            <p><strong>打开翻译对话框:</strong></p>
-
-            <p>点击工具栏上的 <img src="./images/icon.png" alt="图标"> 图标即可打开翻译对话框。</p>
-        </li>
-        <li>
-            <p><strong>翻译编辑器中的文本:</strong></p>
-
-            <p>在编辑器中 <kbd>选择文本或者鼠标指向文本</kbd> &gt; <kbd>单击鼠标右键</kbd> &gt; <kbd>Translate</kbd></p>
-
-            <p><img src="./images/editor_popup_menu.png" alt="翻译"></p>
-
-            <p>或者使用快捷键<kbd>Alt + 0/1/2/3/4</kbd>进行翻译，详见 <strong><a href="#actions">Actions</a></strong></p>
-        </li>
-        <li>
-            <p><strong>自定义快捷键:</strong></p>
-
-            <p><kbd>Preferences(Settings)</kbd> &gt; <kbd>Keymap</kbd> &gt; <kbd>搜索Translation</kbd>。在需要添加快捷键Action上
-                <kbd>右键</kbd> &gt; <kbd>add Keyboard Shortcut...</kbd> 设置快捷键（按<kbd>ESC</kbd>键可关闭气泡和翻译对话框）。</p>
-
-            <p><img src="./images/keymap.png" alt="keymap"></p>
-        </li>
-        <li>
-            <p><strong>设置有道API KEY:</strong></p>
-
-            <p><kbd>Preferences(Settings)</kbd> &gt; <kbd>Other Settings</kbd> &gt; <kbd>Translation</kbd>。
-                由于有道的API在查询请求数量上存在限制，如果在1小时内查询请求次数达到一定数量后将会暂时禁止查询一段时间（大概1小时）。如果很多人同时使用同一个KEY，可能会很容易就达到了限制条件，这就可以通过使用自己的KEY来避免（一人一个KEY基本足够用了）。
-            </p>
-        </li>
-        <li>
-            <p><strong>如何获取有道API KEY？</strong></p>
-
-            <p><kbd>Preferences(Settings)</kbd> &gt; <kbd>Other Settings</kbd> &gt; <kbd>Translation</kbd> &gt; <kbd>获取有道API
-                KEY</kbd></p>
-
-            <p>或者 <a href="http://fanyi.youdao.com/openapi?path=data-mode"><strong>点击这里</strong></a> 也可申请有道API KEY。</p>
-        </li>
-        <li>
-            <p><strong>Settings(Preferences)</strong></p>
-
-            <p><img src="./images/settings.png" alt="Settings"></p>
-        </li>
-    </ol>
-
-    <h2>
-        <a id="change_log" class="anchor" href="#change_log" aria-hidden="true"><span
-                aria-hidden="true" class="octicon octicon-link"></span></a>更新日志</h2>
-
-    <h2>
-        <a id="v130" class="anchor" href="#v130" aria-hidden="true">
-            <span aria-hidden="true" class="octicon octicon-link"></span>
-        </a>v1.3.0
-    </h2>
-
-    <ul>
-        <li>单词朗读</li>
-        <li>UI优化</li>
-        <li>气泡中添加右键操作菜单</li>
-        <li>右键菜单翻译操作取词模式配置</li>
-        <li>历史记录列表中显示简要的翻译信息</li>
-    </ul>
-
-    <p><a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md">完整的更新历史记录</a></p>
-
-    <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/YiiGuxing/TranslationPlugin">TranslationPlugin</a> is maintained by <a
-                href="https://github.com/YiiGuxing">YiiGuxing</a>.</span>
-    </footer>
-
-</section>
-
+    <div class="idea" oncontextmenu="return false;" ondragstart="return false;">
+        <img src="images/screenshots.gif">
+    </div>
+</div>
 </body>
 </html>
