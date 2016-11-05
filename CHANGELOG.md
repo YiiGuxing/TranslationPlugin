@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.3.1
+
+- 网络请求优化，支持网络代理 [#21][#21]
+- 修复：气泡重叠显示
+
+[#21]:https://github.com/YiiGuxing/TranslationPlugin/issues/21 "支持网络代理"
+
 ## [v1.3.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.0)(2016-10-12)
 
 - 单词朗读

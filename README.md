@@ -77,13 +77,12 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 更新日志
 --------
 
-## v1.3.0
+## v1.3.1
 
-- 单词朗读
-- UI优化
-- 气泡中添加右键操作菜单
-- 右键菜单翻译操作取词模式配置
-- 历史记录列表中显示简要的翻译信息
+- 网络请求优化，支持网络代理 [#21][#21]
+- 修复：气泡重叠显示
+
+[#21]:https://github.com/YiiGuxing/TranslationPlugin/issues/21 "支持网络代理"
 
 [完整的更新历史记录](./CHANGELOG.md)
 
