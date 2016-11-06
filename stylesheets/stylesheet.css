@@ -436,3 +436,7 @@ a:hover {
 .column_img {
     text-align: center;
 }
+
+.column_img img {
+    background-color: #eff0f1;
+}
