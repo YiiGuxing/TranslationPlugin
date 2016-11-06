@@ -51,7 +51,7 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
    ![翻译](./images/3.png)
 
-   或者使用快捷键<kbd>Alt + 0/1/2/3/4</kbd>进行翻译，详见 **[Actions](#actions)**
+   或者使用快捷键<kbd>Alt + 1/2/3</kbd>进行翻译，详见 **[Actions](#actions)**
 
 3. **自定义快捷键:**
 
