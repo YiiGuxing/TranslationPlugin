@@ -300,11 +300,13 @@ a:hover {
 }
 
 .frame_head {
+    z-index: 1;
     width: 100%;
     height: 64px;
     position: relative;
     padding-left: 12rem;
-    background-color: #00A3E1
+    background-color: #00A3E1;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .frame_head a {
