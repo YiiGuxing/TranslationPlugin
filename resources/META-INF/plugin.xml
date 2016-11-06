@@ -20,10 +20,10 @@
       General Usage Instructions:
       <ul>
       <li>选择需要翻译的文本 > 点击鼠标右键 > 点击Translate.</li>
-      <li>或者使用快捷键Alt + 0/1/2/3/4进行翻译。</li>
+      <li>或者使用快捷键Alt + 0/1/2/3进行翻译。</li>
       <li>你可以直接翻译如"getTranslatedString"和"HELLO_WORLD"这样的文本。</li>
       <ul/>
-      <a href="https://github.com/YiiGuxing/TranslationPlugin/wiki">详细说明文档</a>
+      <a href="http://yiiguxing.github.io/TranslationPlugin/start.html">详细说明文档</a>
       <br/>
       <br/>
       <i>Compiled with Java 1.6</i>
