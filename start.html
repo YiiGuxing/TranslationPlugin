@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>开始使用 - TranslationPlugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="一个 IntelliJ IDEA/Android Studio 翻译插件，支持中英互译、单词朗读">
+    <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
+    <link rel="icon" type="image/png" href="./images/icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html">TranslationPlugin</a>
+    <span class="frame_head_title">开始使用</span>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin">
+        <img class="github-icon" src="images/github.svg"></a>
+</header>
+
+<div class="frame_content">
+    <div class="column">
+        <h2 class="column_title">安装</h2>
+        <h3 class="column_item_title">使用 IDEA 内置插件系统安装：</h3>
+        <div class="column_item_info_code">
+            <ul>
+                <li>Preferences(Settings) > Plugins > Browse repositories... > 搜索并找到"Translation" > Install Plugin.</li>
+            </ul>
+        </div>
+        <h3 class="column_item_title">手动安装：</h3>
+        <div class="column_item_info_code">
+            <ul>
+                <li>到 <a href="https://github.com/YiiGuxing/TranslationPlugin/releases">Github</a> 或者
+                    <a href="https://plugins.jetbrains.com/plugin/8579">Jetbrains 插件中心</a>上下载最新发布的插件包
+                </li>
+                <li>Preferences(Settings) > Plugins > Install plugin from disk...</li>
+            </ul>
+        </div>
+        <p class="column_tip">安装好后重新启动 IDEA 即可。</p>
+    </div>
+    <div class="column">
+        <h2 class="column_title">使用</h2>
+        <h3 class="column_item_title">翻译对话框</h3>
+        <p class="column_tip">点击工具栏上的 <img width="16px" height="16px" src="images/icon.png"> 图标按钮或者使用默认
+            快捷键 Alt + 0 即可打开翻译功能对话框。见 <a href="#actions">Actions</a>.</p>
+
+        <h3 class="column_item_title">翻译编辑器中的文本</h3>
+        <p class="column_tip">在编辑器中用鼠标指针指向需要翻译的单词，或者选择需要翻译的文本，点击鼠标右键弹出操作菜单，然后点击
+            Translate 即可进行翻译。也可以使用默认快捷键 Alt + 1/2/3 进行操作，详见 <a href="#actions">Actions</a>.</p>
+        <div class="column_img"><img width="405" height="230" src="images/editor_popup_menu.png"></div>
+
+        <h3 class="column_item_title">自定义快捷键</h3>
+        <p class="column_tip">打开 Preferences(Settings) > Keymap, 然后搜索 Translation. 在需要修改快捷键的
+            <a href="#actions">Action</a> 上点击鼠标右键，然后点击 "add Keyboard Shortcut..." 设置新的快捷键。
+            另外，按 ESC 键可关闭气泡和翻译对话框。</p>
+        <div class="column_img"><img width="641" height="171" src="images/keymap.png"></div>
+
+        <h3 class="column_item_title">设置有道 API KEY</h3>
+        <p class="column_tip">在设置页（Preferences(Settings) > Other Settings > Translation）上可以设置有道的 API KEY,
+            使用自己的KEY.</p>
+        <p class="column_tip">
+            由于有道的API在查询请求数量上存在限制，如果在1小时内查询请求次数达到一定数量后将会暂时禁止查询一段时间（大概1小时）。
+            如果很多人同时使用同一个KEY，可能会很容易就达到了限制条件，这就可以通过使用自己的KEY来避免（一人一个KEY基本足够用了）。</p>
+
+        <p class="column_tip" style="font-weight: bold">如何获取有道API KEY？</p>
+        <p class="column_tip">点击设置页上的<span style="font-weight: bold">“获取有道API KEY”</span>链接，或者
+            <a href="http://fanyi.youdao.com/openapi?path=data-mode">点击这里</a>进入申请页面。</p>
+
+        <h3 class="column_item_title">Settings(Preferences)</h3>
+        <div class="column_img"><img width="660" height="359" src="images/settings.png"></div>
+    </div>
+
+    <div class="column">
+        <h2 id="actions" class="column_title">Actions</h2>
+        <p class="column_tip">TranslationPlugin有四个操作动作，它们分别是：<b>Translation</b>, <b>Translate</b>,
+            <b>Translate(Inclusive)</b> 和 <b>Translate(Exclusive)</b>. 其功能如下：</p>
+        <ul>
+            <li>
+                <b>Translation</b> [Alt + 0] 打开翻译对话框，默认显示在工具栏上。
+            </li>
+        </ul>
+        <div class="column_img"><img width="451" height="528" src="images/action0.gif"></div>
+
+        <ul>
+            <li>
+                <b>Translate</b> [Alt + 1] 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词
+                （该取词模式可在Settings中配置）。该动作按钮默认显示在编辑器右键菜单上。
+            </li>
+        </ul>
+        <div class="column_img"><img width="407" height="366" src="images/action1.gif"></div>
+
+        <ul>
+            <li>
+                <b>Translate(Inclusive)</b> [Alt + 2] 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
+            </li>
+        </ul>
+        <div class="column_img"><img width="386" height="315" src="images/action2.gif"></div>
+
+        <ul>
+            <li>
+                <b>Translate(Exclusive)</b> [Alt + 3] 取词并翻译。自动取单个词，忽略手动选择的文本。
+            </li>
+        </ul>
+        <div class="column_img"><img width="466" height="372" src="images/action3.gif"></div>
+    </div>
+</div>
+
+</body>
+</html>

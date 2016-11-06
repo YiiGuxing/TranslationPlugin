@@ -3,7 +3,6 @@
 }
 
 html {
-    font-size: 16px;
     height: 100%;
     width: 100%;
 }
@@ -14,9 +13,14 @@ body {
     padding: 0;
     margin: 0;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", sans-serif;
+}
+
+.main-content {
+    padding: 0;
+    margin: 0;
+    color: white;
     font-size: 16px;
     line-height: 1.5;
-    color: #fff;
     text-align: center;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #00A3E1), color-stop(100%, #06DCE9));
     background-image: -webkit-linear-gradient(top, #00A3E1 0, #06DCE9 100%);
@@ -26,11 +30,6 @@ body {
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF00A3E1', endColorstr='#FF06DCE9', GradientType=0);
     background-attachment: fixed;
-}
-
-.main-content {
-    padding: 0;
-    margin: 0;
 }
 
 @media screen and (min-width: 64em) {
@@ -228,18 +227,18 @@ a:hover {
     transform: rotate(45deg)
 }
 
-.index_star_inner {
+.index_star a {
     display: block;
     height: 28px;
     border: 1px dashed #7FD0E8;
     line-height: 28px;
-    color: #01AAE1
+    color: #01AAE1;
 }
 
-.index_star_inner:hover {
+.index_star a:hover {
     border: 1px dashed #5fc2e6;
     text-decoration: none;
-    color: #0091e1
+    color: #0091e1;
 }
 
 @media handheld and (max-width: 846px), screen and (max-width: 846px) {
@@ -266,9 +265,7 @@ a:hover {
     height: 618px;
     padding-left: 41px;
     padding-top: 70px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 1rem;
+    margin: 1rem auto 5rem;
     border: 1px solid #00a0e1;
     background-image: url("../images/background.png");
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -279,4 +276,163 @@ a:hover {
 .idea:hover {
     border: 1px solid #707070;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.24);
+}
+
+.maintainer {
+    color: #DEF3F5;
+    font-size: 0.9rem;
+}
+
+.maintainer a {
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.maintainer a:hover {
+    color: #007be1;
+}
+
+.start_body {
+    position: relative;
+    min-height: 100%;
+}
+
+.frame_head {
+    width: 100%;
+    height: 64px;
+    position: relative;
+    padding-left: 12rem;
+    background-color: #00A3E1
+}
+
+.frame_head a {
+    height: 64px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-left: -16px;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    line-height: 64px;
+    text-decoration: none;
+    display: inline-block;
+    -webkit-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+}
+
+.frame_head a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.frame_head_title {
+    height: 64px;
+    padding-left: 16px;
+    padding-right: 16px;
+    line-height: 64px;
+    color: white;
+}
+
+.frame_content {
+    color: #474860;
+    padding-bottom: 5rem;
+    padding-left: 12rem;
+    padding-right: 12rem;
+    top: 64px;
+    bottom: 0;
+    position: absolute;
+    overflow: auto;
+}
+
+.frame_content a {
+    color: #00A3E1;
+}
+
+@media screen and (min-width: 64em) {
+    .frame_head {
+        font-size: 1rem;
+        padding-left: 8rem;
+    }
+
+    .frame_content {
+        padding-left: 8rem;
+        padding-right: 8rem;
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .frame_head {
+        font-size: 1rem;
+        padding-left: 4rem;
+    }
+
+    .frame_content {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .frame_head {
+        font-size: 0.9rem;
+        padding-left: 1rem;
+    }
+
+    .frame_content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+.github-icon-wrap {
+    width: 64px;
+    height: 64px;
+    right: 10px;
+    position: absolute;
+}
+
+.github-icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 16px;
+}
+
+.column {
+    margin-bottom: 4rem;
+}
+
+.column_title {
+    color: #333333;
+    font-size: 38px;
+    font-weight: 700;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.column_item_title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+    font-weight: 700
+}
+
+.column_tip {
+    margin-bottom: 22px;
+}
+
+.column_item_info_code {
+    padding: 15px;
+    font-size: 15px;
+    background-color: #FAF8F2;
+    border: 1px solid #efe8d5;
+    border-radius: 4px;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.column_img {
+    text-align: center;
 }
