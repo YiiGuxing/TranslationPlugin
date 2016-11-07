@@ -45,18 +45,19 @@
 
         <h3 class="column_item_title">翻译编辑器中的文本</h3>
         <p class="column_tip">在编辑器中用鼠标指针指向需要翻译的单词，或者选择需要翻译的文本，点击鼠标右键弹出操作菜单，然后点击
-            Translate 即可进行翻译。也可以使用默认快捷键 Alt + 1/2/3 进行操作，详见 <a href="#actions">Actions</a>.</p>
+            Translate 即可进行翻译。也可以使用默认快捷键 Alt + 1/2/3 进行操作（Mac下默认快捷键可能无效，需要
+            <a href="#kaymap">自定义快捷键</a>），详见 <a href="#actions">Actions</a>.</p>
         <div class="column_img"><img width="405" height="230" src="images/editor_popup_menu.png"></div>
 
-        <h3 class="column_item_title">自定义快捷键</h3>
+        <h3 id="kaymap" class="column_item_title">自定义快捷键（Mac下默认快捷键可能无效）</h3>
         <p class="column_tip">打开 Preferences(Settings) > Keymap, 然后搜索 Translation. 在需要修改快捷键的
             <a href="#actions">Action</a> 上点击鼠标右键，然后点击 "add Keyboard Shortcut..." 设置新的快捷键。
             另外，按 ESC 键可关闭气泡和翻译对话框。</p>
         <div class="column_img"><img width="641" height="171" src="images/keymap.png"></div>
 
         <h3 class="column_item_title">设置有道 API KEY</h3>
-        <p class="column_tip">在设置页（Preferences(Settings) > Other Settings > Translation）上可以设置有道的 API KEY,
-            使用自己的KEY.</p>
+        <p class="column_tip">在<a href="#settings">设置页</a>（Preferences(Settings) > Other Settings > Translation）
+            上可以设置有道的 API KEY, 使用自己的KEY.</p>
         <p class="column_tip">
             由于有道的API在查询请求数量上存在限制，如果在1小时内查询请求次数达到一定数量后将会暂时禁止查询一段时间（大概1小时）。
             如果很多人同时使用同一个KEY，可能会很容易就达到了限制条件，这就可以通过使用自己的KEY来避免（一人一个KEY基本足够用了）。</p>
@@ -65,7 +66,7 @@
         <p class="column_tip">点击设置页上的<span style="font-weight: bold">“获取有道API KEY”</span>链接，或者
             <a href="http://fanyi.youdao.com/openapi?path=data-mode">点击这里</a>进入申请页面。</p>
 
-        <h3 class="column_item_title">Settings(Preferences)</h3>
+        <h3 id="settings" class="column_item_title">Settings(Preferences)</h3>
         <div class="column_img"><img width="660" height="359" src="images/settings.png"></div>
     </div>
 
