@@ -51,9 +51,9 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 
    ![翻译](./images/3.png)
 
-   或者使用快捷键<kbd>Alt + 1/2/3</kbd>进行翻译，详见 **[Actions](#actions)**
+   或者使用快捷键<kbd>Alt + 1/2/3</kbd>进行翻译（Mac下默认快捷键可能无效，需要自定义快捷键），详见 **[Actions](#actions)**
 
-3. **自定义快捷键:**
+3. **自定义快捷键（Mac下默认快捷键可能无效）:**
 
    <kbd>Preferences(Settings)</kbd> > <kbd>Keymap</kbd> > <kbd>搜索Translation</kbd>。在需要添加快捷键Action上 <kbd>右键</kbd> > <kbd>add Keyboard Shortcut...</kbd> 设置快捷键（按<kbd>ESC</kbd>键可关闭气泡和翻译对话框）。
 
