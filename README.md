@@ -1,6 +1,6 @@
 
-Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugins][plugin-img]][plugin] [![Gitter][badge-gitter-img]][badge-gitter]
-===========
+TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains Plugins][plugin-img]][plugin] [![Gitter][badge-gitter-img]][badge-gitter]
+=================
 
 [![Version](http://phpstorm.espend.de/badge/8579/version)][plugin]
 [![Downloads](http://phpstorm.espend.de/badge/8579/downloads)][plugin]
@@ -26,7 +26,7 @@ Translation [![GitHub release][release-img]][latest-release] [![Jetbrains Plugin
 Actions
 -------
 
-Translation有四个Action，它们分别是：`Translation`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
+TranslationPlugin有四个Action，它们分别是：`Translation`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
 
 - **Translation:** <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
   ![Translate](./images/action0.gif)
