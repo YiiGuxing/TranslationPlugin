@@ -77,12 +77,13 @@ Translation有四个Action，它们分别是：`Translation`, `Translate`, `Tran
 更新日志
 --------
 
-## v1.3.1
+## [v1.3.1][v1.3.1] (2016-11-7)
 
 - 网络请求优化，支持网络代理 [#21][#21]
 - 修复：气泡重叠显示
 
-[#21]:https://github.com/YiiGuxing/TranslationPlugin/issues/21 "支持网络代理"
+[v1.3.1]: https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.1
+[#21]:    https://github.com/YiiGuxing/TranslationPlugin/issues/21 "支持网络代理"
 
 [完整的更新历史记录](./CHANGELOG.md)
 
