@@ -86,7 +86,12 @@ TranslationPlugin有四个Action，它们分别是：`Open Translation Dialog...
 
    或者 [**点击这里**](http://fanyi.youdao.com/openapi?path=data-mode) 也可申请有道API KEY。
 
-6. **Settings(Preferences)**
+6. **网络代理**
+
+   支持HTTP代理，可到这里设置HTTP代理：
+   <kbd>Preferences(Settings)</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>HTTP Proxy</kbd>
+
+7. **Settings(Preferences)**
 
    ![Settings](./images/4.png)
 
