@@ -21,10 +21,10 @@
       </component>
       <component id="53a55" class="javax.swing.JLabel">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="2" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Key Name:"/>
+          <text value="Key From:"/>
         </properties>
       </component>
       <component id="e6e94" class="javax.swing.JTextField" binding="keyNameField">
@@ -41,10 +41,10 @@
       </component>
       <component id="eb37c" class="javax.swing.JLabel">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="2" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Key Value:"/>
+          <text value="API Key:"/>
         </properties>
       </component>
       <component id="dcf59" class="javax.swing.JTextField" binding="keyValueField">
