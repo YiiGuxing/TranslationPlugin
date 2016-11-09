@@ -6,10 +6,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 
-public class TranslationAction extends AnAction implements DumbAware {
+public class OpenTranslationDialogAction extends AnAction implements DumbAware {
 
-    public TranslationAction() {
-        super("TranslationDialog", "Translate", Icons.Translate);
+    public OpenTranslationDialogAction() {
+        super(Icons.Translate);
     }
 
     @Override
