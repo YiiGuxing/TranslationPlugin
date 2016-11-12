@@ -10,7 +10,7 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
 
 ![screenshots](./images/screenshots.gif)
 
-![截图1](./images/0.png)
+![截图1](./images/balloon.png)
 
 安装
 ----
@@ -60,13 +60,13 @@ TranslationPlugin有四个Action，它们分别是：`Open Translation Dialog...
 
 1. **打开翻译对话框:**
 
-   点击工具栏上的 ![图标](./images/2.png) 图标即可打开翻译对话框。
+   点击工具栏上的 ![图标](./images/icon.png) 图标即可打开翻译对话框。
 
 2. **翻译编辑器中的文本:**
 
    在编辑器中 <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
 
-   ![翻译](./images/3.png)
+   ![翻译](./images/editor_popup_menu.png)
 
    或者使用快捷键<kbd>Alt + 1/2/3</kbd>进行翻译（Mac下默认快捷键可能无效，需要自定义快捷键），详见 **[Actions](#actions)**
 
@@ -93,7 +93,7 @@ TranslationPlugin有四个Action，它们分别是：`Open Translation Dialog...
 
 7. **Settings(Preferences)**
 
-   ![Settings](./images/4.png)
+   ![Settings](./images/settings.png)
 
 
 更新日志
