@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 
+import cn.yiiguxing.plugin.translate.Styles;
 import cn.yiiguxing.plugin.translate.TranslationContract;
 import cn.yiiguxing.plugin.translate.TranslationPresenter;
 import cn.yiiguxing.plugin.translate.Utils;
@@ -330,10 +331,15 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     }
 
     @Override
-    public void showResult(@NotNull String query, @NotNull QueryResult result) {
+    public void showResult(@NotNull final String query, @NotNull QueryResult result) {
         mLastSuccessfulQuery = query;
 
-        Utils.insertQueryResultText(resultText, result);
+        Styles.insertStylishResultText(resultText, result, new Styles.OnTextClickListener() {
+            @Override
+            public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
+                query(text);
+            }
+        });
 
         resultText.setCaretPosition(0);
         layout.show(textPanel, CARD_RESULT);

@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui;
 
-import cn.yiiguxing.plugin.translate.TranslationContract;
-import cn.yiiguxing.plugin.translate.TranslationPresenter;
-import cn.yiiguxing.plugin.translate.TranslationUiManager;
-import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
@@ -237,7 +234,12 @@ public class TranslationBalloon implements TranslationContract.View {
         resultText.setBackground(UIManager.getColor("Panel.background"));
         resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
 
-        Utils.insertQueryResultText(resultText, result);
+        Styles.insertStylishResultText(resultText, result, new Styles.OnTextClickListener() {
+            @Override
+            public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
+                showOnTranslationDialog(text);
+            }
+        });
         resultText.setCaretPosition(0);
 
         JBScrollPane scrollPane = new JBScrollPane(resultText);
@@ -257,7 +259,7 @@ public class TranslationBalloon implements TranslationContract.View {
         createPinButton(balloon, showPoint);
         registerDisposer(balloon, false);
         showBalloon(balloon);
-        setPopupMenu(balloon, resultText);
+        setPopupMenu(resultText);
 
         mBalloon = balloon;
 
@@ -272,7 +274,15 @@ public class TranslationBalloon implements TranslationContract.View {
         });
     }
 
-    private void setPopupMenu(final Balloon balloon, final JTextPane textPane) {
+    private void showOnTranslationDialog(@Nullable String text) {
+        hide();
+        TranslationDialog dialog = TranslationUiManager.getInstance().showTranslationDialog(mEditor.getProject());
+        if (!Utils.isEmptyOrBlankString(text)) {
+            dialog.query(text);
+        }
+    }
+
+    private void setPopupMenu(final JTextPane textPane) {
         final JBPopupMenu menu = new JBPopupMenu();
 
         final JBMenuItem copy = new JBMenuItem("Copy", Icons.Copy);
@@ -288,8 +298,7 @@ public class TranslationBalloon implements TranslationContract.View {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedText = textPane.getSelectedText();
-                TranslationUiManager.getInstance().showTranslationDialog(mEditor.getProject()).query(selectedText);
-                balloon.hide(true);
+                showOnTranslationDialog(selectedText);
             }
         });
 
@@ -319,8 +328,7 @@ public class TranslationBalloon implements TranslationContract.View {
                             @Override
                             public void consume(MouseEvent mouseEvent) {
                                 if (mouseEvent.getClickCount() == 1) {
-                                    balloon.hide(true);
-                                    TranslationUiManager.getInstance().showTranslationDialog(mEditor.getProject());
+                                    showOnTranslationDialog(null);
                                 }
                             }
                         });
