@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ArrayUtil;
@@ -41,7 +42,8 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     private JTextField keyNameField;
     private JTextField keyValueField;
     private JCheckBox checkBox;
-    private JComboBox autoSelectionMode;
+    @SuppressWarnings("Since15")
+    private JComboBox<String> autoSelectionMode;
 
     public SettingsConfigurable() {
         settings = Settings.getInstance();
@@ -63,6 +65,17 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     @Override
     public JComponent createComponent() {
         checkBox.addItemListener(this);
+        autoSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
+            @Override
+            public void customize(JList list, String value, int index, boolean selected, boolean hasFocus) {
+                setText(value);
+                if (index == INDEX_INCLUSIVE) {
+                    setToolTipText("以最大范围取最近的所有词");
+                } else if (index == INDEX_EXCLUSIVE) {
+                    setToolTipText("取最近的单个词");
+                }
+            }
+        });
         return contentPane;
     }
 

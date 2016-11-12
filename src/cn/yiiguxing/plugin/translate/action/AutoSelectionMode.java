@@ -5,11 +5,11 @@ package cn.yiiguxing.plugin.translate.action;
  */
 public enum AutoSelectionMode {
     /**
-     * 只取一个词
+     * 取最近的单个词
      */
     EXCLUSIVE,
     /**
-     * 最大范围内取词
+     * 以最大范围取最近的所有词
      */
     INCLUSIVE
 }

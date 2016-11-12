@@ -49,9 +49,9 @@ TranslationPlugin有四个Action，它们分别是：`Open Translation Dialog...
   ![Translate](./images/action0.gif)
 - **Translate:** <kbd>Alt + 1</kbd> 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。此Action默认显示在编辑器右键菜单上。
   ![Translate](./images/action1.gif)
-- **Translate(Inclusive):** <kbd>Alt + 2</kbd> 取词并翻译。以最大范围自动取词，忽略手动选择的文本。
+- **Translate(Inclusive):** <kbd>Alt + 2</kbd> 取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。
   ![Translate(Inclusive)](./images/action2.gif)
-- **Translate(Exclusive):** <kbd>Alt + 3</kbd> 取词并翻译。自动取单个词，忽略手动选择的文本。
+- **Translate(Exclusive):** <kbd>Alt + 3</kbd> 取词并翻译。自动取最近的单个词，忽略手动选择的文本。
   ![Translate(Exclusive)](./images/action3.gif)
 
 

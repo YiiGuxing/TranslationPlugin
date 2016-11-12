@@ -76,12 +76,12 @@
             <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD1"/>
         </action>
         <action id="InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
-                text="Translate(Inclusive)" description="翻译（以最大范围自动取词，忽略手动选择的文本）">
+                text="Translate(Inclusive)" description="翻译（自动以最大范围取最近的所有词，忽略手动选择的文本）">
             <keyboard-shortcut keymap="$default" first-keystroke="alt 2"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD2"/>
         </action>
         <action id="ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
-                text="Translate(Exclusive)" description="翻译（自动取单个词，忽略手动选择的文本）">
+                text="Translate(Exclusive)" description="翻译（自动取最近的单个词，忽略手动选择的文本）">
             <keyboard-shortcut keymap="$default" first-keystroke="alt 3"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD3"/>
         </action>
