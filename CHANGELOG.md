@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.3.2
+
+- 用户体验优化
+
 ## [v1.3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.1)(2016-11-7)
 
 - 网络请求优化，支持网络代理 [#21][#21]
