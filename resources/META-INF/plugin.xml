@@ -32,8 +32,8 @@
 
     <change-notes><![CDATA[
       <ul>
-          <li>网络请求优化，支持网络代理</li>
-          <li>修复：气泡重叠显示</li>
+          <li>用户体验优化</li>
+          <li>历史记录持久化</li>
       </ul>
 
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
