@@ -6,13 +6,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TranslationPresenter implements TranslationContract.Presenter {
-    private static final int HISTORY_SIZE = 50;
-    private static final List<String> sHistory = new ArrayList<String>(HISTORY_SIZE);
+
+    private final AppStorage mAppStorage;
 
     private final Translator mTranslator;
     private final TranslationContract.View mTranslationView;
@@ -22,12 +20,13 @@ public class TranslationPresenter implements TranslationContract.Presenter {
     public TranslationPresenter(@NotNull TranslationContract.View view) {
         mTranslator = Translator.getInstance();
         this.mTranslationView = Utils.requireNonNull(view, "view cannot be null.");
+        mAppStorage = AppStorage.getInstance();
     }
 
     @NotNull
     @Override
     public List<String> getHistory() {
-        return Collections.unmodifiableList(sHistory);
+        return mAppStorage.getHistories();
     }
 
     @Nullable
@@ -62,18 +61,8 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         });
     }
 
-    private void updateHistory(String query) {
-        List<String> history = TranslationPresenter.sHistory;
-        int index = history.indexOf(query);
-        if (index != 0) {
-            if (index > 0) {
-                history.remove(index);
-            }
-            if (history.size() >= HISTORY_SIZE) {
-                history.remove(HISTORY_SIZE - 1);
-            }
-
-            history.add(0, query);
+    private void updateHistory(@NotNull String query) {
+        if (mAppStorage.addHistory(query)) {
             mTranslationView.updateHistory();
         }
     }

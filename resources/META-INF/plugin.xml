@@ -54,6 +54,8 @@
 
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Translator"
                             serviceImplementation="cn.yiiguxing.plugin.translate.Translator"/>
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.AppStorage"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.TranslationUiManager"
                             serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUiManager"/>
     </extensions>

@@ -215,7 +215,7 @@ public final class Styles {
                 if (i > 0) {
                     doc.insertString(doc.getLength(), exp.substring(0, i + 1), attrPre);
                     exp = exp.substring(i + 1);
-                } else if (exp.matches("\\w+")) {
+                } else if (exp.matches("\\w+")) { //Fixme 有中文的怎么办？
                     ClickableStyle style = new ClickableStyle(textPane, exp, doc.getLength(), explainsClickListener);
                     attr = setClickableStyle(attr, style);
                 }

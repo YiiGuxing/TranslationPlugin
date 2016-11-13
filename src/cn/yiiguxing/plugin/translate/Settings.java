@@ -41,6 +41,16 @@ public class Settings implements PersistentStateComponent<Settings> {
         XmlSerializerUtil.copyBean(state, this);
     }
 
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "useDefaultKey=" + useDefaultKey +
+                ", apiKeyName='" + apiKeyName + '\'' +
+                ", apiKeyValue='" + apiKeyValue + '\'' +
+                ", autoSelectionMode=" + autoSelectionMode +
+                '}';
+    }
+
     /**
      * 返回自动取词模式
      */

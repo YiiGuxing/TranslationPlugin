@@ -3,6 +3,7 @@
 ## v1.3.2
 
 - 用户体验优化
+- 历史上记录持久化
 
 ## [v1.3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.1)(2016-11-7)
 
