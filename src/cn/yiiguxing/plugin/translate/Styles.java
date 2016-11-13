@@ -17,6 +17,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 文本样式
@@ -37,7 +39,14 @@ public final class Styles {
 
     private static final int QUERY_FONT_SIZE = 19;
     private static final int PRE_EXPLAINS_FONT_SIZE = 16;
+
     private static final int EXPLAINS_FONT_SIZE = 16;
+
+    private static final Pattern PATTERN_WORD = Pattern.compile("[a-zA-Z]+");
+    private static final Pattern PATTERN_EXPLAIN =
+            Pattern.compile("(^(a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)");
+    private static final int GROUP_LABEL = 1;
+    private static final int GROUP_EXPLAIN = 3;
 
     static {
         StyleConstants.setItalic(ATTR_QUERY, true);
@@ -99,9 +108,9 @@ public final class Styles {
 
         BasicExplain basicExplain = result.getBasicExplain();
         if (basicExplain != null) {
-            insertExplain(textPane, document, basicExplain.getExplains(), explainsClickListener);
+            insertExplain(textPane, document, basicExplain.getExplains(), true, explainsClickListener);
         } else {
-            insertExplain(textPane, document, result.getTranslation(), explainsClickListener);
+            insertExplain(textPane, document, result.getTranslation(), false, explainsClickListener);
         }
 
         WebExplain[] webExplains = result.getWebExplains();
@@ -198,8 +207,9 @@ public final class Styles {
     }
 
     private static void insertExplain(@NotNull final JTextPane textPane,
-                                      @NotNull Document doc,
+                                      @NotNull StyledDocument doc,
                                       @Nullable String[] explains,
+                                      boolean splitLabel,
                                       @Nullable OnTextClickListener explainsClickListener) {
         if (explains == null || explains.length == 0)
             return;
@@ -211,17 +221,29 @@ public final class Styles {
                 if (Utils.isEmptyOrBlankString(exp))
                     continue;
 
-                int i = exp.indexOf('.');
-                if (i > 0) {
-                    doc.insertString(doc.getLength(), exp.substring(0, i + 1), attrPre);
-                    exp = exp.substring(i + 1);
-                } else if (exp.matches("\\w+")) { //Fixme 有中文的怎么办？
-                    ClickableStyle style = new ClickableStyle(textPane, exp, doc.getLength(), explainsClickListener);
-                    attr = setClickableStyle(attr, style);
-                }
+                if (splitLabel) {
+                    Matcher explainMatcher = PATTERN_EXPLAIN.matcher(exp);
+                    if (explainMatcher.find()) {
+                        doc.insertString(doc.getLength(), explainMatcher.group(GROUP_LABEL) + " ", attrPre);
+                        exp = explainMatcher.group(GROUP_EXPLAIN).trim();
+                    }
 
-                doc.insertString(doc.getLength(), exp, attr);
-                doc.insertString(doc.getLength(), "\n", null);
+                    final int offset = doc.getLength();
+                    doc.insertString(offset, exp + "\n", attr);
+
+                    Matcher wordMatcher = PATTERN_WORD.matcher(exp);
+                    String text;
+                    int start;
+                    ClickableStyle style;
+                    while (wordMatcher.find()) {
+                        text = wordMatcher.group();
+                        start = wordMatcher.start() + offset;
+                        style = new ClickableStyle(textPane, text, start, explainsClickListener);
+                        doc.setCharacterAttributes(start, text.length(), setClickableStyle(attr, style), true);
+                    }
+                } else {
+                    doc.insertString(doc.getLength(), exp + "\n", attr);
+                }
             }
 
             doc.insertString(doc.getLength(), "\n", null);
