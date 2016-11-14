@@ -38,7 +38,6 @@ public final class Utils {
     }
 
 
-
     public static boolean isEmptyOrBlankString(String str) {
         return null == str || str.trim().length() == 0;
     }
@@ -50,7 +49,7 @@ public final class Utils {
         if (isEmptyOrBlankString(input))
             return input;
 
-        return input.replaceAll("[_\\s]+", " ")
+        return input.replaceAll("[_*\\s]+", " ")
                 .replaceAll("([A-Z][a-z]+)|([0-9\\W]+)", " $0 ")
                 .replaceAll("[A-Z]{2,}", " $0")
                 .replaceAll("\\s{2,}", " ")
