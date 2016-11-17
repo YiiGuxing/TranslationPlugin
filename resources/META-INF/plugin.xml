@@ -87,6 +87,11 @@
             <keyboard-shortcut keymap="$default" first-keystroke="alt 3"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD3"/>
         </action>
+        <action id="TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+                text="Translate And Replace..." description="翻译并替换">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorTranslateAction"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt R"/>
+        </action>
     </actions>
 
 </idea-plugin>

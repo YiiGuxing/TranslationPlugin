@@ -65,7 +65,7 @@ public class TranslateAction extends AutoSelectAction implements DumbAware {
     }
 
     @Override
-    protected void onActionPerformed(@NotNull final Editor editor, @NotNull TextRange selectionRange) {
+    protected void onActionPerformed(AnActionEvent e, @NotNull final Editor editor, @NotNull TextRange selectionRange) {
         final String queryText = Utils.splitWord(editor.getDocument().getText(selectionRange));
         if (!Utils.isEmptyOrBlankString(queryText)) {
             final Project project = editor.getProject();

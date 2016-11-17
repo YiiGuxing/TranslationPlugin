@@ -46,7 +46,7 @@ abstract class AutoSelectAction extends AnAction {
     protected void onUpdate(AnActionEvent e, boolean active) {
     }
 
-    protected void onActionPerformed(@NotNull Editor editor, @NotNull TextRange selectionRange) {
+    protected void onActionPerformed(AnActionEvent e, @NotNull Editor editor, @NotNull TextRange selectionRange) {
     }
 
     @Override
@@ -69,7 +69,7 @@ abstract class AutoSelectAction extends AnAction {
         if (editor != null) {
             TextRange selectionRange = getSelectionRange(e);
             if (selectionRange != null && !selectionRange.isEmpty()) {
-                onActionPerformed(editor, selectionRange);
+                onActionPerformed(e, editor, selectionRange);
             }
         }
     }
