@@ -60,8 +60,8 @@ public class TranslateAction extends AutoSelectAction implements DumbAware {
     }
 
     @Override
-    protected void onUpdate(AnActionEvent e, boolean hasSelection) {
-        e.getPresentation().setEnabledAndVisible(hasSelection);
+    protected void onUpdate(AnActionEvent e, boolean active) {
+        e.getPresentation().setEnabledAndVisible(active);
     }
 
     @Override

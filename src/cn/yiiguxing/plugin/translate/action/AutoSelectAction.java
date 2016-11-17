@@ -43,7 +43,7 @@ abstract class AutoSelectAction extends AnAction {
     @NotNull
     protected abstract AutoSelectionMode getAutoSelectionMode();
 
-    protected void onUpdate(AnActionEvent e, boolean hasSelection) {
+    protected void onUpdate(AnActionEvent e, boolean active) {
     }
 
     protected void onActionPerformed(@NotNull Editor editor, @NotNull TextRange selectionRange) {
@@ -55,7 +55,7 @@ abstract class AutoSelectAction extends AnAction {
         Editor editor = getEditor(e);
         if (editor != null) {
             SelectionModel selectionModel = editor.getSelectionModel();
-            active = selectionModel.hasSelection() || canSelect(editor);
+            active = (mCheckSelection && selectionModel.hasSelection()) || canSelect(editor);
         }
 
         onUpdate(e, active);
