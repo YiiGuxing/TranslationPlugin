@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.util.TextRange;
@@ -18,8 +19,6 @@ import java.util.ArrayList;
 abstract class AutoSelectAction extends AnAction {
 
     private final boolean mCheckSelection;
-    @Nullable
-    private TextRange mSelectionRange;
 
     public AutoSelectAction(boolean checkSelection) {
         this(null, null, null, checkSelection);
@@ -52,8 +51,14 @@ abstract class AutoSelectAction extends AnAction {
 
     @Override
     public final void update(AnActionEvent e) {
-        mSelectionRange = getQueryTextRange(e);
-        onUpdate(e, hasSelection());
+        boolean active = false;
+        Editor editor = getEditor(e);
+        if (editor != null) {
+            SelectionModel selectionModel = editor.getSelectionModel();
+            active = selectionModel.hasSelection() || canSelect(editor);
+        }
+
+        onUpdate(e, active);
     }
 
     @Override
@@ -61,9 +66,30 @@ abstract class AutoSelectAction extends AnAction {
         if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
 
         final Editor editor = getEditor(e);
-        if (editor != null && hasSelection()) {
-            onActionPerformed(editor, Utils.requireNonNull(mSelectionRange));
+        if (editor != null) {
+            TextRange selectionRange = getSelectionRange(e);
+            if (selectionRange != null && !selectionRange.isEmpty()) {
+                onActionPerformed(editor, selectionRange);
+            }
         }
+    }
+
+    private boolean canSelect(Editor editor) {
+        final int offset = editor.getCaretModel().getOffset();
+        Document document = editor.getDocument();
+        int textLength = document.getTextLength();
+
+        if (textLength == 0)
+            return false;
+
+        String text = document.getText(new TextRange(Math.max(0, offset - 1), Math.min(textLength, offset + 1)));
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isJavaIdentifierPart(text.charAt(i))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Nullable
@@ -71,12 +97,8 @@ abstract class AutoSelectAction extends AnAction {
         return CommonDataKeys.EDITOR.getData(e.getDataContext());
     }
 
-    private boolean hasSelection() {
-        return mSelectionRange != null && !mSelectionRange.isEmpty();
-    }
-
     @Nullable
-    private TextRange getQueryTextRange(AnActionEvent e) {
+    private TextRange getSelectionRange(AnActionEvent e) {
         TextRange selectionRange = null;
 
         Editor editor = getEditor(e);
