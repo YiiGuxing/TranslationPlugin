@@ -6,9 +6,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 
-public class OpenTranslationDialogAction extends AnAction implements DumbAware {
+public class ShowTranslationDialogAction extends AnAction implements DumbAware {
 
-    public OpenTranslationDialogAction() {
+    public ShowTranslationDialogAction() {
         super(Icons.Translate);
     }
 

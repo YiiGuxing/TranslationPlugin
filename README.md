@@ -43,9 +43,9 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
 Actions
 -------
 
-TranslationPlugin有四个Action，它们分别是：`Open Translation Dialog...`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
+TranslationPlugin有四个Action，它们分别是：`Show Translation Dialog...`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
 
-- **Open Translation Dialog...:** <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
+- **Show Translation Dialog...:** <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
   ![Translate](./images/action0.gif)
 - **Translate:** <kbd>Alt + 1</kbd> 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。此Action默认显示在编辑器右键菜单上。
   ![Translate](./images/action1.gif)

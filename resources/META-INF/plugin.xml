@@ -62,9 +62,9 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="OpenTranslationDialogAction"
-                class="cn.yiiguxing.plugin.translate.action.OpenTranslationDialogAction"
-                text="Open Translation Dialog..."
+        <action id="ShowTranslationDialogAction"
+                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
+                text="Show Translation Dialog..."
                 description="打开翻译对话框">
             <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt 0"/>
@@ -73,7 +73,7 @@
         <action id="EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
                 text="Translate"
                 description="翻译">
-            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Cut"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt 1"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD1"/>
         </action>
