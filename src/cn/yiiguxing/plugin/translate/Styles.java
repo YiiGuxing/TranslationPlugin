@@ -43,10 +43,7 @@ public final class Styles {
     private static final int EXPLAINS_FONT_SIZE = 16;
 
     private static final Pattern PATTERN_WORD = Pattern.compile("[a-zA-Z]+");
-    private static final Pattern PATTERN_EXPLAIN =
-            Pattern.compile("(^(a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)");
-    private static final int GROUP_LABEL = 1;
-    private static final int GROUP_EXPLAIN = 3;
+
 
     static {
         StyleConstants.setItalic(ATTR_QUERY, true);
@@ -222,10 +219,10 @@ public final class Styles {
                     continue;
 
                 if (splitLabel) {
-                    Matcher explainMatcher = PATTERN_EXPLAIN.matcher(exp);
-                    if (explainMatcher.find()) {
-                        doc.insertString(doc.getLength(), explainMatcher.group(GROUP_LABEL) + " ", attrPre);
-                        exp = explainMatcher.group(GROUP_EXPLAIN).trim();
+                    String[] splits = Utils.splitExplain(exp);
+                    if (splits[0] != null) {
+                        doc.insertString(doc.getLength(), splits[0] + " ", attrPre);
+                        exp = splits[1];
                     }
 
                     final int offset = doc.getLength();
