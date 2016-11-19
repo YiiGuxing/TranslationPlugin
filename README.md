@@ -31,7 +31,7 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
 - DataGrip
 - Rider
 
-**使用 IDEA 内置插件系统:**
+**使用 IDE 内置插件系统:**
 - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
 
 **手动:**
