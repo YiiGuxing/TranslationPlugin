@@ -135,24 +135,21 @@ public final class Translator {
                 result.setErrorCode(QueryResult.ERROR_CODE_RESTRICTED);
             }
 
-            if (result != null && result.getErrorCode() == QueryResult.ERROR_CODE_NONE) {
-                synchronized (mCache) {
-                    mCache.put(query, result);
+            if (result != null) {
+                result.checkError();
+                if (result.getErrorCode() == QueryResult.ERROR_CODE_NONE) {
+                    synchronized (mCache) {
+                        mCache.put(query, result);
+                    }
                 }
             }
 
             System.out.println("query: " + query);
             System.out.println("result: " + result);
 
-            final QueryResult postResult = result;
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (mCallback != null) {
-                        mCallback.onQuery(query, postResult);
-                    }
-                }
-            });
+            if (mCallback != null) {
+                mCallback.onQuery(query, result);
+            }
         }
     }
 

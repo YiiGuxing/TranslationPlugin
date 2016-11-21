@@ -84,6 +84,12 @@ public class QueryResult {
         this.webExplains = webExplains;
     }
 
+    public void checkError() {
+        if (errorCode == ERROR_CODE_NONE && (translation == null || translation.length == 0) &&
+                (basicExplain == null || basicExplain.getExplains() == null || basicExplain.getExplains().length == 0))
+            errorCode = ERROR_CODE_FAIL;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
