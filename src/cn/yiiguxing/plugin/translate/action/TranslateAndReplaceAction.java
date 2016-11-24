@@ -5,14 +5,16 @@ import cn.yiiguxing.plugin.translate.Translator;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
+import com.intellij.codeInsight.highlighting.HighlightManager;
+import com.intellij.codeInsight.lookup.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.markup.EffectType;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -20,7 +22,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
-import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,10 +37,9 @@ import java.util.regex.Pattern;
 public class TranslateAndReplaceAction extends AutoSelectAction {
 
     private static final Pattern PATTERN_CHINESE = Pattern.compile("[\\u4E00-\\u9FBF]");
-    private static final String PATTERN_FIX = "^\\[[\\u4E00-\\u9FBF]+\\] ";
+    private static final String PATTERN_FIX = "^\\[[\\u4E00-\\u9FBF]+] ";
 
     private static final TextAttributes HIGHLIGHT_ATTRIBUTES;
-    private static final String GROUP_ID = "TranslateAndReplaceAction.GROUP_ID";
 
     static {
         TextAttributes attributes = new TextAttributes();
@@ -91,77 +91,91 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
                 if (result == null || result.getErrorCode() != QueryResult.ERROR_CODE_NONE)
                     return;
 
-                final List<List<String>> replaceData = getReplaceData(result);
-                if (replaceData.isEmpty())
+                final List<LookupElement> replaceLookup = getReplaceLookupElements(result);
+                if (replaceLookup.isEmpty())
                     return;
 
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        doReplace(editor, selectionRange, text, replaceData);
+                        doReplace(editor, selectionRange, text, replaceLookup);
                     }
                 });
             }
         });
     }
 
-    private void doReplace(@NotNull final Editor editor,
-                           @NotNull final TextRange selectionRange,
-                           @NotNull final String targetText,
-                           @NotNull final List<List<String>> replaceData) {
-        if (editor.isDisposed())
+    private static void doReplace(@NotNull final Editor editor,
+                                  @NotNull final TextRange selectionRange,
+                                  @NotNull final String targetText,
+                                  @NotNull final List<LookupElement> replaceLookup) {
+        if (editor.isDisposed() || editor.getProject() == null ||
+                !targetText.equals(editor.getDocument().getText(selectionRange)) ||
+                !selectionRange.containsOffset(editor.getCaretModel().getOffset())) {
             return;
+        }
 
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                if (editor.isDisposed() || !targetText.equals(editor.getDocument().getText(selectionRange)) ||
-                        !selectionRange.containsOffset(editor.getCaretModel().getOffset()))
-                    return;
-
-                final Runnable command = new Runnable() {
-                    @Override
-                    public void run() {
-                        int start = selectionRange.getStartOffset();
-                        int end = selectionRange.getEndOffset();
-                        String replace = replaceData.get(0).get(0);
-                        editor.getDocument().replaceString(start, end, replace);
-                    }
-                };
-
-                CommandProcessor.getInstance().executeCommand(editor.getProject(), command,
-                        getTemplatePresentation().getText(),
-                        DocCommandGroupId.withGroupId(editor.getDocument(), GROUP_ID),
-                        UndoConfirmationPolicy.DEFAULT,
-                        editor.getDocument());
+        final SelectionModel selectionModel = editor.getSelectionModel();
+        final int startOffset = selectionRange.getStartOffset();
+        final int endOffset = selectionRange.getEndOffset();
+        if (selectionModel.hasSelection()) {
+            if (selectionModel.getSelectionStart() != startOffset || selectionModel.getSelectionEnd() != endOffset) {
+                return;
             }
-        });
+        } else {
+            selectionModel.setSelection(startOffset, endOffset);
+        }
+
+        editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+        editor.getCaretModel().moveToOffset(endOffset);
+
+        final ArrayList<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
+        HighlightManager.getInstance(editor.getProject()).addRangeHighlight(editor, startOffset, endOffset,
+                HIGHLIGHT_ATTRIBUTES, false, highlighters);
+
+        LookupElement[] items = replaceLookup.toArray(new LookupElement[replaceLookup.size()]);
+        final LookupEx lookup = LookupManager.getInstance(editor.getProject()).showLookup(editor, items);
+        if (lookup != null) {
+            lookup.addLookupListener(new LookupAdapter() {
+                @Override
+                public void itemSelected(LookupEvent event) {
+                    doDisposeHighlighter(highlighters);
+                }
+
+                @Override
+                public void lookupCanceled(LookupEvent event) {
+                    doDisposeHighlighter(highlighters);
+                }
+            });
+        }
+    }
+
+    private static void doDisposeHighlighter(@NotNull ArrayList<RangeHighlighter> highlighters) {
+        for (RangeHighlighter highlighter : highlighters) {
+            highlighter.dispose();
+        }
     }
 
     @NotNull
-    private static List<List<String>> getReplaceData(@NotNull QueryResult result) {
-        final List<List<String>> replaceData;
+    private static List<LookupElement> getReplaceLookupElements(@NotNull QueryResult result) {
+        final List<LookupElement> replaceLookup;
 
         BasicExplain basicExplain = result.getBasicExplain();
-        if (basicExplain != null && basicExplain.getExplains().length == 1) {
-            replaceData = getMixedReplaceData(basicExplain.getExplains()[0]);
-        } else if (basicExplain == null && result.getTranslation().length == 1) {
-            replaceData = getMixedReplaceData(result.getTranslation()[0]);
-        } else if (basicExplain != null) {
-            replaceData = getLooseReplaceData(basicExplain.getExplains());
+        if (basicExplain != null) {
+            replaceLookup = getReplaceLookupElements(basicExplain.getExplains());
         } else {
-            replaceData = getLooseReplaceData(result.getTranslation());
+            replaceLookup = getReplaceLookupElements(result.getTranslation());
         }
 
-        return replaceData;
+        return replaceLookup;
     }
 
     @NotNull
-    private static List<List<String>> getMixedReplaceData(@NotNull String explain) {
-        final List<String> words = fixAndSplitForVariable(explain);
-        if (words == null || words.isEmpty()) {
+    private static List<LookupElement> getReplaceLookupElements(@Nullable String[] explains) {
+        if (explains == null || explains.length == 0)
             return Collections.emptyList();
-        }
+
+        final LinkedHashSet<LookupElement> set = new LinkedHashSet<LookupElement>();
 
         final StringBuilder camelBuilder = new StringBuilder();
         final StringBuilder pascalBuilder = new StringBuilder();
@@ -169,16 +183,27 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         final StringBuilder capsWithUnderBuilder = new StringBuilder();
         final StringBuilder withSpaceBuilder = new StringBuilder();
 
-        build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder, withSpaceBuilder);
+        for (String explain : explains) {
+            List<String> words = fixAndSplitForVariable(explain);
+            if (words == null || words.isEmpty()) {
+                continue;
+            }
 
-        LinkedHashSet<String> set = new LinkedHashSet<String>();
-        set.add(camelBuilder.toString());
-        set.add(pascalBuilder.toString());
-        set.add(lowerWithUnderBuilder.toString());
-        set.add(capsWithUnderBuilder.toString());
-        set.add(withSpaceBuilder.toString());
+            camelBuilder.setLength(0);
+            pascalBuilder.setLength(0);
+            lowerWithUnderBuilder.setLength(0);
+            capsWithUnderBuilder.setLength(0);
+            withSpaceBuilder.setLength(0);
+            build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder, withSpaceBuilder);
 
-        return Collections.singletonList((List<String>) new ArrayList<String>(set));
+            set.add(LookupElementBuilder.create(camelBuilder.toString()));
+            set.add(LookupElementBuilder.create(pascalBuilder.toString()));
+            set.add(LookupElementBuilder.create(lowerWithUnderBuilder.toString()));
+            set.add(LookupElementBuilder.create(capsWithUnderBuilder.toString()));
+            set.add(LookupElementBuilder.create(withSpaceBuilder.toString()));
+        }
+
+        return Collections.unmodifiableList(new ArrayList<LookupElement>(set));
     }
 
     private static void build(@NotNull final List<String> words,
@@ -210,56 +235,6 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
             lowerWithUnder.append(lowerCase);
             capsWithUnder.append(word.toUpperCase());
         }
-    }
-
-    @NotNull
-    private static List<List<String>> getLooseReplaceData(@NotNull String[] explains) {
-        final StringBuilder camelBuilder = new StringBuilder();
-        final StringBuilder pascalBuilder = new StringBuilder();
-        final StringBuilder lowerWithUnderBuilder = new StringBuilder();
-        final StringBuilder capsWithUnderBuilder = new StringBuilder();
-        final StringBuilder withSpaceBuilder = new StringBuilder();
-
-        final List<String> camel = new SmartList<String>();
-        final List<String> pascal = new SmartList<String>();
-        final List<String> lowerWithUnder = new SmartList<String>();
-        final List<String> capsWithUnder = new SmartList<String>();
-        final List<String> withSpace = new SmartList<String>();
-
-        for (String explain : explains) {
-            List<String> words = fixAndSplitForVariable(explain);
-            if (words == null || words.isEmpty()) {
-                continue;
-            }
-
-            camelBuilder.setLength(0);
-            pascalBuilder.setLength(0);
-            lowerWithUnderBuilder.setLength(0);
-            capsWithUnderBuilder.setLength(0);
-            withSpaceBuilder.setLength(0);
-
-            build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder, withSpaceBuilder);
-
-            camel.add(camelBuilder.toString());
-            pascal.add(pascalBuilder.toString());
-            lowerWithUnder.add(lowerWithUnderBuilder.toString());
-            capsWithUnder.add(capsWithUnderBuilder.toString());
-            withSpace.add(withSpaceBuilder.toString());
-        }
-
-        LinkedHashSet<List<String>> resultSet = new LinkedHashSet<List<String>>();
-        if (!camel.isEmpty())
-            resultSet.add(camel);
-        if (!pascal.isEmpty())
-            resultSet.add(pascal);
-        if (!lowerWithUnder.isEmpty())
-            resultSet.add(lowerWithUnder);
-        if (!capsWithUnder.isEmpty())
-            resultSet.add(capsWithUnder);
-        if (!withSpace.isEmpty())
-            resultSet.add(withSpace);
-
-        return new ArrayList<List<String>>(resultSet);
     }
 
     @Nullable

@@ -86,7 +86,7 @@ public class TranslateAction extends AutoSelectAction implements DumbAware {
                     @Override
                     public void dispose() {
                         for (RangeHighlighter highlighter : highlighters) {
-                            highlightManager.removeSegmentHighlighter(editor, highlighter);
+                            highlighter.dispose();
                         }
                     }
                 });
