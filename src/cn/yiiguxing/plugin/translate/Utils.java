@@ -48,7 +48,7 @@ public final class Utils {
 
 
     public static boolean isEmptyOrBlankString(String str) {
-        return null == str || str.trim().length() == 0;
+        return null == str || str.trim().isEmpty();
     }
 
     /**

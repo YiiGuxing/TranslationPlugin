@@ -92,6 +92,10 @@
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorTranslateAction"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt R"/>
         </action>
+        <action id="TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
+                text="Translate Quick Doc" description="翻译快速文档中选中的文本">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt T"/>
+        </action>
     </actions>
 
 </idea-plugin>
