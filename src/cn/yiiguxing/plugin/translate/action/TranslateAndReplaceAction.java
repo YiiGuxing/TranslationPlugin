@@ -126,29 +126,49 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         editor.getCaretModel().moveToOffset(endOffset);
 
-        final ArrayList<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
-        HighlightManager.getInstance(editor.getProject()).addRangeHighlight(editor, startOffset, endOffset,
-                HIGHLIGHT_ATTRIBUTES, false, highlighters);
-
         LookupElement[] items = replaceLookup.toArray(new LookupElement[replaceLookup.size()]);
         final LookupEx lookup = LookupManager.getInstance(editor.getProject()).showLookup(editor, items);
-        if (lookup != null) {
-            lookup.addLookupListener(new LookupAdapter() {
-                @Override
-                public void itemSelected(LookupEvent event) {
-                    doDisposeHighlighter(highlighters);
-                }
 
-                @Override
-                public void lookupCanceled(LookupEvent event) {
-                    doDisposeHighlighter(highlighters);
-                }
-            });
+        if (lookup == null) {
+            return;
         }
+
+        final HighlightManager highlightManager = HighlightManager.getInstance(editor.getProject());
+        final List<RangeHighlighter> highlighters = addHighlight(highlightManager, editor, selectionRange);
+
+        lookup.addLookupListener(new LookupAdapter() {
+            @Override
+            public void itemSelected(LookupEvent event) {
+                disposeHighlight(highlighters);
+            }
+
+            @Override
+            public void lookupCanceled(LookupEvent event) {
+                selectionModel.removeSelection();
+                disposeHighlight(highlighters);
+            }
+        });
     }
 
-    private static void doDisposeHighlighter(@NotNull ArrayList<RangeHighlighter> highlighters) {
+    @NotNull
+    private static List<RangeHighlighter> addHighlight(@NotNull HighlightManager highlightManager,
+                                                       @NotNull Editor editor,
+                                                       @NotNull TextRange selectionRange) {
+        final ArrayList<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
+        highlightManager.addOccurrenceHighlight(editor, selectionRange.getStartOffset(), selectionRange.getEndOffset(),
+                HIGHLIGHT_ATTRIBUTES, 0, highlighters, null);
+
         for (RangeHighlighter highlighter : highlighters) {
+            highlighter.setGreedyToLeft(true);
+            highlighter.setGreedyToRight(true);
+        }
+
+        return highlighters;
+    }
+
+    private static void disposeHighlight(@NotNull List<RangeHighlighter> highlighters) {
+        for (RangeHighlighter highlighter : highlighters) {
+            System.out.println(highlighter.getStartOffset() + " " + highlighter.getEndOffset());
             highlighter.dispose();
         }
     }
@@ -171,7 +191,6 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
     private static List<LookupElement> getReplaceLookupElements(@Nullable String[] explains) {
         if (explains == null || explains.length == 0)
             return Collections.emptyList();
-
 
         final Set<LookupElement> camel = new LinkedHashSet<LookupElement>();
         final Set<LookupElement> pascal = new LinkedHashSet<LookupElement>();
