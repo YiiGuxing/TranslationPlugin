@@ -25,10 +25,7 @@ import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -175,13 +172,16 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         if (explains == null || explains.length == 0)
             return Collections.emptyList();
 
-        final LinkedHashSet<LookupElement> set = new LinkedHashSet<LookupElement>();
+
+        final Set<LookupElement> camel = new LinkedHashSet<LookupElement>();
+        final Set<LookupElement> pascal = new LinkedHashSet<LookupElement>();
+        final Set<LookupElement> lowerWithUnder = new LinkedHashSet<LookupElement>();
+        final Set<LookupElement> capsWithUnder = new LinkedHashSet<LookupElement>();
 
         final StringBuilder camelBuilder = new StringBuilder();
         final StringBuilder pascalBuilder = new StringBuilder();
         final StringBuilder lowerWithUnderBuilder = new StringBuilder();
         final StringBuilder capsWithUnderBuilder = new StringBuilder();
-        final StringBuilder withSpaceBuilder = new StringBuilder();
 
         for (String explain : explains) {
             List<String> words = fixAndSplitForVariable(explain);
@@ -193,35 +193,36 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
             pascalBuilder.setLength(0);
             lowerWithUnderBuilder.setLength(0);
             capsWithUnderBuilder.setLength(0);
-            withSpaceBuilder.setLength(0);
-            build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder, withSpaceBuilder);
 
-            set.add(LookupElementBuilder.create(camelBuilder.toString()));
-            set.add(LookupElementBuilder.create(pascalBuilder.toString()));
-            set.add(LookupElementBuilder.create(lowerWithUnderBuilder.toString()));
-            set.add(LookupElementBuilder.create(capsWithUnderBuilder.toString()));
-            set.add(LookupElementBuilder.create(withSpaceBuilder.toString()));
+            build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder);
+
+            camel.add(LookupElementBuilder.create(camelBuilder.toString()));
+            pascal.add(LookupElementBuilder.create(pascalBuilder.toString()));
+            lowerWithUnder.add(LookupElementBuilder.create(lowerWithUnderBuilder.toString()));
+            capsWithUnder.add(LookupElementBuilder.create(capsWithUnderBuilder.toString()));
         }
 
-        return Collections.unmodifiableList(new ArrayList<LookupElement>(set));
+        final Set<LookupElement> result = new LinkedHashSet<LookupElement>();
+        result.addAll(camel);
+        result.addAll(pascal);
+        result.addAll(lowerWithUnder);
+        result.addAll(capsWithUnder);
+
+        return Collections.unmodifiableList(new ArrayList<LookupElement>(result));
     }
 
     private static void build(@NotNull final List<String> words,
                               @NotNull final StringBuilder camel,
                               @NotNull final StringBuilder pascal,
                               @NotNull final StringBuilder lowerWithUnder,
-                              @NotNull final StringBuilder capsWithUnder,
-                              @NotNull final StringBuilder withSpace) {
+                              @NotNull final StringBuilder capsWithUnder) {
         for (int i = 0; i < words.size(); i++) {
             String word = words.get(i);
 
             if (i > 0) {
                 lowerWithUnder.append('_');
                 capsWithUnder.append('_');
-                withSpace.append(' ');
             }
-
-            withSpace.append(word);
 
             if (i == 0) {
                 word = sanitizeJavaIdentifierStart(word);
