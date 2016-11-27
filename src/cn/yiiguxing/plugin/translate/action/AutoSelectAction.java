@@ -34,6 +34,7 @@ abstract class AutoSelectAction extends AnAction {
 
     public AutoSelectAction(@Nullable String text, @Nullable String description, @Nullable Icon icon, boolean checkSelection) {
         super(text, description, icon);
+        setEnabledInModalContext(true);
         this.mCheckSelection = checkSelection;
     }
 

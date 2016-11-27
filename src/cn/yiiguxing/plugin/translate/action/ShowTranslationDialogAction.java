@@ -11,6 +11,7 @@ public class ShowTranslationDialogAction extends AnAction implements DumbAware {
 
     public ShowTranslationDialogAction() {
         super(Icons.Translate);
+        setEnabledInModalContext(true);
     }
 
     @Override

@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +63,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
                             presenter.onPostResult(query, result);
                         }
                     }
-                });
+                }, ModalityState.any());
             }
         });
     }

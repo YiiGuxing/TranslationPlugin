@@ -50,6 +50,7 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
 
     public TranslateAndReplaceAction() {
         super(true);
+        setEnabledInModalContext(false);
         settings = Settings.getInstance();
     }
 
