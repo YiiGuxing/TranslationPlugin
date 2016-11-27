@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.ScrollType;
@@ -22,6 +23,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.popup.PopupFactoryImpl;
+import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
@@ -264,6 +266,11 @@ public class TranslationBalloon implements TranslationContract.View {
         mBalloon = balloon;
 
         // 再刷新一下，尽可能地消除滚动条
+        revalidateBalloon(balloon);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private void revalidateBalloon(final BalloonImpl balloon) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -271,7 +278,18 @@ public class TranslationBalloon implements TranslationContract.View {
                     balloon.revalidate();
                 }
             }
-        });
+        }, ModalityState.any());
+
+        final Alarm alarm = new Alarm(mDisposable);
+        alarm.addRequest(new Runnable() {
+            @Override
+            public void run() {
+                if (!balloon.isDisposed()) {
+                    balloon.revalidate();
+                }
+                alarm.dispose();
+            }
+        }, 100, ModalityState.any());
     }
 
     private void showOnTranslationDialog(@Nullable String text) {
