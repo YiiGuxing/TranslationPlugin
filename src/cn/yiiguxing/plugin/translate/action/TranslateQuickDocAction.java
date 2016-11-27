@@ -31,7 +31,7 @@ public class TranslateQuickDocAction extends AnAction implements DumbAware, Hint
             docInfoHint.dispose();
         }
 
-        final String selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT);
+        final String selected = Utils.splitWord(e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT));
         if (!Utils.isEmptyOrBlankString(selected)) {
             TranslationUiManager.getInstance().showTranslationDialog(project).query(selected);
         }
