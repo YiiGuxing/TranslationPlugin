@@ -4,6 +4,9 @@
 
 - 用户体验优化
 - 历史记录持久化
+- 添加翻译替换操作，见[Actions][actions]
+- 添加文本组件翻译操作，见[Actions][actions]
+- 扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框了。
 
 ## [v1.3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.1)(2016-11-7)
 
