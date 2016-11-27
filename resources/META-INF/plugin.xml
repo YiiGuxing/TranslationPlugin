@@ -87,13 +87,13 @@
             <keyboard-shortcut keymap="$default" first-keystroke="alt 3"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt NUMPAD3"/>
         </action>
-        <action id="TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+        <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                 text="Translate And Replace..." description="翻译并替换">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorTranslateAction"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt R"/>
         </action>
-        <action id="TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
-                text="Translate Quick Doc" description="翻译快速文档中选中的文本">
+        <action id="$TranslateTextComponent" class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
+                text="Translate Text Component" description="翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本">
             <keyboard-shortcut keymap="$default" first-keystroke="alt T"/>
         </action>
     </actions>
