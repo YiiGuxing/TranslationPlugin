@@ -43,7 +43,7 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
 Actions
 -------
 
-- **Show Translation Dialog...:** 默认快捷键<kbd>Alt + 0</kbd>，打开翻译对话框，默认显示在工具栏上。
+- **Show Translation Dialog...:** 打开翻译对话框。默认显示在工具栏上，默认快捷键为<kbd>Alt + 0</kbd>
 
   ![Translate](./images/action0.gif)
 
