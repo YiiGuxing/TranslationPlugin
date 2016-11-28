@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.Utils;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl;
@@ -21,15 +20,6 @@ public class TranslateTextComponentAction extends AnAction implements DumbAware,
 
     public TranslateTextComponentAction() {
         setEnabledInModalContext(true);
-
-        ActionManager.getInstance().addAnActionListener(new AnActionListener.Adapter() {
-            @Override
-            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                System.out.println(action.getClass().getClass().getCanonicalName());
-                System.out.println(action);
-                System.out.println(dataContext);
-            }
-        });
     }
 
     @Nullable

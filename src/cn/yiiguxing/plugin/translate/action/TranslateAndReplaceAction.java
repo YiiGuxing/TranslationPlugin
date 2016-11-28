@@ -169,7 +169,6 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
 
     private static void disposeHighlight(@NotNull List<RangeHighlighter> highlighters) {
         for (RangeHighlighter highlighter : highlighters) {
-            System.out.println(highlighter.getStartOffset() + " " + highlighter.getEndOffset());
             highlighter.dispose();
         }
     }
