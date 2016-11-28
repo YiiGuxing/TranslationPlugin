@@ -289,7 +289,7 @@ public class TranslationBalloon implements TranslationContract.View {
                 }
                 alarm.dispose();
             }
-        }, 100, ModalityState.any());
+        }, 50, ModalityState.any());
     }
 
     private void showOnTranslationDialog(@Nullable String text) {
