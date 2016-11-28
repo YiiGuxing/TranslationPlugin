@@ -46,18 +46,18 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         HIGHLIGHT_ATTRIBUTES = attributes;
     }
 
-    private final Settings settings;
+    private final Settings mSettings;
 
     public TranslateAndReplaceAction() {
         super(true);
         setEnabledInModalContext(false);
-        settings = Settings.getInstance();
+        mSettings = Settings.getInstance();
     }
 
     @NotNull
     @Override
     protected AutoSelectionMode getAutoSelectionMode() {
-        return settings.getAutoSelectionMode();
+        return mSettings.getAutoSelectionMode();
     }
 
     @Override

@@ -34,19 +34,19 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
 
-    private final Settings settings;
+    private final Settings mSettings;
 
-    private JPanel contentPane;
+    private JPanel mContentPane;
     @SuppressWarnings("unused")
-    private LinkLabel linkLabel;
-    private JTextField keyNameField;
-    private JTextField keyValueField;
-    private JCheckBox checkBox;
+    private LinkLabel mLinkLabel;
+    private JTextField mKeyNameField;
+    private JTextField mKeyValueField;
+    private JCheckBox mCheckBox;
     @SuppressWarnings("Since15")
-    private JComboBox<String> autoSelectionMode;
+    private JComboBox<String> mAutoSelectionMode;
 
     public SettingsConfigurable() {
-        settings = Settings.getInstance();
+        mSettings = Settings.getInstance();
     }
 
     @Nls
@@ -64,8 +64,8 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     @Nullable
     @Override
     public JComponent createComponent() {
-        checkBox.addItemListener(this);
-        autoSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
+        mCheckBox.addItemListener(this);
+        mAutoSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
             @Override
             public void customize(JList list, String value, int index, boolean selected, boolean hasFocus) {
                 setText(value);
@@ -76,11 +76,11 @@ public class SettingsConfigurable implements Configurable, ItemListener {
                 }
             }
         });
-        return contentPane;
+        return mContentPane;
     }
 
     private void createUIComponents() {
-        linkLabel = new ActionLink("", AllIcons.Ide.Link, new AnAction() {
+        mLinkLabel = new ActionLink("", AllIcons.Ide.Link, new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
                 obtainApiKey();
@@ -101,7 +101,7 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     }
 
     private void switchKey() {
-        if (checkBox.isSelected()) {
+        if (mCheckBox.isSelected()) {
             useDefaultKey();
         } else {
             useCustomKey();
@@ -109,28 +109,28 @@ public class SettingsConfigurable implements Configurable, ItemListener {
     }
 
     private void useDefaultKey() {
-        if (Utils.isEmptyOrBlankString(keyNameField.getText())
-                && Utils.isEmptyOrBlankString(keyValueField.getText())) {
-            settings.setApiKeyName(null);
-            settings.setApiKeyValue(null);
+        if (Utils.isEmptyOrBlankString(mKeyNameField.getText())
+                && Utils.isEmptyOrBlankString(mKeyValueField.getText())) {
+            mSettings.setApiKeyName(null);
+            mSettings.setApiKeyValue(null);
         }
 
-        keyNameField.setText("Default");
-        keyNameField.setEnabled(false);
-        keyValueField.setText("Default");
-        keyValueField.setEnabled(false);
+        mKeyNameField.setText("Default");
+        mKeyNameField.setEnabled(false);
+        mKeyValueField.setText("Default");
+        mKeyValueField.setEnabled(false);
     }
 
     private void useCustomKey() {
-        keyNameField.setText(settings.getApiKeyName());
-        keyNameField.setEnabled(true);
-        keyValueField.setText(settings.getApiKeyValue());
-        keyValueField.setEnabled(true);
+        mKeyNameField.setText(mSettings.getApiKeyName());
+        mKeyNameField.setEnabled(true);
+        mKeyValueField.setText(mSettings.getApiKeyValue());
+        mKeyValueField.setEnabled(true);
     }
 
     @NotNull
     private AutoSelectionMode getAutoSelectionMode() {
-        if (autoSelectionMode.getSelectedIndex() == INDEX_INCLUSIVE) {
+        if (mAutoSelectionMode.getSelectedIndex() == INDEX_INCLUSIVE) {
             return AutoSelectionMode.INCLUSIVE;
         } else {
             return AutoSelectionMode.EXCLUSIVE;
@@ -139,35 +139,35 @@ public class SettingsConfigurable implements Configurable, ItemListener {
 
     @Override
     public boolean isModified() {
-        return (!Utils.isEmptyOrBlankString(keyNameField.getText())
-                && !Utils.isEmptyOrBlankString(keyValueField.getText()))
-                || (settings.getAutoSelectionMode() != getAutoSelectionMode());
+        return (!Utils.isEmptyOrBlankString(mKeyNameField.getText())
+                && !Utils.isEmptyOrBlankString(mKeyValueField.getText()))
+                || (mSettings.getAutoSelectionMode() != getAutoSelectionMode());
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        boolean validKey = !Utils.isEmptyOrBlankString(keyNameField.getText())
-                && !Utils.isEmptyOrBlankString(keyValueField.getText());
-        boolean useDefault = checkBox.isSelected();
+        boolean validKey = !Utils.isEmptyOrBlankString(mKeyNameField.getText())
+                && !Utils.isEmptyOrBlankString(mKeyValueField.getText());
+        boolean useDefault = mCheckBox.isSelected();
         if (!useDefault) {
-            settings.setApiKeyName(keyNameField.getText());
-            settings.setApiKeyValue(keyValueField.getText());
+            mSettings.setApiKeyName(mKeyNameField.getText());
+            mSettings.setApiKeyValue(mKeyValueField.getText());
         }
 
-        settings.setUseDefaultKey(useDefault || !validKey);
-        settings.setAutoSelectionMode(getAutoSelectionMode());
+        mSettings.setUseDefaultKey(useDefault || !validKey);
+        mSettings.setAutoSelectionMode(getAutoSelectionMode());
     }
 
     @Override
     public void reset() {
-        checkBox.setSelected(settings.isUseDefaultKey());
-        autoSelectionMode.setSelectedIndex(settings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
+        mCheckBox.setSelected(mSettings.isUseDefaultKey());
+        mAutoSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
                 ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);
     }
 
     @Override
     public void disposeUIResources() {
-        checkBox.removeItemListener(this);
+        mCheckBox.removeItemListener(this);
     }
 
 }

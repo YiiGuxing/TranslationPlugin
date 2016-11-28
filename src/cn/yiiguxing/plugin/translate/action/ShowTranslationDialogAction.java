@@ -7,6 +7,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 
+/**
+ * 显示翻译对话框动作
+ */
 public class ShowTranslationDialogAction extends AnAction implements DumbAware {
 
     public ShowTranslationDialogAction() {

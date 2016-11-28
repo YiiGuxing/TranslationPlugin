@@ -16,6 +16,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.text.JTextComponent;
 
+/**
+ * 文本组件（如快速文档、提示气泡、输入框……）翻译动作
+ */
 public class TranslateTextComponentAction extends AnAction implements DumbAware, HintManagerImpl.ActionToIgnore {
 
     public TranslateTextComponentAction() {

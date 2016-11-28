@@ -16,6 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 
+/**
+ * 自动从光标周围取词
+ */
 abstract class AutoSelectAction extends AnAction {
 
     private final boolean mCheckSelection;
@@ -44,9 +47,22 @@ abstract class AutoSelectAction extends AnAction {
     @NotNull
     protected abstract AutoSelectionMode getAutoSelectionMode();
 
+    /**
+     * 更新Action
+     *
+     * @param e      事件
+     * @param active 是否活动的，表示是否可以取到词
+     */
     protected void onUpdate(AnActionEvent e, boolean active) {
     }
 
+    /**
+     * 执行操作
+     *
+     * @param e              事件
+     * @param editor         编辑器
+     * @param selectionRange 取词的范围
+     */
     protected void onActionPerformed(AnActionEvent e, @NotNull Editor editor, @NotNull TextRange selectionRange) {
     }
 

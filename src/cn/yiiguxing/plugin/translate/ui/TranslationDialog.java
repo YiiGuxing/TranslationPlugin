@@ -46,20 +46,20 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private static final String CARD_PROCESS = "process";
     private static final String CARD_RESULT = "result";
 
-    private JPanel titlePanel;
-    private JPanel contentPane;
-    private JButton queryBtn;
-    private JLabel messageLabel;
-    private JPanel msgPanel;
-    private JTextPane resultText;
-    private JScrollPane scrollPane;
+    private JPanel mTitlePanel;
+    private JPanel mContentPane;
+    private JButton mQueryBtn;
+    private JLabel mMessageLabel;
+    private JPanel mMsgPanel;
+    private JTextPane mResultText;
+    private JScrollPane mScrollPane;
     @SuppressWarnings("Since15")
-    private JComboBox<String> queryComboBox;
-    private JPanel textPanel;
-    private JPanel processPanel;
-    private AnimatedIcon processIcon;
-    private JLabel queryingLabel;
-    private CardLayout layout;
+    private JComboBox<String> mQueryComboBox;
+    private JPanel mTextPanel;
+    private JPanel mProcessPanel;
+    private AnimatedIcon mProcessIcon;
+    private JLabel mQueryingLabel;
+    private CardLayout mLayout;
 
     private final MyModel mModel;
     private final TranslationContract.Presenter mTranslationPresenter;
@@ -77,7 +77,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 final boolean inside = isInside(new RelativePoint((MouseEvent) e));
                 if (inside != mLastMoveWasInsideDialog) {
                     mLastMoveWasInsideDialog = inside;
-                    ((MyTitlePanel) titlePanel).myButton.repaint();
+                    ((MyTitlePanel) mTitlePanel).myButton.repaint();
                 }
             }
 
@@ -118,10 +118,10 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        contentPane.setPreferredSize(JBUI.size(MIN_WIDTH, MIN_HEIGHT));
-        contentPane.setBorder(BORDER_ACTIVE);
+        mContentPane.setPreferredSize(JBUI.size(MIN_WIDTH, MIN_HEIGHT));
+        mContentPane.setBorder(BORDER_ACTIVE);
 
-        return contentPane;
+        return mContentPane;
     }
 
     private void createUIComponents() {
@@ -137,13 +137,13 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
             @Override
             public void windowActivated(WindowEvent e) {
                 panel.setActive(true);
-                contentPane.setBorder(BORDER_ACTIVE);
+                mContentPane.setBorder(BORDER_ACTIVE);
             }
 
             @Override
             public void windowDeactivated(WindowEvent e) {
                 panel.setActive(false);
-                contentPane.setBorder(BORDER_PASSIVE);
+                mContentPane.setBorder(BORDER_PASSIVE);
             }
         });
         getWindow().addWindowFocusListener(new WindowAdapter() {
@@ -153,16 +153,16 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                     @Override
                     public void run() {
                         // 放到这里是因为在Android Studio上第一次显示会被queryBtn抢去焦点。
-                        queryComboBox.requestFocus();
+                        mQueryComboBox.requestFocus();
                     }
                 });
             }
         });
 
-        titlePanel = panel;
-        titlePanel.requestFocus();
+        mTitlePanel = panel;
+        mTitlePanel.requestFocus();
 
-        processIcon = new ProcessIcon();
+        mProcessIcon = new ProcessIcon();
     }
 
     private boolean isInside(@NotNull RelativePoint target) {
@@ -179,49 +179,49 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     }
 
     private void initViews() {
-        queryBtn.setIcon(Icons.Translate);
-        queryBtn.addActionListener(new ActionListener() {
+        mQueryBtn.setIcon(Icons.Translate);
+        mQueryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 onQueryButtonClick();
             }
         });
-        getRootPane().setDefaultButton(queryBtn);
+        getRootPane().setDefaultButton(mQueryBtn);
 
         initQueryComboBox();
 
-        textPanel.setBorder(BORDER_ACTIVE);
-        scrollPane.setVerticalScrollBar(scrollPane.createVerticalScrollBar());
+        mTextPanel.setBorder(BORDER_ACTIVE);
+        mScrollPane.setVerticalScrollBar(mScrollPane.createVerticalScrollBar());
 
         JBColor background = new JBColor(new Color(0xFFFFFFFF), new Color(0xFF2B2B2B));
-        messageLabel.setBackground(background);
-        processPanel.setBackground(background);
-        msgPanel.setBackground(background);
-        resultText.setBackground(background);
-        resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
-        scrollPane.setBackground(background);
-        scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+        mMessageLabel.setBackground(background);
+        mProcessPanel.setBackground(background);
+        mMsgPanel.setBackground(background);
+        mResultText.setBackground(background);
+        mResultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
+        mScrollPane.setBackground(background);
+        mScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-        layout = (CardLayout) textPanel.getLayout();
-        layout.show(textPanel, CARD_MSG);
+        mLayout = (CardLayout) mTextPanel.getLayout();
+        mLayout.show(mTextPanel, CARD_MSG);
 
-        queryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
+        mQueryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
         setComponentPopupMenu();
     }
 
     private void onQueryButtonClick() {
-        String query = resultText.getSelectedText();
+        String query = mResultText.getSelectedText();
         if (Utils.isEmptyOrBlankString(query)) {
-            query = queryComboBox.getEditor().getItem().toString();
+            query = mQueryComboBox.getEditor().getItem().toString();
         }
         query(query);
     }
 
     private void initQueryComboBox() {
-        queryComboBox.setModel(mModel);
+        mQueryComboBox.setModel(mModel);
 
-        final JTextField field = (JTextField) queryComboBox.getEditor().getEditorComponent();
+        final JTextField field = (JTextField) mQueryComboBox.getEditor().getEditorComponent();
         field.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -234,7 +234,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
             }
         });
 
-        queryComboBox.addItemListener(new ItemListener() {
+        mQueryComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED && !mBroadcast) {
@@ -242,7 +242,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 }
             }
         });
-        queryComboBox.setRenderer(new ComboRenderer());
+        mQueryComboBox.setRenderer(new ComboRenderer());
     }
 
     private void setComponentPopupMenu() {
@@ -252,7 +252,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         copy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                resultText.copy();
+                mResultText.copy();
             }
         });
 
@@ -260,7 +260,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         query.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                query(resultText.getSelectedText());
+                query(mResultText.getSelectedText());
             }
         });
 
@@ -270,13 +270,13 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                boolean hasSelectedText = !Utils.isEmptyOrBlankString(resultText.getSelectedText());
+                boolean hasSelectedText = !Utils.isEmptyOrBlankString(mResultText.getSelectedText());
                 copy.setEnabled(hasSelectedText);
                 query.setEnabled(hasSelectedText);
             }
         });
 
-        resultText.setComponentPopupMenu(menu);
+        mResultText.setComponentPopupMenu(menu);
     }
 
     public void show() {
@@ -298,17 +298,17 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     public void query(String query) {
         if (!Utils.isEmptyOrBlankString(query)) {
-            queryComboBox.getEditor().setItem(query);
+            mQueryComboBox.getEditor().setItem(query);
             onQuery();
         }
     }
 
     private void onQuery() {
-        String text = queryComboBox.getEditor().getItem().toString();
+        String text = mQueryComboBox.getEditor().getItem().toString();
         if (!Utils.isEmptyOrBlankString(text) && !text.equals(mLastSuccessfulQuery)) {
-            resultText.setText("");
-            processIcon.resume();
-            layout.show(textPanel, CARD_PROCESS);
+            mResultText.setText("");
+            mProcessIcon.resume();
+            mLayout.show(mTextPanel, CARD_PROCESS);
             mTranslationPresenter.query(text);
         }
     }
@@ -318,7 +318,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
         mBroadcast = true;// 防止递归查询
         if (updateComboBox) {
-            queryComboBox.setSelectedIndex(0);
+            mQueryComboBox.setSelectedIndex(0);
         } else if (mLastSuccessfulQuery != null) {
             mModel.setSelectedItem(mLastSuccessfulQuery);
         }
@@ -334,25 +334,25 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     public void showResult(@NotNull final String query, @NotNull QueryResult result) {
         mLastSuccessfulQuery = query;
 
-        Styles.insertStylishResultText(resultText, result, new Styles.OnTextClickListener() {
+        Styles.insertStylishResultText(mResultText, result, new Styles.OnTextClickListener() {
             @Override
             public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
                 query(text);
             }
         });
 
-        resultText.setCaretPosition(0);
-        layout.show(textPanel, CARD_RESULT);
-        processIcon.suspend();
+        mResultText.setCaretPosition(0);
+        mLayout.show(mTextPanel, CARD_RESULT);
+        mProcessIcon.suspend();
     }
 
     @Override
     public void showError(@NotNull String query, @NotNull String error) {
         mLastSuccessfulQuery = null;
 
-        messageLabel.setText(error);
-        messageLabel.setForeground(MSG_FOREGROUND_ERROR);
-        layout.show(textPanel, CARD_MSG);
+        mMessageLabel.setText(error);
+        mMessageLabel.setForeground(MSG_FOREGROUND_ERROR);
+        mLayout.show(mTextPanel, CARD_MSG);
     }
 
     @SuppressWarnings("Since15")

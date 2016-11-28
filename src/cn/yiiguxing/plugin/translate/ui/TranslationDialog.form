@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="cn.yiiguxing.plugin.translate.ui.TranslationDialog">
-  <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="cbd77" binding="mContentPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="48" y="54" width="436" height="466"/>
@@ -18,7 +18,7 @@
         <properties/>
         <border type="empty"/>
         <children>
-          <grid id="ad63a" binding="textPanel" layout-manager="CardLayout" hgap="0" vgap="0">
+          <grid id="ad63a" binding="mTextPanel" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -27,7 +27,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="cc85a" binding="msgPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="cc85a" binding="mMsgPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <card name="msg"/>
@@ -38,7 +38,7 @@
                 </properties>
                 <border type="empty"/>
                 <children>
-                  <component id="5803b" class="javax.swing.JLabel" binding="messageLabel">
+                  <component id="5803b" class="javax.swing.JLabel" binding="mMessageLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -50,7 +50,7 @@
                   </component>
                 </children>
               </grid>
-              <scrollpane id="9d9ea" binding="scrollPane">
+              <scrollpane id="9d9ea" binding="mScrollPane">
                 <constraints>
                   <card name="result"/>
                 </constraints>
@@ -60,7 +60,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="2ca8d" class="javax.swing.JTextPane" binding="resultText">
+                  <component id="2ca8d" class="javax.swing.JTextPane" binding="mResultText">
                     <constraints/>
                     <properties>
                       <autoscrolls value="false"/>
@@ -72,7 +72,7 @@
                   </component>
                 </children>
               </scrollpane>
-              <grid id="10988" binding="processPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="-1">
+              <grid id="10988" binding="mProcessPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <card name="process"/>
@@ -82,13 +82,13 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="b464" class="com.intellij.util.ui.AnimatedIcon" binding="processIcon" custom-create="true">
+                  <component id="b464" class="com.intellij.util.ui.AnimatedIcon" binding="mProcessIcon" custom-create="true">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="d170" class="javax.swing.JLabel" binding="queryingLabel">
+                  <component id="d170" class="javax.swing.JLabel" binding="mQueryingLabel">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -101,7 +101,7 @@
               </grid>
             </children>
           </grid>
-          <component id="70f94" class="javax.swing.JComboBox" binding="queryComboBox">
+          <component id="70f94" class="javax.swing.JComboBox" binding="mQueryComboBox">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -110,7 +110,7 @@
               <font name="Microsoft YaHei"/>
             </properties>
           </component>
-          <component id="db56b" class="javax.swing.JButton" binding="queryBtn">
+          <component id="db56b" class="javax.swing.JButton" binding="mQueryBtn">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -131,7 +131,7 @@
           </component>
         </children>
       </grid>
-      <grid id="67b90" binding="titlePanel" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="67b90" binding="mTitlePanel" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>

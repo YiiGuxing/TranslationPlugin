@@ -11,6 +11,9 @@ import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * UI管理器
+ */
 @SuppressWarnings("WeakerAccess")
 public class TranslationUiManager {
 
@@ -20,10 +23,21 @@ public class TranslationUiManager {
     private TranslationUiManager() {
     }
 
+    /**
+     * @return {@link TranslationUiManager} 实例
+     */
     public static TranslationUiManager getInstance() {
         return ServiceManager.getService(TranslationUiManager.class);
     }
 
+    /**
+     * 显示翻译气泡
+     *
+     * @param editor           编辑器
+     * @param caretRangeMarker 光标范围
+     * @param queryText        查询客串
+     * @return 气泡实例
+     */
     public TranslationBalloon showTranslationBalloon(@NotNull Editor editor,
                                                      @NotNull RangeMarker caretRangeMarker,
                                                      @NotNull String queryText) {
@@ -45,6 +59,8 @@ public class TranslationUiManager {
 
     /**
      * 显示对话框
+     *
+     * @return 对话框实例
      */
     @NotNull
     public TranslationDialog showTranslationDialog(@Nullable Project project) {

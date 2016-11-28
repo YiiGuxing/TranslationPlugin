@@ -24,7 +24,14 @@ public final class Speech {
     }
 
     public enum Phonetic {
-        UK(1), US(2);
+        /**
+         * 英式发音
+         */
+        UK(1),
+        /**
+         * 美式发音
+         */
+        US(2);
 
         final int value;
 
@@ -33,6 +40,12 @@ public final class Speech {
         }
     }
 
+    /**
+     * 转换为语音
+     *
+     * @param text     目标文本
+     * @param phonetic 音标
+     */
     public static void toSpeech(@NotNull final String text, @NotNull final Phonetic phonetic) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override

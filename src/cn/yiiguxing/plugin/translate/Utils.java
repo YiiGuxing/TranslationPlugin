@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 辅助工具类
+ */
 public final class Utils {
 
     private static final Pattern PATTERN_EXPLAIN =
@@ -16,6 +19,12 @@ public final class Utils {
     private Utils() {
     }
 
+    /**
+     * 从翻译结果中获取错误信息
+     *
+     * @param result 翻译结果
+     * @return 错误信息
+     */
     public static String getErrorMessage(QueryResult result) {
         if (result == null)
             return "Nothing to show";
@@ -46,7 +55,9 @@ public final class Utils {
         return error;
     }
 
-
+    /**
+     * 测试目标字符串是否是空字符串或者空白字符串
+     */
     public static boolean isEmptyOrBlankString(String str) {
         return null == str || str.trim().isEmpty();
     }

@@ -17,7 +17,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
     private final Translator mTranslator;
     private final TranslationContract.View mTranslationView;
 
-    private String currentQuery;
+    private String mCurrentQuery;
 
     public TranslationPresenter(@NotNull TranslationContract.View view) {
         mTranslator = Translator.getInstance();
@@ -42,13 +42,13 @@ public class TranslationPresenter implements TranslationContract.Presenter {
 
     @Override
     public void query(@Nullable String query) {
-        if (Utils.isEmptyOrBlankString(query) || query.equals(currentQuery))
+        if (Utils.isEmptyOrBlankString(query) || query.equals(mCurrentQuery))
             return;
 
         query = query.trim();
         updateHistory(query);
 
-        currentQuery = query;
+        mCurrentQuery = query;
 
         // 防止内存泄漏
         final Reference<TranslationPresenter> presenterRef = new WeakReference<TranslationPresenter>(this);
@@ -75,10 +75,10 @@ public class TranslationPresenter implements TranslationContract.Presenter {
     }
 
     private void onPostResult(String query, QueryResult result) {
-        if (Utils.isEmptyOrBlankString(query) || !query.equals(currentQuery))
+        if (Utils.isEmptyOrBlankString(query) || !query.equals(mCurrentQuery))
             return;
 
-        currentQuery = null;
+        mCurrentQuery = null;
         String errorMessage = Utils.getErrorMessage(result);
         if (errorMessage != null) {
             mTranslationView.showError(query, errorMessage);

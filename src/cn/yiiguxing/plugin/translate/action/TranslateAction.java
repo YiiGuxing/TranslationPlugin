@@ -22,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * 翻译动作
+ */
 public class TranslateAction extends AutoSelectAction implements DumbAware {
 
     private static final TextAttributes HIGHLIGHT_ATTRIBUTES;

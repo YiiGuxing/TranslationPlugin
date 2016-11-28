@@ -15,6 +15,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
+/**
+ * 翻译器
+ */
 @SuppressWarnings("WeakerAccess")
 public final class Translator {
 
@@ -32,10 +35,16 @@ public final class Translator {
     private Translator() {
     }
 
+    /**
+     * @return {@link Translator} 的实例
+     */
     public static Translator getInstance() {
         return ServiceManager.getService(Translator.class);
     }
 
+    /**
+     * 获取缓存
+     */
     @Nullable
     public QueryResult getCache(@NotNull String query) {
         synchronized (mCache) {
@@ -43,6 +52,12 @@ public final class Translator {
         }
     }
 
+    /**
+     * 查询翻译
+     *
+     * @param query    目标字符串
+     * @param callback 回调
+     */
     public void query(String query, Callback callback) {
         if (Utils.isEmptyOrBlankString(query)) {
             if (callback != null) {
@@ -153,7 +168,16 @@ public final class Translator {
         }
     }
 
+    /**
+     * 翻译回调接口
+     */
     public interface Callback {
+        /**
+         * 翻译结束后的回调方法
+         *
+         * @param query  查询字符串
+         * @param result 翻译结果
+         */
         void onQuery(@Nullable String query, @Nullable QueryResult result);
     }
 
