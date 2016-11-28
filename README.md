@@ -43,17 +43,19 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
 Actions
 -------
 
-TranslationPlugin有四个Action，它们分别是：`Show Translation Dialog...`, `Translate`, `Translate(Inclusive)` 和 `Translate(Exclusive)`.
-
-- **Show Translation Dialog...:** <kbd>Alt + 0</kbd> 打开翻译对话框，默认显示在工具栏上。
+- **Show Translation Dialog...:** 打开翻译对话框。默认显示在工具栏上，默认快捷键为<kbd>Alt + 0</kbd>
   ![Translate](./images/action0.gif)
-- **Translate:** <kbd>Alt + 1</kbd> 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。此Action默认显示在编辑器右键菜单上。
+- **Translate:** 取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。默认显示在编辑器右键菜单上，默认快捷键为<kbd>Alt + 1</kbd>
   ![Translate](./images/action1.gif)
-- **Translate(Inclusive):** <kbd>Alt + 2</kbd> 取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。
+- **Translate(Inclusive):** 取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。默认快捷键为<kbd>Alt + 2</kbd>
   ![Translate(Inclusive)](./images/action2.gif)
-- **Translate(Exclusive):** <kbd>Alt + 3</kbd> 取词并翻译。自动取最近的单个词，忽略手动选择的文本。
+- **Translate(Exclusive):** 取词并翻译。自动取最近的单个词，忽略手动选择的文本。默认快捷键为<kbd>Alt + 3</kbd>
   ![Translate(Exclusive)](./images/action3.gif)
-
+- **Translate And Replace...:** 翻译并替换。取词方式同`Translate`操作。默认显示在编辑器右键菜单上，默认快捷键为<kbd>Alt + R</kbd>
+  ![Translate(Exclusive)](./images/replace.gif)
+- **Translate Text Component:** 翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本。默认快捷键为<kbd>Alt + T</kbd>
+  ![Translate(Exclusive)](./images/text_component.gif)
+  
 
 使用
 ----
