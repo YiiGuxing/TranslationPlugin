@@ -21,7 +21,7 @@
       General Usage Instructions:
       <ul>
       <li>选择需要翻译的文本 > 点击鼠标右键 > 点击Translate.</li>
-      <li>或者使用快捷键Alt + 0/1/2/3(Mac下可能无效，需要<a href="http://yiiguxing.github.io/TranslationPlugin/start.html#kaymap">自定义快捷键</a>)进行翻译。</li>
+      <li>或者使用快捷键Alt + 0/1/2/3/R/T(Mac下可能无效，需要<a href="http://yiiguxing.github.io/TranslationPlugin/start.html#kaymap">自定义快捷键</a>)进行翻译。</li>
       <li>你可以直接翻译如"getTranslatedString"和"HELLO_WORLD"这样的文本。</li>
       <ul/>
       <a href="http://yiiguxing.github.io/TranslationPlugin/start.html">详细说明文档</a>
@@ -34,6 +34,10 @@
       <ul>
           <li>用户体验优化</li>
           <li>历史记录持久化</li>
+          <li>翻译结果中的英文单词添加点击跳转操作</li>
+          <li>添加翻译替换操作，见<a href="http://yiiguxing.github.io/TranslationPlugin/start.html#actions">Actions</a></li>
+          <li>添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译了。详见<a href="http://yiiguxing.github.io/TranslationPlugin/start.html#actions">Actions</a></li>
+          <li>扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框了</li>
       </ul>
 
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
