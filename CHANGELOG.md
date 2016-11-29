@@ -5,9 +5,11 @@
 - 用户体验优化
 - 历史记录持久化
 - 翻译结果中的英文单词添加点击跳转操作
-- 添加翻译替换操作，见[Actions][actions]
-- 添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译。详见[Actions][actions]
+- 添加翻译替换操作，见[Actions][actions132]
+- 添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译。详见[Actions][actions132]
 - 扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框。
+
+[actions132]:https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.2#actions "Actions"
 
 ## [v1.3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.1)(2016-11-7)
 
@@ -30,14 +32,14 @@
 - 自动取词
 - 气泡跟随编辑器滚动而滚动
 - 使用Java1.6编译
-- 添加默认快捷键，见[Actions][actions]
+- 添加默认快捷键，见[Actions][actions122]
 - 修复: PluginException: cannot create class "cn.yiiguxing.plugin.translate.action.**" [#13][#13] [#14][#14]
 - 修复: 与ideaVim插件ESC键冲突问题 [#18][#18]
 
 [#13]:https://github.com/YiiGuxing/TranslationPlugin/issues/13 "Translation threw an uncaught PluginException"
 [#14]:https://github.com/YiiGuxing/TranslationPlugin/issues/14 "Translate Error"
 [#18]:https://github.com/YiiGuxing/TranslationPlugin/issues/18 "对话框在非聚焦状态下按ESC键关闭对话框的问题"
-[actions]:https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions "Actions"
+[actions122]:https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.2#actions "Actions"
 
 ## [v1.2.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.2.1)(2016-08-29)
 
