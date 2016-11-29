@@ -71,7 +71,7 @@ public class TranslateTextComponentAction extends AnAction implements DumbAware,
         final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
         final JBPopup docInfoHint = project == null ? null : DocumentationManager.getInstance(project).getDocInfoHint();
         if (docInfoHint != null) {
-            docInfoHint.dispose();
+            docInfoHint.cancel();
         }
 
         TranslationUiManager.getInstance().showTranslationDialog(e.getProject()).query(selected);

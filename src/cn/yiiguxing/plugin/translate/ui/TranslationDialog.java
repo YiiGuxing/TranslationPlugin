@@ -14,6 +14,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
@@ -45,6 +46,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private static final String CARD_MSG = "msg";
     private static final String CARD_PROCESS = "process";
     private static final String CARD_RESULT = "result";
+
+    private final Project mProject;
 
     private JPanel mTitlePanel;
     private JPanel mContentPane;
@@ -93,6 +96,8 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
 
     public TranslationDialog(@Nullable Project project) {
         super(project);
+        this.mProject = project;
+
         setUndecorated(true);
         setModal(false);
         getPeer().setContentPane(createCenterPanel());
@@ -285,7 +290,7 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         }
 
         update();
-        getWindow().requestFocus();
+        IdeFocusManager.getInstance(mProject).requestFocus(getContentPane(), true);
     }
 
     public void update() {
