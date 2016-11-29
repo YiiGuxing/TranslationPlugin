@@ -2,7 +2,10 @@ package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,6 +96,23 @@ public final class Utils {
         }
 
         return result;
+    }
+
+    /**
+     * 展开像 'Hello; Hi' 这样的解释
+     */
+    @Nullable
+    public static String[] expandExplain(@Nullable String[] explains) {
+        if (explains == null || explains.length == 0)
+            return explains;
+
+        final LinkedHashSet<String> result = new LinkedHashSet<String>(explains.length);
+        final Pattern pattern = Pattern.compile("[;；]");
+        for (String explain : explains) {
+            Collections.addAll(result, pattern.split(explain));
+        }
+
+        return result.toArray(new String[result.size()]);
     }
 
     /**

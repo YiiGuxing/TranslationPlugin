@@ -66,7 +66,9 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
     }
 
     @Override
-    protected void onActionPerformed(final AnActionEvent e, @NotNull final Editor editor, @NotNull final TextRange selectionRange) {
+    protected void onActionPerformed(final AnActionEvent e,
+                                     @NotNull final Editor editor,
+                                     @NotNull final TextRange selectionRange) {
         VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
         final Project project = e.getProject();
         if (project == null || (virtualFile != null &&
@@ -179,7 +181,7 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
 
         BasicExplain basicExplain = result.getBasicExplain();
         if (basicExplain != null) {
-            replaceLookup = getReplaceLookupElements(basicExplain.getExplains());
+            replaceLookup = getReplaceLookupElements(Utils.expandExplain(basicExplain.getExplains()));
         } else {
             replaceLookup = getReplaceLookupElements(result.getTranslation());
         }
@@ -197,7 +199,6 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         final Set<LookupElement> lowerWithUnder = new LinkedHashSet<LookupElement>();
         final Set<LookupElement> capsWithUnder = new LinkedHashSet<LookupElement>();
         final Set<LookupElement> withSpace = new LinkedHashSet<LookupElement>();
-
 
         final StringBuilder camelBuilder = new StringBuilder();
         final StringBuilder pascalBuilder = new StringBuilder();
