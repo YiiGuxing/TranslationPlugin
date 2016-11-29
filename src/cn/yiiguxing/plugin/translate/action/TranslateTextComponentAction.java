@@ -7,7 +7,6 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.textarea.TextComponentEditorImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -26,13 +25,22 @@ public class TranslateTextComponentAction extends AnAction implements DumbAware,
     }
 
     @Nullable
-    public static Editor getEditorFromContext(@NotNull DataContext dataContext) {
+    public static String getSelectedText(@NotNull AnActionEvent event) {
+        final DataContext dataContext = event.getDataContext();
+
+        String selectedQuickDocText = DocumentationManager.SELECTED_QUICK_DOC_TEXT.getData(dataContext);
+        if (selectedQuickDocText != null) {
+            return selectedQuickDocText;
+        }
+
         final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-        if (editor != null) return editor;
+        if (editor != null) {
+            return editor.getSelectionModel().getSelectedText();
+        }
 
         final Object data = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
         if (data instanceof JTextComponent) {
-            return new TextComponentEditorImpl(CommonDataKeys.PROJECT.getData(dataContext), (JTextComponent) data);
+            return ((JTextComponent) data).getSelectedText();
         }
 
         return null;
@@ -42,19 +50,6 @@ public class TranslateTextComponentAction extends AnAction implements DumbAware,
     public void update(AnActionEvent e) {
         final String selected = getSelectedText(e);
         e.getPresentation().setEnabledAndVisible(!Utils.isEmptyOrBlankString(Utils.splitWord(selected)));
-    }
-
-    @Nullable
-    private String getSelectedText(AnActionEvent e) {
-        String selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT);
-        if (selected == null) {
-            final Editor editor = getEditorFromContext(e.getDataContext());
-            if (editor != null) {
-                selected = editor.getSelectionModel().getSelectedText();
-            }
-        }
-
-        return selected;
     }
 
     @Override
