@@ -118,8 +118,8 @@ Actions
 - 历史记录持久化
 - 翻译结果中的英文单词添加点击跳转操作
 - 添加翻译替换操作，见[Actions](#actions)
-- 添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译了。详见[Actions](#actions)
-- 扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框了。
+- 添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译。详见[Actions](#actions)
+- 扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框。
 
 [v1.3.2]: https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.2
 [#21]:    https://github.com/YiiGuxing/TranslationPlugin/issues/21 "支持网络代理"
