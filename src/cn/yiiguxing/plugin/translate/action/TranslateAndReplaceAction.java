@@ -196,11 +196,14 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         final Set<LookupElement> pascal = new LinkedHashSet<LookupElement>();
         final Set<LookupElement> lowerWithUnder = new LinkedHashSet<LookupElement>();
         final Set<LookupElement> capsWithUnder = new LinkedHashSet<LookupElement>();
+        final Set<LookupElement> withSpace = new LinkedHashSet<LookupElement>();
+
 
         final StringBuilder camelBuilder = new StringBuilder();
         final StringBuilder pascalBuilder = new StringBuilder();
         final StringBuilder lowerWithUnderBuilder = new StringBuilder();
         final StringBuilder capsWithUnderBuilder = new StringBuilder();
+        final StringBuilder withSpaceBuilder = new StringBuilder();
 
         for (String explain : explains) {
             List<String> words = fixAndSplitForVariable(explain);
@@ -212,13 +215,15 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
             pascalBuilder.setLength(0);
             lowerWithUnderBuilder.setLength(0);
             capsWithUnderBuilder.setLength(0);
+            withSpaceBuilder.setLength(0);
 
-            build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder);
+            build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, capsWithUnderBuilder, withSpaceBuilder);
 
             camel.add(LookupElementBuilder.create(camelBuilder.toString()));
             pascal.add(LookupElementBuilder.create(pascalBuilder.toString()));
             lowerWithUnder.add(LookupElementBuilder.create(lowerWithUnderBuilder.toString()));
             capsWithUnder.add(LookupElementBuilder.create(capsWithUnderBuilder.toString()));
+            withSpace.add(LookupElementBuilder.create(withSpaceBuilder.toString()));
         }
 
         final Set<LookupElement> result = new LinkedHashSet<LookupElement>();
@@ -226,6 +231,7 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         result.addAll(pascal);
         result.addAll(lowerWithUnder);
         result.addAll(capsWithUnder);
+        result.addAll(withSpace);
 
         return Collections.unmodifiableList(new ArrayList<LookupElement>(result));
     }
@@ -234,14 +240,18 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
                               @NotNull final StringBuilder camel,
                               @NotNull final StringBuilder pascal,
                               @NotNull final StringBuilder lowerWithUnder,
-                              @NotNull final StringBuilder capsWithUnder) {
+                              @NotNull final StringBuilder capsWithUnder,
+                              @NotNull final StringBuilder withSpace) {
         for (int i = 0; i < words.size(); i++) {
             String word = words.get(i);
 
             if (i > 0) {
                 lowerWithUnder.append('_');
                 capsWithUnder.append('_');
+                withSpace.append(' ');
             }
+
+            withSpace.append(word);
 
             if (i == 0) {
                 word = sanitizeJavaIdentifierStart(word);
