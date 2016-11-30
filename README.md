@@ -6,7 +6,7 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
 [![Downloads](http://phpstorm.espend.de/badge/8579/downloads)][plugin]
 [![Downloads last month](http://phpstorm.espend.de/badge/8579/last-month)][plugin]
 
-### IntelliJ IDEA/Android Studio 翻译插件，支持中英互译、单词朗读。
+### JetBrains IDE/Android Studio 翻译插件，支持中英互译、单词朗读。
 
 ![screenshots](./images/screenshots.gif)
 
