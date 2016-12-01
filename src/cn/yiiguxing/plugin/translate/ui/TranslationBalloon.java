@@ -16,6 +16,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.PopupMenuListenerAdapter;
 import com.intellij.ui.awt.RelativePoint;
@@ -231,7 +232,13 @@ public class TranslationBalloon implements TranslationContract.View {
         mProcessIcon.suspend();
         mProcessIcon.dispose();
 
-        JTextPane resultText = new JTextPane();
+        JTextPane resultText = new JTextPane() {
+            @Override
+            public void paint(Graphics g) {
+                // 还原设置图像背景后的图形上下文，使图像背景在JTextPane上失效。
+                super.paint(IdeBackgroundUtil.getOriginalGraphics(g));
+            }
+        };
         resultText.setEditable(false);
         resultText.setBackground(UIManager.getColor("Panel.background"));
         resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
