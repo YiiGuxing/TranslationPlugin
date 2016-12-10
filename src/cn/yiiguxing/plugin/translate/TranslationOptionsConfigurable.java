@@ -31,6 +31,12 @@ public class TranslationOptionsConfigurable implements SearchableConfigurable, C
         return "yiiguxing.plugin.translate";
     }
 
+    @Nullable
+    @Override
+    public Runnable enableSearch(String option) {
+        return null;
+    }
+
     @Nls
     @Override
     public String getDisplayName() {
