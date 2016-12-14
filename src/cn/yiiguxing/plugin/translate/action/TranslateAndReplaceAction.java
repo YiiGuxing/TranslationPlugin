@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class TranslateAndReplaceAction extends AutoSelectAction {
 
     private static final Pattern PATTERN_CHINESE = Pattern.compile("[\\u4E00-\\u9FBF]");
-    private static final String PATTERN_FIX = "^\\[[\\u4E00-\\u9FBF]+] ";
+    private static final String PATTERN_FIX = "^(\\[[\\u4E00-\\u9FBF]+])+ ";
 
     private static final TextAttributes HIGHLIGHT_ATTRIBUTES;
 
