@@ -23,12 +23,13 @@
     <a href="https://github.com/YiiGuxing/TranslationPlugin" class="btn" ondragstart="return false;">GitHub</a>
     <a href="start.html" class="btn" ondragstart="return false;">开始使用</a>
 
-    <div id="version" class="project-version"></div>
+    <div id="version" class="project-version">&nbsp;</div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
             if (version) {
-                $("#version").text("当前版本：" + version);
+                $("#version").html("当前版本：<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
+                    " target='_blank'>" + version + "</a>");
             }
         });
     </script>
@@ -37,8 +38,7 @@
         <img src="images/screenshots.gif">
     </div>
 
-    <span class="maintainer">♥ Developed by
-    <a class="maintainer-link" href="https://github.com/YiiGuxing">Yii.Guxing</a></span>
+    <span class="maintainer">♥ Developed by <a href="https://github.com/YiiGuxing">Yii.Guxing</a></span>
 </div>
 </body>
 </html>
