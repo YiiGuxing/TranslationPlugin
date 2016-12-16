@@ -13,10 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -260,7 +257,6 @@ public final class Styles {
                 doc.insertString(doc.getLength(), webExplain.getKey(), ATTR_WEB_EXPLAIN_KEY);
                 doc.insertString(doc.getLength(), " -", null);
 
-
                 String[] values = webExplain.getValues();
                 for (int i = 0; i < values.length; i++) {
                     doc.insertString(doc.getLength(), " " + values[i] + (i < values.length - 1 ? ";" : ""),
@@ -335,7 +331,7 @@ public final class Styles {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() > 1)
+            if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == 0 || e.getClickCount() > 1)
                 return;
 
             ClickableStyle clickableStyle = getClickableStyle(e);
