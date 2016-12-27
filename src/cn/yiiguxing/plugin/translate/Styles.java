@@ -7,12 +7,12 @@ import cn.yiiguxing.plugin.translate.ui.PhoneticButton;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,10 +34,9 @@ public final class Styles {
     private static final SimpleAttributeSet ATTR_WEB_EXPLAIN_KEY = new SimpleAttributeSet();
     private static final SimpleAttributeSet ATTR_WEB_EXPLAIN_VALUES = new SimpleAttributeSet();
 
-    private static final int QUERY_FONT_SIZE = 19;
-    private static final int PRE_EXPLAINS_FONT_SIZE = 16;
-
-    private static final int EXPLAINS_FONT_SIZE = 16;
+    private static final float QUERY_FONT_SCALE = 1.35f;
+    private static final float PRE_EXPLAINS_FONT_SCALE = 1.15f;
+    private static final float EXPLAINS_FONT_SCALE = 1.15f;
 
     private static final Pattern PATTERN_WORD = Pattern.compile("[a-zA-Z]+");
 
@@ -51,13 +50,10 @@ public final class Styles {
 
         StyleConstants.setItalic(ATTR_PRE_EXPLAINS, true);
         StyleConstants.setForeground(ATTR_PRE_EXPLAINS, new JBColor(0xFF7F0055, 0xFFEAB1FF));
-        StyleConstants.setFontSize(ATTR_PRE_EXPLAINS, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_EXPLAINS, new JBColor(0xFF170591, 0xFFFFC66D));
-        StyleConstants.setFontSize(ATTR_EXPLAINS, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_EXPLAINS_HOVER, new JBColor(0xA60EFF, 0xDF531F));
-        StyleConstants.setFontSize(ATTR_EXPLAINS_HOVER, JBUI.scaleFontSize(16));
 
         StyleConstants.setForeground(ATTR_WEB_EXPLAIN_TITLE, new JBColor(0xFF707070, 0xFF808080));
         StyleConstants.setForeground(ATTR_WEB_EXPLAIN_KEY, new JBColor(0xFF4C4C4C, 0xFF77B767));
@@ -89,7 +85,7 @@ public final class Styles {
                                                @Nullable OnTextClickListener explainsClickListener) {
         setMouseListeners(textPane);
 
-        final StyledDocument document = (StyledDocument) textPane.getDocument();
+        final StyledDocument document = textPane.getStyledDocument();
 
         try {
             document.remove(0, document.getLength());
@@ -98,7 +94,7 @@ public final class Styles {
             return;
         }
 
-        insertHeader(document, result);
+        insertHeader(textPane, result);
 
         BasicExplain basicExplain = result.getBasicExplain();
         if (basicExplain != null) {
@@ -126,12 +122,13 @@ public final class Styles {
 
     // 不能静态设置，否则scale改变时不能即时更新
     @NotNull
-    private static MutableAttributeSet updateFontSize(@NotNull MutableAttributeSet attr, int size) {
-        StyleConstants.setFontSize(attr, JBUI.scaleFontSize(size));
+    private static MutableAttributeSet updateFontSize(@NotNull MutableAttributeSet attr, Font font, float scale) {
+        StyleConstants.setFontSize(attr, Math.round(font.getSize() * scale));
         return attr;
     }
 
-    private static void insertHeader(@NotNull Document document, QueryResult result) {
+    private static void insertHeader(@NotNull JTextPane textPane, QueryResult result) {
+        Document document = textPane.getDocument();
         String query = result.getQuery();
 
         try {
@@ -139,7 +136,7 @@ public final class Styles {
                 query = query.trim();
                 document.insertString(document.getLength(),
                         Character.toUpperCase(query.charAt(0)) + query.substring(1) + "\n",
-                        updateFontSize(ATTR_QUERY, QUERY_FONT_SIZE));
+                        updateFontSize(ATTR_QUERY, textPane.getFont(), QUERY_FONT_SCALE));
             }
 
             BasicExplain be = result.getBasicExplain();
@@ -208,8 +205,8 @@ public final class Styles {
         if (explains == null || explains.length == 0)
             return;
 
-        MutableAttributeSet attrPre = updateFontSize(ATTR_PRE_EXPLAINS, PRE_EXPLAINS_FONT_SIZE);
-        MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS, EXPLAINS_FONT_SIZE);
+        MutableAttributeSet attrPre = updateFontSize(ATTR_PRE_EXPLAINS, textPane.getFont(), PRE_EXPLAINS_FONT_SCALE);
+        MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS, textPane.getFont(), EXPLAINS_FONT_SCALE);
         try {
             for (String exp : explains) {
                 if (Utils.isEmptyOrBlankString(exp))
@@ -280,6 +277,7 @@ public final class Styles {
         void onTextClick(@NotNull JTextPane textPane, @NotNull String text);
     }
 
+    @SuppressWarnings("WeakerAccess")
     private static final class ClickableStyle {
         private final JTextPane mTextPane;
         private final String mText;
@@ -304,8 +302,8 @@ public final class Styles {
 
         void onHover() {
             if (!mHover) {
-                StyledDocument document = (StyledDocument) mTextPane.getDocument();
-                MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS_HOVER, EXPLAINS_FONT_SIZE);
+                StyledDocument document = mTextPane.getStyledDocument();
+                MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS_HOVER, mTextPane.getFont(), EXPLAINS_FONT_SCALE);
                 attr = setClickableStyle(attr, this);
                 document.setCharacterAttributes(mStartOffset, mText.length(), attr, true);
 
@@ -315,8 +313,8 @@ public final class Styles {
 
         void clearHover() {
             if (mHover) {
-                StyledDocument document = (StyledDocument) mTextPane.getDocument();
-                MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS, EXPLAINS_FONT_SIZE);
+                StyledDocument document = mTextPane.getStyledDocument();
+                MutableAttributeSet attr = updateFontSize(ATTR_EXPLAINS, mTextPane.getFont(), EXPLAINS_FONT_SCALE);
                 attr = setClickableStyle(attr, this);
                 document.setCharacterAttributes(mStartOffset, mText.length(), attr, true);
 
@@ -342,7 +340,7 @@ public final class Styles {
 
         private ClickableStyle getClickableStyle(MouseEvent e) {
             JTextPane textPane = (JTextPane) e.getComponent();
-            StyledDocument document = (StyledDocument) textPane.getDocument();
+            StyledDocument document = textPane.getStyledDocument();
 
             Element ele = document.getCharacterElement(textPane.viewToModel(e.getPoint()));
             MutableAttributeSet as = (MutableAttributeSet) ele.getAttributes();
