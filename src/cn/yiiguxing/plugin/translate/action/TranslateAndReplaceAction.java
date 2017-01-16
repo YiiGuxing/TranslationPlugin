@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.action;
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Translator;
 import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.compat.SelectWordUtilCompat;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.codeInsight.highlighting.HighlightManager;
@@ -26,14 +27,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * 翻译并替换
  */
 public class TranslateAndReplaceAction extends AutoSelectAction {
 
-    private static final Pattern PATTERN_CHINESE = Pattern.compile("[\\u4E00-\\u9FBF]");
     private static final String PATTERN_FIX = "^(\\[[\\u4E00-\\u9FBF]+])+ ";
 
     private static final TextAttributes HIGHLIGHT_ATTRIBUTES;
@@ -49,7 +48,7 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
     private final Settings mSettings;
 
     public TranslateAndReplaceAction() {
-        super(true);
+        super(SelectWordUtilCompat.HANZI_CONDITION, true);
         setEnabledInModalContext(false);
         mSettings = Settings.getInstance();
     }
@@ -77,15 +76,10 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         }
 
         final String text = editor.getDocument().getText(selectionRange);
-        if (!PATTERN_CHINESE.matcher(text).find()) {
-            return;
-        }
-
-        final String queryText = Utils.splitWord(text);
-        if (Utils.isEmptyOrBlankString(queryText))
+        if (Utils.isEmptyOrBlankString(text))
             return;
 
-        Translator.getInstance().query(queryText, new Translator.Callback() {
+        Translator.getInstance().query(text, new Translator.Callback() {
             @Override
             public void onQuery(@Nullable String query, @Nullable final QueryResult result) {
                 if (result == null || result.getErrorCode() != QueryResult.ERROR_CODE_NONE)
