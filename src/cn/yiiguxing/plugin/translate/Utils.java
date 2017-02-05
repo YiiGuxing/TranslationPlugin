@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 /**
  * 辅助工具类
  */
+@SuppressWarnings("WeakerAccess")
 public final class Utils {
 
     private static final Pattern PATTERN_EXPLAIN =
@@ -121,7 +122,7 @@ public final class Utils {
      * and constructors, as demonstrated below:
      * <blockquote><pre>
      * public Foo(Bar bar) {
-     *     this.bar = Objects.requireNonNull(bar);
+     *     this.bar = Utils.requireNonNull(bar);
      * }
      * </pre></blockquote>
      *
@@ -130,6 +131,7 @@ public final class Utils {
      * @return {@code obj} if not {@code null}
      * @throws NullPointerException if {@code obj} is {@code null}
      */
+    @NotNull
     public static <T> T requireNonNull(T obj) {
         if (obj == null)
             throw new NullPointerException();
@@ -143,8 +145,8 @@ public final class Utils {
      * constructors with multiple parameters, as demonstrated below:
      * <blockquote><pre>
      * public Foo(Bar bar, Baz baz) {
-     *     this.bar = Objects.requireNonNull(bar, "bar must not be null");
-     *     this.baz = Objects.requireNonNull(baz, "baz must not be null");
+     *     this.bar = Utils.requireNonNull(bar, "bar must not be null");
+     *     this.baz = Utils.requireNonNull(baz, "baz must not be null");
      * }
      * </pre></blockquote>
      *
@@ -155,6 +157,8 @@ public final class Utils {
      * @return {@code obj} if not {@code null}
      * @throws NullPointerException if {@code obj} is {@code null}
      */
+    @SuppressWarnings("SameParameterValue")
+    @NotNull
     public static <T> T requireNonNull(T obj, String message) {
         if (obj == null)
             throw new NullPointerException(message);

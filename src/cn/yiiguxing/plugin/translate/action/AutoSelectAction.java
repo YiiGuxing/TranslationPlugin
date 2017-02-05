@@ -20,6 +20,7 @@ import java.util.ArrayList;
 /**
  * 自动从光标周围取词
  */
+@SuppressWarnings("WeakerAccess")
 abstract class AutoSelectAction extends AnAction {
 
     private final SelectWordUtil.CharCondition mWordPartCondition;

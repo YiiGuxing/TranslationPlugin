@@ -442,10 +442,9 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
         myTracker = tracker;
         myTracker.init(this);
 
-        JRootPane root = Utils.requireNonNull(UIUtil.getRootPane(comp));
-
         myVisible = true;
 
+        JRootPane root = Utils.requireNonNull(UIUtil.getRootPane(comp));
         myLayeredPane = root.getLayeredPane();
         myPosition = position;
         UIUtil.setFutureRootPane(myContent, root);
@@ -1183,7 +1182,6 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
                 Area area = new Area(shape);
                 area.intersect(new Area(titleBounds));
 
-
                 Color fgColor = UIManager.getColor("Label.foreground");
                 fgColor = ColorUtil.toAlpha(fgColor, 140);
                 g.setColor(fgColor);
@@ -1381,7 +1379,6 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
                     .roundLeftDown().lineTo(pointTarget.x + balloon.getPointerWidth(this) / 2, shaper.getCurrent().y)
                     .lineTo(pointTarget.x, pointTarget.y)
                     .close();
-
 
             return shaper.getShape();
         }
@@ -1799,7 +1796,6 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
             }
 
             super.setBounds(bounds);
-
 
             if (getParent() != null) {
                 if (myActionButtons == null) {

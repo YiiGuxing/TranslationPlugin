@@ -76,8 +76,8 @@ public class TranslationBalloon implements TranslationContract.View {
     private final RangeMarker mCaretRangeMarker;
 
     public TranslationBalloon(@NotNull Editor editor, @NotNull RangeMarker caretRangeMarker) {
-        mEditor = Utils.requireNonNull(editor, "editor cannot be null");
-        mCaretRangeMarker = Utils.requireNonNull(caretRangeMarker, "caretRangeMarker cannot be null");
+        mEditor = editor;
+        mCaretRangeMarker = caretRangeMarker;
 
         updateCaretPosition();
 
@@ -154,7 +154,7 @@ public class TranslationBalloon implements TranslationContract.View {
         mEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         showBalloon(mBalloon);
 
-        mTranslationPresenter.query(Utils.requireNonNull(queryText, "queryText cannot be null"));
+        mTranslationPresenter.query(queryText);
     }
 
     private void registerDisposer(@NotNull Balloon balloon, final boolean intercept) {
