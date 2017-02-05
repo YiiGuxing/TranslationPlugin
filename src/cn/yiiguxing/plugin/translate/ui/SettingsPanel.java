@@ -9,63 +9,47 @@ import com.intellij.ide.browsers.WebBrowser;
 import com.intellij.ide.browsers.WebBrowserManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 /**
- * 设置
+ * 设置页
  */
-@SuppressWarnings("WeakerAccess")
-public class SettingsConfigurable implements Configurable, ItemListener {
+public class SettingsPanel {
 
-    private static final String URL = "http://fanyi.youdao.com/openapi?path=data-mode";
+    private static final String API_KEY_URL = "http://fanyi.youdao.com/openapi?path=data-mode";
 
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
 
-    private final Settings mSettings;
+    private JPanel mWholePanel;
+    private JPanel mSelectionSettingsPanel;
+    private JPanel mApiKeySettingsPanel;
 
-    private JPanel mContentPane;
-    @SuppressWarnings("unused")
-    private LinkLabel mLinkLabel;
+    @SuppressWarnings("Since15")
+    private JComboBox<String> mSelectionMode;
     private JTextField mKeyNameField;
     private JTextField mKeyValueField;
-    private JCheckBox mCheckBox;
-    @SuppressWarnings("Since15")
-    private JComboBox<String> mAutoSelectionMode;
+    private JCheckBox mDefaultApiKey;
+    private LinkLabel mGetApiKeyLink;
 
-    public SettingsConfigurable() {
-        mSettings = Settings.getInstance();
-    }
+    private Settings mSettings;
 
-    @Nls
-    @Override
-    public String getDisplayName() {
-        return "Translation";
-    }
+    public JComponent createPanel(@NotNull Settings settings) {
+        mSettings = settings;
 
-    @Nullable
-    @Override
-    public String getHelpTopic() {
-        return null;
-    }
+        mSelectionSettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("取词模式"));
+        mApiKeySettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("有道 API KEY"));
 
-    @Nullable
-    @Override
-    public JComponent createComponent() {
-        mCheckBox.addItemListener(this);
-        mAutoSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
+        mSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
             @Override
             public void customize(JList list, String value, int index, boolean selected, boolean hasFocus) {
                 setText(value);
@@ -76,32 +60,37 @@ public class SettingsConfigurable implements Configurable, ItemListener {
                 }
             }
         });
-        return mContentPane;
+
+        mDefaultApiKey.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                switchKey();
+            }
+        });
+
+        return mWholePanel;
     }
 
     private void createUIComponents() {
-        mLinkLabel = new ActionLink("", AllIcons.Ide.Link, new AnAction() {
+        mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
                 obtainApiKey();
             }
         });
+        mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
     }
 
     private static void obtainApiKey() {
         WebBrowser browser = WebBrowserManager.getInstance().getFirstActiveBrowser();
         if (browser != null) {
-            BrowserLauncher.getInstance().browseUsingPath(URL, null, browser, null, ArrayUtil.EMPTY_STRING_ARRAY);
+            BrowserLauncher.getInstance()
+                    .browseUsingPath(API_KEY_URL, null, browser, null, ArrayUtil.EMPTY_STRING_ARRAY);
         }
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        switchKey();
-    }
-
     private void switchKey() {
-        if (mCheckBox.isSelected()) {
+        if (mDefaultApiKey.isSelected()) {
             useDefaultKey();
         } else {
             useCustomKey();
@@ -130,25 +119,23 @@ public class SettingsConfigurable implements Configurable, ItemListener {
 
     @NotNull
     private AutoSelectionMode getAutoSelectionMode() {
-        if (mAutoSelectionMode.getSelectedIndex() == INDEX_INCLUSIVE) {
+        if (mSelectionMode.getSelectedIndex() == INDEX_INCLUSIVE) {
             return AutoSelectionMode.INCLUSIVE;
         } else {
             return AutoSelectionMode.EXCLUSIVE;
         }
     }
 
-    @Override
     public boolean isModified() {
         return (!Utils.isEmptyOrBlankString(mKeyNameField.getText())
                 && !Utils.isEmptyOrBlankString(mKeyValueField.getText()))
                 || (mSettings.getAutoSelectionMode() != getAutoSelectionMode());
     }
 
-    @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         boolean validKey = !Utils.isEmptyOrBlankString(mKeyNameField.getText())
                 && !Utils.isEmptyOrBlankString(mKeyValueField.getText());
-        boolean useDefault = mCheckBox.isSelected();
+        boolean useDefault = mDefaultApiKey.isSelected();
         if (!useDefault) {
             mSettings.setApiKeyName(mKeyNameField.getText());
             mSettings.setApiKeyValue(mKeyValueField.getText());
@@ -158,16 +145,9 @@ public class SettingsConfigurable implements Configurable, ItemListener {
         mSettings.setAutoSelectionMode(getAutoSelectionMode());
     }
 
-    @Override
     public void reset() {
-        mCheckBox.setSelected(mSettings.isUseDefaultKey());
-        mAutoSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
+        mDefaultApiKey.setSelected(mSettings.isUseDefaultKey());
+        mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
                 ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);
     }
-
-    @Override
-    public void disposeUIResources() {
-        mCheckBox.removeItemListener(this);
-    }
-
 }

@@ -21,7 +21,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
 
     public TranslationPresenter(@NotNull TranslationContract.View view) {
         mTranslator = Translator.getInstance();
-        this.mTranslationView = Utils.requireNonNull(view, "view cannot be null.");
+        this.mTranslationView = view;
         mAppStorage = AppStorage.getInstance();
     }
 

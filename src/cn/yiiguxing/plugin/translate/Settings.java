@@ -63,7 +63,7 @@ public class Settings implements PersistentStateComponent<Settings> {
      * 设置自动取词模式
      */
     public void setAutoSelectionMode(@NotNull AutoSelectionMode autoSelectionMode) {
-        this.autoSelectionMode = Utils.requireNonNull(autoSelectionMode, "autoSelectionMode can not be null.");
+        this.autoSelectionMode = autoSelectionMode;
     }
 
     /**

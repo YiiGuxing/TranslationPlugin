@@ -13,15 +13,24 @@ public final class SelectWordUtilCompat {
     private SelectWordUtilCompat() {
     }
 
+    public static final SelectWordUtil.CharCondition DEFAULT_CONDITION = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION;
+
+    public static final SelectWordUtil.CharCondition HANZI_CONDITION = new SelectWordUtil.CharCondition() {
+        public boolean value(char ch) {
+            return ch >= '\u4E00' && ch <= '\u9FBF';
+        }
+    };
+
     public static void addWordOrLexemeSelection(boolean camel,
                                                 @NotNull Editor editor,
                                                 int cursorOffset,
-                                                @NotNull List<TextRange> ranges) {
+                                                @NotNull List<TextRange> ranges,
+                                                @NotNull SelectWordUtil.CharCondition isWordPartCondition) {
         if (IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2016_2) {
-            SelectWordUtil.addWordOrLexemeSelection(camel, editor, cursorOffset, ranges);
+            SelectWordUtil.addWordOrLexemeSelection(camel, editor, cursorOffset, ranges, isWordPartCondition);
         } else {
             CharSequence editorText = editor.getDocument().getImmutableCharSequence();
-            SelectWordUtil.addWordSelection(camel, editorText, cursorOffset, ranges);
+            SelectWordUtil.addWordSelection(camel, editorText, cursorOffset, ranges, isWordPartCondition);
         }
 
     }

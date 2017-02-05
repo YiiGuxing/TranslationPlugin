@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>1.3.2</version>
+    <version>1.3.3</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
@@ -9,6 +9,7 @@
       <br/>
       <b>
       <a href="http://yiiguxing.github.io/TranslationPlugin">Home Page</a> |
+      <a href="https://plugins.jetbrains.com/idea/plugin/8579">Plugin Page</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a>
       </b>
@@ -32,12 +33,11 @@
 
     <change-notes><![CDATA[
       <ul>
-          <li>用户体验优化</li>
-          <li>历史记录持久化</li>
-          <li>翻译结果中的英文单词添加点击跳转操作</li>
-          <li>添加翻译替换操作，见<a href="http://yiiguxing.github.io/TranslationPlugin/start.html#actions">Actions</a></li>
-          <li>添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译。详见<a href="http://yiiguxing.github.io/TranslationPlugin/start.html#actions">Actions</a></li>
-          <li>扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框</li>
+          <li>优化翻译与替换操作</li>
+          <li>修复:图像背景被应用到气泡上 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/30">#30</a></li>
+          <li>修复:翻译替换出现非释义性中文字符 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/32">#32</a></li>
+          <li>修复:右击可点击文本时跳转操作被执行 <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/34">#34</a></li>
+          <li>修复:NoSuchMethodError: com.intellij.util.ui.JBUI.scaleFontSize(I)I <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/35">#35</a></li>
       </ul>
 
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
@@ -54,7 +54,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Settings"
                             serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
-        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.ui.SettingsConfigurable"/>
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.TranslationOptionsConfigurable"/>
 
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Translator"
                             serviceImplementation="cn.yiiguxing.plugin.translate.Translator"/>

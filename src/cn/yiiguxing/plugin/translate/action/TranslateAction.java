@@ -25,6 +25,7 @@ import java.util.ArrayList;
 /**
  * 翻译动作
  */
+@SuppressWarnings("WeakerAccess")
 public class TranslateAction extends AutoSelectAction implements DumbAware {
 
     private static final TextAttributes HIGHLIGHT_ATTRIBUTES;
@@ -49,6 +50,7 @@ public class TranslateAction extends AutoSelectAction implements DumbAware {
     /**
      * 自动从最大范围内取词，忽略选择
      */
+    @SuppressWarnings("unused")
     public TranslateAction() {
         this(false);
     }
@@ -99,7 +101,7 @@ public class TranslateAction extends AutoSelectAction implements DumbAware {
 
     @NotNull
     private RangeMarker createCaretRangeMarker(@NotNull Editor editor, @NotNull TextRange selectionRange) {
-        RangeMarker myCaretRangeMarker = editor.getDocument().createRangeMarker(Utils.requireNonNull(selectionRange));
+        RangeMarker myCaretRangeMarker = editor.getDocument().createRangeMarker(selectionRange);
         myCaretRangeMarker.setGreedyToLeft(true);
         myCaretRangeMarker.setGreedyToRight(true);
 

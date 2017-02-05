@@ -1,5 +1,18 @@
 # Change Log
 
+## [v1.3.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.3)(2017-2-5)
+
+- 优化翻译与替换操作
+- 修复:图像背景被应用到气泡上 [#30][#30]
+- 修复:翻译替换出现非释义性中文字符 [#32][#32]
+- 修复:右击可点击文本时跳转操作被执行 [#34][#34]
+- 修复:NoSuchMethodError: com.intellij.util.ui.JBUI.scaleFontSize(I)I [#35][#35]
+
+[#30]:https://github.com/YiiGuxing/TranslationPlugin/issues/30 "图像背景被应用到气泡上"
+[#32]:https://github.com/YiiGuxing/TranslationPlugin/issues/32 "翻译替换出现非释义性中文字符"
+[#34]:https://github.com/YiiGuxing/TranslationPlugin/issues/34 "右击可点击文本不应该跳转"
+[#35]:https://github.com/YiiGuxing/TranslationPlugin/issues/35 "NoSuchMethodError"
+
 ## [v1.3.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.2)(2016-11-29)
 
 - 用户体验优化

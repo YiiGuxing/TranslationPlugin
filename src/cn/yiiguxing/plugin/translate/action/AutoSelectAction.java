@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.action;
 
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.compat.SelectWordUtilCompat;
+import com.intellij.codeInsight.editorActions.SelectWordUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -19,25 +20,29 @@ import java.util.ArrayList;
 /**
  * 自动从光标周围取词
  */
+@SuppressWarnings("WeakerAccess")
 abstract class AutoSelectAction extends AnAction {
 
+    private final SelectWordUtil.CharCondition mWordPartCondition;
     private final boolean mCheckSelection;
 
-    public AutoSelectAction(boolean checkSelection) {
-        this(null, null, null, checkSelection);
+    public AutoSelectAction(@Nullable SelectWordUtil.CharCondition isWordPartCondition, boolean checkSelection) {
+        this(null, null, null, isWordPartCondition, checkSelection);
     }
 
     public AutoSelectAction(Icon icon, boolean checkSelection) {
-        this(null, null, icon, checkSelection);
+        this(null, null, icon, null, checkSelection);
     }
 
-    public AutoSelectAction(@Nullable String text, boolean checkSelection) {
-        this(text, null, null, checkSelection);
-    }
-
-    public AutoSelectAction(@Nullable String text, @Nullable String description, @Nullable Icon icon, boolean checkSelection) {
+    public AutoSelectAction(@Nullable String text,
+                            @Nullable String description,
+                            @Nullable Icon icon,
+                            @Nullable SelectWordUtil.CharCondition isWordPartCondition,
+                            boolean checkSelection) {
         super(text, description, icon);
         setEnabledInModalContext(true);
+        this.mWordPartCondition = isWordPartCondition != null
+                ? isWordPartCondition : SelectWordUtilCompat.DEFAULT_CONDITION;
         this.mCheckSelection = checkSelection;
     }
 
@@ -101,7 +106,7 @@ abstract class AutoSelectAction extends AnAction {
 
         String text = document.getText(new TextRange(Math.max(0, offset - 1), Math.min(textLength, offset + 1)));
         for (int i = 0; i < text.length(); i++) {
-            if (Character.isJavaIdentifierPart(text.charAt(i))) {
+            if (mWordPartCondition.value(text.charAt(i))) {
                 return true;
             }
         }
@@ -131,7 +136,7 @@ abstract class AutoSelectAction extends AnAction {
                         "Method getAutoSelectionMode() can not return null.");
                 final boolean exclusiveMode = selectionMode == AutoSelectionMode.EXCLUSIVE;
 
-                SelectWordUtilCompat.addWordOrLexemeSelection(exclusiveMode, editor, offset, ranges);
+                SelectWordUtilCompat.addWordOrLexemeSelection(exclusiveMode, editor, offset, ranges, mWordPartCondition);
 
                 if (!ranges.isEmpty()) {
                     if (exclusiveMode) {
