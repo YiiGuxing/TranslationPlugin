@@ -112,17 +112,18 @@ Actions
 更新日志
 --------
 
-## [v1.3.2][v1.3.2] (2016-11-29)
+## [v1.3.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.3)(2017-2-5)
 
-- 用户体验优化
-- 历史记录持久化
-- 翻译结果中的英文单词添加点击跳转操作
-- 添加翻译替换操作，见[Actions](#actions)
-- 添加文本组件翻译操作。快速文档面板、提示气泡、输入框等也可以取词翻译。详见[Actions](#actions)
-- 扩大事件的响应范围。更多的编辑器可以响应翻译快捷键事件，二级对话框中也能通过快捷键打开翻译对话框。
+- 优化翻译与替换操作
+- 修复:图像背景被应用到气泡上 ([#30][#30])
+- 修复:翻译替换出现非释义性中文字符 ([#32][#32])
+- 修复:右击可点击文本时跳转操作被执行 ([#34][#34])
+- 修复:NoSuchMethodError: com.intellij.util.ui.JBUI.scaleFontSize(I)I ([#35][#35])
 
-[v1.3.2]: https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.2
-[#21]:    https://github.com/YiiGuxing/TranslationPlugin/issues/21 "支持网络代理"
+[#30]:https://github.com/YiiGuxing/TranslationPlugin/issues/30 "图像背景被应用到气泡上"
+[#32]:https://github.com/YiiGuxing/TranslationPlugin/issues/32 "翻译替换出现非释义性中文字符"
+[#34]:https://github.com/YiiGuxing/TranslationPlugin/issues/34 "右击可点击文本不应该跳转"
+[#35]:https://github.com/YiiGuxing/TranslationPlugin/issues/35 "NoSuchMethodError"
 
 [完整的更新历史记录](./CHANGELOG.md)
 
