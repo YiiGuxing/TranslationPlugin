@@ -5,6 +5,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -80,4 +82,11 @@ public class TranslationOptionsConfigurable implements SearchableConfigurable, C
     public void dispose() {
         mPanel = null;
     }
+
+    public static void showSettingsDialog(Project project) {
+        if (project == null)
+            return;
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, TranslationOptionsConfigurable.class);
+    }
+
 }
