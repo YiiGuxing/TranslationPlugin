@@ -425,7 +425,7 @@ public class TranslationBalloon implements TranslationContract.View {
         text.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
-                if (Utils.SETTINGS_HTML_DESCRIPTION.equals(hyperlinkEvent.getDescription())) {
+                if (Constants.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
                     hide();
                     TranslationOptionsConfigurable.showSettingsDialog(mProject);
                 }

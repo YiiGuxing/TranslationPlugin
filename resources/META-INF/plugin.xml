@@ -64,6 +64,12 @@
                             serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUiManager"/>
     </extensions>
 
+    <project-components>
+        <component>
+            <implementation-class>cn.yiiguxing.plugin.translate.TranslationComponent</implementation-class>
+        </component>
+    </project-components>
+
     <actions>
         <!-- Add your actions here -->
         <action id="ShowTranslationDialogAction"

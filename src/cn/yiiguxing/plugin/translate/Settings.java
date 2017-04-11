@@ -18,6 +18,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     private boolean useDefaultKey = true;
     private String apiKeyName;
     private String apiKeyValue;
+    private boolean disableApiKeyNotification;
     @NotNull
     private AutoSelectionMode autoSelectionMode = AutoSelectionMode.INCLUSIVE;
 
@@ -47,6 +48,7 @@ public class Settings implements PersistentStateComponent<Settings> {
                 "useDefaultKey=" + useDefaultKey +
                 ", apiKeyName='" + apiKeyName + '\'' +
                 ", apiKeyValue='" + apiKeyValue + '\'' +
+                ", disableApiKeyNotification=" + disableApiKeyNotification +
                 ", autoSelectionMode=" + autoSelectionMode +
                 '}';
     }
@@ -108,4 +110,11 @@ public class Settings implements PersistentStateComponent<Settings> {
         this.apiKeyValue = apiKeyValue;
     }
 
+    public boolean isDisableApiKeyNotification() {
+        return disableApiKeyNotification;
+    }
+
+    public void setDisableApiKeyNotification(boolean disableApiKeyNotification) {
+        this.disableApiKeyNotification = disableApiKeyNotification;
+    }
 }

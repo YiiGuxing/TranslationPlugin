@@ -40,6 +40,7 @@ public class SettingsPanel {
     private JTextField mKeyValueField;
     private JCheckBox mDefaultApiKey;
     private LinkLabel mGetApiKeyLink;
+    private JLabel mMessage;
 
     private Settings mSettings;
 
@@ -67,6 +68,7 @@ public class SettingsPanel {
                 switchKey();
             }
         });
+        mMessage.setVisible(settings.isUseDefaultKey());
 
         return mWholePanel;
     }
@@ -108,6 +110,7 @@ public class SettingsPanel {
         mKeyNameField.setEnabled(false);
         mKeyValueField.setText("Default");
         mKeyValueField.setEnabled(false);
+        mMessage.setVisible(true);
     }
 
     private void useCustomKey() {
@@ -115,6 +118,7 @@ public class SettingsPanel {
         mKeyNameField.setEnabled(true);
         mKeyValueField.setText(mSettings.getApiKeyValue());
         mKeyValueField.setEnabled(true);
+        mMessage.setVisible(false);
     }
 
     @NotNull
