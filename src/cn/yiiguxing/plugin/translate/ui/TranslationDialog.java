@@ -117,6 +117,15 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
             }
         });
+
+        // 在对话框上打开此对话框时，关闭主对话框时导致此对话框也跟着关闭，
+        // 但资源没有释放干净，回调也没回完整，再次打开的话就会崩溃
+        getWindow().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                close(CLOSE_EXIT_CODE);
+            }
+        });
     }
 
     @Nullable
