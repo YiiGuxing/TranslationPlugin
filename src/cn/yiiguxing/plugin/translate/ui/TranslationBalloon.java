@@ -17,10 +17,10 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
+import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.PopupMenuListenerAdapter;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.popup.PopupFactoryImpl;
@@ -31,7 +31,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.PopupMenuEvent;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -393,6 +396,18 @@ public class TranslationBalloon implements TranslationContract.View {
         });
     }
 
+    @NotNull
+    private static HTMLEditorKit getErrorHTMLKit() {
+        HTMLEditorKit kit = UIUtil.getHTMLEditorKit();
+        JBFont font = JBUI.Fonts.label(16);
+        StyleSheet styleSheet = kit.getStyleSheet();
+        styleSheet.addRule(String.format("body {color:#FF3333; font-family: %s;font-size: %s; text-align: center;}",
+                font.getFamily(), font.getSize()));
+        styleSheet.addRule("a {color:#FF0000;}");
+
+        return kit;
+    }
+
     @Override
     public void showError(@NotNull String query, @NotNull String error) {
         if (mBalloon == null || mBalloon.isDisposed())
@@ -402,19 +417,27 @@ public class TranslationBalloon implements TranslationContract.View {
         mProcessIcon.suspend();
         mProcessIcon.dispose();
 
-        JBLabel label = new JBLabel();
-        label.setFont(JBUI.Fonts.label(16));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setText("Querying...");
+        JEditorPane text = new JEditorPane();
+        text.setContentType("text/html");
+        text.setEditorKit(getErrorHTMLKit());
+        text.setEditable(false);
+        text.setOpaque(false);
+        text.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
+                if (Utils.SETTINGS_HTML_DESCRIPTION.equals(hyperlinkEvent.getDescription())) {
+                    hide();
+                    TranslationOptionsConfigurable.showSettingsDialog(mProject);
+                }
+            }
+        });
+        text.setText(error);
 
         mLayout.setHorizontalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(label, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                .addComponent(text, MIN_BALLOON_WIDTH, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         mLayout.setVerticalGroup(mLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        label.setForeground(new JBColor(new Color(0xFFFF2222), new Color(0xFFFF2222)));
-        label.setText(error);
-        mContentPanel.add(label);
+                .addComponent(text, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        mContentPanel.add(text);
 
         mBalloon.revalidate();
     }

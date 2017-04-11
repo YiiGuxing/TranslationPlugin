@@ -34,18 +34,19 @@
                 </constraints>
                 <properties>
                   <background color="-13948117"/>
-                  <visible value="false"/>
+                  <visible value="true"/>
                 </properties>
                 <border type="empty"/>
                 <children>
-                  <component id="5803b" class="javax.swing.JLabel" binding="mMessageLabel">
+                  <component id="4704f" class="javax.swing.JEditorPane" binding="mMessage" custom-create="true">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-13948117"/>
-                      <font size="14"/>
-                      <text value="Nothing to show"/>
+                      <contentType value="text/html"/>
+                      <editable value="false"/>
+                      <enabled value="true"/>
+                      <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    Nothing to show&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
                     </properties>
                   </component>
                 </children>

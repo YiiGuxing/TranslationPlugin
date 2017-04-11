@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings("WeakerAccess")
 public final class Utils {
 
+    public static final String SETTINGS_HTML_DESCRIPTION = "#SETTINGS";
+
     private static final Pattern PATTERN_EXPLAIN =
             Pattern.compile("(^(a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)");
     private static final int GROUP_CLASS = 1;
@@ -39,10 +41,10 @@ public final class Utils {
         String error;
         switch (result.getErrorCode()) {
             case QueryResult.ERROR_CODE_RESTRICTED:
-                error = "请求过于频繁，请尝试更换API KEY";
+                error = "请求过于频繁，请尝试<a href=\"" + SETTINGS_HTML_DESCRIPTION + "\">更换API KEY</a>";
                 break;
             case QueryResult.ERROR_CODE_INVALID_KEY:
-                error = "无效的API KEY";
+                error = "无效的API KEY,请<a href=\"" + SETTINGS_HTML_DESCRIPTION + "\">更换API KEY</a>";
                 break;
             case QueryResult.ERROR_CODE_QUERY_TOO_LONG:
                 error = "Query too long";
