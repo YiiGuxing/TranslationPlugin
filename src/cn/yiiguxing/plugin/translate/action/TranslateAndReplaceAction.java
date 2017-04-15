@@ -61,6 +61,26 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
 
     @Override
     protected void onUpdate(AnActionEvent e, boolean active) {
+        if (active) {
+            final Editor editor = getEditor(e);
+            if (editor != null) {
+                SelectionModel selectionModel = editor.getSelectionModel();
+                if (selectionModel.hasSelection()) {
+                    final String selectedText = selectionModel.getSelectedText();
+                    if (!Utils.isEmptyOrBlankString(selectedText)) {
+                        boolean hasHanzi = false;
+                        for (int i = 0; i < selectedText.length(); i++) {
+                            if (SelectWordUtilCompat.HANZI_CONDITION.value(selectedText.charAt(i))) {
+                                hasHanzi = true;
+                                break;
+                            }
+                        }
+
+                        active = hasHanzi;
+                    }
+                }
+            }
+        }
         e.getPresentation().setEnabledAndVisible(active);
     }
 

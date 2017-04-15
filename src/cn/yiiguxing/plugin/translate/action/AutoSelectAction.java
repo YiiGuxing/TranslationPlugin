@@ -115,7 +115,7 @@ abstract class AutoSelectAction extends AnAction {
     }
 
     @Nullable
-    private Editor getEditor(AnActionEvent e) {
+    protected static Editor getEditor(AnActionEvent e) {
         return CommonDataKeys.EDITOR.getData(e.getDataContext());
     }
 
