@@ -20,11 +20,13 @@ import javax.swing.*;
 public class TranslationOptionsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Disposable {
 
     private final Settings mSettings;
+    private final AppStorage mAppStorage;
 
     private SettingsPanel mPanel;
 
     public TranslationOptionsConfigurable() {
         mSettings = Settings.getInstance();
+        mAppStorage = AppStorage.getInstance();
     }
 
     @NotNull
@@ -55,7 +57,7 @@ public class TranslationOptionsConfigurable implements SearchableConfigurable, C
     @Override
     public JComponent createComponent() {
         mPanel = new SettingsPanel();
-        return mPanel.createPanel(mSettings);
+        return mPanel.createPanel(mSettings, mAppStorage);
     }
 
     @Override

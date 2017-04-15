@@ -99,20 +99,11 @@ public class TranslationUiManager {
      */
     @Nullable
     public TranslationDialog getCurrentShowingDialog() {
-        if (!hasTranslationDialogShowing()) {
+        if (hasTranslationDialogShowing()) {
             return myShowingDialog;
         }
 
         return null;
-    }
-
-    /**
-     * 通知历史记录变化
-     */
-    public void notifyHistoriesChanged() {
-        if (hasTranslationDialogShowing()) {
-            myShowingDialog.updateHistory(false);
-        }
     }
 
 }

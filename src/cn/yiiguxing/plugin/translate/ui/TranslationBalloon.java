@@ -208,11 +208,6 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     @Override
-    public void updateHistory() {
-        TranslationUiManager.getInstance().notifyHistoriesChanged();
-    }
-
-    @Override
     public void showResult(@NotNull String query, @NotNull QueryResult result) {
         if (mBalloon != null) {
             if (mBalloon.isDisposed()) {
@@ -229,7 +224,10 @@ public class TranslationBalloon implements TranslationContract.View {
             return;
         }
 
-        TranslationUiManager.getInstance().updateCurrentShowingTranslationDialog();
+        final TranslationDialog translationDialog = TranslationUiManager.getInstance().getCurrentShowingDialog();
+        if (translationDialog != null) {
+            translationDialog.query(query);
+        }
 
         mContentPanel.remove(0);
         mProcessIcon.suspend();
@@ -268,7 +266,7 @@ public class TranslationBalloon implements TranslationContract.View {
         updateCaretPosition();
         final BalloonImpl balloon = (BalloonImpl) buildBalloon().createBalloon();
         RelativePoint showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(mEditor);
-        createPinButton(balloon, showPoint);
+        createPinButton(balloon, showPoint, query);
         registerDisposer(balloon, false);
         showBalloon(balloon);
         setPopupMenu(resultText);
@@ -344,7 +342,7 @@ public class TranslationBalloon implements TranslationContract.View {
         textPane.setComponentPopupMenu(menu);
     }
 
-    private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint) {
+    private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint, final String query) {
         balloon.setActionProvider(new BalloonImpl.ActionProvider() {
             private BalloonImpl.ActionButton myPinButton;
             private final Icon myIcon = Icons.Pin;
@@ -356,7 +354,7 @@ public class TranslationBalloon implements TranslationContract.View {
                             @Override
                             public void consume(MouseEvent mouseEvent) {
                                 if (mouseEvent.getClickCount() == 1) {
-                                    showOnTranslationDialog(null);
+                                    showOnTranslationDialog(query);
                                 }
                             }
                         });

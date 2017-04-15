@@ -34,7 +34,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class TranslationDialog extends DialogWrapper implements TranslationContract.View {
+public class TranslationDialog extends DialogWrapper
+        implements TranslationContract.View, AppStorage.HistoriesChangedListener {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
@@ -126,6 +127,12 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 close(CLOSE_EXIT_CODE);
             }
         });
+
+        ApplicationManager
+                .getApplication()
+                .getMessageBus()
+                .connect(getDisposable())
+                .subscribe(AppStorage.HistoriesChangedListener.TOPIC, this);
     }
 
     @Nullable
@@ -351,21 +358,22 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         }
     }
 
-    public void updateHistory(boolean updateComboBox) {
+    @Override
+    public void onHistoriesChanged() {
         mModel.fireContentsChanged();
 
         mBroadcast = true;// 防止递归查询
-        if (updateComboBox) {
-            mQueryComboBox.setSelectedIndex(0);
-        } else if (mLastSuccessfulQuery != null) {
-            mModel.setSelectedItem(mLastSuccessfulQuery);
-        }
+        mModel.setSelectedItem(mLastSuccessfulQuery);
         mBroadcast = false;
     }
 
     @Override
-    public void updateHistory() {
-        updateHistory(true);
+    public void onHistoryItemChanged(@NotNull String newHistory) {
+        mModel.fireContentsChanged();
+
+        mBroadcast = true;// 防止递归查询
+        mModel.setSelectedItem(newHistory);
+        mBroadcast = false;
     }
 
     @Override

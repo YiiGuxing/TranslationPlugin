@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
@@ -9,6 +10,7 @@ import com.intellij.ide.browsers.WebBrowser;
 import com.intellij.ide.browsers.WebBrowserManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
@@ -17,12 +19,15 @@ import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 /**
  * 设置页
  */
+@SuppressWarnings("Since15")
 public class SettingsPanel {
 
     private static final String API_KEY_URL = "http://fanyi.youdao.com/openapi?path=data-mode";
@@ -34,20 +39,25 @@ public class SettingsPanel {
     private JPanel mSelectionSettingsPanel;
     private JPanel mApiKeySettingsPanel;
 
-    @SuppressWarnings("Since15")
     private JComboBox<String> mSelectionMode;
     private JTextField mKeyNameField;
     private JTextField mKeyValueField;
     private JCheckBox mDefaultApiKey;
     private LinkLabel mGetApiKeyLink;
     private JLabel mMessage;
+    private JPanel mHistoryPanel;
+    private ComboBox mMaxHistoriesSize;
+    private JButton mClearHistoriesButton;
 
     private Settings mSettings;
+    private AppStorage mAppStorage;
 
-    public JComponent createPanel(@NotNull Settings settings) {
+    public JComponent createPanel(@NotNull Settings settings, @NotNull AppStorage appStorage) {
         mSettings = settings;
+        mAppStorage = appStorage;
 
         mSelectionSettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("取词模式"));
+        mHistoryPanel.setBorder(IdeBorderFactory.createTitledBorder("历史记录"));
         mApiKeySettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("有道 API KEY"));
 
         mSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
@@ -68,7 +78,12 @@ public class SettingsPanel {
                 switchKey();
             }
         });
-        mMessage.setVisible(settings.isUseDefaultKey());
+        mClearHistoriesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mAppStorage.clearHistories();
+            }
+        });
 
         return mWholePanel;
     }
@@ -130,13 +145,34 @@ public class SettingsPanel {
         }
     }
 
+    private int getMaxHistorySize() {
+        final Object size = mMaxHistoriesSize.getEditor().getItem();
+        if (size instanceof Integer) {
+            return (Integer) size;
+        } else if (size instanceof String) {
+            try {
+                return Integer.parseInt((String) size);
+            } catch (NumberFormatException e) {
+                /*no-op*/
+            }
+        }
+
+        return -1;
+    }
+
     public boolean isModified() {
         return (!Utils.isEmptyOrBlankString(mKeyNameField.getText())
                 && !Utils.isEmptyOrBlankString(mKeyValueField.getText()))
-                || (mSettings.getAutoSelectionMode() != getAutoSelectionMode());
+                || (mSettings.getAutoSelectionMode() != getAutoSelectionMode())
+                || (getMaxHistorySize() != mAppStorage.getMaxHistorySize());
     }
 
     public void apply() {
+        final int maxHistorySize = getMaxHistorySize();
+        if (maxHistorySize >= 0) {
+            mAppStorage.setMaxHistoriesSize(maxHistorySize);
+        }
+
         boolean validKey = !Utils.isEmptyOrBlankString(mKeyNameField.getText())
                 && !Utils.isEmptyOrBlankString(mKeyValueField.getText());
         boolean useDefault = mDefaultApiKey.isSelected();
@@ -150,6 +186,7 @@ public class SettingsPanel {
     }
 
     public void reset() {
+        mMaxHistoriesSize.getEditor().setItem(mAppStorage.getMaxHistorySize());
         mDefaultApiKey.setSelected(mSettings.isUseDefaultKey());
         mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
                 ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);
