@@ -170,7 +170,7 @@ public class SettingsPanel {
     public void apply() {
         final int maxHistorySize = getMaxHistorySize();
         if (maxHistorySize >= 0) {
-            mAppStorage.setMaxHistoriesSize(maxHistorySize);
+            mAppStorage.setMaxHistorySize(maxHistorySize);
         }
 
         boolean validKey = !Utils.isEmptyOrBlankString(mKeyNameField.getText())

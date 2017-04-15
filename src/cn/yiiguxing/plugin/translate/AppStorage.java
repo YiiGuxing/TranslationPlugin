@@ -26,7 +26,7 @@ public class AppStorage implements PersistentStateComponent<AppStorage> {
 
     @CollectionBean
     private List<String> histories = new ArrayList<String>(DEFAULT_HISTORY_SIZE);
-    private int maxSize = DEFAULT_HISTORY_SIZE;
+    private int maxHistorySize = DEFAULT_HISTORY_SIZE;
 
     /**
      * Get the instance of this service.
@@ -56,7 +56,7 @@ public class AppStorage implements PersistentStateComponent<AppStorage> {
     public String toString() {
         return "AppStorage{" +
                 "histories=" + histories +
-                ", maxSize=" + maxSize +
+                ", maxHistorySize=" + maxHistorySize +
                 '}';
     }
 
@@ -65,17 +65,17 @@ public class AppStorage implements PersistentStateComponent<AppStorage> {
      *
      * @param size 最大历史启启记录长度
      */
-    public void setMaxHistoriesSize(int size) {
+    public void setMaxHistorySize(int size) {
         size = Math.max(0, Math.min(size, MAX_HISTORY_SIZE));
-        if (size != maxSize) {
-            maxSize = size;
+        if (size != maxHistorySize) {
+            maxHistorySize = size;
             int listSize = histories.size();
-            boolean trimmed = listSize > maxSize;
+            boolean trimmed = listSize > maxHistorySize;
 
-            if (maxSize == 0) {
+            if (maxHistorySize == 0) {
                 histories.clear();
             } else {
-                while (listSize > maxSize) {
+                while (listSize > maxHistorySize) {
                     histories.remove(--listSize);
                 }
             }
@@ -94,7 +94,7 @@ public class AppStorage implements PersistentStateComponent<AppStorage> {
      * @return 最大历史启启记录长度
      */
     public int getMaxHistorySize() {
-        return maxSize;
+        return maxHistorySize;
     }
 
     /**
@@ -112,14 +112,14 @@ public class AppStorage implements PersistentStateComponent<AppStorage> {
      * @return <code>true</code> - 添加成功。<code>false</code> - 其他。
      */
     public boolean addHistory(@NotNull String query) {
-        if (maxSize > 0) {
+        if (maxHistorySize > 0) {
             int index = histories.indexOf(query);
             if (index != 0) {
                 if (index > 0) {
                     histories.remove(index);
                 }
-                if (histories.size() >= maxSize) {
-                    histories.remove(maxSize - 1);
+                if (histories.size() >= maxHistorySize) {
+                    histories.remove(maxHistorySize - 1);
                 }
 
                 histories.add(0, query);
