@@ -11,14 +11,20 @@ import com.intellij.ide.browsers.WebBrowserManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.FontComboBox;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -48,6 +54,13 @@ public class SettingsPanel {
     private JPanel mHistoryPanel;
     private ComboBox mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
+    private JPanel mFontPanel;
+    private JCheckBox mFontCheckBox;
+    private FontComboBox mPrimaryFontComboBox;
+    private FontComboBox mPhoneticFontComboBox;
+    private JTextPane mFontPreview;
+    private JLabel mPrimaryFontLabel;
+    private JLabel mPhoneticFontLabel;
 
     private Settings mSettings;
     private AppStorage mAppStorage;
@@ -56,10 +69,21 @@ public class SettingsPanel {
         mSettings = settings;
         mAppStorage = appStorage;
 
+        setTitles();
+        setRenderer();
+        setListeners();
+
+        return mWholePanel;
+    }
+
+    private void setTitles() {
         mSelectionSettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("取词模式"));
+        mFontPanel.setBorder(IdeBorderFactory.createTitledBorder("字体"));
         mHistoryPanel.setBorder(IdeBorderFactory.createTitledBorder("历史记录"));
         mApiKeySettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("有道 API KEY"));
+    }
 
+    private void setRenderer() {
         mSelectionMode.setRenderer(new ListCellRendererWrapper<String>() {
             @Override
             public void customize(JList list, String value, int index, boolean selected, boolean hasFocus) {
@@ -71,11 +95,40 @@ public class SettingsPanel {
                 }
             }
         });
+    }
 
+    private void setListeners() {
         mDefaultApiKey.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 switchKey();
+            }
+        });
+        mFontCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                final boolean selected = mFontCheckBox.isSelected();
+                mPrimaryFontComboBox.setEnabled(selected);
+                mPhoneticFontComboBox.setEnabled(selected);
+                mFontPreview.setEnabled(selected);
+                mPrimaryFontLabel.setEnabled(selected);
+                mPhoneticFontLabel.setEnabled(selected);
+            }
+        });
+        mPrimaryFontComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    previewPrimaryFont(mPrimaryFontComboBox.getFontName());
+                }
+            }
+        });
+        mPhoneticFontComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    previewPhoneticFont(mPhoneticFontComboBox.getFontName());
+                }
             }
         });
         mClearHistoriesButton.addActionListener(new ActionListener() {
@@ -84,8 +137,29 @@ public class SettingsPanel {
                 mAppStorage.clearHistories();
             }
         });
+    }
 
-        return mWholePanel;
+    private void previewPrimaryFont(String primary) {
+        if (Utils.isEmptyOrBlankString(primary)) {
+            mFontPreview.setFont(JBUI.Fonts.label(14));
+        } else {
+            mFontPreview.setFont(JBUI.Fonts.create(primary, 14));
+        }
+    }
+
+    private void previewPhoneticFont(String primary) {
+        final StyledDocument document = mFontPreview.getStyledDocument();
+
+        Font font;
+        if (Utils.isEmptyOrBlankString(primary)) {
+            font = JBUI.Fonts.label(14);
+        } else {
+            font = JBUI.Fonts.create(primary, 14);
+        }
+
+        final SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+        StyleConstants.setFontFamily(attributeSet, font.getFamily());
+        document.setCharacterAttributes(4, 41, attributeSet, true);
     }
 
     private void createUIComponents() {
@@ -147,9 +221,7 @@ public class SettingsPanel {
 
     private int getMaxHistorySize() {
         final Object size = mMaxHistoriesSize.getEditor().getItem();
-        if (size instanceof Integer) {
-            return (Integer) size;
-        } else if (size instanceof String) {
+        if (size instanceof String) {
             try {
                 return Integer.parseInt((String) size);
             } catch (NumberFormatException e) {
@@ -163,8 +235,13 @@ public class SettingsPanel {
     public boolean isModified() {
         return (!Utils.isEmptyOrBlankString(mKeyNameField.getText())
                 && !Utils.isEmptyOrBlankString(mKeyValueField.getText()))
-                || (mSettings.getAutoSelectionMode() != getAutoSelectionMode())
-                || (getMaxHistorySize() != mAppStorage.getMaxHistorySize());
+                || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
+                || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
+                || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
+                || (mSettings.getPrimaryFontFamily() != null
+                && mSettings.getPrimaryFontFamily().equals(mPrimaryFontComboBox.getFontName()))
+                || (mSettings.getPhoneticFontFamily() != null
+                && mSettings.getPhoneticFontFamily().equals(mPhoneticFontComboBox.getFontName()));
     }
 
     public void apply() {
@@ -172,6 +249,10 @@ public class SettingsPanel {
         if (maxHistorySize >= 0) {
             mAppStorage.setMaxHistorySize(maxHistorySize);
         }
+
+        mSettings.setOverrideFont(mFontCheckBox.isSelected());
+        mSettings.setPrimaryFontFamily(mPrimaryFontComboBox.getFontName());
+        mSettings.setPhoneticFontFamily(mPhoneticFontComboBox.getFontName());
 
         boolean validKey = !Utils.isEmptyOrBlankString(mKeyNameField.getText())
                 && !Utils.isEmptyOrBlankString(mKeyValueField.getText());
@@ -186,7 +267,13 @@ public class SettingsPanel {
     }
 
     public void reset() {
-        mMaxHistoriesSize.getEditor().setItem(mAppStorage.getMaxHistorySize());
+        mFontCheckBox.setSelected(mSettings.isOverrideFont());
+        mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());
+        mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());
+        previewPrimaryFont(mSettings.getPrimaryFontFamily());
+        previewPhoneticFont(mSettings.getPhoneticFontFamily());
+
+        mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
         mDefaultApiKey.setSelected(mSettings.isUseDefaultKey());
         mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
                 ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);

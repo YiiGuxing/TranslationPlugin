@@ -242,7 +242,7 @@ public class TranslationBalloon implements TranslationContract.View {
         };
         resultText.setEditable(false);
         resultText.setBackground(UIManager.getColor("Panel.background"));
-        resultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
+        setFont(resultText);
 
         Styles.insertStylishResultText(resultText, result, new Styles.OnTextClickListener() {
             @Override
@@ -275,6 +275,18 @@ public class TranslationBalloon implements TranslationContract.View {
 
         // 再刷新一下，尽可能地消除滚动条
         revalidateBalloon(balloon);
+    }
+
+    private void setFont(JComponent component) {
+        Settings settings = Settings.getInstance();
+        if (settings.isOverrideFont()) {
+            final String fontFamily = settings.getPrimaryFontFamily();
+            if (!Utils.isEmptyOrBlankString(fontFamily)) {
+                component.setFont(JBUI.Fonts.create(fontFamily, 14));
+                return;
+            }
+        }
+        component.setFont(JBUI.Fonts.label(14));
     }
 
     @SuppressWarnings("SpellCheckingInspection")

@@ -34,7 +34,7 @@
                 </constraints>
                 <properties>
                   <background color="-13948117"/>
-                  <visible value="true"/>
+                  <visible value="false"/>
                 </properties>
                 <border type="empty"/>
                 <children>
@@ -67,7 +67,7 @@
                       <autoscrolls value="false"/>
                       <background color="-13948117"/>
                       <editable value="false"/>
-                      <font name="Microsoft YaHei" size="14"/>
+                      <font/>
                       <margin top="5" left="5" bottom="5" right="5"/>
                     </properties>
                   </component>

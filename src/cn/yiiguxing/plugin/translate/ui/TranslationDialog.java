@@ -15,6 +15,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
@@ -34,8 +35,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class TranslationDialog extends DialogWrapper
-        implements TranslationContract.View, AppStorage.HistoriesChangedListener {
+public class TranslationDialog extends DialogWrapper implements
+        TranslationContract.View,
+        AppStorage.HistoriesChangedListener,
+        Settings.SettingsChangeListener {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
@@ -68,6 +71,7 @@ public class TranslationDialog extends DialogWrapper
     private final TranslationContract.Presenter mTranslationPresenter;
 
     private String mLastSuccessfulQuery;
+    private QueryResult mLastSuccessfulResult;
     private boolean mBroadcast;
 
     private boolean mLastMoveWasInsideDialog;
@@ -128,11 +132,12 @@ public class TranslationDialog extends DialogWrapper
             }
         });
 
-        ApplicationManager
+        MessageBusConnection messageBusConn = ApplicationManager
                 .getApplication()
                 .getMessageBus()
-                .connect(getDisposable())
-                .subscribe(AppStorage.HistoriesChangedListener.TOPIC, this);
+                .connect(getDisposable());
+        messageBusConn.subscribe(Settings.SettingsChangeListener.TOPIC, this);
+        messageBusConn.subscribe(AppStorage.HistoriesChangedListener.TOPIC, this);
     }
 
     @Nullable
@@ -235,6 +240,7 @@ public class TranslationDialog extends DialogWrapper
         getRootPane().setDefaultButton(mQueryBtn);
 
         initQueryComboBox();
+        setFont(Settings.getInstance());
 
         mTextPanel.setBorder(BORDER_ACTIVE);
         mScrollPane.setVerticalScrollBar(mScrollPane.createVerticalScrollBar());
@@ -243,7 +249,6 @@ public class TranslationDialog extends DialogWrapper
         mProcessPanel.setBackground(background);
         mMsgPanel.setBackground(background);
         mResultText.setBackground(background);
-        mResultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
         mScrollPane.setBackground(background);
         mScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
@@ -253,6 +258,28 @@ public class TranslationDialog extends DialogWrapper
         mQueryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
         setComponentPopupMenu();
+    }
+
+    @Override
+    public void onOverrideFontChanged(@NotNull Settings settings) {
+        setFont(settings);
+    }
+
+    private void setFont(Settings settings) {
+        if (settings.isOverrideFont()) {
+            final String fontFamily = settings.getPrimaryFontFamily();
+            if (!Utils.isEmptyOrBlankString(fontFamily)) {
+                mResultText.setFont(JBUI.Fonts.create(fontFamily, 14));
+            } else {
+                mResultText.setFont(JBUI.Fonts.label(14));
+            }
+        } else {
+            mResultText.setFont(JBUI.Fonts.label(14));
+        }
+
+        if (mLastSuccessfulResult != null) {
+            setResultText(mLastSuccessfulResult);
+        }
     }
 
     private void onQueryButtonClick() {
@@ -379,7 +406,13 @@ public class TranslationDialog extends DialogWrapper
     @Override
     public void showResult(@NotNull final String query, @NotNull QueryResult result) {
         mLastSuccessfulQuery = query;
+        mLastSuccessfulResult = result;
+        setResultText(result);
+        mLayout.show(mTextPanel, CARD_RESULT);
+        mProcessIcon.suspend();
+    }
 
+    private void setResultText(@NotNull QueryResult result) {
         Styles.insertStylishResultText(mResultText, result, new Styles.OnTextClickListener() {
             @Override
             public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
@@ -388,13 +421,12 @@ public class TranslationDialog extends DialogWrapper
         });
 
         mResultText.setCaretPosition(0);
-        mLayout.show(mTextPanel, CARD_RESULT);
-        mProcessIcon.suspend();
     }
 
     @Override
     public void showError(@NotNull String query, @NotNull String error) {
         mLastSuccessfulQuery = null;
+        mLastSuccessfulResult = null;
         mMessage.setText(error);
         mLayout.show(mTextPanel, CARD_MSG);
     }
