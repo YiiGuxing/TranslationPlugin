@@ -184,6 +184,15 @@ a:hover {
     opacity: 0.8;
 }
 
+.project-version a {
+    color: white;
+    text-decoration: none;
+}
+
+.project-version a:hover {
+    color: #0071e1;
+}
+
 .site-footer {
     padding-top: 2rem;
     margin-top: 2rem;

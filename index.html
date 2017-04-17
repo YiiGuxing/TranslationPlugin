@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>TranslationPlugin by Yii.Guxing</title>
-    <meta name="description" content="一个 IntelliJ IDEA/Android Studio 翻译插件，支持中英互译、单词朗读">
+    <meta name="description" content="一个 JetBrains IDE/Android Studio 翻译插件，支持中英互译、单词朗读">
     <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
     <link rel="icon" type="image/png" href="./images/icon.png"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -13,7 +13,7 @@
 <body>
 <div class="main-content">
     <h1 class="project-name">TranslationPlugin</h1>
-    <h2 class="project-tagline">IntelliJ IDEA/Android Studio 翻译插件，支持中英互译、单词朗读。</h2>
+    <h2 class="project-tagline">JetBrains IDE/Android Studio 翻译插件，支持中英互译、单词朗读。</h2>
     <div class="index_starWrap">
         <div class="index_star">
             <a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
@@ -23,12 +23,13 @@
     <a href="https://github.com/YiiGuxing/TranslationPlugin" class="btn" ondragstart="return false;">GitHub</a>
     <a href="start.html" class="btn" ondragstart="return false;">开始使用</a>
 
-    <div id="version" class="project-version"></div>
+    <div id="version" class="project-version">&nbsp;</div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
             if (version) {
-                $("#version").text("当前版本：" + version);
+                $("#version").html("当前版本：<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
+                    " target='_blank'>" + version + "</a>");
             }
         });
     </script>
@@ -37,8 +38,7 @@
         <img src="images/screenshots.gif">
     </div>
 
-    <span class="maintainer">♥ Developed by
-    <a class="maintainer-link" href="https://github.com/YiiGuxing">Yii.Guxing</a></span>
+    <span class="maintainer">♥ Developed by <a href="https://github.com/YiiGuxing">Yii.Guxing</a></span>
 </div>
 </body>
 </html>
