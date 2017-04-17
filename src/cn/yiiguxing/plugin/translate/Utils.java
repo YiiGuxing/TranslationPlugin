@@ -39,10 +39,10 @@ public final class Utils {
         String error;
         switch (result.getErrorCode()) {
             case QueryResult.ERROR_CODE_RESTRICTED:
-                error = "请求过于频繁，请尝试更换API KEY";
+                error = "请求过于频繁，请尝试<a href=\"" + Constants.HTML_DESCRIPTION_SETTINGS + "\">更换API KEY</a>";
                 break;
             case QueryResult.ERROR_CODE_INVALID_KEY:
-                error = "无效的API KEY";
+                error = "无效的API KEY,请<a href=\"" + Constants.HTML_DESCRIPTION_SETTINGS + "\">更换API KEY</a>";
                 break;
             case QueryResult.ERROR_CODE_QUERY_TOO_LONG:
                 error = "Query too long";

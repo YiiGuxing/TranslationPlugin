@@ -1,10 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 
-import cn.yiiguxing.plugin.translate.Styles;
-import cn.yiiguxing.plugin.translate.TranslationContract;
-import cn.yiiguxing.plugin.translate.TranslationPresenter;
-import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.intellij.openapi.Disposable;
@@ -18,7 +15,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.AnimatedIcon;
+import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -28,17 +27,21 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.PopupMenuEvent;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class TranslationDialog extends DialogWrapper implements TranslationContract.View {
+public class TranslationDialog extends DialogWrapper implements
+        TranslationContract.View,
+        AppStorage.HistoriesChangedListener,
+        Settings.SettingsChangeListener {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
-
-    private static final JBColor MSG_FOREGROUND_ERROR = new JBColor(new Color(0xFFFF2222), new Color(0xFFFF2222));
 
     private static final Border BORDER_ACTIVE = new LineBorder(new JBColor(JBColor.GRAY, Gray._35));
     private static final Border BORDER_PASSIVE = new LineBorder(new JBColor(JBColor.LIGHT_GRAY, Gray._75));
@@ -52,7 +55,6 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private JPanel mTitlePanel;
     private JPanel mContentPane;
     private JButton mQueryBtn;
-    private JLabel mMessageLabel;
     private JPanel mMsgPanel;
     private JTextPane mResultText;
     private JScrollPane mScrollPane;
@@ -62,12 +64,14 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
     private JPanel mProcessPanel;
     private AnimatedIcon mProcessIcon;
     private JLabel mQueryingLabel;
+    private JEditorPane mMessage;
     private CardLayout mLayout;
 
     private final MyModel mModel;
     private final TranslationContract.Presenter mTranslationPresenter;
 
     private String mLastSuccessfulQuery;
+    private QueryResult mLastSuccessfulResult;
     private boolean mBroadcast;
 
     private boolean mLastMoveWasInsideDialog;
@@ -118,6 +122,22 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
                 Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
             }
         });
+
+        // 在对话框上打开此对话框时，关闭主对话框时导致此对话框也跟着关闭，
+        // 但资源没有释放干净，回调也没回完整，再次打开的话就会崩溃
+        getWindow().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                close(CLOSE_EXIT_CODE);
+            }
+        });
+
+        MessageBusConnection messageBusConn = ApplicationManager
+                .getApplication()
+                .getMessageBus()
+                .connect(getDisposable());
+        messageBusConn.subscribe(Settings.SettingsChangeListener.TOPIC, this);
+        messageBusConn.subscribe(AppStorage.HistoriesChangedListener.TOPIC, this);
     }
 
     @Nullable
@@ -168,6 +188,32 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         mTitlePanel.requestFocus();
 
         mProcessIcon = new ProcessIcon();
+
+        mMessage = new JEditorPane();
+        mMessage.setContentType("text/html");
+        mMessage.setEditorKit(getErrorHTMLKit());
+        mMessage.setEditable(false);
+        mMessage.setOpaque(false);
+        mMessage.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
+                if (Constants.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
+                    close(CLOSE_EXIT_CODE);
+                    TranslationOptionsConfigurable.showSettingsDialog(mProject);
+                }
+            }
+        });
+    }
+
+    @NotNull
+    private static HTMLEditorKit getErrorHTMLKit() {
+        HTMLEditorKit kit = UIUtil.getHTMLEditorKit();
+        JBFont font = JBUI.Fonts.label(14);
+        StyleSheet styleSheet = kit.getStyleSheet();
+        styleSheet.addRule(String.format("body {font-family: %s;font-size: %s; text-align: center;}",
+                font.getFamily(), font.getSize()));
+
+        return kit;
     }
 
     private boolean isInside(@NotNull RelativePoint target) {
@@ -194,16 +240,15 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         getRootPane().setDefaultButton(mQueryBtn);
 
         initQueryComboBox();
+        setFont(Settings.getInstance());
 
         mTextPanel.setBorder(BORDER_ACTIVE);
         mScrollPane.setVerticalScrollBar(mScrollPane.createVerticalScrollBar());
 
         JBColor background = new JBColor(new Color(0xFFFFFFFF), new Color(0xFF2B2B2B));
-        mMessageLabel.setBackground(background);
         mProcessPanel.setBackground(background);
         mMsgPanel.setBackground(background);
         mResultText.setBackground(background);
-        mResultText.setFont(JBUI.Fonts.create("Microsoft YaHei", 14));
         mScrollPane.setBackground(background);
         mScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
@@ -213,6 +258,28 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         mQueryingLabel.setForeground(new JBColor(new Color(0xFF4C4C4C), new Color(0xFFCDCDCD)));
 
         setComponentPopupMenu();
+    }
+
+    @Override
+    public void onOverrideFontChanged(@NotNull Settings settings) {
+        setFont(settings);
+    }
+
+    private void setFont(Settings settings) {
+        if (settings.isOverrideFont()) {
+            final String fontFamily = settings.getPrimaryFontFamily();
+            if (!Utils.isEmptyOrBlankString(fontFamily)) {
+                mResultText.setFont(JBUI.Fonts.create(fontFamily, 14));
+            } else {
+                mResultText.setFont(JBUI.Fonts.label(14));
+            }
+        } else {
+            mResultText.setFont(JBUI.Fonts.label(14));
+        }
+
+        if (mLastSuccessfulResult != null) {
+            setResultText(mLastSuccessfulResult);
+        }
     }
 
     private void onQueryButtonClick() {
@@ -318,27 +385,34 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         }
     }
 
-    public void updateHistory(boolean updateComboBox) {
+    @Override
+    public void onHistoriesChanged() {
         mModel.fireContentsChanged();
 
         mBroadcast = true;// 防止递归查询
-        if (updateComboBox) {
-            mQueryComboBox.setSelectedIndex(0);
-        } else if (mLastSuccessfulQuery != null) {
-            mModel.setSelectedItem(mLastSuccessfulQuery);
-        }
+        mModel.setSelectedItem(mLastSuccessfulQuery);
         mBroadcast = false;
     }
 
     @Override
-    public void updateHistory() {
-        updateHistory(true);
+    public void onHistoryItemChanged(@NotNull String newHistory) {
+        mModel.fireContentsChanged();
+
+        mBroadcast = true;// 防止递归查询
+        mModel.setSelectedItem(newHistory);
+        mBroadcast = false;
     }
 
     @Override
     public void showResult(@NotNull final String query, @NotNull QueryResult result) {
         mLastSuccessfulQuery = query;
+        mLastSuccessfulResult = result;
+        setResultText(result);
+        mLayout.show(mTextPanel, CARD_RESULT);
+        mProcessIcon.suspend();
+    }
 
+    private void setResultText(@NotNull QueryResult result) {
         Styles.insertStylishResultText(mResultText, result, new Styles.OnTextClickListener() {
             @Override
             public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
@@ -347,16 +421,13 @@ public class TranslationDialog extends DialogWrapper implements TranslationContr
         });
 
         mResultText.setCaretPosition(0);
-        mLayout.show(mTextPanel, CARD_RESULT);
-        mProcessIcon.suspend();
     }
 
     @Override
     public void showError(@NotNull String query, @NotNull String error) {
         mLastSuccessfulQuery = null;
-
-        mMessageLabel.setText(error);
-        mMessageLabel.setForeground(MSG_FOREGROUND_ERROR);
+        mLastSuccessfulResult = null;
+        mMessage.setText(error);
         mLayout.show(mTextPanel, CARD_MSG);
     }
 

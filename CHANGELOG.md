@@ -1,5 +1,13 @@
 # Change Log
 
+## [v1.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.4)(2017-4-17)
+
+- 支持自定义字体，再也不怕小方块了
+- 使用公共API KEY时警告
+- "频繁请求"和"API KEY错误"提示添加跳转至设置页链接以方便设置API KEY
+- 优化历史记录
+- Bug修复
+
 ## [v1.3.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.3)(2017-2-5)
 
 - 优化翻译与替换操作

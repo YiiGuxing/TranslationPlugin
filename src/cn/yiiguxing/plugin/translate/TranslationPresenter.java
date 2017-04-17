@@ -46,7 +46,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
             return;
 
         query = query.trim();
-        updateHistory(query);
+        mAppStorage.addHistory(query);
 
         mCurrentQuery = query;
 
@@ -66,12 +66,6 @@ public class TranslationPresenter implements TranslationContract.Presenter {
                 }, ModalityState.any());
             }
         });
-    }
-
-    private void updateHistory(@NotNull String query) {
-        if (mAppStorage.addHistory(query)) {
-            mTranslationView.updateHistory();
-        }
     }
 
     private void onPostResult(String query, QueryResult result) {

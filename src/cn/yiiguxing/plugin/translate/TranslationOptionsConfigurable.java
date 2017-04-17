@@ -5,6 +5,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -18,11 +20,13 @@ import javax.swing.*;
 public class TranslationOptionsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Disposable {
 
     private final Settings mSettings;
+    private final AppStorage mAppStorage;
 
     private SettingsPanel mPanel;
 
     public TranslationOptionsConfigurable() {
         mSettings = Settings.getInstance();
+        mAppStorage = AppStorage.getInstance();
     }
 
     @NotNull
@@ -53,7 +57,7 @@ public class TranslationOptionsConfigurable implements SearchableConfigurable, C
     @Override
     public JComponent createComponent() {
         mPanel = new SettingsPanel();
-        return mPanel.createPanel(mSettings);
+        return mPanel.createPanel(mSettings, mAppStorage);
     }
 
     @Override
@@ -80,4 +84,11 @@ public class TranslationOptionsConfigurable implements SearchableConfigurable, C
     public void dispose() {
         mPanel = null;
     }
+
+    public static void showSettingsDialog(Project project) {
+        if (project == null)
+            return;
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, TranslationOptionsConfigurable.class);
+    }
+
 }

@@ -26,6 +26,7 @@ public final class Styles {
     private static final Logger LOGGER = Logger.getInstance("#" + Styles.class.getCanonicalName());
 
     private static final SimpleAttributeSet ATTR_QUERY = new SimpleAttributeSet();
+    private static final SimpleAttributeSet ATTR_EXPLAIN_BASE = new SimpleAttributeSet();
     private static final SimpleAttributeSet ATTR_EXPLAIN = new SimpleAttributeSet();
     private static final SimpleAttributeSet ATTR_PRE_EXPLAINS = new SimpleAttributeSet();
     private static final SimpleAttributeSet ATTR_EXPLAINS = new SimpleAttributeSet();
@@ -46,7 +47,9 @@ public final class Styles {
         StyleConstants.setBold(ATTR_QUERY, true);
         StyleConstants.setForeground(ATTR_QUERY, new JBColor(0xFFEE6000, 0xFFCC7832));
 
-        StyleConstants.setForeground(ATTR_EXPLAIN, new JBColor(0xFF3E7EFF, 0xFF8CBCE1));
+        JBColor fg = new JBColor(0xFF3E7EFF, 0xFF8CBCE1);
+        StyleConstants.setForeground(ATTR_EXPLAIN_BASE, fg);
+        StyleConstants.setForeground(ATTR_EXPLAIN, fg);
 
         StyleConstants.setItalic(ATTR_PRE_EXPLAINS, true);
         StyleConstants.setForeground(ATTR_PRE_EXPLAINS, new JBColor(0xFF7F0055, 0xFFEAB1FF));
@@ -176,14 +179,18 @@ public final class Styles {
                                        @NotNull final String query,
                                        @NotNull String phoneticText,
                                        @NotNull final Speech.Phonetic phonetic) throws BadLocationException {
-        String insert;
-        if (phonetic == Speech.Phonetic.UK) {
-            insert = "英[";
+        document.insertString(document.getLength(), phonetic == Speech.Phonetic.UK ? "英[" : "美[", ATTR_EXPLAIN_BASE);
+
+        final Settings settings = Settings.getInstance();
+        final String fontFamily = settings.getPhoneticFontFamily();
+        if (!settings.isOverrideFont() || Utils.isEmptyOrBlankString(fontFamily)) {
+            ATTR_EXPLAIN.removeAttribute(StyleConstants.FontFamily);
         } else {
-            insert = "美[";
+            StyleConstants.setFontFamily(ATTR_EXPLAIN, fontFamily);
         }
-        insert += phoneticText + "]";
-        document.insertString(document.getLength(), insert, ATTR_EXPLAIN);
+        document.insertString(document.getLength(), phoneticText, ATTR_EXPLAIN);
+
+        document.insertString(document.getLength(), "]", ATTR_EXPLAIN_BASE);
 
         SimpleAttributeSet attr = new SimpleAttributeSet();
         StyleConstants.setComponent(attr, new PhoneticButton(new Consumer<MouseEvent>() {

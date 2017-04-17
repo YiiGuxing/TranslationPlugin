@@ -32,11 +32,6 @@ public interface TranslationContract {
 
     interface View {
         /**
-         * 更新历史记录列表
-         */
-        void updateHistory();
-
-        /**
          * 显示翻译结果
          *
          * @param query  查询字符串
