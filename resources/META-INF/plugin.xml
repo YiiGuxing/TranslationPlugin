@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>1.3.4</version>
+    <version>1.3.4-143</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
@@ -33,6 +33,7 @@
 
     <change-notes><![CDATA[
       <ul>
+          <li>修复IDE 143版本上设置页面崩溃问题</li>
           <li>支持自定义字体，再也不怕小方块了</li>
           <li>使用公共API KEY时警告</li>
           <li>"频繁请求"和"API KEY错误"提示添加跳转至设置页链接，以方便设置API KEY</li>
@@ -45,7 +46,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="143.0"/>
+    <idea-version since-build="143.0" until-build="143.*"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

@@ -11,7 +11,6 @@ import com.intellij.ide.browsers.WebBrowserManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.FontComboBox;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
@@ -170,6 +169,9 @@ public class SettingsPanel {
             }
         });
         mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
+
+        mPrimaryFontComboBox = new FontComboBox();
+        mPhoneticFontComboBox = new FontComboBox(false, true);
     }
 
     private static void obtainApiKey() {

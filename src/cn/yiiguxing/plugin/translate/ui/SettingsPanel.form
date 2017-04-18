@@ -229,7 +229,7 @@
                   <text value="主要字体:"/>
                 </properties>
               </component>
-              <component id="83b42" class="com.intellij.ui.FontComboBox" binding="mPrimaryFontComboBox">
+              <component id="83b42" class="cn.yiiguxing.plugin.translate.ui.FontComboBox" binding="mPrimaryFontComboBox" custom-create="true">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -246,7 +246,7 @@
                   <text value="音标字体:"/>
                 </properties>
               </component>
-              <component id="ec7c4" class="com.intellij.ui.FontComboBox" binding="mPhoneticFontComboBox">
+              <component id="ec7c4" class="cn.yiiguxing.plugin.translate.ui.FontComboBox" binding="mPhoneticFontComboBox" custom-create="true">
                 <constraints>
                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>

@@ -1,5 +1,9 @@
 # Change Log
 
+## [v1.3.4-143](https://github.com/YiiGuxing/TranslationPlugin/tree/143)(2017-4-18)
+
+- 修复IDE 143版本上设置页面崩溃问题
+
 ## [v1.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.4)(2017-4-17)
 
 - 支持自定义字体，再也不怕小方块了

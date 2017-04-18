@@ -130,6 +130,16 @@ public final class Styles {
         return attr;
     }
 
+    private static void updatePhoneticFont() {
+        final Settings settings = Settings.getInstance();
+        final String fontFamily = settings.getPhoneticFontFamily();
+        if (!settings.isOverrideFont() || Utils.isEmptyOrBlankString(fontFamily)) {
+            ATTR_EXPLAIN.removeAttribute(StyleConstants.FontFamily);
+        } else {
+            StyleConstants.setFontFamily(ATTR_EXPLAIN, fontFamily);
+        }
+    }
+
     private static void insertHeader(@NotNull JTextPane textPane, QueryResult result) {
         Document document = textPane.getDocument();
         String query = result.getQuery();
@@ -160,7 +170,10 @@ public final class Styles {
 
                 String pho = be.getPhonetic();
                 if (!Utils.isEmptyOrBlankString(pho) && !hasPhonetic) {
-                    document.insertString(document.getLength(), "[" + pho + "]", ATTR_EXPLAIN);
+                    updatePhoneticFont();
+                    document.insertString(document.getLength(), "[", ATTR_EXPLAIN_BASE);
+                    document.insertString(document.getLength(), pho, ATTR_EXPLAIN);
+                    document.insertString(document.getLength(), "]", ATTR_EXPLAIN_BASE);
                     hasPhonetic = true;
                 }
 
@@ -181,13 +194,7 @@ public final class Styles {
                                        @NotNull final Speech.Phonetic phonetic) throws BadLocationException {
         document.insertString(document.getLength(), phonetic == Speech.Phonetic.UK ? "英[" : "美[", ATTR_EXPLAIN_BASE);
 
-        final Settings settings = Settings.getInstance();
-        final String fontFamily = settings.getPhoneticFontFamily();
-        if (!settings.isOverrideFont() || Utils.isEmptyOrBlankString(fontFamily)) {
-            ATTR_EXPLAIN.removeAttribute(StyleConstants.FontFamily);
-        } else {
-            StyleConstants.setFontFamily(ATTR_EXPLAIN, fontFamily);
-        }
+        updatePhoneticFont();
         document.insertString(document.getLength(), phoneticText, ATTR_EXPLAIN);
 
         document.insertString(document.getLength(), "]", ATTR_EXPLAIN_BASE);
