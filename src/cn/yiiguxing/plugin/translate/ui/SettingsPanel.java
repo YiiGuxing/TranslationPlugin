@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
+import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.WebBrowser;
@@ -74,6 +75,32 @@ public class SettingsPanel {
         setListeners();
 
         return mWholePanel;
+    }
+
+    private void createUIComponents() {
+        mGetApiKeyLink = new ActionLink("", new AnAction() {
+            @Override
+            public void actionPerformed(AnActionEvent anActionEvent) {
+                obtainApiKey();
+            }
+        });
+        mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
+
+        mPrimaryFontComboBox = new FontComboBox();
+        if (IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2017_1) {
+            mPhoneticFontComboBox = new FontComboBox(false, true);
+        } else {
+            mPhoneticFontComboBox = new FontComboBox();
+        }
+
+        fixFontComboBoxSize(mPrimaryFontComboBox);
+        fixFontComboBoxSize(mPhoneticFontComboBox);
+    }
+
+    private void fixFontComboBoxSize(FontComboBox fontComboBox) {
+        Dimension size = fontComboBox.getPreferredSize();
+        size.width = size.height * 8;
+        fontComboBox.setPreferredSize(size);
     }
 
     private void setTitles() {
@@ -160,16 +187,6 @@ public class SettingsPanel {
         final SimpleAttributeSet attributeSet = new SimpleAttributeSet();
         StyleConstants.setFontFamily(attributeSet, font.getFamily());
         document.setCharacterAttributes(4, 41, attributeSet, true);
-    }
-
-    private void createUIComponents() {
-        mGetApiKeyLink = new ActionLink("", new AnAction() {
-            @Override
-            public void actionPerformed(AnActionEvent anActionEvent) {
-                obtainApiKey();
-            }
-        });
-        mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
     }
 
     private static void obtainApiKey() {
