@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.browsers.BrowserLauncher;
+import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.browsers.WebBrowser;
 import com.intellij.ide.browsers.WebBrowserManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -15,7 +15,6 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
@@ -177,8 +176,7 @@ public class SettingsPanel {
     private static void obtainApiKey() {
         WebBrowser browser = WebBrowserManager.getInstance().getFirstActiveBrowser();
         if (browser != null) {
-            BrowserLauncher.getInstance()
-                    .browseUsingPath(API_KEY_URL, null, browser, null, ArrayUtil.EMPTY_STRING_ARRAY);
+            BrowserUtil.browse(API_KEY_URL);
         }
     }
 
