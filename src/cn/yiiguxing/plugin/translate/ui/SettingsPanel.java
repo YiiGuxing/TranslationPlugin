@@ -1,10 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui;
 
-import cn.yiiguxing.plugin.translate.AppStorage;
-import cn.yiiguxing.plugin.translate.Settings;
-import cn.yiiguxing.plugin.translate.Utils;
-import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
-import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.WebBrowser;
@@ -19,17 +14,25 @@ import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
+
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import cn.yiiguxing.plugin.translate.AppStorage;
+import cn.yiiguxing.plugin.translate.Settings;
+import cn.yiiguxing.plugin.translate.Utils;
+import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
+import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  * 设置页
@@ -37,7 +40,7 @@ import java.awt.event.ItemListener;
 @SuppressWarnings("Since15")
 public class SettingsPanel {
 
-    private static final String API_KEY_URL = "http://fanyi.youdao.com/openapi?path=data-mode";
+    private static final String API_KEY_URL = "http://http://ai.youdao.com";
 
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
