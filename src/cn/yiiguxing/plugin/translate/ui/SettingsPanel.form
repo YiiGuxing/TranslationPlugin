@@ -70,7 +70,7 @@
                 </constraints>
                 <properties>
                   <labelFor value="18b5c"/>
-                  <text value="Key From:"/>
+                  <text value="应用ID"/>
                 </properties>
               </component>
               <component id="a5726" class="javax.swing.JLabel">
@@ -79,7 +79,7 @@
                 </constraints>
                 <properties>
                   <labelFor value="e3918"/>
-                  <text value="API Key:"/>
+                  <text value="应用密钥"/>
                 </properties>
               </component>
               <component id="18b5c" class="javax.swing.JTextField" binding="mKeyNameField">

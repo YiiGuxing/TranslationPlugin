@@ -1,18 +1,22 @@
 package cn.yiiguxing.plugin.translate;
 
-import cn.yiiguxing.plugin.translate.model.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.HttpRequests;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import cn.yiiguxing.plugin.translate.model.QueryResult;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Future;
 
 /**
@@ -22,10 +26,13 @@ import java.util.concurrent.Future;
 public final class Translator {
 
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do";
+    private static final String BASIC_URL = "https://openapi.youdao.com/api";
 
-    private static final String DEFAULT_API_KEY_NAME = "TranslationPlugin";
-    private static final String DEFAULT_API_KEY_VALUE = "1473510108";
+    // 新版的应用ID  appKey
+    private static final String DEFAULT_API_KEY_NAME = "22e0c7b47735dc48";
+
+    // 新版的应用密钥
+    private static final String DEFAULT_API_KEY_VALUE = "EypH6vWGXE2tUUfyNy2liNBDpicRECWW";
 
     private static final Logger LOGGER = Logger.getInstance("#" + Translator.class.getCanonicalName());
 
@@ -86,12 +93,11 @@ public final class Translator {
     }
 
     static String getQueryUrl(String query) {
-        String encodedQuery = "";
-        try {
-            encodedQuery = URLEncoder.encode(query, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            query = new String(query.getBytes(), "UTF-8");
+//        } catch (UnsupportedEncodingException ignore) {
+//
+//        }
 
         Settings settings = Settings.getInstance();
 
@@ -110,8 +116,81 @@ public final class Translator {
             }
         }
 
-        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + apiKeyName + "&key=" +
-                apiKeyValue + "&q=" + encodedQuery;
+        String salt = "1";
+        // 签名，通过md5(appKey+q+salt+密钥)生成
+        final String sign = md5(apiKeyName + query + salt + apiKeyValue);
+        // 0B532BC7804652685ECDA97D22EBEF25
+
+        // http://openapi.youdao.com/api?q=good&from=en&to=zh_CHS&appKey=ff889495-4b45-46d9-8f48-946554334f2a&salt=2&sign=1995882C5064805BC30A39829B779D7B
+
+        final String url = BASIC_URL + "?" + getTranslateMethod(query) +
+                "&appKey=" + apiKeyName +
+                "&salt=" + salt +
+                "&sign=" + sign +
+                "&q=" + encode(query);
+
+//        System.out.println("request url : " + url);
+
+        return url;
+    }
+
+    /**
+     * 通过传入的字符串判断是英译汉还是汉译英
+     */
+    private static String getTranslateMethod(final String query) {
+        if (query.matches("[a-zA-Z ]+")) {
+            return "from=en&to=zh_CHS";
+        }
+        return "from=zh_CHS&to=en";
+    }
+
+    /**
+     * 生成32位MD5摘要
+     */
+    public static String md5(String string) {
+        if (string == null) {
+            return null;
+        }
+        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F'};
+        try {
+            byte[] btInput = string.getBytes("utf-8");
+            /** 获得MD5摘要算法的 MessageDigest 对象 */
+            MessageDigest mdInst = MessageDigest.getInstance("MD5");
+            /** 使用指定的字节更新摘要 */
+            mdInst.update(btInput);
+            /** 获得密文 */
+            byte[] md = mdInst.digest();
+            /** 把密文转换成十六进制的字符串形式 */
+            int j = md.length;
+            char str[] = new char[j * 2];
+            int k = 0;
+            for (byte byte0 : md) {
+                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                str[k++] = hexDigits[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * 进行URL编码
+     */
+    public static String encode(String input) {
+        if (input == null) {
+            return "";
+        }
+
+        try {
+            return URLEncoder.encode(input, "utf-8");
+        } catch (UnsupportedEncodingException ignore) {
+
+        }
+
+        return input;
     }
 
     private final class QueryRequest implements Runnable {
