@@ -40,7 +40,7 @@ import javax.swing.text.StyledDocument;
 @SuppressWarnings("Since15")
 public class SettingsPanel {
 
-    private static final String API_KEY_URL = "http://http://ai.youdao.com";
+    private static final String API_KEY_URL = "http://ai.youdao.com";
 
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
