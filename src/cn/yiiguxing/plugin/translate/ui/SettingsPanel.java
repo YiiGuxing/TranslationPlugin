@@ -6,9 +6,7 @@ import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.ide.browsers.WebBrowser;
-import com.intellij.ide.browsers.WebBrowserManager;
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
@@ -17,7 +15,6 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
@@ -81,7 +78,7 @@ public class SettingsPanel {
         mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
-                obtainApiKey();
+                BrowserUtil.browse(API_KEY_URL);
             }
         });
         mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
@@ -187,14 +184,6 @@ public class SettingsPanel {
         final SimpleAttributeSet attributeSet = new SimpleAttributeSet();
         StyleConstants.setFontFamily(attributeSet, font.getFamily());
         document.setCharacterAttributes(4, 41, attributeSet, true);
-    }
-
-    private static void obtainApiKey() {
-        WebBrowser browser = WebBrowserManager.getInstance().getFirstActiveBrowser();
-        if (browser != null) {
-            BrowserLauncher.getInstance()
-                    .browseUsingPath(API_KEY_URL, null, browser, null, ArrayUtil.EMPTY_STRING_ARRAY);
-        }
     }
 
     private void switchKey() {
