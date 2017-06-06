@@ -6,8 +6,6 @@ import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.browsers.WebBrowser;
-import com.intellij.ide.browsers.WebBrowserManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
@@ -164,20 +162,13 @@ public class SettingsPanel {
         mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
-                obtainApiKey();
+                BrowserUtil.browse(API_KEY_URL);
             }
         });
         mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
 
         mPrimaryFontComboBox = new FontComboBox();
         mPhoneticFontComboBox = new FontComboBox(false, true);
-    }
-
-    private static void obtainApiKey() {
-        WebBrowser browser = WebBrowserManager.getInstance().getFirstActiveBrowser();
-        if (browser != null) {
-            BrowserUtil.browse(API_KEY_URL);
-        }
     }
 
     private void switchKey() {
