@@ -262,7 +262,7 @@
                   <editable value="false"/>
                   <enabled value="false"/>
                   <margin top="10" left="3" bottom="3" right="3"/>
-                  <opaque value="true"/>
+                  <opaque value="false"/>
                   <text value="预览:[ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw]"/>
                 </properties>
               </component>
