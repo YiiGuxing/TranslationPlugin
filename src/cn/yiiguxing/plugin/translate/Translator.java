@@ -109,9 +109,39 @@ public final class Translator {
                 apiKeyValue = DEFAULT_API_KEY_VALUE;
             }
         }
+				/**
+         * 2017-6-9 yangFan
+         * 改变返回逻辑，以达新、老用户都能用，老用户不用重新申请KEY的目的
+         */
+        if (isOldValue(apiKeyValue)) {
+            return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + apiKeyName + "&key=" +
+                    apiKeyValue + "&q=" + encodedQuery;
+        } else {
+            return TranslatorURLFix.getFixedQueryUrl(apiKeyName, apiKeyValue, query);
+        }
 
-        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + apiKeyName + "&key=" +
-                apiKeyValue + "&q=" + encodedQuery;
+//        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + apiKeyName + "&key=" +
+//                apiKeyValue + "&q=" + encodedQuery;
+    }
+
+    /**
+     * 2017-6-9 yangFan
+     * 判断是否是有道翻译旧接口的API_KEY_VALUE
+     * 依据1、旧接口value长度在10左右，新接口value长度在32左右
+     * 依据2、旧接口value是纯数字，新接口value是大小写字母与数字的混合
+     */
+    public static boolean isOldValue(String str) {
+
+        if (str.length() < 20) {
+            return true;//长度小于20的是OldValue，返回true
+        }
+        for (int i = 0; i < str.length(); i++) {
+            System.out.println(str.charAt(i));
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;//非纯数字是newValue，返回false
+            }
+        }
+        return true;//纯数字是OldValue，返回true
     }
 
     private final class QueryRequest implements Runnable {
