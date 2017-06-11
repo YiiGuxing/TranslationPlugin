@@ -73,11 +73,11 @@ public class TranslationPresenter implements TranslationContract.Presenter {
             return;
 
         mCurrentQuery = null;
-        String errorMessage = Utils.getErrorMessage(result);
-        if (errorMessage != null) {
-            mTranslationView.showError(query, errorMessage);
-        } else {
+        if (result.isSuccessful()) {
             mTranslationView.showResult(query, result);
+        } else {
+            String msg = result.getMessage();
+            mTranslationView.showError(query, Utils.isEmptyOrBlankString(msg) ? "Nothing to show" : msg);
         }
     }
 }

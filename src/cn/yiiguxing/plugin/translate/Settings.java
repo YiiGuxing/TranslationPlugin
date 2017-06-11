@@ -17,13 +17,14 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "TranslationSettings", storages = @Storage(id = "other", file = "$APP_CONFIG$/translation.xml"))
 public class Settings implements PersistentStateComponent<Settings> {
 
-    private boolean useDefaultKey = true;
-    private String apiKeyName;
-    private String apiKeyValue;
+    private String appId;
+    private String appPrivateKey;
+    private Lang langFrom;
+    private Lang langTo;
     private boolean overrideFont;
     private String primaryFontFamily;
     private String phoneticFontFamily;
-    private boolean disableApiKeyNotification;
+    private boolean disableAppKeyNotification;
     @NotNull
     private AutoSelectionMode autoSelectionMode = AutoSelectionMode.INCLUSIVE;
 
@@ -50,15 +51,50 @@ public class Settings implements PersistentStateComponent<Settings> {
     @Override
     public String toString() {
         return "Settings{" +
-                "useDefaultKey=" + useDefaultKey +
-                ", apiKeyName='" + apiKeyName + '\'' +
-                ", apiKeyValue='" + apiKeyValue + '\'' +
+                "appId='" + appId + '\'' +
+                ", appPrivateKey='" + appPrivateKey + '\'' +
+                ", langFrom=" + langFrom +
+                ", langTo=" + langTo +
                 ", overrideFont=" + overrideFont +
                 ", primaryFontFamily='" + primaryFontFamily + '\'' +
                 ", phoneticFontFamily='" + phoneticFontFamily + '\'' +
-                ", disableApiKeyNotification=" + disableApiKeyNotification +
+                ", disableAppKeyNotification=" + disableAppKeyNotification +
                 ", autoSelectionMode=" + autoSelectionMode +
                 '}';
+    }
+
+    /**
+     * 返回输入语言
+     */
+    @Nullable
+    public Lang getLangFrom() {
+        return langFrom;
+    }
+
+    /**
+     * 设置输入语言
+     *
+     * @param lang 语言
+     */
+    public void setLangFrom(@Nullable Lang lang) {
+        this.langFrom = lang;
+    }
+
+    /**
+     * 返回输出语言
+     */
+    @Nullable
+    public Lang getLangTo() {
+        return langTo;
+    }
+
+    /**
+     * 设置输出语言
+     *
+     * @param lang 语言
+     */
+    public void setLangTo(@Nullable Lang lang) {
+        this.langTo = lang;
     }
 
     /**
@@ -77,59 +113,45 @@ public class Settings implements PersistentStateComponent<Settings> {
     }
 
     /**
-     * 返回是否是使用默认的API KEY.
+     * 返回应用ID.
      */
-    public boolean isUseDefaultKey() {
-        return useDefaultKey;
+    public String getAppId() {
+        return this.appId;
     }
 
     /**
-     * 设置是否使用默认的API KEY.
+     * 设置应用ID.
      */
-    public void setUseDefaultKey(boolean useDefaultKey) {
-        this.useDefaultKey = useDefaultKey;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
     /**
-     * 返回API KEY name.
+     * 返回应用密钥.
      */
-    public String getApiKeyName() {
-        return this.apiKeyName;
+    public String getAppPrivateKey() {
+        return this.appPrivateKey;
     }
 
     /**
-     * 设置API KEY name.
+     * 设置应用密钥.
      */
-    public void setApiKeyName(String apiKeyName) {
-        this.apiKeyName = apiKeyName;
+    public void setAppPrivateKey(String appPrivateKey) {
+        this.appPrivateKey = appPrivateKey;
     }
 
     /**
-     * 返回API KEY value.
+     * 返回是否关闭设置APP KEY通知
      */
-    public String getApiKeyValue() {
-        return this.apiKeyValue;
+    public boolean isDisableAppKeyNotification() {
+        return disableAppKeyNotification;
     }
 
     /**
-     * 设置API KEY value.
+     * 设置关闭设置APP KEY通知
      */
-    public void setApiKeyValue(String apiKeyValue) {
-        this.apiKeyValue = apiKeyValue;
-    }
-
-    /**
-     * 返回是否关闭更换API KEY通知
-     */
-    public boolean isDisableApiKeyNotification() {
-        return disableApiKeyNotification;
-    }
-
-    /**
-     * 设置关闭更换API KEY通知
-     */
-    public void setDisableApiKeyNotification(boolean disableApiKeyNotification) {
-        this.disableApiKeyNotification = disableApiKeyNotification;
+    public void setDisableAppKeyNotification(boolean disableAppKeyNotification) {
+        this.disableAppKeyNotification = disableAppKeyNotification;
     }
 
     /**

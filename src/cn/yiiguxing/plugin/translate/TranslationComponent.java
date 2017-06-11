@@ -9,7 +9,7 @@ import javax.swing.event.HyperlinkEvent;
 
 public class TranslationComponent extends AbstractProjectComponent {
 
-    private static final String DISPLAY_ID_API_KEY = "NOTIFICATION_API_KEY";
+    private static final String DISPLAY_ID_APP_KEY = "NOTIFICATION_APP_KEY";
 
     private Settings mSettings;
 
@@ -25,14 +25,15 @@ public class TranslationComponent extends AbstractProjectComponent {
 
     @Override
     public void projectOpened() {
-        if (mSettings.isDisableApiKeyNotification() || !mSettings.isUseDefaultKey())
+        if (mSettings.isDisableAppKeyNotification() ||
+                !(Utils.isEmptyOrBlankString(mSettings.getAppId()) || Utils.isEmptyOrBlankString(mSettings.getAppId())))
             return;
 
-        NotificationGroup group = new NotificationGroup(DISPLAY_ID_API_KEY, NotificationDisplayType.STICKY_BALLOON,
+        NotificationGroup group = new NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON,
                 true);
-        String title = "避免使用公共API Key";
-        String content = String.format("你正在使用公共的API Key，这可能会导致无法正常地进行翻译，建议改用个人API Key." +
-                        "<br/><br/><a href=\"%s\">更改API Key</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+        String title = "设置App Key";
+        String content = String.format("当前App Key为空或者无效，请设置App Key." +
+                        "<br/><br/><a href=\"%s\">设置</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
                         "<a href=\"%s\">不再提示</a>",
                 Constants.HTML_DESCRIPTION_SETTINGS, Constants.HTML_DESCRIPTION_DISABLE);
         Notification notification = group.createNotification(title, content, NotificationType.WARNING,
@@ -46,7 +47,7 @@ public class TranslationComponent extends AbstractProjectComponent {
                         if (Constants.HTML_DESCRIPTION_SETTINGS.equals(description)) {
                             TranslationOptionsConfigurable.showSettingsDialog(myProject);
                         } else if (Constants.HTML_DESCRIPTION_DISABLE.equals(description)) {
-                            mSettings.setDisableApiKeyNotification(true);
+                            mSettings.setDisableAppKeyNotification(true);
                         }
                     }
                 });

@@ -102,7 +102,7 @@ public class TranslateAndReplaceAction extends AutoSelectAction {
         Translator.getInstance().query(text, new Translator.Callback() {
             @Override
             public void onQuery(@Nullable String query, @Nullable final QueryResult result) {
-                if (result == null || result.getErrorCode() != QueryResult.ERROR_CODE_NONE)
+                if (result == null || !result.isSuccessful())
                     return;
 
                 final List<LookupElement> replaceLookup = getReplaceLookupElements(result);
