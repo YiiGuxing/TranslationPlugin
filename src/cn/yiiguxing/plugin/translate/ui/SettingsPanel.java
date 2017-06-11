@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
@@ -252,8 +251,8 @@ public class SettingsPanel {
     }
 
     public void reset() {
-        mLangFromComboBox.setSelectedItem(MoreObjects.firstNonNull(mSettings.getLangFrom(), Lang.AUTO));
-        mLangToComboBox.setSelectedItem(MoreObjects.firstNonNull(mSettings.getLangTo(), Lang.AUTO));
+        mLangFromComboBox.setSelectedItem(Utils.notNull(mSettings.getLangFrom(), Lang.AUTO));
+        mLangToComboBox.setSelectedItem(Utils.notNull(mSettings.getLangTo(), Lang.AUTO));
         mFontCheckBox.setSelected(mSettings.isOverrideFont());
         mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());

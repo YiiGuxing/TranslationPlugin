@@ -132,6 +132,11 @@ public final class Utils {
         return obj;
     }
 
+    @NotNull
+    public static <T> T notNull(@Nullable T value, @NotNull T defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
     private static final char HEX_DIGITS[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'A', 'B', 'C', 'D', 'E', 'F'};
 

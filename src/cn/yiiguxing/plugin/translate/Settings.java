@@ -1,11 +1,13 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
+import com.intellij.ide.passwordSafe.PasswordSafe;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -14,11 +16,14 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Settings
  */
+@SuppressWarnings("WeakerAccess")
 @State(name = "TranslationSettings", storages = @Storage(id = "other", file = "$APP_CONFIG$/translation.xml"))
 public class Settings implements PersistentStateComponent<Settings> {
 
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String YOUDAO_APP_PRIVATE_KEY = "YOUDAO_APP_PRIVATE_KEY";
+
     private String appId;
-    private String appPrivateKey;
     private Lang langFrom;
     private Lang langTo;
     private boolean overrideFont;
@@ -52,7 +57,6 @@ public class Settings implements PersistentStateComponent<Settings> {
     public String toString() {
         return "Settings{" +
                 "appId='" + appId + '\'' +
-                ", appPrivateKey='" + appPrivateKey + '\'' +
                 ", langFrom=" + langFrom +
                 ", langTo=" + langTo +
                 ", overrideFont=" + overrideFont +
@@ -129,15 +133,18 @@ public class Settings implements PersistentStateComponent<Settings> {
     /**
      * 返回应用密钥.
      */
+    @SuppressWarnings("deprecation")
+    @NotNull
     public String getAppPrivateKey() {
-        return this.appPrivateKey;
+        return StringUtil.notNullize(PasswordSafe.getInstance().getPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY));
     }
 
     /**
      * 设置应用密钥.
      */
-    public void setAppPrivateKey(String appPrivateKey) {
-        this.appPrivateKey = appPrivateKey;
+    @SuppressWarnings("deprecation")
+    public void setAppPrivateKey(@NotNull String appPrivateKey) {
+        PasswordSafe.getInstance().setPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY, appPrivateKey);
     }
 
     /**
@@ -150,6 +157,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     /**
      * 设置关闭设置APP KEY通知
      */
+    @SuppressWarnings("SameParameterValue")
     public void setDisableAppKeyNotification(boolean disableAppKeyNotification) {
         this.disableAppKeyNotification = disableAppKeyNotification;
     }

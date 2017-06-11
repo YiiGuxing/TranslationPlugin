@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.model;
 
 import cn.yiiguxing.plugin.translate.Constants;
 import cn.yiiguxing.plugin.translate.Utils;
-import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Arrays;
@@ -114,7 +113,7 @@ public class QueryResult {
 
         if (!isSuccessful() && Utils.isEmptyOrBlankString(message)) {
             String msg = ERROR_MAP.get(errorCode);
-            message = MoreObjects.firstNonNull(msg, String.format("未知错误:[%d]", errorCode));
+            message = Utils.notNull(msg, String.format("未知错误:[%d]", errorCode));
         }
     }
 

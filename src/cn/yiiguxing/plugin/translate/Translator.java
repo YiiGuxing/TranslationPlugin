@@ -66,8 +66,8 @@ public final class Translator {
             mCurrentTask = null;
         }
 
-        final Lang langFrom = MoreObjects.firstNonNull(mSettings.getLangFrom(), Lang.AUTO);
-        final Lang langTo = MoreObjects.firstNonNull(mSettings.getLangTo(), Lang.AUTO);
+        final Lang langFrom = Utils.notNull(mSettings.getLangFrom(), Lang.AUTO);
+        final Lang langTo = Utils.notNull(mSettings.getLangTo(), Lang.AUTO);
 
         QueryResult cache;
         synchronized (mCache) {
