@@ -259,6 +259,8 @@ public class SettingsPanel {
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());
         previewPrimaryFont(mSettings.getPrimaryFontFamily());
         previewPhoneticFont(mSettings.getPhoneticFontFamily());
+        mAppIdField.setText(mSettings.getAppId());
+        mAppPrivateKeyField.setText(mSettings.getAppPrivateKey());
 
         mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
         mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
