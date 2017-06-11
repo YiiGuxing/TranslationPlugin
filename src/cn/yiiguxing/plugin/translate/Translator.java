@@ -23,7 +23,7 @@ public final class Translator {
     private static final Logger LOGGER = Logger.getInstance("#" + Translator.class.getCanonicalName());
 
     private final Settings mSettings = Settings.getInstance();
-    private final LruCache<String, QueryResult> mCache = new LruCache<String, QueryResult>(500);
+    private final LruCache<CacheKey, QueryResult> mCache = new LruCache<CacheKey, QueryResult>(500);
     private Future<?> mCurrentTask;
 
     private Translator() {
@@ -40,9 +40,9 @@ public final class Translator {
      * 获取缓存
      */
     @Nullable
-    public QueryResult getCache(@NotNull String query) {
+    public QueryResult getCache(@NotNull CacheKey key) {
         synchronized (mCache) {
-            return mCache.get(query);
+            return mCache.get(key);
         }
     }
 
@@ -66,26 +66,30 @@ public final class Translator {
             mCurrentTask = null;
         }
 
+        final Lang langFrom = MoreObjects.firstNonNull(mSettings.getLangFrom(), Lang.AUTO);
+        final Lang langTo = MoreObjects.firstNonNull(mSettings.getLangTo(), Lang.AUTO);
+
         QueryResult cache;
         synchronized (mCache) {
-            cache = mCache.get(query);
+            cache = mCache.get(new CacheKey(langFrom, langTo, query));
         }
         if (cache != null) {
             if (callback != null) {
                 callback.onQuery(query, cache);
             }
         } else {
-            mCurrentTask = ApplicationManager.getApplication().executeOnPooledThread(new QueryRequest(query, callback));
+            mCurrentTask = ApplicationManager
+                    .getApplication()
+                    .executeOnPooledThread(new QueryRequest(langFrom, langTo, query, callback));
         }
     }
 
-    private String getQueryUrl(String query) {
+    private String getQueryUrl(@NotNull Lang langFrom, @NotNull Lang langTo, @NotNull String query) {
         Settings settings = mSettings;
 
         String appId = settings.getAppId();
         String privateKey = settings.getAppPrivateKey();
-        String langFrom = MoreObjects.firstNonNull(settings.getLangFrom(), Lang.AUTO).code;
-        String langTo = MoreObjects.firstNonNull(settings.getLangTo(), Lang.AUTO).code;
+
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = Utils.md5(appId + query + salt + privateKey);
 
@@ -100,10 +104,14 @@ public final class Translator {
 
     private final class QueryRequest implements Runnable {
 
+        private final Lang mLangFrom;
+        private final Lang mLangTo;
         private final String mQuery;
         private final Callback mCallback;
 
-        QueryRequest(String query, Callback callback) {
+        QueryRequest(@NotNull Lang langFrom, @NotNull Lang langTo, @NotNull String query, Callback callback) {
+            mLangFrom = langFrom;
+            mLangTo = langTo;
             mQuery = query;
             mCallback = callback;
         }
@@ -111,7 +119,7 @@ public final class Translator {
         @Override
         public void run() {
             final String query = mQuery;
-            final String url = getQueryUrl(query);
+            final String url = getQueryUrl(mLangFrom, mLangTo, query);
 
             QueryResult result = null;
             try {
@@ -138,7 +146,7 @@ public final class Translator {
                 result.checkError();
                 if (result.isSuccessful()) {
                     synchronized (mCache) {
-                        mCache.put(query, result);
+                        mCache.put(new CacheKey(mLangFrom, mLangTo, query), result);
                     }
                 }
             }

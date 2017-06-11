@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.model.QueryResult;
+import com.google.common.base.MoreObjects;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,7 @@ import java.util.List;
 public class TranslationPresenter implements TranslationContract.Presenter {
 
     private final AppStorage mAppStorage;
+    private final Settings mSettings;
 
     private final Translator mTranslator;
     private final TranslationContract.View mTranslationView;
@@ -21,8 +23,9 @@ public class TranslationPresenter implements TranslationContract.Presenter {
 
     public TranslationPresenter(@NotNull TranslationContract.View view) {
         mTranslator = Translator.getInstance();
-        this.mTranslationView = view;
+        mTranslationView = view;
         mAppStorage = AppStorage.getInstance();
+        mSettings = Settings.getInstance();
     }
 
     @NotNull
@@ -37,7 +40,9 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         if (Utils.isEmptyOrBlankString(query))
             return null;
 
-        return mTranslator.getCache(query);
+        final Lang langFrom = MoreObjects.firstNonNull(mSettings.getLangFrom(), Lang.AUTO);
+        final Lang langTo = MoreObjects.firstNonNull(mSettings.getLangTo(), Lang.AUTO);
+        return mTranslator.getCache(new CacheKey(langFrom, langTo, query));
     }
 
     @Override
