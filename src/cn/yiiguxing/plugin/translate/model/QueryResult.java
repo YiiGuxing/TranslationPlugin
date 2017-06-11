@@ -30,7 +30,7 @@ public class QueryResult {
         ERROR_MAP.put(110, "无相关服务的有效实例");
         ERROR_MAP.put(111, "账号无效或者账号已欠费 - " + Constants.LINK_SETTINGS);
         ERROR_MAP.put(201, "解密失败");
-        ERROR_MAP.put(202, "签名检验失败");
+        ERROR_MAP.put(202, "签名检验失败 - " + Constants.LINK_SETTINGS);
         ERROR_MAP.put(203, "访问IP地址不在可访问IP列表");
         ERROR_MAP.put(301, "辞典查询失败");
         ERROR_MAP.put(302, "翻译查询失败");
