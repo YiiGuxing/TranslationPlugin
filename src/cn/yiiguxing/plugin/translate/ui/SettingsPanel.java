@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
-import com.google.common.collect.Lists;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -27,7 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * 设置页
@@ -93,7 +93,7 @@ public class SettingsPanel {
         fixFontComboBoxSize(mPrimaryFontComboBox);
         fixFontComboBoxSize(mPhoneticFontComboBox);
 
-        final ArrayList<Lang> languages = Lists.newArrayList(Lang.values());
+        final List<Lang> languages = Arrays.asList(Lang.values());
         mLangFromComboBox = new ComboBox<Lang>(new CollectionComboBoxModel<Lang>(languages));
         mLangToComboBox = new ComboBox<Lang>(new CollectionComboBoxModel<Lang>(languages));
     }
