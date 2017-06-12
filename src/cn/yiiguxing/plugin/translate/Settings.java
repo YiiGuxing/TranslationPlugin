@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
-import com.intellij.ide.passwordSafe.PasswordSafe;
+import cn.yiiguxing.plugin.translate.compat.PasswordSafeCompat;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -136,7 +136,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     @SuppressWarnings("deprecation")
     @NotNull
     public String getAppPrivateKey() {
-        return StringUtil.notNullize(PasswordSafe.getInstance().getPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY));
+        return StringUtil.notNullize(PasswordSafeCompat.getPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY));
     }
 
     /**
@@ -144,7 +144,7 @@ public class Settings implements PersistentStateComponent<Settings> {
      */
     @SuppressWarnings("deprecation")
     public void setAppPrivateKey(@NotNull String appPrivateKey) {
-        PasswordSafe.getInstance().setPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY, appPrivateKey);
+        PasswordSafeCompat.setPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY, appPrivateKey);
     }
 
     /**
