@@ -10,6 +10,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     private String appId;
     private Lang langFrom;
     private Lang langTo;
+    private boolean privateKeyConfigured;
     private boolean overrideFont;
     private String primaryFontFamily;
     private String phoneticFontFamily;
@@ -59,6 +61,7 @@ public class Settings implements PersistentStateComponent<Settings> {
                 "appId='" + appId + '\'' +
                 ", langFrom=" + langFrom +
                 ", langTo=" + langTo +
+                ", privateKeyConfigured=" + privateKeyConfigured +
                 ", overrideFont=" + overrideFont +
                 ", primaryFontFamily='" + primaryFontFamily + '\'' +
                 ", phoneticFontFamily='" + phoneticFontFamily + '\'' +
@@ -130,10 +133,19 @@ public class Settings implements PersistentStateComponent<Settings> {
         this.appId = appId;
     }
 
+    public boolean isPrivateKeyConfigured() {
+        return privateKeyConfigured;
+    }
+
+    public void setPrivateKeyConfigured(boolean privateKeyConfigured) {
+        this.privateKeyConfigured = privateKeyConfigured;
+    }
+
     /**
      * 返回应用密钥.
      */
     @SuppressWarnings("deprecation")
+    @Transient
     @NotNull
     public String getAppPrivateKey() {
         return StringUtil.notNullize(PasswordSafeCompat.getPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY));
@@ -142,8 +154,10 @@ public class Settings implements PersistentStateComponent<Settings> {
     /**
      * 设置应用密钥.
      */
+    @Transient
     @SuppressWarnings("deprecation")
     public void setAppPrivateKey(@NotNull String appPrivateKey) {
+        setPrivateKeyConfigured(!appPrivateKey.isEmpty());
         PasswordSafeCompat.setPassword(Settings.class, YOUDAO_APP_PRIVATE_KEY, appPrivateKey);
     }
 

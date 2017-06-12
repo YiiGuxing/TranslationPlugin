@@ -8,32 +8,30 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.FontComboBox;
-import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.*;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.List;
+import java.awt.event.*;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 设置页
  */
 @SuppressWarnings("Since15")
 public class SettingsPanel {
+
+    private static final String DEFAULT_PASSWORD_TEXT = "************";
+    private static final boolean KEE_PASS_SUPPORT = IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2016_3;
 
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
@@ -62,6 +60,8 @@ public class SettingsPanel {
 
     private Settings mSettings;
     private AppStorage mAppStorage;
+
+    private boolean mPrivateKeyModified;
 
     public JComponent createPanel(@NotNull Settings settings, @NotNull AppStorage appStorage) {
         mSettings = settings;
@@ -169,6 +169,28 @@ public class SettingsPanel {
                 mAppStorage.clearHistories();
             }
         });
+
+        if (!KEE_PASS_SUPPORT) {
+            mAppPrivateKeyField.getDocument().addDocumentListener(new DocumentAdapter() {
+                @Override
+                protected void textChanged(DocumentEvent e) {
+                    mPrivateKeyModified = true;
+                }
+            });
+            mAppPrivateKeyField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (!mPrivateKeyModified && !getAppPrivateKey().isEmpty()) {
+                        setAppPrivateKey("");
+                        mPrivateKeyModified = true;
+                    }
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                }
+            });
+        }
     }
 
     private void previewPrimaryFont(String primary) {
@@ -216,13 +238,19 @@ public class SettingsPanel {
         return -1;
     }
 
+    @NotNull
     private String getAppPrivateKey() {
         return new String(mAppPrivateKeyField.getPassword());
     }
 
+    private void setAppPrivateKey(@NotNull String key) {
+        mAppPrivateKeyField.setText(key.isEmpty() ? null : key);
+    }
+
     public boolean isModified() {
         return (!Utils.isEmptyOrBlankString(mAppIdField.getText())
-                && !Utils.isEmptyOrBlankString(getAppPrivateKey()))
+                && !Utils.isEmptyOrBlankString(getAppPrivateKey())
+                && (KEE_PASS_SUPPORT || mPrivateKeyModified))
                 || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
                 || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
                 || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
@@ -235,6 +263,16 @@ public class SettingsPanel {
     }
 
     public void apply() {
+        mSettings.setAppId(mAppIdField.getText());
+        if (KEE_PASS_SUPPORT) {
+            final String appPrivateKey = getAppPrivateKey();
+            if (!(appPrivateKey.equals(mSettings.getAppPrivateKey()))) {
+                mSettings.setAppPrivateKey(appPrivateKey);
+            }
+        } else if (mPrivateKeyModified) {
+            mSettings.setAppPrivateKey(getAppPrivateKey());
+        }
+
         final int maxHistorySize = getMaxHistorySize();
         if (maxHistorySize >= 0) {
             mAppStorage.setMaxHistorySize(maxHistorySize);
@@ -245,8 +283,6 @@ public class SettingsPanel {
         mSettings.setOverrideFont(mFontCheckBox.isSelected());
         mSettings.setPrimaryFontFamily(mPrimaryFontComboBox.getFontName());
         mSettings.setPhoneticFontFamily(mPhoneticFontComboBox.getFontName());
-        mSettings.setAppId(mAppIdField.getText());
-        mSettings.setAppPrivateKey(getAppPrivateKey());
         mSettings.setAutoSelectionMode(getAutoSelectionMode());
     }
 
@@ -258,8 +294,13 @@ public class SettingsPanel {
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());
         previewPrimaryFont(mSettings.getPrimaryFontFamily());
         previewPhoneticFont(mSettings.getPhoneticFontFamily());
+
         mAppIdField.setText(mSettings.getAppId());
-        mAppPrivateKeyField.setText(mSettings.getAppPrivateKey());
+        if (KEE_PASS_SUPPORT) {
+            setAppPrivateKey(mSettings.getAppPrivateKey());
+        } else {
+            setAppPrivateKey(mSettings.isPrivateKeyConfigured() ? DEFAULT_PASSWORD_TEXT : "");
+        }
 
         mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
         mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
