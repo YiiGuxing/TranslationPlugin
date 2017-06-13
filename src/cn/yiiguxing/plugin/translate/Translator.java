@@ -94,8 +94,8 @@ public final class Translator {
 
         return Constants.YOUDAO_TRANSLATE_URL +
                 "?appKey=" + appId +
-                "&from=" + langFrom +
-                "&to=" + langTo +
+                "&from=" + langFrom.code +
+                "&to=" + langTo.code +
                 "&salt=" + salt +
                 "&sign=" + sign +
                 "&q=" + Utils.urlEncode(query);
