@@ -30,7 +30,7 @@ import java.util.List;
 @SuppressWarnings("Since15")
 public class SettingsPanel {
 
-    private static final String DEFAULT_PASSWORD_TEXT = "************";
+    private static final String DEFAULT_PASSWORD_TEXT = "********************************";
     private static final boolean KEE_PASS_SUPPORT = IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2016_3;
 
     private static final int INDEX_INCLUSIVE = 0;
@@ -300,6 +300,7 @@ public class SettingsPanel {
             setAppPrivateKey(mSettings.getAppPrivateKey());
         } else {
             setAppPrivateKey(mSettings.isPrivateKeyConfigured() ? DEFAULT_PASSWORD_TEXT : "");
+            mPrivateKeyModified = false;
         }
 
         mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
