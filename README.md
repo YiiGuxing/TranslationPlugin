@@ -112,12 +112,9 @@ Actions
 更新日志
 --------
 
-## [v1.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.4)(2017-4-17)
+## [v1.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.5)
 
-- 支持自定义字体，再也不怕小方块了
-- 使用公共API KEY时警告
-- "频繁请求"和"API KEY错误"提示添加跳转至设置页链接以方便设置API KEY
-- 优化历史记录
+- 翻译API升级
 - Bug修复
 
 [完整的更新历史记录](./CHANGELOG.md)

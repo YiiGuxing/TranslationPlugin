@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>1.3.4</version>
+    <version>1.3.5</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
@@ -33,10 +33,7 @@
 
     <change-notes><![CDATA[
       <ul>
-          <li>支持自定义字体，再也不怕小方块了</li>
-          <li>使用公共API KEY时警告</li>
-          <li>"频繁请求"和"API KEY错误"提示添加跳转至设置页链接，以方便设置API KEY</li>
-          <li>优化历史记录</li>
+          <li>翻译API升级</li>
           <li>Bug修复</li>
       </ul>
 
