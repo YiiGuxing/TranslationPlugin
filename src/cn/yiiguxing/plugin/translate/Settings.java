@@ -1,29 +1,39 @@
 package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
+import com.intellij.ide.passwordSafe.PasswordSafe;
+import com.intellij.ide.passwordSafe.PasswordSafeException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Settings
  */
+@SuppressWarnings("WeakerAccess")
 @State(name = "TranslationSettings", storages = @Storage(id = "other", file = "$APP_CONFIG$/translation.xml"))
 public class Settings implements PersistentStateComponent<Settings> {
 
-    private boolean useDefaultKey = true;
-    private String apiKeyName;
-    private String apiKeyValue;
+    private static final Logger LOG = Logger.getInstance("#" + Settings.class.getCanonicalName());
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String YOUDAO_APP_PRIVATE_KEY = "YOUDAO_APP_PRIVATE_KEY";
+
+    private String appId;
+    private boolean privateKeyConfigured;
     private boolean overrideFont;
     private String primaryFontFamily;
     private String phoneticFontFamily;
-    private boolean disableApiKeyNotification;
+    private boolean disableAppKeyNotification;
     @NotNull
     private AutoSelectionMode autoSelectionMode = AutoSelectionMode.INCLUSIVE;
 
@@ -50,13 +60,12 @@ public class Settings implements PersistentStateComponent<Settings> {
     @Override
     public String toString() {
         return "Settings{" +
-                "useDefaultKey=" + useDefaultKey +
-                ", apiKeyName='" + apiKeyName + '\'' +
-                ", apiKeyValue='" + apiKeyValue + '\'' +
+                "appId='" + appId + '\'' +
+                ", privateKeyConfigured=" + privateKeyConfigured +
                 ", overrideFont=" + overrideFont +
                 ", primaryFontFamily='" + primaryFontFamily + '\'' +
                 ", phoneticFontFamily='" + phoneticFontFamily + '\'' +
-                ", disableApiKeyNotification=" + disableApiKeyNotification +
+                ", disableAppKeyNotification=" + disableAppKeyNotification +
                 ", autoSelectionMode=" + autoSelectionMode +
                 '}';
     }
@@ -77,59 +86,68 @@ public class Settings implements PersistentStateComponent<Settings> {
     }
 
     /**
-     * 返回是否是使用默认的API KEY.
+     * 返回应用ID.
      */
-    public boolean isUseDefaultKey() {
-        return useDefaultKey;
+    public String getAppId() {
+        return this.appId;
     }
 
     /**
-     * 设置是否使用默认的API KEY.
+     * 设置应用ID.
      */
-    public void setUseDefaultKey(boolean useDefaultKey) {
-        this.useDefaultKey = useDefaultKey;
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public boolean isPrivateKeyConfigured() {
+        return privateKeyConfigured;
+    }
+
+    public void setPrivateKeyConfigured(boolean privateKeyConfigured) {
+        this.privateKeyConfigured = privateKeyConfigured;
     }
 
     /**
-     * 返回API KEY name.
+     * 返回应用密钥.
      */
-    public String getApiKeyName() {
-        return this.apiKeyName;
+    @SuppressWarnings("deprecation")
+    @Transient
+    @NotNull
+    public String getAppPrivateKey() {
+        String password;
+        try {
+            password = PasswordSafe.getInstance().getPassword(null, Settings.class, YOUDAO_APP_PRIVATE_KEY);
+        } catch (PasswordSafeException e) {
+            LOG.info("Couldn't get password for key [" + YOUDAO_APP_PRIVATE_KEY + "]", e);
+            password = "";
+        }
+
+        return StringUtil.notNullize(password);
     }
 
     /**
-     * 设置API KEY name.
+     * 设置应用密钥.
      */
-    public void setApiKeyName(String apiKeyName) {
-        this.apiKeyName = apiKeyName;
+    @Transient
+    @SuppressWarnings("deprecation")
+    public void setAppPrivateKey(@NotNull String appPrivateKey) {
+        setPrivateKeyConfigured(!appPrivateKey.isEmpty());
+        PasswordSafe.getInstance().storePassword(null, Settings.class, YOUDAO_APP_PRIVATE_KEY, appPrivateKey);
     }
 
     /**
-     * 返回API KEY value.
+     * 返回是否关闭设置APP KEY通知
      */
-    public String getApiKeyValue() {
-        return this.apiKeyValue;
+    public boolean isDisableAppKeyNotification() {
+        return disableAppKeyNotification;
     }
 
     /**
-     * 设置API KEY value.
+     * 设置关闭设置APP KEY通知
      */
-    public void setApiKeyValue(String apiKeyValue) {
-        this.apiKeyValue = apiKeyValue;
-    }
-
-    /**
-     * 返回是否关闭更换API KEY通知
-     */
-    public boolean isDisableApiKeyNotification() {
-        return disableApiKeyNotification;
-    }
-
-    /**
-     * 设置关闭更换API KEY通知
-     */
-    public void setDisableApiKeyNotification(boolean disableApiKeyNotification) {
-        this.disableApiKeyNotification = disableApiKeyNotification;
+    @SuppressWarnings("SameParameterValue")
+    public void setDisableAppKeyNotification(boolean disableAppKeyNotification) {
+        this.disableAppKeyNotification = disableAppKeyNotification;
     }
 
     /**

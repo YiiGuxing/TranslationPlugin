@@ -11,8 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
 /**
@@ -21,15 +19,10 @@ import java.util.concurrent.Future;
 @SuppressWarnings("WeakerAccess")
 public final class Translator {
 
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final String BASIC_URL = "http://fanyi.youdao.com/openapi.do";
-
-    private static final String DEFAULT_API_KEY_NAME = "TranslationPlugin";
-    private static final String DEFAULT_API_KEY_VALUE = "1473510108";
-
     private static final Logger LOGGER = Logger.getInstance("#" + Translator.class.getCanonicalName());
 
-    private final LruCache<String, QueryResult> mCache = new LruCache<String, QueryResult>(200);
+    private final Settings mSettings = Settings.getInstance();
+    private final LruCache<String, QueryResult> mCache = new LruCache<String, QueryResult>(500);
     private Future<?> mCurrentTask;
 
     private Translator() {
@@ -46,9 +39,9 @@ public final class Translator {
      * 获取缓存
      */
     @Nullable
-    public QueryResult getCache(@NotNull String query) {
+    public QueryResult getCache(@NotNull String key) {
         synchronized (mCache) {
-            return mCache.get(query);
+            return mCache.get(key);
         }
     }
 
@@ -81,37 +74,26 @@ public final class Translator {
                 callback.onQuery(query, cache);
             }
         } else {
-            mCurrentTask = ApplicationManager.getApplication().executeOnPooledThread(new QueryRequest(query, callback));
+            mCurrentTask = ApplicationManager
+                    .getApplication()
+                    .executeOnPooledThread(new QueryRequest(query, callback));
         }
     }
 
-    static String getQueryUrl(String query) {
-        String encodedQuery = "";
-        try {
-            encodedQuery = URLEncoder.encode(query, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    private String getQueryUrl(@NotNull String query) {
+        Settings settings = mSettings;
 
-        Settings settings = Settings.getInstance();
+        String appId = settings.getAppId();
+        String privateKey = settings.getAppPrivateKey();
 
-        String apiKeyName;
-        String apiKeyValue;
-        if (settings.isUseDefaultKey()) {
-            apiKeyName = DEFAULT_API_KEY_NAME;
-            apiKeyValue = DEFAULT_API_KEY_VALUE;
-        } else {
-            apiKeyName = settings.getApiKeyName();
-            apiKeyValue = settings.getApiKeyValue();
+        String salt = String.valueOf(System.currentTimeMillis());
+        String sign = Utils.md5(appId + query + salt + privateKey);
 
-            if (Utils.isEmptyOrBlankString(apiKeyName) || Utils.isEmptyOrBlankString(apiKeyValue)) {
-                apiKeyName = DEFAULT_API_KEY_NAME;
-                apiKeyValue = DEFAULT_API_KEY_VALUE;
-            }
-        }
-
-        return BASIC_URL + "?type=data&doctype=json&version=1.1&keyfrom=" + apiKeyName + "&key=" +
-                apiKeyValue + "&q=" + encodedQuery;
+        return Constants.YOUDAO_TRANSLATE_URL +
+                "?appKey=" + appId +
+                "&salt=" + salt +
+                "&sign=" + sign +
+                "&q=" + Utils.urlEncode(query);
     }
 
     private final class QueryRequest implements Runnable {
@@ -119,7 +101,7 @@ public final class Translator {
         private final String mQuery;
         private final Callback mCallback;
 
-        QueryRequest(String query, Callback callback) {
+        QueryRequest(@NotNull String query, Callback callback) {
             mQuery = query;
             mCallback = callback;
         }
@@ -141,18 +123,18 @@ public final class Translator {
                 LOGGER.warn(e);
 
                 result = new QueryResult();
-                result.setErrorCode(QueryResult.ERROR_CODE_FAIL);
+                result.setErrorCode(QueryResult.CODE_ERROR);
                 result.setMessage(e.getMessage());
             } catch (JsonSyntaxException e) {
                 LOGGER.warn(e);
 
                 result = new QueryResult();
-                result.setErrorCode(QueryResult.ERROR_CODE_RESTRICTED);
+                result.setErrorCode(QueryResult.CODE_JSON_SYNTAX_ERROR);
             }
 
             if (result != null) {
                 result.checkError();
-                if (result.getErrorCode() == QueryResult.ERROR_CODE_NONE) {
+                if (result.isSuccessful()) {
                     synchronized (mCache) {
                         mCache.put(query, result);
                     }

@@ -1,9 +1,12 @@
 package cn.yiiguxing.plugin.translate;
 
-import cn.yiiguxing.plugin.translate.model.QueryResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
@@ -21,42 +24,6 @@ public final class Utils {
     private static final int GROUP_EXPLAIN = 3;
 
     private Utils() {
-    }
-
-    /**
-     * 从翻译结果中获取错误信息
-     *
-     * @param result 翻译结果
-     * @return 错误信息
-     */
-    public static String getErrorMessage(QueryResult result) {
-        if (result == null)
-            return "Nothing to show";
-
-        if (result.getErrorCode() == QueryResult.ERROR_CODE_NONE)
-            return null;
-
-        String error;
-        switch (result.getErrorCode()) {
-            case QueryResult.ERROR_CODE_RESTRICTED:
-                error = "请求过于频繁，请尝试<a href=\"" + Constants.HTML_DESCRIPTION_SETTINGS + "\">更换API KEY</a>";
-                break;
-            case QueryResult.ERROR_CODE_INVALID_KEY:
-                error = "无效的API KEY,请<a href=\"" + Constants.HTML_DESCRIPTION_SETTINGS + "\">更换API KEY</a>";
-                break;
-            case QueryResult.ERROR_CODE_QUERY_TOO_LONG:
-                error = "Query too long";
-                break;
-            case QueryResult.ERROR_CODE_UNSUPPORTED_LANG:
-                error = "Unsupported lang";
-                break;
-            case QueryResult.ERROR_CODE_NO_RESULT:
-            default:
-                error = isEmptyOrBlankString(result.getMessage()) ? "Nothing to show" : result.getMessage();
-                break;
-        }
-
-        return error;
     }
 
     /**
@@ -163,6 +130,56 @@ public final class Utils {
         if (obj == null)
             throw new NullPointerException(message);
         return obj;
+    }
+
+    @NotNull
+    public static <T> T notNull(@Nullable T value, @NotNull T defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
+    private static final char HEX_DIGITS[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'A', 'B', 'C', 'D', 'E', 'F'};
+
+    /**
+     * 生成32位MD5摘要
+     *
+     * @param input 输入
+     * @return MD5摘要
+     */
+    @Nullable
+    public static String md5(String input) {
+        if (input == null) {
+            return null;
+        }
+
+        try {
+            MessageDigest mdInst = MessageDigest.getInstance("MD5");
+            mdInst.update(input.getBytes());
+            byte[] md = mdInst.digest();
+            char str[] = new char[md.length * 2];
+            int k = 0;
+            for (byte byte0 : md) {
+                str[k++] = HEX_DIGITS[byte0 >>> 4 & 0xf];
+                str[k++] = HEX_DIGITS[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    public static String urlEncode(String input) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+
+        try {
+            return URLEncoder.encode(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            /* no-op */
+        }
+
+        return input;
     }
 
 }

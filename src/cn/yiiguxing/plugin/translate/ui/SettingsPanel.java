@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.AppStorage;
+import cn.yiiguxing.plugin.translate.Constants;
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.Utils;
 import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
@@ -9,6 +10,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.labels.ActionLink;
@@ -17,14 +19,12 @@ import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 
 /**
  * 设置页
@@ -32,7 +32,7 @@ import java.awt.event.ItemListener;
 @SuppressWarnings("Since15")
 public class SettingsPanel {
 
-    private static final String API_KEY_URL = "http://fanyi.youdao.com/openapi?path=data-mode";
+    private static final String DEFAULT_PASSWORD_TEXT = "********************************";
 
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
@@ -42,11 +42,9 @@ public class SettingsPanel {
     private JPanel mApiKeySettingsPanel;
 
     private JComboBox<String> mSelectionMode;
-    private JTextField mKeyNameField;
-    private JTextField mKeyValueField;
-    private JCheckBox mDefaultApiKey;
+    private JTextField mAppIdField;
+    private JPasswordField mAppPrivateKeyField;
     private LinkLabel mGetApiKeyLink;
-    private JLabel mMessage;
     private JPanel mHistoryPanel;
     private ComboBox mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
@@ -60,6 +58,8 @@ public class SettingsPanel {
 
     private Settings mSettings;
     private AppStorage mAppStorage;
+
+    private boolean mPrivateKeyModified;
 
     public JComponent createPanel(@NotNull Settings settings, @NotNull AppStorage appStorage) {
         mSettings = settings;
@@ -76,7 +76,7 @@ public class SettingsPanel {
         mSelectionSettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("取词模式"));
         mFontPanel.setBorder(IdeBorderFactory.createTitledBorder("字体"));
         mHistoryPanel.setBorder(IdeBorderFactory.createTitledBorder("历史记录"));
-        mApiKeySettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("有道 API KEY"));
+        mApiKeySettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("有道翻译"));
     }
 
     private void setRenderer() {
@@ -94,12 +94,6 @@ public class SettingsPanel {
     }
 
     private void setListeners() {
-        mDefaultApiKey.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                switchKey();
-            }
-        });
         mFontCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -133,6 +127,25 @@ public class SettingsPanel {
                 mAppStorage.clearHistories();
             }
         });
+        mAppPrivateKeyField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(DocumentEvent e) {
+                mPrivateKeyModified = true;
+            }
+        });
+        mAppPrivateKeyField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (!mPrivateKeyModified && !getAppPrivateKey().isEmpty()) {
+                    setAppPrivateKey("");
+                    mPrivateKeyModified = true;
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            }
+        });
     }
 
     private void previewPrimaryFont(String primary) {
@@ -162,43 +175,13 @@ public class SettingsPanel {
         mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
-                BrowserUtil.browse(API_KEY_URL);
+                BrowserUtil.browse(Constants.YOUDAO_AI_URL);
             }
         });
         mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
 
         mPrimaryFontComboBox = new FontComboBox();
         mPhoneticFontComboBox = new FontComboBox(false, true);
-    }
-
-    private void switchKey() {
-        if (mDefaultApiKey.isSelected()) {
-            useDefaultKey();
-        } else {
-            useCustomKey();
-        }
-    }
-
-    private void useDefaultKey() {
-        if (Utils.isEmptyOrBlankString(mKeyNameField.getText())
-                && Utils.isEmptyOrBlankString(mKeyValueField.getText())) {
-            mSettings.setApiKeyName(null);
-            mSettings.setApiKeyValue(null);
-        }
-
-        mKeyNameField.setText("Default");
-        mKeyNameField.setEnabled(false);
-        mKeyValueField.setText("Default");
-        mKeyValueField.setEnabled(false);
-        mMessage.setVisible(true);
-    }
-
-    private void useCustomKey() {
-        mKeyNameField.setText(mSettings.getApiKeyName());
-        mKeyNameField.setEnabled(true);
-        mKeyValueField.setText(mSettings.getApiKeyValue());
-        mKeyValueField.setEnabled(true);
-        mMessage.setVisible(false);
     }
 
     @NotNull
@@ -223,9 +206,18 @@ public class SettingsPanel {
         return -1;
     }
 
+    @NotNull
+    private String getAppPrivateKey() {
+        return new String(mAppPrivateKeyField.getPassword());
+    }
+
+    private void setAppPrivateKey(@NotNull String key) {
+        mAppPrivateKeyField.setText(key.isEmpty() ? null : key);
+    }
+
     public boolean isModified() {
-        return (!Utils.isEmptyOrBlankString(mKeyNameField.getText())
-                && !Utils.isEmptyOrBlankString(mKeyValueField.getText()))
+        return (!Utils.isEmptyOrBlankString(mAppIdField.getText())
+                && !Utils.isEmptyOrBlankString(getAppPrivateKey()) && mPrivateKeyModified)
                 || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
                 || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
                 || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
@@ -236,6 +228,11 @@ public class SettingsPanel {
     }
 
     public void apply() {
+        mSettings.setAppId(mAppIdField.getText());
+        if (mPrivateKeyModified) {
+            mSettings.setAppPrivateKey(getAppPrivateKey());
+        }
+
         final int maxHistorySize = getMaxHistorySize();
         if (maxHistorySize >= 0) {
             mAppStorage.setMaxHistorySize(maxHistorySize);
@@ -244,28 +241,20 @@ public class SettingsPanel {
         mSettings.setOverrideFont(mFontCheckBox.isSelected());
         mSettings.setPrimaryFontFamily(mPrimaryFontComboBox.getFontName());
         mSettings.setPhoneticFontFamily(mPhoneticFontComboBox.getFontName());
-
-        boolean validKey = !Utils.isEmptyOrBlankString(mKeyNameField.getText())
-                && !Utils.isEmptyOrBlankString(mKeyValueField.getText());
-        boolean useDefault = mDefaultApiKey.isSelected();
-        if (!useDefault) {
-            mSettings.setApiKeyName(mKeyNameField.getText());
-            mSettings.setApiKeyValue(mKeyValueField.getText());
-        }
-
-        mSettings.setUseDefaultKey(useDefault || !validKey);
         mSettings.setAutoSelectionMode(getAutoSelectionMode());
     }
 
     public void reset() {
+        mAppIdField.setText(mSettings.getAppId());
+        setAppPrivateKey(mSettings.isPrivateKeyConfigured() ? DEFAULT_PASSWORD_TEXT : "");
+        mPrivateKeyModified = false;
+
         mFontCheckBox.setSelected(mSettings.isOverrideFont());
         mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());
         previewPrimaryFont(mSettings.getPrimaryFontFamily());
         previewPhoneticFont(mSettings.getPhoneticFontFamily());
-
         mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
-        mDefaultApiKey.setSelected(mSettings.isUseDefaultKey());
         mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
                 ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);
     }
