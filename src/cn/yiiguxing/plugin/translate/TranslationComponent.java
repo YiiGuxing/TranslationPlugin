@@ -26,7 +26,7 @@ public class TranslationComponent extends AbstractProjectComponent {
     @Override
     public void projectOpened() {
         if (mSettings.isDisableAppKeyNotification() ||
-                !Utils.isEmptyOrBlankString(mSettings.getAppId()) || mSettings.isPrivateKeyConfigured())
+                (!Utils.isEmptyOrBlankString(mSettings.getAppId()) && mSettings.isPrivateKeyConfigured()))
             return;
 
         NotificationGroup group = new NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON,
