@@ -85,7 +85,7 @@ public class SettingsPanel {
 
         mPrimaryFontComboBox = new FontComboBox();
         if (IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2017_1) {
-            mPhoneticFontComboBox = new FontComboBox(false, true);
+            mPhoneticFontComboBox = new FontComboBox(false);
         } else {
             mPhoneticFontComboBox = new FontComboBox();
         }
