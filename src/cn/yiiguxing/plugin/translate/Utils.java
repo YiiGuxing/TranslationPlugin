@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
@@ -154,7 +155,7 @@ public final class Utils {
 
         try {
             MessageDigest mdInst = MessageDigest.getInstance("MD5");
-            mdInst.update(input.getBytes());
+            mdInst.update(input.getBytes(Charset.forName("UTF-8")));
             byte[] md = mdInst.digest();
             char str[] = new char[md.length * 2];
             int k = 0;
