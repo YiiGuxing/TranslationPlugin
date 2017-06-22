@@ -111,6 +111,8 @@ public final class Translator {
             final String query = mQuery;
             final String url = getQueryUrl(query);
 
+            System.out.println("query url: " + url);
+
             QueryResult result = null;
             try {
                 String json = HttpRequests.request(url).readString(null);
