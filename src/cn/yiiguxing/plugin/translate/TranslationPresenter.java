@@ -13,6 +13,7 @@ import java.util.List;
 public class TranslationPresenter implements TranslationContract.Presenter {
 
     private final AppStorage mAppStorage;
+    private final Settings mSettings;
 
     private final Translator mTranslator;
     private final TranslationContract.View mTranslationView;
@@ -21,8 +22,9 @@ public class TranslationPresenter implements TranslationContract.Presenter {
 
     public TranslationPresenter(@NotNull TranslationContract.View view) {
         mTranslator = Translator.getInstance();
-        this.mTranslationView = view;
+        mTranslationView = view;
         mAppStorage = AppStorage.getInstance();
+        mSettings = Settings.getInstance();
     }
 
     @NotNull
@@ -37,7 +39,9 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         if (Utils.isEmptyOrBlankString(query))
             return null;
 
-        return mTranslator.getCache(query);
+        final Lang langFrom = Utils.notNull(mSettings.getLangFrom(), Lang.AUTO);
+        final Lang langTo = Utils.notNull(mSettings.getLangTo(), Lang.AUTO);
+        return mTranslator.getCache(new CacheKey(langFrom, langTo, query));
     }
 
     @Override
@@ -73,11 +77,11 @@ public class TranslationPresenter implements TranslationContract.Presenter {
             return;
 
         mCurrentQuery = null;
-        String errorMessage = Utils.getErrorMessage(result);
-        if (errorMessage != null) {
-            mTranslationView.showError(query, errorMessage);
-        } else {
+        if (result.isSuccessful()) {
             mTranslationView.showResult(query, result);
+        } else {
+            String msg = result.getMessage();
+            mTranslationView.showError(query, Utils.isEmptyOrBlankString(msg) ? "Nothing to show" : msg);
         }
     }
 }

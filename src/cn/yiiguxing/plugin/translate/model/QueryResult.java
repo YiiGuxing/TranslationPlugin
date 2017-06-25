@@ -1,19 +1,41 @@
 package cn.yiiguxing.plugin.translate.model;
 
+import cn.yiiguxing.plugin.translate.Constants;
+import cn.yiiguxing.plugin.translate.Utils;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("WeakerAccess")
 public class QueryResult {
 
-    public static final int ERROR_CODE_NONE = 0;
-    public static final int ERROR_CODE_QUERY_TOO_LONG = 20;
-    public static final int ERROR_CODE_FAIL = 30;
-    public static final int ERROR_CODE_UNSUPPORTED_LANG = 40;
-    public static final int ERROR_CODE_INVALID_KEY = 50;
-    public static final int ERROR_CODE_NO_RESULT = 60;
-    public static final int ERROR_CODE_RESTRICTED = -10;
+    public static final int CODE_ERROR = -1;
+    public static final int CODE_JSON_SYNTAX_ERROR = -2;
+
+    private static final Map<Integer, String> ERROR_MAP = new HashMap<Integer, String>();
+
+    static {
+        ERROR_MAP.put(101, "缺少必填的参数");
+        ERROR_MAP.put(102, "不支持的语言类型");
+        ERROR_MAP.put(103, "翻译文本过长");
+        ERROR_MAP.put(104, "不支持的API类型");
+        ERROR_MAP.put(105, "不支持的签名类型");
+        ERROR_MAP.put(106, "不支持的响应类型");
+        ERROR_MAP.put(107, "不支持的传输加密类型");
+        ERROR_MAP.put(108, "AppKey无效 - " + Constants.LINK_SETTINGS);
+        ERROR_MAP.put(109, "BatchLog格式不正确");
+        ERROR_MAP.put(110, "无相关服务的有效实例");
+        ERROR_MAP.put(111, "账号无效或者账号已欠费 - " + Constants.LINK_SETTINGS);
+        ERROR_MAP.put(201, "解密失败");
+        ERROR_MAP.put(202, "签名检验失败 - " + Constants.LINK_SETTINGS);
+        ERROR_MAP.put(203, "访问IP地址不在可访问IP列表");
+        ERROR_MAP.put(301, "辞典查询失败");
+        ERROR_MAP.put(302, "翻译查询失败");
+        ERROR_MAP.put(303, "服务器异常");
+        ERROR_MAP.put(401, "账户已经欠费");
+    }
 
     @SerializedName("query")
     private String query;
@@ -85,9 +107,18 @@ public class QueryResult {
     }
 
     public void checkError() {
-        if (errorCode == ERROR_CODE_NONE && (translation == null || translation.length == 0) &&
+        if (isSuccessful() && (translation == null || translation.length == 0) &&
                 (basicExplain == null || basicExplain.getExplains() == null || basicExplain.getExplains().length == 0))
-            errorCode = ERROR_CODE_FAIL;
+            errorCode = 302;
+
+        if (!isSuccessful() && Utils.isEmptyOrBlankString(message)) {
+            String msg = ERROR_MAP.get(errorCode);
+            message = Utils.notNull(msg, String.format("未知错误:[%d]", errorCode));
+        }
+    }
+
+    public boolean isSuccessful() {
+        return errorCode == 0;
     }
 
     @Override
@@ -128,6 +159,10 @@ public class QueryResult {
                 ", basicExplain=" + basicExplain +
                 ", webExplains=" + Arrays.toString(webExplains) +
                 '}';
+    }
+
+    public static String getErrorMessage(int errorCode) {
+        return ERROR_MAP.get(errorCode);
     }
 
 }

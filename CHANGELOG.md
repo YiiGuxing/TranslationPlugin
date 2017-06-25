@@ -1,5 +1,10 @@
 # Change Log
 
+## [v1.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.5)(2017-06-25)
+
+- 翻译API升级
+- Bug修复
+
 ## [v1.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.4)(2017-4-17)
 
 - 支持自定义字体，再也不怕小方块了

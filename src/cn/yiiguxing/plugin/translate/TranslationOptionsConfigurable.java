@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate;
 
 import cn.yiiguxing.plugin.translate.ui.SettingsPanel;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -17,7 +16,7 @@ import javax.swing.*;
 /**
  * 选项配置
  */
-public class TranslationOptionsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Disposable {
+public class TranslationOptionsConfigurable implements SearchableConfigurable, Disposable {
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
