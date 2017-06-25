@@ -63,9 +63,20 @@
     </div>
     <div class="column">
         <h2 class="column_title">使用</h2>
-        <h3 class="column_item_title">翻译对话框</h3>
-        <p class="column_tip">点击工具栏上的 <img src="images/icon.png"> 图标按钮或者使用默认
-            快捷键 Alt + 0 即可打开翻译功能对话框。见 <a href="#actions">Actions</a>.</p>
+        <h3 class="column_item_title">申请有道智云翻译服务</h3>
+        <div class="column_tip">
+            <ul>
+                <li>注册<a href="http://ai.youdao.com" target="_blank">有道智云</a>帐号并登录到控制台页面</li>
+                <li>创建一个翻译实例：控制台 > 自然语言翻译 > 翻译实例 > 创建翻译实例</li>
+                <li>创建一个应用并绑定翻译服务：控制台 > 应用管理 > 我的应用 > 创建应用 > 绑定服务</li>
+                <li>在插件中绑定应用——将上步骤的<strong>应用</strong>和<strong>应用密钥</strong>填写到插件设置页中相应的位置：Preferences(Settings) >
+                    [Other
+                    Settings] > Translation > 有道翻译
+                </li>
+            </ul>
+
+            <font color="red">注：请注意保管好你的应用密钥，防止其泄漏。如帐号欠费，将无法使用。(未欠费的前提下每天有10万字符的免费翻译量)</font>
+        </div>
 
         <h3 class="column_item_title">翻译编辑器中的文本</h3>
         <p class="column_tip">在编辑器中用鼠标指针指向需要翻译的单词，或者选择需要翻译的文本，点击鼠标右键弹出操作菜单，然后点击
@@ -78,28 +89,6 @@
             <a href="#actions">Action</a> 上点击鼠标右键，然后点击 "add Keyboard Shortcut..." 设置新的快捷键。
             另外，按 ESC 键可关闭气泡和翻译对话框。</p>
         <div class="column_img"><img width="595" height="215" src="images/keymap.png"></div>
-
-        <h3 class="column_item_title">设置有道 API KEY</h3>
-        <p class="column_tip">在<a href="#settings">设置页</a>（Preferences(Settings) > Other Settings > Translation）
-            上可以设置有道的 API KEY, 使用自己的KEY.</p>
-        <p class="column_tip">
-            由于有道的API在查询请求数量上存在限制，如果在1小时内查询请求次数达到一定数量后将会暂时禁止查询一段时间（大概1小时）。
-            如果很多人同时使用同一个KEY，可能会很容易就达到了限制条件，这就可以通过使用自己的KEY来避免（一人一个KEY基本足够用了）。</p>
-
-        <p class="column_tip" style="font-weight: bold">如何获取有道API KEY？</p>
-        <p class="column_tip">点击设置页上的<span style="font-weight: bold">“获取有道API KEY”</span>链接，或者
-            <a href="http://fanyi.youdao.com/openapi?path=data-mode" target="_blank">点击这里</a>进入申请页面。</p>
-
-        <h3 id="http_proxy" class="column_item_title">网络代理</h3>
-        <div class="column_tip">
-            <p>插件支持 HTTP 代理，可到以下位置设置 HTTP 代理：</p>
-            <div class="column_item_info_code">
-                Preferences(Settings) > Appearance & Behavior > System Settings > HTTP Proxy.
-            </div>
-        </div>
-
-        <h3 id="settings" class="column_item_title">Settings(Preferences)</h3>
-        <div class="column_img"><img width="869" height="593" src="images/settings.png"></div>
     </div>
 
     <div class="column">
