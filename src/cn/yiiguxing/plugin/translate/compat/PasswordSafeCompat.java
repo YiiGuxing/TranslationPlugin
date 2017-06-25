@@ -17,7 +17,7 @@ public final class PasswordSafeCompat {
 
     @SuppressWarnings({"deprecation", "SpellCheckingInspection"})
     public static void setPassword(@NotNull Class<?> requestor, @NotNull String accountName, @Nullable String value) {
-        if (IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2016_2) {
+        if (IdeaCompat.BUILD_NUMBER > IdeaCompat.Version.IDEA2016_2) {
             PasswordSafe.getInstance().setPassword(requestor, accountName, value);
         } else {
             PasswordSafe.getInstance().storePassword(null, requestor, accountName, value);
@@ -27,7 +27,7 @@ public final class PasswordSafeCompat {
     @SuppressWarnings({"deprecation", "SpellCheckingInspection"})
     @Nullable
     public static String getPassword(@NotNull Class<?> requestor, @NotNull String accountName) {
-        if (IdeaCompat.BUILD_NUMBER >= IdeaCompat.Version.IDEA2016_2) {
+        if (IdeaCompat.BUILD_NUMBER > IdeaCompat.Version.IDEA2016_2) {
             return PasswordSafe.getInstance().getPassword(requestor, accountName);
         } else {
             String password;
