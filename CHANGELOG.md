@@ -1,5 +1,9 @@
 # Change Log
 
+## [v1.3.6](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.6)(2017-07-05)
+
+- Bug修复
+
 ## [v1.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.5)(2017-06-25)
 
 - 翻译API升级
