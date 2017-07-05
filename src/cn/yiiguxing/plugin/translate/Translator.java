@@ -120,7 +120,7 @@ public final class Translator {
             final String query = mQuery;
             final String url = getQueryUrl(mLangFrom, mLangTo, query);
 
-            System.out.println("query url: " + url);
+            LOGGER.info("query url: " + url);
 
             QueryResult result = null;
             try {
