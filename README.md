@@ -49,7 +49,7 @@ TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains 
    - 创建一个应用并绑定翻译服务：<kbd>控制台</kbd> > <kbd>应用管理</kbd> > <kbd>我的应用</kbd> > <kbd>创建应用</kbd> > <kbd>绑定服务</kbd>
    - 在插件中绑定应用——将上步骤的**应用ID**和**应用密钥**填写到插件设置页中相应的位置：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>有道翻译</kbd>
    
-   注：请注意保管好你的**应用密钥**，防止其泄漏。如帐号欠费，将无法使用。(未欠费的前提下每天有10万字符的免费翻译量)
+   注：请注意保管好你的**应用密钥**，防止其泄漏。如帐号欠费，将无法使用。
 
 2. **翻译编辑器中的文本:**
 
@@ -97,9 +97,8 @@ Actions
 更新日志
 --------
 
-## [v1.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.5) (2017-06-25)
+## [v1.3.6](https://github.com/YiiGuxing/TranslationPlugin/tree/v1.3.6) (2017-07-05)
 
-- 翻译API升级
 - Bug修复
 
 [完整的更新历史记录](./CHANGELOG.md)

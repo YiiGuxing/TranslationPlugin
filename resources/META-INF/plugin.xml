@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>1.3.5</version>
+    <version>1.3.6</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
@@ -33,8 +33,7 @@
 
     <change-notes><![CDATA[
       <ul>
-          <li>翻译API升级</li>
-          <li>Bug修复</li>
+          <li>Bugfix update</li>
       </ul>
 
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
