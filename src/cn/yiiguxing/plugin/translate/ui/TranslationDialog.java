@@ -237,7 +237,6 @@ public class TranslationDialog extends DialogWrapper implements
                 onQueryButtonClick();
             }
         });
-        getRootPane().setDefaultButton(mQueryBtn);
 
         initQueryComboBox();
         setFont(Settings.getInstance());
