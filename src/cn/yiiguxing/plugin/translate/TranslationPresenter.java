@@ -58,7 +58,7 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         final Reference<TranslationPresenter> presenterRef = new WeakReference<TranslationPresenter>(this);
         mTranslator.query(query, new Translator.Callback() {
             @Override
-            public void onQuery(final String query, final QueryResult result) {
+            public void onQuery(@Nullable final String query, @Nullable final QueryResult result) {
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -72,15 +72,15 @@ public class TranslationPresenter implements TranslationContract.Presenter {
         });
     }
 
-    private void onPostResult(String query, QueryResult result) {
+    private void onPostResult(@Nullable String query, @Nullable QueryResult result) {
         if (Utils.isEmptyOrBlankString(query) || !query.equals(mCurrentQuery))
             return;
 
         mCurrentQuery = null;
-        if (result.isSuccessful()) {
+        if (result != null && result.isSuccessful()) {
             mTranslationView.showResult(query, result);
         } else {
-            String msg = result.getMessage();
+            String msg = result != null ? result.getMessage() : "未知错误";
             mTranslationView.showError(query, Utils.isEmptyOrBlankString(msg) ? "Nothing to show" : msg);
         }
     }
