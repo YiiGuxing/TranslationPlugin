@@ -10,7 +10,6 @@ import com.intellij.util.io.HttpRequests;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.concurrent.Future;
 
 /**
@@ -61,7 +60,7 @@ public final class Translator {
         }
 
         if (mCurrentTask != null) {
-            mCurrentTask.cancel(true);
+            mCurrentTask.cancel(false);
             mCurrentTask = null;
         }
 
@@ -118,37 +117,40 @@ public final class Translator {
         @Override
         public void run() {
             final String query = mQuery;
-            final String url = getQueryUrl(mLangFrom, mLangTo, query);
-
-            LOGGER.info("query url: " + url);
 
             QueryResult result = null;
             try {
+                final String url = getQueryUrl(mLangFrom, mLangTo, query);
+                LOGGER.info("query url: " + url);
+
                 String json = HttpRequests.request(url).readString(null);
                 LOGGER.info(json);
 
                 if (!Utils.isEmptyOrBlankString(json)) {
                     result = new Gson().fromJson(json, QueryResult.class);
                 }
-            } catch (IOException e) {
-                LOGGER.warn(e);
-
-                result = new QueryResult();
-                result.setErrorCode(QueryResult.CODE_ERROR);
-                result.setMessage(e.getMessage());
             } catch (JsonSyntaxException e) {
                 LOGGER.warn(e);
 
                 result = new QueryResult();
                 result.setErrorCode(QueryResult.CODE_JSON_SYNTAX_ERROR);
+            } catch (Exception e) {
+                LOGGER.warn(e);
+
+                result = new QueryResult();
+                result.setErrorCode(QueryResult.CODE_ERROR);
+                result.setMessage(e.getMessage());
             }
 
-            if (result != null) {
-                result.checkError();
-                if (result.isSuccessful()) {
-                    synchronized (mCache) {
-                        mCache.put(new CacheKey(mLangFrom, mLangTo, query), result);
-                    }
+            if (result == null) {
+                result = new QueryResult();
+                result.setErrorCode(QueryResult.CODE_ERROR);
+            }
+
+            result.checkError();
+            if (result.isSuccessful()) {
+                synchronized (mCache) {
+                    mCache.put(new CacheKey(mLangFrom, mLangTo, query), result);
                 }
             }
 
