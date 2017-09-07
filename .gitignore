@@ -1,5 +1,4 @@
-.idea/*
-!.idea/compiler.xml
-!/.idea/codeInsightSettings.xml
-out/
-/*.zip
+.idea/
+.gradle/
+build/
+*.iml
