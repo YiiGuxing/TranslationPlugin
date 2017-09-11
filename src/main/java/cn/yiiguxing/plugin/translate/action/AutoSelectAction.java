@@ -40,7 +40,6 @@ abstract class AutoSelectAction extends AnAction {
                             @Nullable SelectWordUtil.CharCondition isWordPartCondition,
                             boolean checkSelection) {
         super(text, description, icon);
-        setEnabledInModalContext(true);
         this.mWordPartCondition = isWordPartCondition != null
                 ? isWordPartCondition : SelectWordUtilCompat.DEFAULT_CONDITION;
         this.mCheckSelection = checkSelection;

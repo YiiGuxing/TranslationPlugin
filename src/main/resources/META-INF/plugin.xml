@@ -66,36 +66,36 @@
     </project-components>
 
     <actions>
-        <action id="ShowTranslationDialogAction"
+        <action id="$ShowTranslationDialogAction"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
                 icon="/icons/translate.png"
                 description="打开翻译对话框">
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt T"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control meta O"/>
             <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
         </action>
-        <action id="EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
+        <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
                 text="Translate"
                 icon="/icons/translate.png"
                 description="翻译">
             <keyboard-shortcut keymap="$default" first-keystroke="control meta T"/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
-        <action id="InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
-                text="Translate(Inclusive)" description="翻译（自动以最大范围取最近的所有词，忽略手动选择的文本）">
-        </action>
-        <action id="ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
-                text="Translate(Exclusive)" description="翻译（自动取最近的单个词，忽略手动选择的文本）">
-        </action>
+        <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
+                text="Translate(Inclusive)" description="翻译（自动以最大范围取最近的所有词，忽略手动选择的文本）"/>
+        <action id="$ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
+                text="Translate(Exclusive)" description="翻译（自动取最近的单个词，忽略手动选择的文本）"/>
         <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                 text="Translate And Replace..." description="翻译并替换">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorTranslateAction"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control shift T"/>
         </action>
+        <action id="$TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
+                text="Translate Quick Document" description="翻译速文档中选中的文本"
+                use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TranslateTextComponent" class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
-                text="Translate Text Component" description="翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本">
-            <keyboard-shortcut keymap="$default" first-keystroke="control meta T"/>
-        </action>
+                text="Translate Text Component" description="翻译一些文本组件（如提示气泡、输入框……）中选中的文本"
+                use-shortcut-of="$EditorTranslateAction"/>
     </actions>
 
 </idea-plugin>
