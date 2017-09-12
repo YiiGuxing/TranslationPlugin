@@ -1,5 +1,5 @@
 /*
- * Editors
+ * 单词选择工具
  * 
  * Created by Yii.Guxing on 2017/9/11
  */
@@ -17,21 +17,16 @@ typealias CharCondition = SelectWordUtil.CharCondition
 typealias SelectionMode = AutoSelectionMode
 
 /**
- * 单词选择工具
+ * 默认条件
  */
-object SelectWord {
-    /**
-     * 默认条件
-     */
-    val DEFAULT_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
-    /**
-     * 汉字条件
-     */
-    val HANZI_CONDITION: CharCondition = CharCondition { it in '\u4E00'..'\u9FBF' }
-}
+val DEFAULT_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
+/**
+ * 汉字条件
+ */
+val HANZI_CONDITION: CharCondition = CharCondition { it in '\u4E00'..'\u9FBF' }
 
-private object TextRangeComparator : Comparator<TextRange> {
-    override fun compare(o1: TextRange, o2: TextRange) = if (o2.contains(o1)) -1 else 1
+private val textRangeComparator = Comparator<TextRange> { tr1, tr2 ->
+    if (tr2.contains(tr1)) -1 else 1
 }
 
 /**
@@ -41,7 +36,7 @@ private object TextRangeComparator : Comparator<TextRange> {
  * @param isWordPartCondition 选择条件
  */
 fun Editor.getSelectionFromCurrentCaret(selectionMode: SelectionMode = SelectionMode.INCLUSIVE,
-                                        isWordPartCondition: CharCondition = SelectWord.DEFAULT_CONDITION): TextRange? {
+                                        isWordPartCondition: CharCondition = DEFAULT_CONDITION): TextRange? {
     val ranges = mutableListOf<TextRange>()
     val isExclusive = selectionMode == SelectionMode.EXCLUSIVE
 
@@ -50,6 +45,6 @@ fun Editor.getSelectionFromCurrentCaret(selectionMode: SelectionMode = Selection
     return when {
         ranges.isEmpty() -> null
         isExclusive      -> ranges[0]
-        else             -> ranges.maxWith(TextRangeComparator)
+        else             -> ranges.maxWith(textRangeComparator)
     }
 }
