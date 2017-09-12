@@ -21,13 +21,13 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
     }
 
     override fun update(e: AnActionEvent) {
-        val selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT).splitWord()
+        val selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
         e.presentation.isEnabled = !selected.isNullOrBlank()
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
-                .splitWord()
+                ?.splitWord()
                 ?.takeIf { it.isNotBlank() }
                 ?.let {
                     hideDocInfoHint(e.project)
@@ -35,8 +35,8 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
                 }
     }
 
-    companion object {
-        private fun hideDocInfoHint(project: Project?) =
+    private companion object {
+        fun hideDocInfoHint(project: Project?) =
                 project?.let { DocumentationManager.getInstance(it).docInfoHint }?.cancel()
     }
 }
