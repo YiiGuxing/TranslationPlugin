@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.*;
-import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import cn.yiiguxing.plugin.translate.compat.IdeaCompat;
+import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -217,11 +217,11 @@ public class SettingsPanel {
     }
 
     @NotNull
-    private AutoSelectionMode getAutoSelectionMode() {
+    private SelectionMode getAutoSelectionMode() {
         if (mSelectionMode.getSelectedIndex() == INDEX_INCLUSIVE) {
-            return AutoSelectionMode.INCLUSIVE;
+            return SelectionMode.INCLUSIVE;
         } else {
-            return AutoSelectionMode.EXCLUSIVE;
+            return SelectionMode.EXCLUSIVE;
         }
     }
 
@@ -304,7 +304,7 @@ public class SettingsPanel {
         }
 
         mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
-        mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == AutoSelectionMode.INCLUSIVE
+        mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == SelectionMode.INCLUSIVE
                 ? INDEX_INCLUSIVE : INDEX_EXCLUSIVE);
     }
 }

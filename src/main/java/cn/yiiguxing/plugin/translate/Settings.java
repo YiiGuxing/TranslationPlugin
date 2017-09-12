@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate;
 
-import cn.yiiguxing.plugin.translate.action.AutoSelectionMode;
 import cn.yiiguxing.plugin.translate.compat.PasswordSafeCompat;
+import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -33,7 +33,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     private String phoneticFontFamily;
     private boolean disableAppKeyNotification;
     @NotNull
-    private AutoSelectionMode autoSelectionMode = AutoSelectionMode.INCLUSIVE;
+    private SelectionMode autoSelectionMode = SelectionMode.INCLUSIVE;
 
     /**
      * Get the instance of this service.
@@ -108,14 +108,14 @@ public class Settings implements PersistentStateComponent<Settings> {
      * 返回自动取词模式
      */
     @NotNull
-    public AutoSelectionMode getAutoSelectionMode() {
+    public SelectionMode getAutoSelectionMode() {
         return autoSelectionMode;
     }
 
     /**
      * 设置自动取词模式
      */
-    public void setAutoSelectionMode(@NotNull AutoSelectionMode autoSelectionMode) {
+    public void setAutoSelectionMode(@NotNull SelectionMode autoSelectionMode) {
         this.autoSelectionMode = autoSelectionMode;
     }
 

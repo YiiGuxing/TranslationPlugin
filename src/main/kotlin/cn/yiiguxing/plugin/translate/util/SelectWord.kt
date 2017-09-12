@@ -7,14 +7,12 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import cn.yiiguxing.plugin.translate.action.AutoSelectionMode
 import com.intellij.codeInsight.editorActions.SelectWordUtil
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
 
 
 typealias CharCondition = SelectWordUtil.CharCondition
-typealias SelectionMode = AutoSelectionMode
 
 /**
  * 默认条件
@@ -27,6 +25,20 @@ val HANZI_CONDITION: CharCondition = CharCondition { it in '\u4E00'..'\u9FBF' }
 
 private val textRangeComparator = Comparator<TextRange> { tr1, tr2 ->
     if (tr2.contains(tr1)) -1 else 1
+}
+
+/**
+ * 取词模式
+ */
+enum class SelectionMode {
+    /**
+     * 取最近的单个词
+     */
+    EXCLUSIVE,
+    /**
+     * 以最大范围取最近的所有词
+     */
+    INCLUSIVE
 }
 
 /**
