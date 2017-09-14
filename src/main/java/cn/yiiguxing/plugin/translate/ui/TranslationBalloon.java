@@ -25,7 +25,6 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Alarm;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,9 +35,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,12 +58,7 @@ public class TranslationBalloon implements TranslationContract.View {
     private boolean mInterceptDispose;
     private boolean mDisposed;
     @NotNull
-    private final Disposable mDisposable = new Disposable() {
-        @Override
-        public void dispose() {
-            onDispose();
-        }
-    };
+    private final Disposable mDisposable = this::onDispose;
 
     @NotNull
     private final TranslationContract.Presenter mTranslationPresenter;
@@ -84,7 +75,7 @@ public class TranslationBalloon implements TranslationContract.View {
 
         updateCaretPosition();
 
-        mContentPanel = new JBPanel<JBPanel>();
+        mContentPanel = new JBPanel<>();
         mLayout = new GroupLayout(mContentPanel);
         mContentPanel.setOpaque(false);
         mContentPanel.setLayout(mLayout);
@@ -164,16 +155,13 @@ public class TranslationBalloon implements TranslationContract.View {
         if (mProject != null) {
             Disposer.register(mProject, balloon);
         }
-        Disposer.register(balloon, new Disposable() {
-            @Override
-            public void dispose() {
-                if (mDisposed || (intercept && mInterceptDispose)) {
-                    return;
-                }
-
-                Disposer.dispose(mDisposable);
-                mInterceptDispose = false;
+        Disposer.register(balloon, () -> {
+            if (mDisposed || (intercept && mInterceptDispose)) {
+                return;
             }
+
+            Disposer.dispose(mDisposable);
+            mInterceptDispose = false;
         });
     }
 
@@ -224,7 +212,7 @@ public class TranslationBalloon implements TranslationContract.View {
             return;
         }
 
-        final TranslationDialog translationDialog = TranslationUiManager.getInstance().getCurrentShowingDialog();
+        final TranslationDialog translationDialog = TranslationManager.Companion.getInstance().getTranslationDialog();
         if (translationDialog != null) {
             translationDialog.query(query);
         }
@@ -244,12 +232,7 @@ public class TranslationBalloon implements TranslationContract.View {
         resultText.setBackground(UIManager.getColor("Panel.background"));
         setFont(resultText);
 
-        Styles.insertStylishResultText(resultText, result, new Styles.OnTextClickListener() {
-            @Override
-            public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
-                showOnTranslationDialog(text);
-            }
-        });
+        Styles.insertStylishResultText(resultText, result, (textPane, text) -> showOnTranslationDialog(text));
         resultText.setCaretPosition(0);
 
         JBScrollPane scrollPane = new JBScrollPane(resultText);
@@ -291,30 +274,24 @@ public class TranslationBalloon implements TranslationContract.View {
 
     @SuppressWarnings("SpellCheckingInspection")
     private void revalidateBalloon(final BalloonImpl balloon) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (!balloon.isDisposed()) {
-                    balloon.revalidate();
-                }
+        ApplicationManager.getApplication().invokeLater(() -> {
+            if (!balloon.isDisposed()) {
+                balloon.revalidate();
             }
         }, ModalityState.any());
 
         final Alarm alarm = new Alarm(mDisposable);
-        alarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
-                if (!balloon.isDisposed()) {
-                    balloon.revalidate();
-                }
-                alarm.dispose();
+        alarm.addRequest(() -> {
+            if (!balloon.isDisposed()) {
+                balloon.revalidate();
             }
+            alarm.dispose();
         }, 50, ModalityState.any());
     }
 
     private void showOnTranslationDialog(@Nullable String text) {
         hide();
-        TranslationDialog dialog = TranslationUiManager.getInstance().showTranslationDialog(mEditor.getProject());
+        TranslationDialog dialog = TranslationManager.Companion.getInstance().showDialog(mEditor.getProject());
         if (!Utils.isEmptyOrBlankString(text)) {
             dialog.query(text);
         }
@@ -324,20 +301,12 @@ public class TranslationBalloon implements TranslationContract.View {
         final JBPopupMenu menu = new JBPopupMenu();
 
         final JBMenuItem copy = new JBMenuItem("Copy", Icons.Copy);
-        copy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textPane.copy();
-            }
-        });
+        copy.addActionListener(e -> textPane.copy());
 
         final JBMenuItem query = new JBMenuItem("Query", Icons.Translate);
-        query.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedText = textPane.getSelectedText();
-                showOnTranslationDialog(selectedText);
-            }
+        query.addActionListener(e -> {
+            String selectedText = textPane.getSelectedText();
+            showOnTranslationDialog(selectedText);
         });
 
         menu.add(copy);
@@ -362,12 +331,9 @@ public class TranslationBalloon implements TranslationContract.View {
             @NotNull
             public List<BalloonImpl.ActionButton> createActions() {
                 myPinButton = balloon.new ActionButton(myIcon, myIcon, null,
-                        new Consumer<MouseEvent>() {
-                            @Override
-                            public void consume(MouseEvent mouseEvent) {
-                                if (mouseEvent.getClickCount() == 1) {
-                                    showOnTranslationDialog(query);
-                                }
+                        mouseEvent -> {
+                            if (mouseEvent.getClickCount() == 1) {
+                                showOnTranslationDialog(query);
                             }
                         });
 

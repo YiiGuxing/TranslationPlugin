@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.TranslationUiManager
+import cn.yiiguxing.plugin.translate.TranslationManager
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.splitWord
 import com.intellij.codeInsight.highlighting.HighlightManager
@@ -41,11 +41,10 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             }
 
             val caretRangeMarker = createCaretRangeMarker(editor, selectionRange)
-            val translationBalloon = TranslationUiManager.getInstance()
-                    .showTranslationBalloon(editor, caretRangeMarker, queryText)
+            val balloon = TranslationManager.instance.showBalloon(editor, caretRangeMarker, queryText)
 
             highlighters?.takeIf { !it.isEmpty() }?.let {
-                Disposer.register(translationBalloon.disposable, Disposable {
+                Disposer.register(balloon.disposable, Disposable {
                     for (highlighter in it) {
                         highlighter.dispose()
                     }

@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.TranslationUiManager
+import cn.yiiguxing.plugin.translate.TranslationManager
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.splitWord
 import com.intellij.openapi.actionSystem.DataContext
@@ -36,11 +36,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
 
             text?.splitWord()
                     ?.takeIf { it.isNotBlank() }
-                    ?.let { queryText ->
-                        TranslationUiManager.getInstance()
-                                .showTranslationDialog(editor.project)
-                                .query(queryText)
-                    }
+                    ?.let(TranslationManager.instance.showDialog(editor.project)::query)
         }
 
         public override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =

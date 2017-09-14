@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.TranslationUiManager
+import cn.yiiguxing.plugin.translate.TranslationManager
 import cn.yiiguxing.plugin.translate.util.splitWord
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
@@ -31,7 +31,7 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
                 ?.takeIf { it.isNotBlank() }
                 ?.let {
                     hideDocInfoHint(e.project)
-                    TranslationUiManager.getInstance().showTranslationDialog(e.project).query(it)
+                    TranslationManager.instance.showDialog(e.project).query(it)
                 }
     }
 
