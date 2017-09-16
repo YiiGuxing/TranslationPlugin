@@ -1,9 +1,9 @@
-package cn.yiiguxing.plugin.translate;
+package cn.yiiguxing.plugin.translate
 
 /**
  * 语言
  */
-public enum Lang {
+enum class Lang(val langName: String, val code: String) {
     AUTO("自动检测", "auto"),
     CHINESE("中文", "zh-CHS"),
     ENGLISH("英文", "EN"),
@@ -30,15 +30,5 @@ public enum Lang {
     THAI("泰文", "th"),
     TURKISH("土耳其文", "tr"),
     GREEK("希腊文", "el"),
-    HUNGARY("匈牙利文", "hu");
-
-
-    public final String langName;
-    public final String code;
-
-    Lang(String langName, String code) {
-        this.langName = langName;
-        this.code = code;
-    }
-
+    HUNGARY("匈牙利文", "hu")
 }

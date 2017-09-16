@@ -86,7 +86,7 @@ public final class Translator {
     private String getQueryUrl(@NotNull Lang langFrom, @NotNull Lang langTo, @NotNull String query) {
         Settings settings = mSettings;
 
-        String appId = settings.getAppId() == null ? "" : settings.getAppId().trim();
+        String appId = settings.getAppId();
         String privateKey = settings.getAppPrivateKey();
 
         String salt = String.valueOf(System.currentTimeMillis());
@@ -94,8 +94,8 @@ public final class Translator {
 
         return Constants.YOUDAO_TRANSLATE_URL +
                 "?appKey=" + Utils.urlEncode(appId) +
-                "&from=" + langFrom.code +
-                "&to=" + langTo.code +
+                "&from=" + langFrom.getCode() +
+                "&to=" + langTo.getCode() +
                 "&salt=" + salt +
                 "&sign=" + sign +
                 "&q=" + Utils.urlEncode(query);

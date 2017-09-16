@@ -128,7 +128,7 @@ public class SettingsPanel {
         final ListCellRendererWrapper<Lang> langRenderer = new ListCellRendererWrapper<Lang>() {
             @Override
             public void customize(JList list, Lang value, int index, boolean selected, boolean hasFocus) {
-                setText(value.langName);
+                setText(value.getLangName());
             }
         };
         mLangFromComboBox.setRenderer(langRenderer);
@@ -263,7 +263,7 @@ public class SettingsPanel {
     }
 
     public void apply() {
-        mSettings.setAppId(mAppIdField.getText());
+        mSettings.setAppId(Utils.notNull(mAppIdField.getText(), "").trim());
         if (KEE_PASS_SUPPORT) {
             final String appPrivateKey = getAppPrivateKey();
             if (!(appPrivateKey.equals(mSettings.getAppPrivateKey()))) {
