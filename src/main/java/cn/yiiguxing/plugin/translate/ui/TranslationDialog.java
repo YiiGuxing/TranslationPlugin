@@ -36,7 +36,7 @@ import java.awt.event.*;
 import java.util.List;
 
 public class TranslationDialog extends DialogWrapper implements
-        TranslationContract.View,
+        View,
         HistoriesChangedListener,
         SettingsChangeListener {
 
@@ -68,7 +68,7 @@ public class TranslationDialog extends DialogWrapper implements
     private CardLayout mLayout;
 
     private final MyModel mModel;
-    private final TranslationContract.Presenter mTranslationPresenter;
+    private final Presenter mTranslationPresenter;
 
     private String mLastSuccessfulQuery;
     private QueryResult mLastSuccessfulResult;
@@ -107,7 +107,7 @@ public class TranslationDialog extends DialogWrapper implements
         getPeer().setContentPane(createCenterPanel());
 
         mTranslationPresenter = new TranslationPresenter(this);
-        mModel = new MyModel(mTranslationPresenter.getHistory());
+        mModel = new MyModel(mTranslationPresenter.getHistories());
 
         initViews();
 

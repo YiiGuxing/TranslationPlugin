@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
-public class TranslationBalloon implements TranslationContract.View {
+public class TranslationBalloon implements View {
 
     private static final int MIN_BALLOON_WIDTH = JBUI.scale(200);
     private static final int MIN_BALLOON_HEIGHT = JBUI.scale(50);
@@ -61,7 +61,7 @@ public class TranslationBalloon implements TranslationContract.View {
     private final Disposable mDisposable = this::onDispose;
 
     @NotNull
-    private final TranslationContract.Presenter mTranslationPresenter;
+    private final Presenter mTranslationPresenter;
 
     @NotNull
     private final Editor mEditor;
