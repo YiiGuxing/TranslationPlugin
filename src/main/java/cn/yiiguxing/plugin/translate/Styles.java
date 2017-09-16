@@ -197,7 +197,7 @@ public final class Styles {
             @Override
             public void consume(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() == 1) {
-                    Speech.toSpeech(query, phonetic);
+                    Speech.INSTANCE.play(query, phonetic);
                 }
             }
         }));
