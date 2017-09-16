@@ -300,10 +300,10 @@ public class TranslationBalloon implements View {
     private void setPopupMenu(final JTextPane textPane) {
         final JBPopupMenu menu = new JBPopupMenu();
 
-        final JBMenuItem copy = new JBMenuItem("Copy", Icons.Copy);
+        final JBMenuItem copy = new JBMenuItem("Copy", Icons.INSTANCE.getCopy());
         copy.addActionListener(e -> textPane.copy());
 
-        final JBMenuItem query = new JBMenuItem("Query", Icons.Translate);
+        final JBMenuItem query = new JBMenuItem("Query", Icons.INSTANCE.getTranslate());
         query.addActionListener(e -> {
             String selectedText = textPane.getSelectedText();
             showOnTranslationDialog(selectedText);
@@ -326,7 +326,7 @@ public class TranslationBalloon implements View {
     private void createPinButton(final BalloonImpl balloon, final RelativePoint showPoint, final String query) {
         balloon.setActionProvider(new BalloonImpl.ActionProvider() {
             private BalloonImpl.ActionButton myPinButton;
-            private final Icon myIcon = Icons.Pin;
+            private final Icon myIcon = Icons.INSTANCE.getPin();
 
             @NotNull
             public List<BalloonImpl.ActionButton> createActions() {

@@ -230,7 +230,7 @@ public class TranslationDialog extends DialogWrapper implements
     }
 
     private void initViews() {
-        mQueryBtn.setIcon(Icons.Translate);
+        mQueryBtn.setIcon(Icons.INSTANCE.getTranslate());
         mQueryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -319,7 +319,7 @@ public class TranslationDialog extends DialogWrapper implements
     private void setComponentPopupMenu() {
         JBPopupMenu menu = new JBPopupMenu();
 
-        final JBMenuItem copy = new JBMenuItem("Copy", Icons.Copy);
+        final JBMenuItem copy = new JBMenuItem("Copy", Icons.INSTANCE.getCopy());
         copy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -327,7 +327,7 @@ public class TranslationDialog extends DialogWrapper implements
             }
         });
 
-        final JBMenuItem query = new JBMenuItem("Query", Icons.Translate);
+        final JBMenuItem query = new JBMenuItem("Query", Icons.INSTANCE.getTranslate());
         query.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -550,7 +550,7 @@ public class TranslationDialog extends DialogWrapper implements
     private class CloseButton extends IconButton {
 
         CloseButton() {
-            super(Icons.Close, Icons.ClosePressed, new Consumer<MouseEvent>() {
+            super(Icons.INSTANCE.getClose(), Icons.INSTANCE.getClosePressed(), new Consumer<MouseEvent>() {
                 @Override
                 public void consume(MouseEvent mouseEvent) {
                     if (mouseEvent.getClickCount() == 1) {
