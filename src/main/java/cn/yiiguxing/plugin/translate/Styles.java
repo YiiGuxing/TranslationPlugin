@@ -181,7 +181,7 @@ public final class Styles {
                                        @NotNull final Speech.Phonetic phonetic) throws BadLocationException {
         document.insertString(document.getLength(), phonetic == Speech.Phonetic.UK ? "英[" : "美[", ATTR_EXPLAIN_BASE);
 
-        final Settings settings = Settings.getInstance();
+        final Settings settings = Settings.Companion.getInstance();
         final String fontFamily = settings.getPhoneticFontFamily();
         if (!settings.isOverrideFont() || Utils.isEmptyOrBlankString(fontFamily)) {
             ATTR_EXPLAIN.removeAttribute(StyleConstants.FontFamily);

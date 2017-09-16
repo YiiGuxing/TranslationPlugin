@@ -24,8 +24,8 @@ public class TranslationOptionsConfigurable implements SearchableConfigurable, D
     private SettingsPanel mPanel;
 
     public TranslationOptionsConfigurable() {
-        mSettings = Settings.getInstance();
-        mAppStorage = AppStorage.getInstance();
+        mSettings = Settings.Companion.getInstance();
+        mAppStorage = AppStorage.Companion.getInstance();
     }
 
     @NotNull

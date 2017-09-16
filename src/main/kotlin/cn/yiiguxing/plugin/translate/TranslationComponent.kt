@@ -13,12 +13,12 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
 
     override fun initComponent() {
         super.initComponent()
-        mSettings = Settings.getInstance()
+        mSettings = Settings.instance
     }
 
     override fun projectOpened() {
         if (mSettings.isDisableAppKeyNotification
-                || !mSettings.appId.isNullOrBlank()
+                || mSettings.appId.isNotBlank()
                 && mSettings.isPrivateKeyConfigured)
             return
 

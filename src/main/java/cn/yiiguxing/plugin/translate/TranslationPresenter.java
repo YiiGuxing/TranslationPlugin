@@ -23,8 +23,8 @@ public class TranslationPresenter implements TranslationContract.Presenter {
     public TranslationPresenter(@NotNull TranslationContract.View view) {
         mTranslator = Translator.getInstance();
         mTranslationView = view;
-        mAppStorage = AppStorage.getInstance();
-        mSettings = Settings.getInstance();
+        mAppStorage = AppStorage.Companion.getInstance();
+        mSettings = Settings.Companion.getInstance();
     }
 
     @NotNull

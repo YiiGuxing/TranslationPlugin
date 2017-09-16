@@ -23,7 +23,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
 
     private class Handler : EditorActionHandler() {
 
-        private val settings = Settings.getInstance()!!
+        private val settings = Settings.instance
 
         public override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
             val text = when {
@@ -36,7 +36,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
 
             text?.splitWord()
                     ?.takeIf { it.isNotBlank() }
-                    ?.let(TranslationManager.instance.showDialog(editor.project)::query)
+                    ?.let { TranslationManager.instance.showDialog(editor.project).query(it) }
         }
 
         public override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =

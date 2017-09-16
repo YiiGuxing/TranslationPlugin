@@ -27,7 +27,7 @@ import java.util.*
  */
 class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
 
-    private val settings: Settings = Settings.getInstance()
+    private val settings: Settings = Settings.instance
 
     override val selectionMode: SelectionMode
         get() = settings.autoSelectionMode

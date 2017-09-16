@@ -37,8 +37,8 @@ import java.util.List;
 
 public class TranslationDialog extends DialogWrapper implements
         TranslationContract.View,
-        AppStorage.HistoriesChangedListener,
-        Settings.SettingsChangeListener {
+        HistoriesChangedListener,
+        SettingsChangeListener {
 
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 450;
@@ -136,8 +136,8 @@ public class TranslationDialog extends DialogWrapper implements
                 .getApplication()
                 .getMessageBus()
                 .connect(getDisposable());
-        messageBusConn.subscribe(Settings.SettingsChangeListener.TOPIC, this);
-        messageBusConn.subscribe(AppStorage.HistoriesChangedListener.TOPIC, this);
+        messageBusConn.subscribe(SettingsChangeListener.Companion.getTOPIC(), this);
+        messageBusConn.subscribe(HistoriesChangedListener.Companion.getTOPIC(), this);
     }
 
     @Nullable
@@ -239,7 +239,7 @@ public class TranslationDialog extends DialogWrapper implements
         });
 
         initQueryComboBox();
-        setFont(Settings.getInstance());
+        setFont(Settings.Companion.getInstance());
 
         mTextPanel.setBorder(BORDER_ACTIVE);
         mScrollPane.setVerticalScrollBar(mScrollPane.createVerticalScrollBar());

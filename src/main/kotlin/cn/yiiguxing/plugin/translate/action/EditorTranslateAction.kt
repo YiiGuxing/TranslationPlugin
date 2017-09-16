@@ -7,7 +7,7 @@ import cn.yiiguxing.plugin.translate.Settings
  */
 class EditorTranslateAction : TranslateAction(true) {
 
-    private val mSettings: Settings = Settings.getInstance()
+    private val mSettings: Settings = Settings.instance
 
     override val selectionMode
         get() = mSettings.autoSelectionMode

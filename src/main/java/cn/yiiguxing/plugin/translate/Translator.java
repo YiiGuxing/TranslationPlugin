@@ -20,7 +20,7 @@ public final class Translator {
 
     private static final Logger LOGGER = Logger.getInstance("#" + Translator.class.getCanonicalName());
 
-    private final Settings mSettings = Settings.getInstance();
+    private final Settings mSettings = Settings.Companion.getInstance();
     private final LruCache<CacheKey, QueryResult> mCache = new LruCache<CacheKey, QueryResult>(500);
     private Future<?> mCurrentTask;
 

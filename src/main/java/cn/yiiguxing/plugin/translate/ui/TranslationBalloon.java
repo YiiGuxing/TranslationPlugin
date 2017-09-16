@@ -261,7 +261,7 @@ public class TranslationBalloon implements TranslationContract.View {
     }
 
     private void setFont(JComponent component) {
-        Settings settings = Settings.getInstance();
+        Settings settings = Settings.Companion.getInstance();
         if (settings.isOverrideFont()) {
             final String fontFamily = settings.getPrimaryFontFamily();
             if (!Utils.isEmptyOrBlankString(fontFamily)) {
