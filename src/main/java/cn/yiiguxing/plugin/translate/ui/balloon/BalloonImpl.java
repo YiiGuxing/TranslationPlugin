@@ -1,8 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.balloon;
 
 import cn.yiiguxing.plugin.translate.Utils;
-import cn.yiiguxing.plugin.translate.compat.AccessibleContextUtilCompat;
-import cn.yiiguxing.plugin.translate.compat.ScreenReaderCompat;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.FrameStateListener;
 import com.intellij.ide.FrameStateManager;
@@ -38,6 +36,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.*;
+import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import com.intellij.util.ui.accessibility.ScreenReader;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -489,7 +489,7 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
                     // Set the accessible parent so that screen readers don't announce
                     // a window context change -- the tooltip is "logically" hosted
                     // inside the component (e.g. editor) it appears on top of.
-                    AccessibleContextUtilCompat.setParent(myContent, myOriginalFocusOwner);
+                    AccessibleContextUtil.setParent(myContent, myOriginalFocusOwner);
 
                     // Set the focus to "myContent"
                     myFocusManager.requestFocus(getContentToFocus(), true);
@@ -1589,7 +1589,7 @@ public class BalloonImpl implements com.intellij.openapi.ui.popup.Balloon {
 
             // When a screen reader is active, TAB/Shift-TAB should allow moving the focus
             // outside the balloon in the event the balloon acquired the focus.
-            if (!ScreenReaderCompat.isActive()) {
+            if (!ScreenReader.isActive()) {
                 setFocusCycleRoot(true);
             }
 
