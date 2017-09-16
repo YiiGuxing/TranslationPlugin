@@ -1,0 +1,68 @@
+package cn.yiiguxing.plugin.translate
+
+import cn.yiiguxing.plugin.translate.ui.SettingsPanel
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.options.ConfigurationException
+import com.intellij.openapi.options.SearchableConfigurable
+import com.intellij.openapi.options.ShowSettingsUtil
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
+import javax.swing.JComponent
+
+/**
+ * 选项配置
+ */
+class OptionsConfigurable : SearchableConfigurable, Disposable {
+
+    private val mSettings: Settings = Settings.instance
+    private val mAppStorage: AppStorage = AppStorage.instance
+
+    private var mPanel: SettingsPanel? = null
+
+    override fun getId(): String {
+        return "yiiguxing.plugin.translate"
+    }
+
+    override fun enableSearch(option: String?): Runnable? {
+        return null
+    }
+
+    override fun getDisplayName(): String {
+        return "Translation"
+    }
+
+    override fun getHelpTopic(): String? {
+        return null
+    }
+
+    override fun createComponent(): JComponent = SettingsPanel().run {
+        mPanel = this@run
+        createPanel(mSettings, mAppStorage)
+    }
+
+    override fun isModified(): Boolean = mPanel?.isModified ?: false
+
+    @Throws(ConfigurationException::class)
+    override fun apply() {
+        mPanel?.apply()
+    }
+
+    override fun reset() {
+        mPanel?.reset()
+    }
+
+    override fun disposeUIResources() {
+        Disposer.dispose(this)
+    }
+
+    override fun dispose() {
+        mPanel = null
+    }
+
+    companion object {
+        fun showSettingsDialog(project: Project?) {
+            ShowSettingsUtil.getInstance().showSettingsDialog(project, OptionsConfigurable::class.java)
+        }
+    }
+
+}

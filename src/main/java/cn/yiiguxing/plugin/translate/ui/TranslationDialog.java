@@ -199,7 +199,7 @@ public class TranslationDialog extends DialogWrapper implements
             protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
                 if (Constants.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
                     close(CLOSE_EXIT_CODE);
-                    TranslationOptionsConfigurable.showSettingsDialog(mProject);
+                    OptionsConfigurable.Companion.showSettingsDialog(mProject);
                 }
             }
         });

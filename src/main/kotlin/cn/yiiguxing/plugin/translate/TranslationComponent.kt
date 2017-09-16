@@ -35,7 +35,7 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
                         notification.expire()
                         when (hyperlinkEvent.description) {
-                            Constants.HTML_DESCRIPTION_SETTINGS -> TranslationOptionsConfigurable
+                            Constants.HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable
                                     .showSettingsDialog(myProject)
                             Constants.HTML_DESCRIPTION_DISABLE -> mSettings.isDisableAppKeyNotification = true
                         }

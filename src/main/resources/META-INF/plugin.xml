@@ -49,7 +49,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Settings"
                             serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
-        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.TranslationOptionsConfigurable"/>
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
 
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Translator"
                             serviceImplementation="cn.yiiguxing.plugin.translate.Translator"/>

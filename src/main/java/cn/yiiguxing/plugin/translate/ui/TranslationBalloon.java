@@ -403,7 +403,7 @@ public class TranslationBalloon implements View {
             protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
                 if (Constants.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
                     hide();
-                    TranslationOptionsConfigurable.showSettingsDialog(mProject);
+                    OptionsConfigurable.Companion.showSettingsDialog(mProject);
                 }
             }
         });
