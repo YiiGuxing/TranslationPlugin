@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
-import cn.yiiguxing.plugin.translate.util.Utils;
+import cn.yiiguxing.plugin.translate.util.StringUtils;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -233,7 +233,7 @@ public class TranslationBalloon implements View {
         resultText.setBackground(UIManager.getColor("Panel.background"));
         setFont(resultText);
 
-        Styles.insertStylishResultText(resultText, result, (textPane, text) -> showOnTranslationDialog(text));
+        Styles.INSTANCE.insertStylishResultText(resultText, result, (textPane, text) -> showOnTranslationDialog(text));
         resultText.setCaretPosition(0);
 
         JBScrollPane scrollPane = new JBScrollPane(resultText);
@@ -265,7 +265,7 @@ public class TranslationBalloon implements View {
         Settings settings = Settings.Companion.getInstance();
         if (settings.isOverrideFont()) {
             final String fontFamily = settings.getPrimaryFontFamily();
-            if (!Utils.isEmptyOrBlankString(fontFamily)) {
+            if (!StringUtils.isEmptyOrBlankString(fontFamily)) {
                 component.setFont(JBUI.Fonts.create(fontFamily, 14));
                 return;
             }
@@ -293,7 +293,7 @@ public class TranslationBalloon implements View {
     private void showOnTranslationDialog(@Nullable String text) {
         hide();
         TranslationDialog dialog = TranslationManager.Companion.getInstance().showDialog(mEditor.getProject());
-        if (!Utils.isEmptyOrBlankString(text)) {
+        if (!StringUtils.isEmptyOrBlankString(text)) {
             dialog.query(text);
         }
     }
@@ -315,7 +315,7 @@ public class TranslationBalloon implements View {
         menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                boolean hasSelectedText = !Utils.isEmptyOrBlankString(textPane.getSelectedText());
+                boolean hasSelectedText = !StringUtils.isEmptyOrBlankString(textPane.getSelectedText());
                 copy.setEnabled(hasSelectedText);
                 query.setEnabled(hasSelectedText);
             }

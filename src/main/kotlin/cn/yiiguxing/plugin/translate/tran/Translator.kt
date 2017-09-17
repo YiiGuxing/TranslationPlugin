@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.util.LruCache
-import cn.yiiguxing.plugin.translate.util.Utils
 import cn.yiiguxing.plugin.translate.util.md5
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
@@ -36,7 +35,7 @@ class Translator private constructor() {
      * @param callback 回调
      */
     fun translate(query: String, callback: (query: String, result: QueryResult?) -> Unit) {
-        if (Utils.isEmptyOrBlankString(query)) {
+        if (query.isBlank()) {
             callback(query, null)
             return
         }
@@ -109,6 +108,9 @@ class Translator private constructor() {
                 checkError()
                 if (isSuccessful) {
                     mCache.put(CacheKey(langFrom, langTo, query), this)
+                }
+                if (this.query.isNullOrBlank()) {
+                    this.query = query
                 }
             }
 

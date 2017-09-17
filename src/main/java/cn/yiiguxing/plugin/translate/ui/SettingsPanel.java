@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.tran.Lang;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
-import cn.yiiguxing.plugin.translate.util.Utils;
+import cn.yiiguxing.plugin.translate.util.StringUtils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -169,7 +169,7 @@ public class SettingsPanel {
     }
 
     private void previewPrimaryFont(String primary) {
-        if (Utils.isEmptyOrBlankString(primary)) {
+        if (StringUtils.isEmptyOrBlankString(primary)) {
             mFontPreview.setFont(JBUI.Fonts.label(14));
         } else {
             mFontPreview.setFont(JBUI.Fonts.create(primary, 14));
@@ -180,7 +180,7 @@ public class SettingsPanel {
         final StyledDocument document = mFontPreview.getStyledDocument();
 
         Font font;
-        if (Utils.isEmptyOrBlankString(primary)) {
+        if (StringUtils.isEmptyOrBlankString(primary)) {
             font = JBUI.Fonts.label(14);
         } else {
             font = JBUI.Fonts.create(primary, 14);
@@ -223,8 +223,8 @@ public class SettingsPanel {
     }
 
     public boolean isModified() {
-        return (!Utils.isEmptyOrBlankString(mAppIdField.getText())
-                && !Utils.isEmptyOrBlankString(getAppPrivateKey()))
+        return (!StringUtils.isEmptyOrBlankString(mAppIdField.getText())
+                && !StringUtils.isEmptyOrBlankString(getAppPrivateKey()))
                 || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
                 || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
                 || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
@@ -237,7 +237,7 @@ public class SettingsPanel {
     }
 
     public void apply() {
-        mSettings.setAppId(Utils.notNull(mAppIdField.getText(), "").trim());
+        mSettings.setAppId(StringUtils.notNull(mAppIdField.getText(), "").trim());
         final String appPrivateKey = getAppPrivateKey();
         if (!(appPrivateKey.equals(mSettings.getAppPrivateKey()))) {
             mSettings.setAppPrivateKey(appPrivateKey);
@@ -257,8 +257,8 @@ public class SettingsPanel {
     }
 
     public void reset() {
-        mLangFromComboBox.setSelectedItem(Utils.notNull(mSettings.getLangFrom(), Lang.AUTO));
-        mLangToComboBox.setSelectedItem(Utils.notNull(mSettings.getLangTo(), Lang.AUTO));
+        mLangFromComboBox.setSelectedItem(StringUtils.notNull(mSettings.getLangFrom(), Lang.AUTO));
+        mLangToComboBox.setSelectedItem(StringUtils.notNull(mSettings.getLangTo(), Lang.AUTO));
         mFontCheckBox.setSelected(mSettings.isOverrideFont());
         mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());

@@ -1,11 +1,11 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.util.Utils
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.tran.Translator
 import cn.yiiguxing.plugin.translate.util.HANZI_CONDITION
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.codeInsight.lookup.*
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -150,7 +150,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
 
         fun getReplaceLookupElements(result: QueryResult): List<LookupElement> =
                 if (result.basicExplain != null) {
-                    getReplaceLookupElements(Utils.expandExplain(result.basicExplain?.explains))
+                    getReplaceLookupElements(TranslationResultUtils.expandExplain(result.basicExplain?.explains))
                 } else {
                     getReplaceLookupElements(result.translation)
                 }
@@ -234,8 +234,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
         }
 
         fun fixAndSplitForVariable(explains: String): List<String>? {
-            val explain = Utils.splitExplain(explains)[1]
-            if (Utils.isEmptyOrBlankString(explain)) {
+            val (_, explain) = TranslationResultUtils.splitExplain(explains)
+            if (explain.isBlank()) {
                 return null
             }
 

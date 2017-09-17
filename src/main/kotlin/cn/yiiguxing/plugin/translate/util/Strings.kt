@@ -10,6 +10,21 @@ package cn.yiiguxing.plugin.translate.util
 import java.net.URLEncoder
 import java.security.MessageDigest
 
+private fun toUpperCase(a: Char): Char = when {
+    a < 'a' -> a
+    a <= 'z' -> (a.toInt() + ('A' - 'a')).toChar()
+    else -> Character.toUpperCase(a)
+}
+
+/**
+ * Capitalize the first letter of the sentence.
+ */
+fun String.capitalize(): String = when {
+    isEmpty() -> this
+    length == 1 -> toUpperCase(this[0]).toString()
+    Character.isUpperCase(this[0]) -> this
+    else -> toUpperCase(this[0]) + substring(1)
+}
 
 /**
  * 单词拆分
