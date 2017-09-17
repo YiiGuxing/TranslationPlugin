@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
+import cn.yiiguxing.plugin.translate.util.Utils;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;

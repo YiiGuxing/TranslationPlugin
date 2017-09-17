@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate
+package cn.yiiguxing.plugin.translate.tran
 
 /**
  * CacheKey

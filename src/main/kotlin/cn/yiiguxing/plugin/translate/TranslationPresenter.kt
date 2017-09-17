@@ -1,6 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.model.QueryResult
+import cn.yiiguxing.plugin.translate.tran.CacheKey
+import cn.yiiguxing.plugin.translate.tran.Lang
+import cn.yiiguxing.plugin.translate.tran.Translator
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import java.lang.ref.WeakReference
@@ -10,7 +13,7 @@ class TranslationPresenter(private val view: View) : Presenter {
     private val mAppStorage: AppStorage = AppStorage.instance
     private val mSettings: Settings = Settings.instance
 
-    private val mTranslator: Translator = Translator.getInstance()
+    private val mTranslator: Translator = Translator.instance
 
     private var mCurrentQuery: String? = null
 
@@ -35,7 +38,7 @@ class TranslationPresenter(private val view: View) : Presenter {
         mCurrentQuery = query
 
         val presenterRef = WeakReference(this)
-        mTranslator.query(query) { _, result ->
+        mTranslator.translate(query) { _, result ->
             ApplicationManager.getApplication().invokeLater({
                 presenterRef.get()?.onPostResult(query, result)
             }, ModalityState.any())
@@ -50,8 +53,8 @@ class TranslationPresenter(private val view: View) : Presenter {
         if (result != null && result.isSuccessful) {
             view.showResult(query, result)
         } else {
-            val msg = result?.message ?: "未知错误"
-            view.showError(query, if (msg.isBlank()) "Nothing to show" else msg)
+            val msg = result?.message ?: "Nothing to show"
+            view.showError(query, if (msg.isBlank()) "未知错误" else msg)
         }
     }
 }

@@ -1,7 +1,9 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.*;
+import cn.yiiguxing.plugin.translate.tran.Lang;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
+import cn.yiiguxing.plugin.translate.util.Utils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;

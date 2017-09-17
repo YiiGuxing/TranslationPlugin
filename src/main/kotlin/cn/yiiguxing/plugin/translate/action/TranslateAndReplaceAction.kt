@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.Translator
-import cn.yiiguxing.plugin.translate.Utils
+import cn.yiiguxing.plugin.translate.util.Utils
 import cn.yiiguxing.plugin.translate.model.QueryResult
+import cn.yiiguxing.plugin.translate.tran.Translator
 import cn.yiiguxing.plugin.translate.util.HANZI_CONDITION
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.codeInsight.highlighting.HighlightManager
@@ -58,7 +58,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
         }
 
         editor.document.getText(selectionRange).takeIf { it.isNotBlank() }?.let { queryText ->
-            Translator.getInstance().query(queryText) { _, result ->
+            Translator.instance.translate(queryText) { _, result ->
                 result?.takeIf { it.isSuccessful }
                         ?.let { getReplaceLookupElements(it) }
                         ?.takeIf { it.isNotEmpty() }

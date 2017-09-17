@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate
+package cn.yiiguxing.plugin.translate.tran
 
+import cn.yiiguxing.plugin.translate.YOUDAO_TTS_URL
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
@@ -13,7 +14,7 @@ import javax.sound.sampled.*
  */
 object Speech {
 
-    private val TTS_URL = "$YOUDAO_TTS_URL?audio=%s&type=%d"
+    private val TTS_URL = "${YOUDAO_TTS_URL}?audio=%s&type=%d"
 
     private val LOG = Logger.getInstance("#" + Speech::class.java.canonicalName)
 

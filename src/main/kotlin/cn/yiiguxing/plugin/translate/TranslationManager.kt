@@ -14,7 +14,7 @@ import com.intellij.openapi.util.Disposer
  * <p>
  * Created by Yii.Guxing on 2017-09-14 0014.
  */
-class TranslationManager {
+class TranslationManager private constructor() {
 
     var translationBalloon: TranslationBalloon? = null
         private set
