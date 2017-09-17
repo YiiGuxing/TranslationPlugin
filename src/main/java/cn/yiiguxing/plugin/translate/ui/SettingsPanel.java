@@ -77,7 +77,7 @@ public class SettingsPanel {
         mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
-                BrowserUtil.browse(Constants.YOUDAO_AI_URL);
+                BrowserUtil.browse(ConstantsKt.YOUDAO_AI_URL);
             }
         });
         mGetApiKeyLink.setIcon(AllIcons.Ide.Link);

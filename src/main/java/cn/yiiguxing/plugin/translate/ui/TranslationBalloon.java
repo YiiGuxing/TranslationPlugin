@@ -401,7 +401,7 @@ public class TranslationBalloon implements View {
         text.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
-                if (Constants.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
+                if (ConstantsKt.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
                     hide();
                     OptionsConfigurable.Companion.showSettingsDialog(mProject);
                 }

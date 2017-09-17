@@ -5,7 +5,6 @@ import com.intellij.openapi.diagnostic.Logger
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
 import java.io.BufferedInputStream
-import java.io.IOException
 import java.net.URL
 import javax.sound.sampled.*
 
@@ -14,7 +13,7 @@ import javax.sound.sampled.*
  */
 object Speech {
 
-    private val TTS_URL = "http://dict.youdao.com/dictvoice?audio=%s&type=%d"
+    private val TTS_URL = "$YOUDAO_TTS_URL?audio=%s&type=%d"
 
     private val LOG = Logger.getInstance("#" + Speech::class.java.canonicalName)
 
@@ -41,7 +40,7 @@ object Speech {
 
     private fun _play(text: String, phonetic: Phonetic) {
         try {
-            val url = URL(String.format(TTS_URL, text, phonetic.value))
+            val url = URL(TTS_URL.format(text, phonetic.value))
             val inputStream = BufferedInputStream(url.openStream())
 
             MpegAudioFileReader().getAudioInputStream(inputStream)?.use {
@@ -65,15 +64,13 @@ object Speech {
         } catch (e: Exception) {
             LOG.error("toSpeech", e)
         }
-
     }
 
-    @Throws(IOException::class, LineUnavailableException::class)
     private fun rawPlay(targetFormat: AudioFormat, din: AudioInputStream) {
         getLine(targetFormat)?.run {
             start()
 
-            try {
+            @Suppress("ConvertTryFinallyToUseCall") try {
                 val data = ByteArray(4096)
                 var bytesRead: Int
                 while (true) {
@@ -89,13 +86,13 @@ object Speech {
         }
     }
 
-    @Throws(LineUnavailableException::class)
-    private fun getLine(audioFormat: AudioFormat): SourceDataLine? {
+    private fun getLine(audioFormat: AudioFormat): SourceDataLine? = try {
         val info = DataLine.Info(SourceDataLine::class.java, audioFormat)
-        val res = AudioSystem.getLine(info) as? SourceDataLine
-        res?.open(audioFormat)
-
-        return res
+        (AudioSystem.getLine(info) as? SourceDataLine)?.apply {
+            open(audioFormat)
+        }
+    } catch (e: Exception) {
+        null
     }
 
 }

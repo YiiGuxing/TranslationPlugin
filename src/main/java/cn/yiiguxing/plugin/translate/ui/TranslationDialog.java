@@ -197,7 +197,7 @@ public class TranslationDialog extends DialogWrapper implements
         mMessage.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent hyperlinkEvent) {
-                if (Constants.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
+                if (ConstantsKt.HTML_DESCRIPTION_SETTINGS.equals(hyperlinkEvent.getDescription())) {
                     close(CLOSE_EXIT_CODE);
                     OptionsConfigurable.Companion.showSettingsDialog(mProject);
                 }

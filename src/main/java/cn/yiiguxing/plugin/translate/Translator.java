@@ -92,7 +92,7 @@ public final class Translator {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = Utils.md5(appId + query + salt + privateKey);
 
-        return Constants.YOUDAO_TRANSLATE_URL +
+        return ConstantsKt.YOUDAO_TRANSLATE_URL +
                 "?appKey=" + Utils.urlEncode(appId) +
                 "&from=" + langFrom.getCode() +
                 "&to=" + langTo.getCode() +

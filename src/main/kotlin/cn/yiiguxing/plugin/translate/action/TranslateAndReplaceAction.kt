@@ -150,7 +150,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
 
         fun getReplaceLookupElements(result: QueryResult): List<LookupElement> =
                 if (result.basicExplain != null) {
-                    getReplaceLookupElements(Utils.expandExplain(result.basicExplain.explains))
+                    getReplaceLookupElements(Utils.expandExplain(result.basicExplain?.explains))
                 } else {
                     getReplaceLookupElements(result.translation)
                 }

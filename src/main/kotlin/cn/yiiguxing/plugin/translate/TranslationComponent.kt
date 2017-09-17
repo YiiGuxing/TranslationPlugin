@@ -25,8 +25,8 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
         val group = NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON, true)
         val title = "设置App Key"
         val content = "当前App Key为空或者无效，请设置App Key.<br/><br/>" +
-                "<a href=\"${Constants.HTML_DESCRIPTION_SETTINGS}\">设置</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                "<a href=\"${Constants.HTML_DESCRIPTION_DISABLE}\">不再提示</a>"
+                "<a href=\"$HTML_DESCRIPTION_SETTINGS\">设置</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                "<a href=\"$HTML_DESCRIPTION_DISABLE\">不再提示</a>"
         val notification = group.createNotification(
                 title,
                 content,
@@ -35,9 +35,8 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
                         notification.expire()
                         when (hyperlinkEvent.description) {
-                            Constants.HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable
-                                    .showSettingsDialog(myProject)
-                            Constants.HTML_DESCRIPTION_DISABLE -> mSettings.isDisableAppKeyNotification = true
+                            HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(myProject)
+                            HTML_DESCRIPTION_DISABLE -> mSettings.isDisableAppKeyNotification = true
                         }
                     }
                 }
