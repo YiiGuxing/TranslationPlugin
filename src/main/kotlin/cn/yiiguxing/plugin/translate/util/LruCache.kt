@@ -212,8 +212,6 @@ open class LruCache<K, V>(maxSize: Int) {
      * [.remove], or replaced by a call to [.put]. The default
      * implementation does nothing.
      *
-     *
-     *
      * The method is called without synchronization: other threads may
      * access the cache while this method is executing.
      *
@@ -230,12 +228,8 @@ open class LruCache<K, V>(maxSize: Int) {
      * Returns the computed value or null if no value can be computed. The
      * default implementation returns null.
      *
-     *
-     *
      * The method is called without synchronization: other threads may
      * access the cache while this method is executing.
-     *
-     *
      *
      * If a value for `key` exists in the cache when this method
      * returns, the created value will be released with [.entryRemoved]
@@ -260,8 +254,6 @@ open class LruCache<K, V>(maxSize: Int) {
      * Returns the size of the entry for `key` and `value` in
      * user-defined units.  The default implementation returns 1 so that size
      * is the number of entries and max size is the maximum number of entries.
-     *
-     *
      *
      * An entry's size must not change while it is in the cache.
      */

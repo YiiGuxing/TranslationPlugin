@@ -2,8 +2,6 @@ package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
-import cn.yiiguxing.plugin.translate.ui.balloon.BalloonBuilder;
-import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -14,9 +12,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
+import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.PopupMenuListenerAdapter;
@@ -133,7 +133,7 @@ public class TranslationBalloon implements View {
 
     @NotNull
     private BalloonBuilder buildBalloon() {
-        return BalloonBuilder.builder(mContentPanel, null)
+        return JBPopupFactory.getInstance().createDialogBalloonBuilder(mContentPanel, null)
                 .setHideOnClickOutside(true)
                 .setShadow(true)
                 .setHideOnKeyOutside(true)
