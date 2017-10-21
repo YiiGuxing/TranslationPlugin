@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui;
 
-import cn.yiiguxing.plugin.translate.*;
+import cn.yiiguxing.plugin.translate.AppStorage;
+import cn.yiiguxing.plugin.translate.ConstantsKt;
+import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.tran.Lang;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import cn.yiiguxing.plugin.translate.util.StringUtils;
@@ -23,17 +25,14 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 设置页
  */
-@SuppressWarnings("Since15")
 public class SettingsPanel {
 
     private static final int INDEX_INCLUSIVE = 0;
@@ -91,8 +90,8 @@ public class SettingsPanel {
         fixFontComboBoxSize(mPhoneticFontComboBox);
 
         final List<Lang> languages = Arrays.asList(Lang.values());
-        mLangFromComboBox = new ComboBox<Lang>(new CollectionComboBoxModel<Lang>(languages));
-        mLangToComboBox = new ComboBox<Lang>(new CollectionComboBoxModel<Lang>(languages));
+        mLangFromComboBox = new ComboBox<>(new CollectionComboBoxModel<>(languages));
+        mLangToComboBox = new ComboBox<>(new CollectionComboBoxModel<>(languages));
     }
 
     private void fixFontComboBoxSize(FontComboBox fontComboBox) {
@@ -133,39 +132,25 @@ public class SettingsPanel {
     }
 
     private void setListeners() {
-        mFontCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                final boolean selected = mFontCheckBox.isSelected();
-                mPrimaryFontComboBox.setEnabled(selected);
-                mPhoneticFontComboBox.setEnabled(selected);
-                mFontPreview.setEnabled(selected);
-                mPrimaryFontLabel.setEnabled(selected);
-                mPhoneticFontLabel.setEnabled(selected);
+        mFontCheckBox.addItemListener(e -> {
+            final boolean selected = mFontCheckBox.isSelected();
+            mPrimaryFontComboBox.setEnabled(selected);
+            mPhoneticFontComboBox.setEnabled(selected);
+            mFontPreview.setEnabled(selected);
+            mPrimaryFontLabel.setEnabled(selected);
+            mPhoneticFontLabel.setEnabled(selected);
+        });
+        mPrimaryFontComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                previewPrimaryFont(mPrimaryFontComboBox.getFontName());
             }
         });
-        mPrimaryFontComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    previewPrimaryFont(mPrimaryFontComboBox.getFontName());
-                }
+        mPhoneticFontComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                previewPhoneticFont(mPhoneticFontComboBox.getFontName());
             }
         });
-        mPhoneticFontComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    previewPhoneticFont(mPhoneticFontComboBox.getFontName());
-                }
-            }
-        });
-        mClearHistoriesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mAppStorage.clearHistories();
-            }
-        });
+        mClearHistoriesButton.addActionListener(e -> mAppStorage.clearHistories());
     }
 
     private void previewPrimaryFont(String primary) {
@@ -237,7 +222,8 @@ public class SettingsPanel {
     }
 
     public void apply() {
-        mSettings.setAppId(StringUtils.notNull(mAppIdField.getText(), "").trim());
+        final String aAppId = Optional.ofNullable(mAppIdField.getText()).orElse("").trim();
+        mSettings.setAppId(aAppId);
         final String appPrivateKey = getAppPrivateKey();
         if (!(appPrivateKey.equals(mSettings.getAppPrivateKey()))) {
             mSettings.setAppPrivateKey(appPrivateKey);
@@ -257,8 +243,10 @@ public class SettingsPanel {
     }
 
     public void reset() {
-        mLangFromComboBox.setSelectedItem(StringUtils.notNull(mSettings.getLangFrom(), Lang.AUTO));
-        mLangToComboBox.setSelectedItem(StringUtils.notNull(mSettings.getLangTo(), Lang.AUTO));
+        final Lang from = Optional.ofNullable(mSettings.getLangFrom()).orElse(Lang.AUTO);
+        final Lang to = Optional.ofNullable(mSettings.getLangTo()).orElse(Lang.AUTO);
+        mLangFromComboBox.setSelectedItem(from);
+        mLangToComboBox.setSelectedItem(to);
         mFontCheckBox.setSelected(mSettings.isOverrideFont());
         mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());

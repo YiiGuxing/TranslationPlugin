@@ -17,10 +17,12 @@ typealias CharCondition = SelectWordUtil.CharCondition
 /**
  * 默认条件
  */
+@Suppress("PropertyName")
 val DEFAULT_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
 /**
  * 汉字条件
  */
+@Suppress("PropertyName")
 val HANZI_CONDITION: CharCondition = CharCondition { it in '\u4E00'..'\u9FBF' }
 
 private val textRangeComparator = Comparator<TextRange> { tr1, tr2 ->
@@ -56,7 +58,7 @@ fun Editor.getSelectionFromCurrentCaret(selectionMode: SelectionMode = Selection
 
     return when {
         ranges.isEmpty() -> null
-        isExclusive      -> ranges[0]
-        else             -> ranges.maxWith(textRangeComparator)
+        isExclusive -> ranges[0]
+        else -> ranges.maxWith(textRangeComparator)
     }
 }

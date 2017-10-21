@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
 import cn.yiiguxing.plugin.translate.util.StringUtils;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -117,12 +116,7 @@ public class TranslationDialog extends DialogWrapper implements
         Toolkit.getDefaultToolkit().addAWTEventListener(mAwtActivityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK
                 | AWTEvent.KEY_EVENT_MASK);
 
-        Disposer.register(getDisposable(), new Disposable() {
-            @Override
-            public void dispose() {
-                Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener);
-            }
-        });
+        Disposer.register(getDisposable(), () -> Toolkit.getDefaultToolkit().removeAWTEventListener(mAwtActivityListener));
 
         // 在对话框上打开此对话框时，关闭主对话框时导致此对话框也跟着关闭，
         // 但资源没有释放干净，回调也没回完整，再次打开的话就会崩溃
@@ -175,12 +169,9 @@ public class TranslationDialog extends DialogWrapper implements
         getWindow().addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 放到这里是因为在Android Studio上第一次显示会被queryBtn抢去焦点。
-                        mQueryComboBox.requestFocus();
-                    }
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    // 放到这里是因为在Android Studio上第一次显示会被queryBtn抢去焦点。
+                    mQueryComboBox.requestFocus();
                 });
             }
         });
@@ -232,12 +223,7 @@ public class TranslationDialog extends DialogWrapper implements
 
     private void initViews() {
         mQueryBtn.setIcon(Icons.INSTANCE.getTranslate());
-        mQueryBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onQueryButtonClick();
-            }
-        });
+        mQueryBtn.addActionListener(e -> onQueryButtonClick());
 
         initQueryComboBox();
         setFont(Settings.Companion.getInstance());
@@ -306,12 +292,9 @@ public class TranslationDialog extends DialogWrapper implements
             }
         });
 
-        mQueryComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED && !mBroadcast) {
-                    onQuery();
-                }
+        mQueryComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED && !mBroadcast) {
+                onQuery();
             }
         });
         mQueryComboBox.setRenderer(new ComboRenderer());
@@ -321,20 +304,10 @@ public class TranslationDialog extends DialogWrapper implements
         JBPopupMenu menu = new JBPopupMenu();
 
         final JBMenuItem copy = new JBMenuItem("Copy", Icons.INSTANCE.getCopy());
-        copy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mResultText.copy();
-            }
-        });
+        copy.addActionListener(e -> mResultText.copy());
 
         final JBMenuItem query = new JBMenuItem("Query", Icons.INSTANCE.getTranslate());
-        query.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                query(mResultText.getSelectedText());
-            }
-        });
+        query.addActionListener(e -> query(mResultText.getSelectedText()));
 
         menu.add(copy);
         menu.add(query);
@@ -360,7 +333,7 @@ public class TranslationDialog extends DialogWrapper implements
         IdeFocusManager.getInstance(mProject).requestFocus(getContentPane(), true);
     }
 
-    public void update() {
+    private void update() {
         if (isShowing()) {
             if (mModel.getSize() > 0) {
                 query(mModel.getElementAt(0));
@@ -413,12 +386,7 @@ public class TranslationDialog extends DialogWrapper implements
     }
 
     private void setResultText(@NotNull QueryResult result) {
-        Styles.INSTANCE.insertStylishResultText(mResultText, result, new Styles.OnTextClickListener() {
-            @Override
-            public void onTextClick(@NotNull JTextPane textPane, @NotNull String text) {
-                query(text);
-            }
-        });
+        Styles.INSTANCE.insertStylishResultText(mResultText, result, (textPane, text) -> query(text));
 
         mResultText.setCaretPosition(0);
     }
@@ -431,7 +399,6 @@ public class TranslationDialog extends DialogWrapper implements
         mLayout.show(mTextPanel, CARD_MSG);
     }
 
-    @SuppressWarnings("Since15")
     private static class MyModel extends AbstractListModel<String> implements ComboBoxModel<String> {
         private final List<String> myFullList;
         private Object mySelectedItem;
@@ -550,6 +517,7 @@ public class TranslationDialog extends DialogWrapper implements
 
     private class CloseButton extends IconButton {
 
+        @SuppressWarnings("Convert2Lambda")
         CloseButton() {
             super(Icons.INSTANCE.getClose(), Icons.INSTANCE.getClosePressed(), new Consumer<MouseEvent>() {
                 @Override

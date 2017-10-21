@@ -41,7 +41,7 @@ fun String.splitWord() = if (isBlank()) this else
  */
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
 
-private val HEX_DIGITS = charArrayOf(
+private val hexDigits = charArrayOf(
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 )
 
@@ -57,8 +57,8 @@ fun String.md5(): String {
 
     val result = CharArray(md5Digest.size * 2)
     md5Digest.forEachIndexed { index, byte ->
-        result[index * 2] = HEX_DIGITS[byte.toInt() ushr 4 and 0xf]
-        result[index * 2 + 1] = HEX_DIGITS[byte.toInt() and 0xf]
+        result[index * 2] = hexDigits[byte.toInt() ushr 4 and 0xf]
+        result[index * 2 + 1] = hexDigits[byte.toInt() and 0xf]
     }
 
     return String(result)
