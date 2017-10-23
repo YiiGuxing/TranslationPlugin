@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
-import cn.yiiguxing.plugin.translate.util.StringUtils;
+import cn.yiiguxing.plugin.translate.util.StringsKt;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -265,7 +265,7 @@ public class TranslationBalloon implements View {
         Settings settings = Settings.Companion.getInstance();
         if (settings.isOverrideFont()) {
             final String fontFamily = settings.getPrimaryFontFamily();
-            if (!StringUtils.isEmptyOrBlankString(fontFamily)) {
+            if (!StringsKt.isNullOrBlank(fontFamily)) {
                 component.setFont(JBUI.Fonts.create(fontFamily, 14));
                 return;
             }
@@ -293,7 +293,7 @@ public class TranslationBalloon implements View {
     private void showOnTranslationDialog(@Nullable String text) {
         hide();
         TranslationDialog dialog = TranslationManager.Companion.getInstance().showDialog(mEditor.getProject());
-        if (!StringUtils.isEmptyOrBlankString(text)) {
+        if (!StringsKt.isNullOrBlank(text)) {
             dialog.query(text);
         }
     }
@@ -315,7 +315,7 @@ public class TranslationBalloon implements View {
         menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                boolean hasSelectedText = !StringUtils.isEmptyOrBlankString(textPane.getSelectedText());
+                boolean hasSelectedText = !StringsKt.isNullOrBlank(textPane.getSelectedText());
                 copy.setEnabled(hasSelectedText);
                 query.setEnabled(hasSelectedText);
             }

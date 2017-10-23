@@ -10,6 +10,8 @@ package cn.yiiguxing.plugin.translate.util
 import java.net.URLEncoder
 import java.security.MessageDigest
 
+fun String?.isNullOrBlank() = (this as CharSequence?).isNullOrBlank()
+
 private fun toUpperCase(a: Char): Char = when {
     a < 'a' -> a
     a <= 'z' -> (a.toInt() + ('A' - 'a')).toChar()

@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.ConstantsKt;
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.tran.Lang;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
-import cn.yiiguxing.plugin.translate.util.StringUtils;
+import cn.yiiguxing.plugin.translate.util.StringsKt;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -154,7 +154,7 @@ public class SettingsPanel {
     }
 
     private void previewPrimaryFont(String primary) {
-        if (StringUtils.isEmptyOrBlankString(primary)) {
+        if (StringsKt.isNullOrBlank(primary)) {
             mFontPreview.setFont(JBUI.Fonts.label(14));
         } else {
             mFontPreview.setFont(JBUI.Fonts.create(primary, 14));
@@ -165,7 +165,7 @@ public class SettingsPanel {
         final StyledDocument document = mFontPreview.getStyledDocument();
 
         Font font;
-        if (StringUtils.isEmptyOrBlankString(primary)) {
+        if (StringsKt.isNullOrBlank(primary)) {
             font = JBUI.Fonts.label(14);
         } else {
             font = JBUI.Fonts.create(primary, 14);
@@ -208,8 +208,8 @@ public class SettingsPanel {
     }
 
     public boolean isModified() {
-        return (!StringUtils.isEmptyOrBlankString(mAppIdField.getText())
-                && !StringUtils.isEmptyOrBlankString(getAppPrivateKey()))
+        return (!StringsKt.isNullOrBlank(mAppIdField.getText())
+                && !StringsKt.isNullOrBlank(getAppPrivateKey()))
                 || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
                 || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
                 || mFontCheckBox.isSelected() != mSettings.isOverrideFont()

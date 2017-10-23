@@ -4,7 +4,7 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.*;
 import cn.yiiguxing.plugin.translate.model.BasicExplain;
 import cn.yiiguxing.plugin.translate.model.QueryResult;
-import cn.yiiguxing.plugin.translate.util.StringUtils;
+import cn.yiiguxing.plugin.translate.util.StringsKt;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -254,7 +254,7 @@ public class TranslationDialog extends DialogWrapper implements
     private void setFont(Settings settings) {
         if (settings.isOverrideFont()) {
             final String fontFamily = settings.getPrimaryFontFamily();
-            if (!StringUtils.isEmptyOrBlankString(fontFamily)) {
+            if (!StringsKt.isNullOrBlank(fontFamily)) {
                 mResultText.setFont(JBUI.Fonts.create(fontFamily, 14));
             } else {
                 mResultText.setFont(JBUI.Fonts.label(14));
@@ -270,7 +270,7 @@ public class TranslationDialog extends DialogWrapper implements
 
     private void onQueryButtonClick() {
         String query = mResultText.getSelectedText();
-        if (StringUtils.isEmptyOrBlankString(query)) {
+        if (StringsKt.isNullOrBlank(query)) {
             query = mQueryComboBox.getEditor().getItem().toString();
         }
         query(query);
@@ -315,7 +315,7 @@ public class TranslationDialog extends DialogWrapper implements
         menu.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                boolean hasSelectedText = !StringUtils.isEmptyOrBlankString(mResultText.getSelectedText());
+                boolean hasSelectedText = !StringsKt.isNullOrBlank(mResultText.getSelectedText());
                 copy.setEnabled(hasSelectedText);
                 query.setEnabled(hasSelectedText);
             }
@@ -342,7 +342,7 @@ public class TranslationDialog extends DialogWrapper implements
     }
 
     public void query(String query) {
-        if (!StringUtils.isEmptyOrBlankString(query)) {
+        if (!StringsKt.isNullOrBlank(query)) {
             mQueryComboBox.getEditor().setItem(query);
             onQuery();
         }
@@ -350,7 +350,7 @@ public class TranslationDialog extends DialogWrapper implements
 
     private void onQuery() {
         String text = mQueryComboBox.getEditor().getItem().toString();
-        if (!StringUtils.isEmptyOrBlankString(text) && !text.equals(mLastSuccessfulQuery)) {
+        if (!StringsKt.isNullOrBlank(text) && !text.equals(mLastSuccessfulQuery)) {
             mResultText.setText("");
             mProcessIcon.resume();
             mLayout.show(mTextPanel, CARD_PROCESS);
@@ -441,7 +441,7 @@ public class TranslationDialog extends DialogWrapper implements
         @Override
         public void customize(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
             if (list.getWidth() == 0 // 在没有确定大小之前不设置真正的文本,否则控件会被过长的文本撑大.
-                    || StringUtils.isEmptyOrBlankString(value)) {
+                    || StringsKt.isNullOrBlank(value)) {
                 setText("");
             } else {
                 setRenderText(value);
