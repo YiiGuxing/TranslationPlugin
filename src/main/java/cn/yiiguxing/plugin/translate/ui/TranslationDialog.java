@@ -58,7 +58,6 @@ public class TranslationDialog extends DialogWrapper implements
     private JPanel mMsgPanel;
     private JTextPane mResultText;
     private JScrollPane mScrollPane;
-    @SuppressWarnings("Since15")
     private JComboBox<String> mQueryComboBox;
     private JPanel mTextPanel;
     private JPanel mProcessPanel;
@@ -72,7 +71,6 @@ public class TranslationDialog extends DialogWrapper implements
 
     private String mLastSuccessfulQuery;
     private QueryResult mLastSuccessfulResult;
-    private boolean mBroadcast;
 
     private boolean mLastMoveWasInsideDialog;
     private final AWTEventListener mAwtActivityListener = new AWTEventListener() {
@@ -293,7 +291,7 @@ public class TranslationDialog extends DialogWrapper implements
         });
 
         mQueryComboBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED && !mBroadcast) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
                 onQuery();
             }
         });
@@ -334,46 +332,43 @@ public class TranslationDialog extends DialogWrapper implements
     }
 
     private void update() {
-        if (isShowing()) {
-            if (mModel.getSize() > 0) {
-                query(mModel.getElementAt(0));
-            }
+        if (isShowing() && mModel.getSize() > 0) {
+            mQueryComboBox.setSelectedIndex(0);
         }
     }
 
     public void query(String query) {
         if (!StringsKt.isNullOrBlank(query)) {
-            mQueryComboBox.getEditor().setItem(query);
-            onQuery();
+            mTranslationPresenter.translate(query);
         }
     }
 
     private void onQuery() {
-        String text = mQueryComboBox.getEditor().getItem().toString();
-        if (!StringsKt.isNullOrBlank(text) && !text.equals(mLastSuccessfulQuery)) {
+        String text = (String) mQueryComboBox.getSelectedItem();
+        if (!StringsKt.isNullOrBlank(text)) {
+            //noinspection ConstantConditions
+            mTranslationPresenter.translate(text);
+        }
+    }
+
+    @Override
+    public void showStartTranslate(@NotNull String query) {
+        mModel.setSelectedItem(query);
+        if (!query.equals(mLastSuccessfulQuery)) {
             mResultText.setText("");
             mProcessIcon.resume();
             mLayout.show(mTextPanel, CARD_PROCESS);
-            mTranslationPresenter.query(text);
         }
     }
 
     @Override
     public void onHistoriesChanged() {
         mModel.fireContentsChanged();
-
-        mBroadcast = true;// 防止递归查询
-        mModel.setSelectedItem(mLastSuccessfulQuery);
-        mBroadcast = false;
     }
 
     @Override
     public void onHistoryItemChanged(@NotNull String newHistory) {
-        mModel.fireContentsChanged();
-
-        mBroadcast = true;// 防止递归查询
-        mModel.setSelectedItem(newHistory);
-        mBroadcast = false;
+        mQueryComboBox.setSelectedItem(newHistory);
     }
 
     @Override

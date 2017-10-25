@@ -29,13 +29,13 @@ class TranslationPresenter(private val view: View) : Presenter {
         return mTranslator.getCache(CacheKey(langFrom, langTo, query))
     }
 
-    override fun query(query: String) {
+    override fun translate(query: String) {
         if (query.isBlank() || query == mCurrentQuery)
             return
 
-        mAppStorage.addHistory(query)
-
         mCurrentQuery = query
+        mAppStorage.addHistory(query)
+        view.showStartTranslate(query)
 
         val presenterRef = WeakReference(this)
         mTranslator.translate(query) { _, result ->

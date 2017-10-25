@@ -24,10 +24,18 @@ interface Presenter {
      *
      * @param query 查询字符串
      */
-    fun query(query: String)
+    fun translate(query: String)
 }
 
 interface View {
+
+    /**
+     * 显示开始翻译
+     *
+     * @param  query 查询字符串
+     */
+    fun showStartTranslate(query: String) {}
+
     /**
      * 显示翻译结果
      *

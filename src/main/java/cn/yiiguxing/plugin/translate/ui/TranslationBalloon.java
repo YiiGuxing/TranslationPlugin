@@ -149,7 +149,7 @@ public class TranslationBalloon implements View {
         mEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         showBalloon(mBalloon);
 
-        mTranslationPresenter.query(queryText);
+        mTranslationPresenter.translate(queryText);
     }
 
     private void registerDisposer(@NotNull Balloon balloon, final boolean intercept) {
@@ -194,6 +194,10 @@ public class TranslationBalloon implements View {
                 return mTargetLocation;
             }
         }, Balloon.Position.below);
+    }
+
+    @Override
+    public void showStartTranslate(@NotNull String query) {
     }
 
     @Override
