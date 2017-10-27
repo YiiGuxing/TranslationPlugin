@@ -90,5 +90,5 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.values): String {
     }
     f = (f % 1E6).toLong()
 
-    return f.toString() + "." + (f xor d)
+    return "$f.${f xor d}"
 }
