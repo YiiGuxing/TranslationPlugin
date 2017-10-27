@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.tran
+package cn.yiiguxing.plugin.translate.trans
 
 /**
  * 语言

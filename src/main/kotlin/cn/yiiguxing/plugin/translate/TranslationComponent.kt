@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.TKK
 import com.intellij.notification.*
 import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
@@ -13,6 +14,7 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
 
     override fun initComponent() {
         super.initComponent()
+        TKK.update()
         mSettings = Settings.instance
     }
 

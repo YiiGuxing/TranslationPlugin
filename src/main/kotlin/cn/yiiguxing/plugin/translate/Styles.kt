@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.model.WebExplain
-import cn.yiiguxing.plugin.translate.tran.Speech
+import cn.yiiguxing.plugin.translate.trans.Speech
 import cn.yiiguxing.plugin.translate.ui.PhoneticButton
 import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
 import cn.yiiguxing.plugin.translate.util.appendString

@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.model.QueryResult
-import cn.yiiguxing.plugin.translate.tran.CacheKey
-import cn.yiiguxing.plugin.translate.tran.Lang
-import cn.yiiguxing.plugin.translate.tran.Translator
+import cn.yiiguxing.plugin.translate.trans.CacheKey
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translator
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import java.lang.ref.WeakReference

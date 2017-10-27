@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui;
 import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.ConstantsKt;
 import cn.yiiguxing.plugin.translate.Settings;
-import cn.yiiguxing.plugin.translate.tran.Lang;
+import cn.yiiguxing.plugin.translate.trans.Lang;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import cn.yiiguxing.plugin.translate.util.StringsKt;
 import com.intellij.icons.AllIcons;

@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.tran.Lang
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.application.ApplicationManager

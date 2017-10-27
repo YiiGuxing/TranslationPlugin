@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.tran
+package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
