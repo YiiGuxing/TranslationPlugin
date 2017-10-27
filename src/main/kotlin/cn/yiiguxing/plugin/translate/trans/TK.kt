@@ -88,7 +88,6 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.values): String {
     if (0 > f) {
         f = (f and Int.MAX_VALUE.toLong()) - Int.MIN_VALUE.toLong()
     }
-    Long.MAX_VALUE
     f = (f % 1E6).toLong()
 
     return f.toString() + "." + (f xor d)
