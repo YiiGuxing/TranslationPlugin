@@ -86,7 +86,7 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.values): String {
     f = `fun`(f, "+-3^+b+-f")
     f = f xor e
     if (0 > f) {
-        f = (f and Int.MAX_VALUE.toLong()) - Int.MIN_VALUE.toLong()
+        f = (f and Int.MAX_VALUE.toLong()) + Int.MAX_VALUE.toLong() + 1
     }
     f = (f % 1E6).toLong()
 
