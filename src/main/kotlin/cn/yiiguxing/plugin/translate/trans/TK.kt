@@ -32,9 +32,9 @@ object TKK {
         private set
 
     fun update(): Pair<Long, Long> {
-        val a = abs(generator.nextInt().toLong()) // 这个是猜的
-        val b = generator.nextInt().toLong()      // 这个也是猜的
-        val c = System.currentTimeMillis() / MIM  // 没错！没想到吧？这个值就是这样的！
+        val a = abs(generator.nextInt().toLong())
+        val b = generator.nextInt().toLong()
+        val c = System.currentTimeMillis() / MIM
 
         values = c to (a + b)
         return values
