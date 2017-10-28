@@ -53,6 +53,8 @@
 
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.trans.Translator"
                             serviceImplementation="cn.yiiguxing.plugin.translate.trans.Translator"/>
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.tts.TextToSpeech"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.AppStorage"
                             serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
         <applicationService serviceInterface="cn.yiiguxing.plugin.translate.TranslationManager"

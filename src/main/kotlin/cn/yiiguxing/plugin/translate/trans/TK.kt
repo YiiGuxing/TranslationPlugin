@@ -41,9 +41,11 @@ object TKK {
     }
 
     @Suppress("unused")
-    fun updateFromGoogle() {
+    fun updateFromGoogle(): Pair<Long, Long> {
         // TODO get from https://translate.google.cn/translate_a/element.js
         // TODO 懒得写了。。。
+
+        return update()
     }
 }
 

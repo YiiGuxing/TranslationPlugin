@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.model.WebExplain
-import cn.yiiguxing.plugin.translate.trans.Speech
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.ui.PhoneticButton
 import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
 import cn.yiiguxing.plugin.translate.util.appendString
@@ -112,6 +112,17 @@ object Styles {
         StyleConstants.setFontSize(this, Math.round(font.size * scale))
     }
 
+    enum class Phonetic(val value: Int) {
+        /**
+         * 英式发音
+         */
+        UK(1),
+        /**
+         * 美式发音
+         */
+        US(2)
+    }
+
     private fun insertHeader(textPane: JTextPane, query: String, result: QueryResult) {
         val document = textPane.document
 
@@ -125,11 +136,11 @@ object Styles {
                 var hasPhonetic = false
 
                 if (!phoUK.isNullOrBlank()) {
-                    insertPhonetic(document, title, phoUK!!, Speech.Phonetic.UK)
+                    insertPhonetic(document, title, phoUK!!, Phonetic.UK)
                     hasPhonetic = true
                 }
                 if (!phoUS.isNullOrBlank()) {
-                    insertPhonetic(document, title, phoUS!!, Speech.Phonetic.US)
+                    insertPhonetic(document, title, phoUS!!, Phonetic.US)
                     hasPhonetic = true
                 }
 
@@ -152,8 +163,8 @@ object Styles {
     private fun insertPhonetic(document: Document,
                                query: String,
                                phoneticText: String,
-                               phonetic: Speech.Phonetic) {
-        document.appendString(if (phonetic === Speech.Phonetic.UK) "英[" else "美[", ATTR_EXPLAIN_BASE)
+                               phonetic: Phonetic) {
+        document.appendString(if (phonetic === Phonetic.UK) "英[" else "美[", ATTR_EXPLAIN_BASE)
 
         val settings = Settings.instance
         val fontFamily = settings.phoneticFontFamily
@@ -169,7 +180,7 @@ object Styles {
         val attr = SimpleAttributeSet()
         StyleConstants.setComponent(attr, PhoneticButton(Consumer { mouseEvent ->
             if (mouseEvent.clickCount == 1) {
-                Speech.play(query, phonetic)
+                TextToSpeech.INSTANCE.speak(query)
             }
         }))
         document.appendString(" ", attr)
