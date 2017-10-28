@@ -43,6 +43,7 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
     private fun play() {
         if (!play) return
         try {
+            LOGGER.info("TTS>>> $url")
             HttpRequests.request(url).also { buildRequest(it) }.connect { request ->
                 if (!play) return@connect
                 MpegAudioFileReader().getAudioInputStream(request.inputStream)?.use { ais ->

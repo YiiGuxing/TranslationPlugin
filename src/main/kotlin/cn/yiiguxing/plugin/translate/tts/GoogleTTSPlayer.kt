@@ -27,6 +27,6 @@ class GoogleTTSPlayer(
     }
 
     companion object {
-        private val TTS_URL = "$GOOGLE_TTS?client=gtx&ie=UTF-8&tl=%s&tk=%s&q=%s&prev=input&total=2&idx=1&textlen=152"
+        private const val TTS_URL = "$GOOGLE_TTS?client=gtx&ie=UTF-8&tl=%s&tk=%s&q=%s"
     }
 }
