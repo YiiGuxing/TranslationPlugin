@@ -6,7 +6,7 @@ package cn.yiiguxing.plugin.translate.trans
 enum class Lang(val langName: String, val code: String) {
     AUTO("自动检测", "auto"),
     CHINESE("中文", "zh-CHS"),
-    ENGLISH("英文", "EN"),
+    ENGLISH("英文", "en"),
     JAPANESE("日文", "ja"),
     KOREAN("韩文", "ko"),
     FRENCH("法文", "fr"),

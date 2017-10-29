@@ -14,7 +14,7 @@ data class Translation(
         val trans: String?,
         val phoneticSymbol: Symbol? = null,
         val dictionaries: Array<Dict> = emptyArray(),
-        val otherExplain: Map<String, Array<String>> = emptyMap()
+        val otherExplain: Map<String, String> = emptyMap()
 )
 
 /**

@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.trans.CacheKey
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.Translator
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import java.lang.ref.WeakReference
@@ -13,7 +13,7 @@ class TranslationPresenter(private val view: View) : Presenter {
     private val mAppStorage: AppStorage = AppStorage.instance
     private val mSettings: Settings = Settings.instance
 
-    private val mTranslator: Translator = Translator.instance
+    private val mTranslator: YoudaoTranslator = YoudaoTranslator.instance
 
     private var mCurrentQuery: String? = null
 

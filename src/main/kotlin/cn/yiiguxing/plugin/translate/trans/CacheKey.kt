@@ -5,4 +5,4 @@ package cn.yiiguxing.plugin.translate.trans
  *
  * Created by Yii.Guxing on 2017-06-11.
  */
-data class CacheKey(val langFrom: Lang, val langTo: Lang, val text: String)
+data class CacheKey(val srcLang: Lang, val targetLang: Lang, val text: String, val translator: String = "unknown")
