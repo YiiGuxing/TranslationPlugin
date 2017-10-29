@@ -8,6 +8,7 @@ import com.intellij.openapi.components.ServiceManager
  */
 class TextToSpeech private constructor() {
 
+    private var currentToken: Long = 0
     private var currentPlayer: TTSPlayer? = null
 
     /**
@@ -16,15 +17,26 @@ class TextToSpeech private constructor() {
      * @param text the text.
      */
     @Synchronized
-    fun speak(text: String) {
+    fun speak(text: String, token: Long = 0) {
         currentPlayer?.stop()
         currentPlayer = GoogleTTSPlayer(text, Lang.ENGLISH) { player ->
             synchronized(this@TextToSpeech) {
                 if (player === currentPlayer) {
+                    currentToken = 0
                     currentPlayer = null
                 }
             }
-        }.apply { start() }
+        }.apply {
+            currentToken = token
+            start()
+        }
+    }
+
+    @Synchronized
+    fun stop(token: Long) {
+        if (currentToken == 0L || currentToken == token) {
+            currentPlayer?.stop()
+        }
     }
 
     companion object {
