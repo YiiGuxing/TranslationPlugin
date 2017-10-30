@@ -4,10 +4,7 @@ import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.model.WebExplain
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.ui.PhoneticButton
-import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
-import cn.yiiguxing.plugin.translate.util.appendString
-import cn.yiiguxing.plugin.translate.util.clear
-import cn.yiiguxing.plugin.translate.util.trimEnd
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.ui.JBColor
 import com.intellij.util.Consumer
@@ -24,7 +21,7 @@ import javax.swing.text.*
  */
 object Styles {
 
-    private val LOGGER = Logger.getInstance("#" + Styles::class.java.canonicalName)
+    private val LOGGER = Logger.getInstance(Styles::class.java)
 
     private val ATTR_QUERY = SimpleAttributeSet()
     private val ATTR_EXPLAIN_BASE = SimpleAttributeSet()
@@ -156,7 +153,7 @@ object Styles {
 
             document.appendString("\n")
         } catch (e: BadLocationException) {
-            LOGGER.error("insertHeader ", e)
+            LOGGER.e("insertHeader ", e)
         }
     }
 
@@ -221,7 +218,7 @@ object Styles {
             }
             doc.appendString("\n")
         } catch (e: BadLocationException) {
-            LOGGER.error("insertExplain ", e)
+            LOGGER.e("insertExplain ", e)
         }
     }
 
@@ -251,7 +248,7 @@ object Styles {
                 doc.appendString("\n")
             }
         } catch (e: BadLocationException) {
-            LOGGER.error("insertWebExplain ", e)
+            LOGGER.e("insertWebExplain ", e)
         }
     }
 

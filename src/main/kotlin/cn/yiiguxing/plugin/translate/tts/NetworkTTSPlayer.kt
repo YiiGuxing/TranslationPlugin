@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate.tts
 
+import cn.yiiguxing.plugin.translate.util.e
+import cn.yiiguxing.plugin.translate.util.i
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
@@ -43,7 +45,7 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
     private fun play() {
         if (!play) return
         try {
-            LOGGER.info("TTS>>> $url")
+            LOGGER.i("TTS>>> $url")
             HttpRequests.request(url).also { buildRequest(it) }.connect { request ->
                 if (!play) return@connect
                 MpegAudioFileReader().getAudioInputStream(request.inputStream)?.use { ais ->
@@ -64,7 +66,7 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
                 }
             }
         } catch (e: Throwable) {
-            LOGGER.error("play", e)
+            LOGGER.e("play", e)
         }
     }
 
@@ -90,7 +92,7 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
     }
 
     companion object {
-        private val LOGGER = Logger.getInstance("#${NetworkTTSPlayer::class.java.canonicalName}")
+        private val LOGGER = Logger.getInstance(NetworkTTSPlayer::class.java)
 
         private fun AudioFormat.openLine(): SourceDataLine? = try {
             val info = DataLine.Info(SourceDataLine::class.java, this)
@@ -98,7 +100,7 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
                 open(this@openLine)
             }
         } catch (e: Exception) {
-            LOGGER.error("openLine", e)
+            LOGGER.e("openLine", e)
             null
         }
     }
