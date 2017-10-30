@@ -1,7 +1,10 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import com.google.gson.JsonSyntaxException
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 
 /**
  * AbstractTranslator
@@ -14,12 +17,22 @@ abstract class AbstractTranslator : Translator {
 
     protected open fun buildRequest(builder: RequestBuilder) {}
 
-    protected abstract fun parserResult(text: String): Translation
+    protected abstract fun parserResult(result: String): Translation
 
-    override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = HttpRequests
-            .request(getTranslateUrl(text, srcLang, targetLang))
-            .also { buildRequest(it) }
-            .connect {
-                parserResult(it.readString(null))
-            }
+    protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
+        is ConnectException -> "网络连接失败"
+        is SocketTimeoutException -> "网络连接超时，请检查网络连接"
+        is JsonSyntaxException -> "无法解析翻译结果"
+        else -> "未知错误"
+    }
+
+    override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = try {
+        HttpRequests.request(getTranslateUrl(text, srcLang, targetLang))
+                .also { buildRequest(it) }
+                .connect {
+                    parserResult(it.readString(null))
+                }
+    } catch (throwable: Throwable) {
+        throw TranslateException(createErrorMessage(throwable), throwable)
+    }
 }

@@ -8,7 +8,7 @@ package cn.yiiguxing.plugin.translate
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_DISABLE = "#DISABLE"
 
-const val LINK_SETTINGS = "<a href=\"$HTML_DESCRIPTION_SETTINGS\">设置</a>"
+const val LINK_SETTINGS = """<a href="$HTML_DESCRIPTION_SETTINGS">设置</a>"""
 
 const val GOOGLE_TTS = "https://translate.google.cn/translate_tts"
 

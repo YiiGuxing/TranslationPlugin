@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.model.QueryResult
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.HANZI_CONDITION
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
@@ -58,7 +58,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
         }
 
         editor.document.getText(selectionRange).takeIf { it.isNotBlank() }?.let { queryText ->
-            YoudaoTranslator.instance.translate(queryText) { _, result ->
+            TranslateService.INSTANCE.translate(queryText) { _, result ->
                 result?.takeIf { it.isSuccessful }
                         ?.let { getReplaceLookupElements(it) }
                         ?.takeIf { it.isNotEmpty() }

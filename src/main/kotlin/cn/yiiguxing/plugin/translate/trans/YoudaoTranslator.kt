@@ -1,132 +1,84 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.LINK_SETTINGS
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.model.QueryResult
-import cn.yiiguxing.plugin.translate.util.LruCache
+import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.util.io.HttpRequests
-import java.util.concurrent.Future
 
-class YoudaoTranslator private constructor() {
+class YoudaoTranslator : AbstractTranslator() {
 
+    override val id: String = TRANSLATOR_ID
     private val mSettings = Settings.instance
-    private val mCache = LruCache<CacheKey, QueryResult>(500)
-    private var mCurrentTask: Future<*>? = null
 
-    /**
-     * 获取缓存
-     */
-    fun getCache(key: CacheKey) = mCache[key]
-
-    /**
-     * 查询翻译
-     *
-     * @param query    目标字符串
-     * @param callback 回调
-     */
-    fun translate(query: String, callback: (query: String, result: QueryResult?) -> Unit) {
-        if (query.isBlank()) {
-            callback(query, null)
-            return
-        }
-
-        mCurrentTask?.apply {
-            if (!isDone) cancel(false)
-        }
-        mCurrentTask = null
-
-        val langFrom = mSettings.langFrom ?: Lang.AUTO
-        val langTo = mSettings.langTo ?: Lang.AUTO
-
-        mCache[CacheKey(langFrom, langTo, query)]?.let {
-            callback(query, it)
-            return
-        }
-
-        mCurrentTask = ApplicationManager
-                .getApplication()
-                .executeOnPooledThread(QueryRequest(langFrom, langTo, query, callback))
-    }
-
-    private fun getQueryUrl(langFrom: Lang, langTo: Lang, query: String): String {
+    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
         val settings = mSettings
         val appId = settings.appId
         val privateKey = settings.appPrivateKey
         val salt = System.currentTimeMillis().toString()
-        val sign = (appId + query + salt + privateKey).md5()
+        val sign = (appId + text + salt + privateKey).md5()
 
-        return "$YOUDAO_TRANSLATE_URL?appKey=${appId.urlEncode()}" +
-                "&from=${langFrom.code}" +
-                "&to=${langTo.code}" +
-                "&salt=$salt" +
-                "&sign=$sign" +
-                "&q=${query.urlEncode()}"
+        return StringBuilder(YOUDAO_TRANSLATE_URL)
+                .append("?appKey=", appId.urlEncode(),
+                        "&from=", srcLang.code,
+                        "&to=", targetLang.code,
+                        "&salt=", salt,
+                        "&sign=", sign,
+                        "&q=", text.urlEncode())
+                .toString()
+                .also {
+                    LOGGER.i("Translate url: $it")
+                }
     }
 
-    private inner class QueryRequest(
-            private val langFrom: Lang,
-            private val langTo: Lang,
-            private val query: String,
-            private val callback: (query: String, result: QueryResult?) -> Unit
-    ) : Runnable {
+    override fun parserResult(result: String): Translation {
+        LOGGER.i("Translate result: $result")
 
-        override fun run() {
-            val query = query
-
-            val result: QueryResult = try {
-                val url = getQueryUrl(langFrom, langTo, query)
-                LOGGER.info("query url: $url")
-
-                val json = HttpRequests.request(url).readString(null)
-                LOGGER.info(json)
-
-                if (json.isNotBlank())
-                    Gson().fromJson(json, QueryResult::class.java)
-                else
-                    QueryResult(errorCode = QueryResult.CODE_ERROR)
-            } catch (e: JsonSyntaxException) {
-                LOGGER.warn(e)
-
-                QueryResult(errorCode = QueryResult.CODE_JSON_SYNTAX_ERROR)
-            } catch (e: Exception) {
-                LOGGER.warn(e)
-
-                QueryResult(errorCode = QueryResult.CODE_ERROR, message = e.message)
+        return Gson().fromJson(result, YoudaoResult::class.java).run {
+            checkError()
+            if (errorCode != 0) {
+                throw YoudaoTranslateException(errorCode)
             }
 
-            result.apply {
-                checkError()
-                if (isSuccessful) {
-                    mCache.put(CacheKey(langFrom, langTo, query), this)
-                }
-                if (this.query.isNullOrBlank()) {
-                    this.query = query
-                }
-            }
-
-            println("query: " + query)
-            println("result: " + result)
-
-            callback(query, result)
+            toTranslation()
         }
     }
 
+    override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
+        is YoudaoTranslateException -> "[${throwable.code}]: " + when (throwable.code) {
+            101 -> "缺少必填的参数"
+            102 -> "不支持的语言类型"
+            103 -> "翻译文本过长"
+            104 -> "不支持的API类型"
+            105 -> "不支持的签名类型"
+            106 -> "不支持的响应类型"
+            107 -> "不支持的传输加密类型"
+            108 -> "AppKey无效 - $LINK_SETTINGS"
+            109 -> "BatchLog格式不正确"
+            110 -> "无相关服务的有效实例"
+            111 -> "账号无效或者账号已欠费 - $LINK_SETTINGS"
+            201 -> "解密失败"
+            202 -> "签名检验失败 - $LINK_SETTINGS"
+            203 -> "访问IP地址不在可访问IP列表"
+            301 -> "辞典查询失败"
+            302 -> "翻译查询失败"
+            303 -> "服务器异常"
+            401 -> "账户已经欠费"
+            else -> "未知错误"
+        }
+        else -> super.createErrorMessage(throwable)
+    }
+
+    class YoudaoTranslateException(val code: Int) : TranslateException("Translate failed: $code")
+
     companion object {
 
-        private val LOGGER = Logger.getInstance("#" + YoudaoTranslator::class.java.canonicalName)
+        const val TRANSLATOR_ID = "YouDao"
 
-        /**
-         * @return [YoudaoTranslator] 的实例
-         */
-        val instance: YoudaoTranslator
-            get() = ServiceManager.getService(YoudaoTranslator::class.java)
+        private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
     }
 
 }
