@@ -15,7 +15,7 @@ import com.intellij.openapi.diagnostic.Logger
 class TranslateService private constructor() {
 
     @Volatile
-    var translator: Translator = DEFAULT_TRANSLATOR
+    var translator: Translator = TranslatorFactory.DEFAULT_TRANSLATOR
         private set
     private val cache = LruCache<CacheKey, Translation>(500)
 
@@ -23,24 +23,20 @@ class TranslateService private constructor() {
         val INSTANCE: TranslateService
             get() = ServiceManager.getService(TranslateService::class.java)
 
-        private val DEFAULT_TRANSLATOR = YoudaoTranslator()
         private val LOGGER = Logger.getInstance(TranslateService::class.java)
     }
 
     fun setTranslator(translatorId: String) {
-        translator = when (translatorId) {
-            YoudaoTranslator.TRANSLATOR_ID -> YoudaoTranslator()
-            else -> DEFAULT_TRANSLATOR
-        }
+        translator = TranslatorFactory.create(translatorId)
     }
 
     fun getCache(text: String, srcLang: Lang? = null, targetLang: Lang? = null): QueryResult? {
         return null
     }
 
-    fun translate(text: String, srcLang: Lang, targetLang: Lang, callback: Callback) {
+    fun translate(text: String, srcLang: Lang, targetLang: Lang, listener: TranslateListener) {
         cache[CacheKey(text, srcLang, targetLang, translator.id)]?.let {
-            callback.onSuccess(it)
+            listener.onSuccess(it)
             return
         }
 
@@ -50,12 +46,12 @@ class TranslateService private constructor() {
                     with(translator) {
                         translate(text, srcLang, targetLang).let { translation ->
                             cache.put(CacheKey(text, srcLang, targetLang, id), translation)
-                            invokeLater { callback.onSuccess(translation) }
+                            invokeLater { listener.onSuccess(translation) }
                         }
                     }
                 } catch (e: TranslateException) {
                     LOGGER.error("translate", e)
-                    invokeLater { callback.onError(e.message) }
+                    invokeLater { listener.onError(e.message) }
                 }
             }
         }
@@ -65,11 +61,6 @@ class TranslateService private constructor() {
         ApplicationManager.getApplication().executeOnPooledThread {
             translator.translate(text, Lang.AUTO, Lang.AUTO)
         }
-    }
-
-    interface Callback {
-        fun onSuccess(translation: Translation)
-        fun onError(message: String)
     }
 
 }
