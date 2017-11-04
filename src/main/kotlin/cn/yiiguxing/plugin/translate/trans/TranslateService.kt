@@ -27,7 +27,9 @@ class TranslateService private constructor() {
     }
 
     fun setTranslator(translatorId: String) {
-        translator = TranslatorFactory.create(translatorId)
+        if (translatorId != translator.id) {
+            translator = TranslatorFactory.create(translatorId)
+        }
     }
 
     fun getCache(text: String, srcLang: Lang? = null, targetLang: Lang? = null): QueryResult? {
