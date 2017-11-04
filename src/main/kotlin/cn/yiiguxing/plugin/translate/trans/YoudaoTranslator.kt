@@ -62,7 +62,7 @@ class YoudaoTranslator : AbstractTranslator() {
     }
 
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is YoudaoTranslateException -> "[${throwable.code}]: " + when (throwable.code) {
+        is YoudaoTranslateException -> "错误[${throwable.code}]: " + when (throwable.code) {
             101 -> "缺少必填的参数"
             102 -> "不支持的语言类型"
             103 -> "翻译文本过长"
@@ -93,6 +93,9 @@ class YoudaoTranslator : AbstractTranslator() {
         const val TRANSLATOR_ID = "YouDao"
 
         private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
+
+        val DEFAULT_SOURCE_LANGUAGE = Lang.AUTO
+        val DEFAULT_TARGET_LANGUAGE = Lang.AUTO
 
         private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
     }

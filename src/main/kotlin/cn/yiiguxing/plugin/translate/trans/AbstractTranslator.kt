@@ -24,7 +24,7 @@ abstract class AbstractTranslator : Translator {
         is ConnectException -> "网络连接失败"
         is SocketTimeoutException -> "网络连接超时，请检查网络连接"
         is JsonSyntaxException -> "无法解析翻译结果"
-        else -> "翻译失败"
+        else -> "翻译失败：未知错误"
     }
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = try {
