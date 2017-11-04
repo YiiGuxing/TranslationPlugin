@@ -12,7 +12,21 @@ import com.intellij.openapi.diagnostic.Logger
 class YoudaoTranslator : AbstractTranslator() {
 
     override val id: String = TRANSLATOR_ID
+
     private val mSettings = Settings.instance
+
+    override val supportedSourceLanguages: List<Lang> = listOf(
+            Lang.AUTO,
+            Lang.CHINESE,
+            Lang.ENGLISH,
+            Lang.JAPANESE,
+            Lang.KOREAN,
+            Lang.FRENCH,
+            Lang.RUSSIAN,
+            Lang.PORTUGUESE,
+            Lang.SPANISH
+    )
+    override val supportedTargetLanguages: List<Lang> = supportedSourceLanguages
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
         val settings = mSettings
@@ -23,8 +37,8 @@ class YoudaoTranslator : AbstractTranslator() {
 
         return StringBuilder(YOUDAO_TRANSLATE_URL)
                 .append("?appKey=", appId.urlEncode(),
-                        "&from=", srcLang.code,
-                        "&to=", targetLang.code,
+                        "&from=", getLanguageCode(srcLang),
+                        "&to=", getLanguageCode(targetLang),
                         "&salt=", salt,
                         "&sign=", sign,
                         "&q=", text.urlEncode())
@@ -79,6 +93,8 @@ class YoudaoTranslator : AbstractTranslator() {
         const val TRANSLATOR_ID = "YouDao"
 
         private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
+
+        private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
     }
 
 }

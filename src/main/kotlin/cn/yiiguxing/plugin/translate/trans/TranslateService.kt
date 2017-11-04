@@ -29,7 +29,12 @@ class TranslateService private constructor() {
         return null
     }
 
-    fun translate(text: String, targetLang: Lang? = null, callback: (String, QueryResult?) -> Unit) {
+    fun translate(
+            text: String,
+            srcLang: Lang? = null,
+            targetLang: Lang? = null,
+            callback: (String, QueryResult?) -> Unit
+    ) {
         ApplicationManager.getApplication().executeOnPooledThread {
             translator.translate(text, Lang.AUTO, Lang.AUTO)
         }

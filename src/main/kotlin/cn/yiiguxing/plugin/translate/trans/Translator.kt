@@ -9,6 +9,10 @@ interface Translator {
 
     val id: String
 
+    val supportedSourceLanguages: List<Lang>
+    
+    val supportedTargetLanguages: List<Lang>
+
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation
 
 }
