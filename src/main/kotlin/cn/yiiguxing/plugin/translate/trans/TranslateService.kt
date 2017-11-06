@@ -24,19 +24,28 @@ class TranslateService private constructor() {
             get() = ServiceManager.getService(TranslateService::class.java)
 
         private val LOGGER = Logger.getInstance(TranslateService::class.java)
+
+        private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
+            "TranslateService must only be used from the Swing Dispatch Thread."
+        }
     }
 
     fun setTranslator(translatorId: String) {
+        checkThread()
         if (translatorId != translator.id) {
             translator = TranslatorFactory.create(translatorId)
         }
     }
 
     fun getCache(text: String, srcLang: Lang? = null, targetLang: Lang? = null): QueryResult? {
+        checkThread()
+
         return null
     }
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang, listener: TranslateListener) {
+        checkThread()
+
         cache[CacheKey(text, srcLang, targetLang, translator.id)]?.let {
             listener.onSuccess(it)
             return
@@ -60,6 +69,7 @@ class TranslateService private constructor() {
     }
 
     fun translate(text: String, callback: (String, QueryResult?) -> Unit) {
+        checkThread()
         ApplicationManager.getApplication().executeOnPooledThread {
             translator.translate(text, Lang.AUTO, Lang.AUTO)
         }
