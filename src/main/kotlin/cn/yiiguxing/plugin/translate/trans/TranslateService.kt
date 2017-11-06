@@ -26,7 +26,7 @@ class TranslateService private constructor() {
         private val LOGGER = Logger.getInstance(TranslateService::class.java)
 
         private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
-            "TranslateService must only be used from the Swing Dispatch Thread."
+            "TranslateService must only be used from the Event Dispatch Thread."
         }
     }
 
