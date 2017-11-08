@@ -11,18 +11,13 @@ import com.intellij.openapi.diagnostic.Logger
 
 object YoudaoTranslator : AbstractTranslator() {
 
+    @JvmField
     val DEFAULT_SOURCE_LANGUAGE = Lang.AUTO
+    @JvmField
     val DEFAULT_TARGET_LANGUAGE = Lang.AUTO
 
-    private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
-
-    const val TRANSLATOR_ID = "YouDao"
-
-    override val id: String = TRANSLATOR_ID
-
-    private val mSettings = Settings.instance
-
-    override val supportedSourceLanguages: List<Lang> = listOf(
+    @JvmField
+    val SUPPORTED_LANGUAGES = listOf(
             Lang.AUTO,
             Lang.CHINESE,
             Lang.ENGLISH,
@@ -33,7 +28,17 @@ object YoudaoTranslator : AbstractTranslator() {
             Lang.PORTUGUESE,
             Lang.SPANISH
     )
-    override val supportedTargetLanguages: List<Lang> = supportedSourceLanguages
+
+    private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
+
+    const val TRANSLATOR_ID = "YouDao"
+
+    override val id: String = TRANSLATOR_ID
+
+    private val mSettings = Settings.instance
+
+    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
         val settings = mSettings

@@ -1,22 +1,13 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.AppStorage;
-import cn.yiiguxing.plugin.translate.ConstantsKt;
 import cn.yiiguxing.plugin.translate.Settings;
-import cn.yiiguxing.plugin.translate.trans.Lang;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import cn.yiiguxing.plugin.translate.util.StringsKt;
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.components.labels.ActionLink;
-import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,9 +17,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 设置页
@@ -39,15 +27,9 @@ public class SettingsPanel implements ConfigurablePanel {
     private static final int INDEX_EXCLUSIVE = 1;
 
     private JPanel mWholePanel;
-    private JPanel mLangSettingsPanel;
     private JPanel mSelectionSettingsPanel;
-    private JPanel mApiKeySettingsPanel;
 
     private JComboBox<String> mSelectionMode;
-    private JTextField mAppIdField;
-    private JPasswordField mAppPrivateKeyField;
-    @SuppressWarnings("FieldCanBeLocal")
-    private LinkLabel mGetApiKeyLink;
     private JPanel mHistoryPanel;
     private ComboBox mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
@@ -58,8 +40,6 @@ public class SettingsPanel implements ConfigurablePanel {
     private JTextPane mFontPreview;
     private JLabel mPrimaryFontLabel;
     private JLabel mPhoneticFontLabel;
-    private JComboBox<Lang> mLangFromComboBox;
-    private JComboBox<Lang> mLangToComboBox;
     private TranslateApiContainer mTranslateApiContainer;
 
     private final Settings mSettings;
@@ -85,23 +65,11 @@ public class SettingsPanel implements ConfigurablePanel {
     private void createUIComponents() {
         mTranslateApiContainer = new TranslateApiContainer(mSettings);
 
-        mGetApiKeyLink = new ActionLink("", new AnAction() {
-            @Override
-            public void actionPerformed(AnActionEvent anActionEvent) {
-                BrowserUtil.browse(ConstantsKt.YOUDAO_AI_URL);
-            }
-        });
-        mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
-
         mPrimaryFontComboBox = new FontComboBox(false, false);
         mPhoneticFontComboBox = new FontComboBox(false, true);
 
         fixFontComboBoxSize(mPrimaryFontComboBox);
         fixFontComboBoxSize(mPhoneticFontComboBox);
-
-        final List<Lang> languages = Arrays.asList(Lang.values());
-        mLangFromComboBox = new ComboBox<>(new CollectionComboBoxModel<>(languages));
-        mLangToComboBox = new ComboBox<>(new CollectionComboBoxModel<>(languages));
     }
 
     private void fixFontComboBoxSize(FontComboBox fontComboBox) {
@@ -111,11 +79,9 @@ public class SettingsPanel implements ConfigurablePanel {
     }
 
     private void setTitles() {
-        mLangSettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("语言"));
         mSelectionSettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("取词模式"));
         mFontPanel.setBorder(IdeBorderFactory.createTitledBorder("字体"));
         mHistoryPanel.setBorder(IdeBorderFactory.createTitledBorder("历史记录"));
-        mApiKeySettingsPanel.setBorder(IdeBorderFactory.createTitledBorder("有道翻译"));
     }
 
     private void setRenderer() {
@@ -130,15 +96,6 @@ public class SettingsPanel implements ConfigurablePanel {
                 }
             }
         });
-
-        final ListCellRendererWrapper<Lang> langRenderer = new ListCellRendererWrapper<Lang>() {
-            @Override
-            public void customize(JList list, Lang value, int index, boolean selected, boolean hasFocus) {
-                setText(value.getLangName());
-            }
-        };
-        mLangFromComboBox.setRenderer(langRenderer);
-        mLangToComboBox.setRenderer(langRenderer);
     }
 
     private void setListeners() {
@@ -208,46 +165,24 @@ public class SettingsPanel implements ConfigurablePanel {
         return -1;
     }
 
-    @NotNull
-    private String getAppPrivateKey() {
-        return new String(mAppPrivateKeyField.getPassword());
-    }
-
-    private void setAppPrivateKey(@NotNull String key) {
-        mAppPrivateKeyField.setText(key.isEmpty() ? null : key);
-    }
-
     @Override
     public boolean isModified() {
-        return (!StringsKt.isNullOrBlank(mAppIdField.getText())
-                && !StringsKt.isNullOrBlank(getAppPrivateKey()))
-                || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
+        return mSettings.getAutoSelectionMode() != getAutoSelectionMode()
                 || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
                 || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
                 || (mSettings.getPrimaryFontFamily() != null
                 && mSettings.getPrimaryFontFamily().equals(mPrimaryFontComboBox.getFontName()))
                 || (mSettings.getPhoneticFontFamily() != null
-                && mSettings.getPhoneticFontFamily().equals(mPhoneticFontComboBox.getFontName()))
-                || mSettings.getLangFrom() != mLangFromComboBox.getSelectedItem()
-                || mSettings.getLangTo() != mLangToComboBox.getSelectedItem();
+                && mSettings.getPhoneticFontFamily().equals(mPhoneticFontComboBox.getFontName()));
     }
 
     @Override
     public void apply() {
-        final String aAppId = Optional.ofNullable(mAppIdField.getText()).orElse("").trim();
-        mSettings.setAppId(aAppId);
-        final String appPrivateKey = getAppPrivateKey();
-        if (!(appPrivateKey.equals(mSettings.getAppPrivateKey()))) {
-            mSettings.setAppPrivateKey(appPrivateKey);
-        }
-
         final int maxHistorySize = getMaxHistorySize();
         if (maxHistorySize >= 0) {
             mAppStorage.setMaxHistorySize(maxHistorySize);
         }
 
-        mSettings.setLangFrom((Lang) mLangFromComboBox.getSelectedItem());
-        mSettings.setLangTo((Lang) mLangToComboBox.getSelectedItem());
         mSettings.setOverrideFont(mFontCheckBox.isSelected());
         mSettings.setPrimaryFontFamily(mPrimaryFontComboBox.getFontName());
         mSettings.setPhoneticFontFamily(mPhoneticFontComboBox.getFontName());
@@ -256,18 +191,11 @@ public class SettingsPanel implements ConfigurablePanel {
 
     @Override
     public void reset() {
-        final Lang from = Optional.ofNullable(mSettings.getLangFrom()).orElse(Lang.AUTO);
-        final Lang to = Optional.ofNullable(mSettings.getLangTo()).orElse(Lang.AUTO);
-        mLangFromComboBox.setSelectedItem(from);
-        mLangToComboBox.setSelectedItem(to);
         mFontCheckBox.setSelected(mSettings.isOverrideFont());
         mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());
         mPhoneticFontComboBox.setFontName(mSettings.getPhoneticFontFamily());
         previewPrimaryFont(mSettings.getPrimaryFontFamily());
         previewPhoneticFont(mSettings.getPhoneticFontFamily());
-
-        mAppIdField.setText(mSettings.getAppId());
-        setAppPrivateKey(mSettings.getAppPrivateKey());
 
         mMaxHistoriesSize.getEditor().setItem(Integer.toString(mAppStorage.getMaxHistorySize()));
         mSelectionMode.setSelectedIndex(mSettings.getAutoSelectionMode() == SelectionMode.INCLUSIVE
