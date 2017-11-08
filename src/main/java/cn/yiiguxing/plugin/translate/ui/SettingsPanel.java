@@ -33,7 +33,7 @@ import java.util.Optional;
 /**
  * 设置页
  */
-public class SettingsPanel {
+public class SettingsPanel implements ConfigurablePanel {
 
     private static final int INDEX_INCLUSIVE = 0;
     private static final int INDEX_EXCLUSIVE = 1;
@@ -46,6 +46,7 @@ public class SettingsPanel {
     private JComboBox<String> mSelectionMode;
     private JTextField mAppIdField;
     private JPasswordField mAppPrivateKeyField;
+    @SuppressWarnings("FieldCanBeLocal")
     private LinkLabel mGetApiKeyLink;
     private JPanel mHistoryPanel;
     private ComboBox mMaxHistoriesSize;
@@ -59,22 +60,31 @@ public class SettingsPanel {
     private JLabel mPhoneticFontLabel;
     private JComboBox<Lang> mLangFromComboBox;
     private JComboBox<Lang> mLangToComboBox;
+    private TranslateApiContainer mTranslateApiContainer;
 
-    private Settings mSettings;
-    private AppStorage mAppStorage;
+    private final Settings mSettings;
+    private final AppStorage mAppStorage;
 
-    public JComponent createPanel(@NotNull Settings settings, @NotNull AppStorage appStorage) {
+    public SettingsPanel(@NotNull Settings settings, @NotNull AppStorage appStorage) {
+        super();
+
         mSettings = settings;
         mAppStorage = appStorage;
 
         setTitles();
         setRenderer();
         setListeners();
+    }
 
+    @Override
+    @NotNull
+    public JComponent getComponent() {
         return mWholePanel;
     }
 
     private void createUIComponents() {
+        mTranslateApiContainer = new TranslateApiContainer(mSettings);
+
         mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
@@ -207,6 +217,7 @@ public class SettingsPanel {
         mAppPrivateKeyField.setText(key.isEmpty() ? null : key);
     }
 
+    @Override
     public boolean isModified() {
         return (!StringsKt.isNullOrBlank(mAppIdField.getText())
                 && !StringsKt.isNullOrBlank(getAppPrivateKey()))
@@ -221,6 +232,7 @@ public class SettingsPanel {
                 || mSettings.getLangTo() != mLangToComboBox.getSelectedItem();
     }
 
+    @Override
     public void apply() {
         final String aAppId = Optional.ofNullable(mAppIdField.getText()).orElse("").trim();
         mSettings.setAppId(aAppId);
@@ -242,6 +254,7 @@ public class SettingsPanel {
         mSettings.setAutoSelectionMode(getAutoSelectionMode());
     }
 
+    @Override
     public void reset() {
         final Lang from = Optional.ofNullable(mSettings.getLangFrom()).orElse(Lang.AUTO);
         final Lang to = Optional.ofNullable(mSettings.getLangTo()).orElse(Lang.AUTO);

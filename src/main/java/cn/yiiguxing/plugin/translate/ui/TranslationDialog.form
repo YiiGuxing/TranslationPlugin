@@ -34,7 +34,7 @@
                 </constraints>
                 <properties>
                   <background color="-13948117"/>
-                  <visible value="false"/>
+                  <visible value="true"/>
                 </properties>
                 <border type="empty"/>
                 <children>
@@ -127,7 +127,7 @@
               <focusable value="true"/>
               <icon value="icons/translate.png"/>
               <opaque value="true"/>
-              <text value="Query"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

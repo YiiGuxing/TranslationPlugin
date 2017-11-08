@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.ui.ConfigurablePanel
 import cn.yiiguxing.plugin.translate.ui.SettingsPanel
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
@@ -17,7 +17,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
     private val mSettings: Settings = Settings.instance
     private val mAppStorage: AppStorage = AppStorage.instance
 
-    private var mPanel: SettingsPanel? = null
+    private var mPanel: ConfigurablePanel? = null
 
     override fun getId(): String {
         return "yiiguxing.plugin.translate"
@@ -35,14 +35,13 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
         return null
     }
 
-    override fun createComponent(): JComponent = SettingsPanel().run {
-        mPanel = this@run
-        createPanel(mSettings, mAppStorage)
+    override fun createComponent(): JComponent = with(SettingsPanel(mSettings, mAppStorage)) {
+        mPanel = this@with
+        component
     }
 
     override fun isModified(): Boolean = mPanel?.isModified ?: false
 
-    @Throws(ConfigurationException::class)
     override fun apply() {
         mPanel?.apply()
     }
