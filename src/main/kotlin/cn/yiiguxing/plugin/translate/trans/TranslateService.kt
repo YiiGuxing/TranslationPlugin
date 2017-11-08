@@ -15,11 +15,13 @@ import com.intellij.openapi.diagnostic.Logger
 class TranslateService private constructor() {
 
     @Volatile
-    var translator: Translator = TranslatorFactory.DEFAULT_TRANSLATOR
+    var translator: Translator = DEFAULT_TRANSLATOR
         private set
     private val cache = LruCache<CacheKey, Translation>(500)
 
     companion object {
+        val DEFAULT_TRANSLATOR: Translator = YoudaoTranslator
+
         val INSTANCE: TranslateService
             get() = ServiceManager.getService(TranslateService::class.java)
 
@@ -33,7 +35,10 @@ class TranslateService private constructor() {
     fun setTranslator(translatorId: String) {
         checkThread()
         if (translatorId != translator.id) {
-            translator = TranslatorFactory.create(translatorId)
+            translator = when (translatorId) {
+                YoudaoTranslator.TRANSLATOR_ID -> YoudaoTranslator
+                else -> DEFAULT_TRANSLATOR
+            }
         }
     }
 

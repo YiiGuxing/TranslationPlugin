@@ -9,7 +9,14 @@ import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 
-class YoudaoTranslator : AbstractTranslator() {
+object YoudaoTranslator : AbstractTranslator() {
+
+    val DEFAULT_SOURCE_LANGUAGE = Lang.AUTO
+    val DEFAULT_TARGET_LANGUAGE = Lang.AUTO
+
+    private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
+
+    const val TRANSLATOR_ID = "YouDao"
 
     override val id: String = TRANSLATOR_ID
 
@@ -47,6 +54,8 @@ class YoudaoTranslator : AbstractTranslator() {
                     LOGGER.i("Translate url: $it")
                 }
     }
+
+    private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
 
     override fun parserResult(result: String): Translation {
         LOGGER.i("Translate result: $result")
@@ -87,17 +96,5 @@ class YoudaoTranslator : AbstractTranslator() {
     }
 
     class YoudaoTranslateException(val code: Int) : TranslateException("Translate failed: $code")
-
-    companion object {
-
-        const val TRANSLATOR_ID = "YouDao"
-
-        private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
-
-        val DEFAULT_SOURCE_LANGUAGE = Lang.AUTO
-        val DEFAULT_TARGET_LANGUAGE = Lang.AUTO
-
-        private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
-    }
 
 }
