@@ -24,7 +24,7 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 翻译API
      */
-    var translateApi: String = YoudaoTranslator.TRANSLATOR_ID
+    var translator: String = YoudaoTranslator.TRANSLATOR_ID
 
     /**
      * 谷歌翻译选项

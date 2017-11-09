@@ -25,7 +25,7 @@ import java.util.Objects;
  * Created by Yii.Guxing on 2017/11/8
  */
 @SuppressWarnings("WeakerAccess")
-public class YoudaoApiPanel implements ConfigurablePanel.TranslateApiPanel {
+public class YoudaoTranslatePanel implements TransPanelContainer.TransPanel {
 
     private JPanel mContentPanel;
     private ComboBox<Lang> mPrimaryLanguage;
@@ -36,7 +36,7 @@ public class YoudaoApiPanel implements ConfigurablePanel.TranslateApiPanel {
 
     private final YoudaoTranslateSettings mSettings;
 
-    public YoudaoApiPanel(@NotNull YoudaoTranslateSettings settings) {
+    public YoudaoTranslatePanel(@NotNull YoudaoTranslateSettings settings) {
         this.mSettings = settings;
     }
 
@@ -48,7 +48,7 @@ public class YoudaoApiPanel implements ConfigurablePanel.TranslateApiPanel {
 
     @NotNull
     @Override
-    public String getTitle() {
+    public String getName() {
         return "有道翻译";
     }
 

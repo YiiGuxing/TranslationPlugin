@@ -21,7 +21,7 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
 
     override fun projectOpened() {
         if (mSettings.isDisableAppKeyNotification
-                || (mSettings.translateApi == YoudaoTranslator.TRANSLATOR_ID
+                || (mSettings.translator == YoudaoTranslator.TRANSLATOR_ID
                 && mSettings.youdaoTranslateSettings.appId.isNotBlank()
                 && mSettings.youdaoTranslateSettings.isAppKeyConfigured)) {
             return

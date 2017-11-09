@@ -40,7 +40,7 @@ public class SettingsPanel implements ConfigurablePanel {
     private JTextPane mFontPreview;
     private JLabel mPrimaryFontLabel;
     private JLabel mPhoneticFontLabel;
-    private TranslateApiContainer mTranslateApiContainer;
+    private TransPanelContainer mTransPanelContainer;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -63,7 +63,7 @@ public class SettingsPanel implements ConfigurablePanel {
     }
 
     private void createUIComponents() {
-        mTranslateApiContainer = new TranslateApiContainer(mSettings);
+        mTransPanelContainer = new TransPanelContainer(mSettings);
 
         mPrimaryFontComboBox = new FontComboBox(false, false);
         mPhoneticFontComboBox = new FontComboBox(false, true);
@@ -167,7 +167,7 @@ public class SettingsPanel implements ConfigurablePanel {
 
     @Override
     public boolean isModified() {
-        return mTranslateApiContainer.isModified()
+        return mTransPanelContainer.isModified()
                 || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
                 || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
                 || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
@@ -179,7 +179,7 @@ public class SettingsPanel implements ConfigurablePanel {
 
     @Override
     public void apply() {
-        mTranslateApiContainer.apply();
+        mTransPanelContainer.apply();
 
         final int maxHistorySize = getMaxHistorySize();
         if (maxHistorySize >= 0) {
@@ -194,7 +194,7 @@ public class SettingsPanel implements ConfigurablePanel {
 
     @Override
     public void reset() {
-        mTranslateApiContainer.reset();
+        mTransPanelContainer.reset();
 
         mFontCheckBox.setSelected(mSettings.isOverrideFont());
         mPrimaryFontComboBox.setFontName(mSettings.getPrimaryFontFamily());

@@ -16,13 +16,13 @@ import java.util.Objects;
  * Created by Yii.Guxing on 2017/11/8
  */
 @SuppressWarnings("WeakerAccess")
-public class GoogleApiPanel implements ConfigurablePanel.TranslateApiPanel {
+public class GoogleTranslatePanel implements TransPanelContainer.TransPanel {
     private JPanel mContentPanel;
     private ComboBox<Lang> mPrimaryLanguage;
 
     private final GoogleTranslateSettings mSettings;
 
-    public GoogleApiPanel(@NotNull GoogleTranslateSettings settings) {
+    public GoogleTranslatePanel(@NotNull GoogleTranslateSettings settings) {
         mSettings = settings;
     }
 
@@ -34,7 +34,7 @@ public class GoogleApiPanel implements ConfigurablePanel.TranslateApiPanel {
 
     @NotNull
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Google翻译";
     }
 

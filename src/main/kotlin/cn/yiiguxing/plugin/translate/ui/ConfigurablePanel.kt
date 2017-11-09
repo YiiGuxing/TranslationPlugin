@@ -18,10 +18,4 @@ interface ConfigurablePanel {
 
     fun apply()
 
-    interface TranslateApiPanel : ConfigurablePanel {
-        val id: String
-
-        val title: String
-    }
-
 }
