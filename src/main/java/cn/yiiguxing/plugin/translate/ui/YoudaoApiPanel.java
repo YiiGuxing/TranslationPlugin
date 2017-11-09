@@ -1,12 +1,14 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.ConstantsKt;
+import cn.yiiguxing.plugin.translate.trans.Lang;
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.ui.components.JBTextField;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +23,7 @@ import javax.swing.*;
 public class YoudaoApiPanel implements ConfigurablePanel.TranslateApiPanel {
 
     private JPanel mContentPanel;
-    private JBTextField mAppIdField;
+    private ComboBox<Lang> mPrimaryLanguage;
     private LinkLabel mGetApiKeyLink;
 
     @NotNull
@@ -37,6 +39,9 @@ public class YoudaoApiPanel implements ConfigurablePanel.TranslateApiPanel {
     }
 
     private void createUIComponents() {
+        mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(YoudaoTranslator.SUPPORTED_LANGUAGES));
+        mPrimaryLanguage.setRenderer(LanguageRenderer.INSTANCE);
+
         mGetApiKeyLink = new ActionLink("", new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {

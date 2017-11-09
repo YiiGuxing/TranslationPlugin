@@ -1,8 +1,12 @@
 package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.trans.Lang;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.CollectionComboBoxModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 /**
  * GoogleApiPanel
@@ -11,6 +15,7 @@ import javax.swing.*;
  */
 public class GoogleApiPanel implements ConfigurablePanel.TranslateApiPanel {
     private JPanel mContentPanel;
+    private ComboBox<Lang> mPrimaryLanguage;
 
     @NotNull
     @Override
@@ -22,6 +27,11 @@ public class GoogleApiPanel implements ConfigurablePanel.TranslateApiPanel {
     @Override
     public String getTitle() {
         return "Google翻译";
+    }
+
+    private void createUIComponents() {
+        mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(Arrays.asList(Lang.values())));
+        mPrimaryLanguage.setRenderer(LanguageRenderer.INSTANCE);
     }
 
     @NotNull
