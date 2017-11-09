@@ -42,8 +42,8 @@ object YoudaoTranslator : AbstractTranslator() {
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
         val settings = mSettings
-        val appId = settings.appId
-        val privateKey = settings.appPrivateKey
+        val appId = settings.youdaoTranslateSettings.appId
+        val privateKey = settings.youdaoTranslateSettings.getAppKey()
         val salt = System.currentTimeMillis().toString()
         val sign = (appId + text + salt + privateKey).md5()
 

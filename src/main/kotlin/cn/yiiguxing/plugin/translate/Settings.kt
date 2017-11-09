@@ -1,8 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import cn.yiiguxing.plugin.translate.util.SelectionMode
-import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
@@ -10,6 +11,7 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
+import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
 import kotlin.properties.Delegates
 
@@ -20,29 +22,18 @@ import kotlin.properties.Delegates
 class Settings : PersistentStateComponent<Settings> {
 
     /**
-     * 应用ID.
+     * 翻译API
      */
-    var appId = ""
-    /**
-     * 应用密钥.
-     */
-    @Suppress("DEPRECATION")
-    var appPrivateKey: String
-        @Transient get() = PasswordSafe.getInstance().getPassword(Settings::class.java, YOUDAO_APP_PRIVATE_KEY) ?: ""
-        @Transient set(value) {
-            isPrivateKeyConfigured = value.isNotEmpty()
-            PasswordSafe.getInstance().setPassword(Settings::class.java, YOUDAO_APP_PRIVATE_KEY, value)
-        }
-    var isPrivateKeyConfigured = false
+    var translateApi: String = YoudaoTranslator.TRANSLATOR_ID
 
     /**
-     * 输入语言
+     * 谷歌翻译选项
      */
-    var langFrom: Lang? = null
+    var googleTranslateSettings: GoogleTranslateSettings = GoogleTranslateSettings()
     /**
-     * 输出语言
+     * 有道翻译选项
      */
-    var langTo: Lang? = null
+    var youdaoTranslateSettings: YoudaoTranslateSettings = YoudaoTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -88,21 +79,7 @@ class Settings : PersistentStateComponent<Settings> {
         XmlSerializerUtil.copyBean(state, this)
     }
 
-    override fun toString(): String {
-        return "Settings(" +
-                "appId=$appId," +
-                "isPrivateKeyConfigured=$isPrivateKeyConfigured," +
-                "langFrom=$langFrom," +
-                "langTo=$langTo," +
-                "isDisableAppKeyNotification=$isDisableAppKeyNotification," +
-                "autoSelectionMode=$autoSelectionMode," +
-                "settingsChangePublisher=$settingsChangePublisher" +
-                ")"
-    }
-
     companion object {
-
-        private const val YOUDAO_APP_PRIVATE_KEY = "YOUDAO_APP_PRIVATE_KEY"
 
         /**
          * Get the instance of this service.
@@ -112,6 +89,46 @@ class Settings : PersistentStateComponent<Settings> {
         val instance: Settings
             get() = ServiceManager.getService(Settings::class.java)
 
+    }
+}
+
+private const val PASSWORD_SERVICE_NAME = "YIIGUXING.TRANSLATION"
+private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
+
+/**
+ * 谷歌翻译选项
+ *
+ * @property primaryLanguage 主要语言
+ */
+@Tag("google-translate")
+data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.CHINESE)
+
+/**
+ * 有道翻译选项
+ *
+ * @property primaryLanguage    主要语言
+ * @property appId              应用ID
+ * @property isAppKeyConfigured 应用密钥设置标志
+ */
+@Tag("youdao-translate")
+data class YoudaoTranslateSettings(
+        var primaryLanguage: Lang = Lang.AUTO,
+        var appId: String = "",
+        var isAppKeyConfigured: Boolean = false
+) {
+    private var _appKey: String?  by PasswordSafeDelegate(PASSWORD_SERVICE_NAME, YOUDAO_APP_KEY)
+        @Transient get
+        @Transient set
+
+    /** 获取应用密钥. */
+    @Transient
+    fun getAppKey(): String = _appKey?.trim() ?: ""
+
+    /** 设置应用密钥. */
+    @Transient
+    fun setAppKey(value: String?) {
+        isAppKeyConfigured = !value.isNullOrBlank()
+        _appKey = if (value.isNullOrBlank()) null else value
     }
 }
 

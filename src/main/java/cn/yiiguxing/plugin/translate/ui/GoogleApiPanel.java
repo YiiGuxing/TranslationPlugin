@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.GoogleTranslateSettings;
 import cn.yiiguxing.plugin.translate.trans.Lang;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.CollectionComboBoxModel;
@@ -7,15 +8,23 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * GoogleApiPanel
  * <p>
  * Created by Yii.Guxing on 2017/11/8
  */
+@SuppressWarnings("WeakerAccess")
 public class GoogleApiPanel implements ConfigurablePanel.TranslateApiPanel {
     private JPanel mContentPanel;
     private ComboBox<Lang> mPrimaryLanguage;
+
+    private final GoogleTranslateSettings mSettings;
+
+    public GoogleApiPanel(@NotNull GoogleTranslateSettings settings) {
+        mSettings = settings;
+    }
 
     @NotNull
     @Override
@@ -42,16 +51,19 @@ public class GoogleApiPanel implements ConfigurablePanel.TranslateApiPanel {
 
     @Override
     public boolean isModified() {
-        return false;
+        return Objects.equals(mPrimaryLanguage.getSelectedItem(), mSettings.getPrimaryLanguage());
     }
 
     @Override
     public void reset() {
-
+        mPrimaryLanguage.setSelectedItem(mSettings.getPrimaryLanguage());
     }
 
     @Override
     public void apply() {
-
+        Lang selectedLang = (Lang) mPrimaryLanguage.getSelectedItem();
+        if (selectedLang != null) {
+            mSettings.setPrimaryLanguage(selectedLang);
+        }
     }
 }

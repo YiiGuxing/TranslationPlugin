@@ -8,12 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * TranslateApiContainer
  * <p>
  * Created by Yii.Guxing on 2017/11/8
  */
+@SuppressWarnings("WeakerAccess")
 public class TranslateApiContainer extends JPanel implements ConfigurablePanel {
 
     private JPanel mRootPanel;
@@ -35,8 +37,8 @@ public class TranslateApiContainer extends JPanel implements ConfigurablePanel {
         add(mRootPanel);
         mContentPanel.setLayout(mLayout);
 
-        add(new GoogleApiPanel());
-        add(new YoudaoApiPanel());
+        add(new GoogleApiPanel(mSettings.getGoogleTranslateSettings()));
+        add(new YoudaoApiPanel(mSettings.getYoudaoTranslateSettings()));
         mComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 mLayout.show(mContentPanel, ((Item) e.getItem()).id);
@@ -58,16 +60,34 @@ public class TranslateApiContainer extends JPanel implements ConfigurablePanel {
 
     @Override
     public boolean isModified() {
-        return mTranslateApiPanels.stream().anyMatch(TranslateApiPanel::isModified);
+        Item selectedApi = (Item) mComboBox.getSelectedItem();
+        return selectedApi == null
+                || !Objects.equals(selectedApi.id, mSettings.getTranslateApi())
+                || mTranslateApiPanels.stream().anyMatch(TranslateApiPanel::isModified);
     }
 
     @Override
     public void reset() {
+        String translateApi = mSettings.getTranslateApi();
+        int itemCount = mComboBox.getItemCount();
+        for (int i = 0; i < itemCount; i++) {
+            Item item = mComboBox.getItemAt(i);
+            if (Objects.equals(item.id, translateApi)) {
+                mComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
+
         mTranslateApiPanels.forEach(TranslateApiPanel::reset);
     }
 
     @Override
     public void apply() {
+        Item selectedApi = (Item) mComboBox.getSelectedItem();
+        if (selectedApi != null) {
+            mSettings.setTranslateApi(selectedApi.id);
+        }
+
         mTranslateApiPanels.forEach(TranslateApiPanel::apply);
     }
 

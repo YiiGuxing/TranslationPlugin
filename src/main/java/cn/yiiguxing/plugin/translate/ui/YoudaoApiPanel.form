@@ -79,7 +79,7 @@
               <text value="应用ID:"/>
             </properties>
           </component>
-          <component id="6b473" class="com.intellij.ui.components.JBTextField">
+          <component id="6b473" class="com.intellij.ui.components.JBTextField" binding="mAppIdField">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -100,7 +100,7 @@
               <text value="应用密钥:"/>
             </properties>
           </component>
-          <component id="4926f" class="com.intellij.ui.components.JBPasswordField">
+          <component id="4926f" class="com.intellij.ui.components.JBPasswordField" binding="mAppKeyField">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="300" height="-1"/>

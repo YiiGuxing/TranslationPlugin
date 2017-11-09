@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.TKK
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import com.intellij.notification.*
 import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
@@ -20,13 +21,15 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
 
     override fun projectOpened() {
         if (mSettings.isDisableAppKeyNotification
-                || mSettings.appId.isNotBlank()
-                && mSettings.isPrivateKeyConfigured)
+                || (mSettings.translateApi == YoudaoTranslator.TRANSLATOR_ID
+                && mSettings.youdaoTranslateSettings.appId.isNotBlank()
+                && mSettings.youdaoTranslateSettings.isAppKeyConfigured)) {
             return
+        }
 
         val group = NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON, true)
-        val title = "设置App Key"
-        val content = "当前App Key为空或者无效，请设置App Key.<br/><br/>" +
+        val title = "设置有道App Key"
+        val content = "当前有道App Key为空或者无效，请设置有道App Key.<br/><br/>" +
                 "<a href=\"$HTML_DESCRIPTION_SETTINGS\">设置</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "<a href=\"$HTML_DESCRIPTION_DISABLE\">不再提示</a>"
         val notification = group.createNotification(
