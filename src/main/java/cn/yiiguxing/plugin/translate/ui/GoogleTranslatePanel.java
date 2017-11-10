@@ -1,13 +1,14 @@
 package cn.yiiguxing.plugin.translate.ui;
 
 import cn.yiiguxing.plugin.translate.GoogleTranslateSettings;
+import cn.yiiguxing.plugin.translate.trans.GoogleTranslator;
 import cn.yiiguxing.plugin.translate.trans.Lang;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.CollectionComboBoxModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,7 +30,7 @@ public class GoogleTranslatePanel implements TransPanelContainer.TransPanel {
     @NotNull
     @Override
     public String getId() {
-        return "Google";
+        return GoogleTranslator.TRANSLATOR_ID;
     }
 
     @NotNull
@@ -39,7 +40,8 @@ public class GoogleTranslatePanel implements TransPanelContainer.TransPanel {
     }
 
     private void createUIComponents() {
-        mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(Arrays.asList(Lang.values())));
+        List<Lang> languages = GoogleTranslator.INSTANCE.getSupportedTargetLanguages();
+        mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(languages));
         mPrimaryLanguage.setRenderer(LanguageRenderer.INSTANCE);
     }
 
