@@ -17,6 +17,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.Objects;
 
 /**
  * 设置页
@@ -169,12 +170,10 @@ public class SettingsPanel implements ConfigurablePanel {
     public boolean isModified() {
         return mTransPanelContainer.isModified()
                 || mSettings.getAutoSelectionMode() != getAutoSelectionMode()
-                || getMaxHistorySize() != mAppStorage.getMaxHistorySize()
-                || mFontCheckBox.isSelected() != mSettings.isOverrideFont()
-                || (mSettings.getPrimaryFontFamily() != null
-                && mSettings.getPrimaryFontFamily().equals(mPrimaryFontComboBox.getFontName()))
-                || (mSettings.getPhoneticFontFamily() != null
-                && mSettings.getPhoneticFontFamily().equals(mPhoneticFontComboBox.getFontName()));
+                || mAppStorage.getMaxHistorySize() != getMaxHistorySize()
+                || mSettings.isOverrideFont() != mFontCheckBox.isSelected()
+                || !Objects.equals(mSettings.getPrimaryFontFamily(), mPrimaryFontComboBox.getFontName())
+                || !Objects.equals(mSettings.getPhoneticFontFamily(), mPhoneticFontComboBox.getFontName());
     }
 
     @Override
