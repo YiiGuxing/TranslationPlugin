@@ -5,6 +5,8 @@
  */
 package cn.yiiguxing.plugin.translate.util
 
+import java.util.*
+
 
 fun <T> MutableList<T>.trimToSize(maxSize: Int): Boolean {
     var size = this.size
@@ -16,3 +18,5 @@ fun <T> MutableList<T>.trimToSize(maxSize: Int): Boolean {
 
     return trim
 }
+
+fun <T> List<T>.toJVMReadOnlyList(): List<T> = Collections.unmodifiableList(this)

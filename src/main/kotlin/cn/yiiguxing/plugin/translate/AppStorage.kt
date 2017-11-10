@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.trimToSize
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
@@ -55,7 +56,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
      * @return 历史上记录列表
      */
     fun getHistories(): List<String> {
-        return histories
+        return histories.toJVMReadOnlyList()
     }
 
     /**
