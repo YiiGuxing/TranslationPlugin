@@ -56,13 +56,13 @@ public class YoudaoTranslatePanel implements TransPanelContainer.TransPanel {
         mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(YoudaoTranslator.SUPPORTED_LANGUAGES));
         mPrimaryLanguage.setRenderer(LanguageRenderer.INSTANCE);
 
-        mGetApiKeyLink = new ActionLink("", new AnAction() {
+        mGetApiKeyLink = new ActionLink("", AllIcons.Ide.Link, new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
                 BrowserUtil.browse(ConstantsKt.YOUDAO_AI_URL);
             }
         });
-        mGetApiKeyLink.setIcon(AllIcons.Ide.Link);
+        mGetApiKeyLink.setPaintUnderline(false);
     }
 
     @NotNull
@@ -92,7 +92,11 @@ public class YoudaoTranslatePanel implements TransPanelContainer.TransPanel {
     public void reset() {
         setAppKey(mSettings.getAppKey());
         mAppIdField.setText(mSettings.getAppId());
-        mPrimaryLanguage.setSelectedItem(mSettings.getPrimaryLanguage());
+
+        final Lang language = mSettings.getPrimaryLanguage();
+        if (YoudaoTranslator.SUPPORTED_LANGUAGES.contains(language)) {
+            mPrimaryLanguage.setSelectedItem(language);
+        }
     }
 
     @Override

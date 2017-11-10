@@ -40,8 +40,8 @@ public class GoogleTranslatePanel implements TransPanelContainer.TransPanel {
     }
 
     private void createUIComponents() {
-        List<Lang> languages = GoogleTranslator.INSTANCE.getSupportedTargetLanguages();
-        mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(languages));
+        final List<Lang> supportedLanguages = GoogleTranslator.INSTANCE.getSupportedTargetLanguages();
+        mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(supportedLanguages));
         mPrimaryLanguage.setRenderer(LanguageRenderer.INSTANCE);
     }
 
@@ -58,7 +58,11 @@ public class GoogleTranslatePanel implements TransPanelContainer.TransPanel {
 
     @Override
     public void reset() {
-        mPrimaryLanguage.setSelectedItem(mSettings.getPrimaryLanguage());
+        final List<Lang> supportedLanguages = GoogleTranslator.INSTANCE.getSupportedTargetLanguages();
+        final Lang language = mSettings.getPrimaryLanguage();
+        if (supportedLanguages.contains(language)) {
+            mPrimaryLanguage.setSelectedItem(language);
+        }
     }
 
     @Override
