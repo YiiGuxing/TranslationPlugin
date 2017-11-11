@@ -8,6 +8,7 @@ import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
+import java.io.InputStream
 import javax.sound.sampled.*
 
 /**
@@ -20,9 +21,13 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
     @Volatile private var play = false
     @Volatile private var started = false
 
-    override fun isPlaying() = play
+    override fun isPlaying(): Boolean {
+        checkThread()
+        return play
+    }
 
     override fun start() {
+        checkThread()
         if (started) throw IllegalStateException("Start with wrong state.")
 
         started = true
@@ -35,6 +40,7 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
     }
 
     override fun stop() {
+        checkThread()
         play = false
     }
 
@@ -47,22 +53,8 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
         try {
             LOGGER.i("TTS>>> $url")
             HttpRequests.request(url).also { buildRequest(it) }.connect { request ->
-                if (!play) return@connect
-                MpegAudioFileReader().getAudioInputStream(request.inputStream)?.use { ais ->
-                    val baseFormat = ais.format
-                    val decodedFormat = AudioFormat(
-                            AudioFormat.Encoding.PCM_SIGNED,
-                            baseFormat.sampleRate,
-                            16,
-                            baseFormat.channels,
-                            baseFormat.channels * 2,
-                            baseFormat.sampleRate,
-                            false
-                    )
-
-                    MpegFormatConversionProvider()
-                            .getAudioInputStream(decodedFormat, ais)
-                            .use { rawPlay(decodedFormat, it) }
+                if (play) {
+                    request.inputStream.asAudioInputStream().rawPlay()
                 }
             }
         } catch (e: Throwable) {
@@ -70,16 +62,27 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
         }
     }
 
-    private fun rawPlay(targetFormat: AudioFormat, din: AudioInputStream) {
+    private fun AudioInputStream.rawPlay() {
+        val decodedFormat = format.let {
+            AudioFormat(AudioFormat.Encoding.PCM_SIGNED, it.sampleRate, 16, it.channels,
+                    it.channels * 2, it.sampleRate, false)
+        }
+
+        MpegFormatConversionProvider()
+                .getAudioInputStream(decodedFormat, this)
+                .rawPlay(decodedFormat)
+    }
+
+    private fun AudioInputStream.rawPlay(format: AudioFormat) {
         if (!play) return
-        targetFormat.openLine()?.run {
+        format.openLine()?.run {
             start()
 
             @Suppress("ConvertTryFinallyToUseCall") try {
                 val data = ByteArray(4096)
                 var bytesRead: Int
                 while (play) {
-                    bytesRead = din.read(data, 0, data.size)
+                    bytesRead = read(data, 0, data.size)
                     if (bytesRead != -1) write(data, 0, bytesRead) else break
                 }
 
@@ -93,6 +96,13 @@ open class NetworkTTSPlayer(private val url: String) : TTSPlayer {
 
     companion object {
         private val LOGGER = Logger.getInstance(NetworkTTSPlayer::class.java)
+
+        private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
+            "NetworkTTSPlayer must only be used from the Event Dispatch Thread."
+        }
+
+        private fun InputStream.asAudioInputStream(): AudioInputStream =
+                MpegAudioFileReader().getAudioInputStream(this)
 
         private fun AudioFormat.openLine(): SourceDataLine? = try {
             val info = DataLine.Info(SourceDataLine::class.java, this)

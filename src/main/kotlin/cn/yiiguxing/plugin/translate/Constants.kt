@@ -12,8 +12,7 @@ const val LINK_SETTINGS = """<a href="$HTML_DESCRIPTION_SETTINGS">设置</a>"""
 
 const val GOOGLE_TTS = "https://translate.google.cn/translate_tts"
 
-const val DEFAULT_USER_AGENT = "Mozilla/5.0"
+const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36"
 
 const val YOUDAO_TRANSLATE_URL = "https://openapi.youdao.com/api"
 const val YOUDAO_AI_URL = "http://ai.youdao.com"
-const val YOUDAO_TTS_URL = "http://dict.youdao.com/dictvoice"
