@@ -39,6 +39,100 @@ fun String.splitWord() = if (isBlank()) this else
             .trim()
 
 /**
+ * 分割句子
+ *
+ * @param maxSentenceLength 句子最大长度
+ */
+fun String.splitSentence(maxSentenceLength: Int): List<String> = splitSentenceTo(ArrayList(), maxSentenceLength)
+
+/**
+ * 分割句子到指定集合
+ *
+ * @param destination       目标集合
+ * @param maxSentenceLength 句子最大长度
+ * @throws IllegalArgumentException 如果[maxSentenceLength] <= 0.
+ */
+fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSentenceLength: Int): C {
+    if (maxSentenceLength <= 0) {
+        throw IllegalArgumentException("maxSentenceLength must be greater than 0.")
+    }
+
+    if (isBlank()) {
+        return destination
+    }
+
+    val whitespaceReg = "[ \\u3000\\n\\r\\t\\s]+".toRegex() // \u3000:全角空格
+    return replace(whitespaceReg, " ")
+            .splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) {
+                splitSentenceTo(it, maxSentenceLength, String::splitBySpace) {
+                    splitByLengthTo(it, maxSentenceLength)
+                }
+            }
+}
+
+private fun <C : MutableCollection<String>> String.splitSentenceTo(
+        destination: C,
+        maxSentenceLength: Int,
+        splitFun: String.() -> List<String>,
+        reSplitFun: String.(C) -> Unit
+): C {
+    val sentences = splitFun()
+    val sentenceBuilder = StringBuilder()
+
+    for (sentence in sentences) {
+        val merged = (sentenceBuilder.toString() + sentence).trim()
+        if (merged.length <= maxSentenceLength) {
+            sentenceBuilder.append(sentence)
+        } else {
+            if (sentenceBuilder.isNotBlank()) {
+                destination += sentenceBuilder.trim().toString()
+                sentenceBuilder.setLength(0)
+            }
+
+            val trimmedSentence = sentence.trim()
+            if (trimmedSentence.length <= maxSentenceLength) {
+                sentenceBuilder.setLength(0)
+                sentenceBuilder.append(sentence)
+            } else {
+                trimmedSentence.reSplitFun(destination)
+            }
+        }
+    }
+
+    if (sentenceBuilder.isNotBlank()) {
+        destination += sentenceBuilder.trim().toString()
+    }
+
+    return destination
+}
+
+private fun String.splitByPunctuation() = splitBy("([?.,;:!][ ]+)|([、。！（），．：；？][ ]?)".toRegex())
+private fun String.splitBySpace() = splitBy(" ".toRegex())
+
+private fun String.splitBy(regex: Regex): List<String> {
+    val splits = mutableListOf<String>()
+    var currIndex = 0
+    for (mr in regex.findAll(this)) {
+        val index = mr.range.endInclusive + 1
+        if (index > currIndex) {
+            splits += substring(currIndex, index)
+        }
+        currIndex = index
+    }
+    if (length > currIndex) {
+        splits += substring(currIndex)
+    }
+
+    return splits
+}
+
+private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLength: Int) {
+    for (i in 0 until length step maxLength) {
+        destination += substring(i, minOf(i + maxLength, length))
+    }
+}
+
+/**
  * URL编码
  */
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
