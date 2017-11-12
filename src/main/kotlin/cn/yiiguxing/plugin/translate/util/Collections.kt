@@ -20,3 +20,5 @@ fun <T> MutableList<T>.trimToSize(maxSize: Int): Boolean {
 }
 
 fun <T> List<T>.toJVMReadOnlyList(): List<T> = Collections.unmodifiableList(this)
+
+inline fun <reified T> Collection<T>.toEnumeration(): Enumeration<T> = ArrayEnumeration(toTypedArray())
