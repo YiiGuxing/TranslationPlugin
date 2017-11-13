@@ -8,19 +8,21 @@ import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.util.io.HttpRequests
+import javazoom.jl.decoder.Bitstream
+import javazoom.spi.mpeg.sampled.convert.DecodedMpegAudioInputStream
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
 import javax.sound.sampled.*
+
 
 /**
  * NetworkTTSPlayer
@@ -46,6 +48,8 @@ class GoogleTTSPlayer(
 
     @Volatile private var started = false
 
+    private var duration = 0
+
     private val playlist: List<String> by lazy {
         with(text.splitSentence(MAX_TEXT_LENGTH)) {
             mapIndexed { index, sentence ->
@@ -60,13 +64,17 @@ class GoogleTTSPlayer(
             cancelText = "stop"
             cancelTooltipText = "stop"
         }
-        playController = BackgroundableProcessIndicator(playTask)
+        playController = BackgroundableProcessIndicator(playTask).apply { isIndeterminate = true }
         disposable = playController
     }
 
     private inner class PlayTask(project: Project?) : Task.Backgroundable(project, "TTS") {
         override fun run(indicator: ProgressIndicator) {
             play(indicator)
+        }
+
+        override fun onThrowable(error: Throwable) {
+            LOGGER.error(error)
         }
 
         override fun onFinished() {
@@ -89,35 +97,30 @@ class GoogleTTSPlayer(
 
     private fun play(indicator: ProgressIndicator) {
         indicator.checkCanceled()
-        try {
-            val total = playlist.size
-            playlist
-                    .mapIndexed { index, url ->
-                        with(indicator) {
-                            if (isCanceled) return@mapIndexed null
-                            text = "tts: downloading...($index/$total)"
-                        }
+        playlist
+                .map {
+                    with(indicator) {
+                        if (isCanceled) return@map null
+                        text = "tts: downloading..."
+                    }
 
-                        LOGGER.i("TTS>>> $url")
-                        HttpRequests.request(url)
-                                .userAgent(DEFAULT_USER_AGENT)
-                                .readBytes(indicator)
-                                .let { ByteArrayInputStream(it) }
+                    LOGGER.i("TTS>>> $it")
+                    HttpRequests.request(it)
+                            .userAgent(DEFAULT_USER_AGENT)
+                            .readBytes(indicator)
+                            .let {
+                                ByteArrayInputStream(it).apply { duration += getAudioDuration(it.size) }
+                            }
+                }
+                .filterNotNull()
+                .takeIf { it.isNotEmpty() }
+                ?.toEnumeration()
+                ?.let {
+                    SequenceInputStream(it).use {
+                        indicator.checkCanceled()
+                        it.asAudioInputStream().rawPlay(indicator)
                     }
-                    .filterNotNull()
-                    .takeIf { it.isNotEmpty() }
-                    ?.toEnumeration()
-                    ?.let {
-                        SequenceInputStream(it).use {
-                            indicator.checkCanceled()
-                            it.asAudioInputStream().rawPlay(indicator)
-                        }
-                    }
-        } catch (e: ProcessCanceledException) {
-            throw e
-        } catch (e: Throwable) {
-            LOGGER.e("play", e)
-        }
+                }
     }
 
     private fun AudioInputStream.rawPlay(indicator: ProgressIndicator) {
@@ -134,23 +137,34 @@ class GoogleTTSPlayer(
     private fun AudioInputStream.rawPlay(format: AudioFormat, indicator: ProgressIndicator) {
         indicator.apply {
             checkCanceled()
+            fraction = 0.0
+            isIndeterminate = false
             text = "tts: playing..."
         }
 
+        this as DecodedMpegAudioInputStream
         format.openLine()?.run {
             start()
-
             @Suppress("ConvertTryFinallyToUseCall") try {
                 val data = ByteArray(2048)
                 var bytesRead: Int
                 while (!indicator.isCanceled) {
                     bytesRead = read(data, 0, data.size)
-                    if (bytesRead != -1) write(data, 0, bytesRead) else break
+                    if (bytesRead != -1) {
+                        write(data, 0, bytesRead)
+
+                        val currentTime = properties()["mp3.position.microseconds"] as Long / 1000
+                        indicator.fraction = currentTime.toDouble() / duration.toDouble()
+                    } else {
+                        indicator.fraction = 1.0
+                        break
+                    }
                 }
 
                 drain()
                 stop()
             } finally {
+                duration = 0
                 close()
             }
         }
@@ -167,6 +181,17 @@ class GoogleTTSPlayer(
 
         private fun InputStream.asAudioInputStream(): AudioInputStream =
                 MpegAudioFileReader().getAudioInputStream(this)
+
+        private fun InputStream.getAudioDuration(dataLength: Int): Int {
+            return try {
+                Math.round(Bitstream(this).readFrame().total_ms(dataLength))
+            } catch (e: Throwable) {
+                LOGGER.error(e)
+                0
+            } finally {
+                reset()
+            }
+        }
 
         private fun AudioFormat.openLine(): SourceDataLine? = try {
             val info = DataLine.Info(SourceDataLine::class.java, this)
