@@ -5,8 +5,15 @@ import cn.yiiguxing.plugin.translate.GOOGLE_TTS
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.tk
 import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.Task
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
+import com.intellij.openapi.project.Project
 import com.intellij.util.io.HttpRequests
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
@@ -20,13 +27,23 @@ import javax.sound.sampled.*
  *
  * Created by Yii.Guxing on 2017-10-28 0028.
  */
-open class GoogleTTSPlayer(
+class GoogleTTSPlayer(
+        project: Project?,
         private val text: String,
         private val lang: Lang,
         private val completeListener: ((TTSPlayer) -> Unit)? = null
 ) : TTSPlayer {
 
-    @Volatile private var play = false
+    private val playTask: PlayTask
+    private val playController: ProgressIndicator
+
+    override val disposable: Disposable
+    override val isPlaying: Boolean
+        get() {
+            checkThread()
+            return playController.isRunning
+        }
+
     @Volatile private var started = false
 
     private val playlist: List<String> by lazy {
@@ -38,9 +55,25 @@ open class GoogleTTSPlayer(
         }
     }
 
-    override fun isPlaying(): Boolean {
-        checkThread()
-        return play
+    init {
+        playTask = PlayTask(project).apply {
+            cancelText = "stop"
+            cancelTooltipText = "stop"
+        }
+        playController = BackgroundableProcessIndicator(playTask).apply {
+            isIndeterminate = true
+        }
+        disposable = playController
+    }
+
+    private inner class PlayTask(project: Project?) : Task.Backgroundable(project, "TTS") {
+        override fun run(indicator: ProgressIndicator) {
+            play(indicator)
+        }
+
+        override fun onFinished() {
+            completeListener?.invoke(this@GoogleTTSPlayer)
+        }
     }
 
     override fun start() {
@@ -48,32 +81,27 @@ open class GoogleTTSPlayer(
         if (started) throw IllegalStateException("Start with wrong state.")
 
         started = true
-        play = true
-
-        with(ApplicationManager.getApplication()) {
-            executeOnPooledThread {
-                play()
-                play = false
-                invokeLater { completeListener?.invoke(this@GoogleTTSPlayer) }
-            }
-        }
+        ProgressManager.getInstance().runProcessWithProgressAsynchronously(playTask, playController)
     }
 
     override fun stop() {
         checkThread()
-        play = false
+        playController.cancel()
     }
 
-    private fun play() {
-        if (!play) return
+    private fun play(indicator: ProgressIndicator) {
+        indicator.apply {
+            checkCanceled()
+            text = "tts: downloading..."
+        }
         try {
             playlist
                     .map {
-                        if (!play) return@map null
+                        if (indicator.isCanceled) return@map null
                         LOGGER.i("TTS>>> $it")
                         HttpRequests.request(it)
                                 .userAgent(DEFAULT_USER_AGENT)
-                                .readBytes(null)
+                                .readBytes(indicator)
                                 .let { ByteArrayInputStream(it) }
                     }
                     .filterNotNull()
@@ -81,15 +109,18 @@ open class GoogleTTSPlayer(
                     ?.toEnumeration()
                     ?.let {
                         SequenceInputStream(it).use {
-                            if (play) it.asAudioInputStream().rawPlay()
+                            indicator.checkCanceled()
+                            it.asAudioInputStream().rawPlay(indicator)
                         }
                     }
+        } catch (e: ProcessCanceledException) {
+            throw e
         } catch (e: Throwable) {
             LOGGER.e("play", e)
         }
     }
 
-    private fun AudioInputStream.rawPlay() {
+    private fun AudioInputStream.rawPlay(indicator: ProgressIndicator) {
         val decodedFormat = format.let {
             AudioFormat(AudioFormat.Encoding.PCM_SIGNED, it.sampleRate, 16, it.channels,
                     it.channels * 2, it.sampleRate, false)
@@ -97,18 +128,22 @@ open class GoogleTTSPlayer(
 
         MpegFormatConversionProvider()
                 .getAudioInputStream(decodedFormat, this)
-                .rawPlay(decodedFormat)
+                .rawPlay(decodedFormat, indicator)
     }
 
-    private fun AudioInputStream.rawPlay(format: AudioFormat) {
-        if (!play) return
+    private fun AudioInputStream.rawPlay(format: AudioFormat, indicator: ProgressIndicator) {
+        indicator.apply {
+            checkCanceled()
+            text = "tts: playing..."
+        }
+
         format.openLine()?.run {
             start()
 
             @Suppress("ConvertTryFinallyToUseCall") try {
-                val data = ByteArray(4096)
+                val data = ByteArray(2048)
                 var bytesRead: Int
-                while (play) {
+                while (!indicator.isCanceled) {
                     bytesRead = read(data, 0, data.size)
                     if (bytesRead != -1) write(data, 0, bytesRead) else break
                 }

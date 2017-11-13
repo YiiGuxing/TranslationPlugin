@@ -177,7 +177,7 @@ object Styles {
         val attr = SimpleAttributeSet()
         StyleConstants.setComponent(attr, PhoneticButton(Consumer { mouseEvent ->
             if (mouseEvent.clickCount == 1) {
-                TextToSpeech.INSTANCE.speak(query)
+                TextToSpeech.INSTANCE.speak(null, query)
             }
         }))
         document.appendString(" ", attr)

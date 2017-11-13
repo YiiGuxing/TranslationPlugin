@@ -1,14 +1,16 @@
 package cn.yiiguxing.plugin.translate.tts
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.project.Project
 
 /**
  * Text to speech.
  */
 class TextToSpeech private constructor() {
 
-    private var currentToken: Long = 0
     private var currentPlayer: TTSPlayer? = null
 
     /**
@@ -16,31 +18,34 @@ class TextToSpeech private constructor() {
      *
      * @param text the text.
      */
-    @Synchronized
-    fun speak(text: String, token: Long = 0) {
+    fun speak(project: Project?, text: String): Disposable {
+        checkThread()
         currentPlayer?.stop()
-        currentPlayer = GoogleTTSPlayer(text, Lang.ENGLISH) { player ->
-            synchronized(this@TextToSpeech) {
-                if (player === currentPlayer) {
-                    currentToken = 0
-                    currentPlayer = null
-                }
+
+        return GoogleTTSPlayer(project, text, Lang.ENGLISH) { player ->
+            if (player === currentPlayer) {
+                currentPlayer = null
             }
-        }.apply {
-            currentToken = token
+        }.run {
+            currentPlayer = this
             start()
+
+            disposable
         }
     }
 
-    @Synchronized
-    fun stop(token: Long) {
-        if (currentToken == 0L || currentToken == token) {
-            currentPlayer?.stop()
-        }
+    @Suppress("unused")
+    fun stop() {
+        checkThread()
+        currentPlayer?.stop()
     }
 
     companion object {
         val INSTANCE: TextToSpeech
             get() = ServiceManager.getService(TextToSpeech::class.java)
+
+        private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
+            "TextToSpeech must only be used from the Event Dispatch Thread."
+        }
     }
 }
