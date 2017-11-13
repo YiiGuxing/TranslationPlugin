@@ -60,9 +60,7 @@ class GoogleTTSPlayer(
             cancelText = "stop"
             cancelTooltipText = "stop"
         }
-        playController = BackgroundableProcessIndicator(playTask).apply {
-            isIndeterminate = true
-        }
+        playController = BackgroundableProcessIndicator(playTask)
         disposable = playController
     }
 
@@ -90,16 +88,18 @@ class GoogleTTSPlayer(
     }
 
     private fun play(indicator: ProgressIndicator) {
-        indicator.apply {
-            checkCanceled()
-            text = "tts: downloading..."
-        }
+        indicator.checkCanceled()
         try {
+            val total = playlist.size
             playlist
-                    .map {
-                        if (indicator.isCanceled) return@map null
-                        LOGGER.i("TTS>>> $it")
-                        HttpRequests.request(it)
+                    .mapIndexed { index, url ->
+                        with(indicator) {
+                            if (isCanceled) return@mapIndexed null
+                            text = "tts: downloading...($index/$total)"
+                        }
+
+                        LOGGER.i("TTS>>> $url")
+                        HttpRequests.request(url)
                                 .userAgent(DEFAULT_USER_AGENT)
                                 .readBytes(indicator)
                                 .let { ByteArrayInputStream(it) }
