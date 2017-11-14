@@ -114,7 +114,7 @@ class GoogleTTSPlayer(
                 }
                 .filterNotNull()
                 .takeIf { it.isNotEmpty() }
-                ?.toEnumeration()
+                ?.enumeration()
                 ?.let {
                     SequenceInputStream(it).use {
                         indicator.checkCanceled()

@@ -1,6 +1,6 @@
-/**
- * Lists
- * <p>
+/*
+ * Collections
+ *
  * Created by Yii.Guxing on 2017-09-16 0016.
  */
 package cn.yiiguxing.plugin.translate.util
@@ -21,4 +21,8 @@ fun <T> MutableList<T>.trimToSize(maxSize: Int): Boolean {
 
 fun <T> List<T>.toJVMReadOnlyList(): List<T> = Collections.unmodifiableList(this)
 
-inline fun <reified T> Collection<T>.toEnumeration(): Enumeration<T> = ArrayEnumeration(toTypedArray())
+fun <T> Iterable<T>.enumeration(): Enumeration<T> = object : Enumeration<T> {
+    val iterator = this@enumeration.iterator()
+    override fun hasMoreElements(): Boolean = iterator.hasNext()
+    override fun nextElement(): T = iterator.next()
+}
