@@ -42,8 +42,15 @@ fun String.splitWord() = if (isBlank()) this else
  * 分割句子
  *
  * @param maxSentenceLength 句子最大长度
+ * @throws IllegalArgumentException 如果[maxSentenceLength] <= 0.
+ *
+ * @see String.splitSentenceTo
  */
-fun String.splitSentence(maxSentenceLength: Int): List<String> = splitSentenceTo(ArrayList(), maxSentenceLength)
+fun String.splitSentence(maxSentenceLength: Int): List<String> = when {
+    maxSentenceLength <= 0 -> throw IllegalArgumentException("maxSentenceLength must be greater than 0.")
+    isBlank() -> emptyList()
+    else -> splitSentenceTo(ArrayList(), maxSentenceLength)
+}
 
 /**
  * 分割句子到指定集合
@@ -62,12 +69,18 @@ fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSe
     }
 
     val whitespaceReg = "[ \\u3000\\n\\r\\t\\s]+".toRegex() // \u3000:全角空格
-    return replace(whitespaceReg, " ")
-            .splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) {
-                splitSentenceTo(it, maxSentenceLength, String::splitBySpace) {
-                    splitByLengthTo(it, maxSentenceLength)
-                }
-            }
+    val optimized = replace(whitespaceReg, " ")
+
+    if (optimized.length <= maxSentenceLength) {
+        destination += optimized
+        return destination
+    }
+
+    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) {
+        splitSentenceTo(it, maxSentenceLength, String::splitBySpace) {
+            splitByLengthTo(it, maxSentenceLength)
+        }
+    }
 }
 
 private fun <C : MutableCollection<String>> String.splitSentenceTo(
