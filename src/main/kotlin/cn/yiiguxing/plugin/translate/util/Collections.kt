@@ -22,7 +22,7 @@ fun <T> MutableList<T>.trimToSize(maxSize: Int): Boolean {
 fun <T> List<T>.toJVMReadOnlyList(): List<T> = Collections.unmodifiableList(this)
 
 fun <T> Iterable<T>.enumeration(): Enumeration<T> = object : Enumeration<T> {
-    val iterator = this@enumeration.iterator()
+    private val iterator = this@enumeration.iterator()
     override fun hasMoreElements(): Boolean = iterator.hasNext()
     override fun nextElement(): T = iterator.next()
 }
