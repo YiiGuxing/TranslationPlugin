@@ -19,21 +19,13 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     private var mPanel: ConfigurablePanel? = null
 
-    override fun getId(): String {
-        return "yiiguxing.plugin.translate"
-    }
+    override fun getId(): String = "yiiguxing.plugin.translate"
 
-    override fun enableSearch(option: String?): Runnable? {
-        return null
-    }
+    override fun enableSearch(option: String?): Runnable? = null
 
-    override fun getDisplayName(): String {
-        return "Translation"
-    }
+    override fun getDisplayName(): String = "Translation"
 
-    override fun getHelpTopic(): String? {
-        return null
-    }
+    override fun getHelpTopic(): String? = null
 
     override fun createComponent(): JComponent = with(SettingsPanel(mSettings, mAppStorage)) {
         mPanel = this@with
