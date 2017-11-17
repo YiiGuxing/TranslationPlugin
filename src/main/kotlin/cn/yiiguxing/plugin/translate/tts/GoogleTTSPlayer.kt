@@ -96,14 +96,13 @@ class GoogleTTSPlayer(
     }
 
     private fun play(indicator: ProgressIndicator) {
-        indicator.checkCanceled()
+        with(indicator) {
+            checkCanceled()
+            text = "tts: downloading..."
+        }
         playlist
                 .map {
-                    with(indicator) {
-                        if (isCanceled) return@map null
-                        text = "tts: downloading..."
-                    }
-
+                    indicator.checkCanceled()
                     LOGGER.i("TTS>>> $it")
                     HttpRequests.request(it)
                             .userAgent(DEFAULT_USER_AGENT)
@@ -112,10 +111,8 @@ class GoogleTTSPlayer(
                                 ByteArrayInputStream(it).apply { duration += getAudioDuration(it.size) }
                             }
                 }
-                .filterNotNull()
-                .takeIf { it.isNotEmpty() }
-                ?.enumeration()
-                ?.let {
+                .enumeration()
+                .let {
                     SequenceInputStream(it).use {
                         indicator.checkCanceled()
                         it.asAudioInputStream().rawPlay(indicator)
