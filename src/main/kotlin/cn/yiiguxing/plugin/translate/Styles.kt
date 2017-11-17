@@ -125,7 +125,7 @@ object Styles {
 
         try {
             val title = query.trim { it <= ' ' }
-            document.appendString(title.capitalize() + "\n",
+            document.appendString("$title\n",
                     updateFontSize(ATTR_QUERY, textPane.font, QUERY_FONT_SCALE))
 
 

@@ -12,27 +12,12 @@ import java.security.MessageDigest
 
 fun String?.isNullOrBlank() = (this as CharSequence?).isNullOrBlank()
 
-private fun toUpperCase(a: Char): Char = when {
-    a < 'a' -> a
-    a <= 'z' -> (a.toInt() + ('A' - 'a')).toChar()
-    else -> Character.toUpperCase(a)
-}
-
-/**
- * Capitalize the first letter of the sentence.
- */
-fun String.capitalize(): String = when {
-    isEmpty() -> this
-    length == 1 -> toUpperCase(this[0]).toString()
-    Character.isUpperCase(this[0]) -> this
-    else -> toUpperCase(this[0]) + substring(1)
-}
 
 /**
  * 单词拆分
  */
-fun String.splitWord() = if (isBlank()) this else
-    replace("[_*\\s]+".toRegex(), " ")
+fun String.splitWord() = if (isBlank()) "" else
+    replace("[_\\s]+".toRegex(), " ")
             .replace("([A-Z][a-z]+)|([0-9\\W]+)".toRegex(), " $0 ")
             .replace("[A-Z]{2,}".toRegex(), " $0")
             .replace("\\s{2,}".toRegex(), " ")
