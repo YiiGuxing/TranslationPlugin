@@ -2,7 +2,9 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.util.ui.JBUI
 import sun.swing.DefaultLookup
+import java.awt.Component
 import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Rectangle
@@ -39,11 +41,12 @@ class LangComboBoxUI(
         if (combo !== comboBox) {
             throw IllegalStateException("Not expected UI.")
         }
-
-        squareButton = false
     }
 
     override fun createArrowButton(): JButton? = null
+
+    override fun getSizeForComponent(comp: Component): Dimension =
+            super.getSizeForComponent(comp).apply { width += JBUI.scale(10) }
 
     override fun getMinimumSize(c: JComponent?): Dimension {
         if (!isMinimumSizeDirty) {
@@ -75,6 +78,7 @@ class LangComboBoxUI(
             label.foreground = foregroundColor
             arrowIcon.color = foregroundColor
 
+            label.font = font
             label.text = selected.langName
         }
 
@@ -91,6 +95,21 @@ class LangComboBoxUI(
         }
 
         currentValuePane.paintComponent(g, label, combo, x, y, w, h, false)
+    }
+
+    override fun rectangleForCurrentValue(): Rectangle {
+        val width = combo.width
+        val height = combo.height
+        val insets = insets
+        return if (combo.componentOrientation.isLeftToRight) {
+            Rectangle(insets.left, insets.top,
+                    width - (insets.left + insets.right),
+                    height - (insets.top + insets.bottom))
+        } else {
+            Rectangle(insets.left, insets.top,
+                    width - (insets.left + insets.right),
+                    height - (insets.top + insets.bottom))
+        }
     }
 
 }
