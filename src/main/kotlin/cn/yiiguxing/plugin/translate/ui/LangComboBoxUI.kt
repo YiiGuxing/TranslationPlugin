@@ -68,7 +68,6 @@ class LangComboBoxUI(
 
     override fun paintCurrentValue(g: Graphics, bounds: Rectangle, hasFocus: Boolean) {
         with(combo) {
-            label.font = font
             val foregroundColor = if (isEnabled) {
                 foreground
             } else {
