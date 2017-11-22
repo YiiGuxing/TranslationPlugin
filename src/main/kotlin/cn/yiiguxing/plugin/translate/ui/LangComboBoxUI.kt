@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.util.ui.JBInsets
 import com.intellij.util.ui.JBUI
 import sun.swing.DefaultLookup
 import java.awt.Component
@@ -17,7 +18,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI
  * Created by Yii.Guxing on 2017/11/20
  */
 class LangComboBoxUI(
-        private val combo: ComboBox<Lang>,
+        private val myComboBox: ComboBox<Lang>,
         horizontalAlignment: Int = SwingConstants.LEFT
 ) : BasicComboBoxUI() {
 
@@ -25,8 +26,10 @@ class LangComboBoxUI(
     private val arrowIcon: ComboArrowIcon
 
     init {
-        combo.border = BorderFactory.createEmptyBorder()
-        combo.isEditable = false
+        myComboBox.apply {
+            border = BorderFactory.createEmptyBorder()
+            isEditable = false
+        }
 
         arrowIcon = ComboArrowIcon()
         label = JLabel(arrowIcon).apply {
@@ -38,8 +41,8 @@ class LangComboBoxUI(
     override fun installDefaults() {
         super.installDefaults()
 
-        if (combo !== comboBox) {
-            throw IllegalStateException("Not expected UI.")
+        if (myComboBox !== comboBox) {
+            throw IllegalStateException("Not expected component.")
         }
     }
 
@@ -48,30 +51,30 @@ class LangComboBoxUI(
     override fun getSizeForComponent(comp: Component): Dimension =
             super.getSizeForComponent(comp).apply { width += JBUI.scale(10) }
 
-    override fun getMinimumSize(c: JComponent?): Dimension {
+    override fun getMinimumSize(c: JComponent): Dimension {
         if (!isMinimumSizeDirty) {
             return Dimension(cachedMinimumSize)
         }
 
-        val size = displaySize
-        val insets = insets
-        size.height += insets.top + insets.bottom
-        size.width += insets.left + insets.right + label.iconTextGap + arrowIcon.iconWidth
+        return displaySize.let {
+            JBInsets.addTo(it, insets)
+            it.width += label.iconTextGap + arrowIcon.iconWidth
 
-        cachedMinimumSize.setSize(size.width, size.height)
-        isMinimumSizeDirty = false
+            cachedMinimumSize.size = it
+            isMinimumSizeDirty = false
 
-        return Dimension(size)
+            Dimension(it)
+        }
     }
 
     override fun paintCurrentValueBackground(g: Graphics, bounds: Rectangle, hasFocus: Boolean) = Unit
 
     override fun paintCurrentValue(g: Graphics, bounds: Rectangle, hasFocus: Boolean) {
-        with(combo) {
+        with(myComboBox) {
             val foregroundColor = if (isEnabled) {
                 foreground
             } else {
-                DefaultLookup.getColor(this, this@LangComboBoxUI, "ComboBox.disabledForeground", null)
+                DefaultLookup.getColor(this, this@LangComboBoxUI, "ComboBox.disabledForeground")
             }
 
             label.foreground = foregroundColor
@@ -81,34 +84,12 @@ class LangComboBoxUI(
             label.text = selected.langName
         }
 
-        var x = bounds.x
-        var y = bounds.y
-        var w = bounds.width
-        var h = bounds.height
-
-        padding?.let {
-            x = bounds.x + it.left
-            y = bounds.y + it.top
-            w = bounds.width - (it.left + it.right)
-            h = bounds.height - (it.top + it.bottom)
-        }
-
-        currentValuePane.paintComponent(g, label, combo, x, y, w, h, false)
+        currentValuePane.paintComponent(g, label, myComboBox,
+                Rectangle(bounds).also { JBInsets.removeFrom(it, padding) })
     }
 
-    override fun rectangleForCurrentValue(): Rectangle {
-        val width = combo.width
-        val height = combo.height
-        val insets = insets
-        return if (combo.componentOrientation.isLeftToRight) {
-            Rectangle(insets.left, insets.top,
-                    width - (insets.left + insets.right),
-                    height - (insets.top + insets.bottom))
-        } else {
-            Rectangle(insets.left, insets.top,
-                    width - (insets.left + insets.right),
-                    height - (insets.top + insets.bottom))
-        }
+    override fun rectangleForCurrentValue(): Rectangle = Rectangle(comboBox.width, comboBox.height).apply {
+        JBInsets.removeFrom(this, insets)
     }
 
 }
