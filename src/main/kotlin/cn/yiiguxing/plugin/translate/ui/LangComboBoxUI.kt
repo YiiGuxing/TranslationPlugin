@@ -28,6 +28,7 @@ class LangComboBoxUI(
     init {
         myComboBox.apply {
             border = BorderFactory.createEmptyBorder()
+            renderer = LanguageRenderer
             isEditable = false
         }
 
