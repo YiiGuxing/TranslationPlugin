@@ -40,9 +40,7 @@ abstract class AutoSelectAction(
      */
     protected open fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {}
 
-    protected open fun getEditor(e: AnActionEvent): Editor? {
-        return CommonDataKeys.EDITOR.getData(e.dataContext)
-    }
+    protected open fun getEditor(e: AnActionEvent): Editor? = CommonDataKeys.EDITOR.getData(e.dataContext)
 
     override fun update(e: AnActionEvent) {
         val active = getEditor(e)?.let { editor ->
@@ -65,13 +63,15 @@ abstract class AutoSelectAction(
         val document = editor.document
         val textLength = document.textLength
 
-        if (textLength == 0)
+        if (textLength == 0) {
             return false
+        }
 
         val text = document.getText(TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1)))
         for (c in text) {
-            if (wordPartCondition.value(c))
+            if (wordPartCondition.value(c)) {
                 return true
+            }
         }
 
         return false

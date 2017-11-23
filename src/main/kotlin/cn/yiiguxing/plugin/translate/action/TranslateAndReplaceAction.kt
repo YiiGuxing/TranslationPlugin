@@ -243,9 +243,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
             return StringUtil.getWordsIn(fixed)
         }
 
-        fun sanitizeJavaIdentifierStart(name: String): String {
-            return if (Character.isJavaIdentifierStart(name[0])) name else "_" + name
-        }
+        fun sanitizeJavaIdentifierStart(name: String): String =
+                if (Character.isJavaIdentifierStart(name[0])) name else "_" + name
     }
 
 }
