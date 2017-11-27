@@ -22,19 +22,15 @@ val <E> JComboBox<E>.selected: E get() = getItemAt(selectedIndex)
  * @param maxWidth 最大宽度
  */
 fun JTextComponent.adjustSize(maxWidth: Int = Int.MAX_VALUE) {
-    if (maxWidth < 0) {
-        throw IllegalArgumentException("maxWidth must be greater than 0.")
-    }
+    require(maxWidth >= 0) { "maxWidth must be greater than or equal to 0." }
 
     val minSize = if (isMinimumSizeSet) minimumSize else Dimension(0, 0)
-
     size = Dimension(maxWidth, Int.MAX_VALUE)
 
     val textWidth = SwingUtilities2.stringWidth(this, getFontMetrics(font), text)
     val preSize = Dimension(preferredSize).apply {
         width = minOf(width, textWidth)
     }
-
 
     size = Dimension(preSize)
     minimumSize = minSize
