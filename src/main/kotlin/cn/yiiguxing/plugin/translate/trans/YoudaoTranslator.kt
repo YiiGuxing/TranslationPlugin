@@ -35,13 +35,13 @@ object YoudaoTranslator : AbstractTranslator() {
 
     override val id: String = TRANSLATOR_ID
 
-    private val mSettings = Settings.instance
+    private val settings = Settings.instance
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
-        val settings = mSettings
+        val settings = settings
         val appId = settings.youdaoTranslateSettings.appId
         val privateKey = settings.youdaoTranslateSettings.getAppKey()
         val salt = System.currentTimeMillis().toString()
