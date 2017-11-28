@@ -11,19 +11,19 @@ import kotlin.properties.Delegates
 
 class TranslationComponent(project: Project) : AbstractProjectComponent(project) {
 
-    private var mSettings: Settings by Delegates.notNull()
+    private var settings: Settings by Delegates.notNull()
 
     override fun initComponent() {
         super.initComponent()
         TKK.update()
-        mSettings = Settings.instance
+        settings = Settings.instance
     }
 
     override fun projectOpened() {
-        if (mSettings.isDisableAppKeyNotification
-                || (mSettings.translator == YoudaoTranslator.TRANSLATOR_ID
-                && mSettings.youdaoTranslateSettings.appId.isNotBlank()
-                && mSettings.youdaoTranslateSettings.isAppKeyConfigured)) {
+        if (settings.isDisableAppKeyNotification
+                || (settings.translator == YoudaoTranslator.TRANSLATOR_ID
+                && settings.youdaoTranslateSettings.appId.isNotBlank()
+                && settings.youdaoTranslateSettings.isAppKeyConfigured)) {
             return
         }
 
@@ -41,7 +41,7 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
                         notification.expire()
                         when (hyperlinkEvent.description) {
                             HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(myProject)
-                            HTML_DESCRIPTION_DISABLE -> mSettings.isDisableAppKeyNotification = true
+                            HTML_DESCRIPTION_DISABLE -> settings.isDisableAppKeyNotification = true
                         }
                     }
                 }

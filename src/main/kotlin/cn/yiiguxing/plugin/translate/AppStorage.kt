@@ -23,7 +23,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     @CollectionBean private val histories: MutableList<String> = ArrayList(DEFAULT_HISTORY_SIZE)
 
     /**
-     * 最大历史启启记录长度
+     * 最大历史记录长度
      */
     var maxHistorySize by Delegates.vetoable(DEFAULT_HISTORY_SIZE) { _, oldValue: Int, newValue: Int ->
         if (oldValue == newValue || newValue < 0) {
@@ -37,27 +37,22 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     @Transient private val dataChangePublisher: HistoriesChangedListener =
             ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
 
+    override fun getState(): AppStorage = this
+
+    override fun loadState(state: AppStorage) {
+        XmlSerializerUtil.copyBean(state, this)
+    }
+
     private fun trimHistoriesSize(maxSize: Int) {
         if (histories.trimToSize(maxSize)) {
             dataChangePublisher.onHistoriesChanged()
         }
     }
 
-    override fun getState(): AppStorage {
-        return this
-    }
-
-    override fun loadState(state: AppStorage) {
-        XmlSerializerUtil.copyBean(state, this)
-    }
-
-
     /**
      * @return 历史上记录列表
      */
-    fun getHistories(): List<String> {
-        return histories.toJVMReadOnlyList()
-    }
+    fun getHistories(): List<String> = histories.toJVMReadOnlyList()
 
     /**
      * 添加历史记录
@@ -94,9 +89,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
         }
     }
 
-    override fun toString(): String {
-        return "AppStorage(histories=$histories, dataChangePublisher=$dataChangePublisher)"
-    }
+    override fun toString(): String = "AppStorage(histories=$histories, dataChangePublisher=$dataChangePublisher)"
 
     companion object {
         private const val DEFAULT_HISTORY_SIZE = 50

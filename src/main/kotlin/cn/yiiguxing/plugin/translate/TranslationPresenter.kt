@@ -8,27 +8,26 @@ import java.lang.ref.WeakReference
 
 class TranslationPresenter(private val view: View) : Presenter {
 
-    private val mAppStorage: AppStorage = AppStorage.instance
-
-    private val mTranslator: TranslateService = TranslateService.INSTANCE
-
-    private var mCurrentQuery: String? = null
+    private val appStorage: AppStorage = AppStorage.instance
+    private val translator: TranslateService = TranslateService.INSTANCE
+    private var currentQuery: String? = null
 
     override val histories: List<String>
-        get() = mAppStorage.getHistories()
+        get() = appStorage.getHistories()
 
-    override fun getCache(query: String): QueryResult? = mTranslator.getCache(query)
+    override fun getCache(query: String): QueryResult? = translator.getCache(query)
 
     override fun translate(query: String) {
-        if (query.isBlank() || query == mCurrentQuery)
+        if (query.isBlank() || query == currentQuery) {
             return
+        }
 
-        mCurrentQuery = query
-        mAppStorage.addHistory(query)
+        currentQuery = query
+        appStorage.addHistory(query)
         view.showStartTranslate(query)
 
         val presenterRef = WeakReference(this)
-        mTranslator.translate(query) { _, result ->
+        translator.translate(query) { _, result ->
             ApplicationManager.getApplication().invokeLater({
                 presenterRef.get()?.onPostResult(query, result)
             }, ModalityState.any())
@@ -36,10 +35,11 @@ class TranslationPresenter(private val view: View) : Presenter {
     }
 
     private fun onPostResult(query: String, result: QueryResult?) {
-        if (query != mCurrentQuery)
+        if (query != currentQuery) {
             return
+        }
 
-        mCurrentQuery = null
+        currentQuery = null
         if (result != null && result.isSuccessful) {
             view.showResult(query, result)
         } else {

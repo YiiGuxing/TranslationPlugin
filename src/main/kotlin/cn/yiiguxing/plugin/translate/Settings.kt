@@ -71,9 +71,7 @@ class Settings : PersistentStateComponent<Settings> {
     @Transient private val settingsChangePublisher: SettingsChangeListener =
             ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
 
-    override fun getState(): Settings? {
-        return this
-    }
+    override fun getState(): Settings = this
 
     override fun loadState(state: Settings) {
         XmlSerializerUtil.copyBean(state, this)
