@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.1.60'
+    ext.kotlin_version = '1.2.0'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
