@@ -8,15 +8,15 @@ package cn.yiiguxing.plugin.translate.util
 import javax.swing.text.AttributeSet
 import javax.swing.text.Document
 
-fun Document.appendString(str: String, attr: AttributeSet? = null) = insertString(length, str, attr)
+fun Document.appendString(str: String, attr: AttributeSet? = null) = apply { insertString(length, str, attr) }
 
-fun Document.clear() {
+fun Document.clear() = apply {
     if (length > 0) remove(0, length)
 }
 
-fun Document.trimEnd() {
+fun Document.trimEnd(predicate: (Char) -> Boolean = Char::isWhitespace) = apply {
     var length = this.length
-    while (length > 0 && getText(--length, 1)[0] <= ' ') {
+    while (length > 0 && predicate(getText(--length, 1)[0])) {
         remove(length, 1)
     }
 }

@@ -25,6 +25,7 @@ fun JTextComponent.adjustSize(maxWidth: Int = Int.MAX_VALUE) {
     require(maxWidth >= 0) { "maxWidth must be greater than or equal to 0." }
 
     val minSize = if (isMinimumSizeSet) minimumSize else Dimension(0, 0)
+    minimumSize = null
     size = Dimension(maxWidth, Int.MAX_VALUE)
 
     val textWidth = SwingUtilities2.stringWidth(this, getFontMetrics(font), text)
