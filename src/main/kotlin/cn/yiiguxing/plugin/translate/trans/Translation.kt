@@ -13,7 +13,7 @@ data class Translation(
         val original: String,
         val trans: String?,
         val phoneticSymbol: Symbol? = null,
-        val dictionaries: Array<Dict> = emptyArray(),
+        val dictionaries: List<Dict> = emptyList(),
         val otherExplain: Map<String, String> = emptyMap()
 )
 
@@ -27,11 +27,11 @@ data class Symbol(val src: String?, val trans: String?)
  */
 data class Dict(
         val partOfSpeech: String,
-        val terms: Array<String> = emptyArray(),
-        val entries: Array<DictEntry> = emptyArray()
+        val terms: List<String> = emptyList(),
+        val entries: List<DictEntry> = emptyList()
 )
 
 /**
  * Entry of Dictionary
  */
-data class DictEntry(val word: String, val reverseTranslation: Array<String> = emptyArray())
+data class DictEntry(val word: String, val reverseTranslation: List<String> = emptyList())
