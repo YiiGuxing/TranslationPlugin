@@ -7,6 +7,8 @@ package cn.yiiguxing.plugin.translate.util
 
 import javax.swing.text.AttributeSet
 import javax.swing.text.Document
+import javax.swing.text.Style
+import javax.swing.text.StyledDocument
 
 fun Document.appendString(str: String, attr: AttributeSet? = null) = apply { insertString(length, str, attr) }
 
@@ -20,3 +22,6 @@ fun Document.trimEnd(predicate: (Char) -> Boolean = Char::isWhitespace) = apply 
         remove(length, 1)
     }
 }
+
+inline fun StyledDocument.addStyle(name: String, parent: Style? = null, init: (Style) -> Unit): Style =
+        addStyle(name, parent).apply(init)
