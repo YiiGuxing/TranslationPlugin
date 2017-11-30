@@ -66,8 +66,19 @@ public class SettingsPanel implements ConfigurablePanel {
     private void createUIComponents() {
         mTransPanelContainer = new TransPanelContainer(mSettings);
 
-        mPrimaryFontComboBox = new FontComboBox(false, false);
-        mPhoneticFontComboBox = new FontComboBox(false, true);
+        try {
+            mPrimaryFontComboBox = new FontComboBox(false, false);
+            mPhoneticFontComboBox = new FontComboBox(false, true);
+        } catch (NoSuchMethodError e) {
+            // Linux 下可能没有这构造函数
+            try {
+                mPrimaryFontComboBox = new FontComboBox(false);
+                mPhoneticFontComboBox = new FontComboBox(false);
+            } catch (NoSuchMethodError e1) {
+                mPrimaryFontComboBox = new FontComboBox();
+                mPhoneticFontComboBox = new FontComboBox();
+            }
+        }
 
         fixFontComboBoxSize(mPrimaryFontComboBox);
         fixFontComboBoxSize(mPhoneticFontComboBox);
