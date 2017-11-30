@@ -1,12 +1,12 @@
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlinVersion = '1.2.0'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -50,9 +50,9 @@ targetCompatibility = javaTargetVersion
 
 compileKotlin {
     kotlinOptions {
-        jvmTarget = javaTargetVersion
-        languageVersion = kotlinTargetVersion
+        languageVersion = kotlinLanguageVersion
         apiVersion = kotlinTargetVersion
+        jvmTarget = javaTargetVersion
     }
 }
 
