@@ -23,5 +23,5 @@ fun Document.trimEnd(predicate: (Char) -> Boolean = Char::isWhitespace) = apply 
     }
 }
 
-inline fun StyledDocument.addStyle(name: String, parent: Style? = null, init: (Style) -> Unit): Style =
+inline fun StyledDocument.addStyle(name: String, parent: Style? = null, init: Style.() -> Unit = {}): Style =
         addStyle(name, parent).apply(init)

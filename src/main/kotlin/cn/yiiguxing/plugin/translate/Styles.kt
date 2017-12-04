@@ -43,7 +43,7 @@ object Styles {
         ATTR_QUERY.let {
             StyleConstants.setItalic(it, true)
             StyleConstants.setBold(it, true)
-            StyleConstants.setForeground(it, JBColor(0xFFEE6000.toInt(), 0xFFCC7832.toInt()))
+            StyleConstants.setForeground(it, JBColor(0xEE6000, 0xCC7832))
         }
 
         val fg = JBColor(0xFF3E7EFF.toInt(), 0xFF8CBCE1.toInt())
@@ -51,15 +51,15 @@ object Styles {
         StyleConstants.setForeground(ATTR_EXPLAIN, fg)
 
         StyleConstants.setItalic(ATTR_PRE_EXPLAINS, true)
-        StyleConstants.setForeground(ATTR_PRE_EXPLAINS, JBColor(0xFF7F0055.toInt(), 0xFFEAB1FF.toInt()))
+        StyleConstants.setForeground(ATTR_PRE_EXPLAINS, JBColor(0x7F0055, 0xEAB1FF))
 
-        StyleConstants.setForeground(ATTR_EXPLAINS, JBColor(0xFF170591.toInt(), 0xFFFFC66D.toInt()))
+        StyleConstants.setForeground(ATTR_EXPLAINS, JBColor(0x170591, 0xFFC66D))
 
         StyleConstants.setForeground(ATTR_EXPLAINS_HOVER, JBColor(0xA60EFF, 0xDF531F))
 
-        StyleConstants.setForeground(ATTR_WEB_EXPLAIN_TITLE, JBColor(0xFF707070.toInt(), 0xFF808080.toInt()))
-        StyleConstants.setForeground(ATTR_WEB_EXPLAIN_KEY, JBColor(0xFF4C4C4C.toInt(), 0xFF77B767.toInt()))
-        StyleConstants.setForeground(ATTR_WEB_EXPLAIN_VALUES, JBColor(0xFF707070.toInt(), 0xFF6A8759.toInt()))
+        StyleConstants.setForeground(ATTR_WEB_EXPLAIN_TITLE, JBColor(0x707070, 0x808080))
+        StyleConstants.setForeground(ATTR_WEB_EXPLAIN_KEY, JBColor(0x4C4C4C, 0x77B767))
+        StyleConstants.setForeground(ATTR_WEB_EXPLAIN_VALUES, JBColor(0x707070, 0x6A8759))
     }
 
     private fun setMouseListeners(textPane: JTextPane) {
