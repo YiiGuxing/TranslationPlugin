@@ -22,7 +22,7 @@ fun <T> MutableList<T>.trimToSize(maxSize: Int): Boolean {
 }
 
 /**
- * Returns a read list for JVM.
+ * Returns a read only list for JVM.
  */
 fun <T> List<T>.toJVMReadOnlyList(): List<T> = Collections.unmodifiableList(this)
 
