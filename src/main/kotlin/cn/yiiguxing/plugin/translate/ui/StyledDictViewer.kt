@@ -6,13 +6,11 @@ import cn.yiiguxing.plugin.translate.util.addStyle
 import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
 import cn.yiiguxing.plugin.translate.util.insert
-import com.intellij.openapi.wm.impl.IdeBackgroundUtil
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Font
-import java.awt.Graphics
 import java.awt.event.InputEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -43,11 +41,13 @@ class StyledDictViewer {
 
     private val viewer: JTextPane = Viewer()
 
+    private val defaultStyle: Style by lazy { viewer.getStyle(StyleContext.DEFAULT_STYLE) }
     private val posParagraphStyle: Style by lazy { viewer.getStyle(POS_PARAGRAPH_STYLE) }
     private val entryParagraphStyle: Style by lazy { viewer.getStyle(ENTRY_PARAGRAPH_STYLE) }
     private val posStyle: Style by lazy { viewer.getStyle(POS_STYLE) }
     private val wordStyle: Style by lazy { viewer.getStyle(WORD_STYLE) }
     private val reverseTranslationStyle: Style by lazy { viewer.getStyle(REVERSE_TRANSLATION_STYLE) }
+    private val separatorStyle: Style by lazy { viewer.getStyle(SEPARATOR_STYLE) }
     private val foldingStyle: Style by lazy { viewer.getStyle(FOLDING_STYLE) }
 
     val component: JComponent get() = viewer
@@ -65,7 +65,6 @@ class StyledDictViewer {
                 addMouseMotionListener(it)
             }
 
-            foreground = JBColor(Color(0x5B5B5B), Color(0xACACAC))
             styledDocument.apply {
                 initParagraphStyles()
                 initPartOfSpeechStyle()
@@ -79,58 +78,86 @@ class StyledDictViewer {
         MOUSE_LISTENER
     }
 
+    /**
+     * 段落样式
+     */
     private fun StyledDocument.initParagraphStyles() {
-        addStyle(POS_PARAGRAPH_STYLE) {
-            StyleConstants.setSpaceAbove(this, JBUI.scale(10f))
+        addStyle(POS_PARAGRAPH_STYLE, defaultStyle) {
+            StyleConstants.setSpaceAbove(this, JBUI.scale(12f))
+            StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
         }
-        addStyle(ENTRY_PARAGRAPH_STYLE) {
-            StyleConstants.setLeftIndent(this, JBUI.scale(10f))
+        addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
+            StyleConstants.setLeftIndent(this, JBUI.scale(12f))
         }
     }
 
+    /**
+     * 词性样式
+     */
     private fun StyledDocument.initPartOfSpeechStyle() {
-        addStyle(POS_STYLE) {
-            StyleConstants.setForeground(this, JBColor(Color(0x5B5B5B), Color(0xACACAC)))
+        addStyle(POS_STYLE, defaultStyle) {
+            StyleConstants.setForeground(this, JBColor(0x293B2B, 0xDF7CFF))
             StyleConstants.setItalic(this, true)
         }
     }
 
+    /**
+     * 词、反向翻译样式
+     */
     private fun StyledDocument.initDictEntryStyles() {
-        addStyle(WORD_STYLE) {
-            JBColor(0x170591, 0xFFC66D).let {
+        addStyle(WORD_STYLE, defaultStyle) {
+            JBColor(0x3C0078, 0xFFFF00).let {
                 StyleConstants.setForeground(this, it)
-                addAttribute(StyleConstant.MOUSE_LISTENER, EntryMouseListener(EntryType.WORD, it, Color.RED))
+
+                val hoverColor = JBColor(0x7400FF, 0xDF9B00)
+                val mouseListener = EntryMouseListener(EntryType.WORD, it, hoverColor)
+                addAttribute(StyleConstant.MOUSE_LISTENER, mouseListener)
             }
         }
-        addStyle(REVERSE_TRANSLATION_STYLE) {
-            JBColor(0x170591, 0xFFC66D).let {
+        addStyle(REVERSE_TRANSLATION_STYLE, defaultStyle) {
+            JBColor(0x3333E8, 0xFFC66D).let {
                 StyleConstants.setForeground(this, it)
+
+                val hoverColor = JBColor(0x762DFF, 0xDF7000)
+                val mouseListener = EntryMouseListener(EntryType.REVERSE_TRANSLATION, it, hoverColor)
                 addAttribute(StyleConstant.MOUSE_LISTENER,
-                        EntryMouseListener(EntryType.REVERSE_TRANSLATION, it, Color.RED))
+                        mouseListener)
             }
         }
-    }
-
-    private fun StyledDocument.initFoldStyle() {
-        addStyle(FOLDING_STYLE) {
-            StyleConstants.setForeground(this, JBColor(Color(0x888888), Color(0x787878)))
-            StyleConstants.setBackground(this, JBColor(Color(0xEDEDED), Color(0x3B3B3B)))
+        addStyle(SEPARATOR_STYLE, defaultStyle) {
+            StyleConstants.setForeground(this, JBColor(0xFF5555, 0x02B1DB))
         }
     }
 
+    /**
+     * 折叠样式
+     */
+    private fun StyledDocument.initFoldStyle() {
+        addStyle(FOLDING_STYLE, defaultStyle) {
+            StyleConstants.setForeground(this, JBColor(0x777777, 0x888888))
+            val background = JBColor(Color(0, 0, 0, 0x18), Color(0xFF, 0xFF, 0xFF, 0x10))
+            StyleConstants.setBackground(this, background)
+        }
+    }
+
+    /**
+     * 设置点击监听器
+     */
     fun setOnEntryClickListener(listener: ((entry: Entry) -> Unit)?) {
         onEntryClickListener = listener
     }
 
+    /**
+     * 设置展开折叠的监听器
+     */
     fun setOnFoldingExpandedListener(listener: ((List<DictEntry>) -> Unit)?) {
         onFoldingExpandedListener = listener
     }
 
     private fun update() {
-        with(viewer) {
-            styledDocument.clear()
-            dictionaries?.let { styledDocument.insertDictionaries(it) }
-            caretPosition = 0
+        viewer.styledDocument.apply {
+            clear()
+            dictionaries?.let { insertDictionaries(it) }
         }
     }
 
@@ -163,7 +190,7 @@ class StyledDictViewer {
             if (size > 3) {
                 val foldingEntries = takeLast(size - 3)
                 val placeholder = foldingEntries.run {
-                    takeLast(3).joinToString(postfix = if (size > 3) ", ..." else "") { it.word }
+                    take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
                 }
 
                 SimpleAttributeSet(foldingStyle).let {
@@ -185,7 +212,7 @@ class StyledDictViewer {
 
         dictEntry.reverseTranslation.forEachIndexed { index, reverseTrans ->
             if (index > 0) {
-                currentOffset = insert(currentOffset, ", ")
+                currentOffset = insert(currentOffset, ", ", separatorStyle)
             }
             currentOffset = insert(currentOffset, reverseTrans, reverseTranslationStyle)
         }
@@ -311,25 +338,13 @@ class StyledDictViewer {
         }
     }
 
-    private class Viewer : JTextPane() {
-        init {
-            isOpaque = false
-            isEditable = false
-        }
-
-        override fun paint(g: Graphics) {
-            // 还原设置图像背景后的图形上下文，使图像背景失效。
-            super.paint(IdeBackgroundUtil.getOriginalGraphics(g))
-        }
-    }
-
-
     companion object {
         private const val POS_PARAGRAPH_STYLE = "part_of_speech_paragraph"
         private const val ENTRY_PARAGRAPH_STYLE = "entry_paragraph"
         private const val POS_STYLE = "part_of_speech"
         private const val WORD_STYLE = "word"
         private const val REVERSE_TRANSLATION_STYLE = "reverse_translation"
+        private const val SEPARATOR_STYLE = "separator"
         private const val FOLDING_STYLE = "folding"
 
         private inline val Element.styledDocument: StyledDocument

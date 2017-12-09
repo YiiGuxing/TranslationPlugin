@@ -46,7 +46,7 @@ object Styles {
             StyleConstants.setForeground(it, JBColor(0xEE6000, 0xCC7832))
         }
 
-        val fg = JBColor(0xFF3E7EFF.toInt(), 0xFF8CBCE1.toInt())
+        val fg = JBColor(0x3E7EFF, 0x8CBCE1)
         StyleConstants.setForeground(ATTR_EXPLAIN_BASE, fg)
         StyleConstants.setForeground(ATTR_EXPLAIN, fg)
 
