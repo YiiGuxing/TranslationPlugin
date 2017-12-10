@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.JBColor
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.JBFont
@@ -23,6 +24,7 @@ class ProcessComponent(text: String, insets: Insets = JBUI.emptyInsets()) : JPan
     private val icon: ProcessIcon = ProcessIcon()
     private val label: JLabel = JLabel(text).apply {
         font = JBFont.create(font).deriveFont(18.0f)
+        foreground = JBColor(0x4C4C4C, 0xCDCDCD)
     }
 
     val isRunning: Boolean = icon.isRunning

@@ -39,8 +39,8 @@ class TranslationManager private constructor() {
         translationBalloon?.run { hide() }
 
         val balloon = TranslationBalloon(editor, caretRangeMarker).apply {
-            Disposer.register(disposable, Disposable { translationBalloon = null })
-            showAndQuery(queryText)
+            Disposer.register(this, Disposable { translationBalloon = null })
+            show(queryText)
         }
         translationBalloon = balloon
 

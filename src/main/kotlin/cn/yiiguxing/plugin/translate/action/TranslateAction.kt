@@ -44,7 +44,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             val balloon = TranslationManager.instance.showBalloon(editor, caretRangeMarker, queryText)
 
             highlighters?.takeIf { !it.isEmpty() }?.let {
-                Disposer.register(balloon.disposable, Disposable {
+                Disposer.register(balloon, Disposable {
                     for (highlighter in it) {
                         highlighter.dispose()
                     }

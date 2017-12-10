@@ -394,6 +394,16 @@ public class TranslationDialog extends DialogWrapper implements
         mLayout.show(mTextPanel, CARD_MSG);
     }
 
+    @Override
+    public boolean getDisposed() {
+        return false;
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
     private static class MyModel extends AbstractListModel<String> implements ComboBoxModel<String> {
         private final List<String> myFullList;
         private Object mySelectedItem;

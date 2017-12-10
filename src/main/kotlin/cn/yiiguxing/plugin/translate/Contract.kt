@@ -6,6 +6,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.model.QueryResult
+import com.intellij.openapi.Disposable
 
 interface Presenter {
     /**
@@ -27,7 +28,9 @@ interface Presenter {
     fun translate(query: String)
 }
 
-interface View {
+interface View : Disposable {
+
+    val disposed: Boolean
 
     /**
      * 显示开始翻译

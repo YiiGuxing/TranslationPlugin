@@ -1,8 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil
-import com.intellij.util.ui.JBFont
-import java.awt.Font
 import java.awt.Graphics
 import javax.swing.JTextPane
 
@@ -17,7 +15,7 @@ class Viewer : JTextPane() {
         isEditable = false
 
         editorKit = WarpEditorKit()
-        font = JBFont.create(Font("Microsoft YaHei", Font.PLAIN, 14))
+        font = Styles.defaultFont
     }
 
     override fun paint(g: Graphics) {
