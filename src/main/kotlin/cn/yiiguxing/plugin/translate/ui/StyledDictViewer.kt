@@ -83,7 +83,7 @@ class StyledDictViewer {
      */
     private fun StyledDocument.initParagraphStyles() {
         addStyle(POS_PARAGRAPH_STYLE, defaultStyle) {
-            StyleConstants.setSpaceAbove(this, JBUI.scale(12f))
+            StyleConstants.setSpaceAbove(this, JBUI.scale(10f))
             StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
         }
         addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
@@ -115,6 +115,7 @@ class StyledDictViewer {
             }
         }
         addStyle(REVERSE_TRANSLATION_STYLE, defaultStyle) {
+            StyleConstants.setItalic(this, true)
             JBColor(0x3333E8, 0xFFC66D).let {
                 StyleConstants.setForeground(this, it)
 
@@ -175,20 +176,45 @@ class StyledDictViewer {
     }
 
     private fun StyledDocument.insertDict(dict: Dict, breakEnd: Boolean) {
-        with(dict.entries) {
-            var paragraphOffset = length
-            appendString(dict.partOfSpeech, posStyle)
-            appendString("\n")
-            setParagraphAttributes(paragraphOffset, length - paragraphOffset, posParagraphStyle, true)
+        var paragraphOffset = length
+        appendString(dict.partOfSpeech, posStyle)
+        appendString("\n")
+        setParagraphAttributes(paragraphOffset, length - paragraphOffset, posParagraphStyle, true)
+        paragraphOffset = length
 
-            paragraphOffset = length
+        val hasWordOnly = dict.entries
+                .filter { it.reverseTranslation.isEmpty() }
+                .map { it.word }
+                .run {
+                    forEachIndexed { index, word ->
+                        if (index > 0) {
+                            appendString(", ", separatorStyle)
+                        }
+                        appendString(word, wordStyle)
+                    }
 
-            take(3).forEach {
-                insertDictEntry(length, it)
+                    isNotEmpty()
+                }
+
+        with(dict.entries.filter { it.reverseTranslation.isNotEmpty() }) {
+            if (isEmpty()) {
+                return@with
+            } else if (hasWordOnly) {
                 appendString("\n")
             }
-            if (size > 3) {
-                val foldingEntries = takeLast(size - 3)
+
+            val displayCount = if (hasWordOnly) 2 else 3
+            take(displayCount).forEachIndexed { index, dictEntry ->
+                if (index > 0) {
+                    appendString("\n")
+                }
+                insertDictEntry(length, dictEntry)
+            }
+
+            if (size > displayCount) {
+                appendString("\n")
+
+                val foldingEntries = takeLast(size - displayCount)
                 val placeholder = foldingEntries.run {
                     take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
                 }
@@ -198,12 +224,12 @@ class StyledDictViewer {
                     appendString(placeholder, it)
                 }
             }
-
-            if (breakEnd) {
-                appendString("\n")
-            }
-            setParagraphAttributes(paragraphOffset, length - paragraphOffset, entryParagraphStyle, true)
         }
+
+        if (breakEnd) {
+            appendString("\n")
+        }
+        setParagraphAttributes(paragraphOffset, length - paragraphOffset, entryParagraphStyle, true)
     }
 
     private fun StyledDocument.insertDictEntry(offset: Int, dictEntry: DictEntry): Int {
