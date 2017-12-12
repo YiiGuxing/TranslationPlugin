@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.util.addStyle
+import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
 import com.intellij.ui.JBColor
 import com.intellij.ui.layout.CCFlags
@@ -12,6 +14,8 @@ import com.intellij.util.ui.JBUI
 import java.awt.Font
 import javax.swing.JComponent
 import javax.swing.JLabel
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
 import kotlin.properties.Delegates
 
 /**
@@ -36,6 +40,7 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
     private val transViewer = Viewer()
     private val transPhonetic = JLabel()
     private val dictViewer = StyledDictViewer()
+    private val otherExplainLabel = JLabel("网络释义:")
     private val otherExplainViewer = Viewer()
 
     val component: JComponent = panel {
@@ -46,6 +51,8 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
         row { transViewer(CCFlags.grow) }
         row { transPhonetic(CCFlags.grow) }
         row { dictViewer.component(CCFlags.grow) }
+        row { otherExplainLabel() }
+        row { otherExplainViewer(CCFlags.grow) }
     }
 
     init {
@@ -83,6 +90,18 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
             originalPhonetic.foreground = it
             transPhonetic.foreground = it
         }
+        otherExplainLabel.foreground = JBColor(0x707070, 0x808080)
+
+        with(otherExplainViewer) {
+            foreground = JBColor(0x555555, 0xACACAC)
+            val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
+            styledDocument.addStyle(EXPLAIN_KEY_STYLE, defaultStyle) {
+                StyleConstants.setForeground(this, JBColor(0x4C4C4C, 0x77B767))
+            }
+            styledDocument.addStyle(EXPLAIN_VALUE_STYLE, defaultStyle) {
+                StyleConstants.setForeground(this, JBColor(0x707070, 0x6A8759))
+            }
+        }
     }
 
     protected open fun update(translation: Translation?) {
@@ -98,6 +117,8 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
 
                 dictViewer.dictionaries = dictionaries
                 dictViewer.component.isVisible = true
+
+                insertOtherExplain(otherExplain)
             } else {
                 originalViewer.empty()
                 originalPhonetic.empty()
@@ -105,9 +126,41 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
                 transPhonetic.empty()
                 otherExplainViewer.empty()
 
+                otherExplainLabel.isVisible = false
                 dictViewer.component.isVisible = false
                 dictViewer.dictionaries = null
             }
+        }
+    }
+
+    private fun insertOtherExplain(explain: Map<String, String>) {
+        with(otherExplainViewer) {
+            styledDocument.clear()
+
+            if (explain.isEmpty()) {
+                isVisible = false
+                otherExplainLabel.isVisible = false
+                return
+            }
+
+            styledDocument.apply {
+                val keyStyle = getStyle(EXPLAIN_KEY_STYLE)
+                val valueStyle = getStyle(EXPLAIN_VALUE_STYLE)
+
+                val lastIndex = explain.size - 1
+                var index = 0
+                for ((key, value) in explain) {
+                    appendString(key, keyStyle)
+                    appendString(" - ")
+                    appendString(value, valueStyle)
+                    if (index++ < lastIndex) {
+                        appendString("\n")
+                    }
+                }
+            }
+
+            isVisible = true
+            otherExplainLabel.isVisible = true
         }
     }
 
@@ -135,6 +188,9 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
         private const val FONT_SIZE_LARGE = 16
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
+
+        private const val EXPLAIN_KEY_STYLE = "explain_key"
+        private const val EXPLAIN_VALUE_STYLE = "explain_value"
     }
 
 }
