@@ -68,7 +68,7 @@ class TranslationBalloon(private val editor: Editor, private val caretRangeMarke
 
     private fun initContentPanel() {
         contentPanel
-                .withFont(Styles.defaultFont)
+                .withFont(UI.defaultFont)
                 .andTransparent()
                 .apply {
                     add(CARD_PROCESSING, processPane)
@@ -79,7 +79,7 @@ class TranslationBalloon(private val editor: Editor, private val caretRangeMarke
     private fun initErrorPane() {
         errorPane.apply {
             contentType = "text/html"
-            editorKit = Styles.errorHTMLKit
+            editorKit = UI.errorHTMLKit
             isEditable = false
             isOpaque = false
 

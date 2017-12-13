@@ -15,7 +15,7 @@ class Viewer : JTextPane() {
         isEditable = false
 
         editorKit = WarpEditorKit()
-        font = Styles.defaultFont
+        font = UI.defaultFont
     }
 
     override fun paint(g: Graphics) {

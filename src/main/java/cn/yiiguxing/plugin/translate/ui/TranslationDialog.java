@@ -381,8 +381,6 @@ public class TranslationDialog extends DialogWrapper implements
     }
 
     private void setResultText(@NotNull QueryResult result) {
-        Styles.INSTANCE.insertStylishResultText(mResultText, result, (textPane, text) -> query(text));
-
         mResultText.setCaretPosition(0);
     }
 

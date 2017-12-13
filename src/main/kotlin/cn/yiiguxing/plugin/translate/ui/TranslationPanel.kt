@@ -5,15 +5,22 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.addStyle
 import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
+import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import com.intellij.openapi.ui.JBMenuItem
+import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.ui.JBColor
+import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.layout.CCFlags
 import com.intellij.ui.layout.Row
 import com.intellij.ui.layout.panel
+import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import java.awt.Font
 import javax.swing.JComponent
 import javax.swing.JLabel
+import javax.swing.JTextPane
+import javax.swing.event.PopupMenuEvent
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import kotlin.properties.Delegates
@@ -31,6 +38,8 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
                     update(newValue)
                 }
             }
+
+    protected val overrideFonts = getOverrideFonts(settings)
 
     protected abstract val sourceLangRowInitializer: Row.() -> Unit
     protected abstract val targetLangRowInitializer: Row.() -> Unit
@@ -55,33 +64,27 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
         row { otherExplainViewer(CCFlags.grow) }
     }
 
+    private var onNewTranslateHandler: ((String) -> Unit)? = null
+    private var onRevalidateHandler: (() -> Unit)? = null
+
     init {
         initFont()
         initForeground()
+        initMaxSize(maxWidth)
+        initActions()
     }
 
     private fun initFont() {
-        var primaryFont: JBFont = Styles.defaultFont.deriveFont(JBUI.scale(FONT_SIZE_DEFAULT.toFloat()))
-        var phoneticFont: JBFont = Styles.defaultFont.deriveFont(JBUI.scale(FONT_SIZE_PHONETIC.toFloat()))
-
-        with(settings) {
-            if (isOverrideFont) {
-                primaryFont = primaryFontFamily?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT) } ?: primaryFont
-                phoneticFont = phoneticFontFamily?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC) } ?: phoneticFont
-            }
-        }
+        val (primaryFont, phoneticFont) = overrideFonts
 
         originalViewer.font = primaryFont.deriveFont(Font.ITALIC, FONT_SIZE_LARGE.toFloat())
         transViewer.font = primaryFont.deriveFont(FONT_SIZE_LARGE.toFloat())
         dictViewer.font = primaryFont
         otherExplainViewer.font = primaryFont
+        otherExplainLabel.font = primaryFont
         originalPhonetic.font = phoneticFont
         transPhonetic.font = phoneticFont
-
-        onUpdateFont(primaryFont, phoneticFont)
     }
-
-    protected open fun onUpdateFont(primaryFont: JBFont, phoneticFont: JBFont) = Unit
 
     private fun initForeground() {
         originalViewer.foreground = JBColor(0xEE6000, 0xCC7832)
@@ -101,6 +104,69 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
             styledDocument.addStyle(EXPLAIN_VALUE_STYLE, defaultStyle) {
                 StyleConstants.setForeground(this, JBColor(0x707070, 0x6A8759))
             }
+        }
+    }
+
+    private fun initMaxSize(maxWidth: Int) {
+        val maximumSize = JBDimension(maxWidth, Int.MAX_VALUE)
+
+        originalViewer.maximumSize = maximumSize
+        originalPhonetic.maximumSize = maximumSize
+        transViewer.maximumSize = maximumSize
+        transPhonetic.maximumSize = maximumSize
+        dictViewer.component.maximumSize = maximumSize
+        otherExplainLabel.maximumSize = maximumSize
+        otherExplainViewer.maximumSize = maximumSize
+    }
+
+    private fun initActions() {
+        originalViewer.setupPopupMenu()
+        transViewer.setupPopupMenu()
+        otherExplainViewer.setupPopupMenu()
+
+        with(dictViewer) {
+            onEntryClicked {
+                onNewTranslateHandler?.invoke(it.value)
+            }
+            onFoldingExpanded {
+                onRevalidateHandler?.invoke()
+            }
+        }
+    }
+
+    fun onNewTranslate(handler: (text: String) -> Unit) {
+        onNewTranslateHandler = handler
+    }
+
+    fun onRevalidate(handler: () -> Unit) {
+        onRevalidateHandler = handler
+    }
+
+    private fun JTextPane.setupPopupMenu() {
+        componentPopupMenu = JBPopupMenu().apply {
+            val copy = JBMenuItem("Copy", Icons.Copy).apply {
+                addActionListener { copy() }
+            }
+            val translate = JBMenuItem("Translate", Icons.Translate).apply {
+                addActionListener {
+                    selectedText.let {
+                        if (!it.isNullOrBlank()) {
+                            onNewTranslateHandler?.invoke(it)
+                        }
+                    }
+                }
+            }
+
+            add(copy)
+            add(translate)
+            addPopupMenuListener(object : PopupMenuListenerAdapter() {
+                override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                    (!selectedText.isNullOrBlank()).let {
+                        copy.isEnabled = it
+                        translate.isEnabled = it
+                    }
+                }
+            })
         }
     }
 
@@ -191,6 +257,20 @@ abstract class TranslationPanel(protected val settings: Settings, maxWidth: Int)
 
         private const val EXPLAIN_KEY_STYLE = "explain_key"
         private const val EXPLAIN_VALUE_STYLE = "explain_value"
+
+        private fun getOverrideFonts(settings: Settings): Pair<JBFont, JBFont> {
+            var primaryFont: JBFont = UI.defaultFont.deriveFont(JBUI.scale(FONT_SIZE_DEFAULT.toFloat()))
+            var phoneticFont: JBFont = UI.defaultFont.deriveFont(JBUI.scale(FONT_SIZE_PHONETIC.toFloat()))
+
+            with(settings) {
+                if (isOverrideFont) {
+                    primaryFont = primaryFontFamily?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT) } ?: primaryFont
+                    phoneticFont = phoneticFontFamily?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC) } ?: phoneticFont
+                }
+            }
+
+            return primaryFont to phoneticFont
+        }
     }
 
 }

@@ -36,8 +36,8 @@ class StyledDictViewer {
     enum class EntryType { WORD, REVERSE_TRANSLATION }
     data class Entry(val entryType: EntryType, val value: String)
 
-    private var onEntryClickListener: ((entry: Entry) -> Unit)? = null
-    private var onFoldingExpandedListener: ((List<DictEntry>) -> Unit)? = null
+    private var onEntryClickedHandler: ((entry: Entry) -> Unit)? = null
+    private var onFoldingExpandedHandler: ((List<DictEntry>) -> Unit)? = null
 
     private val viewer: JTextPane = Viewer()
 
@@ -141,18 +141,12 @@ class StyledDictViewer {
         }
     }
 
-    /**
-     * 设置点击监听器
-     */
-    fun setOnEntryClickListener(listener: ((entry: Entry) -> Unit)?) {
-        onEntryClickListener = listener
+    fun onEntryClicked(handler: ((entry: Entry) -> Unit)?) {
+        onEntryClickedHandler = handler
     }
 
-    /**
-     * 设置展开折叠的监听器
-     */
-    fun setOnFoldingExpandedListener(listener: ((List<DictEntry>) -> Unit)?) {
-        onFoldingExpandedListener = listener
+    fun onFoldingExpanded(handler: ((List<DictEntry>) -> Unit)?) {
+        onFoldingExpandedHandler = handler
     }
 
     private fun update() {
@@ -335,7 +329,7 @@ class StyledDictViewer {
         }
 
         override fun mouseClicked(element: Element) {
-            onEntryClickListener?.run {
+            onEntryClickedHandler?.run {
                 val text = with(element) {
                     document.getText(startOffset, offsetLength)
                 }
@@ -360,7 +354,8 @@ class StyledDictViewer {
                     }
                 }
             }
-            onFoldingExpandedListener?.invoke(foldingEntries)
+
+            onFoldingExpandedHandler?.invoke(foldingEntries)
         }
     }
 
