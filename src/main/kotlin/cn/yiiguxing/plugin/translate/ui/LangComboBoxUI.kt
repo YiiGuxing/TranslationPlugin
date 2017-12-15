@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.ui.ListCellRendererWrapper
 import com.intellij.util.ui.JBInsets
 import com.intellij.util.ui.JBUI
 import sun.swing.DefaultLookup
@@ -28,7 +29,12 @@ class LangComboBoxUI(
     init {
         myComboBox.apply {
             border = BorderFactory.createEmptyBorder()
-            renderer = LanguageRenderer
+            renderer = object : ListCellRendererWrapper<Lang>() {
+                override fun customize(list: JList<*>?, value: Lang, index: Int, selected: Boolean, hasFocus: Boolean) {
+                    setText(value.langName)
+                    setFont(this@apply.font)
+                }
+            }
             isEditable = false
         }
 
@@ -82,7 +88,7 @@ class LangComboBoxUI(
             arrowIcon.color = foregroundColor
 
             label.font = font
-            label.text = selected.langName
+            label.text = selected?.langName
         }
 
         currentValuePane.paintComponent(g, label, myComboBox,
