@@ -12,6 +12,8 @@ interface TranslationAdapter {
 data class Translation(
         val original: String,
         val trans: String?,
+        val srcLang: Lang,
+        val targetLang: Lang,
         val phoneticSymbol: Symbol? = null,
         val dictionaries: List<Dict> = emptyList(),
         val otherExplain: Map<String, String> = emptyMap()

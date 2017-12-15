@@ -32,7 +32,7 @@ data class YoudaoResult(
     }
 
     override fun toTranslation(): Translation {
-        return Translation("", "")
+        return Translation("", "", Lang.AUTO, Lang.AUTO)
     }
 }
 
