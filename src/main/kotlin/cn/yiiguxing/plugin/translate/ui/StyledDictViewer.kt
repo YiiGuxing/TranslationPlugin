@@ -15,7 +15,6 @@ import java.awt.event.InputEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JComponent
-import javax.swing.JTextPane
 import javax.swing.text.*
 import kotlin.properties.Delegates
 
@@ -39,7 +38,7 @@ class StyledDictViewer {
     private var onEntryClickedHandler: ((entry: Entry) -> Unit)? = null
     private var onFoldingExpandedHandler: ((List<DictEntry>) -> Unit)? = null
 
-    private val viewer: JTextPane = Viewer()
+    private val viewer: Viewer = Viewer()
 
     private val defaultStyle: Style by lazy { viewer.getStyle(StyleContext.DEFAULT_STYLE) }
     private val posParagraphStyle: Style by lazy { viewer.getStyle(POS_PARAGRAPH_STYLE) }
@@ -60,6 +59,9 @@ class StyledDictViewer {
 
     init {
         viewer.apply {
+            dragEnabled = false
+            disableSelection()
+
             ViewerMouseAdapter().let {
                 addMouseListener(it)
                 addMouseMotionListener(it)
@@ -244,6 +246,7 @@ class StyledDictViewer {
     private inner class ViewerMouseAdapter : MouseAdapter() {
 
         private var lastElement: Element? = null
+        private var activeElement: Element? = null
 
         private inline val MouseEvent.characterElement: Element
             get() = viewer.styledDocument.getCharacterElement(viewer.viewToModel(point))
@@ -264,6 +267,7 @@ class StyledDictViewer {
         }
 
         private fun exitLastElement() {
+            activeElement = null
             lastElement?.run {
                 mouseListener?.mouseExited(this)
                 lastElement = null
@@ -272,18 +276,24 @@ class StyledDictViewer {
 
         override fun mouseExited(event: MouseEvent) = exitLastElement()
 
-        override fun mouseClicked(event: MouseEvent) {
+        override fun mousePressed(event: MouseEvent) {
+            activeElement = event.characterElement
+        }
+
+        override fun mouseReleased(event: MouseEvent) { // 使用`mouseClicked`在MacOS下会出现事件丢失的情况...
             with(event) {
-                if (modifiers and InputEvent.BUTTON1_MASK == 0 || clickCount > 1) {
-                    return
+                if (modifiers and InputEvent.BUTTON1_MASK == 0) {
+                    return@with
                 }
 
-                consume()
-                with(characterElement) {
-                    (attributes.getAttribute(StyleConstant.MOUSE_LISTENER) as? BaseMouseListener)
-                            ?.mouseClicked(this)
+                characterElement.let {
+                    if (it === activeElement) {
+                        (it.attributes.getAttribute(StyleConstant.MOUSE_LISTENER) as? BaseMouseListener)
+                                ?.mouseClicked(it)
+                    }
                 }
             }
+            activeElement = null
         }
     }
 
