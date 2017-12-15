@@ -11,4 +11,8 @@ import javax.swing.JComboBox
 /**
  * 当前选中项
  */
-val <E> JComboBox<E>.selected: E get() = getItemAt(selectedIndex)
+inline var <reified E> JComboBox<E>.selected: E?
+    get() = selectedItem as? E
+    set(value) {
+        selectedItem = value
+    }
