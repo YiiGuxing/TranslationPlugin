@@ -11,17 +11,21 @@ import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
+import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.layout.CCFlags
 import com.intellij.ui.layout.Row
 import com.intellij.ui.layout.panel
 import com.intellij.util.ui.JBDimension
+import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.JComponent
 import javax.swing.JLabel
+import javax.swing.JPanel
 import javax.swing.JTextPane
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.StyleConstants
@@ -68,6 +72,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         }
     }
 
+    private val fixLanguageLinkLabel = JLabel("源语言: ")
     private val fixLanguageLink = ActionLink {
         translation?.run {
             onFixLanguageHandler?.invoke(srcLang)
@@ -96,19 +101,11 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
         panel {
             sourceLangRow = row {
-                originalTTSLink()
-                sourceLangComponent()
-                fixLanguageLink()
+                createRow(originalTTSLink, sourceLangComponent, fixLanguageLinkLabel, fixLanguageLink)()
             }
-
             row { originalViewer(CCFlags.grow) }
             row { originalPhonetic(CCFlags.grow) }
-
-            targetLangRow = row {
-                transTTSLink()
-                targetLangComponent()
-            }
-
+            targetLangRow = row { createRow(transTTSLink, targetLangComponent)() }
             row { transViewer(CCFlags.grow) }
             row { transPhonetic(CCFlags.grow) }
             row { dictViewer.component(CCFlags.grow) }
@@ -117,12 +114,30 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         }
     }
 
+    init {
+        originalPhonetic.border = JBEmptyBorder(0, 0, 15, 0)
+        fixLanguageLinkLabel.border = JBEmptyBorder(0, 10, 0, 0)
+        JBEmptyBorder(0, 0, 0, 10).let {
+            originalTTSLink.border = it
+            transTTSLink.border = it
+        }
+    }
+
+    private fun createRow(vararg components: JComponent) // 默认的布局组件的间隔太大了，又不能改。。。
+            : JPanel = NonOpaquePanel(FlowLayout(FlowLayout.LEFT, 0, 0))
+            .apply {
+                for (c in components) {
+                    add(c)
+                }
+            }
+
     protected abstract fun onCreateLanguageComponent(): T
 
     private fun initFont() {
         getOverrideFonts(settings).let { (primaryFont, phoneticFont) ->
             sourceLangComponent.font = primaryFont
             targetLangComponent.font = primaryFont
+            fixLanguageLinkLabel.font = primaryFont
             fixLanguageLink.font = primaryFont
             originalViewer.font = primaryFont.deriveFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE.toFloat())
             transViewer.font = primaryFont.deriveFont(FONT_SIZE_LARGE.toFloat())
@@ -140,14 +155,15 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         originalPhonetic.foreground = JBColor(0xEEA985, 0xC79582)
         transPhonetic.foreground = JBColor(0xC79464, 0xCFBAA5)
         otherExplainLabel.foreground = JBColor(0x707070, 0x808080)
+        fixLanguageLinkLabel.foreground = JBColor(0x666666, 0x909090)
 
         fixLanguageLink.apply {
             setPaintUnderline(false)
             normalColor = JBColor(0xF00000, 0xFF0000)
-            activeColor = JBColor(0xDD0000, 0xEE0000)
+            activeColor = JBColor(0xA00000, 0xCC0000)
         }
 
-        JBColor(0x3E7EFF, 0x8CBCE1).let {
+        JBColor(0x555555, 0xACACAC).let {
             sourceLangComponent.foreground = it
             targetLangComponent.foreground = it
         }
@@ -258,8 +274,15 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
     private fun checkSourceLanguage() {
         if (srcLang != null && srcLang != Lang.AUTO && translation?.srcLang != srcLang) {
-            fixLanguageLink.text = translation?.srcLang?.langName
+            val visible = translation?.srcLang?.langName.let {
+                fixLanguageLink.text = it
+                !it.isNullOrEmpty()
+            }
+            fixLanguageLinkLabel.isVisible = visible
+            fixLanguageLink.isVisible = visible
         } else {
+            fixLanguageLinkLabel.isVisible = false
+            fixLanguageLink.isVisible = false
             fixLanguageLink.text = null
         }
     }
