@@ -116,6 +116,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
     init {
         originalPhonetic.border = JBEmptyBorder(0, 0, 15, 0)
+        otherExplainLabel.border = JBEmptyBorder(10, 0, 0, 0)
         fixLanguageLinkLabel.border = JBEmptyBorder(0, 10, 0, 0)
         JBEmptyBorder(0, 0, 0, 10).let {
             originalTTSLink.border = it
