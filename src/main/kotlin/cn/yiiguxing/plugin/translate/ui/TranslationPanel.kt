@@ -19,6 +19,7 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.FocusAdapter
@@ -37,7 +38,7 @@ import kotlin.properties.Delegates
  *
  * Created by Yii.Guxing on 2017/12/10
  */
-abstract class TranslationPanel<T : JComponent>(protected val settings: Settings, maxWidth: Int) {
+abstract class TranslationPanel<T : JComponent>(protected val settings: Settings) {
 
     protected val sourceLangComponent: T by lazy { onCreateLanguageComponent() }
     protected val targetLangComponent: T by lazy { onCreateLanguageComponent() }
@@ -96,7 +97,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     val component: JComponent by lazy {
         initFont()
         initColorScheme()
-        initMaxSize(maxWidth)
+        initMaxSize()
         initActions()
 
         panel {
@@ -118,7 +119,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         originalPhonetic.border = JBEmptyBorder(0, 0, 15, 0)
         otherExplainLabel.border = JBEmptyBorder(10, 0, 0, 0)
         fixLanguageLinkLabel.border = JBEmptyBorder(0, 10, 0, 0)
-        JBEmptyBorder(0, 0, 0, 10).let {
+        JBEmptyBorder(0, 0, 0, 5).let {
             originalTTSLink.border = it
             transTTSLink.border = it
         }
@@ -153,8 +154,12 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     private fun initColorScheme() {
         originalViewer.foreground = JBColor(0xEE6000, 0xCC7832)
         transViewer.foreground = JBColor(0x170591, 0xFFC66D)
-        originalPhonetic.foreground = JBColor(0xEEA985, 0xC79582)
-        transPhonetic.foreground = JBColor(0xC79464, 0xCFBAA5)
+        originalPhonetic.foreground = JBColor(
+                Color(0xEE, 0x60, 0x00, 0xA0),
+                Color(0xCC, 0x78, 0x32, 0xA0))
+        transPhonetic.foreground = JBColor(
+                Color(0x17, 0x05, 0x91, 0xA0),
+                Color(0xFF, 0xC6, 0x6D, 0xA0))
         otherExplainLabel.foreground = JBColor(0x707070, 0x808080)
         fixLanguageLinkLabel.foreground = JBColor(0x666666, 0x909090)
 
@@ -181,8 +186,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         }
     }
 
-    private fun initMaxSize(maxWidth: Int) {
-        val maximumSize = JBDimension(maxWidth, Int.MAX_VALUE)
+    private fun initMaxSize() {
+        val maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 
         originalViewer.maximumSize = maximumSize
         originalPhonetic.maximumSize = maximumSize
@@ -194,14 +199,17 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     }
 
     private fun initActions() {
-        otherExplainViewer.setupPopupMenu()
         originalViewer.apply {
             setupPopupMenu()
-            setFocusListener(transViewer, dictViewer.component as Viewer)
+            setFocusListener(transViewer, otherExplainViewer)
         }
         transViewer.apply {
             setupPopupMenu()
-            setFocusListener(originalViewer, dictViewer.component as Viewer)
+            setFocusListener(originalViewer, otherExplainViewer)
+        }
+        otherExplainViewer.apply {
+            setupPopupMenu()
+            setFocusListener(originalViewer, transViewer)
         }
         dictViewer.apply {
             onEntryClicked {
@@ -210,7 +218,6 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             onFoldingExpanded {
                 onRevalidateHandler?.invoke()
             }
-            (component as Viewer).setFocusListener(originalViewer, transViewer)
         }
     }
 
@@ -304,7 +311,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
                 sourceLangRow.visible = true
                 targetLangRow.visible = true
-                transTTSLink.isEnabled = trans != null
+                transTTSLink.isEnabled = !trans.isNullOrEmpty()
 
                 originalViewer.updateText(original)
                 transViewer.updateText(trans)
@@ -389,6 +396,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     }
 
     companion object {
+        private const val MAX_WIDTH = 600
+
         private const val FONT_SIZE_LARGE = 18
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
@@ -411,8 +420,9 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         }
 
         private fun ttsLinkLabel(action: (ActionLink) -> Unit): ActionLink = ActionLink(action = action).apply {
-            icon = Icons.Speech
-            setHoveringIcon(Icons.SpeechPressed)
+            icon = Icons.Audio
+            disabledIcon = Icons.AudioDisable
+            setHoveringIcon(Icons.AudioPressed)
         }
     }
 

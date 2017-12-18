@@ -12,8 +12,7 @@ import java.awt.event.ItemListener
  *
  * Created by Yii.Guxing on 2017/12/13
  */
-class BalloonTranslationPanel(settings: Settings, maxWidth: Int)
-    : TranslationPanel<ComboBox<Lang>>(settings, maxWidth) {
+class BalloonTranslationPanel(settings: Settings) : TranslationPanel<ComboBox<Lang>>(settings) {
 
     private var ignoreEvent = false
     private var onLanguageChangedHandler: ((Lang, Lang) -> Unit)? = null
