@@ -156,6 +156,7 @@ class StyledDictViewer {
             clear()
             dictionaries?.let { insertDictionaries(it) }
         }
+        viewer.caretPosition = 0
     }
 
     private fun StyledDocument.insertDictionaries(dictionaries: List<Dict>) {

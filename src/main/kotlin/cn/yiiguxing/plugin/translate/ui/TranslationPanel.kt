@@ -408,6 +408,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     private fun Viewer.updateText(text: String?) {
         this.text = text
         isVisible = !text.isNullOrEmpty()
+        caretPosition = 0
     }
 
     private fun JLabel.updateText(text: String?) {
