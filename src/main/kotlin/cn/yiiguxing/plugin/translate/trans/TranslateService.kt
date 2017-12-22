@@ -2,7 +2,9 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.util.LruCache
-import com.intellij.openapi.application.ApplicationManager
+import cn.yiiguxing.plugin.translate.util.checkDispatchThread
+import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
 
@@ -27,9 +29,7 @@ class TranslateService private constructor() {
 
         private val LOGGER = Logger.getInstance(TranslateService::class.java)
 
-        private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
-            "TranslateService must only be used from the Event Dispatch Thread."
-        }
+        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
     }
 
     fun setTranslator(translatorId: String) {
@@ -56,26 +56,24 @@ class TranslateService private constructor() {
             return
         }
 
-        ApplicationManager.getApplication().run {
-            executeOnPooledThread {
-                try {
-                    with(translator) {
-                        translate(text, srcLang, targetLang).let { translation ->
-                            cache.put(CacheKey(text, srcLang, targetLang, id), translation)
-                            invokeLater { listener.onSuccess(translation) }
-                        }
+        executeOnPooledThread {
+            try {
+                with(translator) {
+                    translate(text, srcLang, targetLang).let { translation ->
+                        cache.put(CacheKey(text, srcLang, targetLang, id), translation)
+                        invokeLater { listener.onSuccess(translation) }
                     }
-                } catch (e: TranslateException) {
-                    LOGGER.error("translate", e)
-                    invokeLater { listener.onError(e.message) }
                 }
+            } catch (e: TranslateException) {
+                LOGGER.error("translate", e)
+                invokeLater { listener.onError(e.message) }
             }
         }
     }
 
     fun translate(text: String, callback: (String, QueryResult?) -> Unit) {
         checkThread()
-        ApplicationManager.getApplication().executeOnPooledThread {
+        executeOnPooledThread {
             translator.translate(text, Lang.AUTO, Lang.AUTO)
         }
     }

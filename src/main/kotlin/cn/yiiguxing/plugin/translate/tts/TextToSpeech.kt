@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.tts
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 
@@ -44,8 +44,6 @@ class TextToSpeech private constructor() {
         val INSTANCE: TextToSpeech
             get() = ServiceManager.getService(TextToSpeech::class.java)
 
-        private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
-            "TextToSpeech must only be used from the Event Dispatch Thread."
-        }
+        private fun checkThread() = checkDispatchThread(TextToSpeech::class.java)
     }
 }

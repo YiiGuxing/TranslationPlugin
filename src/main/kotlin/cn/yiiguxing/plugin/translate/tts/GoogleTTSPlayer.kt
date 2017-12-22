@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.tk
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
@@ -172,9 +171,7 @@ class GoogleTTSPlayer(
 
         private const val MAX_TEXT_LENGTH = 200
 
-        private fun checkThread() = check(ApplicationManager.getApplication().isDispatchThread) {
-            "NetworkTTSPlayer must only be used from the Event Dispatch Thread."
-        }
+        private fun checkThread() = checkDispatchThread(GoogleTTSPlayer::class.java)
 
         private fun InputStream.asAudioInputStream(): AudioInputStream =
                 MpegAudioFileReader().getAudioInputStream(this)
