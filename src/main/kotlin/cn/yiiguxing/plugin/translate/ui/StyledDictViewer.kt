@@ -166,16 +166,18 @@ class StyledDictViewer {
 
             val lastIndex = size - 1
             forEachIndexed { index, dict ->
-                insertDict(dict, index < lastIndex)
+                insertDict(dict, index == 0, index < lastIndex)
             }
         }
     }
 
-    private fun StyledDocument.insertDict(dict: Dict, breakEnd: Boolean) {
+    private fun StyledDocument.insertDict(dict: Dict, isFirst: Boolean, breakEnd: Boolean) {
         var paragraphOffset = length
         appendString(dict.partOfSpeech, posStyle)
         appendString("\n")
-        setParagraphAttributes(paragraphOffset, length - paragraphOffset, posParagraphStyle, true)
+        if (!isFirst) {
+            setParagraphAttributes(paragraphOffset, length - paragraphOffset, posParagraphStyle, true)
+        }
         paragraphOffset = length
 
         val hasWordOnly = dict.entries
