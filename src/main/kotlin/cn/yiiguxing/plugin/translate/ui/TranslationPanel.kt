@@ -112,18 +112,24 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             }
             originalViewerRow = row { onWrapViewer(originalViewer)(CCFlags.grow) }
             row { originalPhonetic(CCFlags.grow) }
-            targetLangRow = row { createRow(transTTSLink, targetLangComponent)() }
+            targetLangRow = row {
+                createRow(transTTSLink, targetLangComponent).apply {
+                    border = JBEmptyBorder(15, 0, 0, 0)
+                }()
+            }
             transViewerRow = row { onWrapViewer(transViewer)(CCFlags.grow) }
             row { transPhonetic(CCFlags.grow) }
-            dictViewerRow = row { onWrapViewer(dictViewer.component as Viewer)(CCFlags.grow) }
+            dictViewerRow = row {
+                onWrapViewer(dictViewer.component as Viewer).apply {
+                    border = JBEmptyBorder(10, 0, 0, 0)
+                }(CCFlags.grow)
+            }
             row { otherExplainLabel() }
             otherExplainViewerRow = row { onWrapViewer(otherExplainViewer)(CCFlags.grow) }
         }
     }
 
     init {
-        originalPhonetic.border = JBEmptyBorder(0, 0, 15, 0)
-        transPhonetic.border = JBEmptyBorder(0, 0, 10, 0)
         otherExplainLabel.border = JBEmptyBorder(10, 0, 0, 0)
         fixLanguageLinkLabel.border = JBEmptyBorder(0, 10, 0, 0)
         JBEmptyBorder(0, 0, 0, 5).let {
