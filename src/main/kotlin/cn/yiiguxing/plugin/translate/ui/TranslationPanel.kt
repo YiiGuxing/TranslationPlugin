@@ -126,7 +126,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             }
             row { otherExplainLabel() }
             otherExplainViewerRow = row { onWrapViewer(otherExplainViewer)(CCFlags.grow) }
-        }
+        }.apply { isOpaque = false /* 可使淡入淡出动画流畅自然 */ }
     }
 
     init {
