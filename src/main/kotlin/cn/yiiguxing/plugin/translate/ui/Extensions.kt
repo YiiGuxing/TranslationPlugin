@@ -5,6 +5,7 @@
  */
 package cn.yiiguxing.plugin.translate.ui
 
+import java.awt.Dimension
 import javax.swing.JComboBox
 
 
@@ -16,3 +17,13 @@ inline var <reified E> JComboBox<E>.selected: E?
     set(value) {
         selectedItem = value
     }
+
+/**
+ * Returns the width of the [Dimension].
+ */
+operator fun Dimension.component1() = width
+
+/**
+ * Returns the height of the [Dimension].
+ */
+operator fun Dimension.component2() = height
