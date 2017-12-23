@@ -114,7 +114,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             row { originalPhonetic(CCFlags.grow) }
             targetLangRow = row {
                 createRow(transTTSLink, targetLangComponent).apply {
-                    border = JBEmptyBorder(15, 0, 0, 0)
+                    border = JBEmptyBorder(10, 0, 0, 0)
                 }()
             }
             transViewerRow = row { onWrapViewer(transViewer)(CCFlags.grow) }
