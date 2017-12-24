@@ -64,7 +64,7 @@ class BalloonTranslationPanel(settings: Settings) : TranslationPanel<ComboBox<La
 
     companion object {
         const val MAX_VIEWER_SMALL = 200
-        const val MAX_VIEWER_HEIGHT = 300
+        const val MAX_VIEWER_HEIGHT = 250
 
         private fun ComboBox<Lang>.setLanguages(languages: List<Lang>) {
             model = CollectionComboBoxModel<Lang>(languages, selected)

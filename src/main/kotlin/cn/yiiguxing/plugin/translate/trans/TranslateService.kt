@@ -74,7 +74,12 @@ class TranslateService private constructor() {
     fun translate(text: String, callback: (String, QueryResult?) -> Unit) {
         checkThread()
         executeOnPooledThread {
-            translator.translate(text, Lang.AUTO, Lang.AUTO)
+            try {
+                translator.translate(text, Lang.AUTO, Lang.AUTO)
+                callback(text, QueryResult(errorCode = 0))
+            } catch (e: Exception) {
+                callback(text, QueryResult(errorCode = -1, message = e.message))
+            }
         }
     }
 

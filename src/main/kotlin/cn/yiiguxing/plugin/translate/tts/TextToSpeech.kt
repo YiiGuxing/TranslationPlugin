@@ -16,13 +16,15 @@ class TextToSpeech private constructor() {
     /**
      * Text to speech.
      *
+     * @param project the project.
      * @param text the text.
+     * @param lang the language.
      */
-    fun speak(project: Project?, text: String): Disposable {
+    fun speak(project: Project?, text: String, lang: Lang): Disposable {
         checkThread()
         currentPlayer?.stop()
 
-        return GoogleTTSPlayer(project, text, Lang.ENGLISH) { player ->
+        return GoogleTTSPlayer(project, text, lang) { player ->
             if (player === currentPlayer) {
                 currentPlayer = null
             }
