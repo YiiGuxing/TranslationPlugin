@@ -37,7 +37,7 @@ class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_AS_NEE
 
     private class Viewport(fadingEdgeColor: Color, fadingEdgeSize: Int) : JBViewport() {
 
-        private val transparent = with(fadingEdgeColor) { Color(red, green, blue, 0x0) }
+        private val transparent = fadingEdgeColor.withAlpha(0f)
         private val fadingEdgeSize = JBUI.scale(fadingEdgeSize)
         private val fadingEdgeStart = GradientPaint(0f, 0f, fadingEdgeColor,
                 0f, this.fadingEdgeSize.toFloat(), transparent)
