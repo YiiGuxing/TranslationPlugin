@@ -34,4 +34,11 @@ operator fun Dimension.component2() = height
  *
  * @param alpha the alpha(0.0f ~ 1.0f).
  */
-fun Color.withAlpha(alpha: Float) = Color(red, green, blue, (0xFF * alpha).toInt())
+fun Color.withAlpha(alpha: Float) = toAlpha((0xFF * alpha).toInt())
+
+/**
+ * Returns a new color with [alpha].
+ *
+ * @param alpha the alpha(0 ~ 255).
+ */
+fun Color.toAlpha(alpha: Int) = Color(red, green, blue, alpha)
