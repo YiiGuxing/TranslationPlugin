@@ -1313,12 +1313,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
         @Override
         protected Shape getPointingShape(final Rectangle bounds, final Point pointTarget, final BalloonImpl balloon) {
-            final int pointerLength = balloon.getPointerLength(this);
-            final int offsetY = pointTarget.y - bounds.y;
-            final Point targetPoint = new Point(pointTarget.x, bounds.y + Math.min(pointerLength, offsetY));
-            final int usingPointerLength = Math.max(0, pointerLength - offsetY);
+            int bodyTop = bounds.y + balloon.getPointerLength(this);
+            final Point targetPoint = new Point(pointTarget.x, Math.min(pointTarget.y, bodyTop));
             final Shaper shaper = new Shaper(balloon, bounds, targetPoint, SwingConstants.TOP);
-            shaper.line(balloon.getPointerWidth(this) / 2, usingPointerLength)
+            shaper.lineTo(pointTarget.x + balloon.getPointerWidth(this) / 2, bodyTop)
                     .toRightCurve()
                     .roundRightDown()
                     .toBottomCurve()
@@ -1390,14 +1388,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
         @Override
         protected Shape getPointingShape(final Rectangle bounds, final Point pointTarget, final BalloonImpl balloon) {
-            final int pointerLength = balloon.getPointerLength(this) - 1;
-            final int bottom = bounds.y + bounds.height;
-            final int offsetY = bottom - pointTarget.y;
-            final Point targetPoint = new Point(pointTarget.x, bottom - Math.min(pointerLength, offsetY));
-            final int usingPointerLength = Math.max(0, pointerLength - offsetY);
-
+            final int bodyBottom = (int) bounds.getMaxY() - balloon.getPointerLength(this) + 1;
+            final Point targetPoint = new Point(pointTarget.x, Math.max(pointTarget.y, bodyBottom));
             final Shaper shaper = new Shaper(balloon, bounds, targetPoint, SwingConstants.BOTTOM);
-            shaper.line(-balloon.getPointerWidth(this) / 2, -usingPointerLength)
+            shaper.lineTo(pointTarget.x - balloon.getPointerWidth(this) / 2, bodyBottom)
                     .toLeftCurve()
                     .roundLeftUp()
                     .toTopCurve()
@@ -1470,11 +1464,13 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
         @Override
         protected Shape getPointingShape(final Rectangle bounds, final Point pointTarget, final BalloonImpl balloon) {
-            final Shaper shaper = new Shaper(balloon, bounds, pointTarget, SwingConstants.LEFT);
-            shaper.line(balloon.getPointerLength(this), -balloon.getPointerWidth(this) / 2).toTopCurve().roundUpRight().toRightCurve()
+            int bodyLeft = bounds.x + balloon.getPointerLength(this);
+            final Point targetPoint = new Point(Math.min(pointTarget.x, bodyLeft), pointTarget.y);
+            final Shaper shaper = new Shaper(balloon, bounds, targetPoint, SwingConstants.LEFT);
+            shaper.lineTo(bodyLeft, pointTarget.y - balloon.getPointerWidth(this) / 2).toTopCurve().roundUpRight().toRightCurve()
                     .roundRightDown()
                     .toBottomCurve().roundLeftDown().toLeftCurve().roundLeftUp()
-                    .lineTo(shaper.getCurrent().x, pointTarget.y + balloon.getPointerWidth(this) / 2).lineTo(pointTarget.x, pointTarget.y).close();
+                    .lineTo(shaper.getCurrent().x, targetPoint.y + balloon.getPointerWidth(this) / 2).lineTo(targetPoint.x, targetPoint.y).close();
 
             return shaper.getShape();
         }
@@ -1536,11 +1532,12 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
 
         @Override
         protected Shape getPointingShape(final Rectangle bounds, final Point pointTarget, final BalloonImpl balloon) {
-            final Shaper shaper = new Shaper(balloon, bounds, pointTarget, SwingConstants.RIGHT);
-            shaper
-                    .lineTo((int) bounds.getMaxX() - shaper.getTargetDelta(SwingConstants.RIGHT) - 1, pointTarget.y + balloon.getPointerWidth(this) / 2);
+            final int bodyRight = (int) bounds.getMaxX() - balloon.getPointerLength(this) - 1;
+            final Point targetPoint = new Point(Math.max(pointTarget.x, bodyRight), pointTarget.y);
+            final Shaper shaper = new Shaper(balloon, bounds, targetPoint, SwingConstants.RIGHT);
+            shaper.lineTo(bodyRight, targetPoint.y + balloon.getPointerWidth(this) / 2);
             shaper.toBottomCurve().roundLeftDown().toLeftCurve().roundLeftUp().toTopCurve().roundUpRight().toRightCurve().roundRightDown()
-                    .lineTo(shaper.getCurrent().x, pointTarget.y - balloon.getPointerWidth(this) / 2).lineTo(pointTarget.x, pointTarget.y).close();
+                    .lineTo(shaper.getCurrent().x, targetPoint.y - balloon.getPointerWidth(this) / 2).lineTo(targetPoint.x, targetPoint.y).close();
             return shaper.getShape();
         }
     }
