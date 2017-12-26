@@ -22,16 +22,14 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.popup.PopupFactoryImpl
 import com.intellij.util.ui.*
 import java.awt.AWTEvent
+import java.awt.Color
 import java.awt.Component.RIGHT_ALIGNMENT
 import java.awt.Component.TOP_ALIGNMENT
 import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.AWTEventListener
 import java.awt.event.MouseEvent
-import javax.swing.JComponent
-import javax.swing.JEditorPane
-import javax.swing.MenuElement
-import javax.swing.SwingUtilities
+import javax.swing.*
 import javax.swing.event.HyperlinkEvent
 
 class TranslationBalloon(
@@ -196,18 +194,20 @@ class TranslationBalloon(
             isShowing = true
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
-            showCard(CARD_PROCESSING, false)
             showBalloon()
             presenter.translate(text)
         }
     }
 
-    private fun showCard(card: String, revalidate: Boolean = true) {
-        layout.show(contentPanel, card)
-        if (revalidate) {
-            balloon.revalidate()
-            // 大小还是没有调整好，再刷一次
-            invokeLater { balloon.revalidate() }
+    private fun showCard(card: String) {
+        // 相信我，我发誓，没有什么能比使用swing开发更糟糕的了
+        invokeLater {
+            layout.show(contentPanel, card)
+            with(balloon) {
+                revalidate()
+                // 大小还是没有调整好，再刷一次
+                invokeLater { revalidate() }
+            }
         }
     }
 
@@ -235,20 +235,7 @@ class TranslationBalloon(
 
                 updateCaretPosition()
 
-                val target = popupFactory.guessBestPopupLocation(editor)
-                val visibleArea = editor.scrollingModel.visibleArea
-                val point = Point(visibleArea.x, visibleArea.y)
-                SwingUtilities.convertPointToScreen(point, component)
-
-                val screenPoint = target.screenPoint
-                val y = screenPoint.y - point.y
-                if (targetLocation != null && y + balloon.preferredSize.getHeight() > visibleArea.height) {
-                    //FIXME 只是判断垂直方向，没有判断水平方向，但水平方向问题不是很大。
-                    //FIXME 垂直方向上也只是判断Balloon显示在下方的情况，还是有些小问题。
-                    return targetLocation
-                }
-
-                targetLocation = RelativePoint(Point(screenPoint.x, screenPoint.y))
+                targetLocation = RelativePoint(Point(popupFactory.guessBestPopupLocation(editor).screenPoint))
                 return targetLocation
             }
         }, Balloon.Position.below)
@@ -314,11 +301,15 @@ class TranslationBalloon(
         private const val CARD_ERROR = "error"
         private const val CARD_TRANSLATION = "translation"
 
-        private fun createBalloon(content: JComponent): Balloon = JBPopupFactory
-                .getInstance()
-                .createDialogBalloonBuilder(content, null)
-                .setHideOnClickOutside(true)
+        private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(content)
+                .setDialogMode(true)
+                .setFillColor(UIManager.getColor("Panel.background"))
+                .setBorderColor(Color.darkGray.toAlpha(75))
                 .setShadow(true)
+                .setHideOnClickOutside(true)
+                .setHideOnAction(true)
+                .setHideOnFrameResize(true)
+                .setHideOnCloseClick(true)
                 .setHideOnKeyOutside(true)
                 .setBlockClicksThroughBalloon(true)
                 .setCloseButtonEnabled(false)
