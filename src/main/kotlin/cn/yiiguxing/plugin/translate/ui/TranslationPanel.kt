@@ -433,7 +433,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     }
 
     companion object {
-        const val MAX_WIDTH = 600
+        const val MAX_WIDTH = 500
 
         private const val FONT_SIZE_LARGE = 18
         private const val FONT_SIZE_DEFAULT = 14
