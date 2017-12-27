@@ -142,6 +142,12 @@ public class TranslationDialog extends DialogWrapper implements
         return mContentPane;
     }
 
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return mQueryComboBox;
+    }
+
     private void createUIComponents() {
         final MyTitlePanel panel = new MyTitlePanel();
         panel.setText("Translation");
