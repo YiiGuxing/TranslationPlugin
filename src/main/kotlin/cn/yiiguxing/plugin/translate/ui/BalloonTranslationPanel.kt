@@ -31,6 +31,7 @@ class BalloonTranslationPanel(settings: Settings) : TranslationPanel<ComboBox<La
     }
 
     override fun onCreateLanguageComponent(): ComboBox<Lang> = ComboBox<Lang>().apply {
+        isOpaque = false
         ui = LangComboBoxUI(this)
         addItemListener(itemListener)
     }
