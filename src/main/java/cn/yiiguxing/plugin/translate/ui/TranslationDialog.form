@@ -56,39 +56,83 @@
               <text value=""/>
             </properties>
           </component>
-          <grid id="ad63a" binding="mContentPanel" layout-manager="CardLayout" hgap="0" vgap="0">
+          <grid id="1787c" binding="mMainContentPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <background color="-13948117"/>
-            </properties>
+            <properties/>
             <border type="none"/>
             <children>
-              <grid id="cc85a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="9ad8e" binding="mLanguagePanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
-                  <card name="message"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties>
-                  <background color="-13948117"/>
-                  <opaque value="false"/>
-                  <visible value="true"/>
-                </properties>
-                <border type="empty"/>
+                <properties/>
+                <border type="none"/>
                 <children>
-                  <component id="4704f" class="javax.swing.JEditorPane" binding="mMessage">
+                  <component id="4acfa" class="com.intellij.openapi.ui.ComboBox" binding="mSourceLangComboBox">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <contentType value="text/html"/>
-                      <editable value="false"/>
-                      <enabled value="true"/>
                       <opaque value="false"/>
-                      <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    Nothing to show&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
                     </properties>
                   </component>
+                  <component id="acbd8" class="com.intellij.ui.components.labels.LinkLabel" binding="mSwitchButton">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="d173" class="com.intellij.openapi.ui.ComboBox" binding="mTargetLangComboBox">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <opaque value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="ad63a" binding="mContentContainer" layout-manager="CardLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <opaque value="false"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="cc85a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <card name="message"/>
+                    </constraints>
+                    <properties>
+                      <focusable value="false"/>
+                      <opaque value="false"/>
+                      <requestFocusEnabled value="false"/>
+                    </properties>
+                    <border type="empty"/>
+                    <children>
+                      <component id="4704f" class="javax.swing.JEditorPane" binding="mMessage">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <contentType value="text/html"/>
+                          <editable value="false"/>
+                          <enabled value="true"/>
+                          <focusable value="false"/>
+                          <opaque value="false"/>
+                          <requestFocusEnabled value="false"/>
+                          <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    Nothing to show&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
             </children>
