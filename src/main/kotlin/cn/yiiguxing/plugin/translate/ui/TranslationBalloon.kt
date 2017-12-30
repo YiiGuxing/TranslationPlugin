@@ -25,7 +25,6 @@ import java.awt.AWTEvent
 import java.awt.Color
 import java.awt.Component.RIGHT_ALIGNMENT
 import java.awt.Component.TOP_ALIGNMENT
-import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.AWTEventListener
 import java.awt.event.MouseEvent
@@ -80,7 +79,9 @@ class TranslationBalloon(
         updateCaretPosition()
 
         project?.let { Disposer.register(it, balloon) }
-        Disposer.register(balloon, this)
+        // 如果使用`Disposer.register(balloon, this)`的话，
+        // `TranslationBalloon`在外部以子`Disposable`再次注册时将会使之无效。
+        Disposer.register(balloon, Disposable { Disposer.dispose(this) })
         Disposer.register(this, processPane)
     }
 
@@ -235,7 +236,7 @@ class TranslationBalloon(
 
                 updateCaretPosition()
 
-                targetLocation = RelativePoint(Point(popupFactory.guessBestPopupLocation(editor).screenPoint))
+                targetLocation = popupFactory.guessBestPopupLocation(editor)
                 return targetLocation
             }
         }, Balloon.Position.below)
