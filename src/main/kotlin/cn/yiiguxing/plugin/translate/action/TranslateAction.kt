@@ -40,10 +40,10 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
                 }
             }
 
-            val caretRangeMarker = createCaretRangeMarker(editor, selectionRange)
+            val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val balloon = TranslationManager.instance.showBalloon(editor, caretRangeMarker, queryText)
 
-            highlighters?.takeIf { !it.isEmpty() }?.let {
+            highlighters?.takeIf { it.isNotEmpty() }?.let {
                 Disposer.register(balloon, Disposable {
                     for (highlighter in it) {
                         highlighter.dispose()
@@ -60,12 +60,10 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             effectColor = JBColor(0xFFEE6000.toInt(), 0xFFCC7832.toInt())
         }
 
-        fun createCaretRangeMarker(editor: Editor, selectionRange: TextRange) =
-                editor.document.createRangeMarker(selectionRange).apply {
+        fun Editor.createCaretRangeMarker(selectionRange: TextRange) = document.createRangeMarker(selectionRange)
+                .apply {
                     isGreedyToLeft = true
                     isGreedyToRight = true
                 }
     }
-
-
 }

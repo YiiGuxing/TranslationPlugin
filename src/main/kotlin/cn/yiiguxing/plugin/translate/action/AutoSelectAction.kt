@@ -40,29 +40,28 @@ abstract class AutoSelectAction(
      */
     protected open fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {}
 
-    protected open fun getEditor(e: AnActionEvent): Editor? = CommonDataKeys.EDITOR.getData(e.dataContext)
+    protected open val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
     override fun update(e: AnActionEvent) {
-        val active = getEditor(e)?.let { editor ->
-            checkSelection && editor.selectionModel.hasSelection() || canSelect(editor)
+        val active = e.editor?.let { editor ->
+            checkSelection && editor.selectionModel.hasSelection() || editor.canSelect()
         } ?: false
 
         onUpdate(e, active)
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        if (ApplicationManager.getApplication().isHeadlessEnvironment) return
-
-        getEditor(e)?.let { editor ->
-            getSelectionRange(e)?.takeIf { !it.isEmpty }?.let { onActionPerformed(e, editor, it) }
+        if (ApplicationManager.getApplication().isHeadlessEnvironment) {
+            return
         }
+
+        val editor = e.editor ?: return
+        e.getSelectionRange()?.takeUnless { it.isEmpty }?.let { onActionPerformed(e, editor, it) }
     }
 
-    private fun canSelect(editor: Editor): Boolean {
-        val offset = editor.caretModel.offset
-        val document = editor.document
+    private fun Editor.canSelect(): Boolean {
+        val offset = caretModel.offset
         val textLength = document.textLength
-
         if (textLength == 0) {
             return false
         }
@@ -77,7 +76,7 @@ abstract class AutoSelectAction(
         return false
     }
 
-    private fun getSelectionRange(e: AnActionEvent) = getEditor(e)?.run {
+    private fun AnActionEvent.getSelectionRange() = editor?.run {
         selectionModel.takeIf { checkSelection && it.hasSelection() }?.run {
             TextRange(selectionStart, selectionEnd)
         } ?: getSelectionFromCurrentCaret(selectionMode, wordPartCondition)
