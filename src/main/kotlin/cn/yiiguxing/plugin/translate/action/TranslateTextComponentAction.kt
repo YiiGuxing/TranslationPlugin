@@ -36,7 +36,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
 
             text?.splitWord()
                     ?.takeIf { it.isNotBlank() }
-                    ?.let { TranslationManager.instance.showDialog(editor.project).query(it) }
+                    ?.let { TranslationManager.instance.showDialog(editor.project).translate(it) }
         }
 
         public override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =

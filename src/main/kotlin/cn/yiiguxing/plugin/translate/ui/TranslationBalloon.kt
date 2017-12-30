@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
-import cn.yiiguxing.plugin.translate.model.QueryResult
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
@@ -216,11 +216,11 @@ class TranslationBalloon(
         hide()
         val dialog = TranslationManager.instance.showDialog(editor.project)
         if (!text.isNullOrBlank()) {
-            dialog.query(text)
+            dialog.translate(text)
         }
     }
 
-    override fun showStartTranslate(query: String) {
+    override fun showStartTranslate(text: String) {
         if (!disposed) {
             showCard(CARD_PROCESSING)
         }
@@ -242,53 +242,22 @@ class TranslationBalloon(
         }, Balloon.Position.below)
     }
 
-    override fun showResult(query: String, result: QueryResult) {
+    override fun showTranslation(text: String, translation: Translation) {
         if (disposed) {
             return
         }
 
-        val dictionaries = listOf(
-                Dict("动词", entries = listOf(
-                        DictEntry("显示", listOf("display", "show", "demonstrate", "illustrate")),
-                        DictEntry("陈列", listOf("display", "exhibit", "set out")),
-                        DictEntry("展出", listOf("display", "exhibit", "be on show")),
-                        DictEntry("展览", listOf("exhibit", "display")),
-                        DictEntry("display", listOf("显示", "陈列", "展出", "展览")),
-                        DictEntry("表现",
-                                listOf("show", "express", "behave", "display", "represent", "manifest")),
-                        DictEntry("陈设", listOf("display", "furnish", "set out")),
-                        DictEntry("陈设2", listOf("display", "furnish", "set out"))
-                )),
-                Dict("名词", entries = listOf(
-                        DictEntry("显示", listOf("display")),
-                        DictEntry("表现", listOf("performance", "show", "expression", "manifestation",
-                                "representation", "display")),
-                        DictEntry("炫耀", listOf("display")),
-                        DictEntry("橱窗", listOf("showcase", "show window", "display", "shopwindow",
-                                "glass-fronted billboard")),
-                        DictEntry("罗", listOf("silk", "net", "display", "shift"))
-                ))
-        )
-
-        val trans = Translation(
-                "If baby only wanted to, he could fly up to heaven this moment. It is not for nothing that he does not leave us.",
-                "显示",
-                Lang.ENGLISH,
-                Lang.CHINESE,
-                Symbol("dɪ'spleɪ", "xiǎn shì"),
-                dictionaries
-        )
         translationPane.apply {
             srcLang = Lang.AUTO
             setSupportedLanguages(Lang.values().asList(), Lang.values().asList())
-            translation = trans
+            this.translation = translation
         }
         showCard(CARD_TRANSLATION)
     }
 
-    override fun showError(query: String, error: String) {
+    override fun showError(text: String, errorMessage: String) {
         if (!disposed) {
-            errorPane.text = error
+            errorPane.text = errorMessage
             showCard(CARD_ERROR)
         }
     }

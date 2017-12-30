@@ -35,7 +35,7 @@ class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_AS_NEE
         return Viewport(UIManager.getColor("Panel.background"), 20)
     }
 
-    private class Viewport(fadingEdgeColor: Color, fadingEdgeSize: Int) : JBViewport() {
+    class Viewport(fadingEdgeColor: Color, fadingEdgeSize: Int) : JBViewport() {
 
         private val transparent = fadingEdgeColor.withAlpha(0f)
         private val fadingEdgeSize = JBUI.scale(fadingEdgeSize)

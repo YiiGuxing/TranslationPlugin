@@ -42,7 +42,7 @@ class TranslateService private constructor() {
         }
     }
 
-    fun getCache(text: String, srcLang: Lang? = null, targetLang: Lang? = null): QueryResult? {
+    fun getCache(text: String, srcLang: Lang? = null, targetLang: Lang? = null): Translation? {
         checkThread()
 
         return null

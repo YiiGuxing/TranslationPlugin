@@ -1,9 +1,13 @@
 package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.trans.Lang;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.TitlePanel;
 import com.intellij.ui.components.labels.LinkLabel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -12,7 +16,7 @@ import javax.swing.*;
  * <p>
  * Created by Yii.Guxing on 2017/12/27
  */
-public class TranslationDialogForm {
+public abstract class TranslationDialogForm extends DialogWrapper {
 
     private JPanel mRootPanel;
     private TitlePanel mTitlePanel;
@@ -20,34 +24,38 @@ public class TranslationDialogForm {
     private JButton mTranslateButton;
     private JPanel mMainContentPanel;
     private JPanel mLanguagePanel;
-    private ComboBox mTargetLangComboBox;
+    private ComboBox<Lang> mTargetLangComboBox;
     private LinkLabel mSwitchButton;
-    private ComboBox mSourceLangComboBox;
+    private ComboBox<Lang> mSourceLangComboBox;
     private JPanel mContentContainer;
     private JEditorPane mMessage;
 
+    protected TranslationDialogForm(@Nullable Project project) {
+        super(project);
+    }
+
     @NotNull
-    public final JComponent getComponent() {
+    protected final JComponent getComponent() {
         return mRootPanel;
     }
 
     @NotNull
-    public final TitlePanel getTitlePanel() {
+    protected final TitlePanel getTitlePanel() {
         return mTitlePanel;
     }
 
     @NotNull
-    public final ComboBox<String> getInputComboBox() {
+    protected final ComboBox<String> getInputComboBox() {
         return mInputComboBox;
     }
 
     @NotNull
-    public final JButton getTranslateButton() {
+    protected final JButton getTranslateButton() {
         return mTranslateButton;
     }
 
     @NotNull
-    public JPanel getMainContentPanel() {
+    protected JPanel getMainContentPanel() {
         return mMainContentPanel;
     }
 
@@ -57,27 +65,27 @@ public class TranslationDialogForm {
     }
 
     @NotNull
-    public ComboBox getTargetLangComboBox() {
+    protected ComboBox<Lang> getTargetLangComboBox() {
         return mTargetLangComboBox;
     }
 
     @NotNull
-    public LinkLabel getSwitchButton() {
+    protected LinkLabel getSwitchButton() {
         return mSwitchButton;
     }
 
     @NotNull
-    public ComboBox getSourceLangComboBox() {
+    protected ComboBox<Lang> getSourceLangComboBox() {
         return mSourceLangComboBox;
     }
 
     @NotNull
-    public final JPanel getContentContainer() {
+    protected final JPanel getContentContainer() {
         return mContentContainer;
     }
 
     @NotNull
-    public final JEditorPane getMessagePane() {
+    protected final JEditorPane getMessagePane() {
         return mMessage;
     }
 

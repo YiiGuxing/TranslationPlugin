@@ -3,12 +3,21 @@
  * 
  * Created by Yii.Guxing on 2017/11/20
  */
+@file:Suppress("unused")
+
 package cn.yiiguxing.plugin.translate.ui
 
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JComboBox
+import javax.swing.JComponent
 
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun JComponent.andTransparent() = apply { isOpaque = false }
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun JComponent.andOpaque() = apply { isOpaque = true }
 
 /**
  * 当前选中项

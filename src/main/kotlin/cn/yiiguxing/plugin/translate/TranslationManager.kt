@@ -36,15 +36,13 @@ class TranslationManager private constructor() {
      * @return 气泡实例
      */
     fun showBalloon(editor: Editor, caretRangeMarker: RangeMarker, queryText: String): TranslationBalloon {
-        translationBalloon?.run { hide() }
+        translationBalloon?.hide()
 
-        val balloon = TranslationBalloon(editor, caretRangeMarker, queryText).apply {
+        return TranslationBalloon(editor, caretRangeMarker, queryText).apply {
+            translationBalloon = this
             Disposer.register(this, Disposable { translationBalloon = null })
             show()
         }
-        translationBalloon = balloon
-
-        return balloon
     }
 
     /**
@@ -54,12 +52,11 @@ class TranslationManager private constructor() {
      */
     fun showDialog(project: Project?): TranslationDialog {
         val dialog = translationDialog ?: TranslationDialog(project).apply {
-            Disposer.register(disposable, Disposable { translationDialog = null })
             translationDialog = this
+            Disposer.register(this, Disposable { translationDialog = null })
         }
-        dialog.show()
 
-        return dialog
+        return dialog.apply { show() }
     }
 
 }

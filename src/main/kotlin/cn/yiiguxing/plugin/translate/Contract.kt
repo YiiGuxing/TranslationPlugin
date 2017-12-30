@@ -5,7 +5,7 @@
  */
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.model.QueryResult
+import cn.yiiguxing.plugin.translate.trans.Translation
 import com.intellij.openapi.Disposable
 
 interface Presenter {
@@ -15,17 +15,14 @@ interface Presenter {
     val histories: List<String>
 
     /**
-     * @param query 查询
      * @return 缓存
      */
-    fun getCache(query: String): QueryResult?
+    fun getCache(text: String): Translation?
 
     /**
-     * 查询翻译
-     *
-     * @param query 查询字符串
+     * 翻译
      */
-    fun translate(query: String)
+    fun translate(text: String)
 }
 
 interface View : Disposable {
@@ -35,23 +32,20 @@ interface View : Disposable {
     /**
      * 显示开始翻译
      *
-     * @param  query 查询字符串
+     * @param  text 查询字符串
      */
-    fun showStartTranslate(query: String) {}
+    fun showStartTranslate(text: String)
 
     /**
      * 显示翻译结果
-     *
-     * @param query  查询字符串
-     * @param result 翻译结果
      */
-    fun showResult(query: String, result: QueryResult)
+    fun showTranslation(text: String, translation: Translation)
 
     /**
      * 显示错误信息
      *
-     * @param query 查询字符串
-     * @param error 错误信息
+     * @param text 翻译内容
+     * @param errorMessage 错误信息
      */
-    fun showError(query: String, error: String)
+    fun showError(text: String, errorMessage: String)
 }

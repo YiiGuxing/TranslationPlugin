@@ -30,13 +30,16 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
                 ?.splitWord()
                 ?.takeIf { it.isNotBlank() }
                 ?.let {
-                    hideDocInfoHint(e.project)
-                    TranslationManager.instance.showDialog(e.project).query(it)
+                    e.project.let { project ->
+                        project?.hideDocInfoHint()
+                        TranslationManager.instance.showDialog(project).translate(it)
+                    }
                 }
     }
 
     private companion object {
-        fun hideDocInfoHint(project: Project?) =
-                project?.let { DocumentationManager.getInstance(it).docInfoHint }?.cancel()
+        fun Project.hideDocInfoHint() {
+            DocumentationManager.getInstance(this).docInfoHint?.cancel()
+        }
     }
 }
