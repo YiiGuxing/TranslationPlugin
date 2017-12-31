@@ -33,7 +33,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
         get() = settings.autoSelectionMode
 
     override fun onUpdate(e: AnActionEvent, active: Boolean) {
-        e.presentation.isEnabledAndVisible = getEditor(e)
+        e.presentation.isEnabledAndVisible = e.editor
                 ?.takeIf { active }
                 ?.selectionModel
                 ?.takeIf { it.hasSelection() }
