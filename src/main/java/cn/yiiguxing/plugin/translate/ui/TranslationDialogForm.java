@@ -25,7 +25,7 @@ public abstract class TranslationDialogForm extends DialogWrapper {
     private JPanel mMainContentPanel;
     private JPanel mLanguagePanel;
     private ComboBox<Lang> mTargetLangComboBox;
-    private LinkLabel mSwitchButton;
+    private LinkLabel mSwapButton;
     private ComboBox<Lang> mSourceLangComboBox;
     private JPanel mContentContainer;
     private JEditorPane mMessage;
@@ -70,8 +70,8 @@ public abstract class TranslationDialogForm extends DialogWrapper {
     }
 
     @NotNull
-    protected LinkLabel getSwitchButton() {
-        return mSwitchButton;
+    protected LinkLabel getSwapButton() {
+        return mSwapButton;
     }
 
     @NotNull

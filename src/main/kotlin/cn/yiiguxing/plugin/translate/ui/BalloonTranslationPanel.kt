@@ -6,7 +6,6 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.util.ui.JBDimension
 import java.awt.event.ItemEvent
-import java.awt.event.ItemListener
 import javax.swing.JComponent
 
 /**
@@ -18,22 +17,43 @@ class BalloonTranslationPanel(settings: Settings) : TranslationPanel<ComboBox<La
 
     private var ignoreEvent = false
     private var onLanguageChangedHandler: ((Lang, Lang) -> Unit)? = null
-    private val itemListener = ItemListener {
-        with(it) {
-            if (!ignoreEvent && stateChange == ItemEvent.SELECTED) {
-                val src = sourceLangComponent.selected
-                val target = targetLangComponent.selected
-                if (src != null && target != null) {
-                    onLanguageChangedHandler?.invoke(src, target)
-                }
-            }
+
+    init {
+        onFixLanguage { sourceLangComponent.selected = it }
+    }
+
+    private fun ComboBox<Lang>.swap(old: Any?, new: Any?) {
+        if (new == selectedItem && old != Lang.AUTO && new != Lang.AUTO) {
+            ignoreEvent = true
+            selectedItem = old
+            ignoreEvent = false
         }
     }
 
     override fun onCreateLanguageComponent(): ComboBox<Lang> = ComboBox<Lang>().apply {
         isOpaque = false
         ui = LangComboBoxUI(this)
-        addItemListener(itemListener)
+
+        var old: Any? = null
+        addItemListener {
+            when (it.stateChange) {
+                ItemEvent.DESELECTED -> old = it.item
+                ItemEvent.SELECTED -> {
+                    if (!ignoreEvent) {
+                        when (it.source) {
+                            sourceLangComponent -> targetLangComponent.swap(old, it.item)
+                            targetLangComponent -> sourceLangComponent.swap(old, it.item)
+                        }
+
+                        val src = sourceLangComponent.selected
+                        val target = targetLangComponent.selected
+                        if (src != null && target != null) {
+                            onLanguageChangedHandler?.invoke(src, target)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onWrapViewer(viewer: Viewer): JComponent = ScrollPane(viewer).apply {

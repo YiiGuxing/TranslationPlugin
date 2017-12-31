@@ -32,7 +32,37 @@ data class YoudaoResult(
     }
 
     override fun toTranslation(): Translation {
-        return Translation("", "", Lang.AUTO, Lang.AUTO)
+        val dictionaries = listOf(
+                Dict("动词", entries = listOf(
+                        DictEntry("显示", listOf("display", "show", "demonstrate", "illustrate")),
+                        DictEntry("陈列", listOf("display", "exhibit", "set out")),
+                        DictEntry("展出", listOf("display", "exhibit", "be on show")),
+                        DictEntry("展览", listOf("exhibit", "display")),
+                        DictEntry("display", listOf("显示", "陈列", "展出", "展览")),
+                        DictEntry("表现",
+                                listOf("show", "express", "behave", "display", "represent", "manifest")),
+                        DictEntry("陈设", listOf("display", "furnish", "set out")),
+                        DictEntry("陈设2", listOf("display", "furnish", "set out"))
+                )),
+                Dict("名词", entries = listOf(
+                        DictEntry("显示", listOf("display")),
+                        DictEntry("表现", listOf("performance", "show", "expression", "manifestation",
+                                "representation", "display")),
+                        DictEntry("炫耀", listOf("display")),
+                        DictEntry("橱窗", listOf("showcase", "show window", "display", "shopwindow",
+                                "glass-fronted billboard")),
+                        DictEntry("罗", listOf("silk", "net", "display", "shift"))
+                ))
+        )
+
+        return Translation(
+                "If baby only wanted to, he could fly up to heaven this moment. It is not for nothing that he does not leave us.",
+                "显示",
+                Lang.ENGLISH,
+                Lang.CHINESE,
+                Symbol("dɪ'spleɪ", "xiǎn shì"),
+                dictionaries
+        )
     }
 }
 

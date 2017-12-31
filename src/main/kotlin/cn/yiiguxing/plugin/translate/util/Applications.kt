@@ -8,6 +8,7 @@
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import java.util.concurrent.Future
 
 /**
@@ -39,4 +40,13 @@ inline fun executeOnPooledThread(crossinline action: () -> Unit)
  */
 inline fun invokeLater(crossinline action: () -> Unit) {
     ApplicationManager.getApplication().invokeLater { action() }
+}
+
+/**
+ * Asynchronously execute the [action] on the AWT event dispatching thread.
+ *
+ * @param state the state in which the runnable will be executed.
+ */
+inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
+    ApplicationManager.getApplication().invokeLater({ action() }, state)
 }

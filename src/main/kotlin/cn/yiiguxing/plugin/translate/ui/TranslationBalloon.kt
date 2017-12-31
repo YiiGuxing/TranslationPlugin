@@ -108,8 +108,7 @@ class TranslationBalloon(
 
     private fun initActions() = with(translationPane) {
         onRevalidate { balloon.revalidate() }
-        onLanguageChanged { src, target -> presenter.translate(text) }
-        onFixLanguage { presenter.translate(text) }
+        onLanguageChanged { src, target -> presenter.translate(src, target, text) }
         onNewTranslate { showOnTranslationDialog(it) }
         onTextToSpeech { text, lang ->
             ttsDisposable = TextToSpeech.INSTANCE.speak(project, text, lang)
@@ -196,7 +195,7 @@ class TranslationBalloon(
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
             showBalloon()
-            presenter.translate(text)
+            presenter.translate(Lang.AUTO, Lang.AUTO, text)
         }
     }
 
@@ -242,7 +241,7 @@ class TranslationBalloon(
         }, Balloon.Position.below)
     }
 
-    override fun showTranslation(text: String, translation: Translation) {
+    override fun showTranslation(translation: Translation) {
         if (disposed) {
             return
         }
@@ -255,7 +254,7 @@ class TranslationBalloon(
         showCard(CARD_TRANSLATION)
     }
 
-    override fun showError(text: String, errorMessage: String) {
+    override fun showError(errorMessage: String) {
         if (!disposed) {
             errorPane.text = errorMessage
             showCard(CARD_ERROR)

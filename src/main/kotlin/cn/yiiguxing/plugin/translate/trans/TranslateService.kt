@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
 
@@ -42,10 +43,10 @@ class TranslateService private constructor() {
         }
     }
 
-    fun getCache(text: String, srcLang: Lang? = null, targetLang: Lang? = null): Translation? {
+    fun getCache(srcLang: Lang, targetLang: Lang, text: String): Translation? {
         checkThread()
 
-        return null
+        return cache[CacheKey(text, srcLang, targetLang, translator.id)]
     }
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang, listener: TranslateListener) {
@@ -61,12 +62,12 @@ class TranslateService private constructor() {
                 with(translator) {
                     translate(text, srcLang, targetLang).let { translation ->
                         cache.put(CacheKey(text, srcLang, targetLang, id), translation)
-                        invokeLater { listener.onSuccess(translation) }
+                        invokeLater(ModalityState.any()) { listener.onSuccess(translation) }
                     }
                 }
             } catch (e: TranslateException) {
-                LOGGER.error("translate", e)
-                invokeLater { listener.onError(e.message) }
+                LOGGER.warn("translate", e)
+                invokeLater(ModalityState.any()) { listener.onError(e.message) }
             }
         }
     }

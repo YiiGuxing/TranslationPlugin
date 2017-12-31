@@ -5,6 +5,7 @@
  */
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import com.intellij.openapi.Disposable
 
@@ -17,12 +18,12 @@ interface Presenter {
     /**
      * @return 缓存
      */
-    fun getCache(text: String): Translation?
+    fun getCache(srcLang: Lang, targetLang: Lang, text: String): Translation?
 
     /**
      * 翻译
      */
-    fun translate(text: String)
+    fun translate(srcLang: Lang, targetLang: Lang, text: String)
 }
 
 interface View : Disposable {
@@ -39,13 +40,12 @@ interface View : Disposable {
     /**
      * 显示翻译结果
      */
-    fun showTranslation(text: String, translation: Translation)
+    fun showTranslation(translation: Translation)
 
     /**
      * 显示错误信息
      *
-     * @param text 翻译内容
      * @param errorMessage 错误信息
      */
-    fun showError(text: String, errorMessage: String)
+    fun showError(errorMessage: String)
 }
