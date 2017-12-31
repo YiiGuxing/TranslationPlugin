@@ -458,7 +458,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
         private fun ttsLinkLabel(action: (ActionLink) -> Unit): ActionLink = ActionLink(action = action).apply {
             icon = Icons.Audio
-            disabledIcon = Icons.AudioDisable
+            disabledIcon = Icons.AudioDisabled
             setHoveringIcon(Icons.AudioPressed)
         }
     }

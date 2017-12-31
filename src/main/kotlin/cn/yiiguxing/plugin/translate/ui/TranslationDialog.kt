@@ -171,11 +171,16 @@ class TranslationDialog(private val project: Project?)
         sourceLangComboBox.init(Lang.values().asList())
         targetLangComboBox.init(Lang.values().asList())
 
-        swapButton.setListener({ _, _ ->
-            if (Lang.AUTO != sourceLangComboBox.selected && Lang.AUTO != targetLangComboBox.selected) {
-                sourceLangComboBox.selected = targetLangComboBox.selected
-            }
-        }, null)
+        swapButton.apply {
+            icon = Icons.Swap
+            disabledIcon = Icons.SwapDisabled
+            setHoveringIcon(Icons.SwapHovering)
+            setListener({ _, _ ->
+                if (Lang.AUTO != sourceLangComboBox.selected && Lang.AUTO != targetLangComboBox.selected) {
+                    sourceLangComboBox.selected = targetLangComboBox.selected
+                }
+            }, null)
+        }
     }
 
     private fun ComboBox<Lang>.init(languages: List<Lang>) {

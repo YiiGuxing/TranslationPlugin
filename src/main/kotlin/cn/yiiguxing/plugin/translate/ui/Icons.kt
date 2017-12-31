@@ -17,6 +17,9 @@ object Icons {
     val ClosePressed: Icon = IconLoader.getIcon("/icons/closePressed.png")
     val Audio: Icon = IconLoader.getIcon("/icons/audio.png")
     val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.png")
-    val AudioDisable: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
+    val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
+    val Swap: Icon = IconLoader.getIcon("/icons/swap.png")
+    val SwapHovering: Icon = IconLoader.getIcon("/icons/swapHovering.png")
+    val SwapDisabled: Icon = IconLoader.getIcon("/icons/swapDisabled.png")
 
 }
