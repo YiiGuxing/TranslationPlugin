@@ -11,10 +11,10 @@ import com.intellij.openapi.diagnostic.Logger
 
 object YoudaoTranslator : AbstractTranslator() {
 
+    const val TRANSLATOR_ID = "YouDao"
+
     @JvmField
-    val DEFAULT_SOURCE_LANGUAGE = Lang.AUTO
-    @JvmField
-    val DEFAULT_TARGET_LANGUAGE = Lang.AUTO
+    val DEFAULT_PRIMARY_LANGUAGE = Lang.AUTO
 
     @JvmField
     val SUPPORTED_LANGUAGES = listOf(
@@ -31,19 +31,20 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private val LOGGER = Logger.getInstance(YoudaoTranslator::class.java)
 
-    const val TRANSLATOR_ID = "YouDao"
+    private val settings = Settings.instance
 
     override val id: String = TRANSLATOR_ID
 
-    private val settings = Settings.instance
+    override val primaryLanguage: Lang
+        get() = settings.youdaoTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
-        val settings = settings
-        val appId = settings.youdaoTranslateSettings.appId
-        val privateKey = settings.youdaoTranslateSettings.getAppKey()
+        val settings = settings.youdaoTranslateSettings
+        val appId = settings.appId
+        val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()
         val sign = (appId + text + salt + privateKey).md5()
 

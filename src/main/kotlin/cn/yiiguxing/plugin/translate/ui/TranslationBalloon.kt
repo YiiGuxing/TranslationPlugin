@@ -195,7 +195,7 @@ class TranslationBalloon(
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
             showBalloon()
-            presenter.translate(Lang.AUTO, Lang.AUTO, text)
+            presenter.translate(Lang.AUTO, presenter.primaryLanguage, text)
         }
     }
 
@@ -246,9 +246,10 @@ class TranslationBalloon(
             return
         }
 
+        val (source, target) = presenter.supportedLanguages
         translationPane.apply {
             srcLang = Lang.AUTO
-            setSupportedLanguages(Lang.values().asList(), Lang.values().asList())
+            setSupportedLanguages(source, target)
             this.translation = translation
         }
         showCard(CARD_TRANSLATION)

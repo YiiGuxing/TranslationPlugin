@@ -8,9 +8,11 @@ package cn.yiiguxing.plugin.translate.trans
 interface Translator {
 
     val id: String
+    
+    val primaryLanguage: Lang
 
     val supportedSourceLanguages: List<Lang>
-    
+
     val supportedTargetLanguages: List<Lang>
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation

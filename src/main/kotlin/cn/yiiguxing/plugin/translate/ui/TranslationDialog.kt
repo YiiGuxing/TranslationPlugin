@@ -44,8 +44,8 @@ class TranslationDialog(private val project: Project?)
     private val translationPanel = ScrollPane(translationPane.component)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 
-    private val translationPresenter: Presenter = TranslationPresenter(this)
-    private val inputModel: MyModel = MyModel(translationPresenter.histories)
+    private val presenter: Presenter = TranslationPresenter(this)
+    private val inputModel: MyModel = MyModel(presenter.histories)
 
     private var ignoreLanguageEvent: Boolean = false
 
@@ -168,8 +168,10 @@ class TranslationDialog(private val project: Project?)
             border = SideBorder(JBColor(0xB1B1B1, 0x282828), SideBorder.BOTTOM)
         }
 
-        sourceLangComboBox.init(Lang.values().asList())
-        targetLangComboBox.init(Lang.values().asList())
+        presenter.supportedLanguages.let { (source, target) ->
+            sourceLangComboBox.init(source, source.first())
+            targetLangComboBox.init(target, presenter.primaryLanguage)
+        }
 
         swapButton.apply {
             icon = Icons.Swap
@@ -183,11 +185,11 @@ class TranslationDialog(private val project: Project?)
         }
     }
 
-    private fun ComboBox<Lang>.init(languages: List<Lang>) {
+    private fun ComboBox<Lang>.init(languages: List<Lang>, select: Lang) {
         andTransparent()
         foreground = JBColor(0x555555, 0xACACAC)
         ui = LangComboBoxUI(this, SwingConstants.CENTER)
-        model = CollectionComboBoxModel<Lang>(languages)
+        model = CollectionComboBoxModel<Lang>(languages, select)
 
         fun ComboBox<Lang>.swap(old: Any?, new: Any?) {
             if (new == selectedItem && old != Lang.AUTO && new != Lang.AUTO) {
@@ -368,7 +370,7 @@ class TranslationDialog(private val project: Project?)
         val src = sourceLangComboBox.selected
         val target = targetLangComboBox.selected
         if (!disposed && query != null && !query.isBlank() && src != null && target != null) {
-            translationPresenter.translate(src, target, query)
+            presenter.translate(src, target, query)
         }
     }
 
@@ -475,7 +477,7 @@ class TranslationDialog(private val project: Project?)
                 val src = sourceLangComboBox.selected
                 val target = targetLangComboBox.selected
                 if (src != null && target != null) {
-                    translationPresenter.getCache(src, target, value)?.let {
+                    presenter.getCache(src, target, value)?.let {
                         append("  -  <i><small>")
                         append(it.trans)
                         append("</small></i>")

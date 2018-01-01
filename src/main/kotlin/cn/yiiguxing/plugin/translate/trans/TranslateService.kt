@@ -1,10 +1,13 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
@@ -19,11 +22,11 @@ class TranslateService private constructor() {
 
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
-        private set
+    private val settings: Settings = Settings.instance
     private val cache = LruCache<CacheKey, Translation>(500)
 
     companion object {
-        val DEFAULT_TRANSLATOR: Translator = YoudaoTranslator
+        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
 
         val INSTANCE: TranslateService
             get() = ServiceManager.getService(TranslateService::class.java)
@@ -33,6 +36,20 @@ class TranslateService private constructor() {
         private fun checkThread() = checkDispatchThread(TranslateService::class.java)
     }
 
+    init {
+        setTranslator(settings.translator)
+        ApplicationManager
+                .getApplication()
+                .messageBus
+                .connect()
+                .subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+                    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+                        setTranslator(translatorId)
+                    }
+                })
+    }
+
+    @Suppress("MemberVisibilityCanPrivate")
     fun setTranslator(translatorId: String) {
         checkThread()
         if (translatorId != translator.id) {
@@ -45,7 +62,6 @@ class TranslateService private constructor() {
 
     fun getCache(srcLang: Lang, targetLang: Lang, text: String): Translation? {
         checkThread()
-
         return cache[CacheKey(text, srcLang, targetLang, translator.id)]
     }
 
@@ -72,6 +88,7 @@ class TranslateService private constructor() {
         }
     }
 
+    @Deprecated("Will be deleted.")
     fun translate(text: String, callback: (String, QueryResult?) -> Unit) {
         checkThread()
         executeOnPooledThread {

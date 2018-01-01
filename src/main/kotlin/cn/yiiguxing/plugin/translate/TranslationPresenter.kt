@@ -12,8 +12,14 @@ class TranslationPresenter(private val view: View) : Presenter {
     private val translateService: TranslateService = TranslateService.INSTANCE
     private var currentQuery: CurrentQuery? = null
 
-    override val histories: List<String>
-        get() = appStorage.getHistories()
+    override val histories: List<String> get() = appStorage.getHistories()
+
+    override val primaryLanguage: Lang get() = translateService.translator.primaryLanguage
+
+    override val supportedLanguages: SupportedLanguages
+        get() = with(translateService.translator) {
+            SupportedLanguages(supportedSourceLanguages, supportedTargetLanguages)
+        }
 
     data class CurrentQuery(val srcLang: Lang, val targetLang: Lang, val text: String)
 

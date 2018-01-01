@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
@@ -24,7 +25,12 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 翻译API
      */
-    var translator: String = YoudaoTranslator.TRANSLATOR_ID
+    var translator: String
+            by Delegates.observable(GoogleTranslator.TRANSLATOR_ID) { _, oldValue: String, newValue: String ->
+                if (oldValue != newValue) {
+                    settingsChangePublisher.onTranslatorChanged(this, newValue)
+                }
+            }
 
     /**
      * 谷歌翻译选项
@@ -99,7 +105,7 @@ private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.CHINESE)
+data class GoogleTranslateSettings(var primaryLanguage: Lang = GoogleTranslator.DEFAULT_PRIMARY_LANGUAGE)
 
 /**
  * 有道翻译选项
@@ -110,7 +116,7 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.CHINESE)
  */
 @Tag("youdao-translate")
 data class YoudaoTranslateSettings(
-        var primaryLanguage: Lang = Lang.AUTO,
+        var primaryLanguage: Lang = YoudaoTranslator.DEFAULT_PRIMARY_LANGUAGE,
         var appId: String = "",
         var isAppKeyConfigured: Boolean = false
 ) {
@@ -132,7 +138,9 @@ data class YoudaoTranslateSettings(
 
 interface SettingsChangeListener {
 
-    fun onOverrideFontChanged(settings: Settings)
+    fun onTranslatorChanged(settings: Settings, translatorId: String) {}
+
+    fun onOverrideFontChanged(settings: Settings) {}
 
     companion object {
         val TOPIC: Topic<SettingsChangeListener> = Topic.create(

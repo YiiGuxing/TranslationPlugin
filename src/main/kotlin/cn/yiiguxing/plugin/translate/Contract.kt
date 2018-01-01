@@ -9,11 +9,24 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import com.intellij.openapi.Disposable
 
+data class SupportedLanguages(val source: List<Lang>, val target: List<Lang>)
+
 interface Presenter {
+
     /**
      * 历史记录列表
      */
     val histories: List<String>
+
+    /**
+     * 主要语言
+     */
+    val primaryLanguage: Lang
+
+    /**
+     * 已支持的语言
+     */
+    val supportedLanguages: SupportedLanguages
 
     /**
      * @return 缓存
