@@ -59,4 +59,12 @@ class TranslationManager private constructor() {
         return dialog.apply { show() }
     }
 
+    /**
+     * 关闭显示中的气泡和对话框
+     */
+    fun closeAll() {
+        translationBalloon?.hide()
+        translationDialog?.close()
+    }
+
 }

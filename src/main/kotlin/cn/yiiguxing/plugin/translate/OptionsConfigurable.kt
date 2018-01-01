@@ -35,6 +35,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
     override fun isModified(): Boolean = mPanel?.isModified ?: false
 
     override fun apply() {
+        TranslationManager.instance.closeAll()
         mPanel?.apply()
     }
 
