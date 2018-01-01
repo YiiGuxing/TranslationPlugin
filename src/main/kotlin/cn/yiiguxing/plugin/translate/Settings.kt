@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.openapi.application.ApplicationManager
@@ -105,7 +104,7 @@ private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = GoogleTranslator.DEFAULT_PRIMARY_LANGUAGE)
+data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.CHINESE)
 
 /**
  * 有道翻译选项
@@ -116,7 +115,7 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = GoogleTranslator.
  */
 @Tag("youdao-translate")
 data class YoudaoTranslateSettings(
-        var primaryLanguage: Lang = YoudaoTranslator.DEFAULT_PRIMARY_LANGUAGE,
+        var primaryLanguage: Lang = Lang.AUTO,
         var appId: String = "",
         var isAppKeyConfigured: Boolean = false
 ) {

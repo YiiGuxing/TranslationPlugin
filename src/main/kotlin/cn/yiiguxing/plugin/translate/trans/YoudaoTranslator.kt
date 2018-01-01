@@ -14,9 +14,6 @@ object YoudaoTranslator : AbstractTranslator() {
     const val TRANSLATOR_ID = "YouDao"
 
     @JvmField
-    val DEFAULT_PRIMARY_LANGUAGE = Lang.AUTO
-
-    @JvmField
     val SUPPORTED_LANGUAGES = listOf(
             Lang.AUTO,
             Lang.CHINESE,

@@ -13,8 +13,6 @@ import com.intellij.util.io.RequestBuilder
 object GoogleTranslator : AbstractTranslator() {
 
     const val TRANSLATOR_ID = "Google"
-    @JvmField
-    val DEFAULT_PRIMARY_LANGUAGE = Lang.CHINESE
 
     private val settings = Settings.instance
 
