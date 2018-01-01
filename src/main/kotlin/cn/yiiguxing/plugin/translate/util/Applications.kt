@@ -3,13 +3,65 @@
  * 
  * Created by Yii.Guxing on 2017/12/22
  */
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused", "NOTHING_TO_INLINE", "MemberVisibilityCanPrivate")
 
 package cn.yiiguxing.plugin.translate.util
 
+import com.intellij.ide.IdeBundle
+import com.intellij.ide.plugins.IdeaPluginDescriptor
+import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.application.ex.ApplicationInfoEx
+import com.intellij.openapi.application.impl.ApplicationInfoImpl
+import com.intellij.openapi.extensions.PluginId
+import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.util.SystemInfo
+import com.intellij.util.text.DateFormatUtil
+import java.awt.datatransfer.StringSelection
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.text.SimpleDateFormat
 import java.util.concurrent.Future
+
+object App {
+
+    const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
+
+    val plugin: IdeaPluginDescriptor get() = PluginManager.getPlugin(PluginId.getId(PLUGIN_ID))!!
+
+    val pluginVersion: String by lazy { plugin.version }
+
+    val systemInfo: String by lazy {
+        val appInfo = ApplicationInfoEx.getInstanceEx() as ApplicationInfoImpl
+
+        val appName = appInfo.fullApplicationName
+
+        var buildInfo = IdeBundle.message("about.box.build.number", appInfo.build.asString())
+        val cal = appInfo.buildDate
+        var buildDate = ""
+        if (appInfo.build.isSnapshot) {
+            buildDate = SimpleDateFormat("HH:mm, ").format(cal.time)
+        }
+        buildDate += DateFormatUtil.formatAboutDialogDate(cal.time)
+        buildInfo += IdeBundle.message("about.box.build.date", buildDate)
+
+        val properties = System.getProperties()
+        val javaVersion = properties.getProperty("java.version", "unknown")
+        val javaRuntimeVersion = properties.getProperty("java.runtime.version", javaVersion)
+        val arch = properties.getProperty("os.arch", "")
+        val jreInfo = IdeBundle.message("about.box.jre", javaRuntimeVersion, arch)
+
+        val vmVersion = properties.getProperty("java.vm.name", "unknown")
+        val vmVendor = properties.getProperty("java.vendor", "unknown")
+        val jvmInfo = IdeBundle.message("about.box.vm", vmVersion, vmVendor)
+
+        val pluginInfo = "Plugin v$pluginVersion"
+        val osInfo = "OS: " + SystemInfo.getOsNameAndVersion()
+
+        "$pluginInfo\n$appName\n$buildInfo\n$jreInfo\n$jvmInfo\n$osInfo"
+    }
+}
 
 /**
  * Throws an [IllegalStateException] with the result of calling [lazyMessage] if
@@ -49,4 +101,21 @@ inline fun invokeLater(crossinline action: () -> Unit) {
  */
 inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
     ApplicationManager.getApplication().invokeLater({ action() }, state)
+}
+
+/**
+ * Copy the stack trace to clipboard.
+ */
+fun Throwable.copyToClipboard() {
+    val stringWriter = StringWriter()
+    PrintWriter(stringWriter).use {
+        it.println(App.systemInfo)
+        it.println("========================================\n")
+
+        printStackTrace(it)
+
+        stringWriter.toString()
+    }.let {
+        CopyPasteManager.getInstance().setContents(StringSelection(it))
+    }
 }

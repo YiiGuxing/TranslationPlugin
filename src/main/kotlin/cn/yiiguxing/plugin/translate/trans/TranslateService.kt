@@ -76,14 +76,14 @@ class TranslateService private constructor() {
         executeOnPooledThread {
             try {
                 with(translator) {
-                    translate(text, srcLang, targetLang).let { translation ->
-                        cache.put(CacheKey(text, srcLang, targetLang, id), translation)
-                        invokeLater(ModalityState.any()) { listener.onSuccess(translation) }
+                    translate(text, srcLang, targetLang).let {
+                        cache.put(CacheKey(text, srcLang, targetLang, id), it)
+                        invokeLater(ModalityState.any()) { listener.onSuccess(it) }
                     }
                 }
             } catch (e: TranslateException) {
                 LOGGER.warn("translate", e)
-                invokeLater(ModalityState.any()) { listener.onError(e.message) }
+                invokeLater(ModalityState.any()) { listener.onError(e.message, e) }
             }
         }
     }

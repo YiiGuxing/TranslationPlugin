@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
+import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import com.intellij.openapi.Disposable
@@ -23,6 +24,7 @@ import com.intellij.ui.popup.PopupFactoryImpl
 import com.intellij.util.ui.*
 import java.awt.AWTEvent
 import java.awt.Color
+import java.awt.Component
 import java.awt.Component.RIGHT_ALIGNMENT
 import java.awt.Component.TOP_ALIGNMENT
 import java.awt.Toolkit
@@ -43,11 +45,16 @@ class TranslationBalloon(
 
     private val layout = FixedSizeCardLayout()
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
+    private val errorPanel = NonOpaquePanel(FrameLayout())
     private val errorPane = JEditorPane()
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPanel(settings)
     private val pinButton = ActionLink(icon = Icons.Pin) { showOnTranslationDialog(text) }
+    private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
+        lastError?.copyToClipboard()
+        hide()
+    }
 
     private val balloon: Balloon
     private var targetLocation: RelativePoint? = null
@@ -57,6 +64,8 @@ class TranslationBalloon(
     override val disposed get() = _disposed
     private var ttsDisposable: Disposable? = null
 
+    private var lastError: Throwable? = null
+
     private var lastMoveWasInsideBalloon = false
     private val eventListener = AWTEventListener {
         if (it is MouseEvent && it.id == MouseEvent.MOUSE_MOVED) {
@@ -64,12 +73,13 @@ class TranslationBalloon(
             if (inside != lastMoveWasInsideBalloon) {
                 lastMoveWasInsideBalloon = inside
                 pinButton.isVisible = inside
+                copyErrorLink.isVisible = inside
             }
         }
     }
 
     init {
-        initErrorPane()
+        initErrorPanel()
         initTranslationContent()
         initContentPanel()
 
@@ -91,7 +101,7 @@ class TranslationBalloon(
             .apply {
                 add(CARD_PROCESSING, processPane)
                 add(CARD_TRANSLATION, translationContentPane)
-                add(CARD_ERROR, errorPane)
+                add(CARD_ERROR, errorPanel)
             }
 
 
@@ -117,22 +127,36 @@ class TranslationBalloon(
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
     }
 
-    private fun initErrorPane() = errorPane.apply {
-        contentType = "text/html"
-        isEditable = false
-        isOpaque = false
-        editorKit = UI.errorHTMLKit
-        border = JBEmptyBorder(INSETS)
-        maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
+    private fun initErrorPanel() {
+        errorPane.apply {
+            contentType = "text/html"
+            isEditable = false
+            isOpaque = false
+            editorKit = UI.errorHTMLKit
+            border = JBEmptyBorder(20, 30, 20, 30)
+            maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 
-        addHyperlinkListener(object : HyperlinkAdapter() {
-            override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
-                    this@TranslationBalloon.hide()
-                    OptionsConfigurable.showSettingsDialog(project)
+            addHyperlinkListener(object : HyperlinkAdapter() {
+                override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
+                    if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
+                        this@TranslationBalloon.hide()
+                        OptionsConfigurable.showSettingsDialog(project)
+                    }
                 }
-            }
-        })
+            })
+        }
+
+        copyErrorLink.apply {
+            isVisible = false
+            border = JBEmptyBorder(0, 0, 0, 2)
+            toolTipText = "Copy error info to clipboard."
+            alignmentX = Component.RIGHT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+        }
+        errorPanel.apply {
+            add(copyErrorLink)
+            add(errorPane)
+        }
     }
 
     private fun isInsideBalloon(target: RelativePoint): Boolean {
@@ -255,8 +279,9 @@ class TranslationBalloon(
         showCard(CARD_TRANSLATION)
     }
 
-    override fun showError(errorMessage: String) {
+    override fun showError(errorMessage: String, throwable: Throwable) {
         if (!disposed) {
+            lastError = throwable
             errorPane.text = errorMessage
             showCard(CARD_ERROR)
         }

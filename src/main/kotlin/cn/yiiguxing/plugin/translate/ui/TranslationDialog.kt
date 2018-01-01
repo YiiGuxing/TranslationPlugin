@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
-import cn.yiiguxing.plugin.translate.ui.UI.errorHTMLKit
+import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -16,6 +16,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.openapi.ui.JBMenuItem
+import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.*
@@ -32,6 +34,7 @@ import java.awt.event.*
 import javax.swing.*
 import javax.swing.border.LineBorder
 import javax.swing.event.HyperlinkEvent
+import javax.swing.event.PopupMenuEvent
 import javax.swing.text.JTextComponent
 
 class TranslationDialog(private val project: Project?)
@@ -57,6 +60,7 @@ class TranslationDialog(private val project: Project?)
     private lateinit var windowListener: WindowListener
     private lateinit var activityListener: AWTEventListener
     private var lastMoveWasInsideDialog: Boolean = false
+    private var lastError: Throwable? = null
 
     init {
         isModal = false
@@ -84,6 +88,7 @@ class TranslationDialog(private val project: Project?)
         initInputComboBox()
         initLanguagePanel()
         initTranslationPanel()
+        initMessagePane()
         initFont()
 
         translateButton.apply {
@@ -94,18 +99,6 @@ class TranslationDialog(private val project: Project?)
             border = BORDER_ACTIVE
             background = CONTENT_BACKGROUND
         }
-        messagePane.apply {
-            editorKit = errorHTMLKit
-            addHyperlinkListener(object : HyperlinkAdapter() {
-                override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                    if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
-                        close()
-                        OptionsConfigurable.showSettingsDialog(project)
-                    }
-                }
-            })
-        }
-
         contentContainer.apply {
             add(CARD_PROCESSING, processPane)
             add(CARD_TRANSLATION, translationPanel)
@@ -234,6 +227,39 @@ class TranslationDialog(private val project: Project?)
             viewport = ScrollPane.Viewport(CONTENT_BACKGROUND, 10)
             viewport.view = view
         }
+    }
+
+    private fun initMessagePane() = messagePane.run {
+        editorKit = UI.errorHTMLKit
+        addHyperlinkListener(object : HyperlinkAdapter() {
+            override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
+                if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
+                    close()
+                    OptionsConfigurable.showSettingsDialog(project)
+                }
+            }
+        })
+
+        componentPopupMenu = JBPopupMenu().apply {
+            val copyToClipboard = JBMenuItem("Copy Error Info.", Icons.CopyToClipboard).apply {
+                addActionListener { lastError?.copyToClipboard() }
+            }
+            add(copyToClipboard)
+            addPopupMenuListener(object : PopupMenuListenerAdapter() {
+                override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                    copyToClipboard.isEnabled = lastError != null
+                }
+            })
+        }
+
+        addHyperlinkListener(object : HyperlinkAdapter() {
+            override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
+                if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
+                    close()
+                    OptionsConfigurable.showSettingsDialog(project)
+                }
+            }
+        })
     }
 
     private fun initFont() {
@@ -426,11 +452,12 @@ class TranslationDialog(private val project: Project?)
         setLanguageComponentsEnable(true)
     }
 
-    override fun showError(errorMessage: String) {
+    override fun showError(errorMessage: String, throwable: Throwable) {
         if (disposed) {
             return
         }
 
+        lastError = throwable
         messagePane.text = errorMessage
         showCard(CARD_MASSAGE)
         setLanguageComponentsEnable(true)

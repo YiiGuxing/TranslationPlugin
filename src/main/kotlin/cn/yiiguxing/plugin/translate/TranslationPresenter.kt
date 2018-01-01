@@ -45,9 +45,9 @@ class TranslationPresenter(private val view: View) : Presenter {
                 }
             }
 
-            override fun onError(message: String) {
+            override fun onError(message: String, throwable: Throwable) {
                 presenterRef.get()?.onPostResult(currQuery) {
-                    showError(message)
+                    showError(message, throwable)
                 }
             }
         })

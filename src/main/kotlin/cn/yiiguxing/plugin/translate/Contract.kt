@@ -60,5 +60,5 @@ interface View : Disposable {
      *
      * @param errorMessage 错误信息
      */
-    fun showError(errorMessage: String)
+    fun showError(errorMessage: String, throwable: Throwable)
 }
