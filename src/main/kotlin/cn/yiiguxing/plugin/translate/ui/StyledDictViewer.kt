@@ -40,16 +40,6 @@ class StyledDictViewer {
 
     private val viewer: Viewer = Viewer()
 
-    private val defaultStyle: Style by lazy { viewer.getStyle(StyleContext.DEFAULT_STYLE) }
-    private val posParagraphStyleFirst: Style by lazy { viewer.getStyle(POS_PARAGRAPH_STYLE_FIRST) }
-    private val posParagraphStyle: Style by lazy { viewer.getStyle(POS_PARAGRAPH_STYLE) }
-    private val entryParagraphStyle: Style by lazy { viewer.getStyle(ENTRY_PARAGRAPH_STYLE) }
-    private val posStyle: Style by lazy { viewer.getStyle(POS_STYLE) }
-    private val wordStyle: Style by lazy { viewer.getStyle(WORD_STYLE) }
-    private val reverseTranslationStyle: Style by lazy { viewer.getStyle(REVERSE_TRANSLATION_STYLE) }
-    private val separatorStyle: Style by lazy { viewer.getStyle(SEPARATOR_STYLE) }
-    private val foldingStyle: Style by lazy { viewer.getStyle(FOLDING_STYLE) }
-
     val component: JComponent get() = viewer
 
     var font: Font
@@ -67,13 +57,6 @@ class StyledDictViewer {
                 addMouseListener(it)
                 addMouseMotionListener(it)
             }
-
-            styledDocument.apply {
-                initParagraphStyles()
-                initPartOfSpeechStyle()
-                initDictEntryStyles()
-                initFoldStyle()
-            }
         }
     }
 
@@ -81,37 +64,37 @@ class StyledDictViewer {
         MOUSE_LISTENER
     }
 
-    /**
-     * 段落样式
-     */
-    private fun StyledDocument.initParagraphStyles() {
-        addStyle(POS_PARAGRAPH_STYLE_FIRST, defaultStyle) {
+    private val defaultStyle: Style by lazy { viewer.getStyle(StyleContext.DEFAULT_STYLE) }
+
+    // 段落样式
+    private val posParagraphStyleFirst: Style by lazy {
+        viewer.styledDocument.addStyle(POS_PARAGRAPH_STYLE_FIRST, defaultStyle) {
             StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
         }
-        addStyle(POS_PARAGRAPH_STYLE, defaultStyle) {
+    }
+    private val posParagraphStyle: Style by lazy {
+        viewer.styledDocument.addStyle(POS_PARAGRAPH_STYLE, defaultStyle) {
             StyleConstants.setSpaceAbove(this, JBUI.scale(10f))
             StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
         }
-        addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
+    }
+    private val entryParagraphStyle: Style by lazy {
+        viewer.styledDocument.addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
             StyleConstants.setLeftIndent(this, JBUI.scale(12f))
         }
     }
 
-    /**
-     * 词性样式
-     */
-    private fun StyledDocument.initPartOfSpeechStyle() {
-        addStyle(POS_STYLE, defaultStyle) {
+    // 词性样式
+    private val posStyle: Style by lazy {
+        viewer.styledDocument.addStyle(POS_STYLE, defaultStyle) {
             StyleConstants.setForeground(this, JBColor(0x293B2B, 0xDF7CFF))
             StyleConstants.setItalic(this, true)
         }
     }
 
-    /**
-     * 词、反向翻译样式
-     */
-    private fun StyledDocument.initDictEntryStyles() {
-        addStyle(WORD_STYLE, defaultStyle) {
+    // 单词样式
+    private val wordStyle: Style by lazy {
+        viewer.styledDocument.addStyle(WORD_STYLE, defaultStyle) {
             JBColor(0x3C0078, 0xFFFF00).let {
                 StyleConstants.setForeground(this, it)
 
@@ -120,7 +103,11 @@ class StyledDictViewer {
                 addAttribute(StyleConstant.MOUSE_LISTENER, mouseListener)
             }
         }
-        addStyle(REVERSE_TRANSLATION_STYLE, defaultStyle) {
+    }
+
+    // 反向翻译样式
+    private val reverseTranslationStyle: Style by lazy {
+        viewer.styledDocument.addStyle(REVERSE_TRANSLATION_STYLE, defaultStyle) {
             StyleConstants.setItalic(this, true)
             JBColor(0x3333E8, 0xFFC66D).let {
                 StyleConstants.setForeground(this, it)
@@ -131,16 +118,16 @@ class StyledDictViewer {
                         mouseListener)
             }
         }
-        addStyle(SEPARATOR_STYLE, defaultStyle) {
+    }
+    private val separatorStyle: Style by lazy {
+        viewer.styledDocument.addStyle(SEPARATOR_STYLE, defaultStyle) {
             StyleConstants.setForeground(this, JBColor(0xFF5555, 0x02B1DB))
         }
     }
 
-    /**
-     * 折叠样式
-     */
-    private fun StyledDocument.initFoldStyle() {
-        addStyle(FOLDING_STYLE, defaultStyle) {
+    // 折叠样式
+    private val foldingStyle: Style by lazy {
+        viewer.styledDocument.addStyle(FOLDING_STYLE, defaultStyle) {
             StyleConstants.setForeground(this, JBColor(0x777777, 0x888888))
             val background = JBColor(Color(0, 0, 0, 0x18), Color(0xFF, 0xFF, 0xFF, 0x10))
             StyleConstants.setBackground(this, background)
@@ -397,3 +384,4 @@ class StyledDictViewer {
     }
 
 }
+
