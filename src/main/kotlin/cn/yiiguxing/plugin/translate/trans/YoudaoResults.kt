@@ -51,7 +51,8 @@ data class YoudaoResult(
             val terms = explain.split("[;；]".toRegex())
             val entries = terms.map { DictEntry(it) }
 
-            Dict(partOfSpeech ?: "", terms, entries)
+            // 吐槽：连词性都可能没有，有道算哪门子的词典？
+            Dict(partOfSpeech, terms, entries)
         } ?: emptyList()
 
         val otherExplain: Map<String, String> = webExplains?.mapNotNull { (key, values) ->

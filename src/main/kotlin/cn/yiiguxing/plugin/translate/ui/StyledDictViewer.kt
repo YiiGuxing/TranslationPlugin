@@ -41,6 +41,7 @@ class StyledDictViewer {
     private val viewer: Viewer = Viewer()
 
     private val defaultStyle: Style by lazy { viewer.getStyle(StyleContext.DEFAULT_STYLE) }
+    private val posParagraphStyleFirst: Style by lazy { viewer.getStyle(POS_PARAGRAPH_STYLE_FIRST) }
     private val posParagraphStyle: Style by lazy { viewer.getStyle(POS_PARAGRAPH_STYLE) }
     private val entryParagraphStyle: Style by lazy { viewer.getStyle(ENTRY_PARAGRAPH_STYLE) }
     private val posStyle: Style by lazy { viewer.getStyle(POS_STYLE) }
@@ -84,6 +85,9 @@ class StyledDictViewer {
      * 段落样式
      */
     private fun StyledDocument.initParagraphStyles() {
+        addStyle(POS_PARAGRAPH_STYLE_FIRST, defaultStyle) {
+            StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
+        }
         addStyle(POS_PARAGRAPH_STYLE, defaultStyle) {
             StyleConstants.setSpaceAbove(this, JBUI.scale(10f))
             StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
@@ -174,12 +178,16 @@ class StyledDictViewer {
 
     private fun StyledDocument.insertDict(dict: Dict, isFirst: Boolean, breakEnd: Boolean) {
         var paragraphOffset = length
-        appendString(dict.partOfSpeech, posStyle)
-        appendString("\n")
-        if (!isFirst) {
-            setParagraphAttributes(paragraphOffset, length - paragraphOffset, posParagraphStyle, true)
+        dict.partOfSpeech?.let {
+            appendString(it, posStyle)
+            appendString("\n")
+
+            val style = if (isFirst) posParagraphStyleFirst else posParagraphStyle
+            setParagraphAttributes(paragraphOffset, length - paragraphOffset, style, true)
+
+            paragraphOffset = length
         }
-        paragraphOffset = length
+
 
         val hasWordOnly = dict.entries
                 .filter { it.reverseTranslation.isEmpty() }
@@ -373,6 +381,7 @@ class StyledDictViewer {
     }
 
     companion object {
+        private const val POS_PARAGRAPH_STYLE_FIRST = "part_of_speech_paragraph_first"
         private const val POS_PARAGRAPH_STYLE = "part_of_speech_paragraph"
         private const val ENTRY_PARAGRAPH_STYLE = "entry_paragraph"
         private const val POS_STYLE = "part_of_speech"

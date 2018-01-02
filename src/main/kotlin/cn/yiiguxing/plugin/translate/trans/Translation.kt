@@ -24,7 +24,7 @@ data class Translation(
  * Dictionary
  */
 data class Dict(
-        val partOfSpeech: String,
+        val partOfSpeech: String?,
         val terms: List<String> = emptyList(),
         val entries: List<DictEntry> = emptyList()
 )
