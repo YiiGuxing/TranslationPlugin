@@ -91,7 +91,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     var translation: Translation?
             by Delegates.observable(null) { _, oldValue: Translation?, newValue: Translation? ->
                 if (oldValue !== newValue) {
-                    update(newValue)
+                    update()
                 }
             }
 
@@ -348,53 +348,56 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
     protected abstract fun T.updateLanguage(lang: Lang?)
 
-    private fun update(translation: Translation?) {
+    private fun update() {
         component // initialize components
         checkSourceLanguage()
-        with(translation) translation@ {
-            if (this != null) {
-                this@TranslationPanel.srcLang.let {
-                    if (it == null || Lang.AUTO == it) {
-                        sourceLangComponent.updateLanguage(srcLang)
-                    }
-                }
-                targetLangComponent.updateLanguage(targetLang)
+        translation?.let { updateComponents(it) } ?: resetComponents()
+    }
 
-                sourceLangRow.visible = true
-                targetLangRow.visible = true
-                transTTSLink.isEnabled = !trans.isNullOrEmpty()
-
-                updateViewer(originalViewer, originalViewerRow, original)
-                updateViewer(transViewer, transViewerRow, trans)
-
-                originalPhonetic.updateText(srcPhoneticSymbol)
-                transPhonetic.updateText(transPhoneticSymbol)
-
-                updateDictViewer(dictionaries)
-                updateViewer(basicExplainViewer, basicExplainsViewerRow, basicExplains.joinToString("\n"))
-                updateOtherExplains(otherExplains)
-            } else {
-                targetLangComponent.updateLanguage(null)
-
-                sourceLangRow.visible = false
-                targetLangRow.visible = false
-                originalViewerRow.visible = false
-                transViewerRow.visible = false
-                dictViewerRow.visible = false
-                basicExplainsViewerRow.visible = false
-                otherExplainsViewerRow.visible = false
-
-                originalViewer.empty()
-                originalPhonetic.empty()
-                transViewer.empty()
-                transPhonetic.empty()
-                otherExplainViewer.empty()
-
-                otherExplainLabel.isVisible = false
-                dictViewer.component.isVisible = false
-                dictViewer.dictionaries = null
+    private fun updateComponents(translation: Translation) {
+        val updateSrcLang = this.srcLang.let { null == it || Lang.AUTO == it }
+        with(translation) {
+            if (updateSrcLang) {
+                sourceLangComponent.updateLanguage(srcLang)
             }
+            targetLangComponent.updateLanguage(targetLang)
+
+            sourceLangRow.visible = true
+            targetLangRow.visible = true
+            transTTSLink.isEnabled = !trans.isNullOrEmpty()
+
+            updateViewer(originalViewer, originalViewerRow, original)
+            updateViewer(transViewer, transViewerRow, trans)
+
+            originalPhonetic.updateText(srcPhoneticSymbol)
+            transPhonetic.updateText(transPhoneticSymbol)
+
+            updateDictViewer(dictionaries)
+            updateViewer(basicExplainViewer, basicExplainsViewerRow, basicExplains.joinToString("\n"))
+            updateOtherExplains(otherExplains)
         }
+    }
+
+    private fun resetComponents() {
+        targetLangComponent.updateLanguage(null)
+
+        sourceLangRow.visible = false
+        targetLangRow.visible = false
+        originalViewerRow.visible = false
+        transViewerRow.visible = false
+        dictViewerRow.visible = false
+        basicExplainsViewerRow.visible = false
+        otherExplainsViewerRow.visible = false
+
+        originalViewer.empty()
+        originalPhonetic.empty()
+        transViewer.empty()
+        transPhonetic.empty()
+        otherExplainViewer.empty()
+
+        otherExplainLabel.isVisible = false
+        dictViewer.component.isVisible = false
+        dictViewer.dictionaries = null
     }
 
     private fun updateViewer(viewer: Viewer, row: Row, text: String?) {
