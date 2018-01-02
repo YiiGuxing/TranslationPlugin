@@ -50,6 +50,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     private val originalPhonetic = JLabel()
     private val transPhonetic = JLabel()
     private val dictViewer = StyledDictViewer()
+    private val basicExplainViewer = Viewer()
     private val otherExplainLabel = JLabel("网络释义:")
     private val otherExplainViewer = Viewer()
 
@@ -58,7 +59,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     private lateinit var originalViewerRow: Row
     private lateinit var transViewerRow: Row
     private lateinit var dictViewerRow: Row
-    private lateinit var otherExplainViewerRow: Row
+    private lateinit var basicExplainsViewerRow: Row
+    private lateinit var otherExplainsViewerRow: Row
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
     private var onRevalidateHandler: (() -> Unit)? = null
@@ -110,22 +112,33 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             sourceLangRow = row {
                 createRow(originalTTSLink, sourceLangComponent, fixLanguageLinkLabel, fixLanguageLink)()
             }
+
             originalViewerRow = row { onWrapViewer(originalViewer)(CCFlags.grow) }
             row { originalPhonetic(CCFlags.grow) }
+
             targetLangRow = row {
                 createRow(transTTSLink, targetLangComponent).apply {
                     border = JBEmptyBorder(10, 0, 0, 0)
                 }()
             }
+
             transViewerRow = row { onWrapViewer(transViewer)(CCFlags.grow) }
             row { transPhonetic(CCFlags.grow) }
+
             dictViewerRow = row {
                 onWrapViewer(dictViewer.component as Viewer).apply {
                     border = JBEmptyBorder(10, 0, 0, 0)
                 }(CCFlags.grow)
             }
+
+            basicExplainsViewerRow = row {
+                onWrapViewer(basicExplainViewer).apply {
+                    border = JBEmptyBorder(10, 0, 0, 0)
+                }(CCFlags.grow)
+            }
+
             row { otherExplainLabel() }
-            otherExplainViewerRow = row { onWrapViewer(otherExplainViewer)(CCFlags.grow) }
+            otherExplainsViewerRow = row { onWrapViewer(otherExplainViewer)(CCFlags.grow) }
         }.apply { isOpaque = false /* 可使淡入淡出动画流畅自然 */ }
     }
 
@@ -158,7 +171,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             fixLanguageLink.font = primaryFont
             originalViewer.font = primaryFont.deriveFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE.toFloat())
             transViewer.font = primaryFont.deriveFont(FONT_SIZE_LARGE.toFloat())
-            dictViewer.font = primaryFont
+            dictViewer.font = primaryFont.biggerOn(1f)
+            basicExplainViewer.font = primaryFont.biggerOn(1f)
             otherExplainViewer.font = primaryFont
             otherExplainLabel.font = primaryFont
             originalPhonetic.font = phoneticFont
@@ -175,6 +189,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         transPhonetic.foreground = JBColor(
                 Color(0x17, 0x05, 0x91, 0xA0),
                 Color(0xFF, 0xC6, 0x6D, 0xA0))
+        basicExplainViewer.foreground = JBColor(0x2A237A, 0xFFDB89)
         otherExplainLabel.foreground = JBColor(0x707070, 0x808080)
         fixLanguageLinkLabel.foreground = JBColor(0x666666, 0x909090)
 
@@ -216,15 +231,19 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     private fun initActions() {
         originalViewer.apply {
             setupPopupMenu()
-            setFocusListener(transViewer, otherExplainViewer)
+            setFocusListener(transViewer, basicExplainViewer, otherExplainViewer)
         }
         transViewer.apply {
             setupPopupMenu()
-            setFocusListener(originalViewer, otherExplainViewer)
+            setFocusListener(originalViewer, basicExplainViewer, otherExplainViewer)
+        }
+        basicExplainViewer.apply {
+            setupPopupMenu()
+            setFocusListener(originalViewer, transViewer, otherExplainViewer)
         }
         otherExplainViewer.apply {
             setupPopupMenu()
-            setFocusListener(originalViewer, transViewer)
+            setFocusListener(originalViewer, transViewer, basicExplainViewer)
         }
         dictViewer.apply {
             onEntryClicked { entry ->
@@ -352,7 +371,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
                 transPhonetic.updateText(transPhoneticSymbol)
 
                 updateDictViewer(dictionaries)
-                insertOtherExplain(otherExplain)
+                updateViewer(basicExplainViewer, basicExplainsViewerRow, basicExplains.joinToString("\n"))
+                updateOtherExplains(otherExplains)
             } else {
                 targetLangComponent.updateLanguage(null)
 
@@ -361,7 +381,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
                 originalViewerRow.visible = false
                 transViewerRow.visible = false
                 dictViewerRow.visible = false
-                otherExplainViewerRow.visible = false
+                basicExplainsViewerRow.visible = false
+                otherExplainsViewerRow.visible = false
 
                 originalViewer.empty()
                 originalPhonetic.empty()
@@ -393,14 +414,14 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         }
     }
 
-    private fun insertOtherExplain(explain: Map<String, String>) {
+    private fun updateOtherExplains(explains: Map<String, String>) {
         with(otherExplainViewer) {
             styledDocument.clear()
 
-            if (explain.isEmpty()) {
+            if (explains.isEmpty()) {
                 isVisible = false
                 otherExplainLabel.isVisible = false
-                otherExplainViewerRow.visible = false
+                otherExplainsViewerRow.visible = false
                 return
             }
 
@@ -408,9 +429,9 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
                 val keyStyle = getStyle(EXPLAIN_KEY_STYLE)
                 val valueStyle = getStyle(EXPLAIN_VALUE_STYLE)
 
-                val lastIndex = explain.size - 1
+                val lastIndex = explains.size - 1
                 var index = 0
-                for ((key, value) in explain) {
+                for ((key, value) in explains) {
                     appendString(key, keyStyle)
                     appendString(" - ")
                     appendString(value, valueStyle)
@@ -420,9 +441,10 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
                 }
             }
 
+            caretPosition = 0
             isVisible = true
             otherExplainLabel.isVisible = true
-            otherExplainViewerRow.visible = true
+            otherExplainsViewerRow.visible = true
         }
     }
 

@@ -7,7 +7,6 @@
 
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
 import com.google.gson.annotations.SerializedName
 
 
@@ -46,16 +45,7 @@ data class YoudaoResult(
         val srcLang = Lang.fromCode(languagesList[0])
         val transLang = Lang.fromCode(languagesList[1])
 
-        val dictionaries: List<Dict> = basicExplain?.explains?.map {
-            val (partOfSpeech, explain) = TranslationResultUtils.splitExplain(it)
-            val terms = explain.split("[;；]".toRegex())
-            val entries = terms.map { DictEntry(it) }
-
-            // 吐槽：连词性都可能没有，有道算哪门子的词典？
-            Dict(partOfSpeech, terms, entries)
-        } ?: emptyList()
-
-        val otherExplain: Map<String, String> = webExplains?.mapNotNull { (key, values) ->
+        val otherExplains: Map<String, String> = webExplains?.mapNotNull { (key, values) ->
             if (key == null || values == null) {
                 null
             } else {
@@ -71,9 +61,8 @@ data class YoudaoResult(
                 srcLang,
                 transLang,
                 basicExplain?.phonetic,
-                null,
-                dictionaries,
-                otherExplain)
+                basicExplains = basicExplain?.explains?.asList() ?: emptyList(),
+                otherExplains = otherExplains)
     }
 }
 

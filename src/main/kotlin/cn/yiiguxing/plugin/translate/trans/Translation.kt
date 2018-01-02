@@ -17,17 +17,16 @@ data class Translation(
         val srcPhoneticSymbol: String? = null,
         val transPhoneticSymbol: String? = null,
         val dictionaries: List<Dict> = emptyList(),
-        val otherExplain: Map<String, String> = emptyMap()
-)
+        val basicExplains: List<String> = emptyList(),
+        val otherExplains: Map<String, String> = emptyMap())
 
 /**
  * Dictionary
  */
 data class Dict(
-        val partOfSpeech: String?,
+        val partOfSpeech: String,
         val terms: List<String> = emptyList(),
-        val entries: List<DictEntry> = emptyList()
-)
+        val entries: List<DictEntry> = emptyList())
 
 /**
  * Entry of Dictionary
