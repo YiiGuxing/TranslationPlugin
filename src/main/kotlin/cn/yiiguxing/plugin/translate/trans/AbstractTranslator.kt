@@ -17,7 +17,7 @@ abstract class AbstractTranslator : Translator {
 
     protected open fun buildRequest(builder: RequestBuilder) {}
 
-    protected abstract fun parserResult(result: String): Translation
+    protected abstract fun parserResult(original: String, result: String): Translation
 
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is UnsupportedLanguageException -> "不支持的语言类型：${throwable.lang.langName}"
@@ -38,7 +38,7 @@ abstract class AbstractTranslator : Translator {
         HttpRequests.request(getTranslateUrl(text, srcLang, targetLang))
                 .also { buildRequest(it) }
                 .connect {
-                    parserResult(it.readString(null))
+                    parserResult(text, it.readString(null))
                 }
     } catch (throwable: Throwable) {
         throw TranslateException(createErrorMessage(throwable), throwable)

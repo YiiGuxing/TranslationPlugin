@@ -60,17 +60,16 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
 
-    override fun parserResult(result: String): Translation {
+    override fun parserResult(original: String, result: String): Translation {
         LOGGER.i("Translate result: $result")
 
-        return Gson().fromJson(result, YoudaoResult::class.java).run {
+        return Gson().fromJson(result, YoudaoResult::class.java).apply {
+            query = original
             checkError()
-            if (errorCode != 0) {
+            if (!isSuccessful) {
                 throw YoudaoTranslateException(errorCode)
             }
-
-            toTranslation()
-        }
+        }.toTranslation()
     }
 
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {

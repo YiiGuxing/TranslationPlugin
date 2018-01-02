@@ -14,15 +14,11 @@ data class Translation(
         val trans: String?,
         val srcLang: Lang,
         val targetLang: Lang,
-        val phoneticSymbol: Symbol? = null,
+        val srcPhoneticSymbol: String? = null,
+        val transPhoneticSymbol: String? = null,
         val dictionaries: List<Dict> = emptyList(),
         val otherExplain: Map<String, String> = emptyMap()
 )
-
-/**
- * Phonetic Symbol
- */
-data class Symbol(val src: String?, val trans: String?)
 
 /**
  * Dictionary

@@ -3,10 +3,11 @@
  * 
  * Created by Yii.Guxing on 2017/10/30
  */
-@file:Suppress("ArrayInDataClass")
+@file:Suppress("ArrayInDataClass", "MemberVisibilityCanPrivate")
 
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
 import com.google.gson.annotations.SerializedName
 
 
@@ -35,37 +36,43 @@ data class YoudaoResult(
     }
 
     override fun toTranslation(): Translation {
-        val dictionaries = listOf(
-                Dict("动词", entries = listOf(
-                        DictEntry("显示", listOf("display", "show", "demonstrate", "illustrate")),
-                        DictEntry("陈列", listOf("display", "exhibit", "set out")),
-                        DictEntry("展出", listOf("display", "exhibit", "be on show")),
-                        DictEntry("展览", listOf("exhibit", "display")),
-                        DictEntry("display", listOf("显示", "陈列", "展出", "展览")),
-                        DictEntry("表现",
-                                listOf("show", "express", "behave", "display", "represent", "manifest")),
-                        DictEntry("陈设", listOf("display", "furnish", "set out")),
-                        DictEntry("陈设2", listOf("display", "furnish", "set out"))
-                )),
-                Dict("名词", entries = listOf(
-                        DictEntry("显示", listOf("display")),
-                        DictEntry("表现", listOf("performance", "show", "expression", "manifestation",
-                                "representation", "display")),
-                        DictEntry("炫耀", listOf("display")),
-                        DictEntry("橱窗", listOf("showcase", "show window", "display", "shopwindow",
-                                "glass-fronted billboard")),
-                        DictEntry("罗", listOf("silk", "net", "display", "shift"))
-                ))
-        )
+        check(isSuccessful) { "Can not convert to Translation: errorCode=$errorCode" }
+        check(query != null) { "Can not convert to Translation: query=$query" }
+        check(!languages.isNullOrBlank()) { "Can not convert to Translation: languages=$languages" }
+
+        val languagesList = languages!!.split("2")
+        check(languagesList.size == 2) { "Can not convert to Translation: languages=$languages" }
+
+        val srcLang = Lang.fromCode(languagesList[0])
+        val transLang = Lang.fromCode(languagesList[1])
+
+        val dictionaries: List<Dict> = basicExplain?.explains?.map {
+            val (partOfSpeech, explain) = TranslationResultUtils.splitExplain(it)
+            val terms = explain.split("[;；]".toRegex())
+            val entries = terms.map { DictEntry(it) }
+
+            Dict(partOfSpeech ?: "", terms, entries)
+        } ?: emptyList()
+
+        val otherExplain: Map<String, String> = webExplains?.mapNotNull { (key, values) ->
+            if (key == null || values == null) {
+                null
+            } else {
+                key to values.joinToString(separator = "; ")
+            }
+        }?.let {
+            mapOf(*it.toTypedArray())
+        } ?: emptyMap()
 
         return Translation(
-                "If baby only wanted to, he could fly up to heaven this moment. It is not for nothing that he does not leave us.",
-                "显示",
-                Lang.ENGLISH,
-                Lang.CHINESE,
-                Symbol("dɪ'spleɪ", "xiǎn shì"),
-                dictionaries
-        )
+                query!!,
+                translation?.joinToString(separator = "\n"),
+                srcLang,
+                transLang,
+                basicExplain?.phonetic,
+                null,
+                dictionaries,
+                otherExplain)
     }
 }
 

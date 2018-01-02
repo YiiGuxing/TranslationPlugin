@@ -348,10 +348,8 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
                 updateViewer(originalViewer, originalViewerRow, original)
                 updateViewer(transViewer, transViewerRow, trans)
 
-                phoneticSymbol?.let { (src, trans) ->
-                    originalPhonetic.updateText(src)
-                    transPhonetic.updateText(trans)
-                }
+                originalPhonetic.updateText(srcPhoneticSymbol)
+                transPhonetic.updateText(transPhoneticSymbol)
 
                 updateDictViewer(dictionaries)
                 insertOtherExplain(otherExplain)

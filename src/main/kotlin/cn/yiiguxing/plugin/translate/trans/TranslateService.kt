@@ -2,10 +2,7 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
-import cn.yiiguxing.plugin.translate.util.LruCache
-import cn.yiiguxing.plugin.translate.util.checkDispatchThread
-import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
-import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
@@ -81,7 +78,7 @@ class TranslateService private constructor() {
                     }
                 }
             } catch (e: TranslateException) {
-                LOGGER.warn("translate", e)
+                LOGGER.w("translate", e)
                 invokeLater(ModalityState.any()) { listener.onError(e.message, e) }
             }
         }

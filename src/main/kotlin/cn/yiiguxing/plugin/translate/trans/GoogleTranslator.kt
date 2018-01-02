@@ -33,7 +33,7 @@ object GoogleTranslator : AbstractTranslator() {
         TODO("not implemented")
     }
 
-    override fun parserResult(result: String): Translation {
+    override fun parserResult(original: String, result: String): Translation {
         TODO("not implemented")
     }
 }
