@@ -21,14 +21,14 @@ class TranslationPresenter(private val view: View) : Presenter {
             SupportedLanguages(supportedSourceLanguages, supportedTargetLanguages)
         }
 
-    data class CurrentQuery(val srcLang: Lang, val targetLang: Lang, val text: String)
+    data class CurrentQuery(val text: String, val srcLang: Lang, val targetLang: Lang)
 
-    override fun getCache(srcLang: Lang, targetLang: Lang, text: String): Translation? {
-        return translateService.getCache(srcLang, targetLang, text)
+    override fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
+        return translateService.getCache(text, srcLang, targetLang)
     }
 
-    override fun translate(srcLang: Lang, targetLang: Lang, text: String) {
-        val currQuery = CurrentQuery(srcLang, targetLang, text)
+    override fun translate(text: String, srcLang: Lang, targetLang: Lang) {
+        val currQuery = CurrentQuery(text, srcLang, targetLang)
         if (text.isBlank() || currQuery == currentQuery) {
             return
         }

@@ -31,12 +31,12 @@ interface Presenter {
     /**
      * @return 缓存
      */
-    fun getCache(srcLang: Lang, targetLang: Lang, text: String): Translation?
+    fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation?
 
     /**
      * 翻译
      */
-    fun translate(srcLang: Lang, targetLang: Lang, text: String)
+    fun translate(text: String, srcLang: Lang, targetLang: Lang)
 }
 
 interface View : Disposable {

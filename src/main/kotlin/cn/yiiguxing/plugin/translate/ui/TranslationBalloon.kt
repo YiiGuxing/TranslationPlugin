@@ -118,8 +118,8 @@ class TranslationBalloon(
 
     private fun initActions() = with(translationPane) {
         onRevalidate { balloon.revalidate() }
-        onLanguageChanged { src, target -> presenter.translate(src, target, text) }
-        onNewTranslate { showOnTranslationDialog(it) }
+        onLanguageChanged { src, target -> presenter.translate(text, src, target) }
+        onNewTranslate { text, _, _ -> showOnTranslationDialog(text) }
         onTextToSpeech { text, lang ->
             ttsDisposable = TextToSpeech.INSTANCE.speak(project, text, lang)
         }
@@ -133,7 +133,7 @@ class TranslationBalloon(
             isEditable = false
             isOpaque = false
             editorKit = UI.errorHTMLKit
-            border = JBEmptyBorder(20, 30, 20, 30)
+            border = JBEmptyBorder(INSETS, INSETS + 10, INSETS, INSETS + 10)
             maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 
             addHyperlinkListener(object : HyperlinkAdapter() {
@@ -219,7 +219,7 @@ class TranslationBalloon(
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
             showBalloon()
-            presenter.translate(Lang.AUTO, presenter.primaryLanguage, text)
+            presenter.translate(text, Lang.AUTO, presenter.primaryLanguage)
         }
     }
 
@@ -235,7 +235,7 @@ class TranslationBalloon(
         }
     }
 
-    private fun showOnTranslationDialog(text: String?) {
+    private fun showOnTranslationDialog(text: String) {
         hide()
         val dialog = TranslationManager.instance.showDialog(editor.project)
         if (!text.isNullOrBlank()) {

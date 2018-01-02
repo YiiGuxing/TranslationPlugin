@@ -215,7 +215,11 @@ class TranslationDialog(private val project: Project?)
         with(translationPane) {
             component.border = JBEmptyBorder(10, 10, 5, 10)
 
-            onNewTranslate { translate(it) }
+            onNewTranslate { text, src, target ->
+                val srcLang: Lang = if (sourceLangComboBox.selected == Lang.AUTO) Lang.AUTO else src
+                val targetLang: Lang = if (targetLangComboBox.selected == Lang.AUTO) Lang.AUTO else target
+                translate(text, srcLang, targetLang)
+            }
             onFixLanguage { sourceLangComboBox.selected = it }
             onTextToSpeech { text, lang ->
                 ttsDisposable = TextToSpeech.INSTANCE.speak(project, text, lang)
@@ -392,12 +396,25 @@ class TranslationDialog(private val project: Project?)
         (inputComboBox.selectedItem as String?)?.let { translate(it) }
     }
 
-    fun translate(query: String?) {
-        val src = sourceLangComboBox.selected
-        val target = targetLangComboBox.selected
-        if (!disposed && query != null && !query.isBlank() && src != null && target != null) {
-            presenter.translate(src, target, query)
+    fun translate(text: String) {
+        val srcLang = sourceLangComboBox.selected ?: presenter.supportedLanguages.source.first()
+        val targetLang = targetLangComboBox.selected ?: presenter.primaryLanguage
+        translate(text, srcLang, targetLang)
+    }
+
+    private fun translate(text: String, srcLang: Lang, targetLang: Lang) {
+        if (!disposed && !text.isBlank()) {
+            sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
+            targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
+
+            presenter.translate(text, srcLang, targetLang)
         }
+    }
+
+    private fun ComboBox<Lang>.setSelectLangIgnoreEvent(lang: Lang) {
+        ignoreLanguageEvent = true
+        selected = lang
+        ignoreLanguageEvent = false
     }
 
     override fun onHistoriesChanged() {
@@ -504,7 +521,7 @@ class TranslationDialog(private val project: Project?)
                 val src = sourceLangComboBox.selected
                 val target = targetLangComboBox.selected
                 if (src != null && target != null) {
-                    presenter.getCache(src, target, value)?.let {
+                    presenter.getCache(value, src, target)?.let {
                         append("  -  <i><small>")
                         append(it.trans)
                         append("</small></i>")

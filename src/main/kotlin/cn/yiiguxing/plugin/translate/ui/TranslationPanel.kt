@@ -60,7 +60,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
     private lateinit var dictViewerRow: Row
     private lateinit var otherExplainViewerRow: Row
 
-    private var onNewTranslateHandler: ((String) -> Unit)? = null
+    private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onTextToSpeechHandler: ((String, Lang) -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
@@ -227,8 +227,23 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             setFocusListener(originalViewer, transViewer)
         }
         dictViewer.apply {
-            onEntryClicked {
-                onNewTranslateHandler?.invoke(it.value)
+            onEntryClicked { entry ->
+                translation?.run {
+                    val src: Lang
+                    val target: Lang
+                    when (entry.entryType) {
+                        StyledDictViewer.EntryType.WORD -> {
+                            src = targetLang
+                            target = srcLang
+                        }
+                        StyledDictViewer.EntryType.REVERSE_TRANSLATION -> {
+                            src = srcLang
+                            target = targetLang
+                        }
+                    }
+
+                    onNewTranslateHandler?.invoke(entry.value, src, target)
+                }
             }
             onFoldingExpanded {
                 onRevalidateHandler?.invoke()
@@ -251,7 +266,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         translation = null
     }
 
-    fun onNewTranslate(handler: (text: String) -> Unit) {
+    fun onNewTranslate(handler: (text: String, src: Lang, target: Lang) -> Unit) {
         onNewTranslateHandler = handler
     }
 
@@ -274,9 +289,11 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             }
             val translate = JBMenuItem("Translate", Icons.Translate).apply {
                 addActionListener {
-                    selectedText.let {
-                        if (!it.isNullOrBlank()) {
-                            onNewTranslateHandler?.invoke(it)
+                    translation?.run {
+                        selectedText.let {
+                            if (translation != null && !it.isNullOrBlank()) {
+                                onNewTranslateHandler?.invoke(it, targetLang, srcLang)
+                            }
                         }
                     }
                 }

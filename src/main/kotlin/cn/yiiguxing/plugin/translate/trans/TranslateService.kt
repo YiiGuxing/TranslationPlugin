@@ -60,7 +60,7 @@ class TranslateService private constructor() {
         }
     }
 
-    fun getCache(srcLang: Lang, targetLang: Lang, text: String): Translation? {
+    fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         checkThread()
         return cache[CacheKey(text, srcLang, targetLang, translator.id)]
     }
