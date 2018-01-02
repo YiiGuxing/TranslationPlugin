@@ -25,6 +25,9 @@ data class YoudaoResult(
         @SerializedName("web")
         var webExplains: Array<WebExplain>? = null
 ) : TranslationAdapter {
+
+    val isSuccessful get() = errorCode == 0
+
     fun checkError() {
         if (errorCode == 0 && translation?.isEmpty() != false && basicExplain?.explains?.isEmpty() != false) {
             errorCode = 302

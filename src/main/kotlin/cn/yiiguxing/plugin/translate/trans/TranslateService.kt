@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
-import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
@@ -89,14 +88,14 @@ class TranslateService private constructor() {
     }
 
     @Deprecated("Will be deleted.")
-    fun translate(text: String, callback: (String, QueryResult?) -> Unit) {
+    fun translate(text: String, callback: (String, YoudaoResult?) -> Unit) {
         checkThread()
         executeOnPooledThread {
             try {
                 translator.translate(text, Lang.AUTO, Lang.AUTO)
-                callback(text, QueryResult(errorCode = 0))
+                callback(text, YoudaoResult(errorCode = 0))
             } catch (e: Exception) {
-                callback(text, QueryResult(errorCode = -1, message = e.message))
+                callback(text, YoudaoResult(errorCode = -1, message = e.message))
             }
         }
     }

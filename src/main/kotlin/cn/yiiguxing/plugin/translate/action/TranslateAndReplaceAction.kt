@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.model.QueryResult
 import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.trans.YoudaoResult
 import cn.yiiguxing.plugin.translate.util.HANZI_CONDITION
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.TranslationResultUtils
@@ -148,7 +148,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
             }
         }
 
-        fun getReplaceLookupElements(result: QueryResult): List<LookupElement> =
+        fun getReplaceLookupElements(result: YoudaoResult): List<LookupElement> =
                 if (result.basicExplain != null) {
                     getReplaceLookupElements(TranslationResultUtils.expandExplain(result.basicExplain?.explains))
                 } else {
