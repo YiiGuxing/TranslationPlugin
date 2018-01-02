@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -28,7 +29,6 @@ import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.UIUtil
 import java.awt.AWTEvent
 import java.awt.CardLayout
-import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.*
 import javax.swing.*
@@ -464,8 +464,8 @@ class TranslationDialog(private val project: Project?)
             srcLang = sourceLangComboBox.selected
             this.translation = translation
         }
-        translationPanel.viewport.viewPosition = Point(0, 0)
         showCard(CARD_TRANSLATION)
+        invokeLater { translationPanel.verticalScrollBar.apply { value = 0 } }
         setLanguageComponentsEnable(true)
     }
 
