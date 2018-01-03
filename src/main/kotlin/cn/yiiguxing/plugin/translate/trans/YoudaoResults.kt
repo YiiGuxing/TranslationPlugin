@@ -57,7 +57,7 @@ data class YoudaoResult(
 
         return Translation(
                 query!!,
-                translation?.joinToString(separator = "\n"),
+                translation?.firstOrNull(),
                 srcLang,
                 transLang,
                 basicExplain?.phonetic,

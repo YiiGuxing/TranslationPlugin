@@ -83,18 +83,4 @@ class TranslateService private constructor() {
             }
         }
     }
-
-    @Deprecated("Will be deleted.")
-    fun translate(text: String, callback: (String, YoudaoResult?) -> Unit) {
-        checkThread()
-        executeOnPooledThread {
-            try {
-                translator.translate(text, Lang.AUTO, Lang.AUTO)
-                callback(text, YoudaoResult(errorCode = 0))
-            } catch (e: Exception) {
-                callback(text, YoudaoResult(errorCode = -1, message = e.message))
-            }
-        }
-    }
-
 }
