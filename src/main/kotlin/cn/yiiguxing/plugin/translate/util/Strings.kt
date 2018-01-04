@@ -16,12 +16,23 @@ fun String?.isNullOrBlank() = (this as CharSequence?).isNullOrBlank()
 /**
  * 单词拆分
  */
-fun String.splitWord() = if (isBlank()) "" else
-    replace("[_\\s]+".toRegex(), " ")
-            .replace("([A-Z][a-z]+)|([0-9\\W]+)".toRegex(), " $0 ")
-            .replace("[A-Z]{2,}".toRegex(), " $0")
-            .replace("\\s{2,}".toRegex(), " ")
-            .trim()
+fun String.splitWords(): String? {
+    if (isBlank()) {
+        return null
+    }
+
+    return trim().let {
+        if (it.contains("\\s+".toRegex())) {
+            it.replace("\\s+".toRegex(), " ")
+        } else {
+            it.replace("[_\\s]+".toRegex(), " ")
+                    .replace("([A-Z][a-z]+)|([0-9\\W]+)".toRegex(), " $0 ")
+                    .replace("[A-Z]{2,}".toRegex(), " $0")
+                    .replace("\\s{2,}".toRegex(), " ")
+                    .trim()
+        }
+    }
+}
 
 /**
  * 分割句子

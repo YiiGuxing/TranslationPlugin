@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TranslationManager
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
-import cn.yiiguxing.plugin.translate.util.splitWord
+import cn.yiiguxing.plugin.translate.util.splitWords
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
@@ -34,8 +34,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
                 else -> null
             }
 
-            text?.splitWord()
-                    ?.takeIf { it.isNotBlank() }
+            text?.splitWords()
                     ?.let { TranslationManager.instance.showDialog(editor.project).translate(it) }
         }
 

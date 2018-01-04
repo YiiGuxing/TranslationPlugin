@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.TranslationManager
 import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.splitWord
+import cn.yiiguxing.plugin.translate.util.splitWords
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -32,7 +32,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
     }
 
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
-        editor.document.getText(selectionRange).splitWord().takeIf { it.isNotBlank() }?.let { queryText ->
+        editor.document.getText(selectionRange).splitWords()?.let { text ->
             val highlighters = editor.project?.let {
                 ArrayList<RangeHighlighter>().apply {
                     HighlightManager.getInstance(it).addRangeHighlight(editor, selectionRange.startOffset,
@@ -41,7 +41,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             }
 
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
-            val balloon = TranslationManager.instance.showBalloon(editor, caretRangeMarker, queryText)
+            val balloon = TranslationManager.instance.showBalloon(editor, caretRangeMarker, text)
 
             highlighters?.takeIf { it.isNotEmpty() }?.let {
                 Disposer.register(balloon, Disposable {

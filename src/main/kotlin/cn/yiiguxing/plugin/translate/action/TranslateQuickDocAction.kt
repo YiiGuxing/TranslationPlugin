@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.TranslationManager
-import cn.yiiguxing.plugin.translate.util.splitWord
+import cn.yiiguxing.plugin.translate.util.splitWords
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnAction
@@ -27,8 +27,7 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
 
     override fun actionPerformed(e: AnActionEvent) {
         e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
-                ?.splitWord()
-                ?.takeIf { it.isNotBlank() }
+                ?.splitWords()
                 ?.let {
                     e.project.let { project ->
                         project?.hideDocInfoHint()
