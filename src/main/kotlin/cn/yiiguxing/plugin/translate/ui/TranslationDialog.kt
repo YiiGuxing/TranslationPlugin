@@ -4,11 +4,9 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.CustomShortcutSet
@@ -43,7 +41,7 @@ class TranslationDialog(private val project: Project?)
     private val settings: Settings = Settings.instance
 
     private val processPane = ProcessComponent("Querying...")
-    private val translationPane = DialogTranslationPanel(settings)
+    private val translationPane = DialogTranslationPanel(project, settings)
     private val translationPanel = ScrollPane(translationPane.component)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 
@@ -54,7 +52,6 @@ class TranslationDialog(private val project: Project?)
 
     private var _disposed: Boolean = false
     override val disposed: Boolean get() = _disposed
-    private var ttsDisposable: Disposable? = null
 
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
     private lateinit var windowListener: WindowListener
@@ -72,6 +69,7 @@ class TranslationDialog(private val project: Project?)
         installEnterHook()
 
         Disposer.register(this, processPane)
+        Disposer.register(this, translationPane)
     }
 
     override fun createCenterPanel(): JComponent = component.apply {
@@ -221,9 +219,6 @@ class TranslationDialog(private val project: Project?)
                 translate(text, srcLang, targetLang)
             }
             onFixLanguage { sourceLangComboBox.selected = it }
-            onTextToSpeech { text, lang ->
-                ttsDisposable = TextToSpeech.INSTANCE.speak(project, text, lang)
-            }
         }
 
         translationPanel.apply {
@@ -355,7 +350,6 @@ class TranslationDialog(private val project: Project?)
         window.removeWindowListener(windowListener)
         Toolkit.getDefaultToolkit().removeAWTEventListener(activityListener)
 
-        ttsDisposable?.let { Disposer.dispose(it) }
         Disposer.dispose(this)
         println("Dialog disposed.")
     }

@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
@@ -49,7 +48,7 @@ class TranslationBalloon(
     private val errorPane = JEditorPane()
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
-    private val translationPane = BalloonTranslationPanel(settings)
+    private val translationPane = BalloonTranslationPanel(project, settings)
     private val pinButton = ActionLink(icon = Icons.Pin) { showOnTranslationDialog(text) }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
         lastError?.copyToClipboard()
@@ -62,7 +61,6 @@ class TranslationBalloon(
     private var isShowing = false
     private var _disposed = false
     override val disposed get() = _disposed
-    private var ttsDisposable: Disposable? = null
 
     private var lastError: Throwable? = null
 
@@ -93,6 +91,7 @@ class TranslationBalloon(
         // `TranslationBalloon`在外部以子`Disposable`再次注册时将会使之无效。
         Disposer.register(balloon, Disposable { Disposer.dispose(this) })
         Disposer.register(this, processPane)
+        Disposer.register(this, translationPane)
     }
 
     private fun initContentPanel() = contentPanel
@@ -120,9 +119,6 @@ class TranslationBalloon(
         onRevalidate { balloon.revalidate() }
         onLanguageChanged { src, target -> presenter.translate(text, src, target) }
         onNewTranslate { text, _, _ -> showOnTranslationDialog(text) }
-        onTextToSpeech { text, lang ->
-            ttsDisposable = TextToSpeech.INSTANCE.speak(project, text, lang)
-        }
 
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
     }
@@ -199,7 +195,6 @@ class TranslationBalloon(
 
         balloon.hide()
         caretRangeMarker.dispose()
-        ttsDisposable?.let { Disposer.dispose(it) }
         Toolkit.getDefaultToolkit().removeAWTEventListener(eventListener)
 
         println("Balloon disposed.")

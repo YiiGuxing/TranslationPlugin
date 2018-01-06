@@ -39,6 +39,8 @@ class ActionLink(
     }
 
     override fun linkSelected(aSource: LinkLabel<*>, aLinkData: Any?) {
-        action(this)
+        if (isEnabled) {
+            action(this)
+        }
     }
 }

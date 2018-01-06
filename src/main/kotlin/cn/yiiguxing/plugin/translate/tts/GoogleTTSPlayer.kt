@@ -33,7 +33,7 @@ import javax.sound.sampled.*
  * Created by Yii.Guxing on 2017-10-28 0028.
  */
 class GoogleTTSPlayer(
-        private val project: Project?,
+        project: Project?,
         private val text: String,
         private val lang: Lang,
         private val completeListener: ((TTSPlayer) -> Unit)? = null

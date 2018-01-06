@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.util.ui.JBDimension
@@ -13,7 +14,8 @@ import javax.swing.JComponent
  *
  * Created by Yii.Guxing on 2017/12/13
  */
-class BalloonTranslationPanel(settings: Settings) : TranslationPanel<ComboBox<Lang>>(settings) {
+class BalloonTranslationPanel(project: Project?, settings: Settings)
+    : TranslationPanel<ComboBox<Lang>>(project, settings) {
 
     private var ignoreEvent = false
     private var onLanguageChangedHandler: ((Lang, Lang) -> Unit)? = null

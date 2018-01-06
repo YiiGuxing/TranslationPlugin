@@ -4,12 +4,16 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.addStyle
 import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.panels.NonOpaquePanel
@@ -40,15 +44,18 @@ import kotlin.properties.Delegates
  *
  * Created by Yii.Guxing on 2017/12/10
  */
-abstract class TranslationPanel<T : JComponent>(protected val settings: Settings) {
+abstract class TranslationPanel<T : JComponent>(
+        private val project: Project?,
+        protected val settings: Settings
+) : Disposable {
 
     protected val sourceLangComponent: T by lazy { onCreateLanguageComponent() }
     protected val targetLangComponent: T by lazy { onCreateLanguageComponent() }
 
     protected val originalViewer = Viewer()
     protected val transViewer = Viewer()
-    private val originalPhonetic = JLabel()
-    private val transPhonetic = JLabel()
+    private val srcTransliterationLabel = JLabel()
+    private val transliterationLabel = JLabel()
     private val dictViewer = StyledDictViewer()
     private val basicExplainViewer = Viewer()
     private val otherExplainLabel = JLabel("网络释义:")
@@ -64,19 +71,23 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
     private var onRevalidateHandler: (() -> Unit)? = null
-    private var onTextToSpeechHandler: ((String, Lang) -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
+
+    private val tts: TextToSpeech = TextToSpeech.INSTANCE
+    private var ttsDisposable: Disposable? = null
 
     private val originalTTSLink = ttsLinkLabel {
         translation?.run {
-            onTextToSpeechHandler?.invoke(original, srcLang)
+            ttsDisposable?.dispose()
+            ttsDisposable = tts.speak(project, original, srcLang)
         }
     }
 
     private val transTTSLink = ttsLinkLabel {
         translation?.run {
             if (trans != null) {
-                onTextToSpeechHandler?.invoke(trans, targetLang)
+                ttsDisposable?.dispose()
+                ttsDisposable = tts.speak(project, trans, targetLang)
             }
         }
     }
@@ -114,7 +125,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             }
 
             originalViewerRow = row { onWrapViewer(originalViewer)(CCFlags.grow) }
-            row { originalPhonetic(CCFlags.grow) }
+            row { srcTransliterationLabel(CCFlags.grow) }
 
             targetLangRow = row {
                 createRow(transTTSLink, targetLangComponent).apply {
@@ -123,7 +134,7 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             }
 
             transViewerRow = row { onWrapViewer(transViewer)(CCFlags.grow) }
-            row { transPhonetic(CCFlags.grow) }
+            row { transliterationLabel(CCFlags.grow) }
 
             dictViewerRow = row {
                 onWrapViewer(dictViewer.component as Viewer).apply {
@@ -175,18 +186,18 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
             basicExplainViewer.font = primaryFont.biggerOn(1f)
             otherExplainViewer.font = primaryFont
             otherExplainLabel.font = primaryFont
-            originalPhonetic.font = phoneticFont
-            transPhonetic.font = phoneticFont
+            srcTransliterationLabel.font = phoneticFont
+            transliterationLabel.font = phoneticFont
         }
     }
 
     private fun initColorScheme() {
         originalViewer.foreground = JBColor(0xEE6000, 0xCC7832)
         transViewer.foreground = JBColor(0x170591, 0xFFC66D)
-        originalPhonetic.foreground = JBColor(
+        srcTransliterationLabel.foreground = JBColor(
                 Color(0xEE, 0x60, 0x00, 0xA0),
                 Color(0xCC, 0x78, 0x32, 0xA0))
-        transPhonetic.foreground = JBColor(
+        transliterationLabel.foreground = JBColor(
                 Color(0x17, 0x05, 0x91, 0xA0),
                 Color(0xFF, 0xC6, 0x6D, 0xA0))
         basicExplainViewer.foreground = JBColor(0x2A237A, 0xFFDB89)
@@ -220,9 +231,9 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         val maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 
         originalViewer.maximumSize = maximumSize
-        originalPhonetic.maximumSize = maximumSize
+        srcTransliterationLabel.maximumSize = maximumSize
         transViewer.maximumSize = maximumSize
-        transPhonetic.maximumSize = maximumSize
+        transliterationLabel.maximumSize = maximumSize
         dictViewer.component.maximumSize = maximumSize
         otherExplainLabel.maximumSize = maximumSize
         otherExplainViewer.maximumSize = maximumSize
@@ -280,6 +291,11 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         })
     }
 
+    override fun dispose() {
+        reset()
+        ttsDisposable?.let { Disposer.dispose(it) }
+    }
+
     open fun reset() {
         srcLang = null
         translation = null
@@ -291,10 +307,6 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
     fun onRevalidate(handler: () -> Unit) {
         onRevalidateHandler = handler
-    }
-
-    fun onTextToSpeech(handler: (text: String, lang: Lang) -> Unit) {
-        onTextToSpeechHandler = handler
     }
 
     fun onFixLanguage(handler: (lang: Lang) -> Unit) {
@@ -364,13 +376,15 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
 
             sourceLangRow.visible = true
             targetLangRow.visible = true
-            transTTSLink.isEnabled = !trans.isNullOrEmpty()
+
+            originalTTSLink.isEnabled = tts.isSupportLanguage(srcLang)
+            transTTSLink.isEnabled = !trans.isNullOrEmpty() && tts.isSupportLanguage(targetLang)
 
             updateViewer(originalViewer, originalViewerRow, original)
             updateViewer(transViewer, transViewerRow, trans)
 
-            originalPhonetic.updateText(srcPhoneticSymbol)
-            transPhonetic.updateText(transPhoneticSymbol)
+            srcTransliterationLabel.updateText(srcTransliteration)
+            transliterationLabel.updateText(transliteration)
 
             updateDictViewer(dictionaries)
             updateViewer(basicExplainViewer, basicExplainsViewerRow, basicExplains.joinToString("\n"))
@@ -390,9 +404,9 @@ abstract class TranslationPanel<T : JComponent>(protected val settings: Settings
         otherExplainsViewerRow.visible = false
 
         originalViewer.empty()
-        originalPhonetic.empty()
+        srcTransliterationLabel.empty()
         transViewer.empty()
-        transPhonetic.empty()
+        transliterationLabel.empty()
         otherExplainViewer.empty()
 
         otherExplainLabel.isVisible = false
