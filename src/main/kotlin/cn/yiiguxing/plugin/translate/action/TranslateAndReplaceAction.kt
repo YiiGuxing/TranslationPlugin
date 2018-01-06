@@ -246,26 +246,25 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
 
         fun Editor.showErrorNotification(message: String, throwable: Throwable) {
             val thisRef = WeakReference(this)
-            val group = NotificationGroup(DISPLAY_ID, NotificationDisplayType.NONE, true)
-            val notification = group.createNotification(
-                    "TranslateAndReplace",
-                    """$message (<a href="$DESC_COPY_TO_CLIPBOARD">Copy to Clipboard</a>)""",
-                    NotificationType.WARNING,
-                    object : NotificationListener.Adapter() {
-                        override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
-                            when (hyperlinkEvent.description) {
-                                HTML_DESCRIPTION_SETTINGS -> thisRef.get()?.let {
-                                    if (!it.isDisposed) {
-                                        OptionsConfigurable.showSettingsDialog(it.project)
-                                    } else {
-                                        notification.expire()
+            NotificationGroup(DISPLAY_ID, NotificationDisplayType.TOOL_WINDOW, true)
+                    .createNotification(
+                            "TranslateAndReplace",
+                            """$message (<a href="$DESC_COPY_TO_CLIPBOARD">Copy to Clipboard</a>)""",
+                            NotificationType.WARNING,
+                            object : NotificationListener.Adapter() {
+                                override fun hyperlinkActivated(notification: Notification, event: HyperlinkEvent) {
+                                    notification.expire()
+                                    when (event.description) {
+                                        HTML_DESCRIPTION_SETTINGS -> thisRef.get()?.let {
+                                            if (!it.isDisposed) {
+                                                OptionsConfigurable.showSettingsDialog(it.project)
+                                            }
+                                        }
+                                        DESC_COPY_TO_CLIPBOARD -> throwable.copyToClipboard()
                                     }
                                 }
-                                DESC_COPY_TO_CLIPBOARD -> throwable.copyToClipboard()
-                            }
-                        }
-                    })
-            Notifications.Bus.notify(notification, project)
+                            })
+                    .let { Notifications.Bus.notify(it, project) }
         }
     }
 }
