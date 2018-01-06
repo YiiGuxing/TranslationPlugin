@@ -14,8 +14,8 @@ data class Translation(
         val trans: String?,
         val srcLang: Lang,
         val targetLang: Lang,
-        val srcPhoneticSymbol: String? = null,
-        val transPhoneticSymbol: String? = null,
+        val srcTransliteration: String? = null,
+        val transliteration: String? = null,
         val dictionaries: List<Dict> = emptyList(),
         val basicExplains: List<String> = emptyList(),
         val otherExplains: Map<String, String> = emptyMap())

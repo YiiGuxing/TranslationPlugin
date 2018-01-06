@@ -214,7 +214,9 @@ class TranslationBalloon(
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
             showBalloon()
-            presenter.translate(text, Lang.AUTO, presenter.primaryLanguage)
+
+            val targetLang = if (text.any { it.toInt() > 0xFF }) Lang.ENGLISH else presenter.primaryLanguage
+            presenter.translate(text, Lang.AUTO, targetLang)
         }
     }
 

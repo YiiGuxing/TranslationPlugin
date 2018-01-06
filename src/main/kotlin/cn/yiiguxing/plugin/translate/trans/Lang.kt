@@ -111,9 +111,9 @@ enum class Lang(val langName: String, val code: String) {
     VIETNAMESE("越南语", "vi");
 
     companion object {
-        fun fromCode(code: String): Lang = when (code) {
+        fun valueOfCode(code: String): Lang = when (code) {
             "zh-CHS" -> CHINESE
-            else -> values().find { it.code == code.toLowerCase() }
+            else -> values().find { it.code.equals(code, ignoreCase = true) }
                     ?: throw IllegalArgumentException("Unknown language " + "code:$code")
         }
     }

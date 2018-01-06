@@ -1,5 +1,5 @@
 /*
- * YoudaoResults
+ * YoudaoTranslation
  * 
  * Created by Yii.Guxing on 2017/10/30
  */
@@ -10,7 +10,7 @@ package cn.yiiguxing.plugin.translate.trans
 import com.google.gson.annotations.SerializedName
 
 
-data class YoudaoResult(
+data class YoudaoTranslation(
         @SerializedName("query")
         var query: String? = null,
         @SerializedName("errorCode")
@@ -42,8 +42,8 @@ data class YoudaoResult(
         val languagesList = languages!!.split("2")
         check(languagesList.size == 2) { "Can not convert to Translation: languages=$languages" }
 
-        val srcLang = Lang.fromCode(languagesList[0])
-        val transLang = Lang.fromCode(languagesList[1])
+        val srcLang = Lang.valueOfCode(languagesList[0])
+        val transLang = Lang.valueOfCode(languagesList[1])
 
         val otherExplains: Map<String, String> = webExplains?.mapNotNull { (key, values) ->
             if (key == null || values == null) {
@@ -74,12 +74,10 @@ data class BasicExplain(
         @SerializedName(value = "us-phonetic")
         var phoneticUS: String? = null,
         @SerializedName(value = "explains")
-        var explains: Array<String>? = null
-)
+        var explains: Array<String>? = null)
 
 data class WebExplain(
         @SerializedName(value = "key")
         var key: String? = null,
         @SerializedName(value = "value")
-        var values: Array<String>? = null
-)
+        var values: Array<String>? = null)
