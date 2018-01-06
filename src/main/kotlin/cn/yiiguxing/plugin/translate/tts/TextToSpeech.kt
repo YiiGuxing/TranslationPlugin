@@ -36,6 +36,11 @@ class TextToSpeech private constructor() {
         }
     }
 
+    /**
+     * Returns `true` if the [language][lang] is supported.
+     */
+    fun isSupportLanguage(lang: Lang): Boolean = GoogleTTSPlayer.SUPPORTED_LANGUAGES.contains(lang)
+
     @Suppress("unused")
     fun stop() {
         checkThread()

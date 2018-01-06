@@ -5,6 +5,10 @@ import cn.yiiguxing.plugin.translate.GOOGLE_TTS
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.tk
 import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.notification.NotificationDisplayType
+import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationType
+import com.intellij.notification.Notifications
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
@@ -29,7 +33,7 @@ import javax.sound.sampled.*
  * Created by Yii.Guxing on 2017-10-28 0028.
  */
 class GoogleTTSPlayer(
-        project: Project?,
+        private val project: Project?,
         private val text: String,
         private val lang: Lang,
         private val completeListener: ((TTSPlayer) -> Unit)? = null
@@ -73,7 +77,16 @@ class GoogleTTSPlayer(
         }
 
         override fun onThrowable(error: Throwable) {
-            LOGGER.error(error)
+            if (error is HttpRequests.HttpStatusException && error.statusCode == 404) {
+                LOGGER.w("TTS Error: Unsupported language: ${lang.code}.")
+
+                NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.TOOL_WINDOW, true)
+                        .createNotification("TTS", "不支持的语言: ${lang.langName}.",
+                                NotificationType.WARNING, null)
+                        .let { Notifications.Bus.notify(it, project) }
+            } else {
+                LOGGER.e("TTS Error", error)
+            }
         }
 
         override fun onFinished() {
@@ -170,6 +183,18 @@ class GoogleTTSPlayer(
         private val LOGGER = Logger.getInstance(GoogleTTSPlayer::class.java)
 
         private const val MAX_TEXT_LENGTH = 200
+
+        private const val NOTIFICATION_ID = "TTS_NOTIFICATION"
+
+        val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+                Lang.CHINESE, Lang.ENGLISH, Lang.CHINESE_TRADITIONAL, Lang.ALBANIAN, Lang.ARABIC, Lang.ESTONIAN,
+                Lang.ICELANDIC, Lang.POLISH, Lang.BOSNIAN, Lang.AFRIKAANS, Lang.DANISH, Lang.GERMAN, Lang.RUSSIAN,
+                Lang.FRENCH, Lang.FINNISH, Lang.KHMER, Lang.KOREAN, Lang.DUTCH, Lang.CATALAN, Lang.CZECH, Lang.CROATIAN,
+                Lang.LATIN, Lang.LATVIAN, Lang.ROMANIAN, Lang.MACEDONIAN, Lang.BENGALI, Lang.NEPALI, Lang.NORWEGIAN,
+                Lang.PORTUGUESE, Lang.JAPANESE, Lang.SWEDISH, Lang.SERBIAN, Lang.ESPERANTO, Lang.SLOVAK, Lang.SWAHILI,
+                Lang.TAMIL, Lang.THAI, Lang.TURKISH, Lang.WELSH, Lang.UKRAINIAN, Lang.SPANISH, Lang.GREEK,
+                Lang.HUNGARIAN, Lang.ARMENIAN, Lang.ITALIAN, Lang.HINDI, Lang.SUNDANESE, Lang.INDONESIAN,
+                Lang.JAVANESE, Lang.VIETNAMESE)
 
         private fun checkThread() = checkDispatchThread(GoogleTTSPlayer::class.java)
 
