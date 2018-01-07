@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.trimToSize
 import com.intellij.openapi.application.ApplicationManager
@@ -33,6 +34,15 @@ class AppStorage : PersistentStateComponent<AppStorage> {
         trimHistoriesSize(newValue)
         true
     }
+
+    /**
+     * 记录最后一次的源语言
+     */
+    var lastSourceLanguage: Lang? = null
+    /**
+     * 记录最后一次的目标语言
+     */
+    var lastTargetLanguage: Lang? = null
 
     @Transient private val dataChangePublisher: HistoriesChangedListener =
             ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)

@@ -34,7 +34,11 @@ class TranslationPresenter(private val view: View) : Presenter {
         }
 
         currentQuery = currQuery
-        appStorage.addHistory(text)
+        with(appStorage) {
+            addHistory(text)
+            lastSourceLanguage = srcLang
+            lastTargetLanguage = targetLang
+        }
         view.showStartTranslate(text)
 
         val presenterRef = WeakReference(this)

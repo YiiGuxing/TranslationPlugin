@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui;
 
+import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
@@ -24,10 +25,12 @@ public class TransPanelContainer extends JPanel implements ConfigurablePanel {
 
     private final CardLayout mLayout = new FixedSizeCardLayout();
     private final Settings mSettings;
+    private final AppStorage mAppStorage;
 
-    public TransPanelContainer(@NotNull Settings settings) {
+    public TransPanelContainer(@NotNull Settings settings, @NotNull AppStorage appStorage) {
         super(new BorderLayout());
         mSettings = settings;
+        mAppStorage = appStorage;
 
         init();
     }
@@ -98,7 +101,14 @@ public class TransPanelContainer extends JPanel implements ConfigurablePanel {
     public void apply() {
         TransPanel selectedPanel = (TransPanel) mComboBox.getSelectedItem();
         if (selectedPanel != null) {
-            mSettings.setTranslator(selectedPanel.getId());
+            final String oldTranslator = mSettings.getTranslator();
+            final String newTranslator = selectedPanel.getId();
+            if (!oldTranslator.equals(newTranslator)) {
+                mAppStorage.setLastSourceLanguage(null);
+                mAppStorage.setLastTargetLanguage(null);
+            }
+
+            mSettings.setTranslator(newTranslator);
         }
 
         int itemCount = mComboBox.getItemCount();

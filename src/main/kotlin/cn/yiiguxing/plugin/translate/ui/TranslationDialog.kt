@@ -39,6 +39,7 @@ class TranslationDialog(private val project: Project?)
     : TranslationDialogForm(project), View, HistoriesChangedListener {
 
     private val settings: Settings = Settings.instance
+    private val appStorage: AppStorage = AppStorage.instance
 
     private val processPane = ProcessComponent("Querying...")
     private val translationPane = DialogTranslationPanel(project, settings)
@@ -160,8 +161,8 @@ class TranslationDialog(private val project: Project?)
         }
 
         presenter.supportedLanguages.let { (source, target) ->
-            sourceLangComboBox.init(source, source.first())
-            targetLangComboBox.init(target, presenter.primaryLanguage)
+            sourceLangComboBox.init(source, appStorage.lastSourceLanguage ?: source.first())
+            targetLangComboBox.init(target, appStorage.lastTargetLanguage ?: presenter.primaryLanguage)
         }
 
         swapButton.apply {
@@ -390,13 +391,17 @@ class TranslationDialog(private val project: Project?)
         (inputComboBox.selectedItem as String?)?.let { translate(it) }
     }
 
-    fun translate(text: String) {
-        val srcLang = sourceLangComboBox.selected ?: presenter.supportedLanguages.source.first()
-        val targetLang = targetLangComboBox.selected ?: presenter.primaryLanguage
-        translate(text, srcLang, targetLang)
-    }
+    /**
+     * 以指定的[源语言][src]和[目标语言][target]翻译指定的[内容][text]
+     *
+     * @param text 需要翻译的内容
+     * @param src 源语言, `null`则使用当前选中的语言
+     * @param target 目标语言, `null`则使用当前选中的语言
+     */
+    fun translate(text: String, src: Lang? = null, target: Lang? = null) {
+        val srcLang = src ?: sourceLangComboBox.selected ?: presenter.supportedLanguages.source.first()
+        val targetLang = target ?: targetLangComboBox.selected ?: presenter.primaryLanguage
 
-    private fun translate(text: String, srcLang: Lang, targetLang: Lang) {
         if (!disposed && !text.isBlank()) {
             sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
             targetLangComboBox.setSelectLangIgnoreEvent(targetLang)

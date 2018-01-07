@@ -64,7 +64,7 @@ public class SettingsPanel implements ConfigurablePanel {
     }
 
     private void createUIComponents() {
-        mTransPanelContainer = new TransPanelContainer(mSettings);
+        mTransPanelContainer = new TransPanelContainer(mSettings, mAppStorage);
 
         try {
             mPrimaryFontComboBox = new FontComboBox(false, false);

@@ -49,7 +49,11 @@ class TranslationBalloon(
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPanel(project, settings)
-    private val pinButton = ActionLink(icon = Icons.Pin) { showOnTranslationDialog(text) }
+    private val pinButton = ActionLink(icon = Icons.Pin) {
+        translationPane.translation.let {
+            showOnTranslationDialog(text, it?.srcLang, it?.targetLang)
+        }
+    }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
         lastError?.copyToClipboard()
         hide()
@@ -118,7 +122,7 @@ class TranslationBalloon(
     private fun initActions() = with(translationPane) {
         onRevalidate { balloon.revalidate() }
         onLanguageChanged { src, target -> presenter.translate(text, src, target) }
-        onNewTranslate { text, _, _ -> showOnTranslationDialog(text) }
+        onNewTranslate { text, src, target -> showOnTranslationDialog(text, src, target) }
 
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
     }
@@ -232,11 +236,11 @@ class TranslationBalloon(
         }
     }
 
-    private fun showOnTranslationDialog(text: String) {
+    private fun showOnTranslationDialog(text: String, srcLang: Lang? = null, targetLang: Lang? = null) {
         hide()
         val dialog = TranslationManager.instance.showDialog(editor.project)
         if (!text.isNullOrBlank()) {
-            dialog.translate(text)
+            dialog.translate(text, srcLang, targetLang)
         }
     }
 
