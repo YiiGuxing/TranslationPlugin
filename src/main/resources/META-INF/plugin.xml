@@ -72,15 +72,16 @@
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
                 icon="/icons/translate.png"
-                description="打开翻译对话框">
-            <keyboard-shortcut keymap="$default" first-keystroke="control meta O"/>
+                description="Open Translation Dialog">
             <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
         </action>
         <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
                 text="Translate"
                 icon="/icons/translate.png"
-                description="翻译">
-            <keyboard-shortcut keymap="$default" first-keystroke="control meta T"/>
+                description="Translate">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta T"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta T"/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
         <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
@@ -90,7 +91,9 @@
         <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                 text="Translate And Replace..." description="翻译并替换">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="control shift T"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control shift T"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control shift T"/>
         </action>
         <action id="$TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
                 text="Translate Quick Document" description="翻译速文档中选中的文本"
