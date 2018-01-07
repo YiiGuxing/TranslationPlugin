@@ -2,21 +2,20 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.TKK
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.notification.*
 import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
-
 import javax.swing.event.HyperlinkEvent
-import kotlin.properties.Delegates
 
 class TranslationComponent(project: Project) : AbstractProjectComponent(project) {
 
-    private var settings: Settings by Delegates.notNull()
+    private lateinit var settings: Settings
 
     override fun initComponent() {
         super.initComponent()
-        TKK.update()
         settings = Settings.instance
+        TKK.update()
     }
 
     override fun projectOpened() {
@@ -32,10 +31,7 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
         val content = "当前有道App Key为空或者无效，请设置有道App Key.<br/><br/>" +
                 "<a href=\"$HTML_DESCRIPTION_SETTINGS\">设置</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "<a href=\"$HTML_DESCRIPTION_DISABLE\">不再提示</a>"
-        val notification = group.createNotification(
-                title,
-                content,
-                NotificationType.WARNING,
+        group.createNotification(title, content, NotificationType.WARNING,
                 object : NotificationListener.Adapter() {
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
                         notification.expire()
@@ -45,8 +41,7 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
                         }
                     }
                 }
-        )
-        Notifications.Bus.notify(notification, myProject)
+        ).show(myProject)
     }
 
     private companion object {

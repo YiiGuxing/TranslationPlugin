@@ -10,12 +10,15 @@ package cn.yiiguxing.plugin.translate.util
 import com.intellij.ide.IdeBundle
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager
+import com.intellij.notification.Notification
+import com.intellij.notification.Notifications
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ex.ApplicationInfoEx
 import com.intellij.openapi.application.impl.ApplicationInfoImpl
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.text.DateFormatUtil
 import java.awt.datatransfer.StringSelection
@@ -101,6 +104,13 @@ inline fun invokeLater(crossinline action: () -> Unit) {
  */
 inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
     ApplicationManager.getApplication().invokeLater({ action() }, state)
+}
+
+/**
+ * Shows the notification[Notification].
+ */
+fun Notification.show(project: Project? = null) {
+    Notifications.Bus.notify(this, project)
 }
 
 /**

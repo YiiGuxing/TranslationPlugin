@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
-import com.intellij.notification.Notifications
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
@@ -83,7 +82,7 @@ class GoogleTTSPlayer(
                 NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.TOOL_WINDOW, true)
                         .createNotification("TTS", "不支持的语言: ${lang.langName}.",
                                 NotificationType.WARNING, null)
-                        .let { Notifications.Bus.notify(it, project) }
+                        .show(project)
             } else {
                 LOGGER.e("TTS Error", error)
             }

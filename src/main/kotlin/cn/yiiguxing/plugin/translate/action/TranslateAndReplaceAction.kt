@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.HANZI_CONDITION
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
+import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.codeInsight.lookup.*
 import com.intellij.notification.*
@@ -264,7 +265,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
                                     }
                                 }
                             })
-                    .let { Notifications.Bus.notify(it, project) }
+                    .show(project)
         }
     }
 }
