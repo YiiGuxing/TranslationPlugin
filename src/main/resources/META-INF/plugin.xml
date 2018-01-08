@@ -68,33 +68,42 @@
     </project-components>
 
     <actions>
-        <action id="$ShowTranslationDialogAction"
-                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
-                text="Show Translation Dialog..."
-                icon="/icons/translate.png"
-                description="Open Translation Dialog">
-            <add-to-group group-id="MainToolBar" anchor="after" relative-to-action="HelpTopics"/>
-        </action>
-        <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
-                text="Translate"
-                icon="/icons/translate.png"
-                description="Translate">
-            <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta T"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta T"/>
+        <group>
+            <separator/>
+            <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
+                    text="Translate"
+                    icon="/icons/translate.png"
+                    description="Translate">
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta T"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta T" replace-all="true"/>
+            </action>
+            <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+                    text="Translate and Replace..." description="Translate and Replace">
+                <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control shift T"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control shift T" replace-all="true"/>
+            </action>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+            <separator/>
+        </group>
+        <group>
+            <separator/>
+            <action id="$ShowTranslationDialogAction"
+                    class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
+                    text="Show Translation Dialog..."
+                    icon="/icons/translate.png"
+                    description="Open Translation Dialog"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+            <separator/>
+        </group>
         <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
                 text="Translate(Inclusive)" description="翻译（自动以最大范围取最近的所有词，忽略手动选择的文本）"/>
-        <action id="$ExclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
+        <action id="$ExclusiveTranslateAction"
+                class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
                 text="Translate(Exclusive)" description="翻译（自动取最近的单个词，忽略手动选择的文本）"/>
-        <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
-                text="Translate And Replace..." description="翻译并替换">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control shift T"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control shift T"/>
-        </action>
         <action id="$TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
                 text="Translate Quick Document" description="翻译速文档中选中的文本"
                 use-shortcut-of="$EditorTranslateAction"/>
