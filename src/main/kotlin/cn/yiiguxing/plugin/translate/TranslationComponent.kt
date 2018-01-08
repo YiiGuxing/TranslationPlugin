@@ -19,11 +19,13 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
     }
 
     override fun projectOpened() {
-        if (settings.isDisableAppKeyNotification
-                || (settings.translator == YoudaoTranslator.TRANSLATOR_ID
-                && settings.youdaoTranslateSettings.appId.isNotBlank()
-                && settings.youdaoTranslateSettings.isAppKeyConfigured)) {
-            return
+        with(settings) {
+            if (isDisableAppKeyNotification || translator != YoudaoTranslator.TRANSLATOR_ID) {
+                return
+            }
+            if (youdaoTranslateSettings.let { it.isAppKeyConfigured && it.appId.isNotBlank() }) {
+                return
+            }
         }
 
         val group = NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON, true)
