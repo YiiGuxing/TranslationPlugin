@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference
 class TranslationPresenter(private val view: View) : Presenter {
 
     private val appStorage: AppStorage = AppStorage.instance
-    private val translateService: TranslateService = TranslateService.INSTANCE
+    private val translateService: TranslateService = TranslateService.instance
     private var currentQuery: CurrentQuery? = null
 
     override val histories: List<String> get() = appStorage.getHistories()

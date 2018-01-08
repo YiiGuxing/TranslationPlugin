@@ -68,7 +68,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
 
         val editorRef = WeakReference(editor)
         editor.document.getText(selectionRange).takeIf { it.isNotBlank() }?.let { text ->
-            TranslateService.INSTANCE.translate(text, Lang.AUTO, Lang.ENGLISH, object : TranslateListener {
+            TranslateService.instance.translate(text, Lang.AUTO, Lang.ENGLISH, object : TranslateListener {
                 override fun onSuccess(translation: Translation) {
                     val items = with(translation) {
                         dictionaries.map { it.terms }.flatten().toMutableSet().apply {

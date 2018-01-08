@@ -93,6 +93,19 @@ inline fun executeOnPooledThread(crossinline action: () -> Unit)
 /**
  * Asynchronously execute the [action] on the AWT event dispatching thread.
  */
+inline fun invokeOnDispatchThread(crossinline action: () -> Unit) {
+    with(ApplicationManager.getApplication()) {
+        if (isDispatchThread) {
+            action()
+        } else {
+            invokeLater { action() }
+        }
+    }
+}
+
+/**
+ * Asynchronously execute the [action] on the AWT event dispatching thread.
+ */
 inline fun invokeLater(crossinline action: () -> Unit) {
     ApplicationManager.getApplication().invokeLater { action() }
 }

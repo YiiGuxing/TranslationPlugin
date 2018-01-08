@@ -14,6 +14,8 @@ object YoudaoTranslator : AbstractTranslator() {
 
     const val TRANSLATOR_ID = "YouDao"
 
+    private const val TRANSLATOR_NAME = "Youdao Translate"
+
     @JvmField
     val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.AUTO,
@@ -31,6 +33,8 @@ object YoudaoTranslator : AbstractTranslator() {
     private val settings: Settings = Settings.instance
 
     override val id: String = TRANSLATOR_ID
+
+    override val name: String = TRANSLATOR_NAME
 
     override val primaryLanguage: Lang
         get() = settings.youdaoTranslateSettings.primaryLanguage

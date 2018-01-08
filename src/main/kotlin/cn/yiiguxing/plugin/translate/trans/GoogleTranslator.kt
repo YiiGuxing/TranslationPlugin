@@ -19,6 +19,7 @@ import java.lang.reflect.Type
 object GoogleTranslator : AbstractTranslator() {
 
     const val TRANSLATOR_ID = "Google"
+    private const val TRANSLATOR_NAME = "Google Translate"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
     private val gson: Gson = GsonBuilder()
@@ -29,6 +30,8 @@ object GoogleTranslator : AbstractTranslator() {
     private val settings: Settings = Settings.instance
 
     override val id: String = TRANSLATOR_ID
+
+    override val name: String = TRANSLATOR_NAME
 
     override val primaryLanguage: Lang
         get() = settings.googleTranslateSettings.primaryLanguage

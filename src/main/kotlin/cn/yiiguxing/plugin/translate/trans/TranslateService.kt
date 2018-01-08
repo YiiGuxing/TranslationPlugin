@@ -24,7 +24,7 @@ class TranslateService private constructor() {
     companion object {
         val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
 
-        val INSTANCE: TranslateService
+        val instance: TranslateService
             get() = ServiceManager.getService(TranslateService::class.java)
 
         private val LOGGER = Logger.getInstance(TranslateService::class.java)
@@ -33,7 +33,7 @@ class TranslateService private constructor() {
     }
 
     init {
-        setTranslator(settings.translator)
+        invokeOnDispatchThread { setTranslator(settings.translator) }
         ApplicationManager
                 .getApplication()
                 .messageBus
@@ -45,7 +45,6 @@ class TranslateService private constructor() {
                 })
     }
 
-    @Suppress("MemberVisibilityCanPrivate")
     fun setTranslator(translatorId: String) {
         checkThread()
         if (translatorId != translator.id) {
@@ -55,6 +54,8 @@ class TranslateService private constructor() {
             }
         }
     }
+
+    fun getTranslators(): List<Translator> = listOf(GoogleTranslator, YoudaoTranslator)
 
     fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         checkThread()

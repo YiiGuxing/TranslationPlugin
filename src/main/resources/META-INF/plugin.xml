@@ -90,13 +90,19 @@
         </group>
         <group>
             <separator/>
+            <action id="$ChooseTranslatorAction"
+                    class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
+                    text="Choose Translator"
+                    description="Choose Translator">
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift D"/>
+            </action>
             <action id="$ShowTranslationDialogAction"
                     class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                     text="Show Translation Dialog..."
                     icon="/icons/translate.png"
                     description="Open Translation Dialog"/>
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+            <add-to-group group-id="NavBarToolBar" anchor="last"/>
             <separator/>
         </group>
         <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"

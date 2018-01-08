@@ -32,6 +32,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
     }
 
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
+        editor.isColumnMode
         editor.document.getText(selectionRange).splitWords()?.let { text ->
             val highlighters = editor.project?.let {
                 ArrayList<RangeHighlighter>().apply {
