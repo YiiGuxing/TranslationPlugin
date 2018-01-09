@@ -75,15 +75,15 @@
                     icon="/icons/translate.png"
                     description="Translate">
                 <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta T"/>
-                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta T" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
             </action>
             <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                     text="Translate and Replace..." description="Translate and Replace">
                 <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
                 <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control shift T"/>
-                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control shift T" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
             </action>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <separator/>
@@ -103,8 +103,8 @@
                     text="Show Translation Dialog..."
                     icon="/icons/translate.png"
                     description="Open Translation Dialog">
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O" replace-all="true"/>
-                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
             </action>
             <add-to-group group-id="MainToolBar" anchor="last"/>
             <add-to-group group-id="NavBarToolBar" anchor="last"/>
