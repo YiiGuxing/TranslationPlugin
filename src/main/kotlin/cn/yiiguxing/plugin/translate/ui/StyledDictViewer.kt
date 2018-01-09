@@ -114,8 +114,7 @@ class StyledDictViewer {
 
                 val hoverColor = JBColor(0x762DFF, 0xDF7000)
                 val mouseListener = EntryMouseListener(EntryType.REVERSE_TRANSLATION, it, hoverColor)
-                addAttribute(StyleConstant.MOUSE_LISTENER,
-                        mouseListener)
+                addAttribute(StyleConstant.MOUSE_LISTENER, mouseListener)
             }
         }
     }
