@@ -36,7 +36,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.text.JTextComponent
 
 class TranslationDialog(private val project: Project?)
-    : TranslationDialogForm(project), View, HistoriesChangedListener {
+    : TranslationDialogForm(project), View, HistoriesChangedListener, SettingsChangeListener {
 
     private val settings: Settings = Settings.instance
     private val appStorage: AppStorage = AppStorage.instance
@@ -317,7 +317,10 @@ class TranslationDialog(private val project: Project?)
                 .getApplication()
                 .messageBus
                 .connect(this)
-                .subscribe(HistoriesChangedListener.TOPIC, this)
+                .let {
+                    it.subscribe(HistoriesChangedListener.TOPIC, this)
+                    it.subscribe(SettingsChangeListener.TOPIC, this)
+                }
     }
 
     private fun isInside(target: RelativePoint): Boolean {
@@ -414,6 +417,20 @@ class TranslationDialog(private val project: Project?)
         ignoreLanguageEvent = true
         selected = lang
         ignoreLanguageEvent = false
+    }
+
+    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+        presenter.supportedLanguages.let { (src, target) ->
+            sourceLangComboBox.apply {
+                val srcSelected = selected.takeIf { src.contains(it) } ?: Lang.AUTO
+                model = CollectionComboBoxModel<Lang>(src, srcSelected)
+            }
+            targetLangComboBox.apply {
+                val targetSelected = selected.takeIf { target.contains(it) } ?: presenter.primaryLanguage
+                model = CollectionComboBoxModel<Lang>(target, targetSelected)
+            }
+        }
+        onTranslate()
     }
 
     override fun onHistoriesChanged() {

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
