@@ -165,7 +165,7 @@ class StyledDictViewer {
 
     private fun StyledDocument.insertDict(dict: Dict, isFirst: Boolean, breakEnd: Boolean) {
         var paragraphOffset = length
-        dict.partOfSpeech?.let {
+        dict.partOfSpeech.let {
             appendString(it, posStyle)
             appendString("\n")
 
