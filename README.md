@@ -2,6 +2,7 @@
 TranslationPlugin [![GitHub release][release-img]][latest-release] [![Jetbrains Plugins][plugin-img]][plugin]
 =================
 
+[![Build Status](https://travis-ci.org/YiiGuxing/TranslationPlugin.svg?branch=dev)][travis-ci]
 [![Version](https://img.shields.io/jetbrains/plugin/v/8579.svg)][plugin]
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/8579.svg)][plugin]
 [![Downloads](http://phpstorm.espend.de/badge/8579/downloads)][plugin]
@@ -107,4 +108,5 @@ Actions
 [release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg
 [latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
 [plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg
+[travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
 [plugin]: https://plugins.jetbrains.com/plugin/8579
