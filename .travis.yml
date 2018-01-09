@@ -1,0 +1,21 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+env:
+  - IDEA_VERSION=2017.3
+  - IDEA_VERSION=2017.2
+  - IDEA_VERSION=2017.1
+
+before_install:
+- chmod +x gradlew
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

@@ -55,6 +55,13 @@ compileKotlin {
         jvmTarget = javaTargetVersion
     }
 }
+compileTestKotlin {
+    kotlinOptions {
+        languageVersion = kotlinLanguageVersion
+        apiVersion = kotlinTargetVersion
+        jvmTarget = javaTargetVersion
+    }
+}
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
