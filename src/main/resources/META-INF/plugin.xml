@@ -95,6 +95,8 @@
                     text="Choose Translator"
                     description="Choose Translator">
                 <keyboard-shortcut keymap="$default" first-keystroke="control shift D"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
             </action>
             <action id="$ShowTranslationDialogAction"
                     class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
