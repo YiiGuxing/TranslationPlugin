@@ -102,7 +102,10 @@
                     class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                     text="Show Translation Dialog..."
                     icon="/icons/translate.png"
-                    description="Open Translation Dialog"/>
+                    description="Open Translation Dialog">
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
+            </action>
             <add-to-group group-id="MainToolBar" anchor="last"/>
             <add-to-group group-id="NavBarToolBar" anchor="last"/>
             <separator/>
