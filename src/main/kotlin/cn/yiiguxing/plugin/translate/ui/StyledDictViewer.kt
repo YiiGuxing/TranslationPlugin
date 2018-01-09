@@ -135,7 +135,7 @@ class StyledDictViewer {
     }
     private val foldingParagraphStyle: Style by lazy {
         viewer.styledDocument.addStyle(FOLDING_PARAGRAPH_STYLE, entryParagraphStyle) {
-            StyleConstants.setSpaceAbove(this, JBUI.scale(12f))
+            StyleConstants.setSpaceAbove(this, JBUI.scale(5f))
         }
     }
 
