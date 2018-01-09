@@ -74,14 +74,14 @@
                     text="Translate"
                     icon="/icons/translate.png"
                     description="Translate">
-                <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
             </action>
             <action id="$TranslateAndReplace" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                     text="Translate and Replace..." description="Translate and Replace">
                 <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
-                <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
                 <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
             </action>
@@ -94,8 +94,8 @@
                     class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
                     text="Choose Translator"
                     description="Choose Translator">
-                <keyboard-shortcut keymap="$default" first-keystroke="control shift D"/>
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
             </action>
             <action id="$ShowTranslationDialogAction"
@@ -103,6 +103,7 @@
                     text="Show Translation Dialog..."
                     icon="/icons/translate.png"
                     description="Open Translation Dialog">
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
                 <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
             </action>
