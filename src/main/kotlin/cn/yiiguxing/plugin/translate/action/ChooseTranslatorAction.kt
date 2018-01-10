@@ -28,12 +28,15 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
     }
 
     override fun update(e: AnActionEvent) {
-        e.presentation.text = translateService.translator.name
+        translateService.translator.let {
+            e.presentation.text = it.name
+            e.presentation.icon = it.icon
+        }
     }
 
     override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
         return DefaultActionGroup(translateService.getTranslators().map { translator ->
-            object : DumbAwareAction(translator.name) {
+            object : DumbAwareAction(translator.name, null, translator.icon) {
                 override fun actionPerformed(e: AnActionEvent) {
                     settings.translator = translator.id
                 }

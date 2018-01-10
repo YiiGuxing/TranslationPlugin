@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.ui.Icons
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.urlEncode
@@ -10,6 +11,7 @@ import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.RequestBuilder
 import java.lang.reflect.Type
+import javax.swing.Icon
 
 /**
  * GoogleTranslator
@@ -32,6 +34,8 @@ object GoogleTranslator : AbstractTranslator() {
     override val id: String = TRANSLATOR_ID
 
     override val name: String = TRANSLATOR_NAME
+
+    override val icon: Icon = Icons.Google
 
     override val primaryLanguage: Lang
         get() = settings.googleTranslateSettings.primaryLanguage

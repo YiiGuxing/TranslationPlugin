@@ -39,6 +39,12 @@ public class GoogleTranslatePanel implements TransPanelContainer.TransPanel {
         return "Google翻译";
     }
 
+    @NotNull
+    @Override
+    public Icon getIcon() {
+        return GoogleTranslator.INSTANCE.getIcon();
+    }
+
     private void createUIComponents() {
         final List<Lang> supportedLanguages = GoogleTranslator.INSTANCE.getSupportedTargetLanguages();
         mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(supportedLanguages));

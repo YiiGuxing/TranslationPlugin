@@ -52,6 +52,12 @@ public class YoudaoTranslatePanel implements TransPanelContainer.TransPanel {
         return "有道翻译";
     }
 
+    @NotNull
+    @Override
+    public Icon getIcon() {
+        return YoudaoTranslator.INSTANCE.getIcon();
+    }
+
     private void createUIComponents() {
         mPrimaryLanguage = new ComboBox<>(new CollectionComboBoxModel<>(YoudaoTranslator.SUPPORTED_LANGUAGES));
         mPrimaryLanguage.setRenderer(LanguageRenderer.INSTANCE);

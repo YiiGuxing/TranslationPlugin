@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import javax.swing.Icon
+
 /**
  * Translator
  *
@@ -10,6 +12,8 @@ interface Translator {
     val id: String
 
     val name: String
+
+    val icon: Icon
 
     val primaryLanguage: Lang
 

@@ -22,5 +22,7 @@ object Icons {
     val SwapHovering: Icon = IconLoader.getIcon("/icons/swapHovering.png")
     val SwapDisabled: Icon = IconLoader.getIcon("/icons/swapDisabled.png")
     val CopyToClipboard: Icon = IconLoader.getIcon("/icons/copyToClipboard.png")
+    val Google: Icon = IconLoader.getIcon("/icons/google.png")
+    val Youdao: Icon = IconLoader.getIcon("/icons/youdao.png")
 
 }

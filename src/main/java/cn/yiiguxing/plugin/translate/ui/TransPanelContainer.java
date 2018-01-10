@@ -46,6 +46,7 @@ public class TransPanelContainer extends JPanel implements ConfigurablePanel {
             @Override
             public void customize(JList list, TransPanel value, int index, boolean selected, boolean hasFocus) {
                 setText(value.getName());
+                setIcon(value.getIcon());
             }
         });
         mComboBox.addItemListener(e -> {
@@ -123,6 +124,9 @@ public class TransPanelContainer extends JPanel implements ConfigurablePanel {
 
         @NotNull
         String getName();
+
+        @NotNull
+        Icon getIcon();
     }
 
 }

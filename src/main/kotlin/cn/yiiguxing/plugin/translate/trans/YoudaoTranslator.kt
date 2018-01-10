@@ -3,12 +3,14 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.LINK_SETTINGS
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
+import cn.yiiguxing.plugin.translate.ui.Icons
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
+import javax.swing.Icon
 
 object YoudaoTranslator : AbstractTranslator() {
 
@@ -35,6 +37,8 @@ object YoudaoTranslator : AbstractTranslator() {
     override val id: String = TRANSLATOR_ID
 
     override val name: String = TRANSLATOR_NAME
+
+    override val icon: Icon = Icons.Youdao
 
     override val primaryLanguage: Lang
         get() = settings.youdaoTranslateSettings.primaryLanguage
