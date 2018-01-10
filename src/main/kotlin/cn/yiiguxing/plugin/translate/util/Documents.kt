@@ -1,8 +1,10 @@
 /**
- * Texts
+ * Documents
  * <p>
  * Created by Yii.Guxing on 2017-09-17 0017.
  */
+@file:Suppress("unused")
+
 package cn.yiiguxing.plugin.translate.util
 
 import javax.swing.text.AttributeSet
