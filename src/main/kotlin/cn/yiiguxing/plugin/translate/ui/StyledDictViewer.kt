@@ -66,7 +66,13 @@ class StyledDictViewer {
 
     private val defaultStyle: Style by lazy { viewer.getStyle(StyleContext.DEFAULT_STYLE) }
 
-    // 段落样式
+    // 词性样式
+    private val posStyle: Style by lazy {
+        viewer.styledDocument.addStyle(POS_STYLE, defaultStyle) {
+            StyleConstants.setForeground(this, JBColor(0x293B2B, 0xDF7CFF))
+            StyleConstants.setItalic(this, true)
+        }
+    }
     private val posParagraphStyleFirst: Style by lazy {
         viewer.styledDocument.addStyle(POS_PARAGRAPH_STYLE_FIRST, defaultStyle) {
             StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
@@ -75,20 +81,20 @@ class StyledDictViewer {
     private val posParagraphStyle: Style by lazy {
         viewer.styledDocument.addStyle(POS_PARAGRAPH_STYLE, defaultStyle) {
             StyleConstants.setSpaceAbove(this, JBUI.scale(10f))
-            StyleConstants.setSpaceBelow(this, JBUI.scale(2f))
-        }
-    }
-    private val entryParagraphStyle: Style by lazy {
-        viewer.styledDocument.addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
-            StyleConstants.setLeftIndent(this, JBUI.scale(12f))
+            StyleConstants.setSpaceBelow(this, JBUI.scale(3f))
         }
     }
 
-    // 词性样式
-    private val posStyle: Style by lazy {
-        viewer.styledDocument.addStyle(POS_STYLE, defaultStyle) {
-            StyleConstants.setForeground(this, JBColor(0x293B2B, 0xDF7CFF))
-            StyleConstants.setItalic(this, true)
+    // Entry style
+    private val entryParagraphStyle: Style by lazy {
+        viewer.styledDocument.addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
+            StyleConstants.setLeftIndent(this, JBUI.scale(12f))
+            StyleConstants.setSpaceBelow(this, JBUI.scale(5f))
+        }
+    }
+    private val entryEndParagraphStyle: Style by lazy {
+        viewer.styledDocument.addStyle(ENTRY_END_PARAGRAPH_STYLE, entryParagraphStyle) {
+            StyleConstants.setSpaceBelow(this, JBUI.scale(0f))
         }
     }
 
@@ -132,11 +138,6 @@ class StyledDictViewer {
             StyleConstants.setBackground(this, background)
         }
     }
-    private val foldingParagraphStyle: Style by lazy {
-        viewer.styledDocument.addStyle(FOLDING_PARAGRAPH_STYLE, entryParagraphStyle) {
-            StyleConstants.setSpaceAbove(this, JBUI.scale(5f))
-        }
-    }
 
     fun onEntryClicked(handler: ((entry: Entry) -> Unit)?) {
         onEntryClickedHandler = handler
@@ -162,20 +163,19 @@ class StyledDictViewer {
 
             val lastIndex = size - 1
             forEachIndexed { index, dict ->
-                insertDict(dict, index == 0, index < lastIndex)
+                insertDict(dict, index == 0, index == lastIndex)
             }
         }
     }
 
-    private fun StyledDocument.insertDict(dict: Dict, isFirst: Boolean, breakEnd: Boolean) {
-        val style = if (isFirst) posParagraphStyleFirst else posParagraphStyle
-        setParagraphAttributes(length, 0, style, true)
+    private fun StyledDocument.insertDict(dict: Dict, isFirst: Boolean, isLast: Boolean) {
+        setParagraphStyle(style = if (isFirst) posParagraphStyleFirst else posParagraphStyle)
         dict.partOfSpeech.let {
             appendString(it, posStyle)
             appendString("\n")
         }
 
-        setParagraphAttributes(length, 0, entryParagraphStyle, true)
+        setParagraphStyle(style = if (isLast) entryEndParagraphStyle else entryParagraphStyle)
         val hasWordOnly = dict.entries
                 .filter { it.reverseTranslation.isEmpty() }
                 .map { it.word }
@@ -198,11 +198,12 @@ class StyledDictViewer {
             }
 
             val displayCount = if (hasWordOnly) 2 else 3
+            val lastIndex = size - 1
             take(displayCount).forEachIndexed { index, dictEntry ->
                 if (index > 0) {
                     appendString("\n")
                 }
-                insertDictEntry(length, dictEntry)
+                insertDictEntry(length, dictEntry, index == lastIndex)
             }
 
             if (size > displayCount) {
@@ -213,7 +214,7 @@ class StyledDictViewer {
                     take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
                 }
 
-                setParagraphAttributes(length, 0, foldingParagraphStyle, true)
+                setParagraphStyle(style = entryEndParagraphStyle)
                 SimpleAttributeSet(foldingStyle).let {
                     it.addAttribute(StyleConstant.MOUSE_LISTENER, FoldingMouseListener(foldingEntries))
                     appendString(placeholder, it)
@@ -221,15 +222,17 @@ class StyledDictViewer {
             }
         }
 
-        if (breakEnd) {
+        if (!isLast) {
             appendString("\n")
         }
     }
 
-    private fun StyledDocument.insertDictEntry(offset: Int, dictEntry: DictEntry): Int {
+    private fun StyledDocument.insertDictEntry(offset: Int, dictEntry: DictEntry, isLast: Boolean): Int {
         var currentOffset = insert(offset, dictEntry.word, wordStyle)
         currentOffset = insert(currentOffset, "\n")
+        setParagraphAttributes(offset, currentOffset - offset, entryEndParagraphStyle, true)
 
+        val paragraphStart = currentOffset
         dictEntry.reverseTranslation.forEachIndexed { index, reverseTrans ->
             if (index > 0) {
                 currentOffset = insert(currentOffset, ", ", separatorStyle)
@@ -237,9 +240,11 @@ class StyledDictViewer {
             currentOffset = insert(currentOffset, reverseTrans, reverseTranslationStyle)
         }
 
+        val style = if (isLast) entryEndParagraphStyle else entryParagraphStyle
+        setParagraphAttributes(paragraphStart, currentOffset - paragraphStart, style, true)
+
         return currentOffset
     }
-
 
     private inner class ViewerMouseAdapter : MouseAdapter() {
 
@@ -344,7 +349,6 @@ class StyledDictViewer {
                 invoke(Entry(entryType, text))
             }
         }
-
     }
 
     private inner class FoldingMouseListener(private val foldingEntries: List<DictEntry>) : BaseMouseListener() {
@@ -354,12 +358,12 @@ class StyledDictViewer {
                 styledDocument.apply {
                     var startOffset = startOffset
                     remove(startOffset, offsetLength)
-                    setParagraphAttributes(startOffset, 0, entryParagraphStyle, true)
+                    val last = foldingEntries.size - 1
                     foldingEntries.forEachIndexed { index, entry ->
                         if (index > 0) {
                             startOffset = insert(startOffset, "\n")
                         }
-                        startOffset = insertDictEntry(startOffset, entry)
+                        startOffset = insertDictEntry(startOffset, entry, index == last)
                     }
                 }
             }
@@ -372,7 +376,7 @@ class StyledDictViewer {
         private const val POS_PARAGRAPH_STYLE_FIRST = "part_of_speech_paragraph_first"
         private const val POS_PARAGRAPH_STYLE = "part_of_speech_paragraph"
         private const val ENTRY_PARAGRAPH_STYLE = "entry_paragraph"
-        private const val FOLDING_PARAGRAPH_STYLE = "folding_paragraph"
+        private const val ENTRY_END_PARAGRAPH_STYLE = "entry_end_paragraph"
         private const val POS_STYLE = "part_of_speech"
         private const val WORD_STYLE = "word"
         private const val REVERSE_TRANSLATION_STYLE = "reverse_translation"
@@ -383,7 +387,13 @@ class StyledDictViewer {
             get() = document as StyledDocument
         private inline val Element.offsetLength: Int
             get() = endOffset - startOffset
-    }
 
+        @Suppress("NOTHING_TO_INLINE")
+        private inline fun StyledDocument.setParagraphStyle(offset: Int? = null,
+                                                            style: Style,
+                                                            replace: Boolean = true) {
+            setParagraphAttributes(offset ?: length, 0, style, replace)
+        }
+    }
 }
 
