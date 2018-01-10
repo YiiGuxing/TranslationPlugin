@@ -24,7 +24,7 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
     private val translateService: TranslateService = TranslateService.instance
 
     init {
-        setPopupTitle("Choose Translator")
+        setPopupTitle("Translators")
     }
 
     override fun update(e: AnActionEvent) {
