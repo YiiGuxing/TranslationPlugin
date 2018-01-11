@@ -231,7 +231,11 @@ class TranslationBalloon(
             with(balloon) {
                 revalidate()
                 // 大小还是没有调整好，再刷一次
-                invokeLater { revalidate() }
+                invokeLater {
+                    revalidate()
+                    // 啊！！！
+                    invokeLater { revalidate() }
+                }
             }
         }
     }

@@ -5,10 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
-import cn.yiiguxing.plugin.translate.util.addStyle
-import cn.yiiguxing.plugin.translate.util.appendString
-import cn.yiiguxing.plugin.translate.util.clear
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
@@ -30,10 +27,7 @@ import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JTextPane
+import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
@@ -60,6 +54,9 @@ abstract class TranslationPanel<T : JComponent>(
     private val basicExplainViewer = Viewer()
     private val otherExplainLabel = JLabel("网络释义:")
     private val otherExplainViewer = Viewer()
+
+    private var dictViewerScrollWrapper: JScrollPane? = null
+    private var lastScrollValue: Int = 0
 
     private lateinit var sourceLangRow: Row
     private lateinit var targetLangRow: Row
@@ -136,11 +133,13 @@ abstract class TranslationPanel<T : JComponent>(
             transViewerRow = row { onWrapViewer(transViewer)(CCFlags.grow) }
             row { transliterationLabel(CCFlags.grow) }
 
-            dictViewerRow = row {
-                onWrapViewer(dictViewer.component as Viewer).apply {
-                    border = JBEmptyBorder(10, 0, 0, 0)
-                }(CCFlags.grow)
+            val wrapped = onWrapViewer(dictViewer.component as Viewer).apply {
+                border = JBEmptyBorder(10, 0, 0, 0)
             }
+            dictViewerScrollWrapper = (wrapped as? JScrollPane)?.apply {
+                verticalScrollBar.addAdjustmentListener { lastScrollValue = it.value }
+            }
+            dictViewerRow = row { wrapped(CCFlags.grow) }
 
             basicExplainsViewerRow = row {
                 onWrapViewer(basicExplainViewer).apply {
@@ -276,6 +275,11 @@ abstract class TranslationPanel<T : JComponent>(
                 }
             }
             onFoldingExpanded {
+                dictViewerScrollWrapper?.verticalScrollBar?.run {
+                    lastScrollValue.let {
+                        invokeLater { value = it }
+                    }
+                }
                 onRevalidateHandler?.invoke()
             }
         }

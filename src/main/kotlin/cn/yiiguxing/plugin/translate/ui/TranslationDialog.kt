@@ -58,6 +58,7 @@ class TranslationDialog(private val project: Project?)
     private lateinit var windowListener: WindowListener
     private lateinit var activityListener: AWTEventListener
     private var lastMoveWasInsideDialog: Boolean = false
+    private var lastScrollValue: Int = 0
     private var lastError: Throwable? = null
 
     init {
@@ -220,12 +221,19 @@ class TranslationDialog(private val project: Project?)
                 translate(text, srcLang, targetLang)
             }
             onFixLanguage { sourceLangComboBox.selected = it }
+            onRevalidate {
+                lastScrollValue.let {
+                    invokeLater { translationPanel.verticalScrollBar.value = it }
+                }
+            }
         }
 
         translationPanel.apply {
             val view = viewport.view
             viewport = ScrollPane.Viewport(CONTENT_BACKGROUND, 10)
             viewport.view = view
+
+            verticalScrollBar.addAdjustmentListener { lastScrollValue = it.value }
         }
     }
 
