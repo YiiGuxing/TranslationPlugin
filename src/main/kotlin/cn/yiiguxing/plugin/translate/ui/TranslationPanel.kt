@@ -316,14 +316,16 @@ abstract class TranslationPanel<T : JComponent>(
     private fun JTextPane.setupPopupMenu() {
         componentPopupMenu = JBPopupMenu().apply {
             val copy = JBMenuItem("Copy", Icons.Copy).apply {
+                disabledIcon = Icons.Copy
                 addActionListener { copy() }
             }
             val translate = JBMenuItem("Translate", Icons.Translate).apply {
+                disabledIcon = Icons.Translate
                 addActionListener {
                     translation?.run {
                         selectedText.let {
-                            if (translation != null && !it.isNullOrBlank()) {
-                                onNewTranslateHandler?.invoke(it, targetLang, srcLang)
+                            if (!it.isNullOrBlank()) {
+                                onNewTranslateHandler?.invoke(it, srcLang, targetLang)
                             }
                         }
                     }
