@@ -6,12 +6,15 @@ import cn.yiiguxing.plugin.translate.util.addStyle
 import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
 import cn.yiiguxing.plugin.translate.util.insert
+import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.ui.JBMenuItem
+import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Font
-import java.awt.event.InputEvent
+import java.awt.datatransfer.StringSelection
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JComponent
@@ -39,6 +42,7 @@ class StyledDictViewer {
     private var onFoldingExpandedHandler: ((List<DictEntry>) -> Unit)? = null
 
     private val viewer: Viewer = Viewer()
+    private val copyItem: CopyItem = CopyItem()
 
     val component: JComponent get() = viewer
 
@@ -57,6 +61,7 @@ class StyledDictViewer {
                 addMouseListener(it)
                 addMouseMotionListener(it)
             }
+            setupPopupMenu()
         }
     }
 
@@ -89,7 +94,7 @@ class StyledDictViewer {
     private val entryParagraphStyle: Style by lazy {
         viewer.styledDocument.addStyle(ENTRY_PARAGRAPH_STYLE, defaultStyle) {
             StyleConstants.setLeftIndent(this, JBUI.scale(12f))
-            StyleConstants.setSpaceBelow(this, JBUI.scale(5f))
+            StyleConstants.setSpaceBelow(this, JBUI.scale(8f))
         }
     }
     private val entryEndParagraphStyle: Style by lazy {
@@ -136,6 +141,12 @@ class StyledDictViewer {
             StyleConstants.setForeground(this, JBColor(0x777777, 0x888888))
             val background = JBColor(Color(0, 0, 0, 0x18), Color(0xFF, 0xFF, 0xFF, 0x10))
             StyleConstants.setBackground(this, background)
+        }
+    }
+
+    private fun Viewer.setupPopupMenu() {
+        componentPopupMenu = JBPopupMenu().apply {
+            add(copyItem)
         }
     }
 
@@ -246,6 +257,26 @@ class StyledDictViewer {
         return currentOffset
     }
 
+    private class CopyItem : JBMenuItem("Copy", Icons.Copy) {
+
+        var textSelection: String? = null
+            set(value) {
+                field = value
+                isEnabled = !value.isNullOrEmpty()
+            }
+
+        init {
+            isEnabled = false
+            disabledIcon = Icons.Copy
+            addActionListener {
+                if (!textSelection.isNullOrEmpty()) {
+                    CopyPasteManager.getInstance().setContents(StringSelection(textSelection))
+                    textSelection = null
+                }
+            }
+        }
+    }
+
     private inner class ViewerMouseAdapter : MouseAdapter() {
 
         private var lastElement: Element? = null
@@ -285,14 +316,15 @@ class StyledDictViewer {
 
         override fun mouseReleased(event: MouseEvent) { // 使用`mouseClicked`在MacOS下会出现事件丢失的情况...
             with(event) {
-                if (modifiers and InputEvent.BUTTON1_MASK == 0) {
-                    return@with
-                }
+                characterElement.takeIf { it === activeElement }?.let { elem ->
+                    (elem.attributes.getAttribute(StyleConstant.MOUSE_LISTENER) as? BaseMouseListener)?.run {
+                        if (modifiers and MouseEvent.BUTTON1_MASK != 0) {
+                            mouseClicked(elem)
+                        }
 
-                characterElement.let {
-                    if (it === activeElement) {
-                        (it.attributes.getAttribute(StyleConstant.MOUSE_LISTENER) as? BaseMouseListener)
-                                ?.mouseClicked(it)
+                        if (isMetaDown) {
+                            mouseRightButtonClicked(elem)
+                        }
                     }
                 }
             }
@@ -302,6 +334,8 @@ class StyledDictViewer {
 
     private inner abstract class BaseMouseListener {
         abstract fun mouseClicked(element: Element)
+
+        open fun mouseRightButtonClicked(element: Element) {}
 
         open fun mouseEntered(element: Element) {
             viewer.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
@@ -342,12 +376,11 @@ class StyledDictViewer {
         }
 
         override fun mouseClicked(element: Element) {
-            onEntryClickedHandler?.run {
-                val text = with(element) {
-                    document.getText(startOffset, offsetLength)
-                }
-                invoke(Entry(entryType, text))
-            }
+            onEntryClickedHandler?.invoke(Entry(entryType, element.text))
+        }
+
+        override fun mouseRightButtonClicked(element: Element) {
+            copyItem.textSelection = element.text
         }
     }
 
@@ -387,6 +420,8 @@ class StyledDictViewer {
             get() = document as StyledDocument
         private inline val Element.offsetLength: Int
             get() = endOffset - startOffset
+        private inline val Element.text: String
+            get() = document.getText(startOffset, offsetLength)
 
         @Suppress("NOTHING_TO_INLINE")
         private inline fun StyledDocument.setParagraphStyle(offset: Int? = null,
