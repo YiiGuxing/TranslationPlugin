@@ -61,9 +61,15 @@
                             serviceImplementation="cn.yiiguxing.plugin.translate.TranslationManager"/>
     </extensions>
 
+    <application-components>
+        <component>
+            <implementation-class>cn.yiiguxing.plugin.translate.TranslationAppComponent</implementation-class>
+        </component>
+    </application-components>
+
     <project-components>
         <component>
-            <implementation-class>cn.yiiguxing.plugin.translate.TranslationComponent</implementation-class>
+            <implementation-class>cn.yiiguxing.plugin.translate.TranslationProjectComponent</implementation-class>
         </component>
     </project-components>
 

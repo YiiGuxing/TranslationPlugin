@@ -8,17 +8,20 @@ import com.intellij.openapi.components.AbstractProjectComponent
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
 
-class TranslationComponent(project: Project) : AbstractProjectComponent(project) {
+class TranslationProjectComponent(project: Project) : AbstractProjectComponent(project) {
 
     private lateinit var settings: Settings
 
     override fun initComponent() {
-        super.initComponent()
         settings = Settings.instance
-        TKK.update()
     }
 
     override fun projectOpened() {
+        TKK.update()
+        checkYoudaoConfig()
+    }
+
+    private fun checkYoudaoConfig() {
         with(settings) {
             if (isDisableAppKeyNotification || translator != YoudaoTranslator.TRANSLATOR_ID) {
                 return
@@ -44,6 +47,10 @@ class TranslationComponent(project: Project) : AbstractProjectComponent(project)
                     }
                 }
         ).show(myProject)
+    }
+
+    override fun disposeComponent() {
+        TranslationManager.instance.closeAll()
     }
 
     private companion object {
