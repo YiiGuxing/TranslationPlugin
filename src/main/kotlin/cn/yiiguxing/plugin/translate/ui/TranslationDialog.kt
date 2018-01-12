@@ -162,8 +162,12 @@ class TranslationDialog(private val project: Project?)
         }
 
         presenter.supportedLanguages.let { (source, target) ->
-            sourceLangComboBox.init(source, appStorage.lastSourceLanguage ?: source.first())
-            targetLangComboBox.init(target, appStorage.lastTargetLanguage ?: presenter.primaryLanguage)
+            (appStorage.lastSourceLanguage?.takeIf { source.contains(it) } ?: source.first()).let {
+                sourceLangComboBox.init(source, it)
+            }
+            (appStorage.lastTargetLanguage?.takeIf { target.contains(it) } ?: presenter.primaryLanguage).let {
+                targetLangComboBox.init(target, it)
+            }
         }
 
         swapButton.apply {
@@ -410,13 +414,20 @@ class TranslationDialog(private val project: Project?)
      * @param target 目标语言, `null`则使用当前选中的语言
      */
     fun translate(text: String, src: Lang? = null, target: Lang? = null) {
-        val srcLang = src ?: sourceLangComboBox.selected ?: presenter.supportedLanguages.source.first()
-        val targetLang = target ?: targetLangComboBox.selected ?: presenter.primaryLanguage
+        lateinit var srcLang: Lang
+        lateinit var targetLang: Lang
+        presenter.supportedLanguages.let { (sourceList, targetList) ->
+            srcLang = src?.takeIf { sourceList.contains(it) }
+                    ?: sourceLangComboBox.selected
+                    ?: sourceList.first()
+            targetLang = target?.takeIf { targetList.contains(it) }
+                    ?: targetLangComboBox.selected
+                    ?: presenter.primaryLanguage
+        }
 
         if (!disposed && !text.isBlank()) {
             sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
             targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
-
             presenter.translate(text, srcLang, targetLang)
         }
     }
@@ -430,7 +441,7 @@ class TranslationDialog(private val project: Project?)
     override fun onTranslatorChanged(settings: Settings, translatorId: String) {
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
-                val srcSelected = selected.takeIf { src.contains(it) } ?: Lang.AUTO
+                val srcSelected = selected.takeIf { src.contains(it) } ?: src.first()
                 model = CollectionComboBoxModel<Lang>(src, srcSelected)
             }
             targetLangComboBox.apply {
