@@ -40,7 +40,8 @@ import kotlin.properties.Delegates
  */
 abstract class TranslationPanel<T : JComponent>(
         private val project: Project?,
-        protected val settings: Settings
+        protected val settings: Settings,
+        private val maxWidth: Int = MAX_WIDTH
 ) : Disposable {
 
     protected val sourceLangComponent: T by lazy { onCreateLanguageComponent() }
@@ -253,7 +254,7 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun initMaxSize() {
-        val maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
+        val maximumSize = JBDimension(maxWidth, Int.MAX_VALUE)
 
         originalViewer.maximumSize = maximumSize
         srcTransliterationLabel.maximumSize = maximumSize

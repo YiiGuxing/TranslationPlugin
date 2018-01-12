@@ -11,7 +11,8 @@ import javax.swing.JLabel
  *
  * Created by Yii.Guxing on 2017/12/27
  */
-class DialogTranslationPanel(project: Project?, settings: Settings) : TranslationPanel<JLabel>(project, settings) {
+class DialogTranslationPanel(project: Project?, settings: Settings, maxWidth: Int)
+    : TranslationPanel<JLabel>(project, settings, maxWidth) {
 
     override fun onCreateLanguageComponent() = JLabel().apply {
         border = JBEmptyBorder(0, 0, 0, 10)

@@ -42,7 +42,7 @@ class TranslationDialog(private val project: Project?)
     private val appStorage: AppStorage = AppStorage.instance
 
     private val processPane = ProcessComponent("Querying...")
-    private val translationPane = DialogTranslationPanel(project, settings)
+    private val translationPane = DialogTranslationPanel(project, settings, WIDTH - 44)
     private val translationPanel = ScrollPane(translationPane.component)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 
