@@ -64,7 +64,6 @@ class TranslateService private constructor() {
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang, listener: TranslateListener) {
         checkThread()
-
         cache[CacheKey(text, srcLang, targetLang, translator.id)]?.let {
             listener.onSuccess(it)
             return
@@ -74,7 +73,7 @@ class TranslateService private constructor() {
             try {
                 with(translator) {
                     translate(text, srcLang, targetLang).let {
-                        cache.put(CacheKey(text, srcLang, targetLang, id), it)
+                        it.cache(text, srcLang, targetLang, id)
                         invokeLater(ModalityState.any()) { listener.onSuccess(it) }
                     }
                 }
@@ -82,6 +81,20 @@ class TranslateService private constructor() {
                 LOGGER.w("translate", e)
                 invokeLater(ModalityState.any()) { listener.onError(e.message, e) }
             }
+        }
+    }
+
+    private fun Translation.cache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String) {
+        val cache = cache
+        cache.put(CacheKey(text, srcLang, targetLang, translatorId), this)
+        if (Lang.AUTO == srcLang) {
+            cache.put(CacheKey(text, this.srcLang, targetLang, translatorId), this)
+        }
+        if (Lang.AUTO == targetLang) {
+            cache.put(CacheKey(text, srcLang, this.targetLang, translatorId), this)
+        }
+        if (Lang.AUTO == srcLang && Lang.AUTO == targetLang) {
+            cache.put(CacheKey(text, this.srcLang, this.targetLang, translatorId), this)
         }
     }
 }
