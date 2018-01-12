@@ -20,7 +20,7 @@ import javax.swing.Icon
  */
 object GoogleTranslator : AbstractTranslator() {
 
-    const val TRANSLATOR_ID = "Google"
+    const val TRANSLATOR_ID = "translate.google"
     private const val TRANSLATOR_NAME = "Google Translate"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)

@@ -14,7 +14,7 @@ import javax.swing.Icon
 
 object YoudaoTranslator : AbstractTranslator() {
 
-    const val TRANSLATOR_ID = "YouDao"
+    const val TRANSLATOR_ID = "ai.youdao"
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
