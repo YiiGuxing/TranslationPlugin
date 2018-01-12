@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.util.IconLoader
+import com.intellij.ui.JBColor
 import javax.swing.Icon
 
 
@@ -18,6 +19,8 @@ object Icons {
     val Audio: Icon = IconLoader.getIcon("/icons/audio.png")
     val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.png")
     val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
+    val TTSSuspend: Icon = SuspendIcon(JBColor(0x757575, 0xABABAB))
+    val TTSSuspendHovering: Icon = SuspendIcon(JBColor(0x555555, 0x8A8A8A))
     val Swap: Icon = IconLoader.getIcon("/icons/swap.png")
     val SwapHovering: Icon = IconLoader.getIcon("/icons/swapHovering.png")
     val SwapDisabled: Icon = IconLoader.getIcon("/icons/swapDisabled.png")

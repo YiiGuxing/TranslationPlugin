@@ -15,6 +15,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.intellij.util.io.HttpRequests
 import javazoom.jl.decoder.Bitstream
 import javazoom.spi.mpeg.sampled.convert.DecodedMpegAudioInputStream
@@ -89,6 +90,7 @@ class GoogleTTSPlayer(
         }
 
         override fun onFinished() {
+            Disposer.dispose(disposable)
             completeListener?.invoke(this@GoogleTTSPlayer)
         }
     }

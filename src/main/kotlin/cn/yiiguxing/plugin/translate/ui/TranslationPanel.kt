@@ -70,22 +70,16 @@ abstract class TranslationPanel<T : JComponent>(
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
 
-    private val tts: TextToSpeech = TextToSpeech.INSTANCE
+    private val tts: TextToSpeech = TextToSpeech.instance
     private var ttsDisposable: Disposable? = null
 
-    private val originalTTSLink = ttsLinkLabel {
-        translation?.run {
-            ttsDisposable?.dispose()
-            ttsDisposable = tts.speak(project, original, srcLang)
-        }
+    private val originalTTSLink = createTTSLinkLabel {
+        translation?.run { original to srcLang }
     }
 
-    private val transTTSLink = ttsLinkLabel {
+    private val transTTSLink = createTTSLinkLabel {
         translation?.run {
-            if (trans != null) {
-                ttsDisposable?.dispose()
-                ttsDisposable = tts.speak(project, trans, targetLang)
-            }
+            trans?.let { it to targetLang }
         }
     }
 
@@ -168,6 +162,38 @@ abstract class TranslationPanel<T : JComponent>(
                     add(c)
                 }
             }
+
+    private fun createTTSLinkLabel(block: () -> Pair<String, Lang>?): ActionLink {
+        var myDisposable: Disposable? = null
+        return ActionLink { link ->
+            block()?.let block@ { (text, lang) ->
+                ttsDisposable?.let {
+                    Disposer.dispose(it)
+                    if (it === myDisposable) {
+                        return@block
+                    }
+                }
+
+                link.icon = Icons.TTSSuspend
+                link.setHoveringIcon(Icons.TTSSuspendHovering)
+                tts.speak(project, text, lang).let { disposable ->
+                    myDisposable = disposable
+                    ttsDisposable = disposable
+                    Disposer.register(disposable, Disposable {
+                        if (ttsDisposable === disposable) {
+                            ttsDisposable = null
+                        }
+                        link.icon = Icons.Audio
+                        link.setHoveringIcon(Icons.AudioPressed)
+                    })
+                }
+            }
+        }.apply {
+            icon = Icons.Audio
+            disabledIcon = Icons.AudioDisabled
+            setHoveringIcon(Icons.AudioPressed)
+        }
+    }
 
     protected abstract fun onCreateLanguageComponent(): T
 
@@ -515,12 +541,5 @@ abstract class TranslationPanel<T : JComponent>(
 
             return primaryFont to phoneticFont
         }
-
-        private fun ttsLinkLabel(action: (ActionLink) -> Unit): ActionLink = ActionLink(action = action).apply {
-            icon = Icons.Audio
-            disabledIcon = Icons.AudioDisabled
-            setHoveringIcon(Icons.AudioPressed)
-        }
     }
-
 }

@@ -48,7 +48,7 @@ class TextToSpeech private constructor() {
     }
 
     companion object {
-        val INSTANCE: TextToSpeech
+        val instance: TextToSpeech
             get() = ServiceManager.getService(TextToSpeech::class.java)
 
         private fun checkThread() = checkDispatchThread(TextToSpeech::class.java)

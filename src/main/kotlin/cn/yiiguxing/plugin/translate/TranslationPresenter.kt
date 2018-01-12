@@ -4,12 +4,14 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import java.lang.ref.WeakReference
 
 class TranslationPresenter(private val view: View) : Presenter {
 
     private val appStorage: AppStorage = AppStorage.instance
     private val translateService: TranslateService = TranslateService.instance
+    private val tts: TextToSpeech = TextToSpeech.instance
     private var currentQuery: CurrentQuery? = null
 
     override val histories: List<String> get() = appStorage.getHistories()
@@ -45,6 +47,7 @@ class TranslationPresenter(private val view: View) : Presenter {
             return
         }
 
+        tts.stop()
         view.showStartTranslate(text)
         translateService.translate(text, srcLang, targetLang, ResultListener(this, currQuery))
     }
