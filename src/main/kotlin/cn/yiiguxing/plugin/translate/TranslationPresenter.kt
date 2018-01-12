@@ -12,7 +12,7 @@ class TranslationPresenter(private val view: View) : Presenter {
     private val appStorage: AppStorage = AppStorage.instance
     private val translateService: TranslateService = TranslateService.instance
     private val tts: TextToSpeech = TextToSpeech.instance
-    private var currentQuery: CurrentQuery? = null
+    private var lastRequest: Request? = null
 
     override val histories: List<String> get() = appStorage.getHistories()
 
@@ -23,19 +23,19 @@ class TranslationPresenter(private val view: View) : Presenter {
             SupportedLanguages(supportedSourceLanguages, supportedTargetLanguages)
         }
 
-    data class CurrentQuery(val text: String, val srcLang: Lang, val targetLang: Lang, val translatorId: String)
+    data class Request(val text: String, val srcLang: Lang, val targetLang: Lang, val translatorId: String)
 
     override fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         return translateService.getCache(text, srcLang, targetLang)
     }
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang) {
-        val currQuery = CurrentQuery(text, srcLang, targetLang, translateService.translator.id)
-        if (text.isBlank() || currQuery == currentQuery) {
+        val request = Request(text, srcLang, targetLang, translateService.translator.id)
+        if (text.isBlank() || request == lastRequest) {
             return
         }
 
-        currentQuery = currQuery
+        lastRequest = request
         with(appStorage) {
             addHistory(text)
             lastSourceLanguage = srcLang
@@ -43,33 +43,33 @@ class TranslationPresenter(private val view: View) : Presenter {
         }
 
         getCache(text, srcLang, targetLang)?.let { cache ->
-            onPostResult(currQuery) { showTranslation(cache) }
+            onPostResult(request) { showTranslation(cache) }
             return
         }
 
         tts.stop()
         view.showStartTranslate(text)
-        translateService.translate(text, srcLang, targetLang, ResultListener(this, currQuery))
+        translateService.translate(text, srcLang, targetLang, ResultListener(this, request))
     }
 
-    private inline fun onPostResult(query: CurrentQuery, action: View.() -> Unit) {
-        if (query == currentQuery && !view.disposed) {
-            view.action()
+    private inline fun onPostResult(request: Request, block: View.() -> Unit) {
+        if (request == lastRequest && !view.disposed) {
+            view.block()
         }
     }
 
-    private class ResultListener(presenter: TranslationPresenter, val currQuery: CurrentQuery) : TranslateListener {
+    private class ResultListener(presenter: TranslationPresenter, val request: Request) : TranslateListener {
 
         private val presenterRef: WeakReference<TranslationPresenter> = WeakReference(presenter)
 
         override fun onSuccess(translation: Translation) {
-            presenterRef.get()?.onPostResult(currQuery) {
+            presenterRef.get()?.onPostResult(request) {
                 showTranslation(translation)
             }
         }
 
         override fun onError(message: String, throwable: Throwable) {
-            presenterRef.get()?.onPostResult(currQuery) {
+            presenterRef.get()?.onPostResult(request) {
                 showError(message, throwable)
             }
         }
