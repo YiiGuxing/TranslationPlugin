@@ -130,7 +130,7 @@
                     </properties>
                     <border type="empty"/>
                     <children>
-                      <component id="4704f" class="javax.swing.JEditorPane" binding="mMessage">
+                      <component id="4704f" class="javax.swing.JTextPane" binding="mMessage">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -139,6 +139,7 @@
                           <editable value="false"/>
                           <enabled value="true"/>
                           <focusable value="false"/>
+                          <foreground color="-52429"/>
                           <opaque value="false"/>
                           <requestFocusEnabled value="false"/>
                           <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>

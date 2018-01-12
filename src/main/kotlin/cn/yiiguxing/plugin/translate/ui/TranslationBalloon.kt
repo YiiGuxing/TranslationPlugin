@@ -16,6 +16,7 @@ import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.HyperlinkAdapter
+import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.panels.NonOpaquePanel
@@ -45,7 +46,7 @@ class TranslationBalloon(
     private val layout = FixedSizeCardLayout()
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
     private val errorPanel = NonOpaquePanel(FrameLayout())
-    private val errorPane = JEditorPane()
+    private val errorPane = JTextPane()
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPanel(project, settings)
@@ -133,6 +134,7 @@ class TranslationBalloon(
             isEditable = false
             isOpaque = false
             editorKit = UI.errorHTMLKit
+            foreground = JBColor(0xFF3333, 0xFF3333)
             border = JBEmptyBorder(INSETS, INSETS + 10, INSETS, INSETS + 10)
             maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 
