@@ -414,6 +414,10 @@ class TranslationDialog(private val project: Project?)
      * @param target 目标语言, `null`则使用当前选中的语言
      */
     fun translate(text: String, src: Lang? = null, target: Lang? = null) {
+        if (disposed || text.isBlank()) {
+            return
+        }
+
         lateinit var srcLang: Lang
         lateinit var targetLang: Lang
         presenter.supportedLanguages.let { (sourceList, targetList) ->
@@ -425,11 +429,9 @@ class TranslationDialog(private val project: Project?)
                     ?: presenter.primaryLanguage
         }
 
-        if (!disposed && !text.isBlank()) {
-            sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
-            targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
-            presenter.translate(text, srcLang, targetLang)
-        }
+        sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
+        targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
+        presenter.translate(text, srcLang, targetLang)
     }
 
     private fun ComboBox<Lang>.setSelectLangIgnoreEvent(lang: Lang) {
