@@ -39,27 +39,36 @@ class TranslationPresenter(private val view: View) : Presenter {
             lastSourceLanguage = srcLang
             lastTargetLanguage = targetLang
         }
+
+        getCache(text, srcLang, targetLang)?.let { cache ->
+            onPostResult(currQuery) { showTranslation(cache) }
+            return
+        }
+
         view.showStartTranslate(text)
-
-        val presenterRef = WeakReference(this)
-        translateService.translate(text, srcLang, targetLang, object : TranslateListener {
-            override fun onSuccess(translation: Translation) {
-                presenterRef.get()?.onPostResult(currQuery) {
-                    showTranslation(translation)
-                }
-            }
-
-            override fun onError(message: String, throwable: Throwable) {
-                presenterRef.get()?.onPostResult(currQuery) {
-                    showError(message, throwable)
-                }
-            }
-        })
+        translateService.translate(text, srcLang, targetLang, ResultListener(this, currQuery))
     }
 
     private inline fun onPostResult(query: CurrentQuery, action: View.() -> Unit) {
         if (query == currentQuery && !view.disposed) {
             view.action()
+        }
+    }
+
+    private class ResultListener(presenter: TranslationPresenter, val currQuery: CurrentQuery) : TranslateListener {
+
+        private val presenterRef: WeakReference<TranslationPresenter> = WeakReference(presenter)
+
+        override fun onSuccess(translation: Translation) {
+            presenterRef.get()?.onPostResult(currQuery) {
+                showTranslation(translation)
+            }
+        }
+
+        override fun onError(message: String, throwable: Throwable) {
+            presenterRef.get()?.onPostResult(currQuery) {
+                showError(message, throwable)
+            }
         }
     }
 }

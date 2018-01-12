@@ -225,14 +225,9 @@ class TranslationBalloon(
     }
 
     private fun showCard(card: String) {
-        // 相信我，我发誓，没有什么能比使用swing开发更糟糕的了
         invokeLater {
             layout.show(contentPanel, card)
-            with(balloon) balloon@ {
-                revalidate()
-                // 大小还是没有调整好，再刷一次
-                invokeLater { revalidate() }
-            }
+            balloon.revalidate()
         }
     }
 
@@ -278,8 +273,8 @@ class TranslationBalloon(
             this.translation = translation
         }
 
-        // 太快了会没有朋友，大小又会不对了，谁能告诉我该怎么办？
-        invokeLater(50) { showCard(CARD_TRANSLATION) }
+        // 太快了会没有朋友，大小又会不对了，谁能告诉我到底发生了什么？
+        invokeLater(5) { showCard(CARD_TRANSLATION) }
     }
 
     override fun showError(errorMessage: String, throwable: Throwable) {
