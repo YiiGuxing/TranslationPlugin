@@ -55,7 +55,7 @@ TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][bu
 使用
 ----
 
-1. **申请有道智云翻译服务(可选):**
+1. **申请有道智云翻译服务（可选）:**
    - 注册[有道智云](http://ai.youdao.com)帐号并登录到控制台页面
    - 创建一个翻译实例：<kbd>控制台</kbd> > <kbd>自然语言翻译</kbd> > <kbd>翻译实例</kbd> > <kbd>创建翻译实例</kbd>
    - 创建一个应用并绑定翻译服务：<kbd>控制台</kbd> > <kbd>应用管理</kbd> > <kbd>我的应用</kbd> > <kbd>创建应用</kbd> > <kbd>绑定服务</kbd>
@@ -71,7 +71,7 @@ TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][bu
 
 3. **切换翻译引擎:**
 
-   使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译两个翻译引擎。
+   使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译。
 
 
 Actions
