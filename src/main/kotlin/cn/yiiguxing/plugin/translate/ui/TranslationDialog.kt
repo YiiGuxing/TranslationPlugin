@@ -497,10 +497,7 @@ class TranslationDialog(private val project: Project?)
             return
         }
 
-        translationPane.apply {
-            srcLang = sourceLangComboBox.selected
-            this.translation = translation
-        }
+        translationPane.translation = translation
         showCard(CARD_TRANSLATION)
         invokeLater { translationPanel.verticalScrollBar.apply { value = 0 } }
         setLanguageComponentsEnable(true)

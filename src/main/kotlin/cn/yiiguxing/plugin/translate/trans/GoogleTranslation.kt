@@ -15,7 +15,8 @@ data class GoogleTranslation(
         val src: Lang,
         var target: Lang? = null,
         val sentences: List<GSentence>,
-        val dict: List<GDict>?
+        val dict: List<GDict>?,
+        @SerializedName("ld_result") val ldResult: LDResult
 ) : TranslationAdapter {
 
     override fun toTranslation(): Translation {
@@ -44,6 +45,7 @@ data class GoogleTranslation(
                 trans,
                 src,
                 target!!,
+                ldResult.srclangs,
                 translit?.srcTranslit,
                 translit?.translit,
                 dictionaries)
@@ -61,4 +63,11 @@ data class GDict(val pos: String, val terms: List<String>, val entry: List<GDict
 data class GDictEntry(
         val word: String,
         @SerializedName("reverse_translation") val reverseTranslation: List<String>,
-        val score: Float)
+        val score: Float
+)
+
+data class LDResult(
+        val srclangs: List<Lang>,
+        @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>,
+        @SerializedName("extended_srclangs") val extendedSrclangs: List<Lang>
+)

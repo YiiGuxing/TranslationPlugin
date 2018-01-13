@@ -74,10 +74,7 @@ class BalloonTranslationPanel(project: Project?, settings: Settings)
     }
 
     fun setSupportedLanguages(src: List<Lang>, target: List<Lang>) {
-        sourceLangComponent.apply {
-            setLanguages(src)
-            updateLanguage(srcLang)
-        }
+        sourceLangComponent.setLanguages(src)
         targetLangComponent.setLanguages(target)
     }
 

@@ -86,8 +86,8 @@ abstract class TranslationPanel<T : JComponent>(
 
     private val fixLanguageLinkLabel = JLabel("源语言: ")
     private val fixLanguageLink = ActionLink {
-        translation?.run {
-            onFixLanguageHandler?.invoke(srcLang)
+        translation?.srclangs?.firstOrNull()?.let {
+            onFixLanguageHandler?.invoke(it)
         }
     }
 
@@ -97,13 +97,6 @@ abstract class TranslationPanel<T : JComponent>(
                     update()
                 }
             }
-
-    var srcLang: Lang? by Delegates.observable(null) { _, oldValue: Lang?, newValue: Lang? ->
-        if (oldValue !== newValue) {
-            sourceLangComponent.updateLanguage(newValue)
-            checkSourceLanguage()
-        }
-    }
 
     val component: JComponent by lazy {
         initFont()
@@ -328,7 +321,6 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     open fun reset() {
-        srcLang = null
         translation = null
     }
 
@@ -377,8 +369,9 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun checkSourceLanguage() {
-        if (srcLang != null && srcLang != Lang.AUTO && translation?.srcLang != srcLang) {
-            val visible = translation?.srcLang?.langName.let {
+        val translation = translation
+        if (translation != null && !translation.srclangs.contains(translation.srcLang)) {
+            val visible = translation.srclangs.firstOrNull()?.langName.let {
                 fixLanguageLink.text = it
                 !it.isNullOrEmpty()
             }
@@ -400,11 +393,8 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun updateComponents(translation: Translation) {
-        val updateSrcLang = this.srcLang.let { null == it || Lang.AUTO == it }
         with(translation) {
-            if (updateSrcLang) {
-                sourceLangComponent.updateLanguage(srcLang)
-            }
+            sourceLangComponent.updateLanguage(srcLang)
             targetLangComponent.updateLanguage(targetLang)
 
             sourceLangRow.visible = true

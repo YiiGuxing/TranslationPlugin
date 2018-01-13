@@ -60,6 +60,7 @@ data class YoudaoTranslation(
                 translation?.firstOrNull(),
                 srcLang,
                 transLang,
+                listOf(srcLang),
                 basicExplain?.phonetic,
                 basicExplains = basicExplain?.explains?.asList() ?: emptyList(),
                 otherExplains = otherExplains)

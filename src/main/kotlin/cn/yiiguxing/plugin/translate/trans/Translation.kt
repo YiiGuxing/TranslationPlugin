@@ -1,4 +1,4 @@
-@file:Suppress("ArrayInDataClass", "unused")
+@file:Suppress("unused")
 
 package cn.yiiguxing.plugin.translate.trans
 
@@ -14,6 +14,7 @@ data class Translation(
         val trans: String?,
         val srcLang: Lang,
         val targetLang: Lang,
+        val srclangs: List<Lang>,
         val srcTransliteration: String? = null,
         val transliteration: String? = null,
         val dictionaries: List<Dict> = emptyList(),

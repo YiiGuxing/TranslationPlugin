@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.RangeMarker
 import com.intellij.openapi.editor.ScrollType
@@ -37,7 +38,7 @@ class TranslationBalloon(
         private val editor: Editor,
         private val caretRangeMarker: RangeMarker,
         private val text: String
-) : View {
+) : View, SettingsChangeListener {
 
     private val project: Project? = editor.project
     private val presenter: Presenter = TranslationPresenter(this)
@@ -52,7 +53,7 @@ class TranslationBalloon(
     private val translationPane = BalloonTranslationPanel(project, settings)
     private val pinButton = ActionLink(icon = Icons.Pin) {
         translationPane.translation.let {
-            showOnTranslationDialog(text, it?.srcLang, it?.targetLang)
+            showOnTranslationDialog(text)
         }
     }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
@@ -83,7 +84,7 @@ class TranslationBalloon(
 
     init {
         initErrorPanel()
-        initTranslationContent()
+        initTranslationPanel()
         initContentPanel()
 
         balloon = createBalloon(contentPanel)
@@ -97,6 +98,12 @@ class TranslationBalloon(
         Disposer.register(balloon, Disposable { Disposer.dispose(this) })
         Disposer.register(this, processPane)
         Disposer.register(this, translationPane)
+
+        ApplicationManager
+                .getApplication()
+                .messageBus
+                .connect(this)
+                .subscribe(SettingsChangeListener.TOPIC, this)
     }
 
     private fun initContentPanel() = contentPanel
@@ -108,21 +115,26 @@ class TranslationBalloon(
                 add(CARD_ERROR, errorPanel)
             }
 
+    private fun initTranslationPanel() {
+        presenter.supportedLanguages.let { (source, target) ->
+            translationPane.setSupportedLanguages(source, target)
+        }
 
-    private fun initTranslationContent() = translationContentPane.apply {
-        add(pinButton.apply {
-            isVisible = false
-            alignmentX = RIGHT_ALIGNMENT
-            alignmentY = TOP_ALIGNMENT
-        })
-        add(translationPane.component.apply {
-            border = JBEmptyBorder(16, 16, 10, 16)
-        })
+        translationContentPane.apply {
+            add(pinButton.apply {
+                isVisible = false
+                alignmentX = RIGHT_ALIGNMENT
+                alignmentY = TOP_ALIGNMENT
+            })
+            add(translationPane.component.apply {
+                border = JBEmptyBorder(16, 16, 10, 16)
+            })
+        }
     }
 
     private fun initActions() = with(translationPane) {
         onRevalidate { balloon.revalidate() }
-        onLanguageChanged { src, target -> presenter.translate(text, src, target) }
+        onLanguageChanged { src, target -> translate(src, target) }
         onNewTranslate { text, src, target -> showOnTranslationDialog(text, src, target) }
 
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
@@ -222,9 +234,11 @@ class TranslationBalloon(
             showBalloon()
 
             val targetLang = if (text.any { it.toInt() > 0xFF }) Lang.ENGLISH else presenter.primaryLanguage
-            presenter.translate(text, Lang.AUTO, targetLang)
+            translate(Lang.AUTO, targetLang)
         }
     }
+
+    private fun translate(srcLang: Lang, targetLang: Lang) = presenter.translate(text, srcLang, targetLang)
 
     private fun showCard(card: String) {
         invokeLater {
@@ -239,6 +253,10 @@ class TranslationBalloon(
         if (!text.isNullOrBlank()) {
             dialog.translate(text, srcLang, targetLang)
         }
+    }
+
+    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+        hide()
     }
 
     override fun showStartTranslate(text: String) {
@@ -264,19 +282,11 @@ class TranslationBalloon(
     }
 
     override fun showTranslation(translation: Translation) {
-        if (disposed) {
-            return
+        if (!disposed) {
+            translationPane.translation = translation
+            // 太快了会没有朋友，大小又会不对了，谁能告诉我到底发生了什么？
+            invokeLater(5) { showCard(CARD_TRANSLATION) }
         }
-
-        val (source, target) = presenter.supportedLanguages
-        translationPane.apply {
-            srcLang = Lang.AUTO
-            setSupportedLanguages(source, target)
-            this.translation = translation
-        }
-
-        // 太快了会没有朋友，大小又会不对了，谁能告诉我到底发生了什么？
-        invokeLater(5) { showCard(CARD_TRANSLATION) }
     }
 
     override fun showError(errorMessage: String, throwable: Throwable) {
