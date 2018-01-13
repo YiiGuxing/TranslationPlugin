@@ -7,36 +7,41 @@
     <description><![CDATA[
       <h1>Translation</h1>
       <br/>
+      <p>
       <b>
       <a href="http://yiiguxing.github.io/TranslationPlugin">Website</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a> |
       <a href="http://yiiguxing.github.io/TranslationPlugin/start.html">Doc</a>
       </b>
+      </p>
       <br/>
+      <p><b>A translation plugin.</b></p>
       <br/>
-
-      A translation plugin.
-      <br/>
-      <br/>
-      <b>Features:</b>
+      <p><b>Features:</b>
       <ul>
-      <li>Multiple translation engines.</li>
-      <li>Google translate.</li>
-      <li>Youdao translate.</li>
-      <li>Multiple languages inter-translation.</li>
-      <li>Text to speech.</li>
-      <li>Automatic word selection.</li>
-      <li>Automatic word division.</li>
-      <ul/>
+        <li>Multiple translation engines.
+          <ul>
+            <li>Google translate.</li>
+            <li>Youdao translate.</li>
+          </ul>
+        </li>
+        <li>Multiple languages inter-translation.</li>
+        <li>Text to speech.</li>
+        <li>Automatic word selection.</li>
+        <li>Automatic word division.</li>
+      </ul>
+      </p>
+      <br/>
+      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots.gif" alt="screenshots.gif"/></p>
     ]]></description>
 
     <change-notes><![CDATA[
       <ul>
-          <li>接入谷歌翻译</li>
-          <li>优化用户检验</li>
+        <li>接入谷歌翻译</li>
+        <li>用户体验优化</li>
       </ul>
-
+      <br/>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
 
