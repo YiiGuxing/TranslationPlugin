@@ -252,17 +252,8 @@ class TranslationDialog(private val project: Project?)
             }
         })
 
-        componentPopupMenu = JBPopupMenu().apply {
-            val copyToClipboard = JBMenuItem("Copy Error Info.", Icons.CopyToClipboard).apply {
-                addActionListener { lastError?.copyToClipboard() }
-            }
-            add(copyToClipboard)
-            addPopupMenuListener(object : PopupMenuListenerAdapter() {
-                override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-                    copyToClipboard.isEnabled = lastError != null
-                }
-            })
-        }
+        componentPopupMenu = cratePopupMenu()
+        (parent as JComponent).componentPopupMenu = cratePopupMenu()
 
         addHyperlinkListener(object : HyperlinkAdapter() {
             override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
@@ -270,6 +261,18 @@ class TranslationDialog(private val project: Project?)
                     close()
                     OptionsConfigurable.showSettingsDialog(project)
                 }
+            }
+        })
+    }
+
+    private fun cratePopupMenu() = JBPopupMenu().apply {
+        val copyToClipboard = JBMenuItem("Copy to Clipboard", Icons.CopyToClipboard).apply {
+            addActionListener { lastError?.copyToClipboard() }
+        }
+        add(copyToClipboard)
+        addPopupMenuListener(object : PopupMenuListenerAdapter() {
+            override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                copyToClipboard.isEnabled = lastError != null
             }
         })
     }
