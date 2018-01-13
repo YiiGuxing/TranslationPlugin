@@ -16,11 +16,18 @@
       <br/>
       <br/>
 
-      Translation是一个翻译插件，具有以下特点：
+      A translation plugin.
+      <br/>
+      <br/>
+      <b>Features:</b>
       <ul>
-      <li>多语言互译</li>
-      <li>单词朗读</li>
-      <li>自动选词、分词</li>
+      <li>Multiple translation engines.</li>
+      <li>Google translate.</li>
+      <li>Youdao translate.</li>
+      <li>Multiple languages inter-translation.</li>
+      <li>Text to speech.</li>
+      <li>Automatic word selection.</li>
+      <li>Automatic word division.</li>
       <ul/>
     ]]></description>
 
