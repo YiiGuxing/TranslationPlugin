@@ -50,17 +50,18 @@ object GoogleTranslator : AbstractTranslator() {
     }
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang)
-            : String = "$GOOGLE_TRANSLATE_URL?client=gtx&dt=t&dt=bd&dt=rm&dj=1" +
+            : String = ("$GOOGLE_TRANSLATE_URL?client=gtx&dt=t&dt=bd&dt=rm&dj=1" +
             "&sl=${srcLang.code}" +
             "&tl=${targetLang.code}" +
             "&hl=${primaryLanguage.code}" + // 这是词性的语言
             "&tk=${text.tk()}" +
-            "&q=${text.urlEncode()}".also {
-                logger.i("Translate url: $it")
+            "&q=${text.urlEncode()}")
+            .also {
+                logger.i { "Translate url: $it" }
             }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
-        logger.i("Translate result: $result")
+        logger.i { "Translate result: $result" }
 
         return gson.fromJson(result, GoogleTranslation::class.java).apply {
             target = targetLang

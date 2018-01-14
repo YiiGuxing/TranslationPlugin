@@ -78,7 +78,7 @@ class TranslateService private constructor() {
                     }
                 }
             } catch (e: TranslateException) {
-                LOGGER.w("translate", e)
+                LOGGER.w(e) { "translate" }
                 invokeLater(ModalityState.any()) { listener.onError(e.message, e) }
             }
         }
