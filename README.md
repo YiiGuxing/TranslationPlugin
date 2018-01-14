@@ -1,5 +1,5 @@
 
-TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][build-img-dev]][travis-ci] [![GitHub release][release-img]][latest-release]
+TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][build-img-master]][travis-ci] [![GitHub release][release-img]][latest-release]
 =================
 
 [![Version](https://img.shields.io/jetbrains/plugin/v/8579.svg)][plugin]
