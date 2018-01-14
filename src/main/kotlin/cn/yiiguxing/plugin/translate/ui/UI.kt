@@ -34,6 +34,6 @@ object UI {
     fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrEmpty()) {
         JBUI.Fonts.create(fontFamily, size)
     } else {
-        defaultFont.deriveFont(size.toFloat())
+        defaultFont.deriveScaledFont(size.toFloat())
     }
 }

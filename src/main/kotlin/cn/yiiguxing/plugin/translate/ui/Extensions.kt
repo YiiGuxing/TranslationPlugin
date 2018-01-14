@@ -7,8 +7,11 @@
 
 package cn.yiiguxing.plugin.translate.ui
 
+import com.intellij.util.ui.JBFont
+import com.intellij.util.ui.JBUI
 import java.awt.Color
 import java.awt.Dimension
+import java.awt.Font
 import javax.swing.JComboBox
 import javax.swing.JComponent
 
@@ -51,3 +54,17 @@ fun Color.withAlpha(alpha: Float) = toAlpha((0xFF * alpha).toInt())
  * @param alpha the alpha(0 ~ 255).
  */
 fun Color.toAlpha(alpha: Int) = Color(red, green, blue, alpha)
+
+/**
+ * Creates a new [Font][JBFont] object by replicating this [Font] object
+ * and applying a new style and [scaled size][size].
+ */
+fun JBFont.deriveScaledFont(style: Int, size: Float)
+        : JBFont = JBFont.create(deriveFont(style, JBUI.scale(size)), false)
+
+/**
+ * Creates a new [Font][JBFont] object by replicating the current
+ * [Font] object and applying a new [scaled size][size] to it.
+ */
+fun JBFont.deriveScaledFont(size: Float)
+        : JBFont = JBFont.create(deriveFont(JBUI.scale(size)), false)

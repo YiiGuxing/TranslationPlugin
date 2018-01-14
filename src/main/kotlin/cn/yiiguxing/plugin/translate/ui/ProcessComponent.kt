@@ -23,7 +23,7 @@ class ProcessComponent(text: String, insets: Insets = JBUI.emptyInsets()) : JPan
 
     private val icon: ProcessIcon = ProcessIcon()
     private val label: JLabel = JLabel(text).apply {
-        font = JBFont.create(font).deriveFont(18.0f)
+        font = JBFont.create(font.deriveFont(18.0f))
         foreground = JBColor(0x4C4C4C, 0xCDCDCD)
     }
 

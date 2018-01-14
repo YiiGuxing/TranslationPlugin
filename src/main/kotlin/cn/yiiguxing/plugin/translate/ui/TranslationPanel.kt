@@ -199,8 +199,8 @@ abstract class TranslationPanel<T : JComponent>(
             targetLangComponent.font = primaryFont
             fixLanguageLinkLabel.font = primaryFont
             fixLanguageLink.font = primaryFont
-            originalViewer.font = primaryFont.deriveFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE.toFloat())
-            transViewer.font = primaryFont.deriveFont(FONT_SIZE_LARGE.toFloat())
+            originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
+            transViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             dictViewer.font = primaryFont.biggerOn(1f)
             basicExplainViewer.font = primaryFont.biggerOn(1f)
             otherExplainViewer.font = primaryFont
@@ -512,21 +512,25 @@ abstract class TranslationPanel<T : JComponent>(
     companion object {
         const val MAX_WIDTH = 500
 
-        private const val FONT_SIZE_LARGE = 18
-        private const val FONT_SIZE_DEFAULT = 14
-        private const val FONT_SIZE_PHONETIC = 12
+        private const val FONT_SIZE_LARGE = 18f
+        private const val FONT_SIZE_DEFAULT = 14f
+        private const val FONT_SIZE_PHONETIC = 12f
 
         private const val EXPLAIN_KEY_STYLE = "explain_key"
         private const val EXPLAIN_VALUE_STYLE = "explain_value"
 
         private fun getOverrideFonts(settings: Settings): Pair<JBFont, JBFont> {
-            var primaryFont: JBFont = UI.defaultFont.deriveFont(JBUI.scale(FONT_SIZE_DEFAULT.toFloat()))
-            var phoneticFont: JBFont = UI.defaultFont.deriveFont(JBUI.scale(FONT_SIZE_PHONETIC.toFloat()))
+            var primaryFont: JBFont = UI.defaultFont.deriveScaledFont(FONT_SIZE_DEFAULT)
+            var phoneticFont: JBFont = UI.defaultFont.deriveScaledFont(FONT_SIZE_PHONETIC)
 
             with(settings) {
                 if (isOverrideFont) {
-                    primaryFont = primaryFontFamily?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT) } ?: primaryFont
-                    phoneticFont = phoneticFontFamily?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC) } ?: phoneticFont
+                    primaryFont = primaryFontFamily
+                            ?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT.toInt()) }
+                            ?: primaryFont
+                    phoneticFont = phoneticFontFamily
+                            ?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC.toInt()) }
+                            ?: phoneticFont
                 }
             }
 
