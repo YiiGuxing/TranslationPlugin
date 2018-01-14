@@ -1,0 +1,163 @@
+<idea-plugin>
+    <id>cn.yiiguxing.plugin.translate</id>
+    <name>Translation</name>
+    <version>2.0</version>
+    <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
+
+    <description><![CDATA[
+      <h1>Translation</h1>
+      <br/>
+      <p>
+      <b>
+      <a href="http://yiiguxing.github.io/TranslationPlugin">Website</a> |
+      <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
+      <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a> |
+      <a href="http://yiiguxing.github.io/TranslationPlugin/start.html">Doc</a>
+      </b>
+      </p>
+      <br/>
+      <p><b>A translation plugin.</b></p>
+      <br/>
+      <p><b>Features:</b>
+      <ul>
+        <li>Multiple translation engines.
+          <ul>
+            <li>Google translate.</li>
+            <li>Youdao translate.</li>
+          </ul>
+        </li>
+        <li>Multiple languages inter-translation.</li>
+        <li>Text to speech.</li>
+        <li>Automatic word selection.</li>
+        <li>Automatic word division.</li>
+      </ul>
+      </p>
+      <br/>
+      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots.gif" alt="screenshots.gif"/></p>
+      <br/>
+      <p><a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Send feedback</a></p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+      <ul>
+        <li>接入谷歌翻译</li>
+        <li>用户体验优化</li>
+      </ul>
+      <br/>
+      <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
+    ]]></change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="171"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Settings"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
+
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.trans.TranslateService"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.tts.TextToSpeech"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.AppStorage"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
+        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.TranslationManager"
+                            serviceImplementation="cn.yiiguxing.plugin.translate.TranslationManager"/>
+    </extensions>
+
+    <application-components>
+        <component>
+            <implementation-class>cn.yiiguxing.plugin.translate.TranslationAppComponent</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <component>
+            <implementation-class>cn.yiiguxing.plugin.translate.TranslationProjectComponent</implementation-class>
+        </component>
+    </project-components>
+
+    <actions>
+        <action id="$ShowTranslationDialogAction"
+                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
+                text="Show Translation Dialog..."
+                icon="/icons/translate.png"
+                description="Open Translation Dialog">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
+        </action>
+        <action id="$ChooseTranslatorAction"
+                class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
+                text="Choose Translator"
+                description="Choose Translator">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
+        </action>
+        <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
+                text="Translate"
+                icon="/icons/translate.png"
+                description="Translate">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
+        </action>
+        <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+                text="Translate and Replace..." description="Translate and Replace">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
+        </action>
+        <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
+                text="Translate(Inclusive)" description="翻译（自动以最大范围取最近的所有词，忽略手动选择的文本）"/>
+        <action id="$ExclusiveTranslateAction"
+                class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
+                text="Translate(Exclusive)" description="翻译（自动取最近的单个词，忽略手动选择的文本）"/>
+        <action id="$TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
+                text="Translate Quick Document" description="翻译速文档中选中的文本"
+                use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$TranslateTextComponent" class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
+                text="Translate Text Component" description="翻译一些文本组件（如提示气泡、输入框……）中选中的文本"
+                use-shortcut-of="$EditorTranslateAction"/>
+
+        <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">
+            <separator/>
+            <reference ref="$EditorTranslateAction"/>
+            <reference ref="$TranslateAndReplaceAction"/>
+            <separator/>
+
+            <add-to-group group-id="BasicEditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="Diff.EditorPopupMenu" anchor="first"/>
+        </group>
+        <group id="TranslationToolBar" text="Translation Toolbar Actions">
+            <separator/>
+            <reference ref="$ChooseTranslatorAction"/>
+            <reference ref="$ShowTranslationDialogAction"/>
+            <separator/>
+
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="NavBarToolBar" anchor="last"/>
+        </group>
+        <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
+            <reference ref="$ShowTranslationDialogAction"/>
+            <reference ref="$InclusiveTranslateAction"/>
+            <reference ref="$ExclusiveTranslateAction"/>
+        </group>
+        <group id="TranslationGroup" text="Translation Actions">
+            <separator/>
+            <reference ref="$EditorTranslateAction"/>
+            <reference ref="$TranslateAndReplaceAction"/>
+            <reference ref="TranslationGroup.Expanded"/>
+            <separator/>
+        </group>
+    </actions>
+
+</idea-plugin>
