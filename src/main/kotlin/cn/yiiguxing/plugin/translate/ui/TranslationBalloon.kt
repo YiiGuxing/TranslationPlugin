@@ -294,7 +294,7 @@ class TranslationBalloon(
         if (!disposed) {
             lastError = throwable
             errorPane.text = errorMessage
-            showCard(CARD_ERROR)
+            invokeLater(5) { showCard(CARD_ERROR) }
         }
     }
 
