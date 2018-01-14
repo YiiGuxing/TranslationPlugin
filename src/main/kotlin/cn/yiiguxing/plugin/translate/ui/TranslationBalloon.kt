@@ -147,6 +147,7 @@ class TranslationBalloon(
             isOpaque = false
             editorKit = UI.errorHTMLKit
             foreground = JBColor(0xFF3333, 0xFF3333)
+            font = UI.primaryFont(15)
             border = JBEmptyBorder(INSETS, INSETS + 10, INSETS, INSETS + 10)
             maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 

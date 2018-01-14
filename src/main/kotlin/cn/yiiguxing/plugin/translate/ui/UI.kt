@@ -20,18 +20,16 @@ object UI {
     val errorHTMLKit: HTMLEditorKit
         get() = UIUtil.getHTMLEditorKit().apply {
             with(styleSheet) {
-                val font = Settings.instance
-                        .takeIf { it.isOverrideFont }
-                        ?.primaryFontFamily
-                        ?.let { JBUI.Fonts.create(it, 15) }
-                        ?: defaultFont.biggerOn(1f)
-
-                addRule("body{color:#FF3333;font-family:${font.family};font-size:${font.size};text-align:center;}")
-                addRule("a {color:#FF0000;}")
+                val font = primaryFont(15)
+                addRule("body{color:#FF3333;font-family:${font.family};font-size:${font.size}pt;text-align:center;}")
+                addRule("a {color:#FF0000;font-weight:bold;text-decoration:none;}")
             }
         }
 
-    fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrEmpty()) {
+    fun primaryFont(size: Int)
+            : JBFont = UI.getFont(Settings.instance.takeIf { it.isOverrideFont }?.primaryFontFamily, size)
+
+    private fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrEmpty()) {
         JBUI.Fonts.create(fontFamily, size)
     } else {
         defaultFont.deriveScaledFont(size.toFloat())

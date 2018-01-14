@@ -278,14 +278,12 @@ class TranslationDialog(private val project: Project?)
     }
 
     private fun initFont() {
-        settings.takeIf { it.isOverrideFont }
-                ?.primaryFontFamily
-                .let { UI.getFont(it, 12) }
-                .let {
-                    inputComboBox.font = it
-                    sourceLangComboBox.font = it
-                    targetLangComboBox.font = it
-                }
+        UI.primaryFont(12).let {
+            inputComboBox.font = it
+            sourceLangComboBox.font = it
+            targetLangComboBox.font = it
+            messagePane.font = it.biggerOn(3f)
+        }
     }
 
     private fun installEnterHook() {
@@ -551,7 +549,7 @@ class TranslationDialog(private val project: Project?)
             val text = with(builder) {
                 setLength(0)
 
-                append("<html><b>")
+                append("<html><body><b>")
                 append(value)
                 append("</b>")
 
@@ -565,7 +563,7 @@ class TranslationDialog(private val project: Project?)
                     }
                 }
 
-                builder.append("</html>")
+                builder.append("</body></html>")
                 toString()
             }
             setText(text)
