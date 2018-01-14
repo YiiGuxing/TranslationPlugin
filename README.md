@@ -58,13 +58,13 @@ TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][bu
 
 2. **开始翻译:**
 
-  <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
+   <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
 
-  或者使用快捷键进行翻译，详见 **[Actions](#actions)**
+   或者使用快捷键进行翻译，详见 **[Actions](#actions)**
 
 3. **切换翻译引擎:**
 
-  使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译。
+   使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译。
 
 Actions
 -------
