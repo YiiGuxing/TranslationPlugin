@@ -57,11 +57,11 @@ object GoogleTranslator : AbstractTranslator() {
             "&tk=${text.tk()}" +
             "&q=${text.urlEncode()}")
             .also {
-                logger.i { "Translate url: $it" }
+                logger.i("Translate url: $it")
             }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
-        logger.i { "Translate result: $result" }
+        logger.i("Translate result: $result")
 
         return gson.fromJson(result, GoogleTranslation::class.java).apply {
             target = targetLang

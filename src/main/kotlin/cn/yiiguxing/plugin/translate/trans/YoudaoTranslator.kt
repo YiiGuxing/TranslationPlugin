@@ -61,14 +61,14 @@ object YoudaoTranslator : AbstractTranslator() {
                 "&sign=$sign" +
                 "&q=${text.urlEncode()}")
                 .also {
-                    logger.i { "Translate url: $it" }
+                    logger.i("Translate url: $it")
                 }
     }
 
     private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
-        logger.i { "Translate result: $result" }
+        logger.i("Translate result: $result")
 
         return Gson().fromJson(result, YoudaoTranslation::class.java).apply {
             query = original

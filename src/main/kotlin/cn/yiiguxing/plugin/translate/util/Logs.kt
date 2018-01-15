@@ -10,39 +10,31 @@ package cn.yiiguxing.plugin.translate.util
 import com.intellij.openapi.diagnostic.Logger
 
 
-inline fun Logger.d(lazyMessage: () -> String) {
-    lazyMessage().let {
-        println("DEBUG - $it")
-        debug(it)
-    }
+fun Logger.d(message: String) {
+    println("DEBUG - $message")
+    debug(message)
 }
 
-inline fun Logger.i(lazyMessage: () -> String) {
-    lazyMessage().let {
-        println("INFO - $it")
-        info(it)
-    }
+fun Logger.i(message: String) {
+    println("INFO - $message")
+    info(message)
 }
 
 fun Logger.w(tr: Throwable) {
-    w(tr) { tr.message.toString() }
+    w(tr.message.toString(), tr)
 }
 
-inline fun Logger.w(tr: Throwable? = null, lazyMessage: () -> String) {
-    lazyMessage().let {
-        println("WARN - $it")
-        tr?.printStackTrace()
-        warn(it, tr)
-    }
+fun Logger.w(message: String, tr: Throwable? = null) {
+    println("WARN - $message")
+    tr?.printStackTrace()
+    warn(message, tr)
 }
 
-inline fun Logger.e(tr: Throwable? = null, vararg details: String, lazyMessage: () -> String) {
-    lazyMessage().let {
-        println("ERROR - $it")
-        tr?.printStackTrace()
-        if (details.isNotEmpty()) {
-            println("Details:\n    ${details.joinToString(separator = "\n    ")}")
-        }
-        error(it, tr, *details)
+fun Logger.e(message: String, tr: Throwable? = null, vararg details: String) {
+    println("ERROR - $message")
+    tr?.printStackTrace()
+    if (details.isNotEmpty()) {
+        println("Details:\n    ${details.joinToString(separator = "\n    ")}")
     }
+    error(message, tr, *details)
 }
