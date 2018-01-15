@@ -64,6 +64,7 @@ object GoogleTranslator : AbstractTranslator() {
         logger.i("Translate result: $result")
 
         return gson.fromJson(result, GoogleTranslation::class.java).apply {
+            this.original = original
             target = targetLang
         }.toTranslation()
     }
