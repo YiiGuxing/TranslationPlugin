@@ -142,8 +142,8 @@ fun Notification.show(project: Project? = null) {
 fun Throwable.copyToClipboard() {
     val stringWriter = StringWriter()
     PrintWriter(stringWriter).use {
-        it.println(App.systemInfo)
-        it.println("========================================\n")
+        it.println(App.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
+        it.println()
 
         printStackTrace(it)
 
