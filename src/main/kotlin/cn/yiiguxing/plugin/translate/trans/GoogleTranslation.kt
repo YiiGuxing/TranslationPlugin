@@ -68,6 +68,5 @@ data class GDictEntry(
 
 data class LDResult(
         val srclangs: List<Lang>,
-        @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>,
-        @SerializedName("extended_srclangs") val extendedSrclangs: List<Lang>
+        @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>
 )
