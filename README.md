@@ -19,7 +19,7 @@ TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][bu
 - 多语言互译
 - 语音朗读
 - 自动选词
-- 单词拆分
+- 自动单词拆分
 
 兼容除 MPS 外所有产品编译号为143以上的 Jetbrains IDE 产品。  
 支持的 IDE:
