@@ -5,7 +5,6 @@
     <title>开始使用 - TranslationPlugin</title>
     <meta name="description" content="一个 IntelliJ IDEA/Android Studio 翻译插件，支持中英互译、单词朗读">
     <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
-    <link rel="icon" type="image/png" href="./images/icon.png"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
 </head>
@@ -19,9 +18,21 @@
 
 <div class="frame_content">
     <div class="column">
-        <h2 class="column_title">安装</h2>
+        <h2 class="column_title">特征</h2>
+        <ul class="column_tip">
+            <li>多翻译引擎
+                <ul>
+                    <li>Google翻译</li>
+                    <li>有道翻译</li>
+                </ul>
+            </li>
+            <li>多语言互译</li>
+            <li>语音朗读</li>
+            <li>自动选词</li>
+            <li>自动单词拆分</li>
+        </ul>
         <p class="column_tip">
-            <b>TranslationPlugin</b> 兼容除 MPS 外所有产品<a
+            兼容除 MPS 外所有产品<a
                 href="http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html#branch-and-build-numbers-for-intellij-platform-pre-20162"
                 target="_blank">编译号</a>为 <b>143</b> 以上的
             <a href="https://www.jetbrains.com" target="_blank">Jetbrains IDE</a>
@@ -44,6 +55,9 @@
                 <li>Rider</li>
             </ul>
         </div>
+    </div>
+    <div class="column">
+        <h2 class="column_title">安装</h2>
         <h3 class="column_item_title">使用 IDE 内置插件系统安装：</h3>
         <div class="column_item_info_code">
             <ul>
@@ -63,80 +77,111 @@
     </div>
     <div class="column">
         <h2 class="column_title">使用</h2>
-        <h3 class="column_item_title">申请有道智云翻译服务</h3>
+        <h3 class="column_item_title">1. 申请有道智云翻译服务（可选）</h3>
         <div class="column_tip">
             <ul>
                 <li>注册<a href="http://ai.youdao.com" target="_blank">有道智云</a>帐号并登录到控制台页面</li>
                 <li>创建一个翻译实例：控制台 > 自然语言翻译 > 翻译实例 > 创建翻译实例</li>
                 <li>创建一个应用并绑定翻译服务：控制台 > 应用管理 > 我的应用 > 创建应用 > 绑定服务</li>
                 <li>在插件中绑定应用——将上步骤的<strong>应用</strong>和<strong>应用密钥</strong>填写到插件设置页中相应的位置：Preferences(Settings) >
-                    [Other
-                    Settings] > Translation > 有道翻译
+                    [Other Settings] > Translation > 有道翻译
                 </li>
             </ul>
 
-            <font color="red">注：请注意保管好你的应用密钥，防止其泄漏。如帐号欠费，将无法使用。</font>
+            <div style="color: red">注：请注意保管好你的应用密钥，防止其泄漏。如帐号欠费，将无法使用。</div>
         </div>
 
-        <h3 class="column_item_title">翻译编辑器中的文本</h3>
-        <p class="column_tip">在编辑器中用鼠标指针指向需要翻译的单词，或者选择需要翻译的文本，点击鼠标右键弹出操作菜单，然后点击
-            Translate 即可进行翻译。也可以使用默认快捷键 Alt + 1/2/3/R/T 进行操作（Mac下默认快捷键可能无效，需要
-            <a href="#kaymap">自定义快捷键</a>），详见 <a href="#actions">Actions</a>.</p>
-        <div class="column_img"><img width="370" height="242" src="images/editor_popup_menu.png"></div>
+        <h3 class="column_item_title">2. 开始翻译</h3>
+        <p class="column_tip">选择文本或者鼠标指向文本 > 单击鼠标右键 > Translate</p>
+        <p class="column_tip">或者使用快捷键进行翻译，详见 <a href="#actions">Actions</a>.</p>
 
-        <h3 id="kaymap" class="column_item_title">自定义快捷键（Mac下默认快捷键可能无效）</h3>
-        <p class="column_tip">打开 Preferences(Settings) > Keymap, 然后搜索 Translation. 在需要修改快捷键的
-            <a href="#actions">Action</a> 上点击鼠标右键，然后点击 "add Keyboard Shortcut..." 设置新的快捷键。
-            另外，按 ESC 键可关闭气泡和翻译对话框。</p>
-        <div class="column_img"><img width="595" height="215" src="images/keymap.png"></div>
+        <h3 class="column_item_title">3. 切换翻译引擎</h3>
+        <p class="column_tip">使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> +
+            <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译。</p>
     </div>
 
     <div class="column">
         <h2 id="actions" class="column_title">Actions</h2>
-        <ul>
-            <li>
-                <b>Show Translation Dialog...:</b> <kbd>Alt + 0</kbd> 打开翻译对话框。默认显示在工具栏上。
-            </li>
-        </ul>
-        <div class="column_img"><img width="451" height="528" src="images/action0.gif"></div>
 
         <ul>
             <li>
-                <b>Translate:</b> <kbd>Alt + 1</kbd>
-                取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。默认显示在编辑器右键菜单上。
+                <h4 class="column_item_title">Show Translation Dialog...</h4>
+                <p>打开翻译对话框。默认显示在工具栏上。默认快捷键:</p>
+                <ul>
+                    <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></li>
+                    <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd></li>
+                </ul>
+            </li>
+            <li>
+                <h4 class="column_item_title">Translate</h4>
+                <p>取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。默认显示在编辑器右键菜单上，默认快捷键:</p>
+                <ul>
+                    <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                    <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                </ul>
+            </li>
+            <li>
+                <h4 class="column_item_title">Translate(Inclusive)</h4>
+                <p>取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。默认快捷键: (无)</p>
+            </li>
+            <li>
+                <h4 class="column_item_title">Translate(Exclusive)</h4>
+                <p>取词并翻译。自动取最近的单个词，忽略手动选择的文本。默认快捷键: (无)</p>
+            </li>
+            <li>
+                <h4 class="column_item_title">Translate and Replace...</h4>
+                <p>翻译并替换。取词方式同<b>Translate</b>操作。默认显示在编辑器右键菜单上，默认快捷键:</p>
+                <ul>
+                    <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd></li>
+                    <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd></li>
+                </ul>
+            </li>
+            <li>
+                <h4 class="column_item_title">Translate Text Component</h4>
+                <p>翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本，不支持自动取词。默认快捷键:</p>
+                <ul>
+                    <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></li>
+                    <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd></li>
+                </ul>
+            </li>
+            <li>
+                <h4 class="column_item_title">Choose Translator</h4>
+                <p>快速切换翻译引擎。默认显示在工具栏上。默认快捷键:</p>
+                <ul>
+                    <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                    <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd></li>
+                </ul>
             </li>
         </ul>
-        <div class="column_img"><img width="407" height="366" src="images/action1.gif"></div>
+    </div>
+
+    <div class="column">
+        <h2 id="faq" class="column_title">FAQ</h2>
 
         <ul>
             <li>
-                <b>Translate(Inclusive):</b> <kbd>Alt + 2</kbd> 取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。
+                <h4 class="column_item_title">翻译内容出现乱码怎么办？</h4>
+                <p>答：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。</p>
+                <img src="images/settings_font.png">
             </li>
-        </ul>
-        <div class="column_img"><img width="386" height="315" src="images/action2.gif"></div>
-
-        <ul>
             <li>
-                <b>Translate(Exclusive):</b> <kbd>Alt + 3</kbd> 取词并翻译。自动取最近的单个词，忽略手动选择的文本。
+                <h4 class="column_item_title">为什么2.0以前的版本快捷键在新版本都不能用了?</h4>
+                <p>答：由于2.0以前的版本的快捷键大多与IDE默认的快捷键有冲突，抢占了IDE的默认快捷键。所以，从2.0版本以后，重新设置了插件的默认快捷键，而2.0以前的版本的快捷键已被废弃。</p>
             </li>
-        </ul>
-        <div class="column_img"><img width="466" height="372" src="images/action3.gif"></div>
-
-        <ul>
             <li>
-                <b>Translate And Replace...:</b> <kbd>Alt + R</kbd> 翻译并替换。取词方式同<b>Translate</b>操作。默认显示在编辑器右键菜单上。
+                <h4 class="column_item_title">快捷键不能使用怎么办?</h4>
+                <p>答：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。</p>
             </li>
-        </ul>
-        <div class="column_img"><img width="400" height="250" src="images/replace.gif"></div>
-
-        <ul>
             <li>
-                <b>Translate Text Component:</b> <kbd>Alt + T</kbd> 翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本。
+                <h4 class="column_item_title">如何反馈一个问题，在哪里反馈?</h4>
+                <p>答：如果发现插件的任何问题，或者对插件有任何看法，可以<a
+                        href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank"
+                >点击这里</a>反馈。在反馈问题时，请记得附上错误信息，其收集如下图所示（错误信息将会被拷贝到剪贴板）：
+                </p>
+                <img style="float: left" src="images/ctc_balloon.png"><img src="images/ctc_dialog.png">
             </li>
         </ul>
-        <div class="column_img"><img width="400" height="466" src="images/text_component.gif"></div>
     </div>
 </div>
-
 </body>
 </html>

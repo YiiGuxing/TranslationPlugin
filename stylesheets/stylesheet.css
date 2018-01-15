@@ -227,7 +227,7 @@ a:hover {
 }
 
 .index_starWrap {
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0;
     z-index: 100;
@@ -287,11 +287,11 @@ a:hover {
 }
 
 .idea {
-    width: 544px;
-    height: 618px;
+    width: 608px;
+    height: 637px;
     padding-left: 41px;
-    padding-top: 70px;
-    margin: 1rem auto 5rem;
+    padding-top: 85px;
+    margin: 1rem auto 3rem;
     border: 1px solid #00a0e1;
     background-image: url("../images/background.png");
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -302,6 +302,10 @@ a:hover {
 .idea:hover {
     border: 1px solid #707070;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.24);
+}
+
+.translator-logo {
+    margin-bottom: 5rem;
 }
 
 .maintainer {
@@ -384,8 +388,8 @@ a:hover {
     }
 
     .frame_content {
-        padding-left: 8rem;
-        padding-right: 8rem;
+        padding-left: 16rem;
+        padding-right: 16rem;
     }
 }
 
@@ -467,4 +471,18 @@ a:hover {
 
 .column_img img {
     background-color: #eff0f1;
+}
+
+kbd {
+    display: inline-block;
+    padding: 3px 5px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    line-height: 10px;
+    color: #444d56;
+    vertical-align: middle;
+    background-color: #fafbfc;
+    border: solid 1px #c6cbd1;
+    border-bottom-color: #959da5;
+    border-radius: 3px;
+    box-shadow: inset 0 -1px 0 #959da5;
 }
