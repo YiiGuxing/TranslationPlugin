@@ -18,6 +18,8 @@ import com.intellij.openapi.util.Disposer
  */
 class TranslationManager private constructor() {
 
+    // TODO 为不同的Project分配不同的Balloon和Dialog，Project之间不共用Balloon或Dialog
+
     var translationBalloon: TranslationBalloon? = null
         private set
     var translationDialog: TranslationDialog? = null
