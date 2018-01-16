@@ -20,10 +20,10 @@ typealias CharCondition = SelectWordUtil.CharCondition
 @Suppress("PropertyName")
 val DEFAULT_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
 /**
- * 汉字条件
+ * 非英文条件
  */
 @Suppress("PropertyName")
-val HANZI_CONDITION: CharCondition = CharCondition { it in '\u4E00'..'\u9FBF' }
+val NON_LATIN_CONDITION: CharCondition = CharCondition { it.toInt() > 0xFF && Character.isJavaIdentifierPart(it) }
 
 private val textRangeComparator = Comparator<TextRange> { tr1, tr2 ->
     if (tr2.contains(tr1)) -1 else 1
@@ -42,6 +42,11 @@ enum class SelectionMode {
      */
     INCLUSIVE
 }
+
+/**
+ * Returns the first character matching the given [condition], or `null` if no such character was found.
+ */
+fun String.find(condition: CharCondition): Char? = find { condition.value(it) }
 
 /**
  * 返回当前光标周围文字的范围

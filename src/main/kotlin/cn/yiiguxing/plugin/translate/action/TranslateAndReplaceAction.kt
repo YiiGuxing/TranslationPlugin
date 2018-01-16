@@ -7,10 +7,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.HANZI_CONDITION
-import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
-import cn.yiiguxing.plugin.translate.util.show
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.codeInsight.lookup.*
 import com.intellij.notification.*
@@ -34,7 +31,7 @@ import javax.swing.event.HyperlinkEvent
 /**
  * 翻译并替换
  */
-class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
+class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
     private val settings: Settings = Settings.instance
 
@@ -42,20 +39,13 @@ class TranslateAndReplaceAction : AutoSelectAction(true, HANZI_CONDITION) {
         get() = settings.autoSelectionMode
 
     override fun onUpdate(e: AnActionEvent, active: Boolean) {
-        e.presentation.isEnabledAndVisible = e.editor
-                ?.takeIf { active }
+        e.presentation.isEnabledAndVisible = active
+                && e.editor
                 ?.selectionModel
                 ?.takeIf { it.hasSelection() }
                 ?.selectedText
-                ?.let {
-                    for (c in it) {
-                        if (HANZI_CONDITION.value(c)) {
-                            return@let true
-                        }
-                    }
-
-                    false
-                } ?: active
+                ?.let { it.find(NON_LATIN_CONDITION) != null }
+                ?: active
     }
 
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
