@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.Presentation
@@ -20,25 +20,22 @@ import javax.swing.JComponent
  */
 class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
 
-    private val settings: Settings = Settings.instance
-    private val translateService: TranslateService = TranslateService.instance
-
     init {
         setPopupTitle("Translators")
     }
 
     override fun update(e: AnActionEvent) {
-        translateService.translator.let {
+        TranslateService.translator.let {
             e.presentation.text = it.name
             e.presentation.icon = it.icon
         }
     }
 
     override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
-        return DefaultActionGroup(translateService.getTranslators().map { translator ->
+        return DefaultActionGroup(TranslateService.getTranslators().map { translator ->
             object : DumbAwareAction(translator.name, null, translator.icon) {
                 override fun actionPerformed(e: AnActionEvent) {
-                    settings.translator = translator.id
+                    Settings.translator = translator.id
                 }
             }
         })

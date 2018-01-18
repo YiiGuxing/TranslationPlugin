@@ -17,15 +17,13 @@ typealias CharCondition = SelectWordUtil.CharCondition
 /**
  * 默认条件
  */
-@Suppress("PropertyName")
 val DEFAULT_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
 /**
  * 非英文条件
  */
-@Suppress("PropertyName")
 val NON_LATIN_CONDITION: CharCondition = CharCondition { it.toInt() > 0xFF && Character.isJavaIdentifierPart(it) }
 
-private val textRangeComparator = Comparator<TextRange> { tr1, tr2 ->
+private val TextRangeComparator = Comparator<TextRange> { tr1, tr2 ->
     if (tr2.contains(tr1)) -1 else 1
 }
 
@@ -64,6 +62,6 @@ fun Editor.getSelectionFromCurrentCaret(selectionMode: SelectionMode = Selection
     return when {
         ranges.isEmpty() -> null
         isExclusive -> ranges[0]
-        else -> ranges.maxWith(textRangeComparator)
+        else -> ranges.maxWith(TextRangeComparator)
     }
 }

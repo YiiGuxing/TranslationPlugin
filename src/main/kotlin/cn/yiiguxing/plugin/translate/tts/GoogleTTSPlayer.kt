@@ -49,7 +49,8 @@ class GoogleTTSPlayer(
             return playController.isRunning
         }
 
-    @Volatile private var started = false
+    @Volatile
+    private var started = false
 
     private var duration = 0
 

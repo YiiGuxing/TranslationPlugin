@@ -1,13 +1,9 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.LINK_SETTINGS
-import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.ui.Icons
-import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.md5
-import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
-import cn.yiiguxing.plugin.translate.util.urlEncode
+import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import javax.swing.Icon
@@ -32,8 +28,6 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
 
-    private val settings: Settings = Settings.instance
-
     override val id: String = TRANSLATOR_ID
 
     override val name: String = TRANSLATOR_NAME
@@ -41,13 +35,13 @@ object YoudaoTranslator : AbstractTranslator() {
     override val icon: Icon = Icons.Youdao
 
     override val primaryLanguage: Lang
-        get() = settings.youdaoTranslateSettings.primaryLanguage
+        get() = Settings.youdaoTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
-        val settings = settings.youdaoTranslateSettings
+        val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()

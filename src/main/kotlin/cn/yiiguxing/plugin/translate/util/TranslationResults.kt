@@ -4,11 +4,12 @@ import java.util.*
 import java.util.regex.Pattern
 
 /**
- * TranslationResultUtils
+ * TranslationResults
  * <p>
  * Created by Yii.Guxing on 2017-09-17 0017.
  */
-object TranslationResultUtils {
+@Suppress("unused")
+object TranslationResults {
 
     private val PATTERN_EXPLAIN = Pattern.compile(
             "(^(a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)"

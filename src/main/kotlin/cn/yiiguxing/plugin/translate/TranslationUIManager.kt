@@ -12,11 +12,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 
 /**
- * TranslationManager
+ * TranslationUIManager
  * <p>
  * Created by Yii.Guxing on 2017-09-14 0014.
  */
-class TranslationManager private constructor() {
+class TranslationUIManager private constructor() {
 
     // TODO 为不同的Project分配不同的Balloon和Dialog，Project之间不共用Balloon或Dialog
 
@@ -25,11 +25,6 @@ class TranslationManager private constructor() {
     var translationDialog: TranslationDialog? = null
         private set
 
-
-    companion object {
-        val instance: TranslationManager
-            get() = ServiceManager.getService(TranslationManager::class.java)
-    }
 
     /**
      * 显示气泡
@@ -71,4 +66,8 @@ class TranslationManager private constructor() {
         translationDialog?.close()
     }
 
+    companion object {
+        val instance: TranslationUIManager
+            get() = ServiceManager.getService(TranslationUIManager::class.java)
+    }
 }

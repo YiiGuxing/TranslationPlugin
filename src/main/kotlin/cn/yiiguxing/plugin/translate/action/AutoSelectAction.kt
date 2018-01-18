@@ -18,7 +18,7 @@ abstract class AutoSelectAction(
         private val wordPartCondition: CharCondition = DEFAULT_CONDITION
 ) : AnAction() {
 
-    abstract protected val selectionMode: SelectionMode
+    protected abstract val selectionMode: SelectionMode
 
     /**
      * 更新Action

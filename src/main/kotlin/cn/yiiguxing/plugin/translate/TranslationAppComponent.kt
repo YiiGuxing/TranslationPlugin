@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.TKK
 import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import com.intellij.openapi.components.ApplicationComponent
 
 /**
@@ -20,6 +21,6 @@ class TranslationAppComponent : ApplicationComponent {
     }
 
     override fun disposeComponent() {
-        TranslationManager.instance.closeAll()
+        TranslationUIManager.closeAll()
     }
 }

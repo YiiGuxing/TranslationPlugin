@@ -2,16 +2,16 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
-import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.tts.TextToSpeech
+import cn.yiiguxing.plugin.translate.util.AppStorage
+import cn.yiiguxing.plugin.translate.util.TextToSpeech
+import cn.yiiguxing.plugin.translate.util.TranslateService
 import java.lang.ref.WeakReference
 
 class TranslationPresenter(private val view: View) : Presenter {
 
-    private val appStorage: AppStorage = AppStorage.instance
-    private val translateService: TranslateService = TranslateService.instance
-    private val tts: TextToSpeech = TextToSpeech.instance
+    private val translateService = TranslateService
+    private val appStorage = AppStorage
     private var lastRequest: Request? = null
 
     override val histories: List<String> get() = appStorage.getHistories()
@@ -35,6 +35,8 @@ class TranslationPresenter(private val view: View) : Presenter {
             return
         }
 
+        TextToSpeech.stop()
+
         lastRequest = request
         with(appStorage) {
             addHistory(text)
@@ -47,7 +49,6 @@ class TranslationPresenter(private val view: View) : Presenter {
             return
         }
 
-        tts.stop()
         view.showStartTranslate(text)
         translateService.translate(text, srcLang, targetLang, ResultListener(this, request))
     }

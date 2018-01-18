@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
@@ -71,7 +70,6 @@ abstract class TranslationPanel<T : JComponent>(
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
 
-    private val tts: TextToSpeech = TextToSpeech.instance
     private var ttsDisposable: Disposable? = null
 
     private val originalTTSLink = createTTSLinkLabel {
@@ -170,7 +168,7 @@ abstract class TranslationPanel<T : JComponent>(
 
                 link.icon = Icons.TTSSuspend
                 link.setHoveringIcon(Icons.TTSSuspendHovering)
-                tts.speak(project, text, lang).let { disposable ->
+                TextToSpeech.speak(project, text, lang).let { disposable ->
                     myDisposable = disposable
                     ttsDisposable = disposable
                     Disposer.register(disposable, Disposable {
@@ -393,25 +391,25 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun updateComponents(translation: Translation) {
-        with(translation) {
-            sourceLangComponent.updateLanguage(srcLang)
-            targetLangComponent.updateLanguage(targetLang)
+        translation.let {
+            sourceLangComponent.updateLanguage(it.srcLang)
+            targetLangComponent.updateLanguage(it.targetLang)
 
             sourceLangRow.visible = true
             targetLangRow.visible = true
 
-            originalTTSLink.isEnabled = tts.isSupportLanguage(srcLang)
-            transTTSLink.isEnabled = !trans.isNullOrEmpty() && tts.isSupportLanguage(targetLang)
+            originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(it.srcLang)
+            transTTSLink.isEnabled = !it.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(it.targetLang)
 
-            updateViewer(originalViewer, originalViewerRow, original)
-            updateViewer(transViewer, transViewerRow, trans)
+            updateViewer(originalViewer, originalViewerRow, it.original)
+            updateViewer(transViewer, transViewerRow, it.trans)
 
-            srcTransliterationLabel.updateText(srcTransliteration)
-            transliterationLabel.updateText(transliteration)
+            srcTransliterationLabel.updateText(it.srcTransliteration)
+            transliterationLabel.updateText(it.transliteration)
 
-            updateDictViewer(dictionaries)
-            updateViewer(basicExplainViewer, basicExplainsViewerRow, basicExplains.joinToString("\n"))
-            updateOtherExplains(otherExplains)
+            updateDictViewer(it.dictionaries)
+            updateViewer(basicExplainViewer, basicExplainsViewerRow, it.basicExplains.joinToString("\n"))
+            updateOtherExplains(it.otherExplains)
         }
     }
 

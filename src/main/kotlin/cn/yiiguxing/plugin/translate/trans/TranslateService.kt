@@ -18,7 +18,6 @@ class TranslateService private constructor() {
 
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
-    private val settings: Settings = Settings.instance
     private val cache = LruCache<CacheKey, Translation>(500)
 
     companion object {
@@ -33,7 +32,7 @@ class TranslateService private constructor() {
     }
 
     init {
-        invokeOnDispatchThread { setTranslator(settings.translator) }
+        invokeOnDispatchThread { setTranslator(Settings.instance.translator) }
         ApplicationManager
                 .getApplication()
                 .messageBus

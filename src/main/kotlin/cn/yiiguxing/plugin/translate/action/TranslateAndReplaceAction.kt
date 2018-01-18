@@ -2,10 +2,8 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.OptionsConfigurable
-import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
-import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.codeInsight.highlighting.HighlightManager
@@ -33,10 +31,8 @@ import javax.swing.event.HyperlinkEvent
  */
 class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
-    private val settings: Settings = Settings.instance
-
     override val selectionMode: SelectionMode
-        get() = settings.autoSelectionMode
+        get() = Settings.autoSelectionMode
 
     override fun onUpdate(e: AnActionEvent, active: Boolean) {
         e.presentation.isEnabledAndVisible = active
@@ -58,7 +54,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
         val editorRef = WeakReference(editor)
         editor.document.getText(selectionRange).takeIf { it.isNotBlank() }?.let { text ->
-            TranslateService.instance.translate(text, Lang.AUTO, Lang.ENGLISH, object : TranslateListener {
+            TranslateService.translate(text, Lang.AUTO, Lang.ENGLISH, object : TranslateListener {
                 override fun onSuccess(translation: Translation) {
                     val items = with(translation) {
                         dictionaries.map { it.terms }.flatten().toMutableSet().apply {

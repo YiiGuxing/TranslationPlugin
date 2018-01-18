@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.TranslationManager
+import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
@@ -18,9 +18,8 @@ class ShowTranslationDialogAction : AnAction(), DumbAware {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        if (ApplicationManager.getApplication().isHeadlessEnvironment)
-            return
-
-        TranslationManager.instance.showDialog(e.project)
+        if (!ApplicationManager.getApplication().isHeadlessEnvironment) {
+            TranslationUIManager.showDialog(e.project)
+        }
     }
 }

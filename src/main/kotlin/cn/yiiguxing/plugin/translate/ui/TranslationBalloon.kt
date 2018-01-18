@@ -3,9 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
@@ -42,7 +40,6 @@ class TranslationBalloon(
 
     private val project: Project? = editor.project
     private val presenter: Presenter = TranslationPresenter(this)
-    private val settings: Settings = Settings.instance
 
     private val layout = FixedSizeCardLayout()
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
@@ -50,7 +47,7 @@ class TranslationBalloon(
     private val errorPane = JTextPane()
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
-    private val translationPane = BalloonTranslationPanel(project, settings)
+    private val translationPane = BalloonTranslationPanel(project, Settings)
     private val pinButton = ActionLink(icon = Icons.Pin) {
         translationPane.translation.let {
             showOnTranslationDialog(text)
@@ -250,7 +247,7 @@ class TranslationBalloon(
 
     private fun showOnTranslationDialog(text: String, srcLang: Lang? = null, targetLang: Lang? = null) {
         hide()
-        val dialog = TranslationManager.instance.showDialog(editor.project)
+        val dialog = TranslationUIManager.showDialog(editor.project)
         if (!text.isNullOrBlank()) {
             dialog.translate(text, srcLang, targetLang)
         }

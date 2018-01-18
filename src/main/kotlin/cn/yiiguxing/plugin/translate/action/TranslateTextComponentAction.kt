@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.TranslationManager
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.splitWords
 import com.intellij.openapi.actionSystem.DataContext
@@ -23,7 +23,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
 
     private class Handler : EditorActionHandler() {
 
-        private val settings = Settings.instance
+        private val settings = Settings
 
         public override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
             val text = when {
@@ -34,8 +34,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
                 else -> null
             }
 
-            text?.splitWords()
-                    ?.let { TranslationManager.instance.showDialog(editor.project).translate(it) }
+            text?.splitWords()?.let { TranslationUIManager.showDialog(editor.project).translate(it) }
         }
 
         public override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =

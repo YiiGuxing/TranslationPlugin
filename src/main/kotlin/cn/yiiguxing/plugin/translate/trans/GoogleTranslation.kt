@@ -4,7 +4,7 @@
  * Created by Yii.Guxing on 2018/01/06
  */
 
-@file:Suppress("MemberVisibilityCanPrivate")
+@file:Suppress("MemberVisibilityCanBePrivate")
 
 package cn.yiiguxing.plugin.translate.trans
 

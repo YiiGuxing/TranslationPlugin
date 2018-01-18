@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -27,7 +27,7 @@ object UI {
         }
 
     fun primaryFont(size: Int)
-            : JBFont = UI.getFont(Settings.instance.takeIf { it.isOverrideFont }?.primaryFontFamily, size)
+            : JBFont = UI.getFont(Settings.takeIf { it.isOverrideFont }?.primaryFontFamily, size)
 
     private fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrEmpty()) {
         JBUI.Fonts.create(fontFamily, size)

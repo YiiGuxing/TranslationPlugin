@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.ui.ConfigurablePanel
 import cn.yiiguxing.plugin.translate.ui.SettingsPanel
+import cn.yiiguxing.plugin.translate.util.AppStorage
+import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.options.ShowSettingsUtil
@@ -14,9 +16,6 @@ import javax.swing.JComponent
  */
 class OptionsConfigurable : SearchableConfigurable, Disposable {
 
-    private val mSettings: Settings = Settings.instance
-    private val mAppStorage: AppStorage = AppStorage.instance
-
     private var mPanel: ConfigurablePanel? = null
 
     override fun getId(): String = "yiiguxing.plugin.translate"
@@ -27,7 +26,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     override fun getHelpTopic(): String? = null
 
-    override fun createComponent(): JComponent = with(SettingsPanel(mSettings, mAppStorage)) {
+    override fun createComponent(): JComponent = with(SettingsPanel(Settings, AppStorage)) {
         mPanel = this@with
         component
     }
