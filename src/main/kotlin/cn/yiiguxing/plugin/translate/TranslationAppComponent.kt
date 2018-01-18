@@ -21,6 +21,6 @@ class TranslationAppComponent : ApplicationComponent {
     }
 
     override fun disposeComponent() {
-        TranslationUIManager.closeAll()
+        TranslationUIManager.closeUI()
     }
 }

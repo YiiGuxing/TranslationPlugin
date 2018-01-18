@@ -46,7 +46,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
     }
 
     override fun disposeComponent() {
-        TranslationUIManager.closeAll()
+        TranslationUIManager.closeUI(myProject)
     }
 
     private companion object {
