@@ -68,16 +68,12 @@ class TranslationUIManager private constructor() {
     /**
      * 关闭显示中的气泡和对话框
      */
-    fun closeUI(project: Project? = null) {
+    fun disposeUI(project: Project? = null) {
         checkThread()
 
         if (project == null) {
-            balloonMap.values.toList().forEach {
-                it.hide()
-            }
-            dialogMap.values.toList().forEach {
-                it.close()
-            }
+            balloonMap.values.toList().forEach { it.hide() }
+            dialogMap.values.toList().forEach { it.close() }
         } else {
             balloonMap[project]?.hide()
             dialogMap[project]?.close()
