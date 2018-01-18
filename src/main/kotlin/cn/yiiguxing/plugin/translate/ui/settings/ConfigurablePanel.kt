@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui
+package cn.yiiguxing.plugin.translate.ui.settings
 
 import javax.swing.JComponent
 

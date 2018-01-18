@@ -1,9 +1,12 @@
-package cn.yiiguxing.plugin.translate.ui
+package cn.yiiguxing.plugin.translate.ui.icon
 
 import com.intellij.openapi.util.IconLoader
 import com.intellij.util.ui.AnimatedIcon
 
-internal class ProcessIcon : AnimatedIcon("Querying Process", ICONS, STEP_PASSIVE, CYCLE_LENGTH) {
+internal class ProcessIcon : AnimatedIcon("Querying Process",
+        ICONS,
+        STEP_PASSIVE,
+        CYCLE_LENGTH) {
     companion object {
         private const val CYCLE_LENGTH = 800
 

@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.ui.icon.ComboArrowIcon
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.ListCellRendererWrapper
 import com.intellij.util.ui.JBInsets

@@ -3,6 +3,8 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -304,7 +306,8 @@ class TranslationBalloon(
         private const val CARD_ERROR = "error"
         private const val CARD_TRANSLATION = "translation"
 
-        private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(content)
+        private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(
+                content)
                 .setDialogMode(true)
                 .setFillColor(UIManager.getColor("Panel.background"))
                 .setBorderColor(Color.darkGray.toAlpha(75))

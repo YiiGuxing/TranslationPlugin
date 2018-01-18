@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui
+package cn.yiiguxing.plugin.translate.ui.icon
 
 import com.intellij.util.ui.JBUI
 import java.awt.Color

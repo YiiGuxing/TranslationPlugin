@@ -2,10 +2,9 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.ui.Icons
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
@@ -41,7 +40,7 @@ object GoogleTranslator : AbstractTranslator() {
     override val supportedSourceLanguages
             : List<Lang> = Lang.values().asList()
     override val supportedTargetLanguages
-            : List<Lang> = mutableListOf(*Lang.values()).apply { remove(Lang.AUTO) }.toJVMReadOnlyList()
+            : List<Lang> = mutableListOf(*Lang.values()).apply { remove(Lang.AUTO) }
 
     override fun buildRequest(builder: RequestBuilder) {
         builder.userAgent(DEFAULT_USER_AGENT)

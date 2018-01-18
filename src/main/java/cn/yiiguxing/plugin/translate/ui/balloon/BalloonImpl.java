@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.yiiguxing.plugin.translate.ui;
+package cn.yiiguxing.plugin.translate.ui.balloon;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;

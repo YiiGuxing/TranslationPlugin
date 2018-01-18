@@ -2,8 +2,11 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.LINK_SETTINGS
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.ui.Icons
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.md5
+import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import javax.swing.Icon
@@ -14,7 +17,6 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
-    @JvmField
     val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.AUTO,
             Lang.CHINESE,
@@ -24,7 +26,7 @@ object YoudaoTranslator : AbstractTranslator() {
             Lang.FRENCH,
             Lang.RUSSIAN,
             Lang.PORTUGUESE,
-            Lang.SPANISH).toJVMReadOnlyList()
+            Lang.SPANISH)
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
 

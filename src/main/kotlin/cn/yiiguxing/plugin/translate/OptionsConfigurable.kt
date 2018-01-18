@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.ui.ConfigurablePanel
-import cn.yiiguxing.plugin.translate.ui.SettingsPanel
+import cn.yiiguxing.plugin.translate.ui.settings.ConfigurablePanel
+import cn.yiiguxing.plugin.translate.ui.settings.SettingsPanel
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.Disposable
@@ -16,7 +16,7 @@ import javax.swing.JComponent
  */
 class OptionsConfigurable : SearchableConfigurable, Disposable {
 
-    private var mPanel: ConfigurablePanel? = null
+    private var configurablePanel: ConfigurablePanel? = null
 
     override fun getId(): String = "yiiguxing.plugin.translate"
 
@@ -26,19 +26,19 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     override fun getHelpTopic(): String? = null
 
-    override fun createComponent(): JComponent = with(SettingsPanel(Settings, AppStorage)) {
-        mPanel = this@with
-        component
+    override fun createComponent(): JComponent = SettingsPanel(Settings, AppStorage).let {
+        configurablePanel = it
+        it.component
     }
 
-    override fun isModified(): Boolean = mPanel?.isModified ?: false
+    override fun isModified(): Boolean = configurablePanel?.isModified ?: false
 
     override fun apply() {
-        mPanel?.apply()
+        configurablePanel?.apply()
     }
 
     override fun reset() {
-        mPanel?.reset()
+        configurablePanel?.reset()
     }
 
     override fun disposeUIResources() {
@@ -46,7 +46,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
     }
 
     override fun dispose() {
-        mPanel = null
+        configurablePanel = null
     }
 
     companion object {

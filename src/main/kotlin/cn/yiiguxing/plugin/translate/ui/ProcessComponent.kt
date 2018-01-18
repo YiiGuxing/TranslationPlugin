@@ -2,6 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.ui.icon.ProcessIcon
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor

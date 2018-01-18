@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.trimToSize
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
@@ -21,7 +20,8 @@ import kotlin.properties.Delegates
 @State(name = "AppStorage", storages = [(Storage("yiiguxing.translation.xml"))])
 class AppStorage : PersistentStateComponent<AppStorage> {
 
-    @CollectionBean private val histories: MutableList<String> = ArrayList(DEFAULT_HISTORY_SIZE)
+    @CollectionBean
+    private val histories: MutableList<String> = ArrayList(DEFAULT_HISTORY_SIZE)
 
     /**
      * 最大历史记录长度
@@ -44,7 +44,8 @@ class AppStorage : PersistentStateComponent<AppStorage> {
      */
     var lastTargetLanguage: Lang? = null
 
-    @Transient private val dataChangePublisher: HistoriesChangedListener =
+    @Transient
+    private val dataChangePublisher: HistoriesChangedListener =
             ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
 
     override fun getState(): AppStorage = this
@@ -62,7 +63,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     /**
      * @return 历史上记录列表
      */
-    fun getHistories(): List<String> = histories.toJVMReadOnlyList()
+    fun getHistories(): List<String> = histories
 
     /**
      * 添加历史记录
