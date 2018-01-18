@@ -20,17 +20,6 @@ class TranslateService private constructor() {
     var translator: Translator = DEFAULT_TRANSLATOR
     private val cache = LruCache<CacheKey, Translation>(500)
 
-    companion object {
-        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
-
-        val instance: TranslateService
-            get() = ServiceManager.getService(TranslateService::class.java)
-
-        private val LOGGER = Logger.getInstance(TranslateService::class.java)
-
-        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
-    }
-
     init {
         invokeOnDispatchThread { setTranslator(Settings.instance.translator) }
         ApplicationManager
@@ -95,5 +84,16 @@ class TranslateService private constructor() {
         if (Lang.AUTO == srcLang && Lang.AUTO == targetLang) {
             cache.put(CacheKey(text, this.srcLang, this.targetLang, translatorId), this)
         }
+    }
+
+    companion object {
+        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
+
+        val instance: TranslateService
+            get() = ServiceManager.getService(TranslateService::class.java)
+
+        private val LOGGER = Logger.getInstance(TranslateService::class.java)
+
+        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
     }
 }
