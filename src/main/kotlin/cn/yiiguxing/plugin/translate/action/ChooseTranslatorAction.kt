@@ -41,15 +41,14 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
                 .findFrameFor(e.project)
                 ?.component
                 ?.let {
-                    createActionPopup(POPUP_TITLE, e.dataContext, it, null)
-                            .showInCenterOf(it)
+                    createActionPopup(POPUP_TITLE, e.dataContext, it).showInCenterOf(it)
                 }
     }
 
     private fun createActionPopup(title: String?,
                                   context: DataContext,
                                   component: JComponent,
-                                  disposeCallback: Runnable?): ListPopup {
+                                  disposeCallback: Runnable? = null): ListPopup {
         val group = createPopupActionGroup(component, context)
         return JBPopupFactory.getInstance()
                 .createActionGroupPopup(title, group, context, false, shouldShowDisabledActions(),
