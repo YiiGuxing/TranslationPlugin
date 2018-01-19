@@ -19,6 +19,7 @@ class TranslateService private constructor() {
 
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
+        private set
     private val cache = LruCache<CacheKey, Translation>(500)
 
     private var messageBus: MessageBusConnection? = null
