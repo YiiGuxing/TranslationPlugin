@@ -138,7 +138,7 @@
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="NavBarToolBar" anchor="last"/>
+            <add-to-group group-id="NavBarToolBar" anchor="first"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>
