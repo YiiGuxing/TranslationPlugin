@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog
+import cn.yiiguxing.plugin.translate.ui.TranslatorWidget
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
@@ -63,6 +64,14 @@ class TranslationUIManager private constructor() {
         }
 
         return dialog.apply { show() }
+    }
+
+    /**
+     * 显示状态栏图标
+     */
+    fun installStatusWidget(project: Project) {
+        checkThread()
+        TranslatorWidget(project).install()
     }
 
     /**

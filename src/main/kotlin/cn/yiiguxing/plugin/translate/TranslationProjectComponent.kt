@@ -15,6 +15,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
     override fun projectOpened() {
         TKK.update()
         checkYoudaoConfig()
+        TranslationUIManager.installStatusWidget(myProject)
     }
 
     private fun checkYoudaoConfig() {
