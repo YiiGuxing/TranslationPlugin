@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
@@ -8,7 +7,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.DumbAware
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
@@ -25,7 +23,7 @@ import javax.swing.JComponent
 class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
 
     init {
-        setPopupTitle(POPUP_TITLE)
+        setPopupTitle(TranslatorActionGroup.TITLE)
         isEnabledInModalContext = true
     }
 
@@ -41,7 +39,7 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
                 .findFrameFor(e.project)
                 ?.component
                 ?.let {
-                    createActionPopup(POPUP_TITLE, e.dataContext, it).showInCenterOf(it)
+                    createActionPopup(TranslatorActionGroup.TITLE, e.dataContext, it).showInCenterOf(it)
                 }
     }
 
@@ -56,15 +54,8 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
                 .apply { setMinimumSize(Dimension(minWidth, minHeight)) }
     }
 
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
-        return DefaultActionGroup(TranslateService.getTranslators().map { translator ->
-            object : DumbAwareAction(translator.name, null, translator.icon) {
-                override fun actionPerformed(e: AnActionEvent) {
-                    Settings.translator = translator.id
-                }
-            }
-        })
-    }
+    override fun createPopupActionGroup(button: JComponent)
+            : DefaultActionGroup = DefaultActionGroup(TranslatorActionGroup.getActions())
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton =
             object : ComboBoxButton(presentation) {
@@ -72,8 +63,4 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
                     return createActionPopup(null, dataContext, this, onDispose)
                 }
             }
-
-    companion object {
-        private const val POPUP_TITLE = "Translators"
-    }
 }

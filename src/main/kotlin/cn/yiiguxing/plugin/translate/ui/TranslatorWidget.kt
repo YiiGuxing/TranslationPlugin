@@ -2,15 +2,22 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
+import cn.yiiguxing.plugin.translate.action.TranslatorActionGroup
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
+import com.intellij.ide.DataManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.openapi.wm.impl.status.MemoryUsagePanel
+import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.Consumer
+import java.awt.Component
+import java.awt.Point
 import java.awt.event.MouseEvent
 import javax.swing.Icon
 
@@ -47,9 +54,18 @@ class TranslatorWidget(
         this.statusBar = statusBar
     }
 
-    override fun getClickConsumer(): Consumer<MouseEvent>? {
-        // TODO 添加点击切换翻译引擎支持
-        return null
+    override fun getClickConsumer(): Consumer<MouseEvent> = Consumer {
+        getPopupStep(it.component).apply {
+            val at = Point(0, -content.preferredSize.height)
+            show(RelativePoint(it.component, at))
+        }
+    }
+
+    private fun getPopupStep(component: Component): ListPopup {
+        val group = TranslatorActionGroup()
+        val context = DataManager.getInstance().getDataContext(component)
+        return JBPopupFactory.getInstance()
+                .createActionGroupPopup(TranslatorActionGroup.TITLE, group, context, false, null, 5)
     }
 
     override fun dispose() {
