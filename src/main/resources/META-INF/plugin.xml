@@ -134,7 +134,6 @@
         </group>
         <group id="TranslationToolBar" text="Translation Toolbar Actions">
             <separator/>
-            <reference ref="$ChooseTranslatorAction"/>
             <reference ref="$ShowTranslationDialogAction"/>
             <separator/>
 
