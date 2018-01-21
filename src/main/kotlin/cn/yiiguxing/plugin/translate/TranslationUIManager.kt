@@ -9,9 +9,10 @@ import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.RangeMarker
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
+import com.intellij.util.ui.PositionTracker
 
 /**
  * TranslationUIManager
@@ -26,24 +27,26 @@ class TranslationUIManager private constructor() {
     /**
      * 显示气泡
      *
-     * @param editor           编辑器
-     * @param caretRangeMarker 光标范围
-     * @param queryText        查询字符串
+     * @param editor   编辑器
+     * @param text     查询字符串
+     * @param tracker  位置跟踪器
+     * @param position 气泡位置
      * @return 气泡实例
      */
-    fun showBalloon(editor: Editor, caretRangeMarker: RangeMarker, queryText: String): TranslationBalloon {
+    fun showBalloon(editor: Editor, text: String, tracker: PositionTracker<Balloon>, position: Balloon.Position)
+            : TranslationBalloon {
         checkThread()
         val project = editor.project
         balloonMap[project]?.hide()
 
-        return TranslationBalloon(editor, caretRangeMarker, queryText).also {
+        return TranslationBalloon(editor, text).also {
             balloonMap[project] = it
             Disposer.register(it, Disposable {
                 checkThread()
                 balloonMap.remove(project, it)
             })
 
-            it.show()
+            it.show(tracker, position)
         }
     }
 
