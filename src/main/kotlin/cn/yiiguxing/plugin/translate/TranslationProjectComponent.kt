@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.TKK
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.notification.*
 import com.intellij.openapi.components.AbstractProjectComponent
@@ -10,19 +12,14 @@ import javax.swing.event.HyperlinkEvent
 
 class TranslationProjectComponent(project: Project) : AbstractProjectComponent(project) {
 
-    private lateinit var settings: Settings
-
-    override fun initComponent() {
-        settings = Settings.instance
-    }
-
     override fun projectOpened() {
         TKK.update()
         checkYoudaoConfig()
+        TranslationUIManager.installStatusWidget(myProject)
     }
 
     private fun checkYoudaoConfig() {
-        with(settings) {
+        with(Settings) {
             if (isDisableAppKeyNotification || translator != YoudaoTranslator.TRANSLATOR_ID) {
                 return
             }
@@ -42,7 +39,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
                         notification.expire()
                         when (hyperlinkEvent.description) {
                             HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(myProject)
-                            HTML_DESCRIPTION_DISABLE -> settings.isDisableAppKeyNotification = true
+                            HTML_DESCRIPTION_DISABLE -> Settings.isDisableAppKeyNotification = true
                         }
                     }
                 }
@@ -50,7 +47,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
     }
 
     override fun disposeComponent() {
-        TranslationManager.instance.closeAll()
+        TranslationUIManager.disposeUI(myProject)
     }
 
     private companion object {

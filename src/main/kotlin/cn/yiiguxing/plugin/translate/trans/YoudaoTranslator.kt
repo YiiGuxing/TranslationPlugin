@@ -1,12 +1,11 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.LINK_SETTINGS
-import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.ui.Icons
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
-import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
@@ -18,7 +17,6 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
-    @JvmField
     val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.AUTO,
             Lang.CHINESE,
@@ -28,11 +26,9 @@ object YoudaoTranslator : AbstractTranslator() {
             Lang.FRENCH,
             Lang.RUSSIAN,
             Lang.PORTUGUESE,
-            Lang.SPANISH).toJVMReadOnlyList()
+            Lang.SPANISH)
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
-
-    private val settings: Settings = Settings.instance
 
     override val id: String = TRANSLATOR_ID
 
@@ -41,13 +37,13 @@ object YoudaoTranslator : AbstractTranslator() {
     override val icon: Icon = Icons.Youdao
 
     override val primaryLanguage: Lang
-        get() = settings.youdaoTranslateSettings.primaryLanguage
+        get() = Settings.youdaoTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
-        val settings = settings.youdaoTranslateSettings
+        val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()
@@ -61,14 +57,14 @@ object YoudaoTranslator : AbstractTranslator() {
                 "&sign=$sign" +
                 "&q=${text.urlEncode()}")
                 .also {
-                    logger.i { "Translate url: $it" }
+                    logger.i("Translate url: $it")
                 }
     }
 
     private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
-        logger.i { "Translate result: $result" }
+        logger.i("Translate result: $result")
 
         return Gson().fromJson(result, YoudaoTranslation::class.java).apply {
             query = original

@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.DictEntry
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.addStyle
 import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
@@ -201,37 +202,38 @@ class StyledDictViewer {
                     isNotEmpty()
                 }
 
-        with(dict.entries.filter { it.reverseTranslation.isNotEmpty() }) {
-            if (isEmpty()) {
-                return@with
-            } else if (hasWordOnly) {
-                appendString("\n")
-            }
+        dict.entries
+                .filter { it.reverseTranslation.isNotEmpty() }
+                .takeIf { it.isNotEmpty() }
+                ?.let { entries ->
+                    if (hasWordOnly) {
+                        appendString("\n")
+                    }
 
-            val displayCount = if (hasWordOnly) 2 else 3
-            val lastIndex = size - 1
-            take(displayCount).forEachIndexed { index, dictEntry ->
-                if (index > 0) {
-                    appendString("\n")
+                    val displayCount = if (hasWordOnly) 2 else 3
+                    val lastIndex = entries.size - 1
+                    entries.take(displayCount).forEachIndexed { index, dictEntry ->
+                        if (index > 0) {
+                            appendString("\n")
+                        }
+                        insertDictEntry(length, dictEntry, index == lastIndex)
+                    }
+
+                    if (entries.size > displayCount) {
+                        appendString("\n")
+
+                        val foldingEntries = entries.takeLast(entries.size - displayCount)
+                        val placeholder = foldingEntries.run {
+                            take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
+                        }
+
+                        setParagraphStyle(style = entryEndParagraphStyle)
+                        SimpleAttributeSet(foldingStyle).let {
+                            it.addAttribute(StyleConstant.MOUSE_LISTENER, FoldingMouseListener(foldingEntries))
+                            appendString(placeholder, it)
+                        }
+                    }
                 }
-                insertDictEntry(length, dictEntry, index == lastIndex)
-            }
-
-            if (size > displayCount) {
-                appendString("\n")
-
-                val foldingEntries = takeLast(size - displayCount)
-                val placeholder = foldingEntries.run {
-                    take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
-                }
-
-                setParagraphStyle(style = entryEndParagraphStyle)
-                SimpleAttributeSet(foldingStyle).let {
-                    it.addAttribute(StyleConstant.MOUSE_LISTENER, FoldingMouseListener(foldingEntries))
-                    appendString(placeholder, it)
-                }
-            }
-        }
 
         if (!isLast) {
             appendString("\n")
@@ -332,7 +334,7 @@ class StyledDictViewer {
         }
     }
 
-    private inner abstract class BaseMouseListener {
+    private abstract inner class BaseMouseListener {
         abstract fun mouseClicked(element: Element)
 
         open fun mouseRightButtonClicked(element: Element) {}

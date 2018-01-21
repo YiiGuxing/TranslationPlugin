@@ -3,7 +3,7 @@
  * 
  * Created by Yii.Guxing on 2017/10/30
  */
-@file:Suppress("ArrayInDataClass", "MemberVisibilityCanPrivate")
+@file:Suppress("ArrayInDataClass", "MemberVisibilityCanBePrivate")
 
 package cn.yiiguxing.plugin.translate.trans
 

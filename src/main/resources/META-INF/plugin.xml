@@ -40,8 +40,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>接入谷歌翻译</li>
-        <li>用户体验优化</li>
+        <li>加入状态栏图标</li>
+        <li>BUG修复</li>
       </ul>
       <br/>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
@@ -55,18 +55,13 @@
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.Settings"
-                            serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
-        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUIManager"/>
 
-        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.trans.TranslateService"
-                            serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
-        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.tts.TextToSpeech"
-                            serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
-        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.AppStorage"
-                            serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
-        <applicationService serviceInterface="cn.yiiguxing.plugin.translate.TranslationManager"
-                            serviceImplementation="cn.yiiguxing.plugin.translate.TranslationManager"/>
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
     </extensions>
 
     <application-components>
@@ -139,12 +134,11 @@
         </group>
         <group id="TranslationToolBar" text="Translation Toolbar Actions">
             <separator/>
-            <reference ref="$ChooseTranslatorAction"/>
             <reference ref="$ShowTranslationDialogAction"/>
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="NavBarToolBar" anchor="last"/>
+            <add-to-group group-id="NavBarToolBar" anchor="first"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>

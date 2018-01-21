@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.util.CharCondition
-import cn.yiiguxing.plugin.translate.util.DEFAULT_CONDITION
-import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -21,7 +18,7 @@ abstract class AutoSelectAction(
         private val wordPartCondition: CharCondition = DEFAULT_CONDITION
 ) : AnAction() {
 
-    abstract protected val selectionMode: SelectionMode
+    protected abstract val selectionMode: SelectionMode
 
     /**
      * 更新Action
@@ -66,14 +63,9 @@ abstract class AutoSelectAction(
             return false
         }
 
-        val text = document.getText(TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1)))
-        for (c in text) {
-            if (wordPartCondition.value(c)) {
-                return true
-            }
-        }
-
-        return false
+        return TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
+                .let { document.getText(it) }
+                .find(wordPartCondition) != null
     }
 
     private fun AnActionEvent.getSelectionRange() = editor?.run {
@@ -81,5 +73,4 @@ abstract class AutoSelectAction(
             TextRange(selectionStart, selectionEnd)
         } ?: getSelectionFromCurrentCaret(selectionMode, wordPartCondition)
     }
-
 }

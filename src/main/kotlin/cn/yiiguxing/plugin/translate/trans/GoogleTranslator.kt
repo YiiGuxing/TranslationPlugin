@@ -2,10 +2,9 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.ui.Icons
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.toJVMReadOnlyList
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
@@ -29,8 +28,6 @@ object GoogleTranslator : AbstractTranslator() {
             .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
             .create()
 
-    private val settings: Settings = Settings.instance
-
     override val id: String = TRANSLATOR_ID
 
     override val name: String = TRANSLATOR_NAME
@@ -38,12 +35,12 @@ object GoogleTranslator : AbstractTranslator() {
     override val icon: Icon = Icons.Google
 
     override val primaryLanguage: Lang
-        get() = settings.googleTranslateSettings.primaryLanguage
+        get() = Settings.googleTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages
             : List<Lang> = Lang.values().asList()
     override val supportedTargetLanguages
-            : List<Lang> = mutableListOf(*Lang.values()).apply { remove(Lang.AUTO) }.toJVMReadOnlyList()
+            : List<Lang> = mutableListOf(*Lang.values()).apply { remove(Lang.AUTO) }
 
     override fun buildRequest(builder: RequestBuilder) {
         builder.userAgent(DEFAULT_USER_AGENT)
@@ -57,13 +54,14 @@ object GoogleTranslator : AbstractTranslator() {
             "&tk=${text.tk()}" +
             "&q=${text.urlEncode()}")
             .also {
-                logger.i { "Translate url: $it" }
+                logger.i("Translate url: $it")
             }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
-        logger.i { "Translate result: $result" }
+        logger.i("Translate result: $result")
 
         return gson.fromJson(result, GoogleTranslation::class.java).apply {
+            this.original = original
             target = targetLang
         }.toTranslation()
     }

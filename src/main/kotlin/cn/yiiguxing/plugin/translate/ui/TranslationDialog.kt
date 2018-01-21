@@ -4,9 +4,9 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.CustomShortcutSet
@@ -38,11 +38,8 @@ import javax.swing.text.JTextComponent
 class TranslationDialog(private val project: Project?)
     : TranslationDialogForm(project), View, HistoriesChangedListener, SettingsChangeListener {
 
-    private val settings: Settings = Settings.instance
-    private val appStorage: AppStorage = AppStorage.instance
-
     private val processPane = ProcessComponent("Querying...")
-    private val translationPane = DialogTranslationPanel(project, settings, WIDTH - 44)
+    private val translationPane = DialogTranslationPanel(project, Settings, WIDTH - 44)
     private val translationPanel = ScrollPane(translationPane.component)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 
@@ -162,10 +159,10 @@ class TranslationDialog(private val project: Project?)
         }
 
         presenter.supportedLanguages.let { (source, target) ->
-            (appStorage.lastSourceLanguage?.takeIf { source.contains(it) } ?: source.first()).let {
+            (AppStorage.lastSourceLanguage?.takeIf { source.contains(it) } ?: source.first()).let {
                 sourceLangComboBox.init(source, it)
             }
-            (appStorage.lastTargetLanguage?.takeIf { target.contains(it) } ?: presenter.primaryLanguage).let {
+            (AppStorage.lastTargetLanguage?.takeIf { target.contains(it) } ?: presenter.primaryLanguage).let {
                 targetLangComboBox.init(target, it)
             }
         }
@@ -571,8 +568,8 @@ class TranslationDialog(private val project: Project?)
     }
 
     companion object {
-        private val WIDTH = 400
-        private val HEIGHT = 500
+        private const val WIDTH = 400
+        private const val HEIGHT = 500
 
         private val CONTENT_BACKGROUND = JBColor(0xFFFFFF, 0x2B2B2B)
         private val BORDER_ACTIVE = LineBorder(JBColor(0x808080, 0x232323))

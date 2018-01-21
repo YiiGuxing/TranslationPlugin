@@ -4,6 +4,7 @@ import com.google.gson.JsonSyntaxException
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import java.net.ConnectException
+import java.net.SocketException
 import java.net.SocketTimeoutException
 
 /**
@@ -21,6 +22,7 @@ abstract class AbstractTranslator : Translator {
 
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is UnsupportedLanguageException -> "不支持的语言类型：${throwable.lang.langName}"
+        is SocketException -> "网络异常"
         is ConnectException -> "网络连接失败"
         is SocketTimeoutException -> "网络连接超时，请检查网络连接"
         is JsonSyntaxException -> "无法解析翻译结果"

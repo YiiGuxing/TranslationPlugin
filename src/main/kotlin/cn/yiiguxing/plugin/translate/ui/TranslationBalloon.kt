@@ -3,25 +3,21 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.RangeMarker
 import com.intellij.openapi.editor.ScrollType
-import com.intellij.openapi.editor.VisualPosition
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
-import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.HyperlinkAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.intellij.ui.popup.PopupFactoryImpl
 import com.intellij.util.ui.*
 import java.awt.AWTEvent
 import java.awt.Color
@@ -36,13 +32,11 @@ import javax.swing.event.HyperlinkEvent
 
 class TranslationBalloon(
         private val editor: Editor,
-        private val caretRangeMarker: RangeMarker,
         private val text: String
 ) : View, SettingsChangeListener {
 
     private val project: Project? = editor.project
     private val presenter: Presenter = TranslationPresenter(this)
-    private val settings: Settings = Settings.instance
 
     private val layout = FixedSizeCardLayout()
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
@@ -50,7 +44,7 @@ class TranslationBalloon(
     private val errorPane = JTextPane()
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
-    private val translationPane = BalloonTranslationPanel(project, settings)
+    private val translationPane = BalloonTranslationPanel(project, Settings)
     private val pinButton = ActionLink(icon = Icons.Pin) {
         translationPane.translation.let {
             showOnTranslationDialog(text)
@@ -62,7 +56,6 @@ class TranslationBalloon(
     }
 
     private val balloon: Balloon
-    private var targetLocation: RelativePoint? = null
 
     private var isShowing = false
     private var _disposed = false
@@ -89,8 +82,6 @@ class TranslationBalloon(
 
         balloon = createBalloon(contentPanel)
         initActions()
-
-        updateCaretPosition()
 
         project?.let { Disposer.register(it, balloon) }
         // 如果使用`Disposer.register(balloon, this)`的话，
@@ -192,18 +183,6 @@ class TranslationBalloon(
         }
     }
 
-    private fun updateCaretPosition() {
-        with(caretRangeMarker) {
-            if (isValid) {
-                val offset = Math.round((startOffset + endOffset) / 2f)
-                editor.apply {
-                    val position = offsetToVisualPosition(offset)
-                    putUserData<VisualPosition>(PopupFactoryImpl.ANCHOR_POPUP_POSITION, position)
-                }
-            }
-        }
-    }
-
     override fun dispose() {
         if (disposed) {
             return
@@ -213,7 +192,6 @@ class TranslationBalloon(
         isShowing = false
 
         balloon.hide()
-        caretRangeMarker.dispose()
         Toolkit.getDefaultToolkit().removeAWTEventListener(eventListener)
 
         println("Balloon disposed.")
@@ -225,14 +203,14 @@ class TranslationBalloon(
         }
     }
 
-    fun show() {
+    fun show(tracker: PositionTracker<Balloon>, position: Balloon.Position) {
         check(!disposed) { "Balloon was disposed." }
 
         if (!isShowing) {
             isShowing = true
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
-            showBalloon()
+            balloon.show(tracker, position)
 
             val targetLang = if (text.any { it.toInt() > 0xFF }) Lang.ENGLISH else presenter.primaryLanguage
             translate(Lang.AUTO, targetLang)
@@ -250,7 +228,7 @@ class TranslationBalloon(
 
     private fun showOnTranslationDialog(text: String, srcLang: Lang? = null, targetLang: Lang? = null) {
         hide()
-        val dialog = TranslationManager.instance.showDialog(editor.project)
+        val dialog = TranslationUIManager.showDialog(editor.project)
         if (!text.isNullOrBlank()) {
             dialog.translate(text, srcLang, targetLang)
         }
@@ -264,22 +242,6 @@ class TranslationBalloon(
         if (!disposed) {
             showCard(CARD_PROCESSING)
         }
-    }
-
-    private fun showBalloon() {
-        val popupFactory = JBPopupFactory.getInstance()
-        balloon.show(object : PositionTracker<Balloon>(editor.contentComponent) {
-            override fun recalculateLocation(balloon: Balloon): RelativePoint? {
-                if (targetLocation != null && !popupFactory.isBestPopupLocationVisible(editor)) {
-                    return targetLocation
-                }
-
-                updateCaretPosition()
-
-                targetLocation = popupFactory.guessBestPopupLocation(editor)
-                return targetLocation
-            }
-        }, Balloon.Position.below)
     }
 
     override fun showTranslation(translation: Translation) {
@@ -307,7 +269,8 @@ class TranslationBalloon(
         private const val CARD_ERROR = "error"
         private const val CARD_TRANSLATION = "translation"
 
-        private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(content)
+        private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(
+                content)
                 .setDialogMode(true)
                 .setFillColor(UIManager.getColor("Panel.background"))
                 .setBorderColor(Color.darkGray.toAlpha(75))

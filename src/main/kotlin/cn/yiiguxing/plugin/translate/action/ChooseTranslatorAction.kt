@@ -1,17 +1,19 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.DumbAware
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.openapi.ui.popup.ListPopup
+import com.intellij.openapi.wm.ex.WindowManagerEx
 import java.awt.Dimension
 import javax.swing.JComponent
+
 
 /**
  * ChooseTranslatorAction
@@ -20,39 +22,45 @@ import javax.swing.JComponent
  */
 class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
 
-    private val settings: Settings = Settings.instance
-    private val translateService: TranslateService = TranslateService.instance
-
     init {
-        setPopupTitle("Translators")
+        setPopupTitle(TranslatorActionGroup.TITLE)
+        isEnabledInModalContext = true
     }
 
     override fun update(e: AnActionEvent) {
-        translateService.translator.let {
+        TranslateService.translator.let {
             e.presentation.text = it.name
             e.presentation.icon = it.icon
         }
     }
 
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
-        return DefaultActionGroup(translateService.getTranslators().map { translator ->
-            object : DumbAwareAction(translator.name, null, translator.icon) {
-                override fun actionPerformed(e: AnActionEvent) {
-                    settings.translator = translator.id
+    override fun actionPerformed(e: AnActionEvent) {
+        WindowManagerEx.getInstanceEx()
+                .findFrameFor(e.project)
+                ?.component
+                ?.let {
+                    createActionPopup(TranslatorActionGroup.TITLE, e.dataContext, it).showInCenterOf(it)
                 }
-            }
-        })
     }
+
+    private fun createActionPopup(title: String?,
+                                  context: DataContext,
+                                  component: JComponent,
+                                  disposeCallback: Runnable? = null): ListPopup {
+        val group = createPopupActionGroup(component, context)
+        return JBPopupFactory.getInstance()
+                .createActionGroupPopup(title, group, context, false, shouldShowDisabledActions(),
+                        false, disposeCallback, maxRows, preselectCondition)
+                .apply { setMinimumSize(Dimension(minWidth, minHeight)) }
+    }
+
+    override fun createPopupActionGroup(button: JComponent)
+            : DefaultActionGroup = DefaultActionGroup(TranslatorActionGroup.getActions())
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton =
             object : ComboBoxButton(presentation) {
                 override fun createPopup(onDispose: Runnable?): JBPopup {
-                    val context = dataContext
-                    val group = createPopupActionGroup(this, context)
-                    return JBPopupFactory.getInstance()
-                            .createActionGroupPopup(null, group, context, false, shouldShowDisabledActions(),
-                                    false, onDispose, maxRows, preselectCondition)
-                            .apply { setMinimumSize(Dimension(minWidth, minHeight)) }
+                    return createActionPopup(null, dataContext, this, onDispose)
                 }
             }
 }

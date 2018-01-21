@@ -49,7 +49,8 @@ class GoogleTTSPlayer(
             return playController.isRunning
         }
 
-    @Volatile private var started = false
+    @Volatile
+    private var started = false
 
     private var duration = 0
 
@@ -78,14 +79,14 @@ class GoogleTTSPlayer(
 
         override fun onThrowable(error: Throwable) {
             if (error is HttpRequests.HttpStatusException && error.statusCode == 404) {
-                LOGGER.w { "TTS Error: Unsupported language: ${lang.code}." }
+                LOGGER.w("TTS Error: Unsupported language: ${lang.code}.")
 
                 NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.TOOL_WINDOW, true)
                         .createNotification("TTS", "不支持的语言: ${lang.langName}.",
                                 NotificationType.WARNING, null)
                         .show(project)
             } else {
-                LOGGER.e(error) { "TTS Error" }
+                LOGGER.e("TTS Error", error)
             }
         }
 
@@ -116,7 +117,7 @@ class GoogleTTSPlayer(
         playlist
                 .map {
                     indicator.checkCanceled()
-                    LOGGER.i { "TTS>>> $it" }
+                    LOGGER.i("TTS>>> $it")
                     HttpRequests.request(it)
                             .userAgent(DEFAULT_USER_AGENT)
                             .readBytes(indicator)
@@ -219,7 +220,7 @@ class GoogleTTSPlayer(
                 open(this@openLine)
             }
         } catch (e: Exception) {
-            LOGGER.w(e) { "openLine" }
+            LOGGER.w("openLine", e)
             null
         }
     }

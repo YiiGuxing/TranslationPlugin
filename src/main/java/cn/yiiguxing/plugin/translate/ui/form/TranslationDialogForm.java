@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui;
+package cn.yiiguxing.plugin.translate.ui.form;
 
 import cn.yiiguxing.plugin.translate.trans.Lang;
 import com.intellij.openapi.project.Project;

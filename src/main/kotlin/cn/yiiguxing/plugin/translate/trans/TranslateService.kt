@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.util.messages.MessageBusConnection
 
 
 /**
@@ -18,32 +19,10 @@ class TranslateService private constructor() {
 
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
-    private val settings: Settings = Settings.instance
+        private set
     private val cache = LruCache<CacheKey, Translation>(500)
 
-    companion object {
-        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
-
-        val instance: TranslateService
-            get() = ServiceManager.getService(TranslateService::class.java)
-
-        private val LOGGER = Logger.getInstance(TranslateService::class.java)
-
-        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
-    }
-
-    init {
-        invokeOnDispatchThread { setTranslator(settings.translator) }
-        ApplicationManager
-                .getApplication()
-                .messageBus
-                .connect()
-                .subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-                    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
-                        setTranslator(translatorId)
-                    }
-                })
-    }
+    private var messageBus: MessageBusConnection? = null
 
     fun setTranslator(translatorId: String) {
         checkThread()
@@ -78,7 +57,7 @@ class TranslateService private constructor() {
                     }
                 }
             } catch (e: TranslateException) {
-                LOGGER.w(e) { "translate" }
+                LOGGER.w("translate", e)
                 invokeLater(ModalityState.any()) { listener.onError(e.message, e) }
             }
         }
@@ -96,5 +75,42 @@ class TranslateService private constructor() {
         if (Lang.AUTO == srcLang && Lang.AUTO == targetLang) {
             cache.put(CacheKey(text, this.srcLang, this.targetLang, translatorId), this)
         }
+    }
+
+    fun install() {
+        checkThread()
+        if (messageBus != null) {
+            return
+        }
+
+        setTranslator(Settings.instance.translator)
+        messageBus = ApplicationManager
+                .getApplication()
+                .messageBus
+                .connect()
+                .apply {
+                    subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+                        override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+                            setTranslator(translatorId)
+                        }
+                    })
+                }
+    }
+
+    fun uninstall() {
+        checkThread()
+        messageBus?.disconnect()
+        messageBus = null
+    }
+
+    companion object {
+        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
+
+        val instance: TranslateService
+            get() = ServiceManager.getService(TranslateService::class.java)
+
+        private val LOGGER = Logger.getInstance(TranslateService::class.java)
+
+        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
     }
 }

@@ -28,11 +28,11 @@ class TextToSpeech private constructor() {
             if (player === currentPlayer) {
                 currentPlayer = null
             }
-        }.run {
-            currentPlayer = this
-            start()
+        }.let {
+            currentPlayer = it
+            it.start()
 
-            disposable
+            it.disposable
         }
     }
 

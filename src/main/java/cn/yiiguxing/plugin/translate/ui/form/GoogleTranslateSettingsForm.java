@@ -1,0 +1,27 @@
+package cn.yiiguxing.plugin.translate.ui.form;
+
+import cn.yiiguxing.plugin.translate.trans.Lang;
+import com.intellij.openapi.ui.ComboBox;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+
+/**
+ * GoogleApiPanel
+ * <p>
+ * Created by Yii.Guxing on 2017/11/8
+ */
+public class GoogleTranslateSettingsForm {
+    private JPanel mContentPanel;
+    private ComboBox<Lang> mPrimaryLanguage;
+
+    @NotNull
+    public final JPanel getContentPanel() {
+        return mContentPanel;
+    }
+
+    @NotNull
+    public final ComboBox<Lang> getPrimaryLanguage() {
+        return mPrimaryLanguage;
+    }
+}

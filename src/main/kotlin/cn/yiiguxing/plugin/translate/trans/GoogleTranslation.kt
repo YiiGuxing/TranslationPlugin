@@ -4,7 +4,7 @@
  * Created by Yii.Guxing on 2018/01/06
  */
 
-@file:Suppress("MemberVisibilityCanPrivate")
+@file:Suppress("MemberVisibilityCanBePrivate")
 
 package cn.yiiguxing.plugin.translate.trans
 
@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName
 
 
 data class GoogleTranslation(
+        var original: String? = null,
         val src: Lang,
         var target: Lang? = null,
         val sentences: List<GSentence>,
@@ -20,20 +21,11 @@ data class GoogleTranslation(
 ) : TranslationAdapter {
 
     override fun toTranslation(): Translation {
+        check(original != null) { "Can not convert to Translation: original=null" }
         check(target != null) { "Can not convert to Translation: target=null" }
 
-        var original = ""
-        var trans = ""
-        var translit: TranslitSentence? = null
-        sentences.forEach {
-            when (it) {
-                is TransSentence -> {
-                    original += it.orig
-                    trans += it.trans
-                }
-                is TranslitSentence -> translit = it
-            }
-        }
+        val translit: TranslitSentence? = sentences.find { it is TranslitSentence } as? TranslitSentence
+        val trans = sentences.mapNotNull { (it as? TransSentence)?.trans }.joinToString()
 
         val dictionaries = dict?.map {
             val entries = it.entry.map { DictEntry(it.word, it.reverseTranslation) }
@@ -41,7 +33,7 @@ data class GoogleTranslation(
         } ?: emptyList()
 
         return Translation(
-                original,
+                original!!,
                 trans,
                 src,
                 target!!,
@@ -68,6 +60,5 @@ data class GDictEntry(
 
 data class LDResult(
         val srclangs: List<Lang>,
-        @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>,
-        @SerializedName("extended_srclangs") val extendedSrclangs: List<Lang>
+        @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>
 )

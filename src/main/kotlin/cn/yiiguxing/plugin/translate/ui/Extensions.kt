@@ -59,10 +59,11 @@ fun Color.toAlpha(alpha: Int) = Color(red, green, blue, alpha)
  * Creates a new [Font][JBFont] object by replicating this [Font] object
  * and applying a new style and [scaled size][size].
  */
-fun JBFont.deriveScaledFont(style: Int, size: Float): JBFont = deriveFont(style, JBUI.scale(size))
+fun Font.deriveScaledFont(style: Int, size: Float)
+        : JBFont = JBFont.create(deriveFont(style, JBUI.scale(size)), false)
 
 /**
  * Creates a new [Font][JBFont] object by replicating the current
  * [Font] object and applying a new [scaled size][size] to it.
  */
-fun JBFont.deriveScaledFont(size: Float): JBFont = deriveFont(JBUI.scale(size))
+fun Font.deriveScaledFont(size: Float): JBFont = JBFont.create(deriveFont(JBUI.scale(size)), false)

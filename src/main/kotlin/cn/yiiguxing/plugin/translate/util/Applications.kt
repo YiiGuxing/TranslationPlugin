@@ -3,10 +3,15 @@
  * 
  * Created by Yii.Guxing on 2017/12/22
  */
-@file:Suppress("unused", "NOTHING_TO_INLINE", "MemberVisibilityCanPrivate")
+@file:Suppress("unused", "NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
 
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.AppStorage
+import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationUIManager
+import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import com.intellij.ide.IdeBundle
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager
@@ -66,6 +71,12 @@ object App {
         "$pluginInfo\n$appName\n$buildInfo\n$jreInfo\n$jvmInfo\n$osInfo"
     }
 }
+
+val AppStorage: AppStorage = AppStorage.instance
+val Settings: Settings = Settings.instance
+val TranslateService: TranslateService = TranslateService.instance
+val TextToSpeech: TextToSpeech = TextToSpeech.instance
+val TranslationUIManager: TranslationUIManager = TranslationUIManager.instance
 
 /**
  * Throws an [IllegalStateException] with the result of calling [lazyMessage] if
@@ -142,13 +153,11 @@ fun Notification.show(project: Project? = null) {
 fun Throwable.copyToClipboard() {
     val stringWriter = StringWriter()
     PrintWriter(stringWriter).use {
-        it.println(App.systemInfo)
-        it.println("========================================\n")
+        it.println(App.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
+        it.println()
 
         printStackTrace(it)
 
         stringWriter.toString()
-    }.let {
-        CopyPasteManager.getInstance().setContents(StringSelection(it))
-    }
+    }.let { CopyPasteManager.getInstance().setContents(StringSelection(it)) }
 }

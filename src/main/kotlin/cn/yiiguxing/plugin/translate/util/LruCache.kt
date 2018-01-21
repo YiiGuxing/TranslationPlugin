@@ -10,7 +10,7 @@ import java.util.*
  * the maximum number of entries in the cache. For all other caches,
  * this is the maximum sum of the sizes of the entries in this cache.
  */
-@Suppress("unused", "MemberVisibilityCanPrivate")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 open class LruCache<K, V>(maxSize: Int) {
     private val map: LinkedHashMap<K, V>
 
@@ -122,7 +122,7 @@ open class LruCache<K, V>(maxSize: Int) {
             val previous = map.put(key, createdValue)
             if (previous != null) {
                 // There was a conflict so undo that last put
-                map.put(key, previous)
+                map[key] = previous
             } else {
                 size += safeSizeOf(key, createdValue)
             }
