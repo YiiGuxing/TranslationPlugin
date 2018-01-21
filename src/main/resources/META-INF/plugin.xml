@@ -40,8 +40,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>接入谷歌翻译</li>
-        <li>用户体验优化</li>
+        <li>加入状态栏图标</li>
+        <li>BUG修复</li>
       </ul>
       <br/>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>

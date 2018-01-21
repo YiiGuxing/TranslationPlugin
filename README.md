@@ -129,10 +129,10 @@ FAQ
 
 更新日志
 --------
-## [v2.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0) (2018-01-15)
+## [v2.0.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.1) (2018-01-21)
 
-- 接入谷歌翻译
-- 用户体验优化
+- 加入状态栏图标
+- BUG修复
 
 [完整的更新历史记录](./CHANGELOG.md)
 

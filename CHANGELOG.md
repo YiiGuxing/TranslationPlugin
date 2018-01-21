@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.0.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.1) (2018-01-21)
+
+- 加入状态栏图标
+- BUG修复
+
 ## [v2.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0) (2018-01-15)
 
 - 接入谷歌翻译
