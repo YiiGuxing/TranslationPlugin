@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlinVersion = '1.2.20'
+    ext.kotlinVersion = kotlinVersion
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version '0.2.17'
+    id 'org.jetbrains.intellij' version '0.2.18'
 }
 
 repositories {
@@ -48,19 +48,10 @@ dependencies {
 sourceCompatibility = javaVersion
 targetCompatibility = javaTargetVersion
 
-compileKotlin {
-    kotlinOptions {
-        languageVersion = kotlinLanguageVersion
-        apiVersion = kotlinTargetVersion
-        jvmTarget = javaTargetVersion
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        languageVersion = kotlinLanguageVersion
-        apiVersion = kotlinTargetVersion
-        jvmTarget = javaTargetVersion
-    }
+[compileKotlin, compileTestKotlin]*.kotlinOptions {
+    languageVersion = kotlinLanguageVersion
+    apiVersion = kotlinTargetVersion
+    jvmTarget = javaTargetVersion
 }
 
 tasks.withType(JavaCompile) {
