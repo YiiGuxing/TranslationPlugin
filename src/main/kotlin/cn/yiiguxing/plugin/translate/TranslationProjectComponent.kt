@@ -29,10 +29,9 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
         }
 
         val group = NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON, true)
-        val title = "设置有道App Key"
-        val content = "当前有道App Key为空或者无效，请设置有道App Key.<br/><br/>" +
-                "<a href=\"$HTML_DESCRIPTION_SETTINGS\">设置</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                "<a href=\"$HTML_DESCRIPTION_DISABLE\">不再提示</a>"
+        val title = message("notification.title.youdao.settings")
+        val content = message("notification.content.youdao.settings", HTML_DESCRIPTION_SETTINGS,
+                HTML_DESCRIPTION_DISABLE)
         group.createNotification(title, content, NotificationType.WARNING,
                 object : NotificationListener.Adapter() {
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {

@@ -35,7 +35,7 @@
                 </constraints>
                 <properties>
                   <labelFor value="e57bf"/>
-                  <text value="默认取词模式:"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.label.defaultSelectionMode"/>
                 </properties>
               </component>
               <component id="e57bf" class="javax.swing.JComboBox" binding="mSelectionMode">
@@ -69,7 +69,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="最大历史记录长度:"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.history.label.maxLength"/>
                 </properties>
               </component>
               <hspacer id="e7941">
@@ -99,7 +99,7 @@
                 <properties>
                   <alignmentY value="0.5"/>
                   <margin top="0" left="0" bottom="0" right="0"/>
-                  <text value="清除历史记录"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.history.clear"/>
                 </properties>
               </component>
             </children>
@@ -117,7 +117,7 @@
                   <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="覆盖默认字体（推荐）"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.font.overrideDefault"/>
                 </properties>
               </component>
               <component id="12329" class="javax.swing.JLabel" binding="mPrimaryFontLabel">
@@ -126,7 +126,7 @@
                 </constraints>
                 <properties>
                   <enabled value="false"/>
-                  <text value="主要字体:"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.font.label.primary"/>
                 </properties>
               </component>
               <component id="83b42" class="com.intellij.ui.FontComboBox" binding="mPrimaryFontComboBox" custom-create="true">
@@ -143,7 +143,7 @@
                 </constraints>
                 <properties>
                   <enabled value="false"/>
-                  <text value="音标字体:"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.font.label.phonetic"/>
                 </properties>
               </component>
               <component id="ec7c4" class="com.intellij.ui.FontComboBox" binding="mPhoneticFontComboBox" custom-create="true">
@@ -163,7 +163,7 @@
                   <enabled value="false"/>
                   <margin top="10" left="3" bottom="3" right="3"/>
                   <opaque value="false"/>
-                  <text value="预览:[ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw]"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.font.preview"/>
                 </properties>
               </component>
               <hspacer id="aca2a">

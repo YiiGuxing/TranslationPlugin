@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.ui.FontComboBox
@@ -36,9 +37,9 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
     }
 
     private fun setTitles() {
-        selectionSettingsPanel.setTitledBorder("取词模式")
-        fontPanel.setTitledBorder("字体")
-        historyPanel.setTitledBorder("历史记录")
+        selectionSettingsPanel.setTitledBorder(message("settings.title.selectionMode"))
+        fontPanel.setTitledBorder(message("settings.title.font"))
+        historyPanel.setTitledBorder(message("settings.title.history"))
     }
 
     private fun setRenderer() {
@@ -46,9 +47,9 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             override fun customize(list: JList<*>, value: String, index: Int, selected: Boolean, hasFocus: Boolean) {
                 setText(value)
                 if (index == INDEX_INCLUSIVE) {
-                    setToolTipText("以最大范围取最近的所有词")
+                    setToolTipText(message("settings.tooltip.inclusive"))
                 } else if (index == INDEX_EXCLUSIVE) {
-                    setToolTipText("取最近的单个词")
+                    setToolTipText(message("settings.tooltip.exclusive"))
                 }
             }
         }

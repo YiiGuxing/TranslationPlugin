@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.EscapeUnicode
+
 buildscript {
     ext.kotlinVersion = kotlinVersion
     repositories {
@@ -56,4 +58,10 @@ targetCompatibility = javaTargetVersion
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+tasks.withType(ProcessResources) {
+    filesMatching('**/*.properties') {
+        filter EscapeUnicode
+    }
 }
