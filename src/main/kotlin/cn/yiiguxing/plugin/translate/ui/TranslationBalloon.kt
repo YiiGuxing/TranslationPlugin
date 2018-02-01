@@ -126,7 +126,9 @@ class TranslationBalloon(
     private fun initActions() = with(translationPane) {
         onRevalidate { balloon.revalidate() }
         onLanguageChanged { src, target -> translate(src, target) }
-        onNewTranslate { text, src, target -> showOnTranslationDialog(text, src, target) }
+        onNewTranslate { text, src, target ->
+            invokeLater { showOnTranslationDialog(text, src, target) }
+        }
 
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
     }
