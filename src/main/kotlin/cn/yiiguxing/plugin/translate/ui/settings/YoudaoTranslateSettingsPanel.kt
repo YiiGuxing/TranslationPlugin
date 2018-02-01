@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.YoudaoTranslateSettings
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.LanguageRenderer
 import cn.yiiguxing.plugin.translate.ui.form.YoudaoTranslateSettingsForm
@@ -19,7 +20,8 @@ class YoudaoTranslateSettingsPanel(
 ) : YoudaoTranslateSettingsForm(), TranslatorSettingsPanel {
 
     override val id: String = YoudaoTranslator.id
-    override val name: String = "有道翻译"
+    @Suppress("InvalidBundleOrProperty")
+    override val name: String = message("translator.name.youdao")
     override val icon: Icon = YoudaoTranslator.icon
     override val component: JComponent = contentPanel
 

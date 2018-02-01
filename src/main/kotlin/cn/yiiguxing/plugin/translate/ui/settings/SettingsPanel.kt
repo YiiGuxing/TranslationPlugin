@@ -36,12 +36,14 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         setListeners()
     }
 
+    @Suppress("InvalidBundleOrProperty")
     private fun setTitles() {
         selectionSettingsPanel.setTitledBorder(message("settings.title.selectionMode"))
         fontPanel.setTitledBorder(message("settings.title.font"))
         historyPanel.setTitledBorder(message("settings.title.history"))
     }
 
+    @Suppress("InvalidBundleOrProperty")
     private fun setRenderer() {
         selectionModeComboBox.renderer = object : ListCellRendererWrapper<String>() {
             override fun customize(list: JList<*>, value: String, index: Int, selected: Boolean, hasFocus: Boolean) {

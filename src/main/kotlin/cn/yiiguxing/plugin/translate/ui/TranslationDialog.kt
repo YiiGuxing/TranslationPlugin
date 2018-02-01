@@ -247,15 +247,6 @@ class TranslationDialog(private val project: Project?)
 
         componentPopupMenu = cratePopupMenu()
         (parent as JComponent).componentPopupMenu = cratePopupMenu()
-
-        addHyperlinkListener(object : HyperlinkAdapter() {
-            override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
-                    close()
-                    OptionsConfigurable.showSettingsDialog(project)
-                }
-            }
-        })
     }
 
     private fun cratePopupMenu() = JBPopupMenu().apply {

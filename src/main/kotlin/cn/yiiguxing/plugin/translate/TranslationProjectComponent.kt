@@ -18,6 +18,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
         TranslationUIManager.installStatusWidget(myProject)
     }
 
+    @Suppress("InvalidBundleOrProperty")
     private fun checkYoudaoConfig() {
         with(Settings) {
             if (isDisableAppKeyNotification || translator != YoudaoTranslator.TRANSLATOR_ID) {
