@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.tts
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TTS
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.tk
 import cn.yiiguxing.plugin.translate.util.*
@@ -81,8 +82,9 @@ class GoogleTTSPlayer(
             if (error is HttpRequests.HttpStatusException && error.statusCode == 404) {
                 LOGGER.w("TTS Error: Unsupported language: ${lang.code}.")
 
+                @Suppress("InvalidBundleOrProperty")
                 NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.TOOL_WINDOW, true)
-                        .createNotification("TTS", "不支持的语言: ${lang.langName}.",
+                        .createNotification("TTS", message("error.unsupportedLanguage", lang.langName),
                                 NotificationType.WARNING, null)
                         .show(project)
             } else {
