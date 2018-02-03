@@ -22,11 +22,11 @@ object YoudaoTranslator : AbstractTranslator() {
             Lang.AUTO,
             Lang.CHINESE,
             Lang.ENGLISH,
+            Lang.FRENCH,
             Lang.JAPANESE,
             Lang.KOREAN,
-            Lang.FRENCH,
-            Lang.RUSSIAN,
             Lang.PORTUGUESE,
+            Lang.RUSSIAN,
             Lang.SPANISH)
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
@@ -76,6 +76,7 @@ object YoudaoTranslator : AbstractTranslator() {
         }.toTranslation()
     }
 
+    @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is YoudaoTranslateException -> "${message("error.code", throwable.code)}: " + when (throwable.code) {
             101 -> message("error.youdao.missingParameter")
