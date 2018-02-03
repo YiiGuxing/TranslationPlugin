@@ -38,9 +38,9 @@ object GoogleTranslator : AbstractTranslator() {
         get() = Settings.googleTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages
-            : List<Lang> = Lang.values().asList()
+            : List<Lang> = Lang.sortedValues()
     override val supportedTargetLanguages
-            : List<Lang> = mutableListOf(*Lang.values()).apply { remove(Lang.AUTO) }
+            : List<Lang> = Lang.sortedValues().toMutableList().apply { remove(Lang.AUTO) }
 
     override fun buildRequest(builder: RequestBuilder) {
         builder.userAgent(DEFAULT_USER_AGENT)
