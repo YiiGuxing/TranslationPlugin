@@ -41,6 +41,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         selectionSettingsPanel.setTitledBorder(message("settings.title.selectionMode"))
         fontPanel.setTitledBorder(message("settings.title.font"))
         historyPanel.setTitledBorder(message("settings.title.history"))
+        windowOptionsPanel.setTitledBorder(message("settings.title.windowOptions"))
     }
 
     @Suppress("InvalidBundleOrProperty")
@@ -124,12 +125,16 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
 
     override val isModified: Boolean
-        get() = (transPanelContainer.isModified ||
-                settings.autoSelectionMode !== getAutoSelectionMode() ||
-                appStorage.maxHistorySize != getMaxHistorySize() ||
-                settings.isOverrideFont != fontCheckBox.isSelected ||
-                settings.primaryFontFamily != primaryFontComboBox.fontName ||
-                settings.phoneticFontFamily != phoneticFontComboBox.fontName)
+        get() {
+            val settings = settings
+            return transPanelContainer.isModified ||
+                    appStorage.maxHistorySize != getMaxHistorySize() ||
+                    settings.autoSelectionMode != getAutoSelectionMode() ||
+                    settings.isOverrideFont != fontCheckBox.isSelected ||
+                    settings.primaryFontFamily != primaryFontComboBox.fontName ||
+                    settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
+                    settings.showStatusIcon != showStatusIconCheckBox.isSelected
+        }
 
 
     override fun apply() {
@@ -146,6 +151,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             primaryFontFamily = primaryFontComboBox.fontName
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = getAutoSelectionMode()
+            showStatusIcon = showStatusIconCheckBox.isSelected
         }
     }
 
@@ -154,6 +160,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         val settings = settings
         fontCheckBox.isSelected = settings.isOverrideFont
+        showStatusIconCheckBox.isSelected = settings.showStatusIcon
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)
