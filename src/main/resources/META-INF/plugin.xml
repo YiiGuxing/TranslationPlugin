@@ -40,7 +40,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>加入状态栏图标</li>
+        <li>多语言支持：添加英语语言</li>
+        <li>添加状态栏图标显示配置</li>
         <li>BUG修复</li>
       </ul>
       <br/>
