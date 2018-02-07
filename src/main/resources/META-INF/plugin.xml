@@ -109,16 +109,19 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
-        <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
-                text="Translate(Inclusive)" description="Translate(inclusive)"/>
+        <action id="$InclusiveTranslateAction"
+                class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
+                text="Translate(Inclusive)"/>
         <action id="$ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
-                text="Translate(Exclusive)" description="Translate(exclusive)"/>
-        <action id="$TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
-                text="Translate Quick Document" description="Translate Quick Document"
+                text="Translate(Exclusive)"/>
+        <action id="$TranslateQuickDocAction"
+                class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
+                text="Translate Quick Document"
                 use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$TranslateTextComponent" class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
-                text="Translate Text Component" description="Translate Text Component"
+        <action id="$TranslateTextComponent"
+                class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
+                text="Translate Text Component"
                 use-shortcut-of="$EditorTranslateAction"/>
 
         <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">

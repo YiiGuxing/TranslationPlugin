@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.splitWords
 import com.intellij.codeInsight.documentation.DocumentationManager
@@ -18,6 +19,8 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
 
     init {
         isEnabledInModalContext = true
+        @Suppress("InvalidBundleOrProperty")
+        templatePresentation.description = message("action.description.quickDoc")
     }
 
     override fun update(e: AnActionEvent) {
