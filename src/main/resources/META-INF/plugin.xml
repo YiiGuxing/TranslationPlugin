@@ -40,7 +40,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>加入状态栏图标</li>
+        <li>多语言支持：添加英语语言</li>
+        <li>添加状态栏图标显示配置</li>
         <li>BUG修复</li>
       </ul>
       <br/>
@@ -109,16 +110,19 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
-        <action id="$InclusiveTranslateAction" class="cn.yiiguxing.plugin.translate.action.TranslateAction"
-                text="Translate(Inclusive)" description="翻译（自动以最大范围取最近的所有词，忽略手动选择的文本）"/>
+        <action id="$InclusiveTranslateAction"
+                class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
+                text="Translate(Inclusive)"/>
         <action id="$ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
-                text="Translate(Exclusive)" description="翻译（自动取最近的单个词，忽略手动选择的文本）"/>
-        <action id="$TranslateQuickDocAction" class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
-                text="Translate Quick Document" description="翻译速文档中选中的文本"
+                text="Translate(Exclusive)"/>
+        <action id="$TranslateQuickDocAction"
+                class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
+                text="Translate Quick Document"
                 use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$TranslateTextComponent" class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
-                text="Translate Text Component" description="翻译一些文本组件（如提示气泡、输入框……）中选中的文本"
+        <action id="$TranslateTextComponent"
+                class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
+                text="Translate Text Component"
                 use-shortcut-of="$EditorTranslateAction"/>
 
         <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">

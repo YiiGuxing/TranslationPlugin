@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.2) (2018-02-07)
+
+- 多语言支持：添加英语语言
+- 添加状态栏图标显示配置
+- BUG修复
+
 ## [v2.0.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.1) (2018-01-21)
 
 - 加入状态栏图标

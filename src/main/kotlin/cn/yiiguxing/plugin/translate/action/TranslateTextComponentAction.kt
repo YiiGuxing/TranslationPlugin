@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
@@ -19,6 +20,8 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()) {
 
     init {
         isEnabledInModalContext = true
+        @Suppress("InvalidBundleOrProperty")
+        templatePresentation.description = message("action.description.textComponent")
     }
 
     private class Handler : EditorActionHandler() {

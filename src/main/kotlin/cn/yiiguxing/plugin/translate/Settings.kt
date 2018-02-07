@@ -64,6 +64,13 @@ class Settings : PersistentStateComponent<Settings> {
             settingsChangePublisher.onOverrideFontChanged(this)
         }
     }
+
+    var showStatusIcon: Boolean by Delegates.observable(true) { _, oldValue: Boolean, newValue: Boolean ->
+        if (oldValue != newValue) {
+            settingsChangePublisher.onWindowOptionsChanged(this, WindowOption.STATUS_ICON)
+        }
+    }
+
     /**
      * 是否关闭设置APP KEY通知
      */
@@ -73,7 +80,8 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var autoSelectionMode: SelectionMode = SelectionMode.INCLUSIVE
 
-    @Transient private val settingsChangePublisher: SettingsChangeListener =
+    @Transient
+    private val settingsChangePublisher: SettingsChangeListener =
             ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
 
     override fun getState(): Settings = this
@@ -135,11 +143,17 @@ data class YoudaoTranslateSettings(
     }
 }
 
+enum class WindowOption {
+    STATUS_ICON
+}
+
 interface SettingsChangeListener {
 
     fun onTranslatorChanged(settings: Settings, translatorId: String) {}
 
     fun onOverrideFontChanged(settings: Settings) {}
+
+    fun onWindowOptionsChanged(settings: Settings, option: WindowOption) {}
 
     companion object {
         val TOPIC: Topic<SettingsChangeListener> = Topic.create(

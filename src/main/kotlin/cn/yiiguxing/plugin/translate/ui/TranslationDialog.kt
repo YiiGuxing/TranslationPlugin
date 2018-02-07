@@ -7,12 +7,9 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonShortcuts
-import com.intellij.openapi.actionSystem.CustomShortcutSet
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.JBMenuItem
@@ -65,7 +62,6 @@ class TranslationDialog(private val project: Project?)
 
         initUIComponents()
         setListeners()
-        installEnterHook()
 
         Disposer.register(this, processPane)
         Disposer.register(this, translationPane)
@@ -251,15 +247,6 @@ class TranslationDialog(private val project: Project?)
 
         componentPopupMenu = cratePopupMenu()
         (parent as JComponent).componentPopupMenu = cratePopupMenu()
-
-        addHyperlinkListener(object : HyperlinkAdapter() {
-            override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
-                    close()
-                    OptionsConfigurable.showSettingsDialog(project)
-                }
-            }
-        })
     }
 
     private fun cratePopupMenu() = JBPopupMenu().apply {
@@ -281,14 +268,6 @@ class TranslationDialog(private val project: Project?)
             targetLangComboBox.font = it
             messagePane.font = it.biggerOn(3f)
         }
-    }
-
-    private fun installEnterHook() {
-        object : DumbAwareAction() {
-            override fun actionPerformed(e: AnActionEvent) {
-                translateButton.doClick()
-            }
-        }.registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), component, disposable)
     }
 
     private fun setListeners() {

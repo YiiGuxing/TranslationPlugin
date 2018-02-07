@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.GoogleTranslateSettings
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.ui.LanguageRenderer
 import cn.yiiguxing.plugin.translate.ui.form.GoogleTranslateSettingsForm
@@ -19,7 +20,8 @@ class GoogleTranslateSettingsPanel(
 ) : GoogleTranslateSettingsForm(), TranslatorSettingsPanel {
 
     override val id: String = GoogleTranslator.id
-    override val name: String = "Google翻译"
+    @Suppress("InvalidBundleOrProperty")
+    override val name: String = message("translator.name.google")
     override val icon: Icon = GoogleTranslator.icon
     override val component: JComponent = contentPanel
 

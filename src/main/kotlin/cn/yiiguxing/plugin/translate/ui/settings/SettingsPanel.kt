@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.ui.FontComboBox
@@ -35,20 +36,23 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         setListeners()
     }
 
+    @Suppress("InvalidBundleOrProperty")
     private fun setTitles() {
-        selectionSettingsPanel.setTitledBorder("取词模式")
-        fontPanel.setTitledBorder("字体")
-        historyPanel.setTitledBorder("历史记录")
+        selectionSettingsPanel.setTitledBorder(message("settings.title.selectionMode"))
+        fontPanel.setTitledBorder(message("settings.title.font"))
+        historyPanel.setTitledBorder(message("settings.title.history"))
+        windowOptionsPanel.setTitledBorder(message("settings.title.windowOptions"))
     }
 
+    @Suppress("InvalidBundleOrProperty")
     private fun setRenderer() {
         selectionModeComboBox.renderer = object : ListCellRendererWrapper<String>() {
             override fun customize(list: JList<*>, value: String, index: Int, selected: Boolean, hasFocus: Boolean) {
                 setText(value)
                 if (index == INDEX_INCLUSIVE) {
-                    setToolTipText("以最大范围取最近的所有词")
+                    setToolTipText(message("settings.tooltip.inclusive"))
                 } else if (index == INDEX_EXCLUSIVE) {
-                    setToolTipText("取最近的单个词")
+                    setToolTipText(message("settings.tooltip.exclusive"))
                 }
             }
         }
@@ -121,12 +125,16 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
 
     override val isModified: Boolean
-        get() = (transPanelContainer.isModified ||
-                settings.autoSelectionMode !== getAutoSelectionMode() ||
-                appStorage.maxHistorySize != getMaxHistorySize() ||
-                settings.isOverrideFont != fontCheckBox.isSelected ||
-                settings.primaryFontFamily != primaryFontComboBox.fontName ||
-                settings.phoneticFontFamily != phoneticFontComboBox.fontName)
+        get() {
+            val settings = settings
+            return transPanelContainer.isModified ||
+                    appStorage.maxHistorySize != getMaxHistorySize() ||
+                    settings.autoSelectionMode != getAutoSelectionMode() ||
+                    settings.isOverrideFont != fontCheckBox.isSelected ||
+                    settings.primaryFontFamily != primaryFontComboBox.fontName ||
+                    settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
+                    settings.showStatusIcon != showStatusIconCheckBox.isSelected
+        }
 
 
     override fun apply() {
@@ -143,6 +151,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             primaryFontFamily = primaryFontComboBox.fontName
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = getAutoSelectionMode()
+            showStatusIcon = showStatusIconCheckBox.isSelected
         }
     }
 
@@ -151,6 +160,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         val settings = settings
         fontCheckBox.isSelected = settings.isOverrideFont
+        showStatusIconCheckBox.isSelected = settings.showStatusIcon
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)

@@ -45,7 +45,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="主要语言:"/>
+              <text resource-bundle="messages/TranslationBundle" key="settings.label.primaryLanguage"/>
             </properties>
           </component>
           <component id="29cbb" class="com.intellij.openapi.ui.ComboBox" binding="mPrimaryLanguage">
@@ -76,7 +76,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="应用ID:"/>
+              <text resource-bundle="messages/TranslationBundle" key="settings.label.appId"/>
             </properties>
           </component>
           <component id="6b473" class="com.intellij.ui.components.JBTextField" binding="mAppIdField">
@@ -97,7 +97,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="应用密钥:"/>
+              <text resource-bundle="messages/TranslationBundle" key="settings.label.appPrivateKey"/>
             </properties>
           </component>
           <component id="4926f" class="com.intellij.ui.components.JBPasswordField" binding="mAppKeyField">
@@ -120,7 +120,7 @@
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="没有应用ID和密钥？申请一个！"/>
+          <text resource-bundle="messages/TranslationBundle" key="settings.link.getAppKey"/>
         </properties>
       </component>
     </children>

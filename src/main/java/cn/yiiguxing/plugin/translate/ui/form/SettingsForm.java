@@ -28,6 +28,8 @@ public class SettingsForm {
     private JLabel mPrimaryFontLabel;
     private JLabel mPhoneticFontLabel;
     private TranslatorSettingsContainer mTransPanelContainer;
+    private JPanel mWindowOptionsPanel;
+    private JCheckBox mShowStatusIconCheckBox;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -136,5 +138,15 @@ public class SettingsForm {
     @NotNull
     public final TranslatorSettingsContainer getTransPanelContainer() {
         return mTransPanelContainer;
+    }
+
+    @NotNull
+    public final JPanel getWindowOptionsPanel() {
+        return mWindowOptionsPanel;
+    }
+
+    @NotNull
+    public final JCheckBox getShowStatusIconCheckBox() {
+        return mShowStatusIconCheckBox;
     }
 }

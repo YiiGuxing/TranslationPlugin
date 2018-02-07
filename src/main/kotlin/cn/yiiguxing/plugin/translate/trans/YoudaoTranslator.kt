@@ -1,7 +1,8 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.LINK_SETTINGS
+import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
@@ -21,11 +22,11 @@ object YoudaoTranslator : AbstractTranslator() {
             Lang.AUTO,
             Lang.CHINESE,
             Lang.ENGLISH,
+            Lang.FRENCH,
             Lang.JAPANESE,
             Lang.KOREAN,
-            Lang.FRENCH,
-            Lang.RUSSIAN,
             Lang.PORTUGUESE,
+            Lang.RUSSIAN,
             Lang.SPANISH)
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
@@ -75,27 +76,28 @@ object YoudaoTranslator : AbstractTranslator() {
         }.toTranslation()
     }
 
+    @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is YoudaoTranslateException -> "错误[${throwable.code}]: " + when (throwable.code) {
-            101 -> "缺少必填的参数"
-            102 -> "不支持的语言类型"
-            103 -> "翻译文本过长"
-            104 -> "不支持的API类型"
-            105 -> "不支持的签名类型"
-            106 -> "不支持的响应类型"
-            107 -> "不支持的传输加密类型"
-            108 -> "AppKey无效 - $LINK_SETTINGS"
-            109 -> "BatchLog格式不正确"
-            110 -> "无相关服务的有效实例"
-            111 -> "账号无效或者账号已欠费 - $LINK_SETTINGS"
-            201 -> "解密失败"
-            202 -> "签名检验失败 - $LINK_SETTINGS"
-            203 -> "访问IP地址不在可访问IP列表"
-            301 -> "辞典查询失败"
-            302 -> "翻译查询失败"
-            303 -> "服务器异常"
-            401 -> "账户已经欠费"
-            else -> "未知错误"
+        is YoudaoTranslateException -> "${message("error.code", throwable.code)}: " + when (throwable.code) {
+            101 -> message("error.youdao.missingParameter")
+            102 -> message("error.youdao.unsupported.language")
+            103 -> message("error.youdao.textTooLong")
+            104 -> message("error.youdao.unsupported.api")
+            105 -> message("error.youdao.unsupported.signature")
+            106 -> message("error.youdao.unsupported.response")
+            107 -> message("error.youdao.unsupported.encryptType")
+            108 -> message("error.youdao.invalidKey", HTML_DESCRIPTION_SETTINGS)
+            109 -> message("error.youdao.batchLog")
+            110 -> message("error.youdao.noInstance")
+            111 -> message("error.youdao.invalidAccount", HTML_DESCRIPTION_SETTINGS)
+            201 -> message("error.youdao.decrypt")
+            202 -> message("error.youdao.invalidSignature", HTML_DESCRIPTION_SETTINGS)
+            203 -> message("error.youdao.ip")
+            301 -> message("error.youdao.dictionary")
+            302 -> message("error.youdao.translation")
+            303 -> message("error.youdao.serverError")
+            401 -> message("error.youdao.arrears")
+            else -> message("error.unknown")
         }
         else -> super.createErrorMessage(throwable)
     }
