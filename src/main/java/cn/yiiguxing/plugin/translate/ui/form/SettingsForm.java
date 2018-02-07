@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui.form;
 import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.ui.settings.TranslatorSettingsContainer;
+import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.FontComboBox;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class SettingsForm {
 
     private JPanel mWholePanel;
     private JPanel mSelectionSettingsPanel;
-    private JComboBox<String> mSelectionMode;
+    private ComboBox<SelectionMode> mSelectionMode;
     private JPanel mHistoryPanel;
     private ComboBox mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
@@ -81,7 +82,7 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JComboBox<String> getSelectionModeComboBox() {
+    public final ComboBox<SelectionMode> getSelectionModeComboBox() {
         return mSelectionMode;
     }
 
