@@ -1,4 +1,13 @@
-[//]: 如果需要反馈一个插件错误（如一个未知原因的翻译失败问题），
-[//]: 请按照http://yiiguxing.github.io/TranslationPlugin/start.html#faq-fb所述收集并在此附上收集到的错误信息。
+## Description
+Please describe the problem in detail. Be sure to include:
+- Steps to reproduce the problem.
+- What happened.
+- What you think the correct behavior should be.
 
-正文
+## Environment & Stack Trace
+- Plugin version:
+- IDE version:
+- Operating System and version:
+- Stack Trace (for crash):
+
+[Get Environment & Stack Trace](http://yiiguxing.github.io/TranslationPlugin/start.html#faq-fb)
