@@ -119,11 +119,17 @@ FAQ
    
    ![screenshots](./images/settings_font.png)
 
-2. **为什么2.0以前的版本快捷键在新版本都不能用了?**
+2. **MacOS、Linux下无法保存应用密钥，出现校验签名失败?**
+
+   答：可以尝试将密码保存方式改成`In KeePass`方式 (<kbd>Settings</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>)，原因与细节：
+   - MacOS，请另阅 [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
+   - Linux，请另阅 [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)
+
+3. **为什么2.0以前的版本快捷键在新版本都不能用了?**
 
    答：由于2.0以前的版本的快捷键大多与IDE默认的快捷键有冲突，抢占了IDE的默认快捷键。所以，从2.0版本以后，重新设置了插件的默认快捷键，而2.0以前的版本的快捷键已被废弃。
 
-3. **快捷键不能使用怎么办？**
+4. **快捷键不能使用怎么办？**
 
    答：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
 
