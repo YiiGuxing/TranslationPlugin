@@ -156,7 +156,9 @@ fun Throwable.copyToClipboard() {
         it.println(App.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
         it.println()
 
+        it.println("```")
         printStackTrace(it)
+        it.println("```")
 
         stringWriter.toString()
     }.let { CopyPasteManager.getInstance().setContents(StringSelection(it)) }
