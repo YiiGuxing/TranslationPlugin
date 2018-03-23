@@ -167,9 +167,21 @@ class TranslationDialog(private val project: Project?)
             icon = Icons.Swap
             disabledIcon = Icons.SwapDisabled
             setHoveringIcon(Icons.SwapHovering)
+
+            fun ComboBox<Lang>.swap() {
+                selected = Lang.ENGLISH.takeUnless { it == selected } ?: presenter.primaryLanguage
+            }
+
             setListener({ _, _ ->
-                if (Lang.AUTO != sourceLangComboBox.selected && Lang.AUTO != targetLangComboBox.selected) {
+                val nonAutoSrc = Lang.AUTO != sourceLangComboBox.selected
+                val nonAutoTarget = Lang.AUTO != targetLangComboBox.selected
+
+                if (nonAutoSrc && nonAutoTarget) {
                     sourceLangComboBox.selected = targetLangComboBox.selected
+                } else if (nonAutoSrc) {
+                    sourceLangComboBox.swap()
+                } else if (nonAutoTarget) {
+                    targetLangComboBox.swap()
                 }
             }, null)
         }
@@ -445,8 +457,7 @@ class TranslationDialog(private val project: Project?)
 
     private fun updateSwitchButtonEnable(enabled: Boolean = true) {
         swapButton.isEnabled = enabled
-                && Lang.AUTO != sourceLangComboBox.selected
-                && Lang.AUTO != targetLangComboBox.selected
+                && (Lang.AUTO != sourceLangComboBox.selected || Lang.AUTO != targetLangComboBox.selected)
     }
 
     private fun setLanguageComponentsEnable(enabled: Boolean) {
