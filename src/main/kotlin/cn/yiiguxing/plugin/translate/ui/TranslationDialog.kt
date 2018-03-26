@@ -44,6 +44,7 @@ class TranslationDialog(private val project: Project?)
     private val inputModel: MyModel = MyModel(presenter.histories)
 
     private var ignoreLanguageEvent: Boolean = false
+    private var ignoreInputEvent: Boolean = false
 
     private var _disposed: Boolean = false
     override val disposed: Boolean get() = _disposed
@@ -86,7 +87,7 @@ class TranslationDialog(private val project: Project?)
 
         translateButton.apply {
             icon = Icons.Translate
-            addActionListener { translate(inputComboBox.editor.item.toString()) }
+            addActionListener { translateInternal(inputComboBox.editor.item.toString()) }
         }
         mainContentPanel.apply {
             border = BORDER_ACTIVE
@@ -142,7 +143,7 @@ class TranslationDialog(private val project: Project?)
         }
 
         addItemListener {
-            if (it.stateChange == ItemEvent.SELECTED) {
+            if (!ignoreInputEvent && it.stateChange == ItemEvent.SELECTED) {
                 onTranslate()
             }
         }
@@ -155,12 +156,8 @@ class TranslationDialog(private val project: Project?)
         }
 
         presenter.supportedLanguages.let { (source, target) ->
-            (AppStorage.lastSourceLanguage?.takeIf { source.contains(it) } ?: source.first()).let {
-                sourceLangComboBox.init(source, it)
-            }
-            (AppStorage.lastTargetLanguage?.takeIf { target.contains(it) } ?: presenter.primaryLanguage).let {
-                targetLangComboBox.init(target, it)
-            }
+            sourceLangComboBox.init(source)
+            targetLangComboBox.init(target)
         }
 
         swapButton.apply {
@@ -187,11 +184,11 @@ class TranslationDialog(private val project: Project?)
         }
     }
 
-    private fun ComboBox<Lang>.init(languages: List<Lang>, select: Lang) {
+    private fun ComboBox<Lang>.init(languages: List<Lang>) {
         andTransparent()
         foreground = JBColor(0x555555, 0xACACAC)
         ui = LangComboBoxUI(this, SwingConstants.CENTER)
-        model = CollectionComboBoxModel<Lang>(languages, select)
+        model = CollectionComboBoxModel<Lang>(languages)
 
         fun ComboBox<Lang>.swap(old: Any?, new: Any?) {
             if (new == selectedItem && old != Lang.AUTO && new != Lang.AUTO) {
@@ -392,7 +389,24 @@ class TranslationDialog(private val project: Project?)
             return
         }
 
-        (inputComboBox.selectedItem as String?)?.let { translate(it) }
+        (inputComboBox.selectedItem as String?)?.let { translateInternal(it) }
+    }
+
+    private fun translateInternal(text: String) {
+        presenter.translate(text, sourceLangComboBox.selected!!, targetLangComboBox.selected!!)
+    }
+
+    /**
+     * 翻译指定的[内容][text]
+     */
+    fun translate(text: String) {
+        if (disposed || text.isBlank()) {
+            return
+        }
+
+        val srcLang: Lang = Lang.AUTO
+        val targetLang: Lang = if (text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else presenter.primaryLanguage
+        translateInternal(text, srcLang, targetLang)
     }
 
     /**
@@ -402,13 +416,14 @@ class TranslationDialog(private val project: Project?)
      * @param src 源语言, `null`则使用当前选中的语言
      * @param target 目标语言, `null`则使用当前选中的语言
      */
-    fun translate(text: String, src: Lang? = null, target: Lang? = null) {
+    fun translate(text: String, src: Lang?, target: Lang?) {
         if (disposed || text.isBlank()) {
             return
         }
 
         lateinit var srcLang: Lang
         lateinit var targetLang: Lang
+
         presenter.supportedLanguages.let { (sourceList, targetList) ->
             srcLang = src?.takeIf { sourceList.contains(it) }
                     ?: sourceLangComboBox.selected
@@ -418,6 +433,10 @@ class TranslationDialog(private val project: Project?)
                     ?: presenter.primaryLanguage
         }
 
+        translateInternal(text, srcLang, targetLang)
+    }
+
+    private fun translateInternal(text: String, srcLang: Lang, targetLang: Lang) {
         sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
         targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
         presenter.translate(text, srcLang, targetLang)
@@ -451,7 +470,10 @@ class TranslationDialog(private val project: Project?)
 
     override fun onHistoryItemChanged(newHistory: String) {
         if (!disposed) {
+            ignoreInputEvent = true
             inputComboBox.selectedItem = newHistory
+            ignoreInputEvent = false
+            translate(newHistory)
         }
     }
 

@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.ide.PrivacyPolicy.updateText
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
@@ -23,6 +24,7 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import com.sun.java.accessibility.util.SwingEventMonitor.addPopupMenuListener
 import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.Font
@@ -162,7 +164,7 @@ abstract class TranslationPanel<T : JComponent>(
     private fun createTTSLinkLabel(block: () -> Pair<String, Lang>?): ActionLink {
         var myDisposable: Disposable? = null
         return ActionLink { link ->
-            block()?.let block@ { (text, lang) ->
+            block()?.let block@{ (text, lang) ->
                 ttsDisposable?.let {
                     Disposer.dispose(it)
                     if (it === myDisposable) {
@@ -350,7 +352,17 @@ abstract class TranslationPanel<T : JComponent>(
                     translation?.run {
                         selectedText.let {
                             if (!it.isNullOrBlank()) {
-                                onNewTranslateHandler?.invoke(it, srcLang, targetLang)
+                                lateinit var src: Lang
+                                lateinit var target: Lang
+                                if (this@setupPopupMenu === originalViewer) {
+                                    src = targetLang
+                                    target = srcLang
+                                } else {
+                                    src = srcLang
+                                    target = targetLang
+                                }
+
+                                onNewTranslateHandler?.invoke(it, src, target)
                             }
                         }
                     }

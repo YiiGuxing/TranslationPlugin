@@ -35,15 +35,6 @@ class AppStorage : PersistentStateComponent<AppStorage> {
         true
     }
 
-    /**
-     * 记录最后一次的源语言
-     */
-    var lastSourceLanguage: Lang? = null
-    /**
-     * 记录最后一次的目标语言
-     */
-    var lastTargetLanguage: Lang? = null
-
     @Transient
     private val dataChangePublisher: HistoriesChangedListener =
             ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)

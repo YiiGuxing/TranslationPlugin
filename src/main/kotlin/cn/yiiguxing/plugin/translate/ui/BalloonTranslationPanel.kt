@@ -20,6 +20,9 @@ class BalloonTranslationPanel(project: Project?, settings: Settings)
     private var ignoreEvent = false
     private var onLanguageChangedHandler: ((Lang, Lang) -> Unit)? = null
 
+    val sourceLanguage: Lang? get() = sourceLangComponent.selected
+    val targetLanguage: Lang? get() = targetLangComponent.selected
+
     init {
         onFixLanguage { sourceLangComponent.selected = it }
     }

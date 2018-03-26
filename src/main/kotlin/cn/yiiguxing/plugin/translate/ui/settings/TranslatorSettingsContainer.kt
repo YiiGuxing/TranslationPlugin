@@ -71,14 +71,7 @@ class TranslatorSettingsContainer(
     override fun apply() {
         val selectedPanel = comboBox.selected
         if (selectedPanel != null) {
-            val oldTranslator = settings.translator
-            val newTranslator = selectedPanel.id
-            if (oldTranslator != newTranslator) {
-                appStorage.lastSourceLanguage = null
-                appStorage.lastTargetLanguage = null
-            }
-
-            settings.translator = newTranslator
+            settings.translator = selectedPanel.id
         }
 
         with(comboBox) {

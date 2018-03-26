@@ -38,11 +38,7 @@ class TranslationPresenter(private val view: View) : Presenter {
         TextToSpeech.stop()
 
         lastRequest = request
-        with(appStorage) {
-            addHistory(text)
-            lastSourceLanguage = srcLang
-            lastTargetLanguage = targetLang
-        }
+        appStorage.addHistory(text)
 
         getCache(text, srcLang, targetLang)?.let { cache ->
             onPostResult(request) { showTranslation(cache) }
