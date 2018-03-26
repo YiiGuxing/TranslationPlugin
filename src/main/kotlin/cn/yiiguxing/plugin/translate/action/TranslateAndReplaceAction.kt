@@ -40,7 +40,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
                 ?.selectionModel
                 ?.takeIf { it.hasSelection() }
                 ?.selectedText
-                ?.let { it.find(NON_LATIN_CONDITION) != null }
+                ?.any(NON_LATIN_CONDITION)
                 ?: active
     }
 
