@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.EscapeUnicode
 buildscript {
     ext.kotlinVersion = kotlinVersion
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url = 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
         mavenCentral()
     }
@@ -17,7 +17,7 @@ plugins {
 }
 
 repositories {
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url = 'http://maven.aliyun.com/nexus/content/groups/public/' }
     jcenter()
     mavenCentral()
 }
@@ -25,13 +25,13 @@ repositories {
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.intellij'
 
-group 'cn.yiiguxing.plugin.translate'
-version "${version}${buildNumber ? '-' + buildNumber : ''}"
+group = 'cn.yiiguxing.plugin.translate'
+version = "${version}${buildNumber ? '-' + buildNumber : ''}"
 
 intellij {
-    version ideaVersion
-    pluginName 'TranslationPlugin'
-    downloadSources Boolean.valueOf(sources)
+    version = ideaVersion
+    pluginName = 'TranslationPlugin'
+    downloadSources = Boolean.valueOf(sources)
 }
 
 patchPluginXml {
