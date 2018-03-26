@@ -31,8 +31,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
 
         val group = NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON, true)
         val title = message("notification.title.youdao.settings")
-        val content = message("notification.content.youdao.settings", HTML_DESCRIPTION_SETTINGS,
-                HTML_DESCRIPTION_DISABLE)
+        val content = message("notification.content.youdao.settings", HTML_DESCRIPTION_DISABLE, HTML_DESCRIPTION_SETTINGS)
         group.createNotification(title, content, NotificationType.WARNING,
                 object : NotificationListener.Adapter() {
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
