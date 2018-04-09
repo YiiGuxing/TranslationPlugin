@@ -54,7 +54,8 @@ class TranslateService private constructor() {
         listeners[key]?.let {
             it += listener
             return
-        } ?: mutableSetOf(listener).also { listeners[key] = it }
+        }
+        listeners[key] = mutableSetOf(listener)
 
         executeOnPooledThread {
             try {
