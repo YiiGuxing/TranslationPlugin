@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.tts
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TTS
+import cn.yiiguxing.plugin.translate.GOOGLE_TTS_CN
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.tk
@@ -56,9 +57,14 @@ class GoogleTTSPlayer(
     private var duration = 0
 
     private val playlist: List<String> by lazy {
+        val baseUrl = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
+            GOOGLE_TTS
+        } else {
+            GOOGLE_TTS_CN
+        }
         with(text.splitSentence(MAX_TEXT_LENGTH)) {
             mapIndexed { index, sentence ->
-                "$GOOGLE_TTS?client=gtx&ie=UTF-8&tl=${lang.code}&total=$size&idx=$index&textlen=${sentence.length}" +
+                "$baseUrl?client=gtx&ie=UTF-8&tl=${lang.code}&total=$size&idx=$index&textlen=${sentence.length}" +
                         "&tk=${sentence.tk()}&q=${sentence.urlEncode()}"
             }
         }

@@ -13,6 +13,7 @@ import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
+import java.util.*
 import kotlin.properties.Delegates
 
 /**
@@ -112,7 +113,8 @@ private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default)
+data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default,
+                                   var useTranslateGoogleCom: Boolean = Locale.getDefault() != Locale.CHINA)
 
 /**
  * 有道翻译选项

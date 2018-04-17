@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
+import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_CN_URL
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -22,6 +23,7 @@ object GoogleTranslator : AbstractTranslator() {
     const val TRANSLATOR_ID = "translate.google"
     private const val TRANSLATOR_NAME = "Google Translate"
 
+    private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
     private val gson: Gson = GsonBuilder()
             .registerTypeAdapter(Lang::class.java, LangDeserializer)
@@ -35,7 +37,10 @@ object GoogleTranslator : AbstractTranslator() {
     override val icon: Icon = Icons.Google
 
     override val primaryLanguage: Lang
-        get() = Settings.googleTranslateSettings.primaryLanguage
+        get() = settings.primaryLanguage
+
+    private val baseUrl: String
+        get() = if (settings.useTranslateGoogleCom) GOOGLE_TRANSLATE_URL else GOOGLE_TRANSLATE_CN_URL
 
     override val supportedSourceLanguages
             : List<Lang> = Lang.sortedValues()
@@ -47,7 +52,7 @@ object GoogleTranslator : AbstractTranslator() {
     }
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang)
-            : String = ("$GOOGLE_TRANSLATE_URL?client=gtx&dt=t&dt=bd&dt=rm&dj=1" +
+            : String = ("$baseUrl?client=gtx&dt=t&dt=bd&dt=rm&dj=1" +
             "&sl=${srcLang.code}" +
             "&tl=${targetLang.code}" +
             "&hl=${primaryLanguage.code}" + // 这是词性的语言
