@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.ide.PrivacyPolicy.updateText
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
@@ -24,7 +23,6 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
-import com.sun.java.accessibility.util.SwingEventMonitor.addPopupMenuListener
 import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.Font
@@ -420,8 +418,16 @@ abstract class TranslationPanel<T : JComponent>(
             updateViewer(originalViewer, originalViewerRow, it.original)
             updateViewer(transViewer, transViewerRow, it.trans)
 
-            srcTransliterationLabel.updateText(it.srcTransliteration)
-            transliterationLabel.updateText(it.transliteration)
+            srcTransliterationLabel.apply {
+                val srcTransliteration = it.srcTransliteration
+                updateText(srcTransliteration)
+                toolTipText = srcTransliteration
+            }
+            transliterationLabel.apply {
+                val transliteration = it.transliteration
+                updateText(transliteration)
+                toolTipText = transliteration
+            }
 
             updateDictViewer(it.dictionaries)
             updateViewer(basicExplainViewer, basicExplainsViewerRow, it.basicExplains.joinToString("\n"))
