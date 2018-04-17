@@ -112,7 +112,7 @@ private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.CHINESE)
+data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default)
 
 /**
  * 有道翻译选项
