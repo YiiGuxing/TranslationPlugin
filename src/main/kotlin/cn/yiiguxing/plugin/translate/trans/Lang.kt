@@ -126,6 +126,18 @@ enum class Lang(@PropertyKey(resourceBundle = LANGUAGE_BUNDLE) langNameKey: Stri
     companion object {
         private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
 
+        val default: Lang = when (Locale.getDefault().language) {
+            Locale.CHINESE.language -> when (Locale.getDefault().country) {
+                "HK", "TW" -> CHINESE_TRADITIONAL
+                else -> CHINESE
+            }
+
+            else -> {
+                val language = Locale.getDefault().language
+                values().find { it.code.equals(language, ignoreCase = true) } ?: ENGLISH
+            }
+        }
+
         fun sortedValues(): List<Lang> = when (Locale.getDefault()) {
             Locale.CHINESE,
             Locale.CHINA -> values().asList()
@@ -135,7 +147,7 @@ enum class Lang(@PropertyKey(resourceBundle = LANGUAGE_BUNDLE) langNameKey: Stri
         fun valueOfCode(code: String): Lang = when (code) {
             "zh-CHS" -> CHINESE
             else -> values().find { it.code.equals(code, ignoreCase = true) }
-                    ?: throw IllegalArgumentException("Unknown language " + "code:$code")
+                    ?: throw IllegalArgumentException("Unknown language code:$code")
         }
     }
 }
