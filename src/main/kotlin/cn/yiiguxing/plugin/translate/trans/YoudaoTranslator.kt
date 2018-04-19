@@ -52,8 +52,8 @@ object YoudaoTranslator : AbstractTranslator() {
 
         return (YOUDAO_TRANSLATE_URL +
                 "?appKey=${appId.urlEncode()}" +
-                "&from=${getLanguageCode(srcLang)}" +
-                "&to=${getLanguageCode(targetLang)}" +
+                "&from=${srcLang.youdaoCode}" +
+                "&to=${targetLang.youdaoCode}" +
                 "&salt=$salt" +
                 "&sign=$sign" +
                 "&q=${text.urlEncode()}")
@@ -61,8 +61,6 @@ object YoudaoTranslator : AbstractTranslator() {
                     logger.i("Translate url: $it")
                 }
     }
-
-    private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
         logger.i("Translate result: $result")

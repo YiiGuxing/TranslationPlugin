@@ -42,10 +42,17 @@ object GoogleTranslator : AbstractTranslator() {
     private val baseUrl: String
         get() = if (settings.useTranslateGoogleCom) GOOGLE_TRANSLATE_URL else GOOGLE_TRANSLATE_CN_URL
 
-    override val supportedSourceLanguages
-            : List<Lang> = Lang.sortedValues()
-    override val supportedTargetLanguages
-            : List<Lang> = Lang.sortedValues().toMutableList().apply { remove(Lang.AUTO) }
+    private val notSupportedLanguages = arrayListOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
+
+    override val supportedSourceLanguages: List<Lang> = Lang.sortedValues()
+            .toMutableList()
+            .apply { removeAll(notSupportedLanguages) }
+    override val supportedTargetLanguages: List<Lang> = Lang.sortedValues()
+            .toMutableList()
+            .apply {
+                remove(Lang.AUTO)
+                removeAll(notSupportedLanguages)
+            }
 
     override fun buildRequest(builder: RequestBuilder) {
         builder.userAgent(DEFAULT_USER_AGENT)
