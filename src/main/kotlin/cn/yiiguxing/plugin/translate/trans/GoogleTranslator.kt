@@ -5,8 +5,8 @@ import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_CN_URL
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.RequestBuilder
@@ -58,16 +58,17 @@ object GoogleTranslator : AbstractTranslator() {
         builder.userAgent(DEFAULT_USER_AGENT)
     }
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang)
-            : String = ("$baseUrl?client=gtx&dt=t&dt=bd&dt=rm&dj=1" +
-            "&sl=${srcLang.code}" +
-            "&tl=${targetLang.code}" +
-            "&hl=${primaryLanguage.code}" + // 这是词性的语言
-            "&tk=${text.tk()}" +
-            "&q=${text.urlEncode()}")
-            .also {
-                logger.i("Translate url: $it")
-            }
+    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String = UrlBuilder(baseUrl)
+            .addQueryParameter("client", "gtx")
+            .addQueryParameters("dt", "t", "bd", "rm")
+            .addQueryParameter("dj", "1")
+            .addQueryParameter("sl", srcLang.code)
+            .addQueryParameter("tl", targetLang.code)
+            .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
+            .addQueryParameter("tk", text.tk())
+            .addQueryParameter("q", text)
+            .build()
+            .also { logger.i("Translate url: $it") }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
         logger.i("Translate result: $result")

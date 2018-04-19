@@ -27,5 +27,6 @@ object Icons {
     val CopyToClipboard: Icon = IconLoader.getIcon("/icons/copyToClipboard.png")
     val Google: Icon = IconLoader.getIcon("/icons/google.png")
     val Youdao: Icon = IconLoader.getIcon("/icons/youdao.png")
+    val Baidu: Icon = IconLoader.getIcon("/icons/baidu.png")
 
 }

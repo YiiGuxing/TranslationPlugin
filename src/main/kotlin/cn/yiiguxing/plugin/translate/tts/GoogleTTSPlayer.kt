@@ -62,10 +62,18 @@ class GoogleTTSPlayer(
         } else {
             GOOGLE_TTS_CN
         }
-        with(text.splitSentence(MAX_TEXT_LENGTH)) {
-            mapIndexed { index, sentence ->
-                "$baseUrl?client=gtx&ie=UTF-8&tl=${lang.code}&total=$size&idx=$index&textlen=${sentence.length}" +
-                        "&tk=${sentence.tk()}&q=${sentence.urlEncode()}"
+        text.splitSentence(MAX_TEXT_LENGTH).let {
+            it.mapIndexed { index, sentence ->
+                UrlBuilder(baseUrl)
+                        .addQueryParameter("client", "gtx")
+                        .addQueryParameter("ie", "UTF-8")
+                        .addQueryParameter("tl", lang.code)
+                        .addQueryParameter("total", it.size.toString())
+                        .addQueryParameter("idx", index.toString())
+                        .addQueryParameter("textlen", sentence.length.toString())
+                        .addQueryParameter("tk", sentence.tk())
+                        .addQueryParameter("q", sentence)
+                        .build()
             }
         }
     }

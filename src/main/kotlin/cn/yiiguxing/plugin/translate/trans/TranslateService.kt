@@ -31,12 +31,13 @@ class TranslateService private constructor() {
         if (translatorId != translator.id) {
             translator = when (translatorId) {
                 YoudaoTranslator.TRANSLATOR_ID -> YoudaoTranslator
+                BaiduTranslator.TRANSLATOR_ID -> BaiduTranslator
                 else -> DEFAULT_TRANSLATOR
             }
         }
     }
 
-    fun getTranslators(): List<Translator> = listOf(GoogleTranslator, YoudaoTranslator)
+    fun getTranslators(): List<Translator> = listOf(GoogleTranslator, YoudaoTranslator, BaiduTranslator)
 
     fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         checkThread()

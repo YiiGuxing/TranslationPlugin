@@ -1,9 +1,11 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.TKK
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.notification.*
 import com.intellij.openapi.components.AbstractProjectComponent
@@ -14,24 +16,19 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
 
     override fun projectOpened() {
         TKK.update()
-        checkYoudaoConfig()
+        checkConfig()
         TranslationUIManager.installStatusWidget(myProject)
     }
 
     @Suppress("InvalidBundleOrProperty")
-    private fun checkYoudaoConfig() {
-        with(Settings) {
-            if (isDisableAppKeyNotification || translator != YoudaoTranslator.TRANSLATOR_ID) {
-                return
-            }
-            if (youdaoTranslateSettings.let { it.isAppKeyConfigured && it.appId.isNotBlank() }) {
-                return
-            }
+    private fun checkConfig() {
+        if (!needShowNotification(Settings.translator)) {
+            return
         }
 
         val group = NotificationGroup(DISPLAY_ID_APP_KEY, NotificationDisplayType.STICKY_BALLOON, true)
-        val title = message("notification.title.youdao.settings")
-        val content = message("notification.content.youdao.settings", HTML_DESCRIPTION_DISABLE, HTML_DESCRIPTION_SETTINGS)
+        val title = message("notification.title.settings.appKey")
+        val content = message("notification.content.settings.appKey", HTML_DESCRIPTION_DISABLE, HTML_DESCRIPTION_SETTINGS)
         group.createNotification(title, content, NotificationType.WARNING,
                 object : NotificationListener.Adapter() {
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
@@ -43,6 +40,14 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
                     }
                 }
         ).show(myProject)
+    }
+
+    private fun needShowNotification(translatorId: String): Boolean = with(Settings) {
+        when (translatorId) {
+            YoudaoTranslator.TRANSLATOR_ID -> youdaoTranslateSettings
+            BaiduTranslator.TRANSLATOR_ID -> baiduTranslateSettings
+            else -> return@with false
+        }.let { !it.isAppKeyConfigured || it.appId.isNullOrBlank() }
     }
 
     override fun disposeComponent() {

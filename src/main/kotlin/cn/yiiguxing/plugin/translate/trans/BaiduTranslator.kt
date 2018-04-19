@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
-import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -12,46 +12,70 @@ import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import javax.swing.Icon
 
-object YoudaoTranslator : AbstractTranslator() {
+/**
+ * BaiduTranslator
+ *
+ * Created by Yii.Guxing on 2018/04/19.
+ */
+object BaiduTranslator : AbstractTranslator() {
 
-    const val TRANSLATOR_ID = "ai.youdao"
+    const val TRANSLATOR_ID = "fanyi.baidu"
 
-    private const val TRANSLATOR_NAME = "Youdao Translate"
+    private const val TRANSLATOR_NAME = "Baidu Translate"
 
     val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-            Lang.AUTO,
             Lang.CHINESE,
             Lang.ENGLISH,
-            Lang.FRENCH,
+            Lang.CHINESE_TRADITIONAL,
+            Lang.CHINESE_CANTONESE,
+            Lang.CHINESE_CLASSICAL,
             Lang.JAPANESE,
             Lang.KOREAN,
-            Lang.PORTUGUESE,
+            Lang.FRENCH,
+            Lang.SPANISH,
+            Lang.THAI,
+            Lang.ARABIC,
             Lang.RUSSIAN,
-            Lang.SPANISH)
+            Lang.PORTUGUESE,
+            Lang.GERMAN,
+            Lang.ITALIAN,
+            Lang.GREEK,
+            Lang.DUTCH,
+            Lang.POLISH,
+            Lang.BULGARIAN,
+            Lang.ESTONIAN,
+            Lang.DANISH,
+            Lang.FINNISH,
+            Lang.CZECH,
+            Lang.ROMANIAN,
+            Lang.SLOVENIAN,
+            Lang.SWEDISH,
+            Lang.HUNGARIAN,
+            Lang.VIETNAMESE)
 
-    private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
+    private val logger: Logger = Logger.getInstance(BaiduTranslator::class.java)
 
     override val id: String = TRANSLATOR_ID
-
     override val name: String = TRANSLATOR_NAME
-
-    override val icon: Icon = Icons.Youdao
+    override val icon: Icon = Icons.Baidu
 
     override val primaryLanguage: Lang
-        get() = Settings.youdaoTranslateSettings.primaryLanguage
+        get() = Settings.baiduTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
+            .toMutableList()
+            .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
-        val settings = Settings.youdaoTranslateSettings
+        val settings = Settings.baiduTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()
-        val sign = (appId + text + salt + privateKey).md5()
+        val sign = (appId + text + salt + privateKey).md5().toLowerCase()
 
-        return UrlBuilder(YOUDAO_TRANSLATE_URL)
-                .addQueryParameter("appKey", appId)
+        return UrlBuilder(BAIDU_TRANSLATE_URL)
+                .addQueryParameter("appid", appId)
                 .addQueryParameter("from", srcLang.baiduCode)
                 .addQueryParameter("to", targetLang.baiduCode)
                 .addQueryParameter("salt", salt)
@@ -64,11 +88,9 @@ object YoudaoTranslator : AbstractTranslator() {
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
         logger.i("Translate result: $result")
 
-        return Gson().fromJson(result, YoudaoTranslation::class.java).apply {
-            query = original
-            checkError()
+        return Gson().fromJson(result, BaiduTranslation::class.java).apply {
             if (!isSuccessful) {
-                throw TranslateResultException(errorCode)
+                throw TranslateResultException(code)
             }
         }.toTranslation()
     }
@@ -76,24 +98,15 @@ object YoudaoTranslator : AbstractTranslator() {
     @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is TranslateResultException -> "${message("error.code", throwable.code)}: " + when (throwable.code) {
-            101 -> message("error.missingParameter")
-            102 -> message("error.language.unsupported")
-            103 -> message("error.youdao.textTooLong")
-            104 -> message("error.youdao.unsupported.api")
-            105 -> message("error.youdao.unsupported.signature")
-            106 -> message("error.youdao.unsupported.response")
-            107 -> message("error.youdao.unsupported.encryptType")
-            108 -> message("error.youdao.invalidKey", HTML_DESCRIPTION_SETTINGS)
-            109 -> message("error.youdao.batchLog")
-            110 -> message("error.youdao.noInstance")
-            111 -> message("error.invalidAccount", HTML_DESCRIPTION_SETTINGS)
-            201 -> message("error.youdao.decrypt")
-            202 -> message("error.invalidSignature", HTML_DESCRIPTION_SETTINGS)
-            203 -> message("error.access.ip")
-            301 -> message("error.youdao.dictionary")
-            302 -> message("error.youdao.translation")
-            303 -> message("error.youdao.serverError")
-            401 -> message("error.account.arrears")
+            52001 -> message("error.request.timeout")
+            52002 -> message("error.systemError")
+            52003 -> message("error.invalidAccount", HTML_DESCRIPTION_SETTINGS)
+            54000 -> message("error.missingParameter")
+            54001 -> message("error.invalidSignature", HTML_DESCRIPTION_SETTINGS)
+            54003, 54005 -> message("error.access.limited")
+            54004 -> message("error.account.arrears")
+            58000 -> message("error.access.ip")
+            58001 -> message("error.language.unsupported")
             else -> message("error.unknown")
         }
         else -> super.createErrorMessage(throwable)

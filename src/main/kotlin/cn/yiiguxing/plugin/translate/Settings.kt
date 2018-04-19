@@ -40,6 +40,10 @@ class Settings : PersistentStateComponent<Settings> {
      * 有道翻译选项
      */
     var youdaoTranslateSettings: YoudaoTranslateSettings = YoudaoTranslateSettings()
+    /**
+     * 百度翻译选项
+     */
+    var baiduTranslateSettings: AppKeySettings = BaiduTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -106,6 +110,7 @@ class Settings : PersistentStateComponent<Settings> {
 
 private const val PASSWORD_SERVICE_NAME = "YIIGUXING.TRANSLATION"
 private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
+private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 
 /**
  * 谷歌翻译选项
@@ -117,19 +122,18 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default,
                                    var useTranslateGoogleCom: Boolean = Locale.getDefault() != Locale.CHINA)
 
 /**
- * 有道翻译选项
- *
  * @property primaryLanguage    主要语言
  * @property appId              应用ID
  * @property isAppKeyConfigured 应用密钥设置标志
  */
-@Tag("youdao-translate")
-data class YoudaoTranslateSettings(
-        var primaryLanguage: Lang = Lang.AUTO,
+@Tag("app-key")
+abstract class AppKeySettings(
+        var primaryLanguage: Lang,
         var appId: String = "",
-        var isAppKeyConfigured: Boolean = false
+        var isAppKeyConfigured: Boolean = false,
+        securityKey: String
 ) {
-    private var _appKey: String?  by PasswordSafeDelegate(PASSWORD_SERVICE_NAME, YOUDAO_APP_KEY)
+    private var _appKey: String?  by PasswordSafeDelegate(PASSWORD_SERVICE_NAME, securityKey)
         @Transient get
         @Transient set
 
@@ -144,6 +148,17 @@ data class YoudaoTranslateSettings(
         _appKey = if (value.isNullOrBlank()) null else value
     }
 }
+
+/**
+ * 有道翻译选项
+ */
+@Tag("youdao-translate")
+class YoudaoTranslateSettings : AppKeySettings(Lang.AUTO, securityKey = YOUDAO_APP_KEY)
+
+/**
+ * 百度翻译选项
+ */
+class BaiduTranslateSettings : AppKeySettings(Lang.CHINESE, securityKey = BAIDU_APP_KEY)
 
 enum class WindowOption {
     STATUS_ICON

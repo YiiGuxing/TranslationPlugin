@@ -18,3 +18,6 @@ const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
 
 const val YOUDAO_TRANSLATE_URL = "http://openapi.youdao.com/api"
 const val YOUDAO_AI_URL = "http://ai.youdao.com"
+
+const val BAIDU_TRANSLATE_URL = "http://api.fanyi.baidu.com/api/trans/vip/translate"
+const val BAIDU_FANYI_URL = "http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer"

@@ -1,9 +1,11 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Yii.Guxing">
     <words>
+      <w>appid</w>
       <w>baidu</w>
       <w>belarusian</w>
       <w>chichewa</w>
+      <w>fanyi</w>
       <w>galician</w>
       <w>gson</w>
       <w>guxing</w>
@@ -17,6 +19,7 @@
       <w>sinhala</w>
       <w>srclangs</w>
       <w>tajik</w>
+      <w>textlen</w>
       <w>translit</w>
       <w>yii</w>
       <w>yiiguxing</w>
