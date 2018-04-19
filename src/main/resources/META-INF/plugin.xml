@@ -24,6 +24,7 @@
           <ul>
             <li>Google translate.</li>
             <li>Youdao translate.</li>
+            <li>Baidu translate.</li>
           </ul>
         </li>
         <li>Multiple languages inter-translation.</li>
@@ -40,8 +41,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>多语言支持：添加英语语言</li>
-        <li>添加状态栏图标显示配置</li>
+        <li>添加百度翻译</li>
+        <li>优化交互体验</li>
         <li>BUG修复</li>
       </ul>
       <br/>
