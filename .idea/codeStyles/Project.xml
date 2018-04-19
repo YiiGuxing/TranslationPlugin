@@ -24,5 +24,11 @@
         <option name="ITERATION_ELEMENTS_WRAPPING" value="chop_down_if_not_single" />
       </formatting-settings>
     </DBN-SQL>
+    <codeStyleSettings language="kotlin">
+      <option name="CALL_PARAMETERS_WRAP" value="1" />
+      <option name="METHOD_PARAMETERS_WRAP" value="1" />
+      <option name="EXTENDS_LIST_WRAP" value="1" />
+      <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
+    </codeStyleSettings>
   </code_scheme>
 </component>
