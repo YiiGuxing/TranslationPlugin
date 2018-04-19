@@ -23,7 +23,7 @@ object BaiduTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Baidu Translate"
 
-    val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.CHINESE,
             Lang.ENGLISH,
             Lang.CHINESE_TRADITIONAL,
@@ -56,7 +56,9 @@ object BaiduTranslator : AbstractTranslator() {
     private val logger: Logger = Logger.getInstance(BaiduTranslator::class.java)
 
     override val id: String = TRANSLATOR_ID
+
     override val name: String = TRANSLATOR_NAME
+
     override val icon: Icon = Icons.Baidu
 
     override val primaryLanguage: Lang

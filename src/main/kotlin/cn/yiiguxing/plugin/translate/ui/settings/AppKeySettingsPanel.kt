@@ -1,33 +1,32 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.YoudaoTranslateSettings
-import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.AppKeySettings
+import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.ui.LanguageRenderer
-import cn.yiiguxing.plugin.translate.ui.form.YoudaoTranslateSettingsForm
+import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import com.intellij.ui.CollectionComboBoxModel
 import javax.swing.Icon
 import javax.swing.JComponent
 
 /**
- * YoudaoTranslateSettingsPanel
+ * AppKeySettingsPanel
  *
  * Created by Yii.Guxing on 2018/1/18
  */
-class YoudaoTranslateSettingsPanel(
-        private val settings: YoudaoTranslateSettings
-) : YoudaoTranslateSettingsForm(), TranslatorSettingsPanel {
+abstract class AppKeySettingsPanel(private val settings: AppKeySettings, translator: Translator)
+    : AppKeySettingsForm(), TranslatorSettingsPanel {
 
-    override val id: String = YoudaoTranslator.id
-    @Suppress("InvalidBundleOrProperty")
-    override val name: String = message("translator.name.youdao")
-    override val icon: Icon = YoudaoTranslator.icon
     override val component: JComponent = contentPanel
+
+    override val id: String = translator.id
+    override val icon: Icon = translator.icon
+
+    private val supportedLanguages = translator.supportedTargetLanguages
 
     init {
         primaryLanguage.apply {
-            model = CollectionComboBoxModel(YoudaoTranslator.SUPPORTED_LANGUAGES)
+            model = CollectionComboBoxModel(supportedLanguages)
             setRenderer(LanguageRenderer)
         }
     }
@@ -55,7 +54,7 @@ class YoudaoTranslateSettingsPanel(
         appKey = settings.getAppKey()
 
         settings.primaryLanguage.let {
-            if (YoudaoTranslator.SUPPORTED_LANGUAGES.contains(it)) {
+            if (supportedLanguages.contains(it)) {
                 primaryLanguage.selectedItem = it
             }
         }

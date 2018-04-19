@@ -1,7 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.openapi.application.ApplicationManager
@@ -43,7 +45,7 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 百度翻译选项
      */
-    var baiduTranslateSettings: AppKeySettings = BaiduTranslateSettings()
+    var baiduTranslateSettings: BaiduTranslateSettings = BaiduTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -108,8 +110,9 @@ class Settings : PersistentStateComponent<Settings> {
     }
 }
 
-private const val PASSWORD_SERVICE_NAME = "YIIGUXING.TRANSLATION"
+private const val YOUDAO_SERVICE_NAME = "YIIGUXING.TRANSLATION"
 private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
+private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 
 /**
@@ -131,9 +134,10 @@ abstract class AppKeySettings(
         var primaryLanguage: Lang,
         var appId: String = "",
         var isAppKeyConfigured: Boolean = false,
+        securityName: String,
         securityKey: String
 ) {
-    private var _appKey: String?  by PasswordSafeDelegate(PASSWORD_SERVICE_NAME, securityKey)
+    private var _appKey: String?  by PasswordSafeDelegate(securityName, securityKey)
         @Transient get
         @Transient set
 
@@ -153,12 +157,18 @@ abstract class AppKeySettings(
  * 有道翻译选项
  */
 @Tag("youdao-translate")
-class YoudaoTranslateSettings : AppKeySettings(Lang.AUTO, securityKey = YOUDAO_APP_KEY)
+class YoudaoTranslateSettings : AppKeySettings(
+        YoudaoTranslator.defaultLangForLocale,
+        securityName = YOUDAO_SERVICE_NAME,
+        securityKey = YOUDAO_APP_KEY)
 
 /**
  * 百度翻译选项
  */
-class BaiduTranslateSettings : AppKeySettings(Lang.CHINESE, securityKey = BAIDU_APP_KEY)
+class BaiduTranslateSettings : AppKeySettings(
+        BaiduTranslator.defaultLangForLocale,
+        securityName = BAIDU_SERVICE_NAME,
+        securityKey = BAIDU_APP_KEY)
 
 enum class WindowOption {
     STATUS_ICON

@@ -43,7 +43,7 @@ public class SettingsForm {
     }
 
     private void createUIComponents() {
-        mTransPanelContainer = new TranslatorSettingsContainer(mSettings, mAppStorage);
+        mTransPanelContainer = new TranslatorSettingsContainer(mSettings);
 
         try {
             mPrimaryFontComboBox = new FontComboBox(false, false);

@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
+import java.util.*
 import javax.swing.Icon
 
 object YoudaoTranslator : AbstractTranslator() {
@@ -18,7 +19,7 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
-    val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.AUTO,
             Lang.CHINESE,
             Lang.ENGLISH,
@@ -36,6 +37,12 @@ object YoudaoTranslator : AbstractTranslator() {
     override val name: String = TRANSLATOR_NAME
 
     override val icon: Icon = Icons.Youdao
+
+    override val defaultLangForLocale: Lang
+        get() = when (Locale.getDefault()) {
+            Locale.CHINA, Locale.CHINESE -> Lang.AUTO
+            else -> super.defaultLangForLocale
+        }
 
     override val primaryLanguage: Lang
         get() = Settings.youdaoTranslateSettings.primaryLanguage
