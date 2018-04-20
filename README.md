@@ -52,22 +52,26 @@ TranslationPlugin
 使用
 ----
 1. **申请有道智云翻译服务（可选）:**
-   - 注册[有道智云](http://ai.youdao.com)帐号并登录到控制台页面
-   - 创建一个翻译实例：<kbd>控制台</kbd> > <kbd>自然语言翻译</kbd> > <kbd>翻译实例</kbd> > <kbd>创建翻译实例</kbd>
-   - 创建一个应用并绑定翻译服务：<kbd>控制台</kbd> > <kbd>应用管理</kbd> > <kbd>我的应用</kbd> > <kbd>创建应用</kbd> > <kbd>绑定服务</kbd>
-   - 在插件中绑定应用——将上步骤的**应用ID**和**应用密钥**填写到插件设置页中相应的位置：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>有道翻译</kbd>
+   - 注册[有道智云](http://ai.youdao.com)帐号并获取其**应用ID**和**应用密钥**
+   - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>有道翻译</kbd>
 
    注：请注意保管好你的**应用密钥**，防止其泄漏。如帐号欠费，将无法使用。
 
-2. **开始翻译:**
+2. **申请百度翻译服务（可选）:**
+   - 注册[百度翻译开放平台](http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer)帐号并获取其**应用ID**和**应用密钥**
+   - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>百度翻译</kbd>
+
+   注：请注意保管好你的**应用密钥**，防止其泄漏。如帐号欠费，将无法使用。
+
+3. **开始翻译:**
 
    <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
 
    或者使用快捷键进行翻译，详见 **[Actions](#actions)**
 
-3. **切换翻译引擎:**
+4. **切换翻译引擎:**
 
-   点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译。
+   点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
 
 Actions
 -------
