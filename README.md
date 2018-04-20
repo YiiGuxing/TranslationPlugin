@@ -16,6 +16,7 @@ TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][bu
 - 多翻译引擎
   - Google翻译
   - 有道翻译
+  - 百度翻译
 - 多语言互译
 - 语音朗读
 - 自动选词
@@ -129,10 +130,10 @@ FAQ
 
 更新日志
 --------
-## [v2.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.2) (2018-02-07)
+## [v2.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.3)
 
-- 多语言支持：添加英语语言
-- 添加状态栏图标显示配置
+- 添加百度翻译
+- 优化交互体验
 - BUG修复
 
 [完整的更新历史记录](./CHANGELOG.md)
