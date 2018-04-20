@@ -65,7 +65,7 @@ abstract class AutoSelectAction(
 
         return TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
                 .let { document.getText(it) }
-                .find(wordPartCondition) != null
+                .any(wordPartCondition)
     }
 
     private fun AnActionEvent.getSelectionRange() = editor?.run {

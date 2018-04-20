@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import java.util.*
 import javax.swing.Icon
 
 /**
@@ -22,5 +23,19 @@ interface Translator {
     val supportedTargetLanguages: List<Lang>
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation
+
+    val defaultLangForLocale: Lang
+        get() = when (Locale.getDefault().language) {
+            Locale.CHINESE.language -> {
+                when (Locale.getDefault().country) {
+                    "HK", "TW" -> Lang.CHINESE_TRADITIONAL
+                    else -> Lang.CHINESE
+                }.takeIf { it in supportedTargetLanguages }
+            }
+            else -> {
+                val language = Locale.getDefault().language
+                supportedTargetLanguages.find { it.code.equals(language, ignoreCase = true) }
+            }
+        } ?: Lang.ENGLISH
 
 }

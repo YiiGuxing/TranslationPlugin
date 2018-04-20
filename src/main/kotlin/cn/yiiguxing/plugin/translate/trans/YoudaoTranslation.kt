@@ -42,8 +42,8 @@ data class YoudaoTranslation(
         val languagesList = languages!!.split("2")
         check(languagesList.size == 2) { "Can not convert to Translation: languages=$languages" }
 
-        val srcLang = Lang.valueOfCode(languagesList[0])
-        val transLang = Lang.valueOfCode(languagesList[1])
+        val srcLang = Lang.valueOfYoudaoCode(languagesList[0])
+        val transLang = Lang.valueOfYoudaoCode(languagesList[1])
 
         val otherExplains: Map<String, String> = webExplains?.mapNotNull { (key, values) ->
             if (key == null || values == null) {

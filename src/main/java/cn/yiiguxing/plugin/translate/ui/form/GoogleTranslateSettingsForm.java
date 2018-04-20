@@ -14,6 +14,7 @@ import javax.swing.*;
 public class GoogleTranslateSettingsForm {
     private JPanel mContentPanel;
     private ComboBox<Lang> mPrimaryLanguage;
+    private JCheckBox useTranslateGoogleComCheckBox;
 
     @NotNull
     public final JPanel getContentPanel() {
@@ -23,5 +24,10 @@ public class GoogleTranslateSettingsForm {
     @NotNull
     public final ComboBox<Lang> getPrimaryLanguage() {
         return mPrimaryLanguage;
+    }
+
+    @NotNull
+    public final JCheckBox getUseTranslateGoogleComCheckBox() {
+        return useTranslateGoogleComCheckBox;
     }
 }

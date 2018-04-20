@@ -14,6 +14,8 @@ import javax.swing.JLabel
 class DialogTranslationPanel(project: Project?, settings: Settings, maxWidth: Int)
     : TranslationPanel<JLabel>(project, settings, maxWidth) {
 
+    override val originalFoldingLength: Int = 50
+
     override fun onCreateLanguageComponent() = JLabel().apply {
         border = JBEmptyBorder(0, 0, 0, 10)
     }

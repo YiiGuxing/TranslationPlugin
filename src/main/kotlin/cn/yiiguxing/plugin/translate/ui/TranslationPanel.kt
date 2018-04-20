@@ -24,12 +24,16 @@ import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import java.awt.Color
+import java.awt.Cursor
 import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
+import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import kotlin.properties.Delegates
@@ -162,7 +166,7 @@ abstract class TranslationPanel<T : JComponent>(
     private fun createTTSLinkLabel(block: () -> Pair<String, Lang>?): ActionLink {
         var myDisposable: Disposable? = null
         return ActionLink { link ->
-            block()?.let block@ { (text, lang) ->
+            block()?.let block@{ (text, lang) ->
                 ttsDisposable?.let {
                     Disposer.dispose(it)
                     if (it === myDisposable) {
@@ -350,7 +354,17 @@ abstract class TranslationPanel<T : JComponent>(
                     translation?.run {
                         selectedText.let {
                             if (!it.isNullOrBlank()) {
-                                onNewTranslateHandler?.invoke(it, srcLang, targetLang)
+                                lateinit var src: Lang
+                                lateinit var target: Lang
+                                if (this@setupPopupMenu === originalViewer) {
+                                    src = targetLang
+                                    target = srcLang
+                                } else {
+                                    src = srcLang
+                                    target = targetLang
+                                }
+
+                                onNewTranslateHandler?.invoke(it, src, target)
                             }
                         }
                     }
@@ -388,6 +402,8 @@ abstract class TranslationPanel<T : JComponent>(
 
     protected abstract fun T.updateLanguage(lang: Lang?)
 
+    protected abstract val originalFoldingLength: Int
+
     private fun update() {
         component // initialize components
         checkSourceLanguage()
@@ -405,15 +421,83 @@ abstract class TranslationPanel<T : JComponent>(
             originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(it.srcLang)
             transTTSLink.isEnabled = !it.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(it.targetLang)
 
-            updateViewer(originalViewer, originalViewerRow, it.original)
+            updateOriginalViewer(it.original)
             updateViewer(transViewer, transViewerRow, it.trans)
 
-            srcTransliterationLabel.updateText(it.srcTransliteration)
-            transliterationLabel.updateText(it.transliteration)
+            srcTransliterationLabel.apply {
+                val srcTransliteration = it.srcTransliteration
+                updateText(srcTransliteration)
+                toolTipText = srcTransliteration
+            }
+            transliterationLabel.apply {
+                val transliteration = it.transliteration
+                updateText(transliteration)
+                toolTipText = transliteration
+            }
 
             updateDictViewer(it.dictionaries)
             updateViewer(basicExplainViewer, basicExplainsViewerRow, it.basicExplains.joinToString("\n"))
             updateOtherExplains(it.otherExplains)
+        }
+    }
+
+    private fun updateOriginalViewer(text: String) {
+        if (text.isEmpty()) {
+            originalViewer.empty()
+            originalViewerRow.visible = false
+            return
+        }
+
+        with(originalViewer) {
+            if (settings.foldOriginal && text.length > originalFoldingLength) {
+                val display = text.splitSentence(originalFoldingLength).first()
+                setText(display)
+
+                val attr = SimpleAttributeSet()
+                StyleConstants.setComponent(attr, FoldingButton {
+                    setText(text)
+                    caretPosition = 0
+                    onRevalidateHandler?.invoke()
+                })
+                styledDocument.appendString(" ").appendString(" ", attr)
+            } else {
+                setText(text)
+            }
+
+            caretPosition = 0
+        }
+        originalViewerRow.visible = true
+    }
+
+    private class FoldingButton(private val action: () -> Unit) : JButton("..."), MouseListener {
+
+        init {
+            isOpaque = false
+            alignmentY = 0.8f
+
+            JBDimension(35, 23).let {
+                minimumSize = it
+                maximumSize = it
+                preferredSize = it
+            }
+
+            foreground = JBColor(0x555555, 0xb2b2b2)
+            addMouseListener(this)
+        }
+
+        override fun mouseReleased(e: MouseEvent) {}
+        override fun mousePressed(e: MouseEvent) {}
+
+        override fun mouseClicked(e: MouseEvent) {
+            action()
+        }
+
+        override fun mouseEntered(e: MouseEvent) {
+            cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+        }
+
+        override fun mouseExited(e: MouseEvent) {
+            cursor = Cursor.getDefaultCursor()
         }
     }
 

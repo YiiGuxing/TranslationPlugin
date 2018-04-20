@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.ui.FixedSizeCardLayout
 import cn.yiiguxing.plugin.translate.ui.form.TranslatorSettingsContainerForm
@@ -16,10 +15,8 @@ import javax.swing.JList
  *
  * Created by Yii.Guxing on 2018/1/18
  */
-class TranslatorSettingsContainer(
-        private val settings: Settings,
-        private val appStorage: AppStorage
-) : TranslatorSettingsContainerForm<TranslatorSettingsPanel>(), ConfigurablePanel {
+class TranslatorSettingsContainer(private val settings: Settings)
+    : TranslatorSettingsContainerForm<TranslatorSettingsPanel>(), ConfigurablePanel {
 
     private val layout = FixedSizeCardLayout()
 
@@ -29,7 +26,8 @@ class TranslatorSettingsContainer(
         contentPanel.layout = layout
 
         add(GoogleTranslateSettingsPanel(settings.googleTranslateSettings))
-        add(YoudaoTranslateSettingsPanel(settings.youdaoTranslateSettings))
+        add(YoudaoAppKeySettingsPanel(settings))
+        add(BaiduAppKeySettingsPanel(settings))
 
         comboBox.renderer = object : ListCellRendererWrapper<TranslatorSettingsPanel>() {
             override fun customize(list: JList<*>, value: TranslatorSettingsPanel, index: Int, selected: Boolean,
@@ -71,14 +69,7 @@ class TranslatorSettingsContainer(
     override fun apply() {
         val selectedPanel = comboBox.selected
         if (selectedPanel != null) {
-            val oldTranslator = settings.translator
-            val newTranslator = selectedPanel.id
-            if (oldTranslator != newTranslator) {
-                appStorage.lastSourceLanguage = null
-                appStorage.lastTargetLanguage = null
-            }
-
-            settings.translator = newTranslator
+            settings.translator = selectedPanel.id
         }
 
         with(comboBox) {

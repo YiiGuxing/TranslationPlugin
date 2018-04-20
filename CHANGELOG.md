@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.3)
+
+- 添加百度翻译
+- 翻译原文折叠
+- 优化交互体验
+- BUG修复
+
 ## [v2.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.2) (2018-02-07)
 
 - 多语言支持：添加英语语言

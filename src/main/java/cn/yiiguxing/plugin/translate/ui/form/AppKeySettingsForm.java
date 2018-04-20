@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui.form;
 
-import cn.yiiguxing.plugin.translate.ConstantsKt;
 import cn.yiiguxing.plugin.translate.trans.Lang;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
@@ -20,7 +19,7 @@ import javax.swing.*;
  * <p>
  * Created by Yii.Guxing on 2017/11/8
  */
-public class YoudaoTranslateSettingsForm {
+public abstract class AppKeySettingsForm {
 
     private JPanel mContentPanel;
     private ComboBox<Lang> mPrimaryLanguage;
@@ -28,16 +27,24 @@ public class YoudaoTranslateSettingsForm {
     private JBPasswordField mAppKeyField;
     @SuppressWarnings("FieldCanBeLocal")
     private LinkLabel mGetApiKeyLink;
+    private JLabel mLogo;
 
     private void createUIComponents() {
-
         mGetApiKeyLink = new ActionLink("", AllIcons.Ide.Link, new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent anActionEvent) {
-                BrowserUtil.browse(ConstantsKt.YOUDAO_AI_URL);
+                BrowserUtil.browse(getAppKeyLink());
             }
         });
         mGetApiKeyLink.setPaintUnderline(false);
+    }
+
+    @NotNull
+    public abstract String getAppKeyLink();
+
+    @NotNull
+    public JLabel getLogo() {
+        return mLogo;
     }
 
     @NotNull

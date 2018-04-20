@@ -1,11 +1,12 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
+import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_CN_URL
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.RequestBuilder
@@ -22,6 +23,7 @@ object GoogleTranslator : AbstractTranslator() {
     const val TRANSLATOR_ID = "translate.google"
     private const val TRANSLATOR_NAME = "Google Translate"
 
+    private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
     private val gson: Gson = GsonBuilder()
             .registerTypeAdapter(Lang::class.java, LangDeserializer)
@@ -35,27 +37,38 @@ object GoogleTranslator : AbstractTranslator() {
     override val icon: Icon = Icons.Google
 
     override val primaryLanguage: Lang
-        get() = Settings.googleTranslateSettings.primaryLanguage
+        get() = settings.primaryLanguage
 
-    override val supportedSourceLanguages
-            : List<Lang> = Lang.sortedValues()
-    override val supportedTargetLanguages
-            : List<Lang> = Lang.sortedValues().toMutableList().apply { remove(Lang.AUTO) }
+    private val baseUrl: String
+        get() = if (settings.useTranslateGoogleCom) GOOGLE_TRANSLATE_URL else GOOGLE_TRANSLATE_CN_URL
+
+    private val notSupportedLanguages = arrayListOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
+
+    override val supportedSourceLanguages: List<Lang> = Lang.sortedValues()
+            .toMutableList()
+            .apply { removeAll(notSupportedLanguages) }
+    override val supportedTargetLanguages: List<Lang> = Lang.sortedValues()
+            .toMutableList()
+            .apply {
+                remove(Lang.AUTO)
+                removeAll(notSupportedLanguages)
+            }
 
     override fun buildRequest(builder: RequestBuilder) {
         builder.userAgent(DEFAULT_USER_AGENT)
     }
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang)
-            : String = ("$GOOGLE_TRANSLATE_URL?client=gtx&dt=t&dt=bd&dt=rm&dj=1" +
-            "&sl=${srcLang.code}" +
-            "&tl=${targetLang.code}" +
-            "&hl=${primaryLanguage.code}" + // 这是词性的语言
-            "&tk=${text.tk()}" +
-            "&q=${text.urlEncode()}")
-            .also {
-                logger.i("Translate url: $it")
-            }
+    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String = UrlBuilder(baseUrl)
+            .addQueryParameter("client", "gtx")
+            .addQueryParameters("dt", "t", "bd", "rm")
+            .addQueryParameter("dj", "1")
+            .addQueryParameter("sl", srcLang.code)
+            .addQueryParameter("tl", targetLang.code)
+            .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
+            .addQueryParameter("tk", text.tk())
+            .addQueryParameter("q", text)
+            .build()
+            .also { logger.i("Translate url: $it") }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
         logger.i("Translate result: $result")

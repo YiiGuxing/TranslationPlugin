@@ -1,7 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.openapi.application.ApplicationManager
@@ -13,6 +15,7 @@ import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
+import java.util.*
 import kotlin.properties.Delegates
 
 /**
@@ -39,6 +42,10 @@ class Settings : PersistentStateComponent<Settings> {
      * 有道翻译选项
      */
     var youdaoTranslateSettings: YoudaoTranslateSettings = YoudaoTranslateSettings()
+    /**
+     * 百度翻译选项
+     */
+    var baiduTranslateSettings: BaiduTranslateSettings = BaiduTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -65,11 +72,19 @@ class Settings : PersistentStateComponent<Settings> {
         }
     }
 
+    /**
+     * 状态栏图标
+     */
     var showStatusIcon: Boolean by Delegates.observable(true) { _, oldValue: Boolean, newValue: Boolean ->
         if (oldValue != newValue) {
             settingsChangePublisher.onWindowOptionsChanged(this, WindowOption.STATUS_ICON)
         }
     }
+
+    /**
+     * 状态栏图标
+     */
+    var foldOriginal: Boolean = false
 
     /**
      * 是否关闭设置APP KEY通知
@@ -103,8 +118,10 @@ class Settings : PersistentStateComponent<Settings> {
     }
 }
 
-private const val PASSWORD_SERVICE_NAME = "YIIGUXING.TRANSLATION"
+private const val YOUDAO_SERVICE_NAME = "YIIGUXING.TRANSLATION"
 private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
+private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
+private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 
 /**
  * 谷歌翻译选项
@@ -112,22 +129,23 @@ private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.CHINESE)
+data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default,
+                                   var useTranslateGoogleCom: Boolean = Locale.getDefault() != Locale.CHINA)
 
 /**
- * 有道翻译选项
- *
  * @property primaryLanguage    主要语言
  * @property appId              应用ID
  * @property isAppKeyConfigured 应用密钥设置标志
  */
-@Tag("youdao-translate")
-data class YoudaoTranslateSettings(
-        var primaryLanguage: Lang = Lang.AUTO,
+@Tag("app-key")
+abstract class AppKeySettings(
+        var primaryLanguage: Lang,
         var appId: String = "",
-        var isAppKeyConfigured: Boolean = false
+        var isAppKeyConfigured: Boolean = false,
+        securityName: String,
+        securityKey: String
 ) {
-    private var _appKey: String?  by PasswordSafeDelegate(PASSWORD_SERVICE_NAME, YOUDAO_APP_KEY)
+    private var _appKey: String?  by PasswordSafeDelegate(securityName, securityKey)
         @Transient get
         @Transient set
 
@@ -142,6 +160,23 @@ data class YoudaoTranslateSettings(
         _appKey = if (value.isNullOrBlank()) null else value
     }
 }
+
+/**
+ * 有道翻译选项
+ */
+@Tag("youdao-translate")
+class YoudaoTranslateSettings : AppKeySettings(
+        YoudaoTranslator.defaultLangForLocale,
+        securityName = YOUDAO_SERVICE_NAME,
+        securityKey = YOUDAO_APP_KEY)
+
+/**
+ * 百度翻译选项
+ */
+class BaiduTranslateSettings : AppKeySettings(
+        BaiduTranslator.defaultLangForLocale,
+        securityName = BAIDU_SERVICE_NAME,
+        securityKey = BAIDU_APP_KEY)
 
 enum class WindowOption {
     STATUS_ICON

@@ -47,6 +47,11 @@ enum class SelectionMode {
 fun String.find(condition: CharCondition): Char? = find { condition.value(it) }
 
 /**
+ * Returns `true` if at least one character matches the given [condition].
+ */
+fun String.any(condition: CharCondition): Boolean = any { condition.value(it) }
+
+/**
  * 返回当前光标周围文字的范围
  *
  * @param selectionMode 选择模式

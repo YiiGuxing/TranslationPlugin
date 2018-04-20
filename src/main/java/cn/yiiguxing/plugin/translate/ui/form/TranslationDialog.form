@@ -43,7 +43,7 @@
             <properties>
               <borderPainted value="true"/>
               <contentAreaFilled value="true"/>
-              <defaultCapable value="true"/>
+              <defaultCapable value="false"/>
               <doubleBuffered value="false"/>
               <enabled value="true"/>
               <focusCycleRoot value="false"/>

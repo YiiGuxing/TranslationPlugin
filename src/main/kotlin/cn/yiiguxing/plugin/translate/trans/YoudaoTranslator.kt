@@ -5,11 +5,12 @@ import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
-import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
+import java.util.*
 import javax.swing.Icon
 
 object YoudaoTranslator : AbstractTranslator() {
@@ -18,7 +19,7 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
-    val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.AUTO,
             Lang.CHINESE,
             Lang.ENGLISH,
@@ -37,6 +38,12 @@ object YoudaoTranslator : AbstractTranslator() {
 
     override val icon: Icon = Icons.Youdao
 
+    override val defaultLangForLocale: Lang
+        get() = when (Locale.getDefault()) {
+            Locale.CHINA, Locale.CHINESE -> Lang.AUTO
+            else -> super.defaultLangForLocale
+        }
+
     override val primaryLanguage: Lang
         get() = Settings.youdaoTranslateSettings.primaryLanguage
 
@@ -50,19 +57,16 @@ object YoudaoTranslator : AbstractTranslator() {
         val salt = System.currentTimeMillis().toString()
         val sign = (appId + text + salt + privateKey).md5()
 
-        return (YOUDAO_TRANSLATE_URL +
-                "?appKey=${appId.urlEncode()}" +
-                "&from=${getLanguageCode(srcLang)}" +
-                "&to=${getLanguageCode(targetLang)}" +
-                "&salt=$salt" +
-                "&sign=$sign" +
-                "&q=${text.urlEncode()}")
-                .also {
-                    logger.i("Translate url: $it")
-                }
+        return UrlBuilder(YOUDAO_TRANSLATE_URL)
+                .addQueryParameter("appKey", appId)
+                .addQueryParameter("from", srcLang.baiduCode)
+                .addQueryParameter("to", targetLang.baiduCode)
+                .addQueryParameter("salt", salt)
+                .addQueryParameter("sign", sign)
+                .addQueryParameter("q", text)
+                .build()
+                .also { logger.i("Translate url: $it") }
     }
-
-    private fun getLanguageCode(lang: Lang): String = if (lang == Lang.CHINESE) "zh-CHS" else lang.code
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
         logger.i("Translate result: $result")
@@ -71,16 +75,16 @@ object YoudaoTranslator : AbstractTranslator() {
             query = original
             checkError()
             if (!isSuccessful) {
-                throw YoudaoTranslateException(errorCode)
+                throw TranslateResultException(errorCode)
             }
         }.toTranslation()
     }
 
     @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is YoudaoTranslateException -> "${message("error.code", throwable.code)}: " + when (throwable.code) {
-            101 -> message("error.youdao.missingParameter")
-            102 -> message("error.youdao.unsupported.language")
+        is TranslateResultException -> "${message("error.code", throwable.code)}: " + when (throwable.code) {
+            101 -> message("error.missingParameter")
+            102 -> message("error.language.unsupported")
             103 -> message("error.youdao.textTooLong")
             104 -> message("error.youdao.unsupported.api")
             105 -> message("error.youdao.unsupported.signature")
@@ -89,19 +93,16 @@ object YoudaoTranslator : AbstractTranslator() {
             108 -> message("error.youdao.invalidKey", HTML_DESCRIPTION_SETTINGS)
             109 -> message("error.youdao.batchLog")
             110 -> message("error.youdao.noInstance")
-            111 -> message("error.youdao.invalidAccount", HTML_DESCRIPTION_SETTINGS)
+            111 -> message("error.invalidAccount", HTML_DESCRIPTION_SETTINGS)
             201 -> message("error.youdao.decrypt")
-            202 -> message("error.youdao.invalidSignature", HTML_DESCRIPTION_SETTINGS)
-            203 -> message("error.youdao.ip")
+            202 -> message("error.invalidSignature", HTML_DESCRIPTION_SETTINGS)
+            203 -> message("error.access.ip")
             301 -> message("error.youdao.dictionary")
             302 -> message("error.youdao.translation")
             303 -> message("error.youdao.serverError")
-            401 -> message("error.youdao.arrears")
+            401 -> message("error.account.arrears")
             else -> message("error.unknown")
         }
         else -> super.createErrorMessage(throwable)
     }
-
-    private class YoudaoTranslateException(val code: Int) : TranslateException("Translate failed: $code")
-
 }

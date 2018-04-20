@@ -4,7 +4,10 @@ import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
+import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import com.intellij.openapi.ui.ComboBox
+import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.FontComboBox
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ListCellRendererWrapper
@@ -32,8 +35,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         phoneticFontComboBox.fixFontComboBoxSize()
 
         setTitles()
-        setRenderer()
         setListeners()
+        initSelectionModeComboBox()
     }
 
     @Suppress("InvalidBundleOrProperty")
@@ -41,18 +44,26 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         selectionSettingsPanel.setTitledBorder(message("settings.title.selectionMode"))
         fontPanel.setTitledBorder(message("settings.title.font"))
         historyPanel.setTitledBorder(message("settings.title.history"))
-        windowOptionsPanel.setTitledBorder(message("settings.title.windowOptions"))
+        optionsPanel.setTitledBorder(message("settings.title.options"))
     }
 
     @Suppress("InvalidBundleOrProperty")
-    private fun setRenderer() {
-        selectionModeComboBox.renderer = object : ListCellRendererWrapper<String>() {
-            override fun customize(list: JList<*>, value: String, index: Int, selected: Boolean, hasFocus: Boolean) {
-                setText(value)
-                if (index == INDEX_INCLUSIVE) {
-                    setToolTipText(message("settings.tooltip.inclusive"))
-                } else if (index == INDEX_EXCLUSIVE) {
-                    setToolTipText(message("settings.tooltip.exclusive"))
+    private fun initSelectionModeComboBox() {
+        with(selectionModeComboBox) {
+            model = CollectionComboBoxModel(listOf(SelectionMode.INCLUSIVE, SelectionMode.EXCLUSIVE))
+            renderer = object : ListCellRendererWrapper<SelectionMode>() {
+                override fun customize(list: JList<*>, value: SelectionMode, index: Int, selected: Boolean,
+                                       hasFocus: Boolean) {
+                    when (value) {
+                        SelectionMode.EXCLUSIVE -> {
+                            setText("Exclusive")
+                            setToolTipText(message("settings.tooltip.exclusive"))
+                        }
+                        else -> {
+                            setText("Inclusive")
+                            setToolTipText(message("settings.tooltip.inclusive"))
+                        }
+                    }
                 }
             }
         }
@@ -102,38 +113,22 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         document.setCharacterAttributes(4, 41, attributeSet, true)
     }
 
-    private fun getAutoSelectionMode(): SelectionMode {
-        return if (selectionModeComboBox.selectedIndex == INDEX_INCLUSIVE) {
-            SelectionMode.INCLUSIVE
-        } else {
-            SelectionMode.EXCLUSIVE
-        }
-    }
-
     private fun getMaxHistorySize(): Int {
         val size = maxHistoriesSizeComboBox.editor.item
-        if (size is String) {
-            try {
-                return Integer.parseInt(size)
-            } catch (e: NumberFormatException) {
-                /*no-op*/
-            }
-        }
-
-        return -1
+        return (size as? String)?.toIntOrNull() ?: -1
     }
-
 
     override val isModified: Boolean
         get() {
             val settings = settings
             return transPanelContainer.isModified ||
                     appStorage.maxHistorySize != getMaxHistorySize() ||
-                    settings.autoSelectionMode != getAutoSelectionMode() ||
+                    settings.autoSelectionMode != selectionModeComboBox.currentMode ||
                     settings.isOverrideFont != fontCheckBox.isSelected ||
                     settings.primaryFontFamily != primaryFontComboBox.fontName ||
                     settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
-                    settings.showStatusIcon != showStatusIconCheckBox.isSelected
+                    settings.showStatusIcon != showStatusIconCheckBox.isSelected ||
+                    settings.foldOriginal != foldOriginalCheckBox.isSelected
         }
 
 
@@ -150,8 +145,9 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             isOverrideFont = fontCheckBox.isSelected
             primaryFontFamily = primaryFontComboBox.fontName
             phoneticFontFamily = phoneticFontComboBox.fontName
-            autoSelectionMode = getAutoSelectionMode()
+            autoSelectionMode = selectionModeComboBox.currentMode
             showStatusIcon = showStatusIconCheckBox.isSelected
+            foldOriginal = foldOriginalCheckBox.isSelected
         }
     }
 
@@ -161,22 +157,18 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         val settings = settings
         fontCheckBox.isSelected = settings.isOverrideFont
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
+        foldOriginalCheckBox.isSelected = settings.foldOriginal
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)
         previewPhoneticFont(settings.phoneticFontFamily)
 
         maxHistoriesSizeComboBox.editor.item = Integer.toString(appStorage.maxHistorySize)
-        selectionModeComboBox.selectedIndex = if (settings.autoSelectionMode === SelectionMode.INCLUSIVE) {
-            INDEX_INCLUSIVE
-        } else {
-            INDEX_EXCLUSIVE
-        }
+        selectionModeComboBox.selected = settings.autoSelectionMode
     }
 
     companion object {
-        private const val INDEX_INCLUSIVE = 0
-        private const val INDEX_EXCLUSIVE = 1
+        private val ComboBox<SelectionMode>.currentMode get() = selected ?: SelectionMode.INCLUSIVE
 
         private fun FontComboBox.fixFontComboBoxSize() {
             val size = preferredSize
