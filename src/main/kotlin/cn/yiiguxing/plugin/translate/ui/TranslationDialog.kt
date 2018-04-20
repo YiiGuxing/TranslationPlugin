@@ -21,6 +21,7 @@ import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
+import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.AWTEvent
 import java.awt.CardLayout
@@ -88,6 +89,9 @@ class TranslationDialog(private val project: Project?)
         translateButton.apply {
             icon = Icons.Translate
             addActionListener { translateInternal(inputComboBox.editor.item.toString()) }
+            minimumSize = JBDimension(45, 0)
+            maximumSize = JBDimension(45, Int.MAX_VALUE)
+            preferredSize = JBDimension(45, (preferredSize.height / JBUI.scale(1f)).toInt())
         }
         mainContentPanel.apply {
             border = BORDER_ACTIVE
