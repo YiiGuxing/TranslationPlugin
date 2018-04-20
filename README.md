@@ -135,6 +135,7 @@ FAQ
 ## [v2.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.3)
 
 - 添加百度翻译
+- 翻译原文折叠
 - 优化交互体验
 - BUG修复
 
