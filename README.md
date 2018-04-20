@@ -1,11 +1,11 @@
 
-TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][build-img-dev]][travis-ci] [![GitHub release][release-img]][latest-release]
+TranslationPlugin [![Jetbrains Plugins][plugin-img]][plugin] [![Build Status][build-img-dev]][travis-ci] [![GitHub release][release-img]][latest-release] [![License][license-img]][license]
 =================
 
-[![Version](https://img.shields.io/jetbrains/plugin/v/8579.svg)][plugin]
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/8579.svg)][plugin]
-[![Downloads](http://phpstorm.espend.de/badge/8579/downloads)][plugin]
-[![Downloads last month](http://phpstorm.espend.de/badge/8579/last-month)][plugin]
+[![Version](https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square)][plugin]
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square)][plugin]
+[![Downloads](http://phpstorm.espend.de/badge/8579/downloads?style=flat-square)][plugin]
+[![Downloads last month](http://phpstorm.espend.de/badge/8579/last-month?style=flat-square)][plugin]
 
 ### JetBrains IDE/Android Studio 翻译插件
 
@@ -139,10 +139,12 @@ FAQ
 [完整的更新历史记录](./CHANGELOG.md)
 
 
-[build-img-dev]: https://travis-ci.org/YiiGuxing/TranslationPlugin.svg?branch=dev
-[build-img-master]: https://travis-ci.org/YiiGuxing/TranslationPlugin.svg?branch=master
-[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg
+[build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=for-the-badge
+[build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=for-the-badge
+[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=for-the-badge
+[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=for-the-badge
+[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=for-the-badge
 [latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
-[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg
+[license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
 [travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
 [plugin]: https://plugins.jetbrains.com/plugin/8579
