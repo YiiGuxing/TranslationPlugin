@@ -139,11 +139,11 @@ FAQ
 [完整的更新历史记录](./CHANGELOG.md)
 
 
-[build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=for-the-badge
-[build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=for-the-badge
-[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=for-the-badge
-[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=for-the-badge
-[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=for-the-badge
+[build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=flat-square
+[build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=flat-square
+[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
+[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
+[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=flat-square
 [latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
 [license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
 [travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
