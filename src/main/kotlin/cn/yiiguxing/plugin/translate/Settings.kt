@@ -72,11 +72,19 @@ class Settings : PersistentStateComponent<Settings> {
         }
     }
 
+    /**
+     * 状态栏图标
+     */
     var showStatusIcon: Boolean by Delegates.observable(true) { _, oldValue: Boolean, newValue: Boolean ->
         if (oldValue != newValue) {
             settingsChangePublisher.onWindowOptionsChanged(this, WindowOption.STATUS_ICON)
         }
     }
+
+    /**
+     * 状态栏图标
+     */
+    var foldOriginal: Boolean = false
 
     /**
      * 是否关闭设置APP KEY通知

@@ -29,8 +29,9 @@ public class SettingsForm {
     private JLabel mPrimaryFontLabel;
     private JLabel mPhoneticFontLabel;
     private TranslatorSettingsContainer mTransPanelContainer;
-    private JPanel mWindowOptionsPanel;
+    private JPanel mOptionsPanel;
     private JCheckBox mShowStatusIconCheckBox;
+    private JCheckBox mFoldOriginalCheckBox;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -142,12 +143,17 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JPanel getWindowOptionsPanel() {
-        return mWindowOptionsPanel;
+    public final JPanel getOptionsPanel() {
+        return mOptionsPanel;
     }
 
     @NotNull
     public final JCheckBox getShowStatusIconCheckBox() {
         return mShowStatusIconCheckBox;
+    }
+
+    @NotNull
+    public final JCheckBox getFoldOriginalCheckBox() {
+        return mFoldOriginalCheckBox;
     }
 }
