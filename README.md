@@ -142,7 +142,7 @@ FAQ
 
 更新日志
 --------
-## [v2.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.3)
+## [v2.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.0.3) (2018-04-20)
 
 - 添加百度翻译
 - 翻译原文折叠
