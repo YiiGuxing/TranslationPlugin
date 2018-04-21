@@ -24,6 +24,7 @@
                 <ul>
                     <li>Google翻译</li>
                     <li>有道翻译</li>
+                    <li>百度翻译</li>
                 </ul>
             </li>
             <li>多语言互译</li>
@@ -80,24 +81,37 @@
         <h3 class="column_item_title">1. 申请有道智云翻译服务（可选）</h3>
         <div class="column_tip">
             <ul>
-                <li>注册<a href="http://ai.youdao.com" target="_blank">有道智云</a>帐号并登录到控制台页面</li>
-                <li>创建一个翻译实例：控制台 > 自然语言翻译 > 翻译实例 > 创建翻译实例</li>
-                <li>创建一个应用并绑定翻译服务：控制台 > 应用管理 > 我的应用 > 创建应用 > 绑定服务</li>
-                <li>在插件中绑定应用——将上步骤的<strong>应用</strong>和<strong>应用密钥</strong>填写到插件设置页中相应的位置：Preferences(Settings) >
-                    [Other Settings] > Translation > 有道翻译
+                <li>注册<a href="http://ai.youdao.com"
+                         target="_blank">有道智云</a>帐号并获取其<strong>应用ID</strong>和<strong>密钥</strong></li>
+                <li>绑定<strong>应用ID</strong>和<strong>密钥</strong>：Preferences(Settings) > [Other Settings] > Translation >
+                    有道翻译
                 </li>
             </ul>
 
             <div style="color: red">注：请注意保管好你的应用密钥，防止其泄漏。如帐号欠费，将无法使用。</div>
         </div>
 
-        <h3 class="column_item_title">2. 开始翻译</h3>
+        <h3 class="column_item_title">2. 申请百度翻译服务（可选）</h3>
+        <div class="column_tip">
+            <ul>
+                <li>注册<a href="http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer" target="_blank">百度翻译开放平台</a>帐号并获取其<strong>应用ID</strong>和<strong>密钥</strong>
+                </li>
+                <li>绑定<strong>应用ID</strong>和<strong>密钥</strong>：Preferences(Settings) > [Other Settings] > Translation >
+                    百度翻译
+                </li>
+            </ul>
+
+            <div style="color: red">注：请注意保管好你的应用密钥，防止其泄漏。如帐号欠费，将无法使用。</div>
+        </div>
+
+        <h3 class="column_item_title">3. 开始翻译</h3>
         <p class="column_tip">选择文本或者鼠标指向文本 > 单击鼠标右键 > Translate</p>
         <p class="column_tip">或者使用快捷键进行翻译，详见 <a href="#actions">Actions</a>.</p>
 
-        <h3 class="column_item_title">3. 切换翻译引擎</h3>
-        <p class="column_tip">点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> +
-            <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译和有道翻译。</p>
+        <h3 class="column_item_title">4. 切换翻译引擎</h3>
+        <p class="column_tip">点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd>
+            +
+            <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。</p>
     </div>
 
     <div class="column">
@@ -163,6 +177,10 @@
                 <h4 id="faq-gc" class="column_item_title">翻译内容出现乱码怎么办？</h4>
                 <p>答：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。</p>
                 <img src="images/settings_font.png">
+            </li>
+            <li>
+                <h4 id="faq-sign" class="column_item_title">MacOS、Linux下无法保存应用密钥，出现校验签名失败?</h4>
+                <p>答：可以尝试将密码保存方式改成 <strong>In KeePass</strong> 方式（<kbd>Settings</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>）</p>
             </li>
             <li>
                 <h4 id="faq-km" class="column_item_title">为什么2.0以前的版本快捷键在新版本都不能用了?</h4>
