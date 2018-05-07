@@ -124,7 +124,7 @@ class TranslationBalloon(
     }
 
     private fun initActions() = with(translationPane) {
-        onRevalidate { balloon.revalidate() }
+        onRevalidate { if (!disposed) balloon.revalidate() }
         onLanguageChanged { src, target -> translate(src, target) }
         onNewTranslate { text, src, target ->
             invokeLater { showOnTranslationDialog(text, src, target) }
@@ -223,8 +223,10 @@ class TranslationBalloon(
 
     private fun showCard(card: String) {
         invokeLater {
-            layout.show(contentPanel, card)
-            balloon.revalidate()
+            if (!disposed) {
+                layout.show(contentPanel, card)
+                balloon.revalidate()
+            }
         }
     }
 
