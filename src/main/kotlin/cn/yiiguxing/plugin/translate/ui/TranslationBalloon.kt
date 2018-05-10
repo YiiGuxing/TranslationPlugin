@@ -59,7 +59,7 @@ class TranslationBalloon(
 
     private var isShowing = false
     private var _disposed = false
-    override val disposed get() = _disposed
+    override val disposed get() = _disposed || balloon.isDisposed
 
     private var lastError: Throwable? = null
 
@@ -186,7 +186,7 @@ class TranslationBalloon(
     }
 
     override fun dispose() {
-        if (disposed) {
+        if (_disposed) {
             return
         }
 
