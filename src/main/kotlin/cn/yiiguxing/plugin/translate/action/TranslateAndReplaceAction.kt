@@ -110,21 +110,19 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
             val items = replaceLookup.toTypedArray()
             val lookup = LookupManager.getInstance(project).showLookup(this, *items) ?: return
+            val highlightManager = HighlightManager.getInstance(project)
+            val highlighters = highlightManager.addHighlight(this, selectionRange)
 
-            HighlightManager.getInstance(project)
-                    .addHighlight(this, selectionRange)
-                    .let {
-                        lookup.addLookupListener(object : LookupAdapter() {
-                            override fun itemSelected(event: LookupEvent) {
-                                it.dispose()
-                            }
+            lookup.addLookupListener(object : LookupAdapter() {
+                override fun itemSelected(event: LookupEvent) {
+                    highlightManager.removeSegmentHighlighters(this@doReplace, highlighters)
+                }
 
-                            override fun lookupCanceled(event: LookupEvent) {
-                                selectionModel.removeSelection()
-                                it.dispose()
-                            }
-                        })
-                    }
+                override fun lookupCanceled(event: LookupEvent) {
+                    selectionModel.removeSelection()
+                    highlightManager.removeSegmentHighlighters(this@doReplace, highlighters)
+                }
+            })
         }
 
         fun HighlightManager.addHighlight(editor: Editor, selectionRange: TextRange)
@@ -145,10 +143,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
             }
         }
 
-        fun List<RangeHighlighter>.dispose() {
-            for (highlighter in this) {
-                highlighter.dispose()
-            }
+        fun HighlightManager.removeSegmentHighlighters(editor: Editor, highlighters: List<RangeHighlighter>) {
+            highlighters.forEach { removeSegmentHighlighter(editor, it) }
         }
 
         fun List<String>.toReplaceLookupElements(): List<LookupElement> {

@@ -34,23 +34,21 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
     }
 
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
-        editor.isColumnMode
+        val project = editor.project ?: return
         editor.document.getText(selectionRange).splitWords()?.let { text ->
-            val highlighters = editor.project?.let { project ->
-                ArrayList<RangeHighlighter>().also {
-                    HighlightManager.getInstance(project).addRangeHighlight(editor, selectionRange.startOffset,
-                            selectionRange.endOffset, HIGHLIGHT_ATTRIBUTES, true, it)
-                }
-            }
+            val highlightManager = HighlightManager.getInstance(project)
+            val highlighters = ArrayList<RangeHighlighter>()
+            HighlightManager.getInstance(project).addRangeHighlight(editor, selectionRange.startOffset,
+                    selectionRange.endOffset, HIGHLIGHT_ATTRIBUTES, true, highlighters)
 
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val tracker = BalloonPositionTracker(editor, caretRangeMarker)
             val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
 
-            highlighters?.takeIf { it.isNotEmpty() }?.let {
+            highlighters.takeIf { it.isNotEmpty() }?.let {
                 Disposer.register(balloon, Disposable {
                     for (highlighter in it) {
-                        highlighter.dispose()
+                        highlightManager.removeSegmentHighlighter(editor, highlighter)
                     }
                 })
             }
