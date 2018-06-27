@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin url="http://yiiguxing.github.io/TranslationPlugin">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
     <version>2.0</version>
@@ -34,8 +34,8 @@
       </ul>
       </p>
       <br/>
-      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots-balloon.png" alt="screenshots-balloon.png"/></p>
-      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots-dialog.png" alt="screenshots-dialog.png"/></p>
+      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots-balloon.png" width="500" height="480" alt="screenshots-balloon.png"/></p>
+      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots-dialog.png" width="400" height="500" alt="screenshots-dialog.png"/></p>
       <br/>
       <p><a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Send feedback</a></p>
     ]]></description>
