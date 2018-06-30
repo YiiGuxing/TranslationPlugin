@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
+import javax.swing.SwingConstants
 
 /**
  * TTSButton
@@ -27,6 +28,7 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
         disabledIcon = Icons.AudioDisabled
         setHoveringIcon(Icons.AudioPressed)
         myPaintUnderline = false
+        horizontalAlignment = SwingConstants.CENTER
         setListener(this, null)
     }
 
