@@ -77,13 +77,11 @@ abstract class TranslationPanel<T : JComponent>(
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
 
-    private var ttsDisposable: Disposable? = null
-
-    private val originalTTSLink = createTTSLinkLabel {
+    private val originalTTSLink = createTTSButton {
         translation?.run { original to srcLang }
     }
 
-    private val transTTSLink = createTTSLinkLabel {
+    private val transTTSLink = createTTSButton {
         translation?.run {
             trans?.let { it to targetLang }
         }
@@ -163,35 +161,12 @@ abstract class TranslationPanel<T : JComponent>(
                 }
             }
 
-    private fun createTTSLinkLabel(block: () -> Pair<String, Lang>?): ActionLink {
-        var myDisposable: Disposable? = null
-        return ActionLink { link ->
-            block()?.let block@{ (text, lang) ->
-                ttsDisposable?.let {
-                    Disposer.dispose(it)
-                    if (it === myDisposable) {
-                        return@block
-                    }
-                }
-
-                link.icon = Icons.TTSSuspend
-                link.setHoveringIcon(Icons.TTSSuspendHovering)
-                TextToSpeech.speak(project, text, lang).let { disposable ->
-                    myDisposable = disposable
-                    ttsDisposable = disposable
-                    Disposer.register(disposable, Disposable {
-                        if (ttsDisposable === disposable) {
-                            ttsDisposable = null
-                        }
-                        link.icon = Icons.Audio
-                        link.setHoveringIcon(Icons.AudioPressed)
-                    })
-                }
-            }
-        }.apply {
-            icon = Icons.Audio
-            disabledIcon = Icons.AudioDisabled
-            setHoveringIcon(Icons.AudioPressed)
+    private fun createTTSButton(block: () -> Pair<String, Lang>?): TTSButton {
+        val translationPanel = this
+        return TTSButton().apply {
+            project = translationPanel.project
+            dataSource(block)
+            Disposer.register(translationPanel, this)
         }
     }
 
@@ -323,7 +298,6 @@ abstract class TranslationPanel<T : JComponent>(
 
     override fun dispose() {
         reset()
-        ttsDisposable?.let { Disposer.dispose(it) }
     }
 
     open fun reset() {
