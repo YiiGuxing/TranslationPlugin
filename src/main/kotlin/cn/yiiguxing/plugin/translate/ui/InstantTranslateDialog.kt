@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslateDialogForm
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.ui.SideBorder
@@ -30,6 +31,17 @@ class InstantTranslateDialog(project: Project?) : InstantTranslateDialogForm(pro
         translationToolBar.apply {
             border = TOOLBAR_BORDER
             background = TOOLBAR_BACKGROUND
+        }
+
+        clearButton.apply {
+            icon = Icons.ClearText
+            disabledIcon = Icons.ClearTextDisabled
+            setHoveringIcon(Icons.ClearTextHovering)
+        }
+        copyButton.apply {
+            icon = Icons.CopyAll
+            disabledIcon = Icons.CopyAllDisabled
+            setHoveringIcon(Icons.CopyAllHovering)
         }
     }
 

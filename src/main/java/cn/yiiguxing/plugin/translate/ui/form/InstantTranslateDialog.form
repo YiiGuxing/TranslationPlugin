@@ -98,8 +98,8 @@
               </component>
             </children>
           </scrollpane>
-          <grid id="3b6ee" binding="inputToolBar" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="-1">
-            <margin top="3" left="5" bottom="3" right="5"/>
+          <grid id="3b6ee" binding="inputToolBar" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="10" vgap="-1">
+            <margin top="4" left="10" bottom="4" right="10"/>
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -157,8 +157,8 @@
               </component>
             </children>
           </scrollpane>
-          <grid id="6b43d" binding="translationToolBar" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="-1">
-            <margin top="3" left="5" bottom="3" right="5"/>
+          <grid id="6b43d" binding="translationToolBar" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="10" vgap="-1">
+            <margin top="4" left="10" bottom="4" right="10"/>
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
