@@ -90,6 +90,12 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
+        <action id="$ShowInstantTranslationDialogAction"
+                class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
+                text="Show Instant Translation Dialog..."
+                icon="/icons/translate.png"
+                description="Open Instant Translation Dialog">
+        </action>
         <action id="$ChooseTranslatorAction"
                 class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
                 text="Choose Translator"
@@ -142,6 +148,7 @@
         <group id="TranslationToolBar" text="Translation Toolbar Actions">
             <separator/>
             <reference ref="$ShowTranslationDialogAction"/>
+            <reference ref="$ShowInstantTranslationDialogAction"/>
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
@@ -149,6 +156,7 @@
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>
+            <reference ref="$ShowInstantTranslationDialogAction"/>
             <reference ref="$InclusiveTranslateAction"/>
             <reference ref="$ExclusiveTranslateAction"/>
         </group>

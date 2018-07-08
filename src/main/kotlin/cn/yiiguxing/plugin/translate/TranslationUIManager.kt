@@ -2,6 +2,7 @@
 
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslatorWidget
@@ -11,6 +12,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.ui.PositionTracker
@@ -24,6 +26,7 @@ class TranslationUIManager private constructor() {
 
     private val balloonMap: MutableMap<Project?, TranslationBalloon> = mutableMapOf()
     private val dialogMap: MutableMap<Project?, TranslationDialog> = mutableMapOf()
+    private val instantTranslationDialogMap: MutableMap<Project?, InstantTranslationDialog> = mutableMapOf()
 
     /**
      * 显示气泡
@@ -57,17 +60,16 @@ class TranslationUIManager private constructor() {
      * @return 对话框实例
      */
     fun showDialog(project: Project?): TranslationDialog {
-        checkThread()
+        return showDialog(project, dialogMap) { TranslationDialog(project) }
+    }
 
-        val dialog = dialogMap[project] ?: TranslationDialog(project).also {
-            dialogMap[project] = it
-            Disposer.register(it, Disposable {
-                checkThread()
-                dialogMap.remove(project, it)
-            })
-        }
-
-        return dialog.apply { show() }
+    /**
+     * 显示对话框
+     *
+     * @return 对话框实例
+     */
+    fun showInstantTranslationDialog(project: Project?): InstantTranslationDialog {
+        return showDialog(project, instantTranslationDialogMap) { InstantTranslationDialog(project) }
     }
 
     /**
@@ -89,11 +91,19 @@ class TranslationUIManager private constructor() {
         checkThread()
 
         if (project == null) {
-            balloonMap.values.toList().forEach { it.hide() }
-            dialogMap.values.toList().forEach { it.close() }
+            for ((_, balloon) in balloonMap) {
+                balloon.hide()
+            }
+            for ((_, dialog) in dialogMap) {
+                dialog.close()
+            }
+            for ((_, dialog) in instantTranslationDialogMap) {
+                dialog.close()
+            }
         } else {
             balloonMap[project]?.hide()
             dialogMap[project]?.close()
+            instantTranslationDialogMap[project]?.close()
         }
     }
 
@@ -102,5 +112,20 @@ class TranslationUIManager private constructor() {
             get() = ServiceManager.getService(TranslationUIManager::class.java)
 
         private fun checkThread() = checkDispatchThread(TranslationUIManager::class.java)
+
+        private inline fun <D : DialogWrapper> showDialog(project: Project?,
+                                                          cache: MutableMap<Project?, D>,
+                                                          dialog: () -> D): D {
+            checkThread()
+            return cache.getOrPut(project) {
+                dialog().also {
+                    cache[project] = it
+                    Disposer.register(it.disposable, Disposable {
+                        checkThread()
+                        cache.remove(project, it)
+                    })
+                }
+            }.apply { show() }
+        }
     }
 }
