@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class InstantTranslateDialogForm extends DialogWrapper {
+public class InstantTranslationDialogForm extends DialogWrapper {
     private JPanel mRoot;
     protected ComboBox sourceLangComboBox;
     protected ComboBox targetLangComboBox;
@@ -19,8 +19,8 @@ public class InstantTranslateDialogForm extends DialogWrapper {
     protected JTextArea translationTextArea;
     protected TTSButton inputTTSButton;
     protected TTSButton translationTTSButton;
-    protected LinkLabel clearButton;
-    protected LinkLabel copyButton;
+    protected LinkLabel<Void> clearButton;
+    protected LinkLabel<Void> copyButton;
     protected JScrollPane inputScrollPane;
     protected JScrollPane translationScrollPane;
     protected JPanel translationToolBar;
@@ -28,7 +28,7 @@ public class InstantTranslateDialogForm extends DialogWrapper {
     protected JPanel inputContentPanel;
     protected JPanel translationContentPanel;
 
-    protected InstantTranslateDialogForm(@Nullable Project project) {
+    protected InstantTranslationDialogForm(@Nullable Project project) {
         super(project);
     }
 
