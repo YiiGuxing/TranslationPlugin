@@ -1,14 +1,17 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.View
+import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
+import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.SideBorder
@@ -21,11 +24,16 @@ import javax.swing.event.DocumentEvent
  *
  * Created by Yii.Guxing on 2018/06/18
  */
-class InstantTranslationDialog(project: Project?) : InstantTranslationDialogForm(project), View, Disposable {
+class InstantTranslationDialog(project: Project?) :
+        InstantTranslationDialogForm(project),
+        View,
+        Disposable,
+        SettingsChangeListener {
 
     private var _disposed = false
     override val disposed get() = _disposed
 
+    private val presenter: Presenter = TranslationPresenter(this)
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
 
     init {
@@ -33,6 +41,12 @@ class InstantTranslationDialog(project: Project?) : InstantTranslationDialogForm
         isModal = false
         initComponents()
         peer.setContentPane(createCenterPanel())
+
+        ApplicationManager
+                .getApplication()
+                .messageBus
+                .connect(this)
+                .subscribe(SettingsChangeListener.TOPIC, this)
     }
 
     private fun initComponents() {
@@ -88,6 +102,10 @@ class InstantTranslationDialog(project: Project?) : InstantTranslationDialogForm
                 translationTTSButton.isEnabled = isNotEmpty
             }
         })
+
+        sourceLangComboBox.renderer = LanguageRenderer
+        targetLangComboBox.renderer = LanguageRenderer
+        updateLanguages()
     }
 
     override fun showStartTranslate(text: String) {
@@ -100,6 +118,24 @@ class InstantTranslationDialog(project: Project?) : InstantTranslationDialogForm
 
     override fun showError(errorMessage: String, throwable: Throwable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+        updateLanguages()
+        // onTranslate()
+    }
+
+    private fun updateLanguages() {
+        presenter.supportedLanguages.let { (src, target) ->
+            sourceLangComboBox.apply {
+                val srcSelected = selected?.takeIf { src.contains(it) } ?: src.first()
+                model = CollectionComboBoxModel<Lang>(src, srcSelected)
+            }
+            targetLangComboBox.apply {
+                val targetSelected = selected?.takeIf { target.contains(it) } ?: presenter.primaryLanguage
+                model = CollectionComboBoxModel<Lang>(target, targetSelected)
+            }
+        }
     }
 
     override fun show() {

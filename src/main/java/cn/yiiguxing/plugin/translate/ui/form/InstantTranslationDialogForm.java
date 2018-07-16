@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.form;
 
+import cn.yiiguxing.plugin.translate.trans.Lang;
 import cn.yiiguxing.plugin.translate.ui.TTSButton;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
@@ -11,8 +12,8 @@ import javax.swing.*;
 
 public class InstantTranslationDialogForm extends DialogWrapper {
     private JPanel mRoot;
-    protected ComboBox sourceLangComboBox;
-    protected ComboBox targetLangComboBox;
+    protected ComboBox<Lang> sourceLangComboBox;
+    protected ComboBox<Lang> targetLangComboBox;
     protected JButton swapButton;
     protected JButton translateButton;
     protected JTextArea inputTextArea;
