@@ -50,6 +50,13 @@ class InstantTranslationDialog(project: Project?) :
     }
 
     private fun initComponents() {
+        initBorders()
+        initLangComboBoxes()
+        initTextAreas()
+        initToolBar()
+    }
+
+    private fun initBorders() {
         inputScrollPane.border = null
         translationScrollPane.border = null
         inputContentPanel.border = BORDER
@@ -62,7 +69,32 @@ class InstantTranslationDialog(project: Project?) :
             border = TOOLBAR_BORDER
             background = TOOLBAR_BACKGROUND
         }
+    }
 
+    private fun initLangComboBoxes() {
+        sourceLangComboBox.renderer = LanguageRenderer
+        targetLangComboBox.renderer = LanguageRenderer
+        updateLanguages()
+    }
+
+    private fun initTextAreas() {
+        inputTextArea.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                val isNotEmpty = e.document.length > 0
+                clearButton.isEnabled = isNotEmpty
+                inputTTSButton.isEnabled = isNotEmpty
+            }
+        })
+        translationTextArea.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                val isNotEmpty = e.document.length > 0
+                copyButton.isEnabled = isNotEmpty
+                translationTTSButton.isEnabled = isNotEmpty
+            }
+        })
+    }
+
+    private fun initToolBar() {
         inputTTSButton.isEnabled = false
         translationTTSButton.isEnabled = false
         clearButton.apply {
@@ -87,25 +119,6 @@ class InstantTranslationDialog(project: Project?) :
                 }
             }, null)
         }
-
-        inputTextArea.document.addDocumentListener(object : DocumentAdapter() {
-            override fun textChanged(e: DocumentEvent) {
-                val isNotEmpty = e.document.length > 0
-                clearButton.isEnabled = isNotEmpty
-                inputTTSButton.isEnabled = isNotEmpty
-            }
-        })
-        translationTextArea.document.addDocumentListener(object : DocumentAdapter() {
-            override fun textChanged(e: DocumentEvent) {
-                val isNotEmpty = e.document.length > 0
-                copyButton.isEnabled = isNotEmpty
-                translationTTSButton.isEnabled = isNotEmpty
-            }
-        })
-
-        sourceLangComboBox.renderer = LanguageRenderer
-        targetLangComboBox.renderer = LanguageRenderer
-        updateLanguages()
     }
 
     override fun showStartTranslate(text: String) {
