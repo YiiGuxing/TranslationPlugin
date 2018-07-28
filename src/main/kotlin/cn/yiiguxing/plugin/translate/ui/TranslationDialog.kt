@@ -131,6 +131,11 @@ class TranslationDialog(private val project: Project?)
     }
 
     private fun initInputComboBox() = with(inputComboBox) {
+        val scale = JBUI.scale(1f)
+        val width = (preferredSize.width / scale).toInt()
+        minimumSize = JBDimension(width, 0)
+        maximumSize = JBDimension(width, Int.MAX_VALUE)
+        preferredSize = JBDimension(width, (preferredSize.height / scale).toInt())
         model = inputModel
         renderer = ComboRenderer()
 
