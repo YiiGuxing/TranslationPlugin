@@ -7,6 +7,7 @@ package cn.yiiguxing.plugin.translate
 
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_DISABLE = "#DISABLE"
+const val HTML_DESC_COPY_TO_CLIPBOARD = "#COPY_TO_CLIPBOARD"
 
 const val GOOGLE_TRANSLATE_URL = "https://translate.google.com/translate_a/single"
 const val GOOGLE_TRANSLATE_CN_URL = "https://translate.google.cn/translate_a/single"

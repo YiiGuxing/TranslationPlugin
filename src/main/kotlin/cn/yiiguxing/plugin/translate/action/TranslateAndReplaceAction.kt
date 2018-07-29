@@ -1,14 +1,11 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
-import cn.yiiguxing.plugin.translate.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.codeInsight.lookup.*
-import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.editor.Editor
@@ -24,7 +21,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.JBColor
 import java.lang.ref.WeakReference
 import java.util.*
-import javax.swing.event.HyperlinkEvent
 
 /**
  * 翻译并替换
@@ -67,7 +63,9 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
                 }
 
                 override fun onError(message: String, throwable: Throwable) {
-                    editorRef.get()?.showErrorNotification(message, throwable)
+                    editorRef.get()?.let {
+                        Notifications.showErrorNotification(it.project, NOTIFICATION_DISPLAY_ID, message, throwable)
+                    }
                 }
             })
         }
@@ -75,6 +73,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
     private companion object {
 
+        const val NOTIFICATION_DISPLAY_ID = "TranslateAndReplaceAction"
         val ITEM_FILTER_REGEX = "[ _a-zA-Z0-9]+".toRegex()
 
         val HIGHLIGHT_ATTRIBUTES = TextAttributes().apply {
@@ -222,32 +221,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
             this
         } else {
             "_$this"
-        }
-
-        const val DISPLAY_ID = "TranslateAndReplaceAction"
-        const val DESC_COPY_TO_CLIPBOARD = "CopyToClipboard"
-
-        fun Editor.showErrorNotification(message: String, throwable: Throwable) {
-            val thisRef = WeakReference(this)
-            NotificationGroup(DISPLAY_ID, NotificationDisplayType.TOOL_WINDOW, true)
-                    .createNotification(
-                            "TranslateAndReplace",
-                            """$message (<a href="$DESC_COPY_TO_CLIPBOARD">Copy to Clipboard</a>)""",
-                            NotificationType.WARNING,
-                            object : NotificationListener.Adapter() {
-                                override fun hyperlinkActivated(notification: Notification, event: HyperlinkEvent) {
-                                    notification.expire()
-                                    when (event.description) {
-                                        HTML_DESCRIPTION_SETTINGS -> thisRef.get()?.let {
-                                            if (!it.isDisposed) {
-                                                OptionsConfigurable.showSettingsDialog(it.project)
-                                            }
-                                        }
-                                        DESC_COPY_TO_CLIPBOARD -> throwable.copyToClipboard()
-                                    }
-                                }
-                            })
-                    .show(project)
         }
     }
 }
