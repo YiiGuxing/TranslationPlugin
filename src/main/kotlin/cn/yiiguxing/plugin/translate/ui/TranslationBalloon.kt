@@ -59,7 +59,7 @@ class TranslationBalloon(
 
     private var isShowing = false
     private var _disposed = false
-    override val disposed get() = _disposed
+    override val disposed get() = _disposed || balloon.isDisposed
 
     private var lastError: Throwable? = null
 
@@ -124,7 +124,7 @@ class TranslationBalloon(
     }
 
     private fun initActions() = with(translationPane) {
-        onRevalidate { balloon.revalidate() }
+        onRevalidate { if (!disposed) balloon.revalidate() }
         onLanguageChanged { src, target -> translate(src, target) }
         onNewTranslate { text, src, target ->
             invokeLater { showOnTranslationDialog(text, src, target) }
@@ -186,7 +186,7 @@ class TranslationBalloon(
     }
 
     override fun dispose() {
-        if (disposed) {
+        if (_disposed) {
             return
         }
 
@@ -223,8 +223,10 @@ class TranslationBalloon(
 
     private fun showCard(card: String) {
         invokeLater {
-            layout.show(contentPanel, card)
-            balloon.revalidate()
+            if (!disposed) {
+                layout.show(contentPanel, card)
+                balloon.revalidate()
+            }
         }
     }
 
@@ -240,13 +242,13 @@ class TranslationBalloon(
         hide()
     }
 
-    override fun showStartTranslate(text: String) {
+    override fun showStartTranslate(request: Presenter.Request, text: String) {
         if (!disposed) {
             showCard(CARD_PROCESSING)
         }
     }
 
-    override fun showTranslation(translation: Translation) {
+    override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         if (!disposed) {
             translationPane.translation = translation
             // 太快了会没有朋友，大小又会不对了，谁能告诉我到底发生了什么？
@@ -254,7 +256,7 @@ class TranslationBalloon(
         }
     }
 
-    override fun showError(errorMessage: String, throwable: Throwable) {
+    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
         if (!disposed) {
             lastError = throwable
             errorPane.text = errorMessage

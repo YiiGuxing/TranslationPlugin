@@ -33,6 +33,8 @@ interface Presenter {
      */
     fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation?
 
+    data class Request(val text: String, val srcLang: Lang, val targetLang: Lang, val translatorId: String)
+
     /**
      * 翻译
      */
@@ -48,17 +50,17 @@ interface View : Disposable {
      *
      * @param  text 查询字符串
      */
-    fun showStartTranslate(text: String)
+    fun showStartTranslate(request: Presenter.Request, text: String)
 
     /**
      * 显示翻译结果
      */
-    fun showTranslation(translation: Translation)
+    fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean)
 
     /**
      * 显示错误信息
      *
      * @param errorMessage 错误信息
      */
-    fun showError(errorMessage: String, throwable: Throwable)
+    fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable)
 }

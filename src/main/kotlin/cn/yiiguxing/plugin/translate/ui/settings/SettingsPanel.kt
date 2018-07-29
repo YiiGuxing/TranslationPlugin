@@ -3,14 +3,15 @@ package cn.yiiguxing.plugin.translate.ui.settings
 import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import com.intellij.openapi.editor.event.DocumentAdapter
+import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.ComboBox
-import com.intellij.ui.CollectionComboBoxModel
-import com.intellij.ui.FontComboBox
-import com.intellij.ui.IdeBorderFactory
-import com.intellij.ui.ListCellRendererWrapper
+import com.intellij.ui.*
 import com.intellij.util.ui.JBUI
 import java.awt.Font
 import java.awt.event.ItemEvent
@@ -28,6 +29,8 @@ import javax.swing.text.StyleConstants
 class SettingsPanel(settings: Settings, appStorage: AppStorage)
     : SettingsForm(settings, appStorage), ConfigurablePanel {
 
+    private var validRegExp = true
+
     override val component: JComponent = wholePanel
 
     init {
@@ -41,7 +44,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
     @Suppress("InvalidBundleOrProperty")
     private fun setTitles() {
-        selectionSettingsPanel.setTitledBorder(message("settings.title.selectionMode"))
+        translateSettingsPanel.setTitledBorder(message("settings.title.translate"))
         fontPanel.setTitledBorder(message("settings.title.font"))
         historyPanel.setTitledBorder(message("settings.title.history"))
         optionsPanel.setTitledBorder(message("settings.title.options"))
@@ -89,6 +92,36 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             }
         }
         clearHistoriesButton.addActionListener { appStorage.clearHistories() }
+
+        val ignoreRegExp = ignoreRegExp
+        checkIgnoreRegExpButton.addActionListener {
+            val project = ProjectManager.getInstance().defaultProject
+            CheckRegExpDialog(project, ignoreRegExp.text) {
+                if (it != ignoreRegExp.text) {
+                    ignoreRegExp.text = it
+                }
+            }.show()
+        }
+
+        val background = ignoreRegExp.background
+        ignoreRegExp.addDocumentListener(object : DocumentAdapter() {
+            override fun documentChanged(e: DocumentEvent) {
+                try {
+                    e.document.text.takeUnless { it.isBlank() }?.toRegex()
+
+                    if (!validRegExp) {
+                        ignoreRegExp.background = background
+                        ignoreRegExpMsg.text = null
+
+                        validRegExp = true
+                    }
+                } catch (e: Exception) {
+                    ignoreRegExp.background = BACKGROUND_COLOR_ERROR
+                    ignoreRegExpMsg.text = e.message?.let { it.substring(0, it.indexOf('\n')) }
+                    validRegExp = false
+                }
+            }
+        })
     }
 
     private fun previewPrimaryFont(primary: String?) {
@@ -120,10 +153,15 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
     override val isModified: Boolean
         get() {
+            if (!validRegExp) {
+                return false
+            }
+
             val settings = settings
             return transPanelContainer.isModified ||
                     appStorage.maxHistorySize != getMaxHistorySize() ||
                     settings.autoSelectionMode != selectionModeComboBox.currentMode ||
+                    settings.ignoreRegExp != ignoreRegExp.text ||
                     settings.isOverrideFont != fontCheckBox.isSelected ||
                     settings.primaryFontFamily != primaryFontComboBox.fontName ||
                     settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
@@ -148,6 +186,10 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             autoSelectionMode = selectionModeComboBox.currentMode
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
+
+            if (validRegExp) {
+                ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
+            }
         }
     }
 
@@ -155,6 +197,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         transPanelContainer.reset()
 
         val settings = settings
+        ignoreRegExp.text = settings.ignoreRegExp ?: ".*"
         fontCheckBox.isSelected = settings.isOverrideFont
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
@@ -168,6 +211,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
     }
 
     companion object {
+        private val BACKGROUND_COLOR_ERROR = JBColor(0xffb1a0, 0x6e2b28)
         private val ComboBox<SelectionMode>.currentMode get() = selected ?: SelectionMode.INCLUSIVE
 
         private fun FontComboBox.fixFontComboBoxSize() {

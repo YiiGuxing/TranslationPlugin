@@ -25,10 +25,10 @@ data class GoogleTranslation(
         check(target != null) { "Can not convert to Translation: target=null" }
 
         val translit: TranslitSentence? = sentences.find { it is TranslitSentence } as? TranslitSentence
-        val trans = sentences.mapNotNull { (it as? TransSentence)?.trans }.joinToString()
+        val trans = sentences.mapNotNull { (it as? TransSentence)?.trans }.joinToString("")
 
         val dictionaries = dict?.map {
-            val entries = it.entry.map { DictEntry(it.word, it.reverseTranslation) }
+            val entries = it.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
             Dict(it.pos, it.terms, entries)
         } ?: emptyList()
 
@@ -54,7 +54,7 @@ data class TranslitSentence(
 data class GDict(val pos: String, val terms: List<String>, val entry: List<GDictEntry>)
 data class GDictEntry(
         val word: String,
-        @SerializedName("reverse_translation") val reverseTranslation: List<String>,
+        @SerializedName("reverse_translation") val reverseTranslation: List<String>?,
         val score: Float
 )
 

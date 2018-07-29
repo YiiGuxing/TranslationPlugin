@@ -131,6 +131,11 @@ class TranslationDialog(private val project: Project?)
     }
 
     private fun initInputComboBox() = with(inputComboBox) {
+        val scale = JBUI.scale(1f)
+        val width = (preferredSize.width / scale).toInt()
+        minimumSize = JBDimension(width, 0)
+        maximumSize = JBDimension(width, Int.MAX_VALUE)
+        preferredSize = JBDimension(width, (preferredSize.height / scale).toInt())
         model = inputModel
         renderer = ComboRenderer()
 
@@ -496,7 +501,7 @@ class TranslationDialog(private val project: Project?)
         (contentContainer.layout as CardLayout).show(contentContainer, card)
     }
 
-    override fun showStartTranslate(text: String) {
+    override fun showStartTranslate(request: Presenter.Request, text: String) {
         if (disposed) {
             return
         }
@@ -506,7 +511,7 @@ class TranslationDialog(private val project: Project?)
         setLanguageComponentsEnable(false)
     }
 
-    override fun showTranslation(translation: Translation) {
+    override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         if (disposed) {
             return
         }
@@ -517,7 +522,7 @@ class TranslationDialog(private val project: Project?)
         setLanguageComponentsEnable(true)
     }
 
-    override fun showError(errorMessage: String, throwable: Throwable) {
+    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
         if (disposed) {
             return
         }
