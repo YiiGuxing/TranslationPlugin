@@ -4,7 +4,7 @@ TranslationPlugin
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
-[![Build Status][build-img-dev]][travis-ci]
+[![Build Status][build-img-master]][travis-ci]
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
