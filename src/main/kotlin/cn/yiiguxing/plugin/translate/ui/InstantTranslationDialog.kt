@@ -172,7 +172,7 @@ class InstantTranslationDialog(private val project: Project?) :
         addActionListener { onTranslate() }
     }
 
-    private fun requestTranslate(delay: Int = 500) {
+    private fun requestTranslate(delay: Int = 300) {
         alarm.apply {
             cancelAllRequests()
             addRequest(translateAction, delay)
