@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
+import javax.swing.Icon
 
 /**
  * AutoSelectAction
@@ -15,8 +16,9 @@ import com.intellij.openapi.util.TextRange
  */
 abstract class AutoSelectAction(
         private val checkSelection: Boolean,
-        private val wordPartCondition: CharCondition = DEFAULT_CONDITION
-) : AnAction() {
+        private val wordPartCondition: CharCondition = DEFAULT_CONDITION,
+        icon: Icon? = null
+) : AnAction(icon) {
 
     protected abstract val selectionMode: SelectionMode
 

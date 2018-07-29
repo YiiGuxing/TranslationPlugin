@@ -12,6 +12,7 @@ import javax.swing.Icon
 object Icons {
 
     val Translate: Icon = IconLoader.getIcon("/icons/translate.png")
+    val Translate2: Icon = IconLoader.getIcon("/icons/translate2.png")
     val Pin: Icon = IconLoader.getIcon("/icons/pin.png")
     val Copy: Icon = AllIcons.Actions.Copy
     val Close: Icon = IconLoader.getIcon("/icons/close.png")

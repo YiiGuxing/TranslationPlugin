@@ -84,7 +84,6 @@
         <action id="$ShowTranslationDialogAction"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
-                icon="/icons/translate.png"
                 description="Open Translation Dialog">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
@@ -93,7 +92,6 @@
         <action id="$ShowInstantTranslationDialogAction"
                 class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
                 text="Show Instant Translation Dialog..."
-                icon="/icons/translate.png"
                 description="Open Instant Translation Dialog">
         </action>
         <action id="$ChooseTranslatorAction"
@@ -106,7 +104,6 @@
         </action>
         <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
                 text="Translate"
-                icon="/icons/translate.png"
                 description="Translate">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
@@ -152,7 +149,7 @@
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+            <add-to-group group-id="NavBarToolBar" anchor="last"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>
