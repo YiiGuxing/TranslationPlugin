@@ -242,13 +242,13 @@ class TranslationBalloon(
         hide()
     }
 
-    override fun showStartTranslate(text: String) {
+    override fun showStartTranslate(request: Presenter.Request, text: String) {
         if (!disposed) {
             showCard(CARD_PROCESSING)
         }
     }
 
-    override fun showTranslation(translation: Translation) {
+    override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         if (!disposed) {
             translationPane.translation = translation
             // 太快了会没有朋友，大小又会不对了，谁能告诉我到底发生了什么？
@@ -256,7 +256,7 @@ class TranslationBalloon(
         }
     }
 
-    override fun showError(errorMessage: String, throwable: Throwable) {
+    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
         if (!disposed) {
             lastError = throwable
             errorPane.text = errorMessage

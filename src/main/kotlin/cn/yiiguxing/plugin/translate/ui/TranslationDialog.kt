@@ -501,7 +501,7 @@ class TranslationDialog(private val project: Project?)
         (contentContainer.layout as CardLayout).show(contentContainer, card)
     }
 
-    override fun showStartTranslate(text: String) {
+    override fun showStartTranslate(request: Presenter.Request, text: String) {
         if (disposed) {
             return
         }
@@ -511,7 +511,7 @@ class TranslationDialog(private val project: Project?)
         setLanguageComponentsEnable(false)
     }
 
-    override fun showTranslation(translation: Translation) {
+    override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         if (disposed) {
             return
         }
@@ -522,7 +522,7 @@ class TranslationDialog(private val project: Project?)
         setLanguageComponentsEnable(true)
     }
 
-    override fun showError(errorMessage: String, throwable: Throwable) {
+    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
         if (disposed) {
             return
         }

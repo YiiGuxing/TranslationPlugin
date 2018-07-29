@@ -131,15 +131,15 @@ class InstantTranslationDialog(project: Project?) :
         translateButton.foreground = JBColor(0x0077C2, 0x389FD6)
     }
 
-    override fun showStartTranslate(text: String) {
+    override fun showStartTranslate(request: Presenter.Request, text: String) {
         swapButton.isEnabled = false
     }
 
-    override fun showTranslation(translation: Translation) {
+    override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         swapButton.isEnabled = true
     }
 
-    override fun showError(errorMessage: String, throwable: Throwable) {
+    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
         swapButton.isEnabled = true
     }
 
