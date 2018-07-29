@@ -66,6 +66,7 @@
             </constraints>
             <properties>
               <font style="1"/>
+              <foreground color="-13066282"/>
               <text resource-bundle="messages/TranslationBundle" key="translate"/>
             </properties>
           </component>

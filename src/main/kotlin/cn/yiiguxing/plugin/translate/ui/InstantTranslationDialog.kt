@@ -54,6 +54,8 @@ class InstantTranslationDialog(project: Project?) :
         initLangComboBoxes()
         initTextAreas()
         initToolBar()
+        initSwapButton()
+        initTranslateButton()
     }
 
     private fun initBorders() {
@@ -121,16 +123,24 @@ class InstantTranslationDialog(project: Project?) :
         }
     }
 
+    private fun initSwapButton() {
+        swapButton.icon = Icons.Swap2
+    }
+
+    private fun initTranslateButton() {
+        translateButton.foreground = JBColor(0x0077C2, 0x389FD6)
+    }
+
     override fun showStartTranslate(text: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        swapButton.isEnabled = false
     }
 
     override fun showTranslation(translation: Translation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        swapButton.isEnabled = true
     }
 
     override fun showError(errorMessage: String, throwable: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        swapButton.isEnabled = true
     }
 
     override fun onTranslatorChanged(settings: Settings, translatorId: String) {

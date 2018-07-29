@@ -22,6 +22,7 @@ object Icons {
     val TTSSuspend: Icon = SuspendIcon(JBColor(0x757575, 0xABABAB))
     val TTSSuspendHovering: Icon = SuspendIcon(JBColor(0x555555, 0x8A8A8A))
     val Swap: Icon = IconLoader.getIcon("/icons/swap.png")
+    val Swap2: Icon = IconLoader.getIcon("/icons/swap2.png")
     val SwapHovering: Icon = IconLoader.getIcon("/icons/swapHovering.png")
     val SwapDisabled: Icon = IconLoader.getIcon("/icons/swapDisabled.png")
     val ClearText: Icon = IconLoader.getIcon("/icons/clearText.png")
