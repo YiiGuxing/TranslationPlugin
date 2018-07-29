@@ -38,7 +38,7 @@ fun String.splitWords(): String? {
 }
 
 @TestOnly
-internal fun String.splitWordsForTest(): String? {
+fun String.splitWordsForTest(): String? {
     if (isBlank()) {
         return null
     }
