@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.Notifications
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ide.CopyPasteManager
@@ -15,7 +16,10 @@ import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.SideBorder
+import com.intellij.util.Alarm
 import java.awt.datatransfer.StringSelection
+import java.awt.event.ItemEvent
+import java.awt.event.ItemListener
 import javax.swing.border.LineBorder
 import javax.swing.event.DocumentEvent
 
@@ -24,17 +28,26 @@ import javax.swing.event.DocumentEvent
  *
  * Created by Yii.Guxing on 2018/06/18
  */
-class InstantTranslationDialog(project: Project?) :
+class InstantTranslationDialog(private val project: Project?) :
         InstantTranslationDialogForm(project),
         View,
         Disposable,
         SettingsChangeListener {
 
+    private val presenter: Presenter = TranslationPresenter(this, false)
+    private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
+
+    private val alarm: Alarm = Alarm()
+    private val translateAction = Runnable { onTranslate() }
+
+    private var currentRequest: Presenter.Request? = null
+    private var lastTranslation: Translation? = null
+
     private var _disposed = false
     override val disposed get() = _disposed
 
-    private val presenter: Presenter = TranslationPresenter(this)
-    private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
+    private inline val sourceLang: Lang get() = sourceLangComboBox.selected!!
+    private inline val targetLang: Lang get() = targetLangComboBox.selected!!
 
     init {
         title = "Translation"
@@ -76,22 +89,32 @@ class InstantTranslationDialog(project: Project?) :
     private fun initLangComboBoxes() {
         sourceLangComboBox.renderer = LanguageRenderer
         targetLangComboBox.renderer = LanguageRenderer
+
+        val itemListener = ItemListener {
+            if (it.stateChange == ItemEvent.SELECTED) {
+                requestTranslate()
+            }
+        }
+        sourceLangComboBox.addItemListener(itemListener)
+        targetLangComboBox.addItemListener(itemListener)
+
         updateLanguages()
     }
 
     private fun initTextAreas() {
+        UI.primaryFont(14).let {
+            inputTextArea.font = it
+            translationTextArea.font = it
+        }
         inputTextArea.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                val isNotEmpty = e.document.length > 0
-                clearButton.isEnabled = isNotEmpty
-                inputTTSButton.isEnabled = isNotEmpty
+                clearButton.isEnabled = e.document.length > 0
+                requestTranslate()
             }
         })
         translationTextArea.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                val isNotEmpty = e.document.length > 0
-                copyButton.isEnabled = isNotEmpty
-                translationTTSButton.isEnabled = isNotEmpty
+                copyButton.isEnabled = e.document.length > 0
             }
         })
     }
@@ -99,6 +122,10 @@ class InstantTranslationDialog(project: Project?) :
     private fun initToolBar() {
         inputTTSButton.isEnabled = false
         translationTTSButton.isEnabled = false
+
+        inputTTSButton.dataSource { lastTranslation?.run { original to srcLang } }
+        translationTTSButton.dataSource { lastTranslation?.run { trans?.let { it to targetLang } } }
+
         clearButton.apply {
             isEnabled = false
             icon = Icons.ClearText
@@ -123,29 +150,81 @@ class InstantTranslationDialog(project: Project?) :
         }
     }
 
-    private fun initSwapButton() {
-        swapButton.icon = Icons.Swap2
+    private fun initSwapButton() = with(swapButton) {
+        icon = Icons.Swap2
+        addActionListener {
+            val srcLang = lastTranslation?.srcLang ?: sourceLang
+            val targetLang = lastTranslation?.targetLang ?: targetLang
+
+            if (srcLang != targetLang) {
+                presenter.supportedLanguages.let { (src, target) ->
+                    sourceLangComboBox.selected = targetLang.takeIf { src.contains(it) } ?: presenter.primaryLanguage
+                    targetLangComboBox.selected = srcLang.takeIf { target.contains(it) } ?: presenter.primaryLanguage
+                }
+
+                lastTranslation?.trans?.let { inputTextArea.text = it }
+            }
+        }
     }
 
-    private fun initTranslateButton() {
-        translateButton.foreground = JBColor(0x0077C2, 0x389FD6)
+    private fun initTranslateButton() = with(translateButton) {
+        foreground = JBColor(0x0077C2, 0x389FD6)
+        addActionListener { onTranslate() }
+    }
+
+    private fun requestTranslate(delay: Int = 500) {
+        alarm.apply {
+            cancelAllRequests()
+            addRequest(translateAction, delay)
+        }
+    }
+
+    private fun onTranslate() {
+        inputTextArea.text.takeUnless { it.isNullOrBlank() }?.let {
+            presenter.translate(it, sourceLang, targetLang)
+        } ?: clearTranslation()
+    }
+
+    private fun clearTranslation() {
+        swapButton.isEnabled = true
+        inputTTSButton.isEnabled = false
+        translationTTSButton.isEnabled = false
+        currentRequest = null
+        lastTranslation = null
+        translationTextArea.text = null
     }
 
     override fun showStartTranslate(request: Presenter.Request, text: String) {
+        currentRequest = request
         swapButton.isEnabled = false
+        inputTTSButton.isEnabled = false
+        translationTTSButton.isEnabled = false
+        translationTextArea.text = "${lastTranslation?.trans ?: ""}..."
     }
 
     override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
+        if (currentRequest != request && !fromCache) {
+            return
+        }
+
+        currentRequest = null
+        lastTranslation = translation
         swapButton.isEnabled = true
+        inputTTSButton.isEnabled = true
+        translationTTSButton.isEnabled = true
+        translationTextArea.text = translation.trans
     }
 
     override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
-        swapButton.isEnabled = true
+        if (currentRequest == request) {
+            clearTranslation()
+        }
+        Notifications.showErrorNotification(project, NOTIFICATION_DISPLAY_ID, errorMessage, throwable)
     }
 
     override fun onTranslatorChanged(settings: Settings, translatorId: String) {
         updateLanguages()
-        // onTranslate()
+        requestTranslate(0)
     }
 
     private fun updateLanguages() {
@@ -186,6 +265,7 @@ class InstantTranslationDialog(project: Project?) :
     }
 
     companion object {
+        private const val NOTIFICATION_DISPLAY_ID = "InstantTranslationDialog"
         private val BORDER = LineBorder(JBColor(0x808080, 0x303030))
         private val TOOLBAR_BORDER = SideBorder(JBColor(0x9F9F9F, 0x3C3C3C), SideBorder.TOP)
         private val TOOLBAR_BACKGROUND = JBColor(0xEEF1F3, 0x4E5556)
