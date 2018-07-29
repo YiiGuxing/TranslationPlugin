@@ -37,7 +37,7 @@ class InstantTranslationDialog(private val project: Project?) :
     private val presenter: Presenter = TranslationPresenter(this, false)
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
 
-    private val alarm: Alarm = Alarm()
+    private val alarm: Alarm = Alarm(this)
     private val translateAction = Runnable { onTranslate() }
 
     private var currentRequest: Presenter.Request? = null

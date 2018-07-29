@@ -82,6 +82,11 @@ class Settings : PersistentStateComponent<Settings> {
     }
 
     /**
+     * 翻译时需要忽略的内容
+     */
+    var ignoreRegExp: String? = null
+
+    /**
      * 状态栏图标
      */
     var foldOriginal: Boolean = false

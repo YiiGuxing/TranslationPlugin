@@ -7,6 +7,7 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import org.jetbrains.annotations.TestOnly
 import java.net.URLEncoder
 import java.security.MessageDigest
 
@@ -17,11 +18,32 @@ fun String?.isNullOrBlank() = (this as CharSequence?).isNullOrBlank()
  * 单词拆分
  */
 fun String.splitWords(): String? {
+    val filteredIgnore = try {
+        Settings.ignoreRegExp?.takeIf { it.isNotEmpty() }?.toRegex()?.let { replace(it, " ") } ?: this
+    } catch (e: Exception) {
+        this
+    }
+
+    return filteredIgnore.trim().takeIf { it.isNotBlank() }?.let {
+        if (it.contains("\\s+".toRegex())) {
+            it.replace("\\s+".toRegex(), " ")
+        } else {
+            it.replace("[_\\s]+".toRegex(), " ")
+                    .replace("([A-Z][a-z]+)|([0-9\\W]+)".toRegex(), " $0 ")
+                    .replace("[A-Z]{2,}".toRegex(), " $0")
+                    .replace("\\s{2,}".toRegex(), " ")
+                    .trim()
+        }
+    }
+}
+
+@TestOnly
+internal fun String.splitWordsForTest(): String? {
     if (isBlank()) {
         return null
     }
 
-    return trim().let {
+    return trim().takeIf { it.isNotBlank() }?.let {
         if (it.contains("\\s+".toRegex())) {
             it.replace("\\s+".toRegex(), " ")
         } else {
