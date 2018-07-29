@@ -197,7 +197,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         transPanelContainer.reset()
 
         val settings = settings
-        ignoreRegExp.text = settings.ignoreRegExp ?: ".*"
+        ignoreRegExp.text = settings.ignoreRegExp ?: ""
         fontCheckBox.isSelected = settings.isOverrideFont
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
