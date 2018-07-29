@@ -41,10 +41,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
+      突然更新：
       <ul>
-        <li>添加百度翻译</li>
-        <li>翻译原文折叠</li>
-        <li>优化交互体验</li>
+        <li>实时翻译</li>
+        <li>忽略内容配置</li>
         <li>BUG修复</li>
       </ul>
       <br/>
