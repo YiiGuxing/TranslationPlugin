@@ -234,7 +234,7 @@ class InstantTranslationDialog(private val project: Project?) :
                 model = CollectionComboBoxModel<Lang>(src, srcSelected)
             }
             targetLangComboBox.apply {
-                val targetSelected = selected?.takeIf { target.contains(it) } ?: presenter.primaryLanguage
+                val targetSelected = selected?.takeIf { target.contains(it) } ?: Lang.ENGLISH
                 model = CollectionComboBoxModel<Lang>(target, targetSelected)
             }
         }
