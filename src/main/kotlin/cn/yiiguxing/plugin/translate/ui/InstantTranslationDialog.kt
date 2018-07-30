@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.TextToSpeech
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ide.CopyPasteManager
@@ -210,8 +211,8 @@ class InstantTranslationDialog(private val project: Project?) :
         currentRequest = null
         lastTranslation = translation
         swapButton.isEnabled = true
-        inputTTSButton.isEnabled = true
-        translationTTSButton.isEnabled = true
+        inputTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
+        translationTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.targetLang)
         translationTextArea.text = translation.trans
     }
 
