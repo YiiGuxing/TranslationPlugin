@@ -39,6 +39,7 @@ public class SettingsForm {
     private JPanel mOptionsPanel;
     private JCheckBox mShowStatusIconCheckBox;
     private JCheckBox mFoldOriginalCheckBox;
+    private JCheckBox mKeepFormat;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -179,5 +180,10 @@ public class SettingsForm {
     @NotNull
     public final JCheckBox getFoldOriginalCheckBox() {
         return mFoldOriginalCheckBox;
+    }
+
+    @NotNull
+    public final JCheckBox getKeepFormatCheckBox() {
+        return mKeepFormat;
     }
 }

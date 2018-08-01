@@ -40,7 +40,11 @@ fun String.processBeforeTranslate(): String? {
         this
     }
 
-    return filteredIgnore.trim()
+    val formatted = if (!Settings.keepFormat) {
+        replace(REGEX_WHITESPACE_CHARACTERS, " ")
+    } else filteredIgnore
+
+    return formatted.trim()
             .takeIf { it.isNotBlank() }
             ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) splitWords() else it }
 }

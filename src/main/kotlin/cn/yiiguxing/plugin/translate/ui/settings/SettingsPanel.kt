@@ -166,7 +166,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                     settings.primaryFontFamily != primaryFontComboBox.fontName ||
                     settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
                     settings.showStatusIcon != showStatusIconCheckBox.isSelected ||
-                    settings.foldOriginal != foldOriginalCheckBox.isSelected
+                    settings.foldOriginal != foldOriginalCheckBox.isSelected ||
+                    settings.keepFormat != keepFormatCheckBox.isSelected
         }
 
 
@@ -186,6 +187,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             autoSelectionMode = selectionModeComboBox.currentMode
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
+            keepFormat = keepFormatCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
@@ -201,6 +203,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         fontCheckBox.isSelected = settings.isOverrideFont
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
+        keepFormatCheckBox.isSelected = settings.keepFormat
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)
