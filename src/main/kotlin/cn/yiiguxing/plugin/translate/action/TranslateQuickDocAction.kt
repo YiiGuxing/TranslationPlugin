@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
-import cn.yiiguxing.plugin.translate.util.splitWords
+import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnAction
@@ -30,7 +30,7 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
 
     override fun actionPerformed(e: AnActionEvent) {
         e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
-                ?.splitWords()
+                ?.processBeforeTranslate()
                 ?.let {
                     e.project.let { project ->
                         project?.hideDocInfoHint()

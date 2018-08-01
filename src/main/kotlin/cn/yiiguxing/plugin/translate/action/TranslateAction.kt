@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.plugin.translate.ui.BalloonPositionTracker
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
-import cn.yiiguxing.plugin.translate.util.splitWords
+import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -37,7 +37,7 @@ open class TranslateAction(checkSelection: Boolean = false, icon: Icon? = null) 
 
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
         val project = editor.project ?: return
-        editor.document.getText(selectionRange).splitWords()?.let { text ->
+        editor.document.getText(selectionRange).processBeforeTranslate()?.let { text ->
             val highlightManager = HighlightManager.getInstance(project)
             val highlighters = ArrayList<RangeHighlighter>()
             HighlightManager.getInstance(project).addRangeHighlight(editor, selectionRange.startOffset,
