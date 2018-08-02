@@ -32,6 +32,7 @@ intellij {
     version = ideaVersion
     pluginName = 'TranslationPlugin'
     downloadSources = Boolean.valueOf(sources)
+    sandboxDirectory 'sandbox'
 }
 
 patchPluginXml {
