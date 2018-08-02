@@ -219,7 +219,8 @@ class InstantTranslationDialog(private val project: Project?) :
         if (currentRequest == request) {
             clearTranslation()
         }
-        Notifications.showErrorNotification(project, NOTIFICATION_DISPLAY_ID, errorMessage, throwable)
+        Notifications.showErrorNotification(project, NOTIFICATION_DISPLAY_ID,
+                "Translate Error", errorMessage, throwable)
     }
 
     override fun onTranslatorChanged(settings: Settings, translatorId: String) {

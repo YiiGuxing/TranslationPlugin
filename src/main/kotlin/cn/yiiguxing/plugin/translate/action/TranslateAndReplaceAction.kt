@@ -64,7 +64,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
                 override fun onError(message: String, throwable: Throwable) {
                     editorRef.get()?.let {
-                        Notifications.showErrorNotification(it.project, NOTIFICATION_DISPLAY_ID, message, throwable)
+                        Notifications.showErrorNotification(it.project, NOTIFICATION_DISPLAY_ID,
+                                "Translate and Replace", message, throwable)
                     }
                 }
             })

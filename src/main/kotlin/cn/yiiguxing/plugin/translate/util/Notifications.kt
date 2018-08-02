@@ -9,10 +9,14 @@ import javax.swing.event.HyperlinkEvent
 
 object Notifications {
 
-    fun showErrorNotification(project: Project?, displayId: String, message: String, throwable: Throwable) {
+    fun showErrorNotification(project: Project?,
+                              displayId: String,
+                              title: String,
+                              message: String,
+                              throwable: Throwable) {
         NotificationGroup(displayId, NotificationDisplayType.TOOL_WINDOW, true)
                 .createNotification(
-                        "TranslateAndReplace",
+                        title,
                         """$message (<a href="$HTML_DESC_COPY_TO_CLIPBOARD">Copy to Clipboard</a>)""",
                         NotificationType.WARNING,
                         object : NotificationListener.Adapter() {
