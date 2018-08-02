@@ -13,7 +13,6 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
-import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.SideBorder
@@ -232,11 +231,11 @@ class InstantTranslationDialog(private val project: Project?) :
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
                 val srcSelected = selected?.takeIf { src.contains(it) } ?: src.first()
-                model = CollectionComboBoxModel<Lang>(src, srcSelected)
+                model = LanguageListModel(src, srcSelected)
             }
             targetLangComboBox.apply {
                 val targetSelected = selected?.takeIf { target.contains(it) } ?: Lang.ENGLISH
-                model = CollectionComboBoxModel<Lang>(target, targetSelected)
+                model = LanguageListModel(target, targetSelected)
             }
         }
     }

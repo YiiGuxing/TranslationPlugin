@@ -197,7 +197,7 @@ class TranslationDialog(private val project: Project?)
         andTransparent()
         foreground = JBColor(0x555555, 0xACACAC)
         ui = LangComboBoxUI(this, SwingConstants.CENTER)
-        model = CollectionComboBoxModel<Lang>(languages)
+        model = LanguageListModel(languages)
 
         fun ComboBox<Lang>.swap(old: Any?, new: Any?) {
             if (new == selectedItem && old != Lang.AUTO && new != Lang.AUTO) {
