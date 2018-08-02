@@ -3,6 +3,7 @@
 .idea/workspace.xml
 .gradle/
 build/
+sandbox/
 out/
 .DS_Store
 *.iml
