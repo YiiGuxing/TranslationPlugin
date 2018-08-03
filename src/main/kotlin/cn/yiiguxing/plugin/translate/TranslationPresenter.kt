@@ -12,7 +12,7 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
     private val translateService = TranslateService
     private val appStorage = AppStorage
-    private var lastRequest: Presenter.Request? = null
+    private var currentRequest: Presenter.Request? = null
 
     override val histories: List<String> get() = appStorage.getHistories()
 
@@ -29,13 +29,13 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang) {
         val request = Presenter.Request(text, srcLang, targetLang, translateService.translator.id)
-        if (text.isBlank() || request == lastRequest) {
+        if (text.isBlank() || request == currentRequest) {
             return
         }
 
         TextToSpeech.stop()
 
-        lastRequest = request
+        currentRequest = request
         if (recordHistory) {
             appStorage.addHistory(text)
         }
@@ -51,8 +51,9 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
     }
 
     private inline fun onPostResult(request: Presenter.Request, block: View.() -> Unit) {
-        if (request == lastRequest && !view.disposed) {
+        if (request == currentRequest && !view.disposed) {
             view.block()
+            currentRequest = null
         }
     }
 
@@ -61,17 +62,11 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
         private val presenterRef: WeakReference<TranslationPresenter> = WeakReference(presenter)
 
         override fun onSuccess(translation: Translation) {
-            presenterRef.get()?.apply {
-                onPostResult(request) { showTranslation(request, translation, false) }
-                lastRequest = null
-            }
+            presenterRef.get()?.onPostResult(request) { showTranslation(request, translation, false) }
         }
 
         override fun onError(message: String, throwable: Throwable) {
-            presenterRef.get()?.apply {
-                onPostResult(request) { showError(request, message, throwable) }
-                lastRequest = null
-            }
+            presenterRef.get()?.onPostResult(request) { showError(request, message, throwable) }
         }
     }
 }
