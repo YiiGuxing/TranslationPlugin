@@ -45,6 +45,7 @@ abstract class AbstractTranslator : Translator {
                     parserResult(text, srcLang, targetLang, it.readString(null))
                 }
     } catch (throwable: Throwable) {
-        throw TranslateException(createErrorMessage(throwable), throwable)
+        val errorMessage = "$name > ${createErrorMessage(throwable)}"
+        throw TranslateException(errorMessage, throwable)
     }
 }
