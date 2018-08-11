@@ -31,10 +31,6 @@ open class TranslateAction(checkSelection: Boolean = false, icon: Icon? = null) 
     override val selectionMode
         get() = SelectionMode.INCLUSIVE
 
-    override fun onUpdate(e: AnActionEvent, active: Boolean) {
-        e.presentation.isEnabledAndVisible = active
-    }
-
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
         val project = editor.project ?: return
         editor.document.getText(selectionRange).processBeforeTranslate()?.let { text ->

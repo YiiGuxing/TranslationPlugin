@@ -25,10 +25,9 @@ abstract class AutoSelectAction(
     /**
      * 更新Action
      *
-     * @param e      事件
-     * @param active 是否活动的，表示是否可以取到词
+     * @param e 事件
      */
-    protected open fun onUpdate(e: AnActionEvent, active: Boolean) {}
+    protected open fun onUpdate(e: AnActionEvent): Boolean = true
 
     /**
      * 执行操作
@@ -42,11 +41,8 @@ abstract class AutoSelectAction(
     protected open val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
     override fun update(e: AnActionEvent) {
-        val active = e.editor?.let { editor ->
-            checkSelection && editor.selectionModel.hasSelection() || editor.canSelect()
-        } ?: false
-
-        onUpdate(e, active)
+        val active = e.editor?.run { hasValidSelection() || canSelect() } ?: false
+        e.presentation.isEnabledAndVisible = active && onUpdate(e)
     }
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -58,6 +54,12 @@ abstract class AutoSelectAction(
         e.getSelectionRange()?.takeUnless { it.isEmpty }?.let { onActionPerformed(e, editor, it) }
     }
 
+    private fun Editor.hasValidSelection(): Boolean {
+        return checkSelection && selectionModel.run {
+            hasSelection() && (selectedText?.filterIgnore()?.any(wordPartCondition) ?: false)
+        }
+    }
+
     private fun Editor.canSelect(): Boolean {
         val offset = caretModel.offset
         val textLength = document.textLength
@@ -67,6 +69,7 @@ abstract class AutoSelectAction(
 
         return TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
                 .let { document.getText(it) }
+                .filterIgnore()
                 .any(wordPartCondition)
     }
 
