@@ -33,15 +33,18 @@ fun String.splitWords(): String {
             .replace(REGEX_UPPER_WORD, REPLACEMENT_SPLIT_GROUP)
 }
 
-fun String.processBeforeTranslate(): String? {
-    val filteredIgnore = try {
+fun String.filterIgnore(): String {
+    return try {
         Settings.ignoreRegExp?.takeIf { it.isNotEmpty() }?.toRegex()?.let { replace(it, " ") } ?: this
     } catch (e: Exception) {
         this
     }
+}
 
+fun String.processBeforeTranslate(): String? {
+    val filteredIgnore = filterIgnore()
     val formatted = if (!Settings.keepFormat) {
-        replace(REGEX_WHITESPACE_CHARACTERS, " ")
+        filteredIgnore.replace(REGEX_WHITESPACE_CHARACTERS, " ")
     } else filteredIgnore
 
     return formatted.trim()
