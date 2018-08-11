@@ -1,9 +1,7 @@
 import org.apache.tools.ant.filters.EscapeUnicode
 
 buildscript {
-    ext.kotlinVersion = kotlinVersion
     repositories {
-        maven { url = 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
         mavenCentral()
     }
@@ -13,11 +11,11 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version '0.3.4'
+    id 'org.jetbrains.intellij' version '0.3.5'
 }
 
 repositories {
-    maven { url = 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url = 'https://maven.aliyun.com/repository/public/' }
     jcenter()
     mavenCentral()
 }
