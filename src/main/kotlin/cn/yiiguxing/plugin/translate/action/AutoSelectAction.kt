@@ -41,7 +41,13 @@ abstract class AutoSelectAction(
     protected open val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
     override fun update(e: AnActionEvent) {
-        val active = e.editor?.run { hasValidSelection() || canSelect() } ?: false
+        val active = e.editor?.run {
+            if (checkSelection && selectionModel.hasSelection()) {
+                hasValidSelection()
+            } else {
+                canSelect()
+            }
+        } ?: false
         e.presentation.isEnabledAndVisible = active && onUpdate(e)
     }
 
@@ -55,9 +61,7 @@ abstract class AutoSelectAction(
     }
 
     private fun Editor.hasValidSelection(): Boolean {
-        return checkSelection && selectionModel.run {
-            hasSelection() && (selectedText?.filterIgnore()?.any(wordPartCondition) ?: false)
-        }
+        return selectionModel.selectedText?.filterIgnore()?.any(wordPartCondition) ?: false
     }
 
     private fun Editor.canSelect(): Boolean {
