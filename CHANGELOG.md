@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.1.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.1.1) (2018-08-18)
+
+- 语言列表排序
+- 保留文本格式选项
+- BUG修复
+
 ## [v2.1.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.1.0) (2018-07-30)
 
 - 实时翻译
