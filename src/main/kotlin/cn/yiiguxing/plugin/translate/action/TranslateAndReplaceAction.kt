@@ -30,16 +30,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
     override val selectionMode: SelectionMode
         get() = Settings.autoSelectionMode
 
-    override fun onUpdate(e: AnActionEvent, active: Boolean) {
-        e.presentation.isEnabledAndVisible = active
-                && e.editor
-                ?.selectionModel
-                ?.takeIf { it.hasSelection() }
-                ?.selectedText
-                ?.any(NON_LATIN_CONDITION)
-                ?: active
-    }
-
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
         val project = e.project ?: return
         e.getData(PlatformDataKeys.VIRTUAL_FILE)?.let {
@@ -64,7 +54,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_LATIN_CONDITION) {
 
                 override fun onError(message: String, throwable: Throwable) {
                     editorRef.get()?.let {
-                        Notifications.showErrorNotification(it.project, NOTIFICATION_DISPLAY_ID, message, throwable)
+                        Notifications.showErrorNotification(it.project, NOTIFICATION_DISPLAY_ID,
+                                "Translate and Replace", message, throwable)
                     }
                 }
             })

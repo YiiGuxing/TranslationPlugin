@@ -41,10 +41,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      突然更新：
       <ul>
-        <li>实时翻译</li>
-        <li>忽略内容配置</li>
+        <li>语言列表排序</li>
+        <li>保留文本格式选项</li>
         <li>BUG修复</li>
       </ul>
       <br/>

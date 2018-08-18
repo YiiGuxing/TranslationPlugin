@@ -87,6 +87,11 @@ class Settings : PersistentStateComponent<Settings> {
     var ignoreRegExp: String? = null
 
     /**
+     * 翻译时保留文本格式
+     */
+    var keepFormat: Boolean = false
+
+    /**
      * 状态栏图标
      */
     var foldOriginal: Boolean = false

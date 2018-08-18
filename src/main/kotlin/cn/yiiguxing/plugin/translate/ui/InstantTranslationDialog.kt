@@ -6,13 +6,13 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.TextToSpeech
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
-import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.SideBorder
@@ -210,8 +210,8 @@ class InstantTranslationDialog(private val project: Project?) :
         currentRequest = null
         lastTranslation = translation
         swapButton.isEnabled = true
-        inputTTSButton.isEnabled = true
-        translationTTSButton.isEnabled = true
+        inputTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
+        translationTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.targetLang)
         translationTextArea.text = translation.trans
     }
 
@@ -219,7 +219,8 @@ class InstantTranslationDialog(private val project: Project?) :
         if (currentRequest == request) {
             clearTranslation()
         }
-        Notifications.showErrorNotification(project, NOTIFICATION_DISPLAY_ID, errorMessage, throwable)
+        Notifications.showErrorNotification(project, NOTIFICATION_DISPLAY_ID,
+                "Translate Error", errorMessage, throwable)
     }
 
     override fun onTranslatorChanged(settings: Settings, translatorId: String) {
@@ -231,11 +232,11 @@ class InstantTranslationDialog(private val project: Project?) :
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
                 val srcSelected = selected?.takeIf { src.contains(it) } ?: src.first()
-                model = CollectionComboBoxModel<Lang>(src, srcSelected)
+                model = LanguageListModel(src, srcSelected)
             }
             targetLangComboBox.apply {
-                val targetSelected = selected?.takeIf { target.contains(it) } ?: presenter.primaryLanguage
-                model = CollectionComboBoxModel<Lang>(target, targetSelected)
+                val targetSelected = selected?.takeIf { target.contains(it) } ?: Lang.ENGLISH
+                model = LanguageListModel(target, targetSelected)
             }
         }
     }

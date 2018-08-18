@@ -142,10 +142,10 @@ FAQ
 
 更新日志
 --------
-## [v2.1.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.1.0) (2018-07-30)
+## [v2.1.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.1.1) (2018-08-18)
 
-- 实时翻译
-- 忽略内容配置
+- 语言列表排序
+- 保留文本格式选项
 - BUG修复
 
 [完整的更新历史记录](./CHANGELOG.md)

@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
@@ -27,6 +28,7 @@ import java.awt.Color
 import java.awt.Cursor
 import java.awt.FlowLayout
 import java.awt.Font
+import java.awt.datatransfer.StringSelection
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
@@ -284,6 +286,9 @@ abstract class TranslationPanel<T : JComponent>(
                 onRevalidateHandler?.invoke()
             }
         }
+
+        srcTransliterationLabel.setupPopupMenu()
+        transliterationLabel.setupPopupMenu()
     }
 
     private fun Viewer.setFocusListener(vararg vs: Viewer) {
@@ -356,6 +361,12 @@ abstract class TranslationPanel<T : JComponent>(
                 }
             })
         }
+    }
+
+    private fun JLabel.setupPopupMenu() {
+        val copy = JBMenuItem("Copy", Icons.Copy)
+        copy.addActionListener { CopyPasteManager.getInstance().setContents(StringSelection(text)) }
+        componentPopupMenu = JBPopupMenu().apply { add(copy) }
     }
 
     private fun checkSourceLanguage() {

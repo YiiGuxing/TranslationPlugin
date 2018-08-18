@@ -12,16 +12,18 @@ class StringsTest {
 
     @Test
     fun testSplitWord() {
-        Assert.assertEquals("split Word", "splitWord".splitWordsForTest())
-        Assert.assertEquals("Split Word", "SplitWord".splitWordsForTest())
-        Assert.assertEquals("Split Word", "Split_Word".splitWordsForTest())
-        Assert.assertEquals("split word", "split_word".splitWordsForTest())
-        Assert.assertEquals("SPLIT WORD", "SPLIT_WORD".splitWordsForTest())
-        Assert.assertEquals("split WORD", "splitWORD".splitWordsForTest())
-        Assert.assertEquals("SPLIT Word", "SPLITWord".splitWordsForTest())
-        Assert.assertEquals("split Word SplitWord", "split  Word  SplitWord ".splitWordsForTest())
-        Assert.assertEquals("word 0", "word0".splitWordsForTest())
-        Assert.assertEquals("word 字", "word字".splitWordsForTest())
+        Assert.assertEquals("split Word", "splitWord".splitWords())
+        Assert.assertEquals("Split Word", "SplitWord".splitWords())
+        Assert.assertEquals("Split Word", "Split_Word".splitWords())
+        Assert.assertEquals("split word", "split_word".splitWords())
+        Assert.assertEquals("SPLIT WORD", "SPLIT_WORD".splitWords())
+        Assert.assertEquals("split WORD", "splitWORD".splitWords())
+        Assert.assertEquals("SPLIT Word", "SPLITWord".splitWords())
+        Assert.assertEquals(" split  Word  Split Word;", " split  Word  SplitWord;".splitWords())
+        Assert.assertEquals("0 word 1", "0word1".splitWords())
+        Assert.assertEquals("word字", "word字".splitWords())
+        Assert.assertEquals("0 split Word Split Word Split WORD SPLIT Word字",
+                "0splitWordSplitWordSplitWORD_SPLITWord字".splitWords())
     }
 
     @Test
