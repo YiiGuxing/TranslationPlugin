@@ -96,9 +96,9 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         val ignoreRegExp = ignoreRegExp
         checkIgnoreRegExpButton.addActionListener {
             val project = ProjectManager.getInstance().defaultProject
-            CheckRegExpDialog(project, ignoreRegExp.text) {
-                if (it != ignoreRegExp.text) {
-                    ignoreRegExp.text = it
+            CheckRegExpDialog(project, ignoreRegExp.text) { newRegExp ->
+                if (newRegExp != ignoreRegExp.text) {
+                    ignoreRegExp.text = newRegExp
                 }
             }.show()
         }

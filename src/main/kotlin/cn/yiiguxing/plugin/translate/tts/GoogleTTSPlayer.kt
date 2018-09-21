@@ -131,10 +131,10 @@ class GoogleTTSPlayer(
             text = "tts: downloading..."
         }
         playlist
-                .map {
+                .map { url ->
                     indicator.checkCanceled()
-                    LOGGER.i("TTS>>> $it")
-                    HttpRequests.request(it)
+                    LOGGER.i("TTS>>> $url")
+                    HttpRequests.request(url)
                             .userAgent(DEFAULT_USER_AGENT)
                             .readBytes(indicator)
                             .let {
@@ -143,9 +143,9 @@ class GoogleTTSPlayer(
                 }
                 .enumeration()
                 .let {
-                    SequenceInputStream(it).use {
+                    SequenceInputStream(it).use { sis ->
                         indicator.checkCanceled()
-                        it.asAudioInputStream().rawPlay(indicator)
+                        sis.asAudioInputStream().rawPlay(indicator)
                     }
                 }
     }

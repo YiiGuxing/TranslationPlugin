@@ -25,11 +25,11 @@ data class GoogleTranslation(
         check(target != null) { "Can not convert to Translation: target=null" }
 
         val translit: TranslitSentence? = sentences.find { it is TranslitSentence } as? TranslitSentence
-        val trans = sentences.mapNotNull { (it as? TransSentence)?.trans }.joinToString("")
+        val trans = sentences.asSequence().mapNotNull { (it as? TransSentence)?.trans }.joinToString("")
 
-        val dictionaries = dict?.map {
-            val entries = it.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
-            Dict(it.pos, it.terms, entries)
+        val dictionaries = dict?.map { gDict ->
+            val entries = gDict.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
+            Dict(gDict.pos, gDict.terms, entries)
         } ?: emptyList()
 
         return Translation(

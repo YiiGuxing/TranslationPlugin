@@ -237,9 +237,7 @@ class TranslationDialog(private val project: Project?)
             }
             onFixLanguage { sourceLangComboBox.selected = it }
             onRevalidate {
-                lastScrollValue.let {
-                    invokeLater { translationPanel.verticalScrollBar.value = it }
-                }
+                invokeLater { translationPanel.verticalScrollBar.value = lastScrollValue }
             }
         }
 

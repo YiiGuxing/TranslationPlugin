@@ -152,7 +152,7 @@ class InstantTranslationDialog(private val project: Project?) :
 
     private fun initSwapButton() = with(swapButton) {
         icon = Icons.Swap2
-        addActionListener {
+        addActionListener { _ ->
             val srcLang = lastTranslation?.srcLang ?: sourceLang
             val targetLang = lastTranslation?.targetLang ?: targetLang
 
