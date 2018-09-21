@@ -1,6 +1,6 @@
-.idea/libraries/
-.idea/modules/
-.idea/workspace.xml
+.idea/*
+!.idea/runConfigurations/
+!.idea/uiDesigner.xml
 .gradle/
 build/
 sandbox/
