@@ -3,7 +3,7 @@
  * 
  * Created by Yii.Guxing on 2017/9/11
  */
-@file:Suppress("unused")
+@file:Suppress("unused", "NOTHING_TO_INLINE")
 
 package cn.yiiguxing.plugin.translate.util
 
@@ -14,14 +14,24 @@ import com.intellij.openapi.util.TextRange
 
 typealias CharCondition = SelectWordUtil.CharCondition
 
+inline operator fun CharCondition.invoke(char: Char): Boolean = value(char)
+
+/**
+ * Java标识符条件
+ */
+val JAVA_IDENTIFIER_PART_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
 /**
  * 默认条件
  */
-val DEFAULT_CONDITION: CharCondition = SelectWordUtil.JAVA_IDENTIFIER_PART_CONDITION
+val DEFAULT_CONDITION: CharCondition = JAVA_IDENTIFIER_PART_CONDITION
 /**
  * 非英文条件
  */
 val NON_LATIN_CONDITION: CharCondition = CharCondition { it.toInt() > 0xFF && Character.isJavaIdentifierPart(it) }
+/**
+ * 非空白条件
+ */
+val NON_WHITESPACE_CONDITION: CharCondition = CharCondition { !Character.isWhitespace(it) }
 
 private val TextRangeComparator = Comparator<TextRange> { tr1, tr2 ->
     if (tr2.contains(tr1)) -1 else 1
@@ -44,12 +54,12 @@ enum class SelectionMode {
 /**
  * Returns the first character matching the given [condition], or `null` if no such character was found.
  */
-fun String.find(condition: CharCondition): Char? = find { condition.value(it) }
+fun String.find(condition: CharCondition): Char? = find { condition(it) }
 
 /**
  * Returns `true` if at least one character matches the given [condition].
  */
-fun String.any(condition: CharCondition): Boolean = any { condition.value(it) }
+fun String.any(condition: CharCondition): Boolean = any { condition(it) }
 
 /**
  * 返回当前光标周围文字的范围

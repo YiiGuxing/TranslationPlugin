@@ -158,16 +158,17 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             }
 
             val settings = settings
-            return transPanelContainer.isModified ||
-                    appStorage.maxHistorySize != getMaxHistorySize() ||
-                    settings.autoSelectionMode != selectionModeComboBox.currentMode ||
-                    settings.ignoreRegExp != ignoreRegExp.text ||
-                    settings.isOverrideFont != fontCheckBox.isSelected ||
-                    settings.primaryFontFamily != primaryFontComboBox.fontName ||
-                    settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
-                    settings.showStatusIcon != showStatusIconCheckBox.isSelected ||
-                    settings.foldOriginal != foldOriginalCheckBox.isSelected ||
-                    settings.keepFormat != keepFormatCheckBox.isSelected
+            return transPanelContainer.isModified
+                    || appStorage.maxHistorySize != getMaxHistorySize()
+                    || settings.autoSelectionMode != selectionModeComboBox.currentMode
+                    || settings.ignoreRegExp != ignoreRegExp.text
+                    || settings.isOverrideFont != fontCheckBox.isSelected
+                    || settings.primaryFontFamily != primaryFontComboBox.fontName
+                    || settings.phoneticFontFamily != phoneticFontComboBox.fontName
+                    || settings.showStatusIcon != showStatusIconCheckBox.isSelected
+                    || settings.foldOriginal != foldOriginalCheckBox.isSelected
+                    || settings.keepFormat != keepFormatCheckBox.isSelected
+                    || settings.autoReplace != autoReplaceCheckBox.isSelected
         }
 
 
@@ -188,6 +189,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
+            autoReplace = autoReplaceCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
@@ -204,6 +206,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
+        autoReplaceCheckBox.isSelected = settings.autoReplace
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)
