@@ -127,6 +127,12 @@
       <item class="com.intellij.openapi.ui.ComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
         <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
       </item>
+      <item class="com.intellij.ui.components.JBCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="CheckBox" />
+        </initial-values>
+      </item>
     </group>
     <group name="Project">
       <item class="cn.yiiguxing.plugin.translate.ui.TTSButton" removable="false" auto-create-binding="false" can-attach-label="false">
