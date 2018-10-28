@@ -62,6 +62,8 @@ object GoogleTranslator : AbstractTranslator() {
             .addQueryParameter("client", "gtx")
             .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
             .addQueryParameter("dj", "1")
+            .addQueryParameter("ie", "UTF-8")
+            .addQueryParameter("oe", "UTF-8")
             .addQueryParameter("sl", srcLang.code)
             .addQueryParameter("tl", targetLang.code)
             .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
