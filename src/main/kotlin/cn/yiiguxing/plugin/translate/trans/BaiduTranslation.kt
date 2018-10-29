@@ -18,7 +18,7 @@ data class BaiduTranslation(
         @SerializedName("to")
         val targetLanguage: String? = null,
         @SerializedName("trans_result")
-        val trans: List<Trans> = emptyList()
+        val trans: List<BTrans> = emptyList()
 ) : TranslationAdapter {
 
     val isSuccessful get() = code == 0 || code == 52000
@@ -37,7 +37,7 @@ data class BaiduTranslation(
     }
 }
 
-data class Trans(
+data class BTrans(
         @SerializedName("src")
         val src: String,
         @SerializedName("dst")
