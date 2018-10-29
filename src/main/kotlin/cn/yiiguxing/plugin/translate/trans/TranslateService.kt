@@ -44,6 +44,11 @@ class TranslateService private constructor() {
         return cache[CacheKey(text, srcLang, targetLang, translator.id)]
     }
 
+    fun clearCaches() {
+        checkThread()
+        cache.evictAll()
+    }
+
     fun translate(text: String, srcLang: Lang, targetLang: Lang, listener: TranslateListener) {
         checkThread()
         cache[CacheKey(text, srcLang, targetLang, translator.id)]?.let {

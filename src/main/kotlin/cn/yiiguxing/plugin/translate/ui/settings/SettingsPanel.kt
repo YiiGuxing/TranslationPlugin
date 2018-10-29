@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.project.ProjectManager
@@ -168,6 +169,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                     || settings.showStatusIcon != showStatusIconCheckBox.isSelected
                     || settings.foldOriginal != foldOriginalCheckBox.isSelected
                     || settings.keepFormat != keepFormatCheckBox.isSelected
+                    || settings.showTenses != showTensesCheckBox.isSelected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
         }
 
@@ -181,6 +183,10 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             }
         }
 
+        if (settings.showTenses != showTensesCheckBox.isSelected) {
+            TranslateService.clearCaches()
+        }
+
         with(settings) {
             isOverrideFont = fontCheckBox.isSelected
             primaryFontFamily = primaryFontComboBox.fontName
@@ -189,6 +195,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
+            showTenses = showTensesCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
 
             if (validRegExp) {
@@ -206,6 +213,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
+        showTensesCheckBox.isSelected = settings.showTenses
         autoReplaceCheckBox.isSelected = settings.autoReplace
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
