@@ -150,11 +150,10 @@ FAQ
 
 更新日志
 --------
-## [v2.1.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.1.1) (2018-08-18)
+## [v2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.2) (2018-10-31)
 
-- 语言列表排序
-- 保留文本格式选项
-- BUG修复
+- 翻译替换：支持多种语言
+- 有道翻译：显示词形
 
 [完整的更新历史记录](./CHANGELOG.md)
 

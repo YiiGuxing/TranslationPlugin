@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.2) (2018-10-31)
+
+- 翻译替换：支持多种语言
+- 有道翻译：显示词形
+
 ## [v2.1.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.1.1) (2018-08-18)
 
 - 语言列表排序
