@@ -58,8 +58,8 @@ data class YoudaoTranslation(
 
         val basicExplains = ArrayList<String>()
         basicExplain?.explains?.let { basicExplains.addAll(it) }
-        if (Settings.showTenses) {
-            basicExplain?.tenses?.joinToString("\n", "\n") { tw -> tw.tense.toString() }
+        if (Settings.showWordForms) {
+            basicExplain?.wordForms?.joinToString("\n", "\n") { it.wordForm.toString() }
                     ?.let { basicExplains.add(it) }
         }
 
@@ -85,7 +85,7 @@ data class YBasicExplain(
         @SerializedName(value = "explains")
         var explains: Array<String>? = null,
         @SerializedName(value = "wfs")
-        var tenses: Array<YTenseWrapper>? = null)
+        var wordForms: Array<YWordFormWrapper>? = null)
 
 data class YWebExplain(
         @SerializedName(value = "key")
@@ -93,8 +93,8 @@ data class YWebExplain(
         @SerializedName(value = "value")
         var values: Array<String>? = null)
 
-data class YTenseWrapper(@SerializedName(value = "wf") val tense: YTense)
-data class YTense(
+data class YWordFormWrapper(@SerializedName(value = "wf") val wordForm: YWordForm)
+data class YWordForm(
         @SerializedName(value = "name")
         val name: String,
         @SerializedName(value = "value")

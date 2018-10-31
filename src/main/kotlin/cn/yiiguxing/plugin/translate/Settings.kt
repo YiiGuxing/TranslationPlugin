@@ -92,9 +92,9 @@ class Settings : PersistentStateComponent<Settings> {
     var keepFormat: Boolean = false
 
     /**
-     * 显示时态（有道翻译）
+     * 显示词形（有道翻译）
      */
-    var showTenses: Boolean = true
+    var showWordForms: Boolean = true
 
     /**
      * 翻译替换结果唯一时自动替换

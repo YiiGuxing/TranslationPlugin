@@ -41,7 +41,7 @@ public class SettingsForm {
     private JBCheckBox mShowStatusIconCheckBox;
     private JBCheckBox mFoldOriginalCheckBox;
     private JBCheckBox mKeepFormat;
-    private JBCheckBox mShowTenses;
+    private JBCheckBox mShowWordForms;
     private JBCheckBox mAutoReplace;
 
     private final Settings mSettings;
@@ -191,8 +191,8 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JBCheckBox getShowTensesCheckBox() {
-        return mShowTenses;
+    public final JBCheckBox getShowWordFormsCheckBox() {
+        return mShowWordForms;
     }
 
     @NotNull

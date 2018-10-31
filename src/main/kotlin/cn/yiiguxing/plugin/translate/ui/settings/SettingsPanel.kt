@@ -169,7 +169,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                     || settings.showStatusIcon != showStatusIconCheckBox.isSelected
                     || settings.foldOriginal != foldOriginalCheckBox.isSelected
                     || settings.keepFormat != keepFormatCheckBox.isSelected
-                    || settings.showTenses != showTensesCheckBox.isSelected
+                    || settings.showWordForms != showWordFormsCheckBox.isSelected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
         }
 
@@ -183,7 +183,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             }
         }
 
-        if (settings.showTenses != showTensesCheckBox.isSelected) {
+        if (settings.showWordForms != showWordFormsCheckBox.isSelected) {
             TranslateService.clearCaches()
         }
 
@@ -195,7 +195,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
-            showTenses = showTensesCheckBox.isSelected
+            showWordForms = showWordFormsCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
 
             if (validRegExp) {
@@ -213,7 +213,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
-        showTensesCheckBox.isSelected = settings.showTenses
+        showWordFormsCheckBox.isSelected = settings.showWordForms
         autoReplaceCheckBox.isSelected = settings.autoReplace
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily

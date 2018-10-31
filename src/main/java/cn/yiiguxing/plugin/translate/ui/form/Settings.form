@@ -263,12 +263,12 @@
                   <text resource-bundle="messages/TranslationBundle" key="settings.options.autoReplace"/>
                 </properties>
               </component>
-              <component id="e3492" class="com.intellij.ui.components.JBCheckBox" binding="mShowTenses">
+              <component id="e3492" class="com.intellij.ui.components.JBCheckBox" binding="mShowWordForms">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text resource-bundle="messages/TranslationBundle" key="settings.options.showTenses"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.options.showWordForms"/>
                 </properties>
               </component>
             </children>
