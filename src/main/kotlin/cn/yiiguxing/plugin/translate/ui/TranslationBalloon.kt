@@ -46,9 +46,7 @@ class TranslationBalloon(
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPanel(project, Settings)
     private val pinButton = ActionLink(icon = Icons.Pin) {
-        translationPane.translation.let {
-            showOnTranslationDialog(text, translationPane.sourceLanguage, translationPane.targetLanguage)
-        }
+        showOnTranslationDialog(text, translationPane.sourceLanguage, translationPane.targetLanguage)
     }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
         lastError?.copyToClipboard()

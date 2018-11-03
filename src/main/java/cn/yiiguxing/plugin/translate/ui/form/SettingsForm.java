@@ -9,6 +9,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.FontComboBox;
+import com.intellij.ui.components.JBCheckBox;
 import org.intellij.lang.regexp.RegExpLanguage;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +30,7 @@ public class SettingsForm {
     private ComboBox mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
     private JPanel mFontPanel;
-    private JCheckBox mFontCheckBox;
+    private JBCheckBox mFontCheckBox;
     private FontComboBox mPrimaryFontComboBox;
     private FontComboBox mPhoneticFontComboBox;
     private JTextPane mFontPreview;
@@ -37,9 +38,11 @@ public class SettingsForm {
     private JLabel mPhoneticFontLabel;
     private TranslatorSettingsContainer mTransPanelContainer;
     private JPanel mOptionsPanel;
-    private JCheckBox mShowStatusIconCheckBox;
-    private JCheckBox mFoldOriginalCheckBox;
-    private JCheckBox mKeepFormat;
+    private JBCheckBox mShowStatusIconCheckBox;
+    private JBCheckBox mFoldOriginalCheckBox;
+    private JBCheckBox mKeepFormat;
+    private JBCheckBox mShowWordForms;
+    private JBCheckBox mAutoReplace;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -133,7 +136,7 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JCheckBox getFontCheckBox() {
+    public final JBCheckBox getFontCheckBox() {
         return mFontCheckBox;
     }
 
@@ -173,17 +176,27 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JCheckBox getShowStatusIconCheckBox() {
+    public final JBCheckBox getShowStatusIconCheckBox() {
         return mShowStatusIconCheckBox;
     }
 
     @NotNull
-    public final JCheckBox getFoldOriginalCheckBox() {
+    public final JBCheckBox getFoldOriginalCheckBox() {
         return mFoldOriginalCheckBox;
     }
 
     @NotNull
-    public final JCheckBox getKeepFormatCheckBox() {
+    public final JBCheckBox getKeepFormatCheckBox() {
         return mKeepFormat;
+    }
+
+    @NotNull
+    public final JBCheckBox getShowWordFormsCheckBox() {
+        return mShowWordForms;
+    }
+
+    @NotNull
+    public final JBCheckBox getAutoReplaceCheckBox() {
+        return mAutoReplace;
     }
 }

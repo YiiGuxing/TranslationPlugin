@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import com.intellij.AbstractBundle
+import com.intellij.util.xmlb.annotations.Attribute
+import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
 
@@ -8,6 +10,10 @@ import java.util.*
 private const val LANGUAGE_BUNDLE = "messages.LanguageBundle"
 
 private object LanguageBundle : AbstractBundle(LANGUAGE_BUNDLE)
+
+@Tag("language-pair")
+data class LanguagePair(@Attribute var source: Lang = Lang.AUTO,
+                        @Attribute var target: Lang = Lang.AUTO)
 
 
 /**

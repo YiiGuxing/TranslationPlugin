@@ -2,9 +2,11 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
+import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.TextToSpeech
 import com.intellij.openapi.Disposable
@@ -92,13 +94,17 @@ class InstantTranslationDialog(private val project: Project?) :
 
         val itemListener = ItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
+                AppStorage.lastLanguages.let { pair ->
+                    pair.source = sourceLang
+                    pair.target = targetLang
+                }
                 requestTranslate()
             }
         }
         sourceLangComboBox.addItemListener(itemListener)
         targetLangComboBox.addItemListener(itemListener)
 
-        updateLanguages()
+        updateLanguages(AppStorage.lastLanguages)
     }
 
     private fun initTextAreas() {
@@ -152,7 +158,7 @@ class InstantTranslationDialog(private val project: Project?) :
 
     private fun initSwapButton() = with(swapButton) {
         icon = Icons.Swap2
-        addActionListener {
+        addActionListener { _ ->
             val srcLang = lastTranslation?.srcLang ?: sourceLang
             val targetLang = lastTranslation?.targetLang ?: targetLang
 
@@ -228,14 +234,18 @@ class InstantTranslationDialog(private val project: Project?) :
         requestTranslate(0)
     }
 
-    private fun updateLanguages() {
+    private fun updateLanguages(languagePair: LanguagePair? = null) {
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
-                val srcSelected = selected?.takeIf { src.contains(it) } ?: src.first()
+                val srcSelected = (languagePair?.source ?: selected)
+                        ?.takeIf { src.contains(it) }
+                        ?: src.first()
                 model = LanguageListModel(src, srcSelected)
             }
             targetLangComboBox.apply {
-                val targetSelected = selected?.takeIf { target.contains(it) } ?: Lang.ENGLISH
+                val targetSelected = (languagePair?.target ?: selected)
+                        ?.takeIf { target.contains(it) }
+                        ?: Lang.ENGLISH
                 model = LanguageListModel(target, targetSelected)
             }
         }
@@ -266,7 +276,7 @@ class InstantTranslationDialog(private val project: Project?) :
     }
 
     companion object {
-        private const val NOTIFICATION_DISPLAY_ID = "InstantTranslationDialog"
+        private const val NOTIFICATION_DISPLAY_ID = "Instant Translate Error"
         private val BORDER = LineBorder(JBColor(0x808080, 0x303030))
         private val TOOLBAR_BORDER = SideBorder(JBColor(0x9F9F9F, 0x3C3C3C), SideBorder.TOP)
         private val TOOLBAR_BACKGROUND = JBColor(0xEEF1F3, 0x4E5556)

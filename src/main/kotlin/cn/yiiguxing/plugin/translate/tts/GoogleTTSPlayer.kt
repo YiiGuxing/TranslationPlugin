@@ -131,10 +131,10 @@ class GoogleTTSPlayer(
             text = "tts: downloading..."
         }
         playlist
-                .map {
+                .map { url ->
                     indicator.checkCanceled()
-                    LOGGER.i("TTS>>> $it")
-                    HttpRequests.request(it)
+                    LOGGER.i("TTS>>> $url")
+                    HttpRequests.request(url)
                             .userAgent(DEFAULT_USER_AGENT)
                             .readBytes(indicator)
                             .let {
@@ -143,9 +143,9 @@ class GoogleTTSPlayer(
                 }
                 .enumeration()
                 .let {
-                    SequenceInputStream(it).use {
+                    SequenceInputStream(it).use { sis ->
                         indicator.checkCanceled()
-                        it.asAudioInputStream().rawPlay(indicator)
+                        sis.asAudioInputStream().rawPlay(indicator)
                     }
                 }
     }
@@ -202,7 +202,7 @@ class GoogleTTSPlayer(
 
         private const val MAX_TEXT_LENGTH = 200
 
-        private const val NOTIFICATION_ID = "TTS_NOTIFICATION"
+        private const val NOTIFICATION_ID = "TTS Error"
 
         val SUPPORTED_LANGUAGES: List<Lang> = listOf(
                 Lang.CHINESE, Lang.ENGLISH, Lang.CHINESE_TRADITIONAL, Lang.ALBANIAN, Lang.ARABIC, Lang.ESTONIAN,

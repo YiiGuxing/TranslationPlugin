@@ -92,9 +92,7 @@ abstract class TranslationPanel<T : JComponent>(
     @Suppress("InvalidBundleOrProperty")
     private val fixLanguageLinkLabel = JLabel("${message("tip.label.sourceLanguage")}: ")
     private val fixLanguageLink = ActionLink {
-        translation?.srclangs?.firstOrNull()?.let {
-            onFixLanguageHandler?.invoke(it)
-        }
+        translation?.srclangs?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
     }
 
     var translation: Translation?
@@ -279,9 +277,7 @@ abstract class TranslationPanel<T : JComponent>(
             }
             onFoldingExpanded {
                 dictViewerScrollWrapper?.verticalScrollBar?.run {
-                    lastScrollValue.let {
-                        invokeLater { value = it }
-                    }
+                    invokeLater { value = lastScrollValue }
                 }
                 onRevalidateHandler?.invoke()
             }
@@ -329,22 +325,20 @@ abstract class TranslationPanel<T : JComponent>(
             }
             val translate = JBMenuItem("Translate", Icons.Translate).apply {
                 disabledIcon = Icons.Translate
-                addActionListener {
-                    translation?.run {
-                        selectedText.let {
-                            if (!it.isNullOrBlank()) {
-                                lateinit var src: Lang
-                                lateinit var target: Lang
-                                if (this@setupPopupMenu === originalViewer) {
-                                    src = targetLang
-                                    target = srcLang
-                                } else {
-                                    src = srcLang
-                                    target = targetLang
-                                }
-
-                                onNewTranslateHandler?.invoke(it, src, target)
+                addActionListener { _ ->
+                    translation?.let { translation ->
+                        selectedText.takeUnless { it.isNullOrBlank() }?.let { selectedText ->
+                            lateinit var src: Lang
+                            lateinit var target: Lang
+                            if (this@setupPopupMenu === originalViewer) {
+                                src = translation.targetLang
+                                target = translation.srcLang
+                            } else {
+                                src = translation.srcLang
+                                target = translation.targetLang
                             }
+
+                            onNewTranslateHandler?.invoke(selectedText, src, target)
                         }
                     }
                 }
@@ -354,10 +348,9 @@ abstract class TranslationPanel<T : JComponent>(
             add(translate)
             addPopupMenuListener(object : PopupMenuListenerAdapter() {
                 override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-                    (!selectedText.isNullOrBlank()).let {
-                        copy.isEnabled = it
-                        translate.isEnabled = it
-                    }
+                    val hasSelectedText = !selectedText.isNullOrBlank()
+                    copy.isEnabled = hasSelectedText
+                    translate.isEnabled = hasSelectedText
                 }
             })
         }

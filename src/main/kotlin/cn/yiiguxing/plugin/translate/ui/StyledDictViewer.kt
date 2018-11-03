@@ -189,8 +189,10 @@ class StyledDictViewer {
 
         setParagraphStyle(style = if (isLast) entryEndParagraphStyle else entryParagraphStyle)
         val hasWordOnly = dict.entries
+                .asSequence()
                 .filter { it.reverseTranslation.isEmpty() }
                 .map { it.word }
+                .toList()
                 .run {
                     forEachIndexed { index, word ->
                         if (index > 0) {

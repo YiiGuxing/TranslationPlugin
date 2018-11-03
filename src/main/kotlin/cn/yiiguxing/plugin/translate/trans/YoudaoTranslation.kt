@@ -7,6 +7,7 @@
 
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.util.Settings
 import com.google.gson.annotations.SerializedName
 
 
@@ -19,11 +20,11 @@ data class YoudaoTranslation(
         @SerializedName("translation")
         var translation: Array<String>? = null,
         @SerializedName("basic")
-        var basicExplain: BasicExplain? = null,
+        var basicExplain: YBasicExplain? = null,
         @SerializedName("l")
         var languages: String? = null,
         @SerializedName("web")
-        var webExplains: Array<WebExplain>? = null
+        var webExplains: Array<YWebExplain>? = null
 ) : TranslationAdapter {
 
     val isSuccessful get() = errorCode == 0
@@ -55,6 +56,13 @@ data class YoudaoTranslation(
             mapOf(*it.toTypedArray())
         } ?: emptyMap()
 
+        val basicExplains = ArrayList<String>()
+        basicExplain?.explains?.let { basicExplains.addAll(it) }
+        if (Settings.showWordForms) {
+            basicExplain?.wordForms?.joinToString("\n", "\n") { it.wordForm.toString() }
+                    ?.let { basicExplains.add(it) }
+        }
+
         return Translation(
                 query!!,
                 translation?.firstOrNull(),
@@ -62,12 +70,12 @@ data class YoudaoTranslation(
                 transLang,
                 listOf(srcLang),
                 basicExplain?.phonetic,
-                basicExplains = basicExplain?.explains?.asList() ?: emptyList(),
+                basicExplains = basicExplains,
                 otherExplains = otherExplains)
     }
 }
 
-data class BasicExplain(
+data class YBasicExplain(
         @SerializedName(value = "phonetic")
         var phonetic: String? = null,
         @SerializedName(value = "uk-phonetic")
@@ -75,10 +83,24 @@ data class BasicExplain(
         @SerializedName(value = "us-phonetic")
         var phoneticUS: String? = null,
         @SerializedName(value = "explains")
-        var explains: Array<String>? = null)
+        var explains: Array<String>? = null,
+        @SerializedName(value = "wfs")
+        var wordForms: Array<YWordFormWrapper>? = null)
 
-data class WebExplain(
+data class YWebExplain(
         @SerializedName(value = "key")
         var key: String? = null,
         @SerializedName(value = "value")
         var values: Array<String>? = null)
+
+data class YWordFormWrapper(@SerializedName(value = "wf") val wordForm: YWordForm)
+data class YWordForm(
+        @SerializedName(value = "name")
+        val name: String,
+        @SerializedName(value = "value")
+        val value: String
+) {
+    override fun toString(): String {
+        return "$name: ${value.replace("\\s*或\\s*".toRegex(), ", ")}"
+    }
+}

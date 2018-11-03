@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.project.ProjectManager
@@ -96,9 +97,9 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         val ignoreRegExp = ignoreRegExp
         checkIgnoreRegExpButton.addActionListener {
             val project = ProjectManager.getInstance().defaultProject
-            CheckRegExpDialog(project, ignoreRegExp.text) {
-                if (it != ignoreRegExp.text) {
-                    ignoreRegExp.text = it
+            CheckRegExpDialog(project, ignoreRegExp.text) { newRegExp ->
+                if (newRegExp != ignoreRegExp.text) {
+                    ignoreRegExp.text = newRegExp
                 }
             }.show()
         }
@@ -158,16 +159,18 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             }
 
             val settings = settings
-            return transPanelContainer.isModified ||
-                    appStorage.maxHistorySize != getMaxHistorySize() ||
-                    settings.autoSelectionMode != selectionModeComboBox.currentMode ||
-                    settings.ignoreRegExp != ignoreRegExp.text ||
-                    settings.isOverrideFont != fontCheckBox.isSelected ||
-                    settings.primaryFontFamily != primaryFontComboBox.fontName ||
-                    settings.phoneticFontFamily != phoneticFontComboBox.fontName ||
-                    settings.showStatusIcon != showStatusIconCheckBox.isSelected ||
-                    settings.foldOriginal != foldOriginalCheckBox.isSelected ||
-                    settings.keepFormat != keepFormatCheckBox.isSelected
+            return transPanelContainer.isModified
+                    || appStorage.maxHistorySize != getMaxHistorySize()
+                    || settings.autoSelectionMode != selectionModeComboBox.currentMode
+                    || settings.ignoreRegExp != ignoreRegExp.text
+                    || settings.isOverrideFont != fontCheckBox.isSelected
+                    || settings.primaryFontFamily != primaryFontComboBox.fontName
+                    || settings.phoneticFontFamily != phoneticFontComboBox.fontName
+                    || settings.showStatusIcon != showStatusIconCheckBox.isSelected
+                    || settings.foldOriginal != foldOriginalCheckBox.isSelected
+                    || settings.keepFormat != keepFormatCheckBox.isSelected
+                    || settings.showWordForms != showWordFormsCheckBox.isSelected
+                    || settings.autoReplace != autoReplaceCheckBox.isSelected
         }
 
 
@@ -180,6 +183,10 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             }
         }
 
+        if (settings.showWordForms != showWordFormsCheckBox.isSelected) {
+            TranslateService.clearCaches()
+        }
+
         with(settings) {
             isOverrideFont = fontCheckBox.isSelected
             primaryFontFamily = primaryFontComboBox.fontName
@@ -188,6 +195,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
+            showWordForms = showWordFormsCheckBox.isSelected
+            autoReplace = autoReplaceCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
@@ -204,6 +213,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
+        showWordFormsCheckBox.isSelected = settings.showWordForms
+        autoReplaceCheckBox.isSelected = settings.autoReplace
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)

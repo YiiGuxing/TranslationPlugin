@@ -17,19 +17,21 @@ data class GoogleTranslation(
         var target: Lang? = null,
         val sentences: List<GSentence>,
         val dict: List<GDict>?,
-        @SerializedName("ld_result") val ldResult: LDResult
+        @SerializedName("ld_result") val ldResult: GLDResult,
+        // For dt=at
+        @SerializedName("alternative_translations") val alternativeTranslations: List<GAlternativeTranslations>?
 ) : TranslationAdapter {
 
     override fun toTranslation(): Translation {
         check(original != null) { "Can not convert to Translation: original=null" }
         check(target != null) { "Can not convert to Translation: target=null" }
 
-        val translit: TranslitSentence? = sentences.find { it is TranslitSentence } as? TranslitSentence
-        val trans = sentences.mapNotNull { (it as? TransSentence)?.trans }.joinToString("")
+        val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
+        val trans = sentences.asSequence().mapNotNull { (it as? GTransSentence)?.trans }.joinToString("")
 
-        val dictionaries = dict?.map {
-            val entries = it.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
-            Dict(it.pos, it.terms, entries)
+        val dictionaries = dict?.map { gDict ->
+            val entries = gDict.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
+            Dict(gDict.pos, gDict.terms, entries)
         } ?: emptyList()
 
         return Translation(
@@ -45,20 +47,33 @@ data class GoogleTranslation(
 }
 
 sealed class GSentence
-data class TransSentence(val orig: String, val trans: String, val backend: Int) : GSentence()
-data class TranslitSentence(
+data class GTransSentence(val orig: String, val trans: String, val backend: Int) : GSentence()
+data class GTranslitSentence(
         @SerializedName("src_translit") val srcTranslit: String?,
-        val translit: String?
+        @SerializedName("translit") val translit: String?
 ) : GSentence()
 
 data class GDict(val pos: String, val terms: List<String>, val entry: List<GDictEntry>)
 data class GDictEntry(
-        val word: String,
+        @SerializedName("word") val word: String,
         @SerializedName("reverse_translation") val reverseTranslation: List<String>?,
-        val score: Float
+        @SerializedName("score") val score: Float
 )
 
-data class LDResult(
-        val srclangs: List<Lang>,
+data class GLDResult(
+        @SerializedName("srclangs") val srclangs: List<Lang>,
         @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>
+)
+
+data class GAlternativeTranslations(
+        @SerializedName("src_phrase") val srcPhrase: String,
+        @SerializedName("raw_src_segment") val rawSrcSegment: String,
+        @SerializedName("alternative") val alternative: List<GAlternative>
+)
+
+data class GAlternative(
+        @SerializedName("word_postproc") val wordPostproc: String,
+        @SerializedName("score") val score: Float,
+        @SerializedName("has_preceding_space") val hasPrecedingSpace: Boolean,
+        @SerializedName("attach_to_next_token") val attachToNextToken: Boolean
 )

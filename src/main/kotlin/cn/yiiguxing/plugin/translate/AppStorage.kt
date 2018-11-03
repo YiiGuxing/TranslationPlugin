@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.util.trimToSize
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
@@ -27,6 +28,8 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     @MapAnnotation
     private val languageScores: MutableMap<Lang, Int> = HashMap()
+
+    var lastLanguages: LanguagePair = LanguagePair()
 
     /**
      * 最大历史记录长度

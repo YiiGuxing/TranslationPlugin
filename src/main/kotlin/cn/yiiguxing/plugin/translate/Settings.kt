@@ -92,6 +92,16 @@ class Settings : PersistentStateComponent<Settings> {
     var keepFormat: Boolean = false
 
     /**
+     * 显示词形（有道翻译）
+     */
+    var showWordForms: Boolean = true
+
+    /**
+     * 翻译替换结果唯一时自动替换
+     */
+    var autoReplace: Boolean = false
+
+    /**
      * 状态栏图标
      */
     var foldOriginal: Boolean = false

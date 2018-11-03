@@ -90,9 +90,9 @@ fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSe
         return destination
     }
 
-    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) {
-        splitSentenceTo(it, maxSentenceLength, String::splitBySpace) {
-            splitByLengthTo(it, maxSentenceLength)
+    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) { _ ->
+        splitSentenceTo(destination, maxSentenceLength, String::splitBySpace) { _ ->
+            splitByLengthTo(destination, maxSentenceLength)
         }
     }
 }

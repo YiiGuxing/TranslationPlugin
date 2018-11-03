@@ -5,6 +5,8 @@
  */
 package cn.yiiguxing.plugin.translate
 
+const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
+
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_DISABLE = "#DISABLE"
 const val HTML_DESC_COPY_TO_CLIPBOARD = "#COPY_TO_CLIPBOARD"

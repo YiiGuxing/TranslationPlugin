@@ -60,8 +60,10 @@ object GoogleTranslator : AbstractTranslator() {
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String = UrlBuilder(baseUrl)
             .addQueryParameter("client", "gtx")
-            .addQueryParameters("dt", "t", "bd", "rm")
+            .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
             .addQueryParameter("dj", "1")
+            .addQueryParameter("ie", "UTF-8")
+            .addQueryParameter("oe", "UTF-8")
             .addQueryParameter("sl", srcLang.code)
             .addQueryParameter("tl", targetLang.code)
             .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
@@ -89,10 +91,10 @@ object GoogleTranslator : AbstractTranslator() {
             val jsonObject = jsonElement.asJsonObject
             return when {
                 jsonObject.has("orig") && jsonObject.has("trans") -> {
-                    context.deserialize<TransSentence>(jsonElement, TransSentence::class.java)
+                    context.deserialize<GTransSentence>(jsonElement, GTransSentence::class.java)
                 }
                 jsonObject.has("translit") || jsonObject.has("src_translit") -> {
-                    context.deserialize<TranslitSentence>(jsonElement, TranslitSentence::class.java)
+                    context.deserialize<GTranslitSentence>(jsonElement, GTranslitSentence::class.java)
                 }
                 else -> throw JsonParseException("Cannot deserialize to type GSentence: $jsonElement")
             }
