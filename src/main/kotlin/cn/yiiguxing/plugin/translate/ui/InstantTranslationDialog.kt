@@ -276,7 +276,7 @@ class InstantTranslationDialog(private val project: Project?) :
     }
 
     companion object {
-        private const val NOTIFICATION_DISPLAY_ID = "InstantTranslationDialog"
+        private const val NOTIFICATION_DISPLAY_ID = "Instant Translate Error"
         private val BORDER = LineBorder(JBColor(0x808080, 0x303030))
         private val TOOLBAR_BORDER = SideBorder(JBColor(0x9F9F9F, 0x3C3C3C), SideBorder.TOP)
         private val TOOLBAR_BACKGROUND = JBColor(0xEEF1F3, 0x4E5556)

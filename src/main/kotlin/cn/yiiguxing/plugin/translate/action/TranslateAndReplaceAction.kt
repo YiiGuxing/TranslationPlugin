@@ -109,7 +109,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     private companion object {
 
-        const val NOTIFICATION_DISPLAY_ID = "TranslateAndReplaceAction"
+        const val NOTIFICATION_DISPLAY_ID = "Translate and Replace Error"
 
         /** 谷歌翻译的空格符：`0xA0` */
         const val GT_WHITESPACE_CHARACTER = ' ' // 0xA0
