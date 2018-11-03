@@ -35,6 +35,15 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     override val selectionMode: SelectionMode
         get() = Settings.autoSelectionMode
 
+    override fun onUpdate(e: AnActionEvent): Boolean {
+        val editor = e.editor ?: return false
+        val selectionModel = editor.selectionModel
+        if (selectionModel.hasSelection()) {
+            return selectionModel.selectedText?.any(JAVA_IDENTIFIER_PART_CONDITION) ?: false
+        }
+        return super.onUpdate(e)
+    }
+
     override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
         val project = e.project ?: return
         e.getData(PlatformDataKeys.VIRTUAL_FILE)?.let {
