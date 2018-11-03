@@ -150,7 +150,7 @@ FAQ
 
 更新日志
 --------
-## [v2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.2) (2018-10-31)
+## [v2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.2) (2018-11-03)
 
 - 翻译替换：支持多种语言
 - 有道翻译：显示词形
