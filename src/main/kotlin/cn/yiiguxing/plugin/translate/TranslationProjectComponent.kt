@@ -64,7 +64,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
             val displayId = "${plugin.name} Plugin Update"
             val title = "${plugin.name} plugin updated to v$version"
             val content = "If you find this plugin helpful, please " +
-                    "<b><a href=\"$GITHUB_URL\">give me a star on Github</a>.</b> " +
+                    "<b><a href=\"$GITHUB_URL\">star this project on Github</a>.</b> " +
                     "If you run into any issue, feel free to <b><a href=\"$GITHUB_URL/issues\">raise a issue</a>.</b>" +
                     "<br/><br/>Change notes:<br/>${plugin.changeNotes}"
             NotificationGroup(displayId, NotificationDisplayType.STICKY_BALLOON, false)
