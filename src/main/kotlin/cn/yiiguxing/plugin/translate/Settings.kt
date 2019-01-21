@@ -114,6 +114,10 @@ class Settings : PersistentStateComponent<Settings> {
      * 自动取词模式
      */
     var autoSelectionMode: SelectionMode = SelectionMode.INCLUSIVE
+    /**
+     * 目标语言选择
+     */
+    var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
     @Transient
     private val settingsChangePublisher: SettingsChangeListener =
@@ -200,6 +204,12 @@ class BaiduTranslateSettings : AppKeySettings(
 
 enum class WindowOption {
     STATUS_ICON
+}
+
+@Suppress("InvalidBundleOrProperty")
+enum class TargetLanguageSelection(val displayName: String) {
+    DEFAULT(message("default")), PRIMARY_LANGUAGE(message("settings.item.primaryLanguage")), LAST(
+            message("settings.item.last"))
 }
 
 interface SettingsChangeListener {

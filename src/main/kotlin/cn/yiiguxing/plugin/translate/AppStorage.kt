@@ -29,7 +29,9 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     @MapAnnotation
     private val languageScores: MutableMap<Lang, Int> = HashMap()
 
-    var lastLanguages: LanguagePair = LanguagePair()
+    val lastLanguages: LanguagePair = LanguagePair()
+
+    val lastInstantLanguages: LanguagePair = LanguagePair()
 
     /**
      * 最大历史记录长度

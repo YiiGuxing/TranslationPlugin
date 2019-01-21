@@ -94,7 +94,7 @@ class InstantTranslationDialog(private val project: Project?) :
 
         val itemListener = ItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                AppStorage.lastLanguages.let { pair ->
+                AppStorage.lastInstantLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
                 }
@@ -104,7 +104,7 @@ class InstantTranslationDialog(private val project: Project?) :
         sourceLangComboBox.addItemListener(itemListener)
         targetLangComboBox.addItemListener(itemListener)
 
-        updateLanguages(AppStorage.lastLanguages)
+        updateLanguages(AppStorage.lastInstantLanguages)
     }
 
     private fun initTextAreas() {

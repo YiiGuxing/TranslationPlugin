@@ -36,6 +36,16 @@ interface Presenter {
     data class Request(val text: String, val srcLang: Lang, val targetLang: Lang, val translatorId: String)
 
     /**
+     * 返回目标语言
+     */
+    fun getTargetLang(text: String): Lang
+
+    /**
+     * 更新最后使用的语言
+     */
+    fun updateLastLanguages(srcLang: Lang, targetLang: Lang)
+
+    /**
      * 翻译
      */
     fun translate(text: String, srcLang: Lang, targetLang: Lang)
