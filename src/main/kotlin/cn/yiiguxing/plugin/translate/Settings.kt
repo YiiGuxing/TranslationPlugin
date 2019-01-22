@@ -89,7 +89,7 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 分隔符
      */
-    var separators: String = "_ "
+    var separators: String = "_- "
 
     /**
      * 翻译时保留文本格式
