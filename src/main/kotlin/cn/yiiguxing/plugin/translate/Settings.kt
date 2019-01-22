@@ -87,6 +87,11 @@ class Settings : PersistentStateComponent<Settings> {
     var ignoreRegExp: String? = null
 
     /**
+     * 分隔符
+     */
+    var separators: String = "_ "
+
+    /**
      * 翻译时保留文本格式
      */
     var keepFormat: Boolean = false

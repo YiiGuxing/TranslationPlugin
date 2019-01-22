@@ -221,14 +221,13 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
             val camel = LinkedHashSet<LookupElement>()
             val pascal = LinkedHashSet<LookupElement>()
-            val lowerWithUnder = LinkedHashSet<LookupElement>()
-            val withSpace = LinkedHashSet<LookupElement>()
             val original = LinkedHashSet<LookupElement>()
 
             val camelBuilder = StringBuilder()
             val pascalBuilder = StringBuilder()
-            val lowerWithUnderBuilder = StringBuilder()
-            val withSpaceBuilder = StringBuilder()
+
+            val lowerWithSeparatorBuilders = Settings.separators.map { it to StringBuilder() }
+            val lowerWithSeparator = Settings.separators.map { it to LinkedHashSet<LookupElement>() }.toMap()
 
             for (item in items) {
                 original.add(LookupElementBuilder.create(item))
@@ -243,22 +242,23 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
                 camelBuilder.setLength(0)
                 pascalBuilder.setLength(0)
-                lowerWithUnderBuilder.setLength(0)
-                withSpaceBuilder.setLength(0)
+                lowerWithSeparatorBuilders.forEach { it.second.setLength(0) }
 
-                build(words, camelBuilder, pascalBuilder, lowerWithUnderBuilder, withSpaceBuilder)
+                build(words, camelBuilder, pascalBuilder, lowerWithSeparatorBuilders)
 
                 camel.add(LookupElementBuilder.create(camelBuilder.toString()))
                 pascal.add(LookupElementBuilder.create(pascalBuilder.toString()))
-                lowerWithUnder.add(LookupElementBuilder.create(lowerWithUnderBuilder.toString()))
-                withSpace.add(LookupElementBuilder.create(withSpaceBuilder.toString()))
+                for ((separator, builder) in lowerWithSeparatorBuilders) {
+                    lowerWithSeparator[separator]!!.add(LookupElementBuilder.create(builder.toString()))
+                }
             }
 
             return LinkedHashSet<LookupElement>().apply {
                 addAll(camel)
                 addAll(pascal)
-                addAll(lowerWithUnder)
-                addAll(withSpace)
+                for ((_, elements) in lowerWithSeparator) {
+                    addAll(elements)
+                }
                 addAll(original)
             }.toList()
         }
@@ -266,28 +266,21 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         fun build(words: List<String>,
                   camel: StringBuilder,
                   pascal: StringBuilder,
-                  lowerWithUnder: StringBuilder,
-                  withSpace: StringBuilder) {
+                  lowerWithSeparator: List<Pair<Char, StringBuilder>>) {
             for (i in words.indices) {
-                var word = words[i]
+                val word = if (i == 0) words[i].sanitizeJavaIdentifierStart() else words[i]
+                val lowerCase = word.toLowerCase()
 
-                if (i > 0) {
-                    lowerWithUnder.append('_')
-                    withSpace.append(' ')
-                }
-
-                withSpace.append(word)
-
-                if (i == 0) {
-                    word = word.sanitizeJavaIdentifierStart()
+                for ((separator, builder) in lowerWithSeparator) {
+                    if (i > 0) {
+                        builder.append(separator)
+                    }
+                    builder.append(lowerCase)
                 }
 
                 val capitalized = StringUtil.capitalizeWithJavaBeanConvention(word)
-                val lowerCase = word.toLowerCase()
-
                 camel.append(if (i == 0) lowerCase else capitalized)
                 pascal.append(capitalized)
-                lowerWithUnder.append(lowerCase)
             }
         }
 

@@ -20,6 +20,8 @@ import java.awt.event.ItemEvent
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
+import javax.swing.text.AttributeSet
+import javax.swing.text.PlainDocument
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 
@@ -41,6 +43,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         setTitles()
         setListeners()
+        initSeparatorsTextField()
         initSelectionModeComboBox()
         initTargetLangSelectionComboBox()
     }
@@ -88,6 +91,23 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                                        selected: Boolean,
                                        hasFocus: Boolean) {
                     setText(value.displayName)
+                }
+            }
+        }
+    }
+
+    private fun initSeparatorsTextField() {
+        separatorsTextField.document = object : PlainDocument() {
+            override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
+                val text = getText(0, length)
+                val stringToInsert = str
+                        ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
+                        ?.toSet()
+                        ?.take(10 - length)
+                        ?.joinToString("")
+                        ?: return
+                if (stringToInsert.isNotEmpty()) {
+                    super.insertString(offset, stringToInsert, attr)
                 }
             }
         }
@@ -183,6 +203,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                     || appStorage.maxHistorySize != getMaxHistorySize()
                     || settings.autoSelectionMode != selectionModeComboBox.currentMode
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
+                    || settings.separators != separatorsTextField.text
                     || settings.ignoreRegExp != ignoreRegExp.text
                     || settings.isOverrideFont != fontCheckBox.isSelected
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
@@ -214,6 +235,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = selectionModeComboBox.currentMode
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
+            separators = separatorsTextField.text
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
@@ -231,6 +253,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         val settings = settings
         ignoreRegExp.text = settings.ignoreRegExp ?: ""
+        separatorsTextField.text = settings.separators
         fontCheckBox.isSelected = settings.isOverrideFont
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal

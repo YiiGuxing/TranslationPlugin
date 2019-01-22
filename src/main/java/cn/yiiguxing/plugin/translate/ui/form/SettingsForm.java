@@ -25,6 +25,7 @@ public class SettingsForm {
     private JPanel mTranslateSettingsPanel;
     private ComboBox<SelectionMode> mSelectionMode;
     private ComboBox<TargetLanguageSelection> mTargetLangSelectionComboBox;
+    private JTextField mSeparatorsTextField;
     private EditorTextField mIgnoreRegExp;
     private JButton mCheckIgnoreRegExpButton;
     private JLabel mIgnoreRegExpMsg;
@@ -105,6 +106,11 @@ public class SettingsForm {
     @NotNull
     public final ComboBox<TargetLanguageSelection> getTargetLangSelectionComboBox() {
         return mTargetLangSelectionComboBox;
+    }
+
+    @NotNull
+    public final JTextField getSeparatorsTextField() {
+        return mSeparatorsTextField;
     }
 
     @NotNull
