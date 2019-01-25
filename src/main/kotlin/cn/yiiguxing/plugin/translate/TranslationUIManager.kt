@@ -113,9 +113,11 @@ class TranslationUIManager private constructor() {
 
         private fun checkThread() = checkDispatchThread(TranslationUIManager::class.java)
 
-        private inline fun <D : DialogWrapper> showDialog(project: Project?,
-                                                          cache: MutableMap<Project?, D>,
-                                                          dialog: () -> D): D {
+        private inline fun <D : DialogWrapper> showDialog(
+            project: Project?,
+            cache: MutableMap<Project?, D>,
+            dialog: () -> D
+        ): D {
             checkThread()
             return cache.getOrPut(project) {
                 dialog().also {

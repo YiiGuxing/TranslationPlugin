@@ -47,7 +47,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     @Transient
     private val dataChangePublisher: HistoriesChangedListener =
-            ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
+        ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
 
     override fun getState(): AppStorage = this
 
@@ -136,9 +136,7 @@ interface HistoriesChangedListener {
     fun onHistoryItemChanged(newHistory: String)
 
     companion object {
-        val TOPIC: Topic<HistoriesChangedListener> = Topic.create(
-                "TranslateHistoriesChanged",
-                HistoriesChangedListener::class.java
-        )
+        val TOPIC: Topic<HistoriesChangedListener> =
+            Topic.create("TranslateHistoriesChanged", HistoriesChangedListener::class.java)
     }
 }
