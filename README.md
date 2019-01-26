@@ -150,10 +150,11 @@ FAQ
 
 更新日志
 --------
-## [v2.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.2) (2018-11-03)
+## [v2.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.2) (2019-01-26)
 
-- 翻译替换：支持多种语言
-- 有道翻译：显示词形
+- 翻译：添加目标语言选择配置
+- 翻译替换：添加分隔符配置
+- 翻译替换：扩大使用范围，任何文本输入框都可以使用了
 
 [完整的更新历史记录](./CHANGELOG.md)
 
