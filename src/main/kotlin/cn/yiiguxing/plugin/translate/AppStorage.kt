@@ -29,7 +29,9 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     @MapAnnotation
     private val languageScores: MutableMap<Lang, Int> = HashMap()
 
-    var lastLanguages: LanguagePair = LanguagePair()
+    val lastLanguages: LanguagePair = LanguagePair()
+
+    val lastInstantLanguages: LanguagePair = LanguagePair()
 
     /**
      * 最大历史记录长度
@@ -45,7 +47,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     @Transient
     private val dataChangePublisher: HistoriesChangedListener =
-            ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
+        ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
 
     override fun getState(): AppStorage = this
 
@@ -134,9 +136,7 @@ interface HistoriesChangedListener {
     fun onHistoryItemChanged(newHistory: String)
 
     companion object {
-        val TOPIC: Topic<HistoriesChangedListener> = Topic.create(
-                "TranslateHistoriesChanged",
-                HistoriesChangedListener::class.java
-        )
+        val TOPIC: Topic<HistoriesChangedListener> =
+            Topic.create("TranslateHistoriesChanged", HistoriesChangedListener::class.java)
     }
 }

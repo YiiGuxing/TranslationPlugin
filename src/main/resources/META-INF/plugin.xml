@@ -42,9 +42,11 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>翻译替换：支持多种语言</li>
-        <li>有道翻译：显示词形</li>
+        <li>翻译：添加目标语言选择配置</li>
+        <li>翻译替换：添加分隔符配置</li>
+        <li>翻译替换：扩大使用范围，任何文本输入框都可以使用了</li>
       </ul>
+      <p><img src="https://user-images.githubusercontent.com/10737066/51783398-0bd5e180-2174-11e9-9d12-6d2824226541.gif"/></p>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
 

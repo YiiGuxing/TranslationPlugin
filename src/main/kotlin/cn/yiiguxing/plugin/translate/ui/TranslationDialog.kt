@@ -6,7 +6,10 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.copyToClipboard
+import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
@@ -46,6 +49,7 @@ class TranslationDialog(private val project: Project?)
 
     private var ignoreLanguageEvent: Boolean = false
     private var ignoreInputEvent: Boolean = false
+    private var ignoreHistoryEvent: Boolean = false
 
     private var _disposed: Boolean = false
     override val disposed: Boolean get() = _disposed
@@ -218,6 +222,7 @@ class TranslationDialog(private val project: Project?)
                             targetLangComboBox -> sourceLangComboBox.swap(old, it.item)
                         }
 
+                        presenter.updateLastLanguages(sourceLangComboBox.selected!!, targetLangComboBox.selected!!)
                         updateSwitchButtonEnable()
                         onTranslate()
                     }
@@ -412,7 +417,7 @@ class TranslationDialog(private val project: Project?)
         }
 
         val srcLang: Lang = Lang.AUTO
-        val targetLang: Lang = if (text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else presenter.primaryLanguage
+        val targetLang = presenter.getTargetLang(text)
         translateInternal(text, srcLang, targetLang)
     }
 
@@ -446,7 +451,9 @@ class TranslationDialog(private val project: Project?)
     private fun translateInternal(text: String, srcLang: Lang, targetLang: Lang) {
         sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
         targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
+        ignoreHistoryEvent = true
         presenter.translate(text, srcLang, targetLang)
+        ignoreHistoryEvent = false
     }
 
     private fun ComboBox<Lang>.setSelectLangIgnoreEvent(lang: Lang) {
@@ -480,7 +487,10 @@ class TranslationDialog(private val project: Project?)
             ignoreInputEvent = true
             inputComboBox.selectedItem = newHistory
             ignoreInputEvent = false
-            translate(newHistory)
+
+            if (!ignoreHistoryEvent) {
+                translate(newHistory)
+            }
         }
     }
 

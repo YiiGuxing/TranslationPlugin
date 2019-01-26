@@ -87,6 +87,11 @@ class Settings : PersistentStateComponent<Settings> {
     var ignoreRegExp: String? = null
 
     /**
+     * 分隔符
+     */
+    var separators: String = "_- "
+
+    /**
      * 翻译时保留文本格式
      */
     var keepFormat: Boolean = false
@@ -114,10 +119,14 @@ class Settings : PersistentStateComponent<Settings> {
      * 自动取词模式
      */
     var autoSelectionMode: SelectionMode = SelectionMode.INCLUSIVE
+    /**
+     * 目标语言选择
+     */
+    var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
     @Transient
     private val settingsChangePublisher: SettingsChangeListener =
-            ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
+        ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
 
     override fun getState(): Settings = this
 
@@ -149,8 +158,10 @@ private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default,
-                                   var useTranslateGoogleCom: Boolean = Locale.getDefault() != Locale.CHINA)
+data class GoogleTranslateSettings(
+    var primaryLanguage: Lang = Lang.default,
+    var useTranslateGoogleCom: Boolean = Locale.getDefault() != Locale.CHINA
+)
 
 /**
  * @property primaryLanguage    主要语言
@@ -159,11 +170,11 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default,
  */
 @Tag("app-key")
 abstract class AppKeySettings(
-        var primaryLanguage: Lang,
-        var appId: String = "",
-        var isAppKeyConfigured: Boolean = false,
-        securityName: String,
-        securityKey: String
+    var primaryLanguage: Lang,
+    var appId: String = "",
+    var isAppKeyConfigured: Boolean = false,
+    securityName: String,
+    securityKey: String
 ) {
     private var _appKey: String?  by PasswordSafeDelegate(securityName, securityKey)
         @Transient get
@@ -186,20 +197,29 @@ abstract class AppKeySettings(
  */
 @Tag("youdao-translate")
 class YoudaoTranslateSettings : AppKeySettings(
-        YoudaoTranslator.defaultLangForLocale,
-        securityName = YOUDAO_SERVICE_NAME,
-        securityKey = YOUDAO_APP_KEY)
+    YoudaoTranslator.defaultLangForLocale,
+    securityName = YOUDAO_SERVICE_NAME,
+    securityKey = YOUDAO_APP_KEY
+)
 
 /**
  * 百度翻译选项
  */
 class BaiduTranslateSettings : AppKeySettings(
-        BaiduTranslator.defaultLangForLocale,
-        securityName = BAIDU_SERVICE_NAME,
-        securityKey = BAIDU_APP_KEY)
+    BaiduTranslator.defaultLangForLocale,
+    securityName = BAIDU_SERVICE_NAME,
+    securityKey = BAIDU_APP_KEY
+)
 
 enum class WindowOption {
     STATUS_ICON
+}
+
+@Suppress("InvalidBundleOrProperty")
+enum class TargetLanguageSelection(val displayName: String) {
+    DEFAULT(message("default")),
+    PRIMARY_LANGUAGE(message("settings.item.primaryLanguage")),
+    LAST(message("settings.item.last"))
 }
 
 interface SettingsChangeListener {
@@ -211,9 +231,7 @@ interface SettingsChangeListener {
     fun onWindowOptionsChanged(settings: Settings, option: WindowOption) {}
 
     companion object {
-        val TOPIC: Topic<SettingsChangeListener> = Topic.create(
-                "TranslationSettingsChanged",
-                SettingsChangeListener::class.java
-        )
+        val TOPIC: Topic<SettingsChangeListener> =
+            Topic.create("TranslationSettingsChanged", SettingsChangeListener::class.java)
     }
 }

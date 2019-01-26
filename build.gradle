@@ -2,19 +2,17 @@ import org.apache.tools.ant.filters.EscapeUnicode
 
 buildscript {
     repositories {
-        maven { url = 'https://maven.aliyun.com/repository/public' }
         jcenter()
         mavenCentral()
     }
 }
 
 plugins {
-    id "org.jetbrains.intellij" version "0.3.11"
-    id "org.jetbrains.kotlin.jvm" version "1.2.71"
+    id "org.jetbrains.intellij" version "0.4.2"
+    id 'org.jetbrains.kotlin.jvm' version '1.3.20'
 }
 
 repositories {
-    maven { url = 'https://maven.aliyun.com/repository/public' }
     jcenter()
     mavenCentral()
 }
@@ -58,5 +56,15 @@ tasks.withType(JavaCompile) {
 tasks.withType(ProcessResources) {
     filesMatching('**/*.properties') {
         filter EscapeUnicode
+    }
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }

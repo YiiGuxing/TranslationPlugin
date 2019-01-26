@@ -33,18 +33,20 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
         val displayId = "${App.plugin.name} App Key"
         val group = NotificationGroup(displayId, NotificationDisplayType.STICKY_BALLOON, true)
         val title = message("notification.title.settings.appKey")
-        val content = message("notification.content.settings.appKey", HTML_DESCRIPTION_DISABLE,
-                HTML_DESCRIPTION_SETTINGS)
+        val content = message(
+            "notification.content.settings.appKey", HTML_DESCRIPTION_DISABLE,
+            HTML_DESCRIPTION_SETTINGS
+        )
         group.createNotification(title, content, NotificationType.WARNING,
-                object : NotificationListener.Adapter() {
-                    override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
-                        notification.expire()
-                        when (hyperlinkEvent.description) {
-                            HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(myProject)
-                            HTML_DESCRIPTION_DISABLE -> Settings.isDisableAppKeyNotification = true
-                        }
+            object : NotificationListener.Adapter() {
+                override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
+                    notification.expire()
+                    when (hyperlinkEvent.description) {
+                        HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(myProject)
+                        HTML_DESCRIPTION_DISABLE -> Settings.isDisableAppKeyNotification = true
                     }
                 }
+            }
         ).show(myProject)
     }
 
@@ -64,12 +66,12 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
             val displayId = "${plugin.name} Plugin Update"
             val title = "${plugin.name} plugin updated to v$version"
             val content = "If you find this plugin helpful, please " +
-                    "<b><a href=\"$GITHUB_URL\">give me a star on Github</a>.</b> " +
+                    "<b><a href=\"$GITHUB_URL\">star this project on Github</a>.</b> " +
                     "If you run into any issue, feel free to <b><a href=\"$GITHUB_URL/issues\">raise a issue</a>.</b>" +
                     "<br/><br/>Change notes:<br/>${plugin.changeNotes}"
             NotificationGroup(displayId, NotificationDisplayType.STICKY_BALLOON, false)
-                    .createNotification(title, content, NotificationType.INFORMATION, URL_OPENING_LISTENER)
-                    .show(myProject)
+                .createNotification(title, content, NotificationType.INFORMATION, URL_OPENING_LISTENER)
+                .show(myProject)
             properties.setValue(VERSION_PROPERTY, version)
         }
     }

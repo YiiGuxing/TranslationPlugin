@@ -325,9 +325,9 @@ abstract class TranslationPanel<T : JComponent>(
             }
             val translate = JBMenuItem("Translate", Icons.Translate).apply {
                 disabledIcon = Icons.Translate
-                addActionListener { _ ->
+                addActionListener {
                     translation?.let { translation ->
-                        selectedText.takeUnless { it.isNullOrBlank() }?.let { selectedText ->
+                        selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->
                             lateinit var src: Lang
                             lateinit var target: Lang
                             if (this@setupPopupMenu === originalViewer) {

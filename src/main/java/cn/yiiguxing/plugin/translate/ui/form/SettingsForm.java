@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.form;
 
 import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
+import cn.yiiguxing.plugin.translate.TargetLanguageSelection;
 import cn.yiiguxing.plugin.translate.ui.settings.TranslatorSettingsContainer;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
 import com.intellij.openapi.project.Project;
@@ -23,6 +24,8 @@ public class SettingsForm {
     private JPanel mWholePanel;
     private JPanel mTranslateSettingsPanel;
     private ComboBox<SelectionMode> mSelectionMode;
+    private ComboBox<TargetLanguageSelection> mTargetLangSelectionComboBox;
+    private JTextField mSeparatorsTextField;
     private EditorTextField mIgnoreRegExp;
     private JButton mCheckIgnoreRegExpButton;
     private JLabel mIgnoreRegExpMsg;
@@ -98,6 +101,16 @@ public class SettingsForm {
     @NotNull
     public final ComboBox<SelectionMode> getSelectionModeComboBox() {
         return mSelectionMode;
+    }
+
+    @NotNull
+    public final ComboBox<TargetLanguageSelection> getTargetLangSelectionComboBox() {
+        return mTargetLangSelectionComboBox;
+    }
+
+    @NotNull
+    public final JTextField getSeparatorsTextField() {
+        return mSeparatorsTextField;
     }
 
     @NotNull

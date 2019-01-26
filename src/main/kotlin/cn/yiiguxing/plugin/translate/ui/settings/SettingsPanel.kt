@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TargetLanguageSelection
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
@@ -19,6 +20,8 @@ import java.awt.event.ItemEvent
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
+import javax.swing.text.AttributeSet
+import javax.swing.text.PlainDocument
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 
@@ -40,7 +43,9 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         setTitles()
         setListeners()
+        initSeparatorsTextField()
         initSelectionModeComboBox()
+        initTargetLangSelectionComboBox()
     }
 
     @Suppress("InvalidBundleOrProperty")
@@ -56,7 +61,10 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         with(selectionModeComboBox) {
             model = CollectionComboBoxModel(listOf(SelectionMode.INCLUSIVE, SelectionMode.EXCLUSIVE))
             renderer = object : ListCellRendererWrapper<SelectionMode>() {
-                override fun customize(list: JList<*>, value: SelectionMode, index: Int, selected: Boolean,
+                override fun customize(list: JList<*>,
+                                       value: SelectionMode,
+                                       index: Int,
+                                       selected: Boolean,
                                        hasFocus: Boolean) {
                     when (value) {
                         SelectionMode.EXCLUSIVE -> {
@@ -68,6 +76,38 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                             setToolTipText(message("settings.tooltip.inclusive"))
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun initTargetLangSelectionComboBox() {
+        with(targetLangSelectionComboBox) {
+            model = CollectionComboBoxModel(TargetLanguageSelection.values().asList())
+            renderer = object : ListCellRendererWrapper<TargetLanguageSelection>() {
+                override fun customize(list: JList<*>,
+                                       value: TargetLanguageSelection,
+                                       index: Int,
+                                       selected: Boolean,
+                                       hasFocus: Boolean) {
+                    setText(value.displayName)
+                }
+            }
+        }
+    }
+
+    private fun initSeparatorsTextField() {
+        separatorsTextField.document = object : PlainDocument() {
+            override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
+                val text = getText(0, length)
+                val stringToInsert = str
+                        ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
+                        ?.toSet()
+                        ?.take(10 - length)
+                        ?.joinToString("")
+                        ?: return
+                if (stringToInsert.isNotEmpty()) {
+                    super.insertString(offset, stringToInsert, attr)
                 }
             }
         }
@@ -162,6 +202,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             return transPanelContainer.isModified
                     || appStorage.maxHistorySize != getMaxHistorySize()
                     || settings.autoSelectionMode != selectionModeComboBox.currentMode
+                    || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
+                    || settings.separators != separatorsTextField.text
                     || settings.ignoreRegExp != ignoreRegExp.text
                     || settings.isOverrideFont != fontCheckBox.isSelected
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
@@ -192,6 +234,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             primaryFontFamily = primaryFontComboBox.fontName
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = selectionModeComboBox.currentMode
+            targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
+            separators = separatorsTextField.text
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
@@ -209,6 +253,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         val settings = settings
         ignoreRegExp.text = settings.ignoreRegExp ?: ""
+        separatorsTextField.text = settings.separators
         fontCheckBox.isSelected = settings.isOverrideFont
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
@@ -222,6 +267,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
 
         maxHistoriesSizeComboBox.editor.item = Integer.toString(appStorage.maxHistorySize)
         selectionModeComboBox.selected = settings.autoSelectionMode
+        targetLangSelectionComboBox.selected = settings.targetLanguageSelection
     }
 
     companion object {
