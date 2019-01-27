@@ -31,10 +31,10 @@ import javax.swing.event.DocumentEvent
  * Created by Yii.Guxing on 2018/06/18
  */
 class InstantTranslationDialog(private val project: Project?) :
-        InstantTranslationDialogForm(project),
-        View,
-        Disposable,
-        SettingsChangeListener {
+    InstantTranslationDialogForm(project),
+    View,
+    Disposable,
+    SettingsChangeListener {
 
     private val presenter: Presenter = TranslationPresenter(this, false)
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
@@ -58,10 +58,10 @@ class InstantTranslationDialog(private val project: Project?) :
         peer.setContentPane(createCenterPanel())
 
         ApplicationManager
-                .getApplication()
-                .messageBus
-                .connect(this)
-                .subscribe(SettingsChangeListener.TOPIC, this)
+            .getApplication()
+            .messageBus
+            .connect(this)
+            .subscribe(SettingsChangeListener.TOPIC, this)
     }
 
     private fun initComponents() {
@@ -146,9 +146,9 @@ class InstantTranslationDialog(private val project: Project?) :
             setHoveringIcon(Icons.CopyAllHovering)
             setListener({ _, _ ->
                 val textToCopy = translationTextArea
-                        .selectedText
-                        .takeUnless { it.isNullOrEmpty() }
-                        ?: translationTextArea.text
+                    .selectedText
+                    .takeUnless { it.isNullOrEmpty() }
+                    ?: translationTextArea.text
                 if (!textToCopy.isNullOrEmpty()) {
                     CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
                 }
@@ -158,7 +158,7 @@ class InstantTranslationDialog(private val project: Project?) :
 
     private fun initSwapButton() = with(swapButton) {
         icon = Icons.Swap2
-        addActionListener { _ ->
+        addActionListener {
             val srcLang = lastTranslation?.srcLang ?: sourceLang
             val targetLang = lastTranslation?.targetLang ?: targetLang
 
@@ -225,8 +225,10 @@ class InstantTranslationDialog(private val project: Project?) :
         if (currentRequest == request) {
             clearTranslation()
         }
-        Notifications.showErrorNotification(project, NOTIFICATION_DISPLAY_ID,
-                "Translate Error", errorMessage, throwable)
+        Notifications.showErrorNotification(
+            project, NOTIFICATION_DISPLAY_ID,
+            "Translate Error", errorMessage, throwable
+        )
     }
 
     override fun onTranslatorChanged(settings: Settings, translatorId: String) {
@@ -238,14 +240,14 @@ class InstantTranslationDialog(private val project: Project?) :
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
                 val srcSelected = (languagePair?.source ?: selected)
-                        ?.takeIf { src.contains(it) }
-                        ?: src.first()
+                    ?.takeIf { src.contains(it) }
+                    ?: src.first()
                 model = LanguageListModel(src, srcSelected)
             }
             targetLangComboBox.apply {
                 val targetSelected = (languagePair?.target ?: selected)
-                        ?.takeIf { target.contains(it) }
-                        ?: Lang.ENGLISH
+                    ?.takeIf { target.contains(it) }
+                    ?: Lang.ENGLISH
                 model = LanguageListModel(target, targetSelected)
             }
         }
@@ -254,9 +256,9 @@ class InstantTranslationDialog(private val project: Project?) :
     override fun show() {
         if (!isShowing) {
             super.show()
-        } else {
-            focusManager.requestFocus(window, true)
         }
+
+        focusManager.requestFocus(inputTextArea, true)
     }
 
     fun close() {
