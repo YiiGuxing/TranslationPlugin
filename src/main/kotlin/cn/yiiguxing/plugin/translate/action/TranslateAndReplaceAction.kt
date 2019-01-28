@@ -26,12 +26,10 @@ import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.ReadonlyStatusHandler
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.JBColor
 import java.lang.ref.WeakReference
 import java.util.*
@@ -65,7 +63,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
     override fun onUpdate(e: AnActionEvent): Boolean {
-        val editor = e.editor ?: return false
+        val editor = e.editor?.takeIf { it.isWritable } ?: return false
         val selectionModel = editor.selectionModel
         if (selectionModel.hasSelection()) {
             return selectionModel.selectedText?.any(JAVA_IDENTIFIER_PART_CONDITION) ?: false
@@ -73,15 +71,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         return super.onUpdate(e)
     }
 
-    override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
-        val project = e.project ?: return
-        e.getData(PlatformDataKeys.VIRTUAL_FILE)?.let {
-            if (it.isReadOnly(project)) {
-                return
-            }
-        }
-
-        val language = e.getData(LangDataKeys.LANGUAGE)
+    override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
+        val language = event.getData(LangDataKeys.LANGUAGE)
         val editorRef = WeakReference(editor)
         editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
@@ -125,7 +116,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                         override fun onError(message: String, throwable: Throwable) {
                             editorRef.get()?.let { editor ->
                                 invokeLater {
-                                    editor.showLookup(selectionRange, text, emptyList())
+                                    if (editor is TextComponentEditor) {
+                                        editor.showListPopup(selectionRange, text, emptyList())
+                                    } else {
+                                        editor.showLookup(selectionRange, text, emptyList())
+                                    }
                                 }
                                 Notifications.showErrorNotification(
                                     editor.project,
@@ -158,11 +153,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             effectColor = JBColor(0xFF0000, 0xFF0000)
         }
 
+        val Editor.isWritable: Boolean
+            get() = project?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) } ?: false
+
         fun String.fixWhitespace() = replace(GT_WHITESPACE_CHARACTER, WHITESPACE_CHARACTER)
 
-        fun VirtualFile.isReadOnly(project: Project): Boolean {
-            return ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(this).hasReadonlyFiles()
-        }
 
         fun Editor.canShowPopup(selectionRange: TextRange, targetText: String): Boolean {
             return !isDisposed
@@ -196,14 +191,25 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             return true
         }
 
-        fun Editor.showLookup(selectionRange: TextRange, targetText: String, elementsToReplace: List<String>) {
+        fun Editor.beforeShowPopup(
+            selectionRange: TextRange,
+            targetText: String,
+            elementsToReplace: List<String>
+        ): Boolean {
             if (!canShowPopup(selectionRange, targetText)) {
-                return
+                return false
             }
             if (tryReplace(selectionRange, elementsToReplace)) {
-                return
+                return false
             }
             if (!checkSelection(selectionRange)) {
+                return false
+            }
+            return true
+        }
+
+        fun Editor.showLookup(selectionRange: TextRange, targetText: String, elementsToReplace: List<String>) {
+            if (!beforeShowPopup(selectionRange, targetText, elementsToReplace)) {
                 return
             }
 
@@ -266,13 +272,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun TextComponentEditor.showListPopup(selectionRange: TextRange, targetText: String, elements: List<String>) {
-            if (!canShowPopup(selectionRange, targetText)) {
-                return
-            }
-            if (tryReplace(selectionRange, elements)) {
-                return
-            }
-            if (!checkSelection(selectionRange)) {
+            if (!beforeShowPopup(selectionRange, targetText, elements)) {
                 return
             }
 
