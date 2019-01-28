@@ -32,11 +32,11 @@ abstract class AutoSelectAction(
     /**
      * 执行操作
      *
-     * @param e              事件
+     * @param event          事件
      * @param editor         编辑器
      * @param selectionRange 取词的范围
      */
-    protected open fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {}
+    protected open fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {}
 
     protected open val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 

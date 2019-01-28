@@ -31,7 +31,7 @@ open class TranslateAction(checkSelection: Boolean = false, icon: Icon? = null) 
     override val selectionMode
         get() = SelectionMode.INCLUSIVE
 
-    override fun onActionPerformed(e: AnActionEvent, editor: Editor, selectionRange: TextRange) {
+    override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
         val project = editor.project ?: return
         editor.document.getText(selectionRange).processBeforeTranslate()?.let { text ->
             val highlightManager = HighlightManager.getInstance(project)
