@@ -8,6 +8,7 @@
 
 package cn.yiiguxing.plugin.translate.ui
 
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
@@ -38,26 +39,37 @@ open class SpeedSearchListPopupStep<T> : BaseListPopupStep<T> {
 
 }
 
-inline fun <T> TextComponentEditor.showListPopup(
+inline fun <T> Editor.showListPopup(
     step: ListPopupStep<T>,
     maxRowCount: Int = -1,
     init: (ListPopup) -> Unit = {}
-): ListPopup = JBPopupFactory
-    .getInstance()
-    .createListPopup(step, maxRowCount)
-    .apply {
+): ListPopup {
+    val factory = JBPopupFactory.getInstance()
+    val popup = factory.createListPopup(step, maxRowCount)
+
+    val minWidth = if (this is TextComponentEditor) {
         val contentComponent = contentComponent
-        val minWidth = if (contentComponent is JTextField) {
+        if (contentComponent is JTextField) {
             contentComponent.width -
                     with(contentComponent.insets) { left + right } -
                     with(contentComponent.margin) { left + right } +
                     JBUI.scale(2)
         } else JBUI.scale(150)
-        setMinimumSize(Dimension(minWidth, 0))
-        setRequestFocus(true)
-        init(this)
-        show(guessBestPopupLocation)
+    } else {
+        JBUI.scale(150)
     }
+    popup.setMinimumSize(Dimension(minWidth, 0))
+    popup.setRequestFocus(true)
+    init(popup)
+
+    if (this is TextComponentEditor) {
+        popup.show(guessBestPopupLocation)
+    } else {
+        popup.show(factory.guessBestPopupLocation(this))
+    }
+
+    return popup
+}
 
 
 val TextComponentEditor.guessBestPopupLocation: RelativePoint

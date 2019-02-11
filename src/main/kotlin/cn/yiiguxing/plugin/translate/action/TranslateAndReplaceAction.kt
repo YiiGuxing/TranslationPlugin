@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.Translation
@@ -77,11 +78,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?.let { text ->
-                fun translate(targetLang: Lang) {
+                fun translate(targetLang: Lang, reTranslate: Boolean = false) {
                     TranslateService.translate(text, Lang.AUTO, targetLang, object : TranslateListener {
                         override fun onSuccess(translation: Translation) {
                             val primaryLanguage = TranslateService.translator.primaryLanguage
-                            if (translation.srcLang == Lang.ENGLISH
+                            if (reTranslate && translation.srcLang == Lang.ENGLISH
                                 && primaryLanguage != Lang.ENGLISH
                                 && targetLang == Lang.ENGLISH
                             ) {
@@ -132,10 +133,14 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                     })
                 }
 
-                val targetLang = Lang.AUTO
-                    .takeIf { TranslateService.translator.supportedTargetLanguages.contains(it) }
-                    ?: Lang.ENGLISH
-                translate(targetLang)
+                if (Settings.selectTargetLanguageBeforeReplacement) {
+                    editor.showTargetLanguagesPopup { translate(it) }
+                } else {
+                    val targetLang = Lang.AUTO
+                        .takeIf { TranslateService.translator.supportedTargetLanguages.contains(it) }
+                        ?: Lang.ENGLISH
+                    translate(targetLang, true)
+                }
             }
     }
 
@@ -157,6 +162,29 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             get() = project?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) } ?: false
 
         fun String.fixWhitespace() = replace(GT_WHITESPACE_CHARACTER, WHITESPACE_CHARACTER)
+
+        fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
+            val appStorage = AppStorage
+            val languages = TranslateService.translator.supportedTargetLanguages.sortedByDescending {
+                if (this == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(it)
+            }
+            val index = languages.indexOf(appStorage.lastReplacementTargetLanguage)
+            @Suppress("InvalidBundleOrProperty")
+            val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
+                override fun getTextFor(value: Lang): String = value.langName
+                override fun onChosen(selectedValue: Lang, finalChoice: Boolean): PopupStep<*>? {
+                    onChosen(selectedValue)
+                    appStorage.accumulateLanguageScore(selectedValue)
+                    appStorage.lastReplacementTargetLanguage = selectedValue
+                    return super.onChosen(selectedValue, true)
+                }
+            }
+            if (index >= 0) {
+                step.defaultOptionIndex = index
+            }
+
+            showListPopup(step, 10)
+        }
 
 
         fun Editor.canShowPopup(selectionRange: TextRange, targetText: String): Boolean {

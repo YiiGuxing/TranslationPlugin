@@ -30,8 +30,8 @@ import javax.swing.text.StyleConstants
  *
  * Created by Yii.Guxing on 2018/1/18
  */
-class SettingsPanel(settings: Settings, appStorage: AppStorage)
-    : SettingsForm(settings, appStorage), ConfigurablePanel {
+class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(settings, appStorage),
+    ConfigurablePanel {
 
     private var validRegExp = true
 
@@ -61,11 +61,13 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         with(selectionModeComboBox) {
             model = CollectionComboBoxModel(listOf(SelectionMode.INCLUSIVE, SelectionMode.EXCLUSIVE))
             renderer = object : ListCellRendererWrapper<SelectionMode>() {
-                override fun customize(list: JList<*>,
-                                       value: SelectionMode,
-                                       index: Int,
-                                       selected: Boolean,
-                                       hasFocus: Boolean) {
+                override fun customize(
+                    list: JList<*>,
+                    value: SelectionMode,
+                    index: Int,
+                    selected: Boolean,
+                    hasFocus: Boolean
+                ) {
                     when (value) {
                         SelectionMode.EXCLUSIVE -> {
                             setText("Exclusive")
@@ -85,11 +87,13 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         with(targetLangSelectionComboBox) {
             model = CollectionComboBoxModel(TargetLanguageSelection.values().asList())
             renderer = object : ListCellRendererWrapper<TargetLanguageSelection>() {
-                override fun customize(list: JList<*>,
-                                       value: TargetLanguageSelection,
-                                       index: Int,
-                                       selected: Boolean,
-                                       hasFocus: Boolean) {
+                override fun customize(
+                    list: JList<*>,
+                    value: TargetLanguageSelection,
+                    index: Int,
+                    selected: Boolean,
+                    hasFocus: Boolean
+                ) {
                     setText(value.displayName)
                 }
             }
@@ -101,11 +105,11 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
                 val text = getText(0, length)
                 val stringToInsert = str
-                        ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
-                        ?.toSet()
-                        ?.take(10 - length)
-                        ?.joinToString("")
-                        ?: return
+                    ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
+                    ?.toSet()
+                    ?.take(10 - length)
+                    ?.joinToString("")
+                    ?: return
                 if (stringToInsert.isNotEmpty()) {
                     super.insertString(offset, stringToInsert, attr)
                 }
@@ -213,6 +217,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
                     || settings.keepFormat != keepFormatCheckBox.isSelected
                     || settings.showWordForms != showWordFormsCheckBox.isSelected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
+                    || settings.selectTargetLanguageBeforeReplacement != selectTargetLanguageCheckBox.isSelected
         }
 
 
@@ -241,6 +246,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
             keepFormat = keepFormatCheckBox.isSelected
             showWordForms = showWordFormsCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
+            selectTargetLanguageBeforeReplacement = selectTargetLanguageCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
@@ -248,6 +254,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         }
     }
 
+    @Suppress("Duplicates")
     override fun reset() {
         transPanelContainer.reset()
 
@@ -260,6 +267,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage)
         keepFormatCheckBox.isSelected = settings.keepFormat
         showWordFormsCheckBox.isSelected = settings.showWordForms
         autoReplaceCheckBox.isSelected = settings.autoReplace
+        selectTargetLanguageCheckBox.isSelected = settings.selectTargetLanguageBeforeReplacement
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)

@@ -46,6 +46,7 @@ public class SettingsForm {
     private JBCheckBox mKeepFormat;
     private JBCheckBox mShowWordForms;
     private JBCheckBox mAutoReplace;
+    private JBCheckBox mSelectTargetLanguage;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -211,5 +212,10 @@ public class SettingsForm {
     @NotNull
     public final JBCheckBox getAutoReplaceCheckBox() {
         return mAutoReplace;
+    }
+
+    @NotNull
+    public final JBCheckBox getSelectTargetLanguageCheckBox() {
+        return mSelectTargetLanguage;
     }
 }

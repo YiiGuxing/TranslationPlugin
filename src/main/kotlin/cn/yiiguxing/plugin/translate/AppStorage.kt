@@ -33,6 +33,8 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     val lastInstantLanguages: LanguagePair = LanguagePair()
 
+    var lastReplacementTargetLanguage: Lang? = null
+
     /**
      * 最大历史记录长度
      */
@@ -65,6 +67,15 @@ class AppStorage : PersistentStateComponent<AppStorage> {
      */
     fun setLanguageScore(lang: Lang, score: Int) {
         languageScores[lang] = score
+    }
+
+    /**
+     * 增加语言常用评分
+     */
+    fun accumulateLanguageScore(lang: Lang) {
+        if (lang != Lang.AUTO) {
+            languageScores[lang] = languageScores.getOrDefault(lang, 0) + 1
+        }
     }
 
     private fun trimHistoriesSize(maxSize: Int) {

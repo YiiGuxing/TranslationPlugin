@@ -107,6 +107,11 @@ class Settings : PersistentStateComponent<Settings> {
     var autoReplace: Boolean = false
 
     /**
+     * 翻译替换前选择目标语言
+     */
+    var selectTargetLanguageBeforeReplacement: Boolean = false
+
+    /**
      * 状态栏图标
      */
     var foldOriginal: Boolean = false
