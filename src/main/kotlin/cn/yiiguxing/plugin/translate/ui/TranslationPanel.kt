@@ -46,9 +46,9 @@ import kotlin.properties.Delegates
  * Created by Yii.Guxing on 2017/12/10
  */
 abstract class TranslationPanel<T : JComponent>(
-        private val project: Project?,
-        protected val settings: Settings,
-        private val maxWidth: Int = MAX_WIDTH
+    private val project: Project?,
+    protected val settings: Settings,
+    private val maxWidth: Int = MAX_WIDTH
 ) : Disposable {
 
     protected val sourceLangComponent: T by lazy { onCreateLanguageComponent() }
@@ -155,11 +155,11 @@ abstract class TranslationPanel<T : JComponent>(
 
     private fun createRow(vararg components: JComponent) // 默认的布局组件的间隔太大了，又不能改。。。
             : JPanel = NonOpaquePanel(FlowLayout(FlowLayout.LEFT, 0, 0))
-            .apply {
-                for (c in components) {
-                    add(c)
-                }
+        .apply {
+            for (c in components) {
+                add(c)
             }
+        }
 
     private fun createTTSButton(block: () -> Pair<String, Lang>?): TTSButton {
         val translationPanel = this
@@ -195,11 +195,13 @@ abstract class TranslationPanel<T : JComponent>(
         originalViewer.foreground = JBColor(0xEE6000, 0xCC7832)
         transViewer.foreground = JBColor(0x170591, 0xFFC66D)
         srcTransliterationLabel.foreground = JBColor(
-                Color(0xEE, 0x60, 0x00, 0xA0),
-                Color(0xCC, 0x78, 0x32, 0xA0))
+            Color(0xEE, 0x60, 0x00, 0xA0),
+            Color(0xCC, 0x78, 0x32, 0xA0)
+        )
         transliterationLabel.foreground = JBColor(
-                Color(0x17, 0x05, 0x91, 0xA0),
-                Color(0xFF, 0xC6, 0x6D, 0xA0))
+            Color(0x17, 0x05, 0x91, 0xA0),
+            Color(0xFF, 0xC6, 0x6D, 0xA0)
+        )
         basicExplainViewer.foreground = JBColor(0x2A237A, 0xFFDB89)
         otherExplainLabel.foreground = JBColor(0x707070, 0x808080)
         fixLanguageLinkLabel.foreground = JBColor(0x666666, 0x909090)
@@ -240,47 +242,37 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun initActions() {
-        originalViewer.apply {
-            setupPopupMenu()
-            setFocusListener(transViewer, basicExplainViewer, otherExplainViewer)
-        }
-        transViewer.apply {
-            setupPopupMenu()
-            setFocusListener(originalViewer, basicExplainViewer, otherExplainViewer)
-        }
-        basicExplainViewer.apply {
-            setupPopupMenu()
-            setFocusListener(originalViewer, transViewer, otherExplainViewer)
-        }
-        otherExplainViewer.apply {
-            setupPopupMenu()
-            setFocusListener(originalViewer, transViewer, basicExplainViewer)
-        }
-        dictViewer.apply {
-            onEntryClicked { entry ->
-                translation?.run {
-                    val src: Lang
-                    val target: Lang
-                    when (entry.entryType) {
-                        StyledDictViewer.EntryType.WORD -> {
-                            src = targetLang
-                            target = srcLang
-                        }
-                        StyledDictViewer.EntryType.REVERSE_TRANSLATION -> {
-                            src = srcLang
-                            target = targetLang
-                        }
+        originalViewer.setupPopupMenu()
+        originalViewer.setFocusListener(transViewer, basicExplainViewer, otherExplainViewer)
+        transViewer.setupPopupMenu()
+        transViewer.setFocusListener(originalViewer, basicExplainViewer, otherExplainViewer)
+        basicExplainViewer.setupPopupMenu()
+        basicExplainViewer.setFocusListener(originalViewer, transViewer, otherExplainViewer)
+        otherExplainViewer.setupPopupMenu()
+        otherExplainViewer.setFocusListener(originalViewer, transViewer, basicExplainViewer)
+        dictViewer.onEntryClicked { entry ->
+            translation?.run {
+                val src: Lang
+                val target: Lang
+                when (entry.entryType) {
+                    StyledDictViewer.EntryType.WORD -> {
+                        src = targetLang
+                        target = srcLang
                     }
+                    StyledDictViewer.EntryType.REVERSE_TRANSLATION -> {
+                        src = srcLang
+                        target = targetLang
+                    }
+                }
 
-                    onNewTranslateHandler?.invoke(entry.value, src, target)
-                }
+                onNewTranslateHandler?.invoke(entry.value, src, target)
             }
-            onFoldingExpanded {
-                dictViewerScrollWrapper?.verticalScrollBar?.run {
-                    invokeLater { value = lastScrollValue }
-                }
-                onRevalidateHandler?.invoke()
+        }
+        dictViewer.onFoldingExpanded {
+            dictViewerScrollWrapper?.verticalScrollBar?.run {
+                invokeLater { value = lastScrollValue }
             }
+            onRevalidateHandler?.invoke()
         }
 
         srcTransliterationLabel.setupPopupMenu()
@@ -590,11 +582,11 @@ abstract class TranslationPanel<T : JComponent>(
             with(settings) {
                 if (isOverrideFont) {
                     primaryFont = primaryFontFamily
-                            ?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT.toInt()) }
-                            ?: primaryFont
+                        ?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT.toInt()) }
+                        ?: primaryFont
                     phoneticFont = phoneticFontFamily
-                            ?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC.toInt()) }
-                            ?: phoneticFont
+                        ?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC.toInt()) }
+                        ?: phoneticFont
                 }
             }
 
