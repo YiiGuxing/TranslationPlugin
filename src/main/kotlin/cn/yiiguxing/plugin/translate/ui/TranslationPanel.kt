@@ -331,11 +331,11 @@ abstract class TranslationPanel<T : JComponent>(
                             lateinit var src: Lang
                             lateinit var target: Lang
                             if (this@setupPopupMenu === originalViewer) {
-                                src = translation.targetLang
-                                target = translation.srcLang
-                            } else {
                                 src = translation.srcLang
                                 target = translation.targetLang
+                            } else {
+                                src = translation.targetLang
+                                target = translation.srcLang
                             }
 
                             onNewTranslateHandler?.invoke(selectedText, src, target)
