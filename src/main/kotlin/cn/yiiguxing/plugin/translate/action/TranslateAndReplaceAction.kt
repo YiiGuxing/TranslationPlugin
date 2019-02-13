@@ -64,7 +64,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
     override fun onUpdate(e: AnActionEvent): Boolean {
-        val editor = e.editor?.takeIf { it.isWritable } ?: return false
+        val editor = e.editor?.takeIf { it.document.isWritable } ?: return false
         val selectionModel = editor.selectionModel
         if (selectionModel.hasSelection()) {
             return selectionModel.selectedText?.any(JAVA_IDENTIFIER_PART_CONDITION) ?: false
@@ -73,6 +73,10 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     }
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
+        if (!editor.isWritable) {
+            return
+        }
+
         val language = event.getData(LangDataKeys.LANGUAGE)
         val editorRef = WeakReference(editor)
         editor.document.getText(selectionRange)
