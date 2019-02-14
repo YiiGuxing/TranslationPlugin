@@ -1,3 +1,5 @@
+@file:Suppress("InvalidBundleOrProperty")
+
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
@@ -95,6 +97,13 @@ class Settings : PersistentStateComponent<Settings> {
      * 翻译时保留文本格式
      */
     var keepFormat: Boolean = false
+
+    /**
+     * 自动播放TTS
+     */
+    var autoPlayTTS: Boolean = false
+
+    var ttsSource: TTSSource = TTSSource.ORIGINAL
 
     /**
      * 显示词形（有道翻译）
@@ -216,8 +225,11 @@ class BaiduTranslateSettings : AppKeySettings(
     securityKey = BAIDU_APP_KEY
 )
 
-enum class WindowOption {
-    STATUS_ICON
+enum class WindowOption { STATUS_ICON }
+
+enum class TTSSource(val displayName: String) {
+    ORIGINAL(message("settings.item.original")),
+    TRANSLATION(message("settings.item.translation"))
 }
 
 @Suppress("InvalidBundleOrProperty")

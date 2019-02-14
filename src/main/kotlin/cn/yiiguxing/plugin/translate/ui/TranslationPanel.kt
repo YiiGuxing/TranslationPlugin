@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TTSSource.ORIGINAL
+import cn.yiiguxing.plugin.translate.TTSSource.TRANSLATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
@@ -377,38 +379,50 @@ abstract class TranslationPanel<T : JComponent>(
     private fun update() {
         component // initialize components
         checkSourceLanguage()
-        translation?.let { updateComponents(it) } ?: resetComponents()
+        translation.let {
+            if (it != null) {
+                updateComponents(it)
+                if (settings.autoPlayTTS) {
+                    when (settings.ttsSource) {
+                        ORIGINAL -> originalTTSLink
+                        TRANSLATION -> transTTSLink
+                    }.play()
+                }
+            } else {
+                resetComponents()
+                TextToSpeech.stop()
+            }
+        }
     }
 
     private fun updateComponents(translation: Translation) {
-        translation.let {
-            sourceLangComponent.updateLanguage(it.srcLang)
-            targetLangComponent.updateLanguage(it.targetLang)
+        sourceLangComponent.updateLanguage(translation.srcLang)
+        targetLangComponent.updateLanguage(translation.targetLang)
 
-            sourceLangRow.visible = true
-            targetLangRow.visible = true
+        sourceLangRow.visible = true
+        targetLangRow.visible = true
 
-            originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(it.srcLang)
-            transTTSLink.isEnabled = !it.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(it.targetLang)
+        originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
+        transTTSLink.isEnabled =
+            !translation.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
 
-            updateOriginalViewer(it.original)
-            updateViewer(transViewer, transViewerRow, it.trans)
+        updateOriginalViewer(translation.original)
+        updateViewer(transViewer, transViewerRow, translation.trans)
 
-            srcTransliterationLabel.apply {
-                val srcTransliteration = it.srcTransliteration
-                updateText(srcTransliteration)
-                toolTipText = srcTransliteration
-            }
-            transliterationLabel.apply {
-                val transliteration = it.transliteration
-                updateText(transliteration)
-                toolTipText = transliteration
-            }
-
-            updateDictViewer(it.dictionaries)
-            updateViewer(basicExplainViewer, basicExplainsViewerRow, it.basicExplains.joinToString("\n"))
-            updateOtherExplains(it.otherExplains)
+        srcTransliterationLabel.apply {
+            val srcTransliteration = translation.srcTransliteration
+            updateText(srcTransliteration)
+            toolTipText = srcTransliteration
         }
+        transliterationLabel.apply {
+            val transliteration = translation.transliteration
+            updateText(transliteration)
+            toolTipText = transliteration
+        }
+
+        updateDictViewer(translation.dictionaries)
+        updateViewer(basicExplainViewer, basicExplainsViewerRow, translation.basicExplains.joinToString("\n"))
+        updateOtherExplains(translation.otherExplains)
     }
 
     private fun updateOriginalViewer(text: String) {
