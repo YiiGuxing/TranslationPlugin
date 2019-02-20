@@ -11,8 +11,8 @@ import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.*
-import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
+import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
@@ -113,7 +113,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                     setText(value.displayName)
                 }
             }
-            preferredSize = JBDimension(preferredSize.width, 22)
+            preferredSize = Dimension(preferredSize.width, JBUI.scale(26))
         }
     }
 
