@@ -42,8 +42,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>优化交互体验</li>
-        <li>翻译替换：添加目标语言选择配置</li>
+        <li>添加自动播放TTS支持</li>
+        <li>BUG修复</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>

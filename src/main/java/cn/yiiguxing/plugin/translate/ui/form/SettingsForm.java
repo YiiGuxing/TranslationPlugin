@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.form;
 
 import cn.yiiguxing.plugin.translate.AppStorage;
 import cn.yiiguxing.plugin.translate.Settings;
+import cn.yiiguxing.plugin.translate.TTSSource;
 import cn.yiiguxing.plugin.translate.TargetLanguageSelection;
 import cn.yiiguxing.plugin.translate.ui.settings.TranslatorSettingsContainer;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
@@ -43,10 +44,12 @@ public class SettingsForm {
     private JPanel mOptionsPanel;
     private JBCheckBox mShowStatusIconCheckBox;
     private JBCheckBox mFoldOriginalCheckBox;
-    private JBCheckBox mKeepFormat;
-    private JBCheckBox mShowWordForms;
-    private JBCheckBox mAutoReplace;
-    private JBCheckBox mSelectTargetLanguage;
+    private JBCheckBox mKeepFormatCheckBox;
+    private JBCheckBox mAutoPlayTTSCheckBox;
+    private ComboBox<TTSSource> mTTSSourceComboBox;
+    private JBCheckBox mShowWordFormsCheckBox;
+    private JBCheckBox mAutoReplaceCheckBox;
+    private JBCheckBox mSelectTargetLanguageCheckBox;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -201,21 +204,31 @@ public class SettingsForm {
 
     @NotNull
     public final JBCheckBox getKeepFormatCheckBox() {
-        return mKeepFormat;
+        return mKeepFormatCheckBox;
+    }
+
+    @NotNull
+    public final JBCheckBox getAutoPlayTTSCheckBox() {
+        return mAutoPlayTTSCheckBox;
+    }
+
+    @NotNull
+    public final ComboBox<TTSSource> getTTSSourceComboBox() {
+        return mTTSSourceComboBox;
     }
 
     @NotNull
     public final JBCheckBox getShowWordFormsCheckBox() {
-        return mShowWordForms;
+        return mShowWordFormsCheckBox;
     }
 
     @NotNull
     public final JBCheckBox getAutoReplaceCheckBox() {
-        return mAutoReplace;
+        return mAutoReplaceCheckBox;
     }
 
     @NotNull
     public final JBCheckBox getSelectTargetLanguageCheckBox() {
-        return mSelectTargetLanguage;
+        return mSelectTargetLanguageCheckBox;
     }
 }

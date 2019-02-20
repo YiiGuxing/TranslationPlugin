@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.AppStorage
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.TargetLanguageSelection
-import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
@@ -14,6 +11,7 @@ import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.*
+import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import java.awt.Font
 import java.awt.event.ItemEvent
@@ -46,6 +44,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         initSeparatorsTextField()
         initSelectionModeComboBox()
         initTargetLangSelectionComboBox()
+        initTTSSourceComboBox()
     }
 
     @Suppress("InvalidBundleOrProperty")
@@ -100,6 +99,24 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         }
     }
 
+    private fun initTTSSourceComboBox() {
+        with(ttsSourceComboBox) {
+            model = CollectionComboBoxModel(TTSSource.values().asList())
+            renderer = object : ListCellRendererWrapper<TTSSource>() {
+                override fun customize(
+                    list: JList<*>,
+                    value: TTSSource,
+                    index: Int,
+                    selected: Boolean,
+                    hasFocus: Boolean
+                ) {
+                    setText(value.displayName)
+                }
+            }
+            preferredSize = JBDimension(preferredSize.width, 22)
+        }
+    }
+
     private fun initSeparatorsTextField() {
         separatorsTextField.document = object : PlainDocument() {
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
@@ -136,7 +153,12 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                 previewPhoneticFont(phoneticFontComboBox.fontName)
             }
         }
-        clearHistoriesButton.addActionListener { appStorage.clearHistories() }
+        clearHistoriesButton.addActionListener {
+            appStorage.clearHistories()
+        }
+        autoPlayTTSCheckBox.addItemListener {
+            ttsSourceComboBox.isEnabled = autoPlayTTSCheckBox.isSelected
+        }
 
         val ignoreRegExp = ignoreRegExp
         checkIgnoreRegExpButton.addActionListener {
@@ -215,6 +237,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                     || settings.showStatusIcon != showStatusIconCheckBox.isSelected
                     || settings.foldOriginal != foldOriginalCheckBox.isSelected
                     || settings.keepFormat != keepFormatCheckBox.isSelected
+                    || settings.autoPlayTTS != autoPlayTTSCheckBox.isSelected
+                    || settings.ttsSource != ttsSourceComboBox.selected
                     || settings.showWordForms != showWordFormsCheckBox.isSelected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
                     || settings.selectTargetLanguageBeforeReplacement != selectTargetLanguageCheckBox.isSelected
@@ -234,16 +258,19 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
             TranslateService.clearCaches()
         }
 
+        @Suppress("Duplicates")
         with(settings) {
             isOverrideFont = fontCheckBox.isSelected
             primaryFontFamily = primaryFontComboBox.fontName
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = selectionModeComboBox.currentMode
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
+            ttsSource = ttsSourceComboBox.selected ?: TTSSource.ORIGINAL
             separators = separatorsTextField.text
             showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
+            autoPlayTTS = autoPlayTTSCheckBox.isSelected
             showWordForms = showWordFormsCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
             selectTargetLanguageBeforeReplacement = selectTargetLanguageCheckBox.isSelected
@@ -265,6 +292,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
+        autoPlayTTSCheckBox.isSelected = settings.autoPlayTTS
         showWordFormsCheckBox.isSelected = settings.showWordForms
         autoReplaceCheckBox.isSelected = settings.autoReplace
         selectTargetLanguageCheckBox.isSelected = settings.selectTargetLanguageBeforeReplacement
@@ -276,6 +304,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         maxHistoriesSizeComboBox.editor.item = Integer.toString(appStorage.maxHistorySize)
         selectionModeComboBox.selected = settings.autoSelectionMode
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
+        ttsSourceComboBox.selected = settings.ttsSource
     }
 
     companion object {
