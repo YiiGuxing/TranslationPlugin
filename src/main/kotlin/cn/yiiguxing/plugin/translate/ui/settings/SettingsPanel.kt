@@ -113,7 +113,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                     setText(value.displayName)
                 }
             }
-            preferredSize = JBDimension(preferredSize.width, 22)
+            preferredSize = JBDimension(preferredSize.width, 26)
         }
     }
 
