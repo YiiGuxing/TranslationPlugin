@@ -73,6 +73,13 @@ TranslationPlugin
 
    点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
 
+
+插件配置
+------
+
+![settings](./images/settings.png)
+
+
 Actions
 -------
 - **Show Translation Dialog...**
