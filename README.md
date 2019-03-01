@@ -158,6 +158,13 @@ FAQ
 [完整的更新历史记录](./CHANGELOG.md)
 
 
+其他插件
+------
+
+- [FIGlet](https://github.com/YiiGuxing/intellij-figlet)
+- [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
+
+
 [build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=flat-square
 [build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=flat-square
 [license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
