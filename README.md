@@ -73,6 +73,13 @@ TranslationPlugin
 
    点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
 
+
+插件配置
+------
+
+![settings](./images/settings.png)
+
+
 Actions
 -------
 - **Show Translation Dialog...**
@@ -150,12 +157,19 @@ FAQ
 
 更新日志
 --------
-## [v2.3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.1) (2019-02-11)
+## [v2.3.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.2) (2019-02-20)
 
-- 优化交互体验
-- 翻译替换：添加目标语言选择配置
+- 添加自动播放TTS支持
+- BUG修复
 
 [完整的更新历史记录](./CHANGELOG.md)
+
+
+其他插件
+------
+
+- [FIGlet](https://github.com/YiiGuxing/intellij-figlet)
+- [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
 
 
 [build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=flat-square
