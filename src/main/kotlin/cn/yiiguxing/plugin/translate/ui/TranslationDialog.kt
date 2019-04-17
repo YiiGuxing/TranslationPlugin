@@ -28,6 +28,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.AWTEvent
 import java.awt.CardLayout
+import java.awt.Cursor
 import java.awt.Toolkit
 import java.awt.event.*
 import javax.swing.*
@@ -36,8 +37,8 @@ import javax.swing.event.HyperlinkEvent
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.JTextComponent
 
-class TranslationDialog(private val project: Project?)
-    : TranslationDialogForm(project), View, HistoriesChangedListener, SettingsChangeListener {
+class TranslationDialog(private val project: Project?) : TranslationDialogForm(project), View, HistoriesChangedListener,
+    SettingsChangeListener {
 
     private val processPane = ProcessComponent("Querying...")
     private val translationPane = DialogTranslationPanel(project, Settings, WIDTH - 44)
@@ -66,6 +67,7 @@ class TranslationDialog(private val project: Project?)
         setUndecorated(true)
         peer.setContentPane(createCenterPanel())
 
+        setResizable()
         initUIComponents()
         setListeners()
 
@@ -79,6 +81,14 @@ class TranslationDialog(private val project: Project?)
     }
 
     override fun getPreferredFocusedComponent(): JComponent? = inputComboBox
+
+    private fun setResizable() {
+        val resizableListener = ResizableListener()
+        component.apply {
+            addMouseMotionListener(resizableListener)
+            addMouseListener(resizableListener)
+        }
+    }
 
     private fun initUIComponents() {
         rootPane.andTransparent()
@@ -324,13 +334,13 @@ class TranslationDialog(private val project: Project?)
         Toolkit.getDefaultToolkit().addAWTEventListener(activityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
 
         ApplicationManager
-                .getApplication()
-                .messageBus
-                .connect(this)
-                .let {
-                    it.subscribe(HistoriesChangedListener.TOPIC, this)
-                    it.subscribe(SettingsChangeListener.TOPIC, this)
-                }
+            .getApplication()
+            .messageBus
+            .connect(this)
+            .let {
+                it.subscribe(HistoriesChangedListener.TOPIC, this)
+                it.subscribe(SettingsChangeListener.TOPIC, this)
+            }
     }
 
     private fun isInside(target: RelativePoint): Boolean {
@@ -438,11 +448,11 @@ class TranslationDialog(private val project: Project?)
 
         presenter.supportedLanguages.let { (sourceList, targetList) ->
             srcLang = src?.takeIf { sourceList.contains(it) }
-                    ?: sourceLangComboBox.selected
-                    ?: sourceList.first()
+                ?: sourceLangComboBox.selected
+                        ?: sourceList.first()
             targetLang = target?.takeIf { targetList.contains(it) }
-                    ?: targetLangComboBox.selected
-                    ?: presenter.primaryLanguage
+                ?: targetLangComboBox.selected
+                        ?: presenter.primaryLanguage
         }
 
         translateInternal(text, srcLang, targetLang)
@@ -593,6 +603,60 @@ class TranslationDialog(private val project: Project?)
                 toString()
             }
             setText(text)
+        }
+    }
+
+    private inner class ResizableListener : MouseAdapter() {
+
+        private var offsetX = 0
+        private var offsetY = 0
+        private var isResizeMode = false
+
+        private val MouseEvent.isResizePointHover: Boolean
+            get() {
+                val component = source as JComponent
+                return x >= component.width - 10 && x <= component.width
+                        && y >= component.height - 10 && y <= component.height
+            }
+
+        override fun mouseMoved(e: MouseEvent) {
+            if (!isResizeMode) {
+                (e.source as JComponent).cursor = if (e.isResizePointHover) {
+                    Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)
+                } else {
+                    Cursor.getDefaultCursor()
+                }
+            }
+        }
+
+        override fun mousePressed(e: MouseEvent) {
+            isResizeMode = e.button == MouseEvent.BUTTON1 && e.isResizePointHover
+            if (isResizeMode) {
+                val component = e.source as JComponent
+                offsetX = component.width - e.x
+                offsetY = component.height - e.y
+
+                (e.source as JComponent).cursor = Cursor.getDefaultCursor()
+            }
+        }
+
+        override fun mouseReleased(e: MouseEvent) {
+            if (e.button == MouseEvent.BUTTON1) {
+                isResizeMode = false
+            }
+        }
+
+        override fun mouseDragged(e: MouseEvent) {
+            if (isResizeMode) {
+                val window = window
+                val location = window.location
+                val w = maxOf(WIDTH, e.xOnScreen - location.x + offsetX)
+                val h = maxOf(HEIGHT, e.yOnScreen - location.y + offsetY)
+                if (w != window.width || h != window.height) {
+                    window.setSize(w, h)
+                    window.revalidate()
+                }
+            }
         }
     }
 
