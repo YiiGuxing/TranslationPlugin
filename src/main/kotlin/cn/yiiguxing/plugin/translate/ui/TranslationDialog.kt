@@ -38,7 +38,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     SettingsChangeListener {
 
     private val processPane = ProcessComponent("Querying...")
-    private val translationPane = DialogTranslationPanel(project, Settings, WIDTH - 44)
+    private val translationPane = DialogTranslationPanel(project, Settings)
     private val translationPanel = ScrollPane(translationPane.component)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 

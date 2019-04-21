@@ -11,8 +11,8 @@ import javax.swing.JLabel
  *
  * Created by Yii.Guxing on 2017/12/27
  */
-class DialogTranslationPanel(project: Project?, settings: Settings, maxWidth: Int)
-    : TranslationPanel<JLabel>(project, settings, maxWidth) {
+class DialogTranslationPanel(project: Project?, settings: Settings) :
+    TranslationPanel<JLabel>(project, settings) {
 
     override val originalFoldingLength: Int = 50
 

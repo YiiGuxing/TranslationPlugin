@@ -26,10 +26,7 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
-import java.awt.Color
-import java.awt.Cursor
-import java.awt.FlowLayout
-import java.awt.Font
+import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
@@ -49,8 +46,7 @@ import kotlin.properties.Delegates
  */
 abstract class TranslationPanel<T : JComponent>(
     private val project: Project?,
-    protected val settings: Settings,
-    private val maxWidth: Int = MAX_WIDTH
+    protected val settings: Settings
 ) : Disposable {
 
     protected val sourceLangComponent: T by lazy { onCreateLanguageComponent() }
@@ -107,7 +103,6 @@ abstract class TranslationPanel<T : JComponent>(
     val component: JComponent by lazy {
         initFont()
         initColorScheme()
-        initMaxSize()
         initActions()
 
         panel {
@@ -143,7 +138,10 @@ abstract class TranslationPanel<T : JComponent>(
 
             row { otherExplainLabel() }
             otherExplainsViewerRow = row { onWrapViewer(otherExplainViewer)(CCFlags.grow) }
-        }.apply { isOpaque = false /* 可使淡入淡出动画流畅自然 */ }
+        }.apply {
+            isOpaque = false /* 可使淡入淡出动画流畅自然 */
+            onComponentCreated()
+        }
     }
 
     init {
@@ -171,6 +169,8 @@ abstract class TranslationPanel<T : JComponent>(
             Disposer.register(translationPanel, this)
         }
     }
+
+    protected open fun onComponentCreated() {}
 
     protected abstract fun onCreateLanguageComponent(): T
 
@@ -231,8 +231,8 @@ abstract class TranslationPanel<T : JComponent>(
         }
     }
 
-    private fun initMaxSize() {
-        val maximumSize = JBDimension(maxWidth, Int.MAX_VALUE)
+    protected fun setMaxWidth(maxWidth: Int) {
+        val maximumSize = Dimension(maxWidth, Int.MAX_VALUE)
 
         originalViewer.maximumSize = maximumSize
         srcTransliterationLabel.maximumSize = maximumSize
@@ -580,8 +580,6 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     companion object {
-        const val MAX_WIDTH = 500
-
         private const val FONT_SIZE_LARGE = 18f
         private const val FONT_SIZE_DEFAULT = 14f
         private const val FONT_SIZE_PHONETIC = 12f
