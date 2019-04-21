@@ -140,9 +140,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 if (Settings.selectTargetLanguageBeforeReplacement) {
                     editor.showTargetLanguagesPopup { translate(it) }
                 } else {
-                    val targetLang = Lang.AUTO
-                        .takeIf { TranslateService.translator.supportedTargetLanguages.contains(it) }
-                        ?: Lang.ENGLISH
+                    val targetLang = if (TranslateService.translator.supportedTargetLanguages.contains(Lang.AUTO)) {
+                        Lang.AUTO
+                    } else {
+                        Lang.ENGLISH
+                    }
                     translate(targetLang, true)
                 }
             }
@@ -170,7 +172,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
             val appStorage = AppStorage
             val languages = TranslateService.translator.supportedTargetLanguages.sortedByDescending {
-                if (this == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(it)
+                if (it == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(it)
             }
             val index = languages.indexOf(appStorage.lastReplacementTargetLanguage)
             @Suppress("InvalidBundleOrProperty")
