@@ -157,9 +157,10 @@ FAQ
 
 更新日志
 --------
-## [v2.3.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.2) (2019-02-20)
+## [v2.3.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.3) (2019-07-10)
 
-- 添加自动播放TTS支持
+- 优化交互体验
+- 翻译窗口可调整尺寸
 - BUG修复
 
 [完整的更新历史记录](./CHANGELOG.md)
