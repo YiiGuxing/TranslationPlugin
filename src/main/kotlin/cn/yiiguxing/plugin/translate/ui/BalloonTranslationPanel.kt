@@ -13,8 +13,11 @@ import javax.swing.JComponent
  *
  * Created by Yii.Guxing on 2017/12/13
  */
-class BalloonTranslationPanel(project: Project?, settings: Settings)
-    : TranslationPanel<ComboBox<Lang>>(project, settings) {
+class BalloonTranslationPanel(
+    project: Project?,
+    settings: Settings,
+    private val maxWidth: Int
+) : TranslationPanel<ComboBox<Lang>>(project, settings) {
 
     private var ignoreEvent = false
     private var onLanguageChangedHandler: ((Lang, Lang) -> Unit)? = null
@@ -34,6 +37,10 @@ class BalloonTranslationPanel(project: Project?, settings: Settings)
             selectedItem = old
             ignoreEvent = false
         }
+    }
+
+    override fun onComponentCreated() {
+        setMaxWidth(maxWidth)
     }
 
     override fun onCreateLanguageComponent(): ComboBox<Lang> = ComboBox<Lang>().apply {
@@ -68,7 +75,7 @@ class BalloonTranslationPanel(project: Project?, settings: Settings)
         } else {
             MAX_VIEWER_HEIGHT
         }
-        maximumSize = JBDimension(MAX_WIDTH, maxHeight)
+        maximumSize = JBDimension(maxWidth, maxHeight)
     }
 
     override fun ComboBox<Lang>.updateLanguage(lang: Lang?) {

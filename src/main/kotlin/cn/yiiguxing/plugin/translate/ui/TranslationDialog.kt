@@ -26,9 +26,7 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import java.awt.AWTEvent
-import java.awt.CardLayout
-import java.awt.Toolkit
+import java.awt.*
 import java.awt.event.*
 import javax.swing.*
 import javax.swing.border.LineBorder
@@ -36,11 +34,11 @@ import javax.swing.event.HyperlinkEvent
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.JTextComponent
 
-class TranslationDialog(private val project: Project?)
-    : TranslationDialogForm(project), View, HistoriesChangedListener, SettingsChangeListener {
+class TranslationDialog(private val project: Project?) : TranslationDialogForm(project), View, HistoriesChangedListener,
+    SettingsChangeListener {
 
     private val processPane = ProcessComponent("Querying...")
-    private val translationPane = DialogTranslationPanel(project, Settings, WIDTH - 44)
+    private val translationPane = DialogTranslationPanel(project, Settings)
     private val translationPanel = ScrollPane(translationPane.component)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 
@@ -66,6 +64,7 @@ class TranslationDialog(private val project: Project?)
         setUndecorated(true)
         peer.setContentPane(createCenterPanel())
 
+        setResizable()
         initUIComponents()
         setListeners()
 
@@ -79,6 +78,14 @@ class TranslationDialog(private val project: Project?)
     }
 
     override fun getPreferredFocusedComponent(): JComponent? = inputComboBox
+
+    private fun setResizable() {
+        val resizableListener = ResizableListener()
+        component.apply {
+            addMouseMotionListener(resizableListener)
+            addMouseListener(resizableListener)
+        }
+    }
 
     private fun initUIComponents() {
         rootPane.andTransparent()
@@ -324,13 +331,13 @@ class TranslationDialog(private val project: Project?)
         Toolkit.getDefaultToolkit().addAWTEventListener(activityListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
 
         ApplicationManager
-                .getApplication()
-                .messageBus
-                .connect(this)
-                .let {
-                    it.subscribe(HistoriesChangedListener.TOPIC, this)
-                    it.subscribe(SettingsChangeListener.TOPIC, this)
-                }
+            .getApplication()
+            .messageBus
+            .connect(this)
+            .let {
+                it.subscribe(HistoriesChangedListener.TOPIC, this)
+                it.subscribe(SettingsChangeListener.TOPIC, this)
+            }
     }
 
     private fun isInside(target: RelativePoint): Boolean {
@@ -438,11 +445,11 @@ class TranslationDialog(private val project: Project?)
 
         presenter.supportedLanguages.let { (sourceList, targetList) ->
             srcLang = src?.takeIf { sourceList.contains(it) }
-                    ?: sourceLangComboBox.selected
-                    ?: sourceList.first()
+                ?: sourceLangComboBox.selected
+                        ?: sourceList.first()
             targetLang = target?.takeIf { targetList.contains(it) }
-                    ?: targetLangComboBox.selected
-                    ?: presenter.primaryLanguage
+                ?: targetLangComboBox.selected
+                        ?: presenter.primaryLanguage
         }
 
         translateInternal(text, srcLang, targetLang)
@@ -596,9 +603,104 @@ class TranslationDialog(private val project: Project?)
         }
     }
 
+    private inner class ResizableListener : MouseAdapter() {
+
+        private var resizeFlag = 0
+        private var startX = 0
+        private var startY = 0
+        private val startLocation = Point()
+        private val startSize = Dimension()
+
+        private val MouseEvent.resizeFlag: Int
+            get() {
+                var flag = 0
+                val component = source as JComponent
+                if (x in 0..RESIZE_TOUCH_SIZE) {
+                    flag = flag or RESIZE_FLAG_LEFT
+                }
+                if (x >= component.width - RESIZE_TOUCH_SIZE && x <= component.width) {
+                    flag = flag or RESIZE_FLAG_RIGHT
+                }
+                if (y >= component.height - RESIZE_TOUCH_SIZE && y <= component.height) {
+                    flag = flag or RESIZE_FLAG_BOTTOM
+                }
+
+                return flag
+            }
+
+        private fun JComponent.updateCursor(flag: Int) {
+            val cursor = when {
+                flag == RESIZE_FLAG_LEFT -> Cursor.W_RESIZE_CURSOR
+                flag == RESIZE_FLAG_RIGHT -> Cursor.E_RESIZE_CURSOR
+                flag == RESIZE_FLAG_BOTTOM -> Cursor.S_RESIZE_CURSOR
+                flag and RESIZE_FLAG_LEFT != 0 && flag and RESIZE_FLAG_BOTTOM != 0 -> Cursor.SW_RESIZE_CURSOR
+                flag and RESIZE_FLAG_RIGHT != 0 && flag and RESIZE_FLAG_BOTTOM != 0 -> Cursor.SE_RESIZE_CURSOR
+                else -> Cursor.DEFAULT_CURSOR
+            }
+
+            this.cursor = Cursor.getPredefinedCursor(cursor)
+        }
+
+        override fun mouseMoved(e: MouseEvent) {
+            if (resizeFlag == 0) {
+                (e.source as JComponent).updateCursor(e.resizeFlag)
+            }
+        }
+
+        override fun mousePressed(e: MouseEvent) {
+            resizeFlag = if (e.button == MouseEvent.BUTTON1) e.resizeFlag else 0
+            if (resizeFlag != 0) {
+                startX = e.xOnScreen
+                startY = e.yOnScreen
+                startLocation.location = window.location
+                startSize.size = window.size
+            }
+
+            (e.source as JComponent).updateCursor(resizeFlag)
+        }
+
+        override fun mouseReleased(e: MouseEvent) {
+            if (e.button == MouseEvent.BUTTON1) {
+                resizeFlag = 0
+                (e.source as JComponent).cursor = Cursor.getDefaultCursor()
+            }
+        }
+
+        override fun mouseDragged(e: MouseEvent) {
+            if (resizeFlag == 0) {
+                return
+            }
+
+            var x = startLocation.x
+            var w = startSize.width
+            var h = startSize.height
+
+            val dx = e.xOnScreen - startX
+            val dy = e.yOnScreen - startY
+
+            if (resizeFlag and RESIZE_FLAG_LEFT != 0) {
+                w = maxOf(WIDTH, w - dx)
+                x = x - w + startSize.width
+            } else if (resizeFlag and RESIZE_FLAG_RIGHT != 0) {
+                w = maxOf(WIDTH, w + dx)
+            }
+            if (resizeFlag and RESIZE_FLAG_BOTTOM != 0) {
+                h = maxOf(HEIGHT, h + dy)
+            }
+
+            window.setBounds(x, startLocation.y, w, h)
+            window.revalidate()
+        }
+    }
+
     companion object {
         private const val WIDTH = 400
         private const val HEIGHT = 500
+
+        private const val RESIZE_TOUCH_SIZE = 3
+        private const val RESIZE_FLAG_LEFT = 0b001
+        private const val RESIZE_FLAG_RIGHT = 0b010
+        private const val RESIZE_FLAG_BOTTOM = 0b100
 
         private val CONTENT_BACKGROUND = JBColor(0xFFFFFF, 0x2B2B2B)
         private val BORDER_ACTIVE = LineBorder(JBColor(0x808080, 0x232323))

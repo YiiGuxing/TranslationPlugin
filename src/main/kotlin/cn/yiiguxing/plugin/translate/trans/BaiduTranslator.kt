@@ -24,34 +24,35 @@ object BaiduTranslator : AbstractTranslator() {
     private const val TRANSLATOR_NAME = "Baidu Translate"
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-            Lang.CHINESE,
-            Lang.ENGLISH,
-            Lang.CHINESE_TRADITIONAL,
-            Lang.CHINESE_CANTONESE,
-            Lang.CHINESE_CLASSICAL,
-            Lang.JAPANESE,
-            Lang.KOREAN,
-            Lang.FRENCH,
-            Lang.SPANISH,
-            Lang.THAI,
-            Lang.ARABIC,
-            Lang.RUSSIAN,
-            Lang.PORTUGUESE,
-            Lang.GERMAN,
-            Lang.ITALIAN,
-            Lang.GREEK,
-            Lang.DUTCH,
-            Lang.POLISH,
-            Lang.BULGARIAN,
-            Lang.ESTONIAN,
-            Lang.DANISH,
-            Lang.FINNISH,
-            Lang.CZECH,
-            Lang.ROMANIAN,
-            Lang.SLOVENIAN,
-            Lang.SWEDISH,
-            Lang.HUNGARIAN,
-            Lang.VIETNAMESE)
+        Lang.CHINESE,
+        Lang.ENGLISH,
+        Lang.CHINESE_TRADITIONAL,
+        Lang.CHINESE_CANTONESE,
+        Lang.CHINESE_CLASSICAL,
+        Lang.JAPANESE,
+        Lang.KOREAN,
+        Lang.FRENCH,
+        Lang.SPANISH,
+        Lang.THAI,
+        Lang.ARABIC,
+        Lang.RUSSIAN,
+        Lang.PORTUGUESE,
+        Lang.GERMAN,
+        Lang.ITALIAN,
+        Lang.GREEK,
+        Lang.DUTCH,
+        Lang.POLISH,
+        Lang.BULGARIAN,
+        Lang.ESTONIAN,
+        Lang.DANISH,
+        Lang.FINNISH,
+        Lang.CZECH,
+        Lang.ROMANIAN,
+        Lang.SLOVENIAN,
+        Lang.SWEDISH,
+        Lang.HUNGARIAN,
+        Lang.VIETNAMESE
+    )
 
     private val logger: Logger = Logger.getInstance(BaiduTranslator::class.java)
 
@@ -65,8 +66,8 @@ object BaiduTranslator : AbstractTranslator() {
         get() = Settings.baiduTranslateSettings.primaryLanguage
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
-            .toMutableList()
-            .apply { add(0, Lang.AUTO) }
+        .toMutableList()
+        .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
@@ -77,14 +78,14 @@ object BaiduTranslator : AbstractTranslator() {
         val sign = (appId + text + salt + privateKey).md5().toLowerCase()
 
         return UrlBuilder(BAIDU_TRANSLATE_URL)
-                .addQueryParameter("appid", appId)
-                .addQueryParameter("from", srcLang.baiduCode)
-                .addQueryParameter("to", targetLang.baiduCode)
-                .addQueryParameter("salt", salt)
-                .addQueryParameter("sign", sign)
-                .addQueryParameter("q", text)
-                .build()
-                .also { logger.i("Translate url: $it") }
+            .addQueryParameter("appid", appId)
+            .addQueryParameter("from", srcLang.baiduCode)
+            .addQueryParameter("to", targetLang.baiduCode)
+            .addQueryParameter("salt", salt)
+            .addQueryParameter("sign", sign)
+            .addQueryParameter("q", text)
+            .build()
+            .also { logger.i("Translate url: $it") }
     }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
@@ -92,14 +93,14 @@ object BaiduTranslator : AbstractTranslator() {
 
         return Gson().fromJson(result, BaiduTranslation::class.java).apply {
             if (!isSuccessful) {
-                throw TranslateResultException(code)
+                throw TranslateResultException(code, name)
             }
         }.toTranslation()
     }
 
     @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslateResultException -> "${message("error.code", throwable.code)}: " + when (throwable.code) {
+        is TranslateResultException -> when (throwable.code) {
             52001 -> message("error.request.timeout")
             52002 -> message("error.systemError")
             52003 -> message("error.invalidAccount", HTML_DESCRIPTION_SETTINGS)
@@ -109,7 +110,7 @@ object BaiduTranslator : AbstractTranslator() {
             54004 -> message("error.account.arrears")
             58000 -> message("error.access.ip")
             58001 -> message("error.language.unsupported")
-            else -> message("error.unknown")
+            else -> message("error.unknown") + "[${throwable.code}]"
         }
         else -> super.createErrorMessage(throwable)
     }
