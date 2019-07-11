@@ -231,7 +231,7 @@ abstract class TranslationPanel<T : JComponent>(
         }
     }
 
-    protected fun setMaxWidth(maxWidth: Int) {
+    fun setMaxWidth(maxWidth: Int) {
         val maximumSize = Dimension(maxWidth, Int.MAX_VALUE)
 
         originalViewer.maximumSize = maximumSize
