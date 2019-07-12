@@ -301,7 +301,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         previewPrimaryFont(settings.primaryFontFamily)
         previewPhoneticFont(settings.phoneticFontFamily)
 
-        maxHistoriesSizeComboBox.editor.item = Integer.toString(appStorage.maxHistorySize)
+        maxHistoriesSizeComboBox.editor.item = appStorage.maxHistorySize.toString()
         selectionModeComboBox.selected = settings.autoSelectionMode
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ttsSourceComboBox.selected = settings.ttsSource
