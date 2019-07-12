@@ -42,8 +42,6 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>优化交互体验</li>
-        <li>翻译窗口可调整尺寸</li>
         <li>BUG修复</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
