@@ -18,7 +18,7 @@ import javax.swing.event.HyperlinkEvent
 class TranslationProjectComponent(project: Project) : AbstractProjectComponent(project) {
 
     override fun projectOpened() {
-        TKK.update()
+        TKK.updateAsync()
         checkConfig()
         checkUpdate()
         TranslationUIManager.installStatusWidget(myProject)

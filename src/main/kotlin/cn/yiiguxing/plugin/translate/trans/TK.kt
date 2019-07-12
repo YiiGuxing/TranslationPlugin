@@ -5,8 +5,13 @@
  */
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
+import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.util.io.HttpRequests
 import java.lang.Math.abs
 import java.util.*
+import java.util.regex.Pattern
 
 private fun `fun`(a: Long, b: String): Long {
     var g = a
@@ -25,32 +30,73 @@ private fun `fun`(a: Long, b: String): Long {
  */
 object TKK {
     private const val MIM = 60 * 60 * 1000
+    private const val ELEMENT_URL = "https://translate.google.com/translate_a/element.js"
+    private const val ELEMENT_URL_CN = "https://translate.google.cn/translate_a/element.js"
+
+    private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
     private val generator = Random()
 
-    var values = update()
-        private set
+    private val tkkPattern = Pattern.compile("tkk='(\\d+).(-?\\d+)'")
 
+    private var innerValue: Pair<Long, Long> = 0L to 0L
+
+    val value = update()
+
+    @Synchronized
     fun update(): Pair<Long, Long> {
-        val a = abs(generator.nextInt().toLong())
-        val b = generator.nextInt().toLong()
-        val c = System.currentTimeMillis() / MIM
+        val now = System.currentTimeMillis() / MIM
+        val (curVal) = innerValue
+        if (now == curVal) {
+            return innerValue
+        }
 
-        values = c to (a + b)
-        return values
+        innerValue = updateFromGoogle() ?: now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
+        return innerValue
     }
 
-    @Suppress("unused")
-    fun updateFromGoogle(): Pair<Long, Long> =
-            // TODO get from https://translate.google.cn/translate_a/element.js
-            // TODO 懒得写了。。。
+    private fun updateFromGoogle(): Pair<Long, Long>? {
+        val updateUrl = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
+            ELEMENT_URL
+        } else {
+            ELEMENT_URL_CN
+        }
+
+        return try {
+            val elementJS = HttpRequests.request(updateUrl)
+                .userAgent(DEFAULT_USER_AGENT)
+                .connect { it.readString(null) }
+
+            val matcher = tkkPattern.matcher(elementJS)
+            if (matcher.find()) {
+                val value1 = matcher.group(1).toLong()
+                val value2 = matcher.group(2).toLong()
+
+                logger.i("TKK Updated: $value1.$value2")
+
+                value1 to value2
+            } else {
+                logger.w("Update TKK failed: TKK not found.")
+
+                null
+            }
+        } catch (e: Throwable) {
+            logger.e("Update TKK failed", e)
+            null
+        }
+    }
+
+    fun updateAsync() {
+        executeOnPooledThread {
             update()
+        }
+    }
 }
 
 /**
  * 计算tk值.
  */
-fun String.tk(tkk: Pair<Long, Long> = TKK.values): String {
+fun String.tk(tkk: Pair<Long, Long> = TKK.value): String {
     val a = mutableListOf<Long>()
     var b = 0
     while (b < length) {
@@ -76,8 +122,7 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.values): String {
         b++
     }
 
-    val d = tkk.first
-    val e = tkk.second
+    val (d, e) = tkk
     var f = d
     for (h in a) {
         f += h
