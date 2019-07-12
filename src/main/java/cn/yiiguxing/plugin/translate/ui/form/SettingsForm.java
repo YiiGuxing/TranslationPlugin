@@ -5,7 +5,9 @@ import cn.yiiguxing.plugin.translate.Settings;
 import cn.yiiguxing.plugin.translate.TTSSource;
 import cn.yiiguxing.plugin.translate.TargetLanguageSelection;
 import cn.yiiguxing.plugin.translate.ui.settings.TranslatorSettingsContainer;
+import cn.yiiguxing.plugin.translate.util.LogsKt;
 import cn.yiiguxing.plugin.translate.util.SelectionMode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.ComboBox;
@@ -16,11 +18,14 @@ import org.intellij.lang.regexp.RegExpLanguage;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 设置页
  */
 public class SettingsForm {
+
+    private static Logger LOGGER = Logger.getInstance(SettingsForm.class);
 
     private JPanel mWholePanel;
     private JPanel mTranslateSettingsPanel;
@@ -66,21 +71,36 @@ public class SettingsForm {
         mTransPanelContainer = new TranslatorSettingsContainer(mSettings);
         mIgnoreRegExp = new EditorTextField("", project, RegExpLanguage.INSTANCE.getAssociatedFileType());
 
+        mPrimaryFontComboBox = createFontComboBox(false);
+        mPhoneticFontComboBox = createFontComboBox(true);
+    }
+
+    private static FontComboBox createFontComboBox(boolean filterNonLatin) {
         try {
-            mPrimaryFontComboBox = new FontComboBox(false, false);
-            mPhoneticFontComboBox = new FontComboBox(false, true);
-        } catch (NoSuchMethodError e) {
-            // Linux 下可能没有这构造函数
+            LogsKt.d(LOGGER, String.format("Try new FontComboBox(false, %b, false).", filterNonLatin));
+            //noinspection JavaReflectionMemberAccess
+            return FontComboBox.class
+                    .getDeclaredConstructor(Boolean.TYPE, Boolean.TYPE, Boolean.TYPE)
+                    .newInstance(false, filterNonLatin, false);
+        } catch (NoSuchMethodException | InstantiationException |
+                IllegalAccessException | InvocationTargetException e) {
             try {
-                mPrimaryFontComboBox = new FontComboBox(false);
-                mPhoneticFontComboBox = new FontComboBox(false);
-            } catch (NoSuchMethodError e1) {
-                mPrimaryFontComboBox = new FontComboBox();
-                mPhoneticFontComboBox = new FontComboBox();
+                LogsKt.d(LOGGER, String.format("Try new FontComboBox(false, %b).", filterNonLatin));
+                return FontComboBox.class
+                        .getDeclaredConstructor(Boolean.TYPE, Boolean.TYPE)
+                        .newInstance(false, filterNonLatin);
+            } catch (NoSuchMethodException | InstantiationException |
+                    IllegalAccessException | InvocationTargetException ex) {
+                try {
+                    LogsKt.d(LOGGER, "Try new FontComboBox(false).");
+                    return new FontComboBox(false);
+                } catch (NoSuchMethodError exc) {
+                    LogsKt.d(LOGGER, "Try new FontComboBox().");
+                    return new FontComboBox();
+                }
             }
         }
     }
-
 
     @NotNull
     public final Settings getSettings() {

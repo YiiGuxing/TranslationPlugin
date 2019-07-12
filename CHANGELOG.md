@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.4) (2019-07-12)
+
+- BUG修复
+
 ## [v2.3.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.3) (2019-07-10)
 
 - 优化交互体验
