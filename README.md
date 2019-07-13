@@ -55,13 +55,13 @@ TranslationPlugin
    - 注册[有道智云](http://ai.youdao.com)帐号并获取其**应用ID**和**应用密钥**
    - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>有道翻译</kbd>
 
-   注：请注意保管好你的**应用密钥**，防止其泄漏。如帐号欠费，将无法使用。
+   注：请注意保管好你的**应用密钥**，防止其泄露。如帐号欠费，将无法使用。
 
 2. **申请百度翻译服务（可选）:**
    - 注册[百度翻译开放平台](http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer)帐号并获取其**应用ID**和**应用密钥**
    - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>百度翻译</kbd>
 
-   注：请注意保管好你的**应用密钥**，防止其泄漏。如帐号欠费，将无法使用。
+   注：请注意保管好你的**应用密钥**，防止其泄露。如帐号欠费，将无法使用。
 
 3. **开始翻译:**
 
