@@ -42,7 +42,7 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>BUG修复</li>
+        <li>修复Google翻译Forbidden的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
