@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.3.6](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.6) (2019-07-15)
+
+- 修复Google翻译Forbidden的问题
+- BUG修复
+
 ## [v2.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.5) (2019-07-15)
 
 - 修复Google翻译Forbidden的问题
