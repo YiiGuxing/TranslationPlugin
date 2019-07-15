@@ -15,7 +15,7 @@ class TranslationAppComponent : ApplicationComponent {
     override fun getComponentName(): String = javaClass.name
 
     override fun initComponent() {
-        TKK.update()
+        TKK.updateAsync()
         // initialize translate service.
         TranslateService.install()
     }
