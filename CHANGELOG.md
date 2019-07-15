@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.5) (2019-07-15)
+
+- 修复Google翻译Forbidden的问题
+
 ## [v2.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.4) (2019-07-12)
 
 - BUG修复

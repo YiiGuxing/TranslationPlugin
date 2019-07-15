@@ -4,7 +4,7 @@ TranslationPlugin
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
-[![Build Status][build-img-master]][travis-ci]
+[![Build Status][build-img-dev]][travis-ci]
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
@@ -157,9 +157,9 @@ FAQ
 
 更新日志
 --------
-## [v2.3.4](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.4) (2019-07-12)
+## [v2.3.5](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.5) (2019-07-15)
 
-- BUG修复
+- 修复Google翻译Forbidden的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 
