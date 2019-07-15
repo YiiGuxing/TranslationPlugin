@@ -41,7 +41,7 @@ object TKK {
 
     private var innerValue: Pair<Long, Long> = 0L to 0L
 
-    val value = update()
+    val value get() = update()
 
     @Synchronized
     fun update(): Pair<Long, Long> {
