@@ -6,6 +6,9 @@ jdk:
 install:
   - echo "Override default Travis install step to avoid unnecessary './gradlew assemble'."
 
+before_install:
+- chmod +x gradlew
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
