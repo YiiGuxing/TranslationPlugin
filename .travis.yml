@@ -3,8 +3,8 @@ language: java
 jdk:
   - openjdk8
 
-install:
-  - echo "Override default Travis install step to avoid unnecessary './gradlew assemble'."
+script:
+  - ./gradlew check buildPlugin
 
 before_install:
 - chmod +x gradlew
