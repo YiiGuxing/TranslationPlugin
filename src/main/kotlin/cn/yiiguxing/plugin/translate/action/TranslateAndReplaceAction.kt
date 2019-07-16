@@ -195,7 +195,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         fun Editor.canShowPopup(selectionRange: TextRange, targetText: String): Boolean {
             return !isDisposed &&
-                    selectionRange.endOffset < document.textLength &&
+                    selectionRange.endOffset <= document.textLength &&
                     targetText == document.getText(selectionRange) &&
                     selectionRange.containsOffset(caretModel.offset)
         }
