@@ -150,9 +150,14 @@ fun Notification.show(project: Project? = null) {
 /**
  * Copy the stack trace to clipboard.
  */
-fun Throwable.copyToClipboard() {
+fun Throwable.copyToClipboard(message: String? = null) {
     val stringWriter = StringWriter()
     PrintWriter(stringWriter).use {
+        if (!message.isNullOrBlank()) {
+            it.println(message)
+            it.println()
+        }
+
         it.println(App.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
         it.println()
 
