@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.trans.TKK
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import com.intellij.openapi.components.ApplicationComponent
@@ -15,7 +14,6 @@ class TranslationAppComponent : ApplicationComponent {
     override fun getComponentName(): String = javaClass.name
 
     override fun initComponent() {
-        TKK.updateAsync()
         // initialize translate service.
         TranslateService.install()
     }

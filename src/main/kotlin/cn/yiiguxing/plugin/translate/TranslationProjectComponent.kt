@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.TKK
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.util.App
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -18,7 +17,6 @@ import javax.swing.event.HyperlinkEvent
 class TranslationProjectComponent(project: Project) : AbstractProjectComponent(project) {
 
     override fun projectOpened() {
-        TKK.updateAsync()
         checkConfig()
         checkUpdate()
         TranslationUIManager.installStatusWidget(myProject)
