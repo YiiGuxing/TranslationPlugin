@@ -6,7 +6,10 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import java.lang.Math.abs
@@ -32,6 +35,7 @@ object TKK {
     private const val MIM = 60 * 60 * 1000
     private const val ELEMENT_URL = "https://translate.google.com/translate_a/element.js"
     private const val ELEMENT_URL_CN = "https://translate.google.cn/translate_a/element.js"
+    private const val NOTIFICATION_DISPLAY_ID = "TKK Update Failed"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
@@ -41,17 +45,21 @@ object TKK {
 
     private var innerValue: Pair<Long, Long> = 0L to 0L
 
+    private var needUpdate: Boolean = true
+
     val value get() = update()
 
     @Synchronized
     fun update(): Pair<Long, Long> {
         val now = System.currentTimeMillis() / MIM
         val (curVal) = innerValue
-        if (now == curVal) {
+        if (!needUpdate && now == curVal) {
             return innerValue
         }
 
-        innerValue = updateFromGoogle() ?: now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
+        val newTKK = updateFromGoogle()
+        needUpdate = newTKK == null
+        innerValue = newTKK ?: now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
         return innerValue
     }
 
@@ -76,19 +84,20 @@ object TKK {
 
                 value1 to value2
             } else {
-                logger.w("Update TKK failed: TKK not found.")
+                logger.w("TKK update failed: TKK not found.")
+                Notifications.showWarningNotification(
+                    NOTIFICATION_DISPLAY_ID,
+                    "TKK",
+                    "TKK update failed: TKK not found."
+                )
 
                 null
             }
         } catch (e: Throwable) {
-            logger.e("Update TKK failed", e)
-            null
-        }
-    }
+            logger.w("TKK update failed", e)
+            Notifications.showErrorNotification(null, NOTIFICATION_DISPLAY_ID, "TKK", "Failed to update TKK.", e)
 
-    fun updateAsync() {
-        executeOnPooledThread {
-            update()
+            null
         }
     }
 }
