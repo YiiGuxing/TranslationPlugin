@@ -157,10 +157,10 @@ FAQ
 
 更新日志
 --------
-## [v2.3.6](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.6) (2019-07-15)
+## [v2.3.7](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.7) (2019-07-22)
 
-- 修复Google翻译Forbidden的问题
-- BUG修复
+- 优化交互检验
+- 修复对话框上不能使用翻译替换的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 

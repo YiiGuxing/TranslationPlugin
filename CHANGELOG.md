@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.3.7](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.7) (2019-07-22)
+
+- 优化交互检验
+- 修复对话框上不能使用翻译替换的问题
+
 ## [v2.3.6](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.6) (2019-07-15)
 
 - 修复Google翻译Forbidden的问题
