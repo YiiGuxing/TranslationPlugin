@@ -42,8 +42,7 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>优化交互检验</li>
-        <li>修复对话框上不能使用翻译替换的问题</li>
+        <li>修复翻译长文本时显示不全的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
