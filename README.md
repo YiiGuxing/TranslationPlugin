@@ -157,10 +157,9 @@ FAQ
 
 更新日志
 --------
-## [v2.3.7](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.7) (2019-07-22)
+## [v2.3.8](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.8) (2019-07-30)
 
-- 优化交互检验
-- 修复对话框上不能使用翻译替换的问题
+- 修复翻译长文本时显示不全的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 

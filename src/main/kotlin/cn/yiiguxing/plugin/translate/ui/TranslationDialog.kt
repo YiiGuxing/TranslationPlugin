@@ -73,8 +73,8 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     }
 
     override fun createCenterPanel(): JComponent = component.apply {
-        translationPane.setMaxWidth(JBUI.scale(WIDTH - INIT_MARGINS))
         preferredSize = JBDimension(WIDTH, HEIGHT)
+        translationPane.setMaxWidth(JBUI.scale(WIDTH - INIT_MARGINS))
         border = BORDER_ACTIVE
     }
 
@@ -690,7 +690,9 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
             }
 
             window.setBounds(x, startLocation.y, w, h)
-            translationPane.setMaxWidth(mainContentPanel.width - JBUI.scale(MARGINS))
+            val scrollBarWidth = translationPanel.verticalScrollBar.let { if (it.isVisible) it.width else 0 };
+            val maxWidth = mainContentPanel.width - JBUI.scale(MARGINS) - scrollBarWidth
+            translationPane.setMaxWidth(maxWidth)
             window.revalidate()
         }
     }
@@ -699,7 +701,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         private const val WIDTH = 400
         private const val HEIGHT = 500
 
-        private const val INIT_MARGINS = 34
+        private const val INIT_MARGINS = 54
         private const val MARGINS = 20
 
         private const val RESIZE_TOUCH_SIZE = 3

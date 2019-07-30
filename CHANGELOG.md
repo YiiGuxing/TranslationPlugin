@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.3.8](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.8) (2019-07-30)
+
+- 修复翻译长文本时显示不全的问题
+
 ## [v2.3.7](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.7) (2019-07-22)
 
 - 优化交互检验
