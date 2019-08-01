@@ -182,8 +182,8 @@ Support
     </tr>
     <tr></tr>
     <tr align="center">
-      <td><img src="./images/alipay.jpg"></td>
-      <td><img src="./images/wechat.jpg"></td>
+      <td><img src="./images/alipay.png"></td>
+      <td><img src="./images/wechat.png"></td>
     </tr>
   </table>
 
