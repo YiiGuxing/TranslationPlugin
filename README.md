@@ -164,6 +164,23 @@ FAQ
 [完整的更新历史记录](./CHANGELOG.md)
 
 
+Support
+-------
+
+您可以通过以下操作为项目提供支持：
+* 在GitHub上Star此项目
+* 将插件分享给您的朋友/同事
+* 提交PR
+* 反馈问题
+* 提出您的建议
+* 通过[Open Collective][open-collective]捐赠
+* 通过支付宝或微信捐赠
+  | 支付宝 | 微信 |
+  | :----: | :--: |
+  | ![支付宝](./images/alipay.png) | ![微信](./images/wechat.png) |
+
+感谢您的支持！
+
 其他插件
 ------
 
@@ -182,3 +199,4 @@ FAQ
 [license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
 [travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
 [plugin]: https://plugins.jetbrains.com/plugin/8579
+[open-collective]: https://opencollective.com/translation-plugin
