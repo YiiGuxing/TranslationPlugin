@@ -175,11 +175,13 @@ Support
 * 提出您的建议
 * 通过[Open Collective][open-collective]捐赠
 * 通过支付宝或微信捐赠
+
   <table>
-    <tr>
-      <th width="50%">AliPay</th>
-      <th width="50%">WeChatPay</th>
-    </tr>
+    <thead align="center">
+      <tr>
+        <th>支付宝</th>
+        <th>微信</th>
+      </tr>
     <tr></tr>
     <tr align="center">
       <td><img src="./images/alipay.png"></td>
