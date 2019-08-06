@@ -12,6 +12,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.ide.IdeBundle
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager
@@ -77,6 +78,7 @@ val Settings: Settings = Settings.instance
 val TranslateService: TranslateService = TranslateService.instance
 val TextToSpeech: TextToSpeech = TextToSpeech.instance
 val TranslationUIManager: TranslationUIManager = TranslationUIManager.instance
+val WordBookService: WordBookService = WordBookService.instance
 
 /**
  * Throws an [IllegalStateException] with the result of calling [lazyMessage] if

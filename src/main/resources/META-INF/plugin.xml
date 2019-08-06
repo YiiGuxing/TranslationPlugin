@@ -60,6 +60,7 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUIManager"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
 
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
     </extensions>
