@@ -145,7 +145,7 @@ class WordBookService {
                                 Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
                                 getString(COLUMN_PHONETIC),
                                 getString(COLUMN_EXPLAINS),
-                                getString(COLUMN_TAGS)?.split("".toRegex()) ?: emptyList(),
+                                getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
                                 getDate(COLUMN_CREATED_AT)
                             )
                         }
