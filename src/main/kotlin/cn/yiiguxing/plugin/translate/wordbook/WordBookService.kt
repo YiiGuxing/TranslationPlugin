@@ -1,3 +1,5 @@
+@file:Suppress("SqlResolve", "SqlNoDataSourceInspection")
+
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
@@ -9,10 +11,7 @@ import org.sqlite.SQLiteErrorCode
 import java.io.RandomAccessFile
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.sql.Connection
-import java.sql.PreparedStatement
-import java.sql.SQLException
-import java.sql.Statement
+import java.sql.*
 import javax.sql.DataSource
 
 /**
@@ -44,7 +43,7 @@ class WordBookService {
             execute { statement: Statement ->
                 val createTableSQL = """
                     CREATE TABLE IF NOT EXISTS wordbook (
-                        "_id"                   INTEGER PRIMARY KEY,
+                        "$COLUMN_ID"            INTEGER PRIMARY KEY,
                         $COLUMN_WORD            TEXT     NOT NULL,
                         $COLUMN_SOURCE_LANGUAGE TEXT     NOT NULL,
                         $COLUMN_TARGET_LANGUAGE TEXT     NOT NULL,
@@ -104,13 +103,7 @@ class WordBookService {
             try {
                 execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
                     with(statement) {
-                        setString(1, item.word)
-                        setString(2, item.sourceLanguage.code)
-                        setString(3, item.targetLanguage.code)
-                        setString(4, item.phonetic)
-                        setString(5, item.explains)
-                        setString(6, item.tags.takeIf { it.isNotEmpty() }?.joinToString(","))
-                        setDate(7, item.createdAt)
+                        setWordBookItem(item)
                         executeUpdate()
                     }
                 }
@@ -130,31 +123,55 @@ class WordBookService {
         }
     }
 
+    private fun PreparedStatement.setWordBookItem(item: WordBookItem) {
+        var index = 0
+        setString(++index, item.word)
+        setString(++index, item.sourceLanguage.code)
+        setString(++index, item.targetLanguage.code)
+        setString(++index, item.phonetic)
+        setString(++index, item.explains)
+        setString(++index, item.tags.takeIf { it.isNotEmpty() }?.joinToString(","))
+        setDate(++index, item.createdAt)
+    }
+
+    fun removeWord(id: Long): Boolean {
+        return lock {
+            execute { statement: Statement ->
+                statement.executeUpdate("DELETE FROM wordbook WHERE $COLUMN_ID = $id;") > 0
+            }
+        }
+    }
+
+    fun nextWord(): WordBookItem? {
+        return execute { statement: Statement ->
+            val resultSet = statement.executeQuery("SELECT * FROM wordbook ORDER BY random() LIMIT 1;")
+            resultSet.takeIf { it.next() }?.toWordBookItem()
+        }
+    }
+
     fun getWords(): List<WordBookItem> {
         execute { statement: Statement ->
-            @Suppress("SqlNoDataSourceInspection", "SqlResolve")
             val resultSet = statement.executeQuery("SELECT * FROM wordbook;")
             @Suppress("ConvertTryFinallyToUseCall")
             return try {
-                generateSequence {
-                    if (resultSet.next()) {
-                        with(resultSet) {
-                            WordBookItem(
-                                getString(COLUMN_WORD),
-                                Lang.valueOfCode(getString(COLUMN_SOURCE_LANGUAGE)),
-                                Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
-                                getString(COLUMN_PHONETIC),
-                                getString(COLUMN_EXPLAINS),
-                                getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
-                                getDate(COLUMN_CREATED_AT)
-                            )
-                        }
-                    } else null
-                }.toList()
+                generateSequence { resultSet.takeIf { it.next() }?.toWordBookItem() }.toList()
             } finally {
                 resultSet.close()
             }
         }
+    }
+
+    private fun ResultSet.toWordBookItem(): WordBookItem {
+        return WordBookItem(
+            getLong(COLUMN_ID),
+            getString(COLUMN_WORD),
+            Lang.valueOfCode(getString(COLUMN_SOURCE_LANGUAGE)),
+            Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
+            getString(COLUMN_PHONETIC),
+            getString(COLUMN_EXPLAINS),
+            getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
+            getDate(COLUMN_CREATED_AT)
+        )
     }
 
     companion object {
@@ -166,6 +183,7 @@ class WordBookService {
         private const val DATABASE_DRIVER = "org.sqlite.JDBC"
         private val DATABASE_URL = "jdbc:sqlite:${TRANSLATION_DIRECTORY.resolve("wordbook.db")}"
 
+        private const val COLUMN_ID = "_id"
         private const val COLUMN_WORD = "word"
         private const val COLUMN_SOURCE_LANGUAGE = "source_language"
         private const val COLUMN_TARGET_LANGUAGE = "target_language"
