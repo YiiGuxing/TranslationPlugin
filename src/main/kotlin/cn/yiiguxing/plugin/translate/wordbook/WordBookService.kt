@@ -1,4 +1,4 @@
-@file:Suppress("SqlResolve", "SqlNoDataSourceInspection")
+@file:Suppress("SqlResolve", "SqlNoDataSourceInspection", "ConvertTryFinallyToUseCall")
 
 package cn.yiiguxing.plugin.translate.wordbook
 
@@ -78,7 +78,6 @@ class WordBookService {
         action: (statement: T) -> R
     ): R {
         val stat = statement(dataSource.connection)
-        @Suppress("ConvertTryFinallyToUseCall")
         return try {
             action(stat)
         } finally {
@@ -145,14 +144,17 @@ class WordBookService {
     fun nextWord(): WordBookItem? {
         return execute { statement: Statement ->
             val resultSet = statement.executeQuery("SELECT * FROM wordbook ORDER BY random() LIMIT 1;")
-            resultSet.takeIf { it.next() }?.toWordBookItem()
+            return try {
+                resultSet.takeIf { it.next() }?.toWordBookItem()
+            } finally {
+                resultSet.close()
+            }
         }
     }
 
     fun getWords(): List<WordBookItem> {
         execute { statement: Statement ->
             val resultSet = statement.executeQuery("SELECT * FROM wordbook;")
-            @Suppress("ConvertTryFinallyToUseCall")
             return try {
                 generateSequence { resultSet.takeIf { it.next() }?.toWordBookItem() }.toList()
             } finally {
