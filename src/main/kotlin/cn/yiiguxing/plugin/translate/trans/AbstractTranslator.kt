@@ -8,6 +8,8 @@ import org.apache.commons.httpclient.HttpStatus
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 
 /**
  * AbstractTranslator
@@ -25,8 +27,8 @@ abstract class AbstractTranslator : Translator {
     @Suppress("InvalidBundleOrProperty")
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
-        is SocketException -> message("error.network")
-        is ConnectException -> message("error.network.connection")
+        is SocketException, is SSLHandshakeException -> message("error.network")
+        is ConnectException, is UnknownHostException -> message("error.network.connection")
         is SocketTimeoutException -> message("error.network.timeout")
         is JsonSyntaxException -> message("error.parse")
         is HttpRequests.HttpStatusException ->
