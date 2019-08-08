@@ -152,6 +152,28 @@ class WordBookService {
         }
     }
 
+    fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Int? {
+        val sql = """
+                SELECT $COLUMN_ID FROM wordbook 
+                    WHERE $COLUMN_WORD = '?' AND $COLUMN_SOURCE_LANGUAGE = '?' AND $COLUMN_TARGET_LANGUAGE = '?';
+            """.trimIndent()
+        return execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
+            val resultSet = with(statement) {
+                var index = 0
+                setString(++index, word)
+                setString(++index, sourceLanguage.code)
+                setString(++index, targetLanguage.code)
+                executeQuery()
+            }
+
+            return try {
+                resultSet.takeIf { it.next() }?.getInt(COLUMN_ID)
+            } finally {
+                resultSet.close()
+            }
+        }
+    }
+
     fun getWords(): List<WordBookItem> {
         execute { statement: Statement ->
             val resultSet = statement.executeQuery("SELECT * FROM wordbook;")
