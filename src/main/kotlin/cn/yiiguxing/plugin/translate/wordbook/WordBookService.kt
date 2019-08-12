@@ -15,7 +15,7 @@ import java.sql.*
 import javax.sql.DataSource
 
 /**
- * WordBookService
+ * Wordbook service.
  *
  * Created by Yii.Guxing on 2019/08/05.
  */
@@ -85,6 +85,16 @@ class WordBookService {
         }
     }
 
+    /**
+     * Test if the specified [word] can be added to the wordbook
+     */
+    fun canAddToWordbook(word: String?): Boolean {
+        return word != null && word.isNotBlank() && word.length <= 60
+    }
+
+    /**
+     * Adds the specified word to the word book.
+     */
     fun addWord(item: WordBookItem) {
         lock {
             val sql = """
@@ -133,6 +143,22 @@ class WordBookService {
         setDate(++index, item.createdAt)
     }
 
+    /**
+     * Updates the [tags] of the word by the specified [id].
+     */
+    fun updateTags(id: Long, tags: List<String>): Boolean {
+        val sql = "UPDATE wordbook SET $COLUMN_TAGS = '?' WHERE $COLUMN_ID = $id;"
+        return lock {
+            execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
+                statement.setString(1, tags.joinToString(","))
+                statement.executeUpdate() > 0
+            }
+        }
+    }
+
+    /**
+     * Removes the word by the specified [id].
+     */
     fun removeWord(id: Long): Boolean {
         return lock {
             execute { statement: Statement ->
@@ -141,6 +167,9 @@ class WordBookService {
         }
     }
 
+    /**
+     * Returns next random word.
+     */
     fun nextWord(): WordBookItem? {
         return execute { statement: Statement ->
             val resultSet = statement.executeQuery("SELECT * FROM wordbook ORDER BY random() LIMIT 1;")
@@ -152,6 +181,9 @@ class WordBookService {
         }
     }
 
+    /**
+     * Returns the word ID by the specified [word], [source language][sourceLanguage] and [target language][targetLanguage].
+     */
     fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Int? {
         val sql = """
                 SELECT $COLUMN_ID FROM wordbook 
@@ -174,9 +206,12 @@ class WordBookService {
         }
     }
 
+    /**
+     * Returns all words.
+     */
     fun getWords(): List<WordBookItem> {
         execute { statement: Statement ->
-            val resultSet = statement.executeQuery("SELECT * FROM wordbook;")
+            val resultSet = statement.executeQuery("SELECT * FROM wordbook ORDER BY $COLUMN_CREATED_AT DESC;")
             return try {
                 generateSequence { resultSet.takeIf { it.next() }?.toWordBookItem() }.toList()
             } finally {
