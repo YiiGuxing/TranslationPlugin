@@ -93,9 +93,9 @@ class WordBookService {
     }
 
     /**
-     * Adds the specified word to the word book.
+     * Adds the specified word to the word book and returns id if word is inserted.
      */
-    fun addWord(item: WordBookItem) {
+    fun addWord(item: WordBookItem): Long? {
         lock {
             val sql = """
                 INSERT INTO wordbook (
@@ -109,12 +109,19 @@ class WordBookService {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?);
             """.trimIndent()
 
-            try {
+            return try {
                 execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
-                    with(statement) {
+                    val effected = with(statement) {
                         setWordBookItem(item)
                         executeUpdate()
                     }
+
+                    return if (effected > 0) {
+                        statement.generatedKeys
+                            .takeIf { it.next() }
+                            ?.getLong(1)
+                            .also { item.id = it }
+                    } else null
                 }
             } catch (e: SQLException) {
                 if (e.errorCode != SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
@@ -127,8 +134,8 @@ class WordBookService {
                         e
                     )
                 }
+                null
             }
-            Unit
         }
     }
 
