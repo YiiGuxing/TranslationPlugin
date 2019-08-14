@@ -5,6 +5,7 @@ package cn.yiiguxing.plugin.translate.wordbook
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.Notifications
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import org.apache.commons.dbcp2.BasicDataSource
 import org.sqlite.SQLiteErrorCode
@@ -23,6 +24,8 @@ class WordBookService {
 
     private val lockFile: RandomAccessFile
     private val dataSource: DataSource
+    private val settingsChangePublisher: WordBookChangeListener =
+        ApplicationManager.getApplication().messageBus.syncPublisher(WordBookChangeListener.TOPIC)
 
     init {
         if (!Files.exists(TRANSLATION_DIRECTORY)) {
@@ -120,7 +123,10 @@ class WordBookService {
                         statement.generatedKeys
                             .takeIf { it.next() }
                             ?.getLong(1)
-                            .also { item.id = it }
+                            ?.also {
+                                item.id = it
+                                settingsChangePublisher.onWordAdded(this@WordBookService, item)
+                            }
                     } else null
                 }
             } catch (e: SQLException) {
@@ -171,6 +177,10 @@ class WordBookService {
             execute { statement: Statement ->
                 statement.executeUpdate("DELETE FROM wordbook WHERE $COLUMN_ID = $id;") > 0
             }
+        }.also { removed ->
+            if (removed) {
+                settingsChangePublisher.onWordRemoved(this@WordBookService, id)
+            }
         }
     }
 
@@ -191,7 +201,7 @@ class WordBookService {
     /**
      * Returns the word ID by the specified [word], [source language][sourceLanguage] and [target language][targetLanguage].
      */
-    fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Int? {
+    fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Long? {
         val sql = """
                 SELECT $COLUMN_ID FROM wordbook 
                     WHERE $COLUMN_WORD = '?' AND $COLUMN_SOURCE_LANGUAGE = '?' AND $COLUMN_TARGET_LANGUAGE = '?';
@@ -206,7 +216,7 @@ class WordBookService {
             }
 
             return try {
-                resultSet.takeIf { it.next() }?.getInt(COLUMN_ID)
+                resultSet.takeIf { it.next() }?.getLong(COLUMN_ID)
             } finally {
                 resultSet.close()
             }
