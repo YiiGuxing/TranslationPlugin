@@ -3,6 +3,8 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.wordbook.WordBookChangeListener
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
@@ -20,6 +22,7 @@ class TranslateService private constructor() {
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
         private set
+
     private val cache = LruCache<CacheKey, Translation>(500)
 
     private var messageBus: MessageBusConnection? = null
@@ -67,6 +70,9 @@ class TranslateService private constructor() {
             try {
                 with(translator) {
                     translate(text, srcLang, targetLang).let { translation ->
+                        translation.favoriteId = WordBookService.instance
+                            .takeIf { it.canAddToWordbook(text) }
+                            ?.getWordId(text, srcLang, targetLang)
                         translation.cache(text, srcLang, targetLang, id)
                         invokeLater(ModalityState.any()) {
                             listeners.run(key) { onSuccess(translation) }
@@ -83,7 +89,9 @@ class TranslateService private constructor() {
     }
 
     private inline fun MutableMap<ListenerKey, MutableSet<TranslateListener>>.run(
-            key: ListenerKey, action: TranslateListener.() -> Unit) {
+        key: ListenerKey,
+        action: TranslateListener.() -> Unit
+    ) {
         remove(key)?.forEach { it.action() }
     }
 
@@ -101,6 +109,15 @@ class TranslateService private constructor() {
         }
     }
 
+    private fun notifyFavoriteRemoved(favoriteId: Long) {
+        synchronized(cache) {
+            cache.snapshot
+                .values
+                .filter { it.favoriteId == favoriteId }
+                .forEach { it.favoriteId = null }
+        }
+    }
+
     fun install() {
         checkThread()
         if (messageBus != null) {
@@ -109,16 +126,19 @@ class TranslateService private constructor() {
 
         setTranslator(Settings.instance.translator)
         messageBus = ApplicationManager
-                .getApplication()
-                .messageBus
-                .connect()
-                .apply {
-                    subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-                        override fun onTranslatorChanged(settings: Settings, translatorId: String) {
-                            setTranslator(translatorId)
-                        }
-                    })
-                }
+            .getApplication()
+            .messageBus
+            .connect()
+            .apply {
+                subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+                    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+                        setTranslator(translatorId)
+                    }
+                })
+                subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
+                    override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
+                })
+            }
     }
 
     fun uninstall() {
