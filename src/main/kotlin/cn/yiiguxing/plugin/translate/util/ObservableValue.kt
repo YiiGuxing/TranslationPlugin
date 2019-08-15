@@ -2,7 +2,8 @@ package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
-import kotlin.properties.Delegates
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.properties.ObservableProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -10,13 +11,22 @@ import kotlin.reflect.KProperty
  *
  * Created by Yii.Guxing on 2019/08/14.
  */
-class ObservableValue<T>(initialValue: T) {
+class ObservableValue<T>(
+    initialValue: T,
+    comparison: (oldValue: T, newValue: T) -> Boolean = { ov, nv -> ov != nv }
+) {
 
-    private val listeners: MutableList<(newValue: T, oldValue: T) -> Unit> = ArrayList()
+    private val listeners: MutableList<(newValue: T, oldValue: T) -> Unit> = CopyOnWriteArrayList()
 
-    var value: T by Delegates.observable(initialValue) { _, oldValue, newValue ->
-        for (listener in listeners) {
-            listener(newValue, oldValue)
+    var value: T by object : ObservableProperty<T>(initialValue) {
+        override fun beforeChange(property: KProperty<*>, oldValue: T, newValue: T): Boolean {
+            return comparison(oldValue, newValue)
+        }
+
+        override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T) {
+            for (listener in listeners) {
+                listener(newValue, oldValue)
+            }
         }
     }
 
