@@ -110,6 +110,7 @@ class TranslateService private constructor() {
     }
 
     private fun notifyFavoriteRemoved(favoriteId: Long) {
+        checkThread()
         synchronized(cache) {
             cache.snapshot
                 .values

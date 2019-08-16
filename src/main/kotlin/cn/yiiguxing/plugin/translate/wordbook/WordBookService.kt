@@ -5,6 +5,7 @@ package cn.yiiguxing.plugin.translate.wordbook
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import org.apache.commons.dbcp2.BasicDataSource
@@ -92,7 +93,7 @@ class WordBookService {
      * Test if the specified [word] can be added to the wordbook
      */
     fun canAddToWordbook(word: String?): Boolean {
-        return word != null && word.isNotBlank() && word.length <= 60
+        return word != null && word.isNotBlank() && word.length <= 60 && '\n' !in word
     }
 
     /**
@@ -125,7 +126,9 @@ class WordBookService {
                             ?.getLong(1)
                             ?.also {
                                 item.id = it
-                                settingsChangePublisher.onWordAdded(this@WordBookService, item)
+                                invokeOnDispatchThread {
+                                    settingsChangePublisher.onWordAdded(this@WordBookService, item)
+                                }
                             }
                     } else null
                 }
@@ -179,7 +182,9 @@ class WordBookService {
             }
         }.also { removed ->
             if (removed) {
-                settingsChangePublisher.onWordRemoved(this@WordBookService, id)
+                invokeOnDispatchThread {
+                    settingsChangePublisher.onWordRemoved(this@WordBookService, id)
+                }
             }
         }
     }
