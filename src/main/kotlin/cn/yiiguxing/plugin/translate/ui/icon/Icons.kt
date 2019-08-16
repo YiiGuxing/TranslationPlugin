@@ -19,6 +19,8 @@ object Icons {
     val ClosePressed: Icon = IconLoader.getIcon("/icons/closePressed.png")
     val Audio: Icon = IconLoader.getIcon("/icons/audio.png")
     val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.png")
+    val StarOff: Icon = IconLoader.getIcon("/icons/starOff.png")
+    val StarOn: Icon = IconLoader.getIcon("/icons/starOn.png")
     val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
     val TTSSuspend: Icon = SuspendIcon(JBColor(0x757575, 0xABABAB))
     val TTSSuspendHovering: Icon = SuspendIcon(JBColor(0x555555, 0x8A8A8A))
