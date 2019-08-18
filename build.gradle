@@ -36,6 +36,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compile 'org.apache.commons:commons-dbcp2:2.6.0'
+    compile 'commons-dbutils:commons-dbutils:1.7'
     compile('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
         exclude module: 'junit'
     }
