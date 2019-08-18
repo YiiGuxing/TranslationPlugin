@@ -389,7 +389,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     private fun update() {
         if (isShowing && inputModel.size > 0) {
-            inputComboBox.selectedIndex = 0
+            translate(inputModel.getElementAt(0))
         }
     }
 
