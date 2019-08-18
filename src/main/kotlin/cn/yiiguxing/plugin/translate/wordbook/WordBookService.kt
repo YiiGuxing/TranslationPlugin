@@ -22,7 +22,7 @@ import java.sql.ResultSet
 import java.sql.SQLException
 
 /**
- * Wordbook service.
+ * Word book service.
  *
  * Created by Yii.Guxing on 2019/08/05.
  */
@@ -169,7 +169,12 @@ class WordBookService {
      * Returns next random word.
      */
     fun nextWord(): WordBookItem? {
-        return queryRunner.query("SELECT * FROM wordbook ORDER BY random() LIMIT 1", WordHandler)
+        return try {
+            queryRunner.query("SELECT * FROM wordbook ORDER BY random() LIMIT 1", WordHandler)
+        } catch (e: SQLException) {
+            LOGGER.e(e.message ?: "", e)
+            null
+        }
     }
 
     /**
@@ -180,14 +185,24 @@ class WordBookService {
                 SELECT $COLUMN_ID FROM wordbook 
                     WHERE $COLUMN_WORD = ? AND $COLUMN_SOURCE_LANGUAGE = ? AND $COLUMN_TARGET_LANGUAGE = ?
             """.trimIndent()
-        return queryRunner.query(sql, WordIdHandler, word, sourceLanguage.code, targetLanguage.code)
+        return try {
+            queryRunner.query(sql, WordIdHandler, word, sourceLanguage.code, targetLanguage.code)
+        } catch (e: SQLException) {
+            LOGGER.e(e.message ?: "", e)
+            null
+        }
     }
 
     /**
      * Returns all words.
      */
     fun getWords(): List<WordBookItem> {
-        return queryRunner.query("SELECT * FROM wordbook ORDER BY $COLUMN_CREATED_AT DESC", WordListHandler)
+        return try {
+            queryRunner.query("SELECT * FROM wordbook ORDER BY $COLUMN_CREATED_AT DESC", WordListHandler)
+        } catch (e: SQLException) {
+            LOGGER.e(e.message ?: "", e)
+            emptyList()
+        }
     }
 
 
