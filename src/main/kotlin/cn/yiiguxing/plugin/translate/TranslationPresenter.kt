@@ -4,10 +4,8 @@ import cn.yiiguxing.plugin.translate.TargetLanguageSelection.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.NON_LATIN_CONDITION
-import cn.yiiguxing.plugin.translate.util.TextToSpeech
-import cn.yiiguxing.plugin.translate.util.TranslateService
-import cn.yiiguxing.plugin.translate.util.any
+import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.openapi.diagnostic.Logger
 import java.lang.ref.WeakReference
 
 class TranslationPresenter(private val view: View, private val recordHistory: Boolean = true) : Presenter {
@@ -82,11 +80,25 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
         private val presenterRef: WeakReference<TranslationPresenter> = WeakReference(presenter)
 
         override fun onSuccess(translation: Translation) {
-            presenterRef.get()?.onPostResult(request) { showTranslation(request, translation, false) }
+            val presenter = presenterRef.get()
+            if (presenter !== null) {
+                presenter.onPostResult(request) { showTranslation(request, translation, false) }
+            } else {
+                LOGGER.w("We lost the presenter!")
+            }
         }
 
         override fun onError(message: String, throwable: Throwable) {
-            presenterRef.get()?.onPostResult(request) { showError(request, message, throwable) }
+            val presenter = presenterRef.get()
+            if (presenter !== null) {
+                presenter.onPostResult(request) { showError(request, message, throwable) }
+            } else {
+                LOGGER.w("We lost the presenter!")
+            }
         }
+    }
+
+    companion object {
+        private val LOGGER = Logger.getInstance(TranslationPresenter::class.java)
     }
 }
