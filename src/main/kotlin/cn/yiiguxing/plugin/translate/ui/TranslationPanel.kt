@@ -484,15 +484,6 @@ abstract class TranslationPanel<T : JComponent>(
         styledDocument.appendString("  ").appendString(" ", starAttribute)
     }
 
-    @Suppress("InvalidBundleOrProperty")
-    private fun getStarButtonToolTipText(favoriteId: Long?): String {
-        return if (favoriteId == null) {
-            message("tooltip.addToWordBook")
-        } else {
-            message("tooltip.removeFormWordBook")
-        }
-    }
-
     private fun Viewer.setFoldedText(text: String) {
         val foldedText = text.splitSentence(originalFoldingLength).first()
         setText(foldedText)
@@ -659,25 +650,38 @@ abstract class TranslationPanel<T : JComponent>(
             return primaryFont to phoneticFont
         }
 
+        @Suppress("InvalidBundleOrProperty")
+        private fun getStarButtonToolTipText(favoriteId: Long?): String {
+            return if (favoriteId == null) {
+                message("tooltip.addToWordBook")
+            } else {
+                message("tooltip.removeFormWordBook")
+            }
+        }
+
         private fun Translation.toWordBookItem(): WordBookItem {
-            val explains = StringBuilder()
+            val explainsBuilder = StringBuilder()
             if (!trans.isNullOrBlank()) {
-                explains.append(trans)
+                explainsBuilder.append(trans)
                 if (dictionaries.isNotEmpty() || basicExplains.isNotEmpty()) {
-                    explains.append("\n\n")
+                    explainsBuilder.append("\n\n")
                 }
             }
 
-            dictionaries.joinTo(explains, "\n") {
-                explains.append(it.partOfSpeech, ": ")
-                it.terms.joinTo(explains, "; ")
+            val wordsBuilder = StringBuilder()
+            dictionaries.joinTo(explainsBuilder, "\n") { dict ->
+                wordsBuilder.also { builder ->
+                    builder.setLength(0)
+                    builder.append(dict.partOfSpeech, ": ")
+                    dict.terms.joinTo(builder, "; ")
+                }
             }
 
             if (dictionaries.isNotEmpty() && basicExplains.isNotEmpty()) {
-                explains.append("\n\n")
+                explainsBuilder.append("\n\n")
             }
 
-            basicExplains.joinTo(explains, "\n")
+            basicExplains.joinTo(explainsBuilder, "\n")
 
             return WordBookItem(
                 null,
@@ -685,7 +689,7 @@ abstract class TranslationPanel<T : JComponent>(
                 srcLang,
                 targetLang,
                 srcTransliteration,
-                explains.toString()
+                explainsBuilder.toString()
             )
         }
     }
