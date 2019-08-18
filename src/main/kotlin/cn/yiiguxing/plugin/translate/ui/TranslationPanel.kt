@@ -473,12 +473,24 @@ abstract class TranslationPanel<T : JComponent>(
                 }
             }
         }, translation)
+        starLabel.alignmentY = 0.86f
+        starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
         translation.observableFavoriteId.observe(this@TranslationPanel) { favoriteId, _ ->
             starLabel.icon = if (favoriteId == null) Icons.StarOff else Icons.StarOn
+            starLabel.toolTipText = getStarButtonToolTipText(favoriteId)
         }
 
         val starAttribute = SimpleAttributeSet().also { StyleConstants.setComponent(it, starLabel) }
-        styledDocument.appendString(" ").appendString(" ", starAttribute)
+        styledDocument.appendString("  ").appendString(" ", starAttribute)
+    }
+
+    @Suppress("InvalidBundleOrProperty")
+    private fun getStarButtonToolTipText(favoriteId: Long?): String {
+        return if (favoriteId == null) {
+            message("tooltip.addToWordBook")
+        } else {
+            message("tooltip.removeFormWordBook")
+        }
     }
 
     private fun Viewer.setFoldedText(text: String) {
