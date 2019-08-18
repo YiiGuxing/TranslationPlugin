@@ -1,20 +1,25 @@
-@file:Suppress("SqlResolve", "SqlNoDataSourceInspection", "ConvertTryFinallyToUseCall")
+@file:Suppress("SqlResolve", "SqlNoDataSourceInspection", "ConvertTryFinallyToUseCall", "SqlDialectInspection")
 
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.e
+import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.diagnostic.Logger
 import org.apache.commons.dbcp2.BasicDataSource
+import org.apache.commons.dbutils.QueryRunner
+import org.apache.commons.dbutils.ResultSetHandler
 import org.sqlite.SQLiteErrorCode
 import java.io.RandomAccessFile
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.sql.*
-import javax.sql.DataSource
+import java.sql.ResultSet
+import java.sql.SQLException
 
 /**
  * Wordbook service.
@@ -24,7 +29,7 @@ import javax.sql.DataSource
 class WordBookService {
 
     private val lockFile: RandomAccessFile
-    private val dataSource: DataSource
+    private val queryRunner: QueryRunner
     private val settingsChangePublisher: WordBookChangeListener =
         ApplicationManager.getApplication().messageBus.syncPublisher(WordBookChangeListener.TOPIC)
 
@@ -34,18 +39,19 @@ class WordBookService {
         }
 
         lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
-        dataSource = BasicDataSource().apply {
+
+        val dataSource = BasicDataSource().apply {
             driverClassName = DATABASE_DRIVER
             url = DATABASE_URL
         }
+        queryRunner = QueryRunner(dataSource)
 
-        initTable()
+        executeOnPooledThread { initTable() }
     }
 
     private fun initTable() {
         lock {
-            execute { statement: Statement ->
-                val createTableSQL = """
+            val createTableSQL = """
                     CREATE TABLE IF NOT EXISTS wordbook (
                         "$COLUMN_ID"            INTEGER PRIMARY KEY,
                         $COLUMN_WORD            TEXT     NOT NULL,
@@ -55,37 +61,27 @@ class WordBookService {
                         $COLUMN_EXPLAINS        TEXT,
                         $COLUMN_TAGS            TEXT,
                         $COLUMN_CREATED_AT      DATETIME NOT NULL
-                    );
+                    )
                 """.trimIndent()
-                statement.executeUpdate(createTableSQL)
+            queryRunner.update(createTableSQL)
 
-                val createIndexSQL = """
+            val createIndexSQL = """
                     CREATE UNIQUE INDEX IF NOT EXISTS wordbook_unique_index
-                        ON wordbook ($COLUMN_WORD, $COLUMN_SOURCE_LANGUAGE, $COLUMN_TARGET_LANGUAGE);
+                        ON wordbook ($COLUMN_WORD, $COLUMN_SOURCE_LANGUAGE, $COLUMN_TARGET_LANGUAGE)
                 """.trimIndent()
-                statement.executeUpdate(createIndexSQL)
-            }
+            queryRunner.update(createIndexSQL)
         }
     }
 
-    private inline fun <T> lock(action: () -> T): T {
+    private inline fun <T> lock(action: () -> T): T? {
         val fileLock = lockFile.channel.lock(0L, Long.MAX_VALUE, true)
         return try {
             action()
+        } catch (e: Throwable) {
+            LOGGER.e(e.message ?: "", e)
+            null
         } finally {
             fileLock.release()
-        }
-    }
-
-    private inline fun <reified T : Statement, R> execute(
-        statement: (connection: Connection) -> T = { it.createStatement() as T },
-        action: (statement: T) -> R
-    ): R {
-        val stat = statement(dataSource.connection)
-        return try {
-            action(stat)
-        } finally {
-            stat.close()
         }
     }
 
@@ -100,7 +96,7 @@ class WordBookService {
      * Adds the specified word to the word book and returns id if word is inserted.
      */
     fun addWord(item: WordBookItem): Long? {
-        lock {
+        return lock {
             val sql = """
                 INSERT INTO wordbook (
                     $COLUMN_WORD,
@@ -110,27 +106,25 @@ class WordBookService {
                     $COLUMN_EXPLAINS,
                     $COLUMN_TAGS,
                     $COLUMN_CREATED_AT
-                ) VALUES (?, ?, ?, ?, ?, ?, ?);
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             return try {
-                execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
-                    val effected = with(statement) {
-                        setWordBookItem(item)
-                        executeUpdate()
+                queryRunner.insert<Long?>(
+                    sql,
+                    WordIdHandler,
+                    item.word,
+                    item.sourceLanguage.code,
+                    item.targetLanguage.code,
+                    item.phonetic,
+                    item.explains,
+                    item.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
+                    item.createdAt
+                )?.also {
+                    item.id = it
+                    invokeOnDispatchThread {
+                        settingsChangePublisher.onWordAdded(this@WordBookService, item)
                     }
-
-                    return if (effected > 0) {
-                        statement.generatedKeys
-                            .takeIf { it.next() }
-                            ?.getLong(1)
-                            ?.also {
-                                item.id = it
-                                invokeOnDispatchThread {
-                                    settingsChangePublisher.onWordAdded(this@WordBookService, item)
-                                }
-                            }
-                    } else null
                 }
             } catch (e: SQLException) {
                 if (e.errorCode != SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
@@ -148,28 +142,12 @@ class WordBookService {
         }
     }
 
-    private fun PreparedStatement.setWordBookItem(item: WordBookItem) {
-        var index = 0
-        setString(++index, item.word)
-        setString(++index, item.sourceLanguage.code)
-        setString(++index, item.targetLanguage.code)
-        setString(++index, item.phonetic)
-        setString(++index, item.explains)
-        setString(++index, item.tags.takeIf { it.isNotEmpty() }?.joinToString(","))
-        setDate(++index, item.createdAt)
-    }
-
     /**
      * Updates the [tags] of the word by the specified [id].
      */
     fun updateTags(id: Long, tags: List<String>): Boolean {
-        val sql = "UPDATE wordbook SET $COLUMN_TAGS = '?' WHERE $COLUMN_ID = $id;"
-        return lock {
-            execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
-                statement.setString(1, tags.joinToString(","))
-                statement.executeUpdate() > 0
-            }
-        }
+        val sql = "UPDATE wordbook SET $COLUMN_TAGS = ? WHERE $COLUMN_ID = ?"
+        return lock { queryRunner.update(sql, tags.joinToString(","), id) > 0 } == true
     }
 
     /**
@@ -177,30 +155,21 @@ class WordBookService {
      */
     fun removeWord(id: Long): Boolean {
         return lock {
-            execute { statement: Statement ->
-                statement.executeUpdate("DELETE FROM wordbook WHERE $COLUMN_ID = $id;") > 0
-            }
-        }.also { removed ->
+            queryRunner.update("DELETE FROM wordbook WHERE $COLUMN_ID = $id") > 0
+        }?.also { removed ->
             if (removed) {
                 invokeOnDispatchThread {
                     settingsChangePublisher.onWordRemoved(this@WordBookService, id)
                 }
             }
-        }
+        } == true
     }
 
     /**
      * Returns next random word.
      */
     fun nextWord(): WordBookItem? {
-        return execute { statement: Statement ->
-            val resultSet = statement.executeQuery("SELECT * FROM wordbook ORDER BY random() LIMIT 1;")
-            return try {
-                resultSet.takeIf { it.next() }?.toWordBookItem()
-            } finally {
-                resultSet.close()
-            }
-        }
+        return queryRunner.query("SELECT * FROM wordbook ORDER BY random() LIMIT 1", WordHandler)
     }
 
     /**
@@ -209,51 +178,33 @@ class WordBookService {
     fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Long? {
         val sql = """
                 SELECT $COLUMN_ID FROM wordbook 
-                    WHERE $COLUMN_WORD = '?' AND $COLUMN_SOURCE_LANGUAGE = '?' AND $COLUMN_TARGET_LANGUAGE = '?';
+                    WHERE $COLUMN_WORD = ? AND $COLUMN_SOURCE_LANGUAGE = ? AND $COLUMN_TARGET_LANGUAGE = ?
             """.trimIndent()
-        return execute({ it.prepareStatement(sql) }) { statement: PreparedStatement ->
-            val resultSet = with(statement) {
-                var index = 0
-                setString(++index, word)
-                setString(++index, sourceLanguage.code)
-                setString(++index, targetLanguage.code)
-                executeQuery()
-            }
-
-            return try {
-                resultSet.takeIf { it.next() }?.getLong(COLUMN_ID)
-            } finally {
-                resultSet.close()
-            }
-        }
+        return queryRunner.query(sql, WordIdHandler, word, sourceLanguage.code, targetLanguage.code)
     }
 
     /**
      * Returns all words.
      */
     fun getWords(): List<WordBookItem> {
-        execute { statement: Statement ->
-            val resultSet = statement.executeQuery("SELECT * FROM wordbook ORDER BY $COLUMN_CREATED_AT DESC;")
-            return try {
-                generateSequence { resultSet.takeIf { it.next() }?.toWordBookItem() }.toList()
-            } finally {
-                resultSet.close()
-            }
+        return queryRunner.query("SELECT * FROM wordbook ORDER BY $COLUMN_CREATED_AT DESC", WordListHandler)
+    }
+
+
+    private object WordIdHandler : ResultSetHandler<Long?> {
+        override fun handle(rs: ResultSet): Long? = rs.takeIf { it.next() }?.getLong(1)
+    }
+
+    private object WordHandler : ResultSetHandler<WordBookItem?> {
+        override fun handle(rs: ResultSet): WordBookItem? = rs.takeIf { it.next() }?.toWordBookItem()
+    }
+
+    private object WordListHandler : ResultSetHandler<List<WordBookItem>> {
+        override fun handle(rs: ResultSet): List<WordBookItem> {
+            return generateSequence { rs.takeIf { it.next() }?.toWordBookItem() }.toList()
         }
     }
 
-    private fun ResultSet.toWordBookItem(): WordBookItem {
-        return WordBookItem(
-            getLong(COLUMN_ID),
-            getString(COLUMN_WORD),
-            Lang.valueOfCode(getString(COLUMN_SOURCE_LANGUAGE)),
-            Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
-            getString(COLUMN_PHONETIC),
-            getString(COLUMN_EXPLAINS),
-            getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
-            getDate(COLUMN_CREATED_AT)
-        )
-    }
 
     companion object {
         private const val NOTIFICATION_DISPLAY_ID = "Wordbook"
@@ -273,7 +224,22 @@ class WordBookService {
         private const val COLUMN_TAGS = "tags"
         private const val COLUMN_CREATED_AT = "created_at"
 
+        private val LOGGER = Logger.getInstance(WordBookService::class.java)
+
         val instance: WordBookService
             get() = ServiceManager.getService(WordBookService::class.java)
+
+        private fun ResultSet.toWordBookItem(): WordBookItem {
+            return WordBookItem(
+                getLong(COLUMN_ID),
+                getString(COLUMN_WORD),
+                Lang.valueOfCode(getString(COLUMN_SOURCE_LANGUAGE)),
+                Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
+                getString(COLUMN_PHONETIC),
+                getString(COLUMN_EXPLAINS),
+                getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
+                getDate(COLUMN_CREATED_AT)
+            )
+        }
     }
 }
