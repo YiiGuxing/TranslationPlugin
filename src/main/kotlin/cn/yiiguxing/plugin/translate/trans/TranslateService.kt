@@ -72,7 +72,8 @@ class TranslateService private constructor() {
                     translate(text, srcLang, targetLang).let { translation ->
                         translation.favoriteId = WordBookService.instance
                             .takeIf { it.canAddToWordbook(text) }
-                            ?.getWordId(text, srcLang, targetLang)
+                            // 这里的`sourceLanguage`参数不能直接使用`srcLang`，因为`srcLang`的值可能为`Lang.AUTO`
+                            ?.getWordId(text, translation.srcLang, translation.targetLang)
                         translation.cache(text, srcLang, targetLang, id)
                         invokeLater(ModalityState.any()) {
                             listeners.run(key) { onSuccess(translation) }
