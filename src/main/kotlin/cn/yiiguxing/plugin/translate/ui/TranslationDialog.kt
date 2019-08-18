@@ -389,6 +389,9 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     private fun update() {
         if (isShowing && inputModel.size > 0) {
+            ignoreInputEvent = true
+            inputComboBox.selectedIndex = 0
+            ignoreInputEvent = false
             translate(inputModel.getElementAt(0))
         }
     }
