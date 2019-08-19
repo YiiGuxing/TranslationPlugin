@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookChangeListener
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
@@ -110,13 +111,29 @@ class TranslateService private constructor() {
         }
     }
 
+    private fun notifyFavoriteAdded(item: WordBookItem) {
+        checkThread()
+        synchronized(cache) {
+            for ((_, translation) in cache.snapshot) {
+                if (translation.favoriteId == null &&
+                    translation.srcLang == item.sourceLanguage &&
+                    translation.targetLang == item.targetLanguage &&
+                    translation.original.equals(item.word, true)
+                ) {
+                    translation.favoriteId = item.id
+                }
+            }
+        }
+    }
+
     private fun notifyFavoriteRemoved(favoriteId: Long) {
         checkThread()
         synchronized(cache) {
-            cache.snapshot
-                .values
-                .filter { it.favoriteId == favoriteId }
-                .forEach { it.favoriteId = null }
+            for ((_, translation) in cache.snapshot) {
+                if (translation.favoriteId == favoriteId) {
+                    translation.favoriteId = null
+                }
+            }
         }
     }
 
@@ -131,16 +148,26 @@ class TranslateService private constructor() {
             .getApplication()
             .messageBus
             .connect()
-            .apply {
-                subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-                    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
-                        setTranslator(translatorId)
-                    }
-                })
-                subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
-                    override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
-                })
+            .subscribeSettingsTopic()
+            .subscribeWordBookTopic()
+    }
+
+    private fun MessageBusConnection.subscribeSettingsTopic() = apply {
+        subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+            override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+                setTranslator(translatorId)
             }
+        })
+    }
+
+    private fun MessageBusConnection.subscribeWordBookTopic() = apply {
+        subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
+            override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
+                notifyFavoriteAdded(wordBookItem)
+            }
+
+            override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
+        })
     }
 
     fun uninstall() {
