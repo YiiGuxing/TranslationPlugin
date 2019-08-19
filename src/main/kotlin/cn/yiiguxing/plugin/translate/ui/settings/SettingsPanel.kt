@@ -242,6 +242,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                     || settings.showWordForms != showWordFormsCheckBox.isSelected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
                     || settings.selectTargetLanguageBeforeReplacement != selectTargetLanguageCheckBox.isSelected
+                    || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
         }
 
 
@@ -274,6 +275,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
             showWordForms = showWordFormsCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
             selectTargetLanguageBeforeReplacement = selectTargetLanguageCheckBox.isSelected
+            showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
@@ -296,6 +298,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         showWordFormsCheckBox.isSelected = settings.showWordForms
         autoReplaceCheckBox.isSelected = settings.autoReplace
         selectTargetLanguageCheckBox.isSelected = settings.selectTargetLanguageBeforeReplacement
+        showWordsOnStartupCheckBox.isSelected = settings.showWordsOnStartup
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
         previewPrimaryFont(settings.primaryFontFamily)
