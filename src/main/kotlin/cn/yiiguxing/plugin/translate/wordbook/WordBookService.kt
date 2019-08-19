@@ -53,14 +53,14 @@ class WordBookService {
         lock {
             val createTableSQL = """
                     CREATE TABLE IF NOT EXISTS wordbook (
-                        "$COLUMN_ID"            INTEGER PRIMARY KEY,
-                        $COLUMN_WORD            TEXT     NOT NULL,
-                        $COLUMN_SOURCE_LANGUAGE TEXT     NOT NULL,
-                        $COLUMN_TARGET_LANGUAGE TEXT     NOT NULL,
+                        "$COLUMN_ID"            INTEGER  PRIMARY KEY,
+                        $COLUMN_WORD            TEXT     COLLATE NOCASE NOT NULL,
+                        $COLUMN_SOURCE_LANGUAGE TEXT                    NOT NULL,
+                        $COLUMN_TARGET_LANGUAGE TEXT                    NOT NULL,
                         $COLUMN_PHONETIC        TEXT,
                         $COLUMN_EXPLAINS        TEXT,
                         $COLUMN_TAGS            TEXT,
-                        $COLUMN_CREATED_AT      DATETIME NOT NULL
+                        $COLUMN_CREATED_AT      DATETIME                NOT NULL
                     )
                 """.trimIndent()
             queryRunner.update(createTableSQL)
