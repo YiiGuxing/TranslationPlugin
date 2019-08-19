@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
-import cn.yiiguxing.plugin.translate.util.App
+import cn.yiiguxing.plugin.translate.util.Plugin
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
@@ -28,7 +28,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
             return
         }
 
-        val displayId = "${App.plugin.name} App Key"
+        val displayId = "${Plugin.descriptor.name} App Key"
         val group = NotificationGroup(displayId, NotificationDisplayType.STICKY_BALLOON, true)
         val title = message("notification.title.settings.appKey")
         val content = message(
@@ -57,7 +57,7 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
     }
 
     private fun checkUpdate() {
-        val plugin = App.plugin
+        val plugin = Plugin.descriptor
         val version = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         if (version != properties.getValue(VERSION_PROPERTY)) {
@@ -79,6 +79,6 @@ class TranslationProjectComponent(project: Project) : AbstractProjectComponent(p
     }
 
     private companion object {
-        private const val VERSION_PROPERTY = "${App.PLUGIN_ID}.version"
+        private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
     }
 }
