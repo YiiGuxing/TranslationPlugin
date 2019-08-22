@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project
 import javax.swing.Action
 
 /**
- * WordOfDayDialog
+ * Word of the day dialog
  *
  * Created by Yii.Guxing on 2019/08/20.
  */

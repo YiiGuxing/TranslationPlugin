@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 /**
- * WordOfDayDialogForm
+ * Word of the day dialog form
  * <p>
  * Created by Yii.Guxing on 2019/08/19.
  */
