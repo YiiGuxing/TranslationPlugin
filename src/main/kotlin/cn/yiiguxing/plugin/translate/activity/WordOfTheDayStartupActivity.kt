@@ -1,8 +1,6 @@
 package cn.yiiguxing.plugin.translate.activity
 
-import cn.yiiguxing.plugin.translate.ui.WordDialog
-import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
@@ -37,7 +35,18 @@ class WordOfTheDayStartupActivity : StartupActivity, DumbAware {
             if (delayCount > 0) {
                 ToolWindowManager.getInstance(project).invokeLater { run(project, delayCount - 1) }
             } else {
-                WordDialog(project).show()
+                executeOnPooledThread {
+                    if (project.isDisposed) {
+                        return@executeOnPooledThread
+                    }
+                    WordBookService.nextWord()?.let { word ->
+                        invokeLater {
+                            if (!project.isDisposed) {
+                                TranslationUIManager.showWordDialog(project, word)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
