@@ -63,6 +63,8 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
 
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
+
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
 
     <application-components>

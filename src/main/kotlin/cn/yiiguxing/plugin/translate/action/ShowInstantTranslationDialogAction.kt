@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.ui.WordDialog
 import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -20,7 +21,7 @@ class ShowInstantTranslationDialogAction : AnAction(Icons.Translate2), DumbAware
 
     override fun actionPerformed(e: AnActionEvent) {
         if (!ApplicationManager.getApplication().isHeadlessEnvironment) {
-            TranslationUIManager.showInstantTranslationDialog(e.project)
+            WordDialog(e.project).show()
         }
     }
 }
