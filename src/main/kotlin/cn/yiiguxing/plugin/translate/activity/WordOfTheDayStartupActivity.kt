@@ -39,13 +39,16 @@ class WordOfTheDayStartupActivity : StartupActivity, DumbAware {
                     if (project.isDisposed) {
                         return@executeOnPooledThread
                     }
-                    WordBookService.nextWord()?.let { word ->
-                        invokeLater {
-                            if (!project.isDisposed) {
-                                TranslationUIManager.showWordDialog(project, word)
+                    WordBookService.getWords()
+                        .takeIf { it.isNotEmpty() }
+                        ?.let { words ->
+                            val sortedWords = words.sortedBy { Math.random() }
+                            invokeLater {
+                                if (!project.isDisposed) {
+                                    TranslationUIManager.showWordDialog(project, sortedWords)
+                                }
                             }
                         }
-                    }
                 }
             }
         }

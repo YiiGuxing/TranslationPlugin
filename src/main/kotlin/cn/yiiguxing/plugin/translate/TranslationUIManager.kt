@@ -71,8 +71,13 @@ class TranslationUIManager private constructor() {
         return showDialog(project, instantTranslationDialogMap) { InstantTranslationDialog(project) }
     }
 
-    fun showWordDialog(project: Project?, wordBookItem: WordBookItem): WordDialog {
-        return showDialog(project, wordDialogMap, { it.setWord(wordBookItem) }) { WordDialog(project, wordBookItem) }
+    /**
+     * 显示每日单词对话框
+     *
+     * @return 对话框实例
+     */
+    fun showWordDialog(project: Project?, words: List<WordBookItem>): WordDialog {
+        return showDialog(project, wordDialogMap, { it.setWords(words) }) { WordDialog(project, words) }
     }
 
     /**
