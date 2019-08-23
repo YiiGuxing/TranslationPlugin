@@ -51,6 +51,7 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
         initFont()
 
         explainsCard.apply {
+            removeAll()
             layout = this@WordDialog.layout
             add(maskPanel, CARD_MASK)
             add(explainsView, CARD_EXPLAINS_VIEW)

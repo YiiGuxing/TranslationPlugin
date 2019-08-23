@@ -24,6 +24,7 @@ public class WordDialogForm extends DialogWrapper {
     private static final Color BORDER_COLOR = new JBColor(0xE0E0E0, 0x5D6162);
     private static final Color BACKGROUND_COLOR = new JBColor(0xFFFFFF, 0x494D4E);
     private static final Color BACKGROUND_COLOR_EXPLAINS = new JBColor(0xF2F2F2, 0x535758);
+    private static final Color SCROLL_BAR_BACKGROUND_COLOR_EXPLAINS = new JBColor(0xF0F0F0, 0x515556);
 
     private JPanel rootPanel;
     private JScrollPane scrollPane;
@@ -46,6 +47,8 @@ public class WordDialogForm extends DialogWrapper {
         scrollPane.setBorder(JBUI.Borders.customLine(BORDER_COLOR));
         scrollPane.setBackground(BACKGROUND_COLOR_EXPLAINS);
         explainsCard.setBackground(BACKGROUND_COLOR_EXPLAINS);
+        scrollPane.getHorizontalScrollBar().setBackground(SCROLL_BAR_BACKGROUND_COLOR_EXPLAINS);
+        scrollPane.getVerticalScrollBar().setBackground(SCROLL_BAR_BACKGROUND_COLOR_EXPLAINS);
     }
 
     private void createUIComponents() {
