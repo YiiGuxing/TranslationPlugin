@@ -129,6 +129,9 @@
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 text="Translate Text Component"
                 use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$ShowWordOfTheDayAction"
+                class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"
+                text="Word of the Day"/>
 
         <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">
             <separator/>
