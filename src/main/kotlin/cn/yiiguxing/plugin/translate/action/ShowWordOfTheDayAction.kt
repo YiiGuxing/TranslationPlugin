@@ -16,18 +16,15 @@ import com.intellij.openapi.ui.MessageType
  */
 class ShowWordOfTheDayAction : AnAction(), DumbAware {
 
-    private var isLoading: Boolean = false
-
     init {
         templatePresentation.description = message("word.of.the.day.title")
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        if (Application.isUnitTestMode || isLoading) {
+        if (Application.isUnitTestMode) {
             return
         }
 
-        isLoading = true
         val project = e.project
         executeOnPooledThread {
             if (project?.isDisposed == true) {
@@ -44,7 +41,6 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
                         Popups.showBalloonForActiveFrame(message, MessageType.INFO)
                     }
                 }
-                isLoading = false
             }
         }
     }
