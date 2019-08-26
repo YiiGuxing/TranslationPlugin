@@ -64,6 +64,11 @@
 
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
 
+        <toolWindow id="Word Book"
+                    anchor="right"
+                    secondary="true"
+                    factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
+
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
 
