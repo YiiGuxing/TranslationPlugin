@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.project.DumbAware
@@ -18,6 +19,11 @@ import javax.swing.JPanel
  * Created by Yii.Guxing on 2019/08/26.
  */
 class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
+
+    override fun init(window: ToolWindow) {
+        super.init(window)
+        window.icon = Icons.Wordbook
+    }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val contentManager = toolWindow.contentManager
