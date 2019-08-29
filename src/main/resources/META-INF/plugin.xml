@@ -61,6 +61,7 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUIManager"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
 

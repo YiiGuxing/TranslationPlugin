@@ -83,6 +83,12 @@ val TextToSpeech: TextToSpeech = TextToSpeech.instance
 val TranslationUIManager: TranslationUIManager = TranslationUIManager.instance
 val WordBookService: WordBookService = WordBookService.instance
 
+
+/**
+ * Asserts whether the method is being called from the event dispatch thread.
+ */
+inline fun assertIsDispatchThread() = Application.assertIsDispatchThread()
+
 /**
  * Throws an [IllegalStateException] with the result of calling [lazyMessage] if
  * the current thread is not the Swing dispatch thread.
