@@ -1,17 +1,22 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.WordBookPanel
 import cn.yiiguxing.plugin.translate.util.Application
+import cn.yiiguxing.plugin.translate.util.Popups
+import cn.yiiguxing.plugin.translate.util.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.assertIsDispatchThread
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
-import javax.swing.Icon
-import javax.swing.JPanel
 
 /**
  * Word book view.
@@ -22,7 +27,11 @@ class WordBookView {
 
     private var isInitialized: Boolean = false
 
-    fun setup(toolWindow: ToolWindow) {
+    private val words: MutableList<WordBookItem> = ArrayList()
+
+    private val wordBookPanels: MutableMap<Project, WordBookPanel> = HashMap()
+
+    fun setup(project: Project, toolWindow: ToolWindow) {
         assertIsDispatchThread()
 
         val contentManager = toolWindow.contentManager
@@ -30,12 +39,14 @@ class WordBookView {
             (toolWindow as ToolWindowEx).setTitleActions(RefreshAction(), ShowWordOfTheDayAction())
         }
 
-        val panel = SimpleToolWindowPanel(true, true)
-        panel.setContent(JPanel())
+        val panel = wordBookPanels.getOrPut(project) { WordBookPanel() }
+        Disposer.register(project, Disposable { wordBookPanels.remove(project) })
 
         val content = contentManager.factory.createContent(panel, null, false)
         contentManager.addContent(content)
         contentManager.setSelectedContent(content)
+
+        refresh()
 
         subscribeWordBookTopic()
         isInitialized = true
@@ -47,39 +58,55 @@ class WordBookView {
                 .connect()
                 .subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
                     override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
+                        words.add(wordBookItem)
+                        notifyWordsChanged()
                     }
 
                     override fun onWordRemoved(service: WordBookService, id: Long) {
+                        words.indexOfFirst { it.id == id }?.let {
+                            words.removeAt(it)
+                            notifyWordsChanged()
+                        }
                     }
                 })
         }
     }
 
-    private abstract class WordBookAction(text: String?, description: String?, icon: Icon?) :
-        DumbAwareAction(text, description, icon) {
-
-        init {
-        }
-
-        override fun update(e: AnActionEvent) {
-        }
+    private fun refresh() {
+        val newWords = WordBookService.getWords()
+        words.clear()
+        words.addAll(newWords)
+        notifyWordsChanged()
     }
 
-    private inner class RefreshAction : WordBookAction(
+    private fun notifyWordsChanged() {
+
+    }
+
+    private inner class RefreshAction : DumbAwareAction(
         message("wordbook.window.action.refresh"),
         message("wordbook.window.action.refresh.desc"),
         AllIcons.Actions.Refresh
     ) {
-        override fun actionPerformed(e: AnActionEvent) {
-
-        }
+        override fun actionPerformed(e: AnActionEvent) = refresh()
     }
 
-    private inner class ShowWordOfTheDayAction : WordBookAction(
+    private inner class ShowWordOfTheDayAction : DumbAwareAction(
         message("word.of.the.day.title"), null, AllIcons.Actions.IntentionBulb
     ) {
         override fun actionPerformed(e: AnActionEvent) {
-
+            println(e.inputEvent.component)
+            if (words.isNotEmpty()) {
+                TranslationUIManager.showWordDialog(e.project, words.toList())
+            } else {
+                Popups.showBalloonForComponent(
+                    e.inputEvent.component,
+                    message("wordbook.window.message.empty"),
+                    MessageType.INFO,
+                    e.project,
+                    offsetY = 2
+                )
+            }
         }
     }
 

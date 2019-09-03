@@ -19,7 +19,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        WordBookView.instance.setup(toolWindow)
+        WordBookView.instance.setup(project, toolWindow)
     }
 
 }

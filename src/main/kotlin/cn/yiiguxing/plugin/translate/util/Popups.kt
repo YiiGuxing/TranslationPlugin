@@ -38,17 +38,24 @@ object Popups {
             return
         }
 
-        showBalloonForComponent(frame.component, message, type, frame.project)
+        showBalloonForComponent(frame.component, message, type, frame.project, offsetY = 10)
     }
 
-    fun showBalloonForComponent(component: Component, message: String, type: MessageType, project: Project?) {
+    fun showBalloonForComponent(
+        component: Component,
+        message: String,
+        type: MessageType,
+        project: Project?,
+        offsetX: Int = 0,
+        offsetY: Int = 0
+    ) {
         val balloon = JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(message, type, null)
             .setDisposable(project ?: ApplicationManager.getApplication())
             .createBalloon()
         val (point, position) = component.size?.let { size ->
-            Point(size.width / 2, size.height + 10) to Balloon.Position.below
-        } ?: Point(0, 0) to Balloon.Position.above
+            Point(size.width / 2 + offsetX, size.height + offsetY) to Balloon.Position.below
+        } ?: Point(offsetX, offsetY) to Balloon.Position.above
         balloon.show(RelativePoint(component, point), position)
     }
 }
