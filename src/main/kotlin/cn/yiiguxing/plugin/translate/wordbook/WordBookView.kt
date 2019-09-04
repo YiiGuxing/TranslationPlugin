@@ -47,6 +47,7 @@ class WordBookView {
         contentManager.setSelectedContent(content)
 
         refresh()
+        panel.showTable()
 
         subscribeWordBookTopic()
         isInitialized = true
@@ -63,8 +64,9 @@ class WordBookView {
                     }
 
                     override fun onWordRemoved(service: WordBookService, id: Long) {
-                        words.indexOfFirst { it.id == id }?.let {
-                            words.removeAt(it)
+                        val index = words.indexOfFirst { it.id == id }
+                        if (index >= 0) {
+                            words.removeAt(index)
                             notifyWordsChanged()
                         }
                     }
@@ -104,7 +106,7 @@ class WordBookView {
                     message("wordbook.window.message.empty"),
                     MessageType.INFO,
                     e.project,
-                    offsetY = 2
+                    offsetY = 1
                 )
             }
         }
