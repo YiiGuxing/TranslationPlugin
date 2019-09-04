@@ -473,7 +473,7 @@ abstract class TranslationPanel<T : JComponent>(
                 }
             }
         }, translation)
-        starLabel.alignmentY = 0.86f
+        starLabel.alignmentY = 0.9f
         starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
         translation.observableFavoriteId.observe(this@TranslationPanel) { favoriteId, _ ->
             starLabel.icon = if (favoriteId == null) Icons.StarOff else Icons.StarOn
