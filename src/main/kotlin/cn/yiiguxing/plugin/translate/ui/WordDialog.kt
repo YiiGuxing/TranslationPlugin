@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent
 import java.lang.Boolean.TRUE
 import javax.swing.AbstractAction
 import javax.swing.Action
-import javax.swing.SwingConstants
 
 /**
  * Word of the day dialog
@@ -58,7 +57,6 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
             add(explainsView, CARD_EXPLAINS_VIEW)
         }
 
-        ttsButton.verticalTextPosition = SwingConstants.BOTTOM
         explainsView.border = JBUI.Borders.empty(10)
         showExplanationButton.addActionListener { layout.show(explainsCard, CARD_EXPLAINS_VIEW) }
     }
@@ -80,7 +78,7 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
 
         ttsButton.font = phoneticFont
         explainsView.font = primaryFont
-        wordView.font = primaryFont.biggerOn(1f).asBold()
+        wordView.font = primaryFont.biggerOn(3f).asBold()
     }
 
     override fun getStyle(): DialogStyle = DialogStyle.COMPACT
