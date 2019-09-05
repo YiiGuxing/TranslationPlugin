@@ -10,7 +10,6 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.ui.PopupMenuListenerAdapter
-import com.intellij.ui.SingleSelectionModel
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
@@ -18,7 +17,11 @@ import com.intellij.util.ui.ListTableModel
 import java.awt.CardLayout
 import java.awt.Component
 import java.awt.datatransfer.StringSelection
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.SwingUtilities
 import javax.swing.event.PopupMenuEvent
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableCellRenderer
@@ -34,6 +37,7 @@ class WordBookPanel() : WordBookWindowForm() {
 
     init {
         tableView.setup()
+        MouseHandler(tableView)
         TableSpeedSearch(tableView)
     }
 
@@ -41,7 +45,7 @@ class WordBookPanel() : WordBookWindowForm() {
         rowSelectionAllowed = true
         setEnableAntialiasing(true)
         setModelAndUpdateColumns(tableModel)
-        selectionModel = SingleSelectionModel()
+        selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
 
         setupMenu()
     }
@@ -115,6 +119,33 @@ class WordBookPanel() : WordBookWindowForm() {
         override fun valueOf(item: WordBookItem): String = item.explains?.replace('\n', ' ') ?: ""
 
         override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
+    }
+
+    private class MouseHandler(private val table: TableView<*>) : MouseAdapter() {
+        init {
+            table.addMouseListener(this)
+            table.addMouseMotionListener(this)
+        }
+
+        override fun mousePressed(e: MouseEvent) {
+            val p = e.point
+            val row = table.rowAtPoint(p)
+            val column = table.columnAtPoint(p)
+            if (column == -1 || row == -1) {
+                table.clearSelection()
+            }
+        }
+
+        override fun mouseDragged(e: MouseEvent) {
+            val p = e.point
+            val row = table.rowAtPoint(p)
+            val column = table.columnAtPoint(p)
+            if (column == -1 || row == -1) {
+                table.clearSelection()
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                table.changeSelection(row, column, false, true)
+            }
+        }
     }
 
     companion object {
