@@ -2,21 +2,22 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.WordBookPanel
-import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.Popups
-import cn.yiiguxing.plugin.translate.util.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.WordBookService
-import cn.yiiguxing.plugin.translate.util.assertIsDispatchThread
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.JBMenuItem
+import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
+import java.awt.datatransfer.StringSelection
 
 /**
  * Word book view.
@@ -43,7 +44,10 @@ class WordBookView {
         }
 
         val panel = wordBookPanels.getOrPut(project) {
-            WordBookPanel().apply { setWords(this@WordBookView.words) }
+            WordBookPanel().apply {
+                setupMenu()
+                setWords(this@WordBookView.words)
+            }
         }
 
         val content = contentManager.factory.createContent(panel, null, false)
@@ -60,6 +64,24 @@ class WordBookView {
 
         subscribeWordBookTopic()
         isInitialized = true
+    }
+
+    private fun WordBookPanel.setupMenu() {
+        val menu = JBPopupMenu()
+
+        val copy = JBMenuItem(message("wordbook.window.menu.copy"), AllIcons.Actions.Copy)
+        copy.addActionListener {
+            selectedWord?.let { CopyPasteManager.getInstance().setContents(StringSelection(it.word)) }
+        }
+        menu.add(copy)
+
+        val delete = JBMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.Delete)
+        delete.addActionListener {
+            selectedWord?.id?.let { id -> executeOnPooledThread { WordBookService.removeWord(id) } }
+        }
+        menu.add(delete)
+
+        popupMenu = menu
     }
 
     private fun subscribeWordBookTopic() {

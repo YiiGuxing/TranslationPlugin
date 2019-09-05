@@ -2,27 +2,19 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.WordBookWindowForm
-import cn.yiiguxing.plugin.translate.util.WordBookService
-import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
-import com.intellij.icons.AllIcons
-import com.intellij.openapi.ide.CopyPasteManager
-import com.intellij.openapi.ui.JBMenuItem
-import com.intellij.openapi.ui.JBPopupMenu
-import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import java.awt.CardLayout
 import java.awt.Component
-import java.awt.datatransfer.StringSelection
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import javax.swing.JPopupMenu
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
 import javax.swing.SwingUtilities
-import javax.swing.event.PopupMenuEvent
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableCellRenderer
 
@@ -35,9 +27,12 @@ class WordBookPanel() : WordBookWindowForm() {
 
     private val tableModel: ListTableModel<WordBookItem> = ListTableModel(WordColumnInfo, ExplainsColumnInfo)
 
+    val selectedWord: WordBookItem? get() = tableView.selectedObject
+
+    var popupMenu: JPopupMenu? = null
+
     init {
         tableView.setup()
-        MouseHandler(tableView)
         TableSpeedSearch(tableView)
     }
 
@@ -47,34 +42,9 @@ class WordBookPanel() : WordBookWindowForm() {
         setModelAndUpdateColumns(tableModel)
         selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
 
-        setupMenu()
-    }
-
-    private fun TableView<WordBookItem>.setupMenu() {
-        val copy = JBMenuItem(message("wordbook.window.menu.copy"), AllIcons.Actions.Copy).apply {
-            addActionListener {
-                selectedObject?.let { CopyPasteManager.getInstance().setContents(StringSelection(it.word)) }
-            }
-        }
-
-        val delete = JBMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.Delete).apply {
-            addActionListener {
-                selectedObject?.id?.let { id -> executeOnPooledThread { WordBookService.removeWord(id) } }
-            }
-        }
-
-        val menu = JBPopupMenu()
-        menu.add(copy)
-        menu.add(delete)
-        menu.addPopupMenuListener(object : PopupMenuListenerAdapter() {
-            override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-                val enable = selectedObject != null
-                copy.isEnabled = enable
-                delete.isEnabled = enable
-            }
-        })
-
-        componentPopupMenu = menu
+        val handler = MouseHandler()
+        addMouseListener(handler)
+        addMouseMotionListener(handler)
     }
 
     fun showMessagePane() {
@@ -121,14 +91,11 @@ class WordBookPanel() : WordBookWindowForm() {
         override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
     }
 
-    private class MouseHandler(private val table: TableView<*>) : MouseAdapter() {
-        init {
-            table.addMouseListener(this)
-            table.addMouseMotionListener(this)
-        }
+    private inner class MouseHandler : MouseAdapter() {
 
         override fun mousePressed(e: MouseEvent) {
             val p = e.point
+            val table = tableView
             val row = table.rowAtPoint(p)
             val column = table.columnAtPoint(p)
             if (column == -1 || row == -1) {
@@ -138,12 +105,23 @@ class WordBookPanel() : WordBookWindowForm() {
 
         override fun mouseDragged(e: MouseEvent) {
             val p = e.point
+            val table = tableView
             val row = table.rowAtPoint(p)
             val column = table.columnAtPoint(p)
             if (column == -1 || row == -1) {
                 table.clearSelection()
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 table.changeSelection(row, column, false, true)
+            }
+        }
+
+        override fun mouseReleased(e: MouseEvent) {
+            val table = tableView
+            if (SwingUtilities.isRightMouseButton(e) && !e.isConsumed && table.selectedObject != null) {
+                popupMenu?.let { popup ->
+                    popup.show(table, e.x, e.y)
+                    e.consume()
+                }
             }
         }
     }
