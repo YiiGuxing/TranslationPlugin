@@ -38,15 +38,22 @@
           </grid>
         </children>
       </grid>
-      <component id="bd5d2" class="com.intellij.ui.table.TableView" binding="tableView">
+      <scrollpane id="e539a">
         <constraints>
           <card name="CARD_TABLE"/>
         </constraints>
-        <properties>
-          <enabled value="true"/>
-          <showHorizontalLines value="false"/>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="bd5d2" class="com.intellij.ui.table.TableView" binding="tableView">
+            <constraints/>
+            <properties>
+              <enabled value="true"/>
+              <striped value="true"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

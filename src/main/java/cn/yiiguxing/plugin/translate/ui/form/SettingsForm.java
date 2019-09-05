@@ -56,7 +56,7 @@ public class SettingsForm {
     private JBCheckBox mAutoReplaceCheckBox;
     private JBCheckBox mSelectTargetLanguageCheckBox;
     private JBCheckBox mShowWordsOnStartupCheckBox;
-    private JBCheckBox mShowExplainsCheckBox;
+    private JBCheckBox mShowExplanationCheckBox;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -250,8 +250,8 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JBCheckBox getShowExplainsCheckBox() {
-        return mShowExplainsCheckBox;
+    public final JBCheckBox getShowExplanationCheckBox() {
+        return mShowExplanationCheckBox;
     }
 
     @NotNull

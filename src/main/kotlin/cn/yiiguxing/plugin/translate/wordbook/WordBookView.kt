@@ -39,7 +39,9 @@ class WordBookView {
             (toolWindow as ToolWindowEx).setTitleActions(RefreshAction(), ShowWordOfTheDayAction())
         }
 
-        val panel = wordBookPanels.getOrPut(project) { WordBookPanel() }
+        val panel = wordBookPanels.getOrPut(project) {
+            WordBookPanel().apply { setWords(this@WordBookView.words) }
+        }
         Disposer.register(project, Disposable { wordBookPanels.remove(project) })
 
         val content = contentManager.factory.createContent(panel, null, false)
@@ -82,7 +84,9 @@ class WordBookView {
     }
 
     private fun notifyWordsChanged() {
-
+        for ((_, panel) in wordBookPanels) {
+            panel.update()
+        }
     }
 
     private inner class RefreshAction : DumbAwareAction(

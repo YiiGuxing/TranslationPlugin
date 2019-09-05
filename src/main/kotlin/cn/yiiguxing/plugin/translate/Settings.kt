@@ -118,7 +118,7 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 每日单词默认显示释义
      */
-    var showExplains: Boolean = false
+    var showExplanation: Boolean = false
 
     /**
      * 翻译替换结果唯一时自动替换

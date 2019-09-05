@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent
 import java.lang.Boolean.TRUE
 import javax.swing.AbstractAction
 import javax.swing.Action
+import javax.swing.SwingConstants
 
 /**
  * Word of the day dialog
@@ -57,8 +58,9 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
             add(explainsView, CARD_EXPLAINS_VIEW)
         }
 
+        ttsButton.verticalTextPosition = SwingConstants.BOTTOM
         explainsView.border = JBUI.Borders.empty(10)
-        showExplainsButton.addActionListener { layout.show(explainsCard, CARD_EXPLAINS_VIEW) }
+        showExplanationButton.addActionListener { layout.show(explainsCard, CARD_EXPLAINS_VIEW) }
     }
 
     private fun initFont() {
@@ -76,7 +78,7 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
             }
         }
 
-        phoneticLabel.font = phoneticFont
+        ttsButton.font = phoneticFont
         explainsView.font = primaryFont
         wordView.font = primaryFont.biggerOn(1f).asBold()
     }
@@ -114,11 +116,12 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
 
     private fun setWord(word: WordBookItem) {
         wordView.text = word.word
-        phoneticLabel.text = word.phonetic?.takeIf { it.isNotBlank() } ?: " "
+        ttsButton.text = word.phonetic?.takeIf { it.isNotBlank() } ?: " "
         ttsButton.dataSource { word.word to word.sourceLanguage }
         explainsView.text = word.explains
+        explanationLabel.text = message("word.of.the.day.language.explanation", word.targetLanguage.langName)
 
-        layout.show(explainsCard, if (Settings.showExplains) CARD_EXPLAINS_VIEW else CARD_MASK)
+        layout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)
     }
 
     override fun show() {

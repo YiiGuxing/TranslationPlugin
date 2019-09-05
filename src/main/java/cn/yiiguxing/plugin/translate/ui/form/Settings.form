@@ -370,12 +370,12 @@
                   <text resource-bundle="messages/TranslationBundle" key="settings.options.showWordsOnStartup"/>
                 </properties>
               </component>
-              <component id="437ac" class="com.intellij.ui.components.JBCheckBox" binding="mShowExplainsCheckBox">
+              <component id="437ac" class="com.intellij.ui.components.JBCheckBox" binding="mShowExplanationCheckBox">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text resource-bundle="messages/TranslationBundle" key="settings.options.showExplains"/>
+                  <text resource-bundle="messages/TranslationBundle" key="settings.options.showExplanation"/>
                 </properties>
               </component>
             </children>

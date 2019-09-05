@@ -20,7 +20,7 @@ import java.awt.*;
 public class WordDialogForm extends DialogWrapper {
 
     private static final int DEFAULT_WIDTH = 400;
-    private static final int DEFAULT_HEIGHT = 150;
+    private static final int DEFAULT_HEIGHT = 160;
     private static final Color BORDER_COLOR = new JBColor(0xE0E0E0, 0x5D6162);
     private static final Color BACKGROUND_COLOR = new JBColor(0xFFFFFF, 0x494D4E);
     private static final Color BACKGROUND_COLOR_EXPLAINS = new JBColor(0xF2F2F2, 0x535758);
@@ -29,12 +29,12 @@ public class WordDialogForm extends DialogWrapper {
     private JPanel rootPanel;
     private JScrollPane scrollPane;
     protected Viewer wordView;
-    protected JLabel phoneticLabel;
     protected TTSButton ttsButton;
     protected JPanel explainsCard;
     protected JPanel maskPanel;
     protected Viewer explainsView;
-    protected JButton showExplainsButton;
+    protected JButton showExplanationButton;
+    protected JLabel explanationLabel;
 
     protected WordDialogForm(@Nullable Project project) {
         super(project);
