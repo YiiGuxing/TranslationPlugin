@@ -29,10 +29,13 @@ class WordBookView {
 
     private val words: MutableList<WordBookItem> = ArrayList()
 
+    private val windows: MutableMap<Project, ToolWindow> = HashMap()
     private val wordBookPanels: MutableMap<Project, WordBookPanel> = HashMap()
 
     fun setup(project: Project, toolWindow: ToolWindow) {
         assertIsDispatchThread()
+
+        windows[project] = toolWindow
 
         val contentManager = toolWindow.contentManager
         if (!Application.isUnitTestMode) {
@@ -42,7 +45,6 @@ class WordBookView {
         val panel = wordBookPanels.getOrPut(project) {
             WordBookPanel().apply { setWords(this@WordBookView.words) }
         }
-        Disposer.register(project, Disposable { wordBookPanels.remove(project) })
 
         val content = contentManager.factory.createContent(panel, null, false)
         contentManager.addContent(content)
@@ -50,6 +52,11 @@ class WordBookView {
 
         refresh()
         panel.showTable()
+
+        Disposer.register(project, Disposable {
+            windows.remove(project)
+            wordBookPanels.remove(project)
+        })
 
         subscribeWordBookTopic()
         isInitialized = true
@@ -101,15 +108,17 @@ class WordBookView {
         message("word.of.the.day.title"), null, AllIcons.Actions.IntentionBulb
     ) {
         override fun actionPerformed(e: AnActionEvent) {
-            println(e.inputEvent.component)
+            val project = e.project
             if (words.isNotEmpty()) {
-                TranslationUIManager.showWordDialog(e.project, words.toList())
+                windows[project]?.hide {
+                    TranslationUIManager.showWordDialog(project, words.toList())
+                }
             } else {
                 Popups.showBalloonForComponent(
                     e.inputEvent.component,
                     message("wordbook.window.message.empty"),
                     MessageType.INFO,
-                    e.project,
+                    project,
                     offsetY = 1
                 )
             }
