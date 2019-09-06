@@ -32,7 +32,7 @@ public class WordDialogForm extends DialogWrapper {
     protected TTSButton ttsButton;
     protected JPanel explainsCard;
     protected JPanel maskPanel;
-    protected Viewer explainsView;
+    protected Viewer explanationView;
     protected JButton showExplanationButton;
     protected JLabel explanationLabel;
 
@@ -53,7 +53,7 @@ public class WordDialogForm extends DialogWrapper {
 
     private void createUIComponents() {
         wordView = new Viewer();
-        explainsView = new Viewer();
+        explanationView = new Viewer();
         ttsButton = new TTSButton();
     }
 

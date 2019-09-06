@@ -54,10 +54,10 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
             removeAll()
             layout = this@WordOfTheDayDialog.layout
             add(maskPanel, CARD_MASK)
-            add(explainsView, CARD_EXPLAINS_VIEW)
+            add(explanationView, CARD_EXPLAINS_VIEW)
         }
 
-        explainsView.border = JBUI.Borders.empty(10)
+        explanationView.border = JBUI.Borders.empty(10)
         showExplanationButton.addActionListener { layout.show(explainsCard, CARD_EXPLAINS_VIEW) }
     }
 
@@ -77,7 +77,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         }
 
         ttsButton.font = phoneticFont
-        explainsView.font = primaryFont
+        explanationView.font = primaryFont
         wordView.font = primaryFont.biggerOn(3f).asBold()
     }
 
@@ -116,7 +116,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         wordView.text = word.word
         ttsButton.text = word.phonetic?.takeIf { it.isNotBlank() } ?: " "
         ttsButton.dataSource { word.word to word.sourceLanguage }
-        explainsView.text = word.explains
+        explanationView.text = word.explanation
         explanationLabel.text = message("word.of.the.day.language.explanation", word.targetLanguage.langName)
 
         layout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)

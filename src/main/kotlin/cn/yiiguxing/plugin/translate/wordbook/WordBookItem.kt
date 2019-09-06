@@ -14,7 +14,7 @@ data class WordBookItem(
     val sourceLanguage: Lang,
     val targetLanguage: Lang,
     val phonetic: String?,
-    val explains: String?,
+    val explanation: String?,
     val tags: List<String> = emptyList(),
     val createdAt: Date = Date(System.currentTimeMillis())
 )

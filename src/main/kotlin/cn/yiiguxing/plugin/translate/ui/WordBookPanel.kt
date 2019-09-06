@@ -86,7 +86,7 @@ class WordBookPanel() : WordBookWindowForm() {
 
     private object ExplainsColumnInfo :
         ColumnInfo<WordBookItem, String>(message("wordbook.window.table.title.explanation")) {
-        override fun valueOf(item: WordBookItem): String = item.explains?.replace('\n', ' ') ?: ""
+        override fun valueOf(item: WordBookItem): String = item.explanation?.replace('\n', ' ') ?: ""
 
         override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
     }

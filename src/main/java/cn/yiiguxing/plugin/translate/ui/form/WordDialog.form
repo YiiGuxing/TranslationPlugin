@@ -44,7 +44,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="cc98b" class="cn.yiiguxing.plugin.translate.ui.Viewer" binding="explainsView" custom-create="true">
+                  <component id="cc98b" class="cn.yiiguxing.plugin.translate.ui.Viewer" binding="explanationView" custom-create="true">
                     <constraints>
                       <card name="CARD_EXPLAINS_VIEW"/>
                     </constraints>

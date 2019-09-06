@@ -58,7 +58,7 @@ class WordBookService {
                         $COLUMN_SOURCE_LANGUAGE TEXT                    NOT NULL,
                         $COLUMN_TARGET_LANGUAGE TEXT                    NOT NULL,
                         $COLUMN_PHONETIC        TEXT,
-                        $COLUMN_EXPLAINS        TEXT,
+                        $COLUMN_EXPLANATION     TEXT,
                         $COLUMN_TAGS            TEXT,
                         $COLUMN_CREATED_AT      DATETIME                NOT NULL
                     )
@@ -103,7 +103,7 @@ class WordBookService {
                     $COLUMN_SOURCE_LANGUAGE,
                     $COLUMN_TARGET_LANGUAGE,
                     $COLUMN_PHONETIC,
-                    $COLUMN_EXPLAINS,
+                    $COLUMN_EXPLANATION,
                     $COLUMN_TAGS,
                     $COLUMN_CREATED_AT
                 ) VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -117,7 +117,7 @@ class WordBookService {
                     item.sourceLanguage.code,
                     item.targetLanguage.code,
                     item.phonetic,
-                    item.explains,
+                    item.explanation,
                     item.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
                     item.createdAt
                 )?.also {
@@ -235,7 +235,7 @@ class WordBookService {
         private const val COLUMN_SOURCE_LANGUAGE = "source_language"
         private const val COLUMN_TARGET_LANGUAGE = "target_language"
         private const val COLUMN_PHONETIC = "phonetic"
-        private const val COLUMN_EXPLAINS = "explains"
+        private const val COLUMN_EXPLANATION = "explanation"
         private const val COLUMN_TAGS = "tags"
         private const val COLUMN_CREATED_AT = "created_at"
 
@@ -251,7 +251,7 @@ class WordBookService {
                 Lang.valueOfCode(getString(COLUMN_SOURCE_LANGUAGE)),
                 Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
                 getString(COLUMN_PHONETIC),
-                getString(COLUMN_EXPLAINS),
+                getString(COLUMN_EXPLANATION),
                 getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
                 getDate(COLUMN_CREATED_AT)
             )
