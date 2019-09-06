@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
@@ -77,7 +78,19 @@ class WordBookView {
 
         val delete = JBMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.Delete)
         delete.addActionListener {
-            selectedWord?.id?.let { id -> executeOnPooledThread { WordBookService.removeWord(id) } }
+            selectedWord?.let { word ->
+                val id = word.id
+                if (id != null) {
+                    val confirmed = Messages.showOkCancelDialog(
+                        message("wordbook.window.confirmation.delete.message", word.word),
+                        message("wordbook.window.confirmation.delete.title"),
+                        null
+                    ) == Messages.OK
+                    if (confirmed) {
+                        executeOnPooledThread { WordBookService.removeWord(id) }
+                    }
+                }
+            }
         }
         menu.add(delete)
 
