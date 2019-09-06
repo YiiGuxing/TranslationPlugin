@@ -11,6 +11,7 @@ import java.awt.CardLayout
 import java.awt.Component
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.util.*
 import javax.swing.JPopupMenu
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
@@ -79,9 +80,13 @@ class WordBookPanel() : WordBookWindowForm() {
 
     private object WordColumnInfo :
         ColumnInfo<WordBookItem, String>(message("wordbook.window.table.title.word")) {
+        private val COMPARATOR = Comparator<WordBookItem> { word1, word2 -> word1.word.compareTo(word2.word) }
+
         override fun valueOf(item: WordBookItem): String = item.word
 
         override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
+
+        override fun getComparator(): Comparator<WordBookItem> = COMPARATOR
     }
 
     private object ExplainsColumnInfo :
