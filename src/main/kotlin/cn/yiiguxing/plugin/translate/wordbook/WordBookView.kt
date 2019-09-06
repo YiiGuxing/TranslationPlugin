@@ -103,11 +103,13 @@ class WordBookView {
                 .connect()
                 .subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
                     override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
+                        assertIsDispatchThread()
                         words.add(wordBookItem)
                         notifyWordsChanged()
                     }
 
                     override fun onWordRemoved(service: WordBookService, id: Long) {
+                        assertIsDispatchThread()
                         val index = words.indexOfFirst { it.id == id }
                         if (index >= 0) {
                             words.removeAt(index)
