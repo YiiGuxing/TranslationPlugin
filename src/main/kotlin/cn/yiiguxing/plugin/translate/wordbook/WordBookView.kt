@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.WordBookPanel
+import cn.yiiguxing.plugin.translate.ui.WordDetailsDialog
+import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import com.intellij.icons.AllIcons
@@ -19,6 +21,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import java.awt.datatransfer.StringSelection
+import javax.swing.Icon
 
 /**
  * Word book view.
@@ -48,6 +51,7 @@ class WordBookView {
             WordBookPanel().apply {
                 setupMenu()
                 setWords(this@WordBookView.words)
+                onWordDoubleClicked { word -> openWordDetails(word) }
             }
         }
 
@@ -68,17 +72,13 @@ class WordBookView {
     }
 
     private fun WordBookPanel.setupMenu() {
-        val menu = JBPopupMenu()
-
-        val copy = JBMenuItem(message("wordbook.window.menu.copy"), AllIcons.Actions.Copy)
-        copy.addActionListener {
-            selectedWord?.let { CopyPasteManager.getInstance().setContents(StringSelection(it.word)) }
-        }
-        menu.add(copy)
-
-        val delete = JBMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.Delete)
-        delete.addActionListener {
-            selectedWord?.let { word ->
+        val panel = this@setupMenu
+        popupMenu = JBPopupMenu()
+            .addMenuItem(panel, message("wordbook.window.menu.detail"), Icons.Detail) { openWordDetails(it) }
+            .addMenuItem(panel, message("wordbook.window.menu.copy"), AllIcons.Actions.Copy) { word ->
+                CopyPasteManager.getInstance().setContents(StringSelection(word.word))
+            }
+            .addMenuItem(panel, message("wordbook.window.menu.delete"), AllIcons.Actions.Delete) { word ->
                 val id = word.id
                 if (id != null) {
                     val confirmed = Messages.showOkCancelDialog(
@@ -91,10 +91,19 @@ class WordBookView {
                     }
                 }
             }
-        }
-        menu.add(delete)
+    }
 
-        popupMenu = menu
+    private inline fun JBPopupMenu.addMenuItem(
+        panel: WordBookPanel,
+        text: String,
+        icon: Icon,
+        crossinline action: (WordBookItem) -> Unit
+    ): JBPopupMenu {
+        val menuItem = JBMenuItem(text, icon)
+        menuItem.addActionListener { panel.selectedWord?.let { action(it) } }
+        add(menuItem)
+
+        return this
     }
 
     private fun subscribeWordBookTopic() {
@@ -131,6 +140,10 @@ class WordBookView {
         for ((_, panel) in wordBookPanels) {
             panel.update()
         }
+    }
+
+    private fun openWordDetails(word: WordBookItem) {
+        WordDetailsDialog(word).show()
     }
 
     private inner class RefreshAction : DumbAwareAction(

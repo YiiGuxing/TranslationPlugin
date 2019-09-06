@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
+import com.intellij.util.ui.JBSwingUtilities
 import com.intellij.util.ui.ListTableModel
 import java.awt.CardLayout
 import java.awt.Component
@@ -15,7 +16,6 @@ import java.util.*
 import javax.swing.JPopupMenu
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
-import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableCellRenderer
 
@@ -31,6 +31,8 @@ class WordBookPanel() : WordBookWindowForm() {
     val selectedWord: WordBookItem? get() = tableView.selectedObject
 
     var popupMenu: JPopupMenu? = null
+
+    private var onWordDoubleClickHandler: ((WordBookItem) -> Unit)? = null
 
     init {
         tableView.setup()
@@ -63,6 +65,10 @@ class WordBookPanel() : WordBookWindowForm() {
 
     fun update() {
         tableModel.fireTableDataChanged()
+    }
+
+    fun onWordDoubleClicked(handler: (word: WordBookItem) -> Unit) {
+        onWordDoubleClickHandler = handler
     }
 
     private object WordsTableCellRenderer : DefaultTableCellRenderer.UIResource() {
@@ -115,16 +121,29 @@ class WordBookPanel() : WordBookWindowForm() {
             val column = table.columnAtPoint(p)
             if (column == -1 || row == -1) {
                 table.clearSelection()
-            } else if (SwingUtilities.isRightMouseButton(e)) {
+            } else if (JBSwingUtilities.isRightMouseButton(e)) {
                 table.changeSelection(row, column, false, true)
             }
         }
 
         override fun mouseReleased(e: MouseEvent) {
             val table = tableView
-            if (SwingUtilities.isRightMouseButton(e) && !e.isConsumed && table.selectedObject != null) {
+            if (JBSwingUtilities.isRightMouseButton(e) && !e.isConsumed && table.selectedObject != null) {
                 popupMenu?.let { popup ->
                     popup.show(table, e.x, e.y)
+                    e.consume()
+                }
+            }
+        }
+
+        override fun mouseClicked(e: MouseEvent) {
+            if (!JBSwingUtilities.isLeftMouseButton(e) || e.isConsumed || e.clickCount != 2) {
+                return
+            }
+
+            tableView.selectedObject?.let { word ->
+                onWordDoubleClickHandler?.let { handler ->
+                    handler(word)
                     e.consume()
                 }
             }
