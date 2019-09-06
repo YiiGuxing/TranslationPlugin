@@ -45,7 +45,7 @@ class WordOfTheDayStartupActivity : StartupActivity, DumbAware {
                             val sortedWords = words.sortedBy { Math.random() }
                             invokeLater {
                                 if (!project.isDisposed) {
-                                    TranslationUIManager.showWordDialog(project, sortedWords)
+                                    TranslationUIManager.showWordOfTheDayDialog(project, sortedWords)
                                 }
                             }
                         }

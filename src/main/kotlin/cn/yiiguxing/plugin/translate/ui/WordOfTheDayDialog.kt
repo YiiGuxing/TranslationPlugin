@@ -22,7 +22,7 @@ import javax.swing.Action
  *
  * Created by Yii.Guxing on 2019/08/20.
  */
-class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(project) {
+class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(project) {
 
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
     private val layout = FixedSizeCardLayout()
@@ -52,7 +52,7 @@ class WordDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(
 
         explainsCard.apply {
             removeAll()
-            layout = this@WordDialog.layout
+            layout = this@WordOfTheDayDialog.layout
             add(maskPanel, CARD_MASK)
             add(explainsView, CARD_EXPLAINS_VIEW)
         }

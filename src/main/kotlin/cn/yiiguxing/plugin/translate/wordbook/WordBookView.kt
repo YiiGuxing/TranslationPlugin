@@ -133,7 +133,7 @@ class WordBookView {
             val project = e.project
             if (words.isNotEmpty()) {
                 windows[project]?.hide {
-                    TranslationUIManager.showWordDialog(project, words.toList())
+                    TranslationUIManager.showWordOfTheDayDialog(project, words.toList())
                 }
             } else {
                 Popups.showBalloonForComponent(

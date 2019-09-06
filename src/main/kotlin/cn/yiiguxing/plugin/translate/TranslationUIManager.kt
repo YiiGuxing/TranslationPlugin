@@ -25,7 +25,7 @@ class TranslationUIManager private constructor() {
     private val balloonMap: MutableMap<Project?, TranslationBalloon> = HashMap()
     private val dialogMap: MutableMap<Project?, TranslationDialog> = HashMap()
     private val instantTranslationDialogMap: MutableMap<Project?, InstantTranslationDialog> = HashMap()
-    private val wordDialogMap: MutableMap<Project?, WordDialog> = HashMap()
+    private val wordOfTheDayDialogMap: MutableMap<Project?, WordOfTheDayDialog> = HashMap()
 
     /**
      * 显示气泡
@@ -76,8 +76,8 @@ class TranslationUIManager private constructor() {
      *
      * @return 对话框实例
      */
-    fun showWordDialog(project: Project?, words: List<WordBookItem>): WordDialog {
-        return showDialog(project, wordDialogMap, { it.setWords(words) }) { WordDialog(project, words) }
+    fun showWordOfTheDayDialog(project: Project?, words: List<WordBookItem>): WordOfTheDayDialog {
+        return showDialog(project, wordOfTheDayDialogMap, { it.setWords(words) }) { WordOfTheDayDialog(project, words) }
     }
 
     /**

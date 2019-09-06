@@ -35,7 +35,7 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
             invokeLater {
                 if (project?.isDisposed != true) {
                     if (words.isNotEmpty()) {
-                        TranslationUIManager.showWordDialog(project, words)
+                        TranslationUIManager.showWordOfTheDayDialog(project, words)
                     } else {
                         val message = message("word.of.the.day.no.words")
                         Popups.showBalloonForActiveFrame(message, MessageType.INFO)
