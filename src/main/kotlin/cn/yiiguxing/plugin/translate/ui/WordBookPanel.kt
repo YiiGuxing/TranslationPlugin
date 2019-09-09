@@ -60,15 +60,24 @@ class WordBookPanel() : WordBookWindowForm() {
 
     fun setWords(words: List<WordBookItem>) {
         tableModel.items = words
-        update()
+        fireWordsChanged()
     }
 
-    fun update() {
-        tableModel.fireTableDataChanged()
+    fun fireWordsChanged(row: Int = ALL_ROWS, type: ChangeType = ChangeType.UPDATE) {
+        when {
+            row == ALL_ROWS -> tableModel.fireTableDataChanged()
+            type == ChangeType.UPDATE -> tableModel.fireTableRowsUpdated(row, row)
+            type == ChangeType.INSERT -> tableModel.fireTableRowsInserted(row, row)
+            type == ChangeType.DELETE -> tableModel.fireTableRowsDeleted(row, row)
+        }
     }
 
     fun onWordDoubleClicked(handler: (word: WordBookItem) -> Unit) {
         onWordDoubleClickHandler = handler
+    }
+
+    enum class ChangeType {
+        UPDATE, INSERT, DELETE
     }
 
     private object WordsTableCellRenderer : DefaultTableCellRenderer.UIResource() {
@@ -153,5 +162,7 @@ class WordBookPanel() : WordBookWindowForm() {
     companion object {
         private const val CARD_MESSAGE = "CARD_MESSAGE"
         private const val CARD_TABLE = "CARD_TABLE"
+
+        const val ALL_ROWS = -1
     }
 }

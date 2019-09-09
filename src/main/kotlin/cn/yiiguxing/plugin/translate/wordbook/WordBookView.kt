@@ -114,7 +114,7 @@ class WordBookView {
                     override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
                         assertIsDispatchThread()
                         words.add(wordBookItem)
-                        notifyWordsChanged()
+                        notifyWordsChanged(words.lastIndex, WordBookPanel.ChangeType.INSERT)
                     }
 
                     override fun onWordRemoved(service: WordBookService, id: Long) {
@@ -122,7 +122,7 @@ class WordBookView {
                         val index = words.indexOfFirst { it.id == id }
                         if (index >= 0) {
                             words.removeAt(index)
-                            notifyWordsChanged()
+                            notifyWordsChanged(index, WordBookPanel.ChangeType.DELETE)
                         }
                     }
                 })
@@ -136,9 +136,12 @@ class WordBookView {
         notifyWordsChanged()
     }
 
-    private fun notifyWordsChanged() {
+    private fun notifyWordsChanged(
+        row: Int = WordBookPanel.ALL_ROWS,
+        type: WordBookPanel.ChangeType = WordBookPanel.ChangeType.UPDATE
+    ) {
         for ((_, panel) in wordBookPanels) {
-            panel.update()
+            panel.fireWordsChanged(row, type)
         }
     }
 
