@@ -110,7 +110,7 @@ class WordBookService {
             """.trimIndent()
 
             return try {
-                queryRunner.insert<Long?>(
+                queryRunner.insert(
                     sql,
                     WordIdHandler,
                     item.word,
@@ -142,6 +142,19 @@ class WordBookService {
         }
     }
 
+    fun updateWord(word: WordBookItem): Boolean {
+        val id = requireNotNull(word.id) { "Required word id was null." }
+        val sql = "UPDATE wordbook SET $COLUMN_PHONETIC = ?, $COLUMN_EXPLANATION = ? WHERE $COLUMN_ID = ?"
+        val updated = lock { queryRunner.update(sql, word.phonetic, word.explanation, id) > 0 } == true
+        if (updated) {
+            invokeOnDispatchThread {
+                settingsChangePublisher.onWordUpdated(this@WordBookService, word)
+            }
+        }
+
+        return updated
+    }
+
     /**
      * Updates the [tags] of the word by the specified [id].
      */
@@ -163,18 +176,6 @@ class WordBookService {
                 }
             }
         } == true
-    }
-
-    /**
-     * Returns next random word.
-     */
-    fun nextWord(): WordBookItem? {
-        return try {
-            queryRunner.query("SELECT * FROM wordbook ORDER BY random() LIMIT 1", WordHandler)
-        } catch (e: SQLException) {
-            LOGGER.e(e.message ?: "", e)
-            null
-        }
     }
 
     /**

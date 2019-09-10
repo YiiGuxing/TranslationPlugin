@@ -117,6 +117,15 @@ class WordBookView {
                         notifyWordsChanged(words.lastIndex, WordBookPanel.ChangeType.INSERT)
                     }
 
+                    override fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {
+                        assertIsDispatchThread()
+                        val index = words.indexOfFirst { it.id == wordBookItem.id }
+                        if (index >= 0) {
+                            words[index] = wordBookItem
+                            notifyWordsChanged(index, WordBookPanel.ChangeType.UPDATE)
+                        }
+                    }
+
                     override fun onWordRemoved(service: WordBookService, id: Long) {
                         assertIsDispatchThread()
                         val index = words.indexOfFirst { it.id == id }

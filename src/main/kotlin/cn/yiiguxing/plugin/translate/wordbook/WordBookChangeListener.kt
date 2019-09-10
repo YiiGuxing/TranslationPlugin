@@ -15,6 +15,11 @@ interface WordBookChangeListener {
     fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {}
 
     /**
+     * Called when a [word][wordBookItem] is updated.
+     */
+    fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {}
+
+    /**
      * Called when a word is removed.
      */
     fun onWordRemoved(service: WordBookService, id: Long) {}
