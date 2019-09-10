@@ -10,11 +10,8 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
-import com.intellij.util.ui.JBFont
-import com.intellij.util.ui.JBUI
 import java.awt.event.ActionEvent
 import java.lang.Boolean.TRUE
-import javax.swing.AbstractAction
 import javax.swing.Action
 
 /**
@@ -46,9 +43,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         title = message("word.of.the.day.title")
         horizontalStretch = 1.33f
         verticalStretch = 1.25f
-        setCancelButtonText(message("word.of.the.day.close"))
-
-        initFont()
+        setCancelButtonText(message("word.dialog.close"))
 
         explainsCard.apply {
             removeAll()
@@ -57,31 +52,8 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
             add(explanationView, CARD_EXPLAINS_VIEW)
         }
 
-        explanationView.border = JBUI.Borders.empty(10)
         showExplanationButton.addActionListener { layout.show(explainsCard, CARD_EXPLAINS_VIEW) }
     }
-
-    private fun initFont() {
-        var primaryFont: JBFont = UI.defaultFont.deriveScaledFont(15f)
-        var phoneticFont: JBFont = UI.defaultFont.deriveScaledFont(14f)
-
-        with(Settings) {
-            if (isOverrideFont) {
-                primaryFont = primaryFontFamily
-                    ?.let { JBUI.Fonts.create(it, 15) }
-                    ?: primaryFont
-                phoneticFont = phoneticFontFamily
-                    ?.let { JBUI.Fonts.create(it, 14) }
-                    ?: phoneticFont
-            }
-        }
-
-        ttsButton.font = phoneticFont
-        explanationView.font = primaryFont
-        wordView.font = primaryFont.biggerOn(3f).asBold()
-    }
-
-    override fun getStyle(): DialogStyle = DialogStyle.COMPACT
 
     override fun createActions(): Array<Action> = arrayOf(previousWordAction, nextWordAction, cancelAction)
 
@@ -117,7 +89,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         ttsButton.text = word.phonetic?.takeIf { it.isNotBlank() } ?: " "
         ttsButton.dataSource { word.word to word.sourceLanguage }
         explanationView.text = word.explanation
-        explanationLabel.text = message("word.of.the.day.language.explanation", word.targetLanguage.langName)
+        explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
 
         layout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)
     }
@@ -127,17 +99,17 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         invokeLater { focusManager.requestFocus(window, true) }
     }
 
-    private inner class PreviousWordAction : AbstractAction(message("word.of.the.day.prev")) {
-        override fun actionPerformed(e: ActionEvent) = previous()
+    private inner class PreviousWordAction : DialogWrapperAction(message("word.of.the.day.prev")) {
+        override fun doAction(e: ActionEvent) = previous()
     }
 
-    private inner class NextWordAction : AbstractAction(message("word.of.the.day.next")) {
+    private inner class NextWordAction : DialogWrapperAction(message("word.of.the.day.next")) {
         init {
             putValue(DEFAULT_ACTION, TRUE)
             putValue(FOCUSED_ACTION, TRUE)
         }
 
-        override fun actionPerformed(e: ActionEvent) = next()
+        override fun doAction(e: ActionEvent) = next()
     }
 
     companion object {

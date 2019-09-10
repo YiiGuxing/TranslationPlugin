@@ -27,11 +27,27 @@ object UI {
         }
 
     fun primaryFont(size: Int)
-            : JBFont = UI.getFont(Settings.takeIf { it.isOverrideFont }?.primaryFontFamily, size)
+            : JBFont = getFont(Settings.takeIf { it.isOverrideFont }?.primaryFontFamily, size)
 
     private fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrEmpty()) {
         JBUI.Fonts.create(fontFamily, size)
     } else {
         defaultFont.deriveScaledFont(size.toFloat())
     }
+
+    fun getFonts(primaryFontSize: Int, phoneticFontSize: Int): FontPair {
+        var primaryFont: JBFont? = null
+        var phoneticFont: JBFont? = null
+        Settings.takeIf { it.isOverrideFont }?.let { settings ->
+            primaryFont = settings.primaryFontFamily?.let { JBUI.Fonts.create(it, primaryFontSize) }
+            phoneticFont = settings.phoneticFontFamily?.let { JBUI.Fonts.create(it, phoneticFontSize) }
+        }
+
+        return FontPair(
+            primaryFont ?: defaultFont.deriveScaledFont(primaryFontSize.toFloat()),
+            phoneticFont ?: defaultFont.deriveScaledFont(phoneticFontSize.toFloat())
+        )
+    }
+
+    data class FontPair(val primary: JBFont, val phonetic: JBFont)
 }
