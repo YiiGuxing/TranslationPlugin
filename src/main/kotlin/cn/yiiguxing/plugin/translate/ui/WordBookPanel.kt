@@ -24,7 +24,7 @@ import javax.swing.table.TableCellRenderer
  *
  * Created by Yii.Guxing on 2019/09/03.
  */
-class WordBookPanel() : WordBookWindowForm() {
+class WordBookPanel : WordBookWindowForm() {
 
     private val tableModel: ListTableModel<WordBookItem> = ListTableModel(WordColumnInfo, ExplainsColumnInfo)
 
@@ -95,7 +95,7 @@ class WordBookPanel() : WordBookWindowForm() {
 
     private object WordColumnInfo :
         ColumnInfo<WordBookItem, String>(message("wordbook.window.table.title.word")) {
-        private val COMPARATOR = Comparator<WordBookItem> { word1, word2 -> word1.word.compareTo(word2.word) }
+        private val COMPARATOR = Comparator<WordBookItem> { word1, word2 -> word1.word.compareTo(word2.word, true) }
 
         override fun valueOf(item: WordBookItem): String = item.word
 
