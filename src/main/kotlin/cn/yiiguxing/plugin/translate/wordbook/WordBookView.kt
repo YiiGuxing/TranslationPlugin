@@ -20,6 +20,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
+import com.intellij.util.ui.JBUI
 import java.awt.datatransfer.StringSelection
 import javax.swing.Icon
 
@@ -52,6 +53,12 @@ class WordBookView {
                 setupMenu()
                 setWords(this@WordBookView.words)
                 onWordDoubleClicked { word -> openWordDetails(word) }
+                onDownloadDriver {
+                    if (!WordBookService.downloadDriver()) {
+                        val message = message("wordbook.window.message.in.download")
+                        Popups.showBalloonForComponent(it, message, MessageType.INFO, project, JBUI.scale(10))
+                    }
+                }
             }
         }
 
@@ -59,8 +66,12 @@ class WordBookView {
         contentManager.addContent(content)
         contentManager.setSelectedContent(content)
 
-        refresh()
-        panel.showTable()
+        if (WordBookService.isInitialized) {
+            refresh()
+            panel.showTable()
+        } else {
+            panel.showMessagePane()
+        }
 
         Disposer.register(project, Disposable {
             windows.remove(project)
@@ -110,7 +121,12 @@ class WordBookView {
         if (!isInitialized) {
             Application.messageBus
                 .connect()
-                .subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
+                .subscribe(WordBookListener.TOPIC, object : WordBookListener {
+                    override fun onInitialized(service: WordBookService) {
+                        assertIsDispatchThread()
+                        showWordBookTable()
+                    }
+
                     override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
                         assertIsDispatchThread()
                         words.add(wordBookItem)
@@ -145,6 +161,13 @@ class WordBookView {
         notifyWordsChanged()
     }
 
+    private fun showWordBookTable() {
+        refresh()
+        for ((_, panel) in wordBookPanels) {
+            panel.showTable()
+        }
+    }
+
     private fun notifyWordsChanged(
         row: Int = WordBookPanel.ALL_ROWS,
         type: WordBookPanel.ChangeType = WordBookPanel.ChangeType.UPDATE
@@ -158,18 +181,39 @@ class WordBookView {
         WordDetailsDialog(word).show()
     }
 
-    private inner class RefreshAction : DumbAwareAction(
+    private abstract inner class WordBookAction(text: String, description: String?, icon: Icon) :
+        DumbAwareAction(text, description, icon) {
+
+        final override fun actionPerformed(e: AnActionEvent) {
+            if (WordBookService.isInitialized) {
+                doAction(e)
+            } else {
+                Popups.showBalloonForComponent(
+                    e.inputEvent.component,
+                    message("wordbook.window.message.missing.driver"),
+                    MessageType.INFO,
+                    e.project,
+                    offsetY = 1
+                )
+            }
+        }
+
+        protected abstract fun doAction(e: AnActionEvent)
+
+    }
+
+    private inner class RefreshAction : WordBookAction(
         message("wordbook.window.action.refresh"),
         message("wordbook.window.action.refresh.desc"),
         AllIcons.Actions.Refresh
     ) {
-        override fun actionPerformed(e: AnActionEvent) = refresh()
+        override fun doAction(e: AnActionEvent) = refresh()
     }
 
-    private inner class ShowWordOfTheDayAction : DumbAwareAction(
+    private inner class ShowWordOfTheDayAction : WordBookAction(
         message("word.of.the.day.title"), null, AllIcons.Actions.IntentionBulb
     ) {
-        override fun actionPerformed(e: AnActionEvent) {
+        override fun doAction(e: AnActionEvent) {
             val project = e.project
             if (words.isNotEmpty()) {
                 windows[project]?.hide {

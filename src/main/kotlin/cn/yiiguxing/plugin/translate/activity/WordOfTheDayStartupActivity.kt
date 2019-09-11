@@ -39,8 +39,10 @@ class WordOfTheDayStartupActivity : StartupActivity, DumbAware {
                     if (project.isDisposed) {
                         return@executeOnPooledThread
                     }
-                    WordBookService.getWords()
-                        .takeIf { it.isNotEmpty() }
+                    WordBookService
+                        .takeIf { it.isInitialized }
+                        ?.getWords()
+                        ?.takeIf { it.isNotEmpty() }
                         ?.let { words ->
                             val sortedWords = words.sortedBy { Math.random() }
                             invokeLater {

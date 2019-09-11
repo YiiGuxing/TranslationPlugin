@@ -3,8 +3,8 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.util.*
-import cn.yiiguxing.plugin.translate.wordbook.WordBookChangeListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
@@ -161,7 +161,7 @@ class TranslateService private constructor() {
     }
 
     private fun MessageBusConnection.subscribeWordBookTopic() = apply {
-        subscribe(WordBookChangeListener.TOPIC, object : WordBookChangeListener {
+        subscribe(WordBookListener.TOPIC, object : WordBookListener {
             override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
                 notifyFavoriteAdded(wordBookItem)
             }

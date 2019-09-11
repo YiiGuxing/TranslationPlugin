@@ -7,7 +7,12 @@ import com.intellij.util.messages.Topic
  *
  * Created by Yii.Guxing on 2019/08/14.
  */
-interface WordBookChangeListener {
+interface WordBookListener {
+
+    /**
+     * Called after the service is initialized.
+     */
+    fun onInitialized(service: WordBookService) {}
 
     /**
      * Called when a new [word][wordBookItem] is added.
@@ -25,7 +30,6 @@ interface WordBookChangeListener {
     fun onWordRemoved(service: WordBookService, id: Long) {}
 
     companion object {
-        val TOPIC: Topic<WordBookChangeListener> =
-            Topic.create("WordBookChanged", WordBookChangeListener::class.java)
+        val TOPIC: Topic<WordBookListener> = Topic.create("WordBookChanged", WordBookListener::class.java)
     }
 }

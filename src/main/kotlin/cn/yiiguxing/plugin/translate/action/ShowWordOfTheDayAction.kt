@@ -25,6 +25,12 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
             return
         }
 
+        if (!WordBookService.isInitialized) {
+            val message = message("wordbook.window.message.missing.driver")
+            Popups.showBalloonForActiveFrame(message, MessageType.INFO)
+            return
+        }
+
         val project = e.project
         executeOnPooledThread {
             if (project?.isDisposed == true) {

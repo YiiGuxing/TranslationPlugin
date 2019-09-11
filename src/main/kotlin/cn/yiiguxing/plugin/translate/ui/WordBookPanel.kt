@@ -13,6 +13,7 @@ import java.awt.Component
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.*
+import javax.swing.JComponent
 import javax.swing.JPopupMenu
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
@@ -34,9 +35,13 @@ class WordBookPanel : WordBookWindowForm() {
 
     private var onWordDoubleClickHandler: ((WordBookItem) -> Unit)? = null
 
+    private var onDownloadDriverHandler: ((JComponent) -> Unit)? = null
+
     init {
         tableView.setup()
         TableSpeedSearch(tableView)
+
+        downloadLinkLabel.setListener({ label, _ -> onDownloadDriverHandler?.invoke(label) }, null)
     }
 
     private fun TableView<WordBookItem>.setup() {
@@ -74,6 +79,10 @@ class WordBookPanel : WordBookWindowForm() {
 
     fun onWordDoubleClicked(handler: (word: WordBookItem) -> Unit) {
         onWordDoubleClickHandler = handler
+    }
+
+    fun onDownloadDriver(handler: (JComponent) -> Unit) {
+        onDownloadDriverHandler = handler
     }
 
     enum class ChangeType {

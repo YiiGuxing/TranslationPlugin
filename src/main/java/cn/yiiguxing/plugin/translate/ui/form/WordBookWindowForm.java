@@ -15,7 +15,7 @@ import javax.swing.*;
  */
 public class WordBookWindowForm extends SimpleToolWindowPanel {
     protected JPanel root;
-    protected LinkLabel downloadLinkLabel;
+    protected LinkLabel<?> downloadLinkLabel;
     protected TableView<WordBookItem> tableView;
 
     public WordBookWindowForm() {
