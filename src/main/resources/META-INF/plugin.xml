@@ -90,7 +90,7 @@
         <action id="$ShowTranslationDialogAction"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
-                description="Open Translation Dialog">
+                description="Open translation dialog">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
@@ -98,12 +98,12 @@
         <action id="$ShowInstantTranslationDialogAction"
                 class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
                 text="Show Instant Translation Dialog..."
-                description="Open Instant Translation Dialog">
+                description="Open instant translation dialog">
         </action>
         <action id="$ChooseTranslatorAction"
                 class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
                 text="Choose Translator"
-                description="Choose Translator">
+                description="Choose translator">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
