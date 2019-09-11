@@ -66,6 +66,7 @@
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
 
         <toolWindow id="Word Book"
+                    icon="Icons.Wordbook"
                     anchor="right"
                     secondary="true"
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
