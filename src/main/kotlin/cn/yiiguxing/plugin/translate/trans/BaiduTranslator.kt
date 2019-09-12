@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
@@ -13,7 +15,7 @@ import icons.Icons
 import javax.swing.Icon
 
 /**
- * BaiduTranslator
+ * Baidu translator
  *
  * Created by Yii.Guxing on 2018/04/19.
  */
@@ -110,6 +112,8 @@ object BaiduTranslator : AbstractTranslator() {
             54004 -> message("error.account.arrears")
             58000 -> message("error.access.ip")
             58001 -> message("error.language.unsupported")
+            58002 -> "服务当前已关闭，请前往管理控制台开启服务"
+            90107 -> "认证未通过或未生效"
             else -> message("error.unknown") + "[${throwable.code}]"
         }
         else -> super.createErrorMessage(throwable)
