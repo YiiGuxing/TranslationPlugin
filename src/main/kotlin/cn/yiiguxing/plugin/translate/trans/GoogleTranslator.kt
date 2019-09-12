@@ -53,7 +53,7 @@ object GoogleTranslator : AbstractTranslator() {
         }
 
     override fun buildRequest(builder: RequestBuilder) {
-        builder.userAgent().asGoogleReferer()
+        builder.userAgent().googleReferer()
     }
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String = UrlBuilder(baseUrl)

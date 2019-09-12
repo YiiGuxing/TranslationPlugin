@@ -32,7 +32,7 @@ private fun getUserAgent(): String {
 
 fun RequestBuilder.userAgent(): RequestBuilder = apply { userAgent(USER_AGENT) }
 
-fun RequestBuilder.asGoogleReferer() = apply {
+fun RequestBuilder.googleReferer() = apply {
     tuner {
         val googleReferer = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
             GOOGLE_REFERER
