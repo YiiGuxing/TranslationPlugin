@@ -93,4 +93,7 @@ object Icons {
     @Suppress("SpellCheckingInspection")
     val Baidu: Icon = IconLoader.getIcon("/icons/baidu.png")
 
+    @JvmField
+    val Support: Icon = IconLoader.getIcon("/icons/support.png")
+
 }
