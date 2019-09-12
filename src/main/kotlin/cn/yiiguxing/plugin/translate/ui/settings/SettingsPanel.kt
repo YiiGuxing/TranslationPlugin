@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
+import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
@@ -12,6 +13,7 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.*
 import com.intellij.util.ui.JBUI
+import icons.Icons
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ItemEvent
@@ -45,6 +47,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         initSelectionModeComboBox()
         initTargetLangSelectionComboBox()
         initTTSSourceComboBox()
+        initSupport()
     }
 
     @Suppress("InvalidBundleOrProperty")
@@ -132,6 +135,11 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                 }
             }
         }
+    }
+
+    private fun initSupport() {
+        supportLinkLabel.icon = Icons.Support
+        supportLinkLabel.setListener({ _, _ -> SupportDialog.show() }, null)
     }
 
     private fun setListeners() {

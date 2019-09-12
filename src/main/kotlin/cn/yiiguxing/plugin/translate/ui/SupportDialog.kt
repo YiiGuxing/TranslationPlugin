@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.SupportForm
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.util.ui.JBUI
@@ -17,7 +18,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
     private val form = SupportForm()
 
     init {
-        title = "支持"
+        title = message("support")
         setOKButtonText("感谢您的支持！")
         form.init()
         init()

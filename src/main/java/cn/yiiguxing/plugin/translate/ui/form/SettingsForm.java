@@ -14,6 +14,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.labels.LinkLabel;
 import org.intellij.lang.regexp.RegExpLanguage;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +58,7 @@ public class SettingsForm {
     private JBCheckBox mSelectTargetLanguageCheckBox;
     private JBCheckBox mShowWordsOnStartupCheckBox;
     private JBCheckBox mShowExplanationCheckBox;
+    private LinkLabel mSupportLinkLabel;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -262,5 +264,10 @@ public class SettingsForm {
     @NotNull
     public final JBCheckBox getSelectTargetLanguageCheckBox() {
         return mSelectTargetLanguageCheckBox;
+    }
+
+    @NotNull
+    public final LinkLabel getSupportLinkLabel() {
+        return mSupportLinkLabel;
     }
 }
