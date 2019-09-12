@@ -15,6 +15,9 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
     private val appStorage = AppStorage.instance
     private var currentRequest: Presenter.Request? = null
 
+    override val translatorId: String
+        get() = translateService.translator.id
+
     override val histories: List<String> get() = appStorage.getHistories()
 
     override val primaryLanguage: Lang get() = translateService.translator.primaryLanguage
