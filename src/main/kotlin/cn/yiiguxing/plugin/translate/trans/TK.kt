@@ -5,12 +5,8 @@
  */
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import java.lang.StrictMath.abs
@@ -73,9 +69,9 @@ object TKK {
 
         return try {
             val elementJS = HttpRequests.request(updateUrl)
-                .userAgent(DEFAULT_USER_AGENT)
-                .connect { it.readString(null) }
-
+                .userAgent()
+                .asGoogleReferer()
+                .readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {
                 val value1 = matcher.group(1).toLong()
