@@ -89,6 +89,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         ttsButton.text = word.phonetic?.takeIf { it.isNotBlank() } ?: " "
         ttsButton.dataSource { word.word to word.sourceLanguage }
         explanationView.text = word.explanation
+        explanationView.caretPosition = 0
         explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
 
         layout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)

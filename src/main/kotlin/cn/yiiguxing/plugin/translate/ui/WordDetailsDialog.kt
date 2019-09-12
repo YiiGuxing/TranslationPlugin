@@ -63,8 +63,9 @@ class WordDetailsDialog(private var word: WordBookItem) : WordDetailsDialogForm(
         languageLabel.text = word.sourceLanguage.langName
         ttsButton.dataSource { word.word to word.sourceLanguage }
         phoneticField.text = word.phonetic
-        explanationView.text = word.explanation
         explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
+        explanationView.text = word.explanation
+        explanationView.caretPosition = 0
     }
 
     private fun saveEditing() {
