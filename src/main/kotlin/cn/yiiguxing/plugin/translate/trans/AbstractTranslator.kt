@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.message
 import com.google.gson.JsonSyntaxException
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
-import org.apache.commons.httpclient.HttpStatus
+import io.netty.handler.codec.http.HttpResponseStatus
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -31,8 +31,7 @@ abstract class AbstractTranslator : Translator {
         is ConnectException, is UnknownHostException -> message("error.network.connection")
         is SocketTimeoutException -> message("error.network.timeout")
         is JsonSyntaxException -> message("error.parse")
-        is HttpRequests.HttpStatusException ->
-            HttpStatus.getStatusText(throwable.statusCode) ?: message("error.unknown")
+        is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
         else -> message("error.unknown")
     }
 
