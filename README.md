@@ -125,6 +125,14 @@ Actions
   - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
   - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
 
+- **Show Instant Translation Dialog**
+
+  显示即时翻译对话框。默认快捷键: (无)
+
+- **Show Word of the Day**
+
+  显示每日单词。默认快捷键: (无)
+
 FAQ
 ---
 1. **翻译内容出现乱码怎么办？**
@@ -167,7 +175,7 @@ FAQ
 Support
 -------
 
-您可以通过以下操作为项目提供支持：
+您可以通过以下操作为项目提供贡献和支持：
 * 在GitHub上Star此项目
 * 将插件分享给您的朋友/同事
 * 提交PR
