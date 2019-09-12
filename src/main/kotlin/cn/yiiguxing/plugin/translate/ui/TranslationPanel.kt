@@ -7,9 +7,9 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
@@ -29,6 +29,7 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import icons.Icons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.FocusAdapter
@@ -317,8 +318,8 @@ abstract class TranslationPanel<T : JComponent>(
 
     private fun JTextPane.setupPopupMenu() {
         componentPopupMenu = JBPopupMenu().apply {
-            val copy = JBMenuItem("Copy", Icons.Copy).apply {
-                disabledIcon = Icons.Copy
+            val copy = JBMenuItem("Copy", AllIcons.Actions.Copy).apply {
+                disabledIcon = AllIcons.Actions.Copy
                 addActionListener { copy() }
             }
             val translate = JBMenuItem("Translate", Icons.Translate).apply {
@@ -355,7 +356,7 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun JLabel.setupPopupMenu() {
-        val copy = JBMenuItem("Copy", Icons.Copy)
+        val copy = JBMenuItem("Copy", AllIcons.Actions.Copy)
         copy.addActionListener { CopyPasteManager.getInstance().setContents(StringSelection(text)) }
         componentPopupMenu = JBPopupMenu().apply { add(copy) }
     }

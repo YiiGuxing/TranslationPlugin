@@ -4,10 +4,10 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
@@ -43,8 +43,7 @@ class WordBookService {
 
     private val lockFile: RandomAccessFile
     private lateinit var queryRunner: QueryRunner
-    private val settingsPublisher: WordBookListener =
-        ApplicationManager.getApplication().messageBus.syncPublisher(WordBookListener.TOPIC)
+    private val settingsPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
 
     init {
         if (!Files.exists(TRANSLATION_DIRECTORY)) {
@@ -250,6 +249,7 @@ class WordBookService {
     /**
      * Updates the [tags] of the word by the specified [id].
      */
+    @Suppress("unused")
     fun updateTags(id: Long, tags: List<String>): Boolean {
         checkIsInitialized()
 

@@ -18,15 +18,13 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.ui.JBColor
 import java.awt.Color
 import java.util.*
-import javax.swing.Icon
 
 /**
  * 翻译动作
  *
  * @param checkSelection 指定是否检查手动选择的文本。`true` - 如果有手动选择文本, 则忽略`autoSelectionMode`, `false` - 将忽略手动选择的文本。
  */
-open class TranslateAction(checkSelection: Boolean = false, icon: Icon? = null) :
-        AutoSelectAction(checkSelection, icon = icon), DumbAware {
+open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(checkSelection), DumbAware {
 
     override val selectionMode
         get() = SelectionMode.INCLUSIVE
@@ -36,8 +34,9 @@ open class TranslateAction(checkSelection: Boolean = false, icon: Icon? = null) 
         editor.document.getText(selectionRange).processBeforeTranslate()?.let { text ->
             val highlightManager = HighlightManager.getInstance(project)
             val highlighters = ArrayList<RangeHighlighter>()
-            HighlightManager.getInstance(project).addRangeHighlight(editor, selectionRange.startOffset,
-                    selectionRange.endOffset, HIGHLIGHT_ATTRIBUTES, true, highlighters)
+            HighlightManager.getInstance(project).addRangeHighlight(
+                editor, selectionRange.startOffset, selectionRange.endOffset, HIGHLIGHT_ATTRIBUTES, true, highlighters
+            )
 
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val tracker = BalloonPositionTracker(editor, caretRangeMarker)
@@ -61,10 +60,10 @@ open class TranslateAction(checkSelection: Boolean = false, icon: Icon? = null) 
         }
 
         fun Editor.createCaretRangeMarker(selectionRange: TextRange) = document
-                .createRangeMarker(selectionRange)
-                .apply {
-                    isGreedyToLeft = true
-                    isGreedyToRight = true
-                }
+            .createRangeMarker(selectionRange)
+            .apply {
+                isGreedyToLeft = true
+                isGreedyToRight = true
+            }
     }
 }

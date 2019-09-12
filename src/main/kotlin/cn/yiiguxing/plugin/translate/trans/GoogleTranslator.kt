@@ -3,13 +3,13 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_CN_URL
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.RequestBuilder
+import icons.Icons
 import java.lang.reflect.Type
 import javax.swing.Icon
 

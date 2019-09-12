@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.wordbook
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.WordBookPanel
 import cn.yiiguxing.plugin.translate.ui.WordDetailsDialog
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import com.intellij.icons.AllIcons
@@ -21,6 +20,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import com.intellij.util.ui.JBUI
+import icons.Icons
 import java.awt.datatransfer.StringSelection
 import javax.swing.Icon
 
