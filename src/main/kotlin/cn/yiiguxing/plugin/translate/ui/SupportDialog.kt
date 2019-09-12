@@ -12,7 +12,7 @@ import javax.swing.UIManager
  *
  * Created by Yii.Guxing on 2019/09/12.
  */
-class SupportDialog : DialogWrapper(null) {
+class SupportDialog private constructor() : DialogWrapper(null) {
 
     private val form = SupportForm()
 
@@ -24,7 +24,7 @@ class SupportDialog : DialogWrapper(null) {
     }
 
     private fun SupportForm.init() {
-        rootPane.border = JBUI.Borders.empty(10)
+        rootPane.border = JBUI.Borders.empty(12, 15)
         rootPane.background = UIManager.getColor("TextArea.background")
 
         starLinkLabel.icon = null
@@ -37,5 +37,9 @@ class SupportDialog : DialogWrapper(null) {
     override fun getStyle(): DialogStyle = DialogStyle.COMPACT
 
     override fun createActions(): Array<Action> = arrayOf(okAction)
+
+    companion object {
+        fun show() = SupportDialog().show()
+    }
 
 }
