@@ -11,6 +11,7 @@ const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
 const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
 
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
+const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"
 const val HTML_DESCRIPTION_DISABLE = "#DISABLE"
 const val HTML_DESC_COPY_TO_CLIPBOARD = "#COPY_TO_CLIPBOARD"
 
