@@ -11,7 +11,8 @@ import javax.swing.*;
  */
 public class SupportForm {
     public JPanel rootPane;
-    public LinkLabel starLinkLabel;
-    public LinkLabel reportLinkLabel;
-    public LinkLabel ideaLinkLabel;
+    public LinkLabel<String> starLinkLabel;
+    public LinkLabel<String> prLinkLab;
+    public LinkLabel<String> reportLinkLabel;
+    public LinkLabel<String> ideaLinkLabel;
 }
