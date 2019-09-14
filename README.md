@@ -129,9 +129,9 @@ Actions
 
   显示即时翻译对话框。默认快捷键: (无)
 
-- **Show Word of the Day**
+- **Word of the Day**
 
-  显示每日单词。默认快捷键: (无)
+  显示每日单词对话框。默认快捷键: (无)
 
 FAQ
 ---
@@ -175,22 +175,22 @@ FAQ
 Support
 -------
 
-您可以通过执行以下操作来贡献和支持此项目：
+您可以通过执行以下任意操作来贡献和支持此项目：
 * 在GitHub上标星
 * 将插件分享给您的朋友/同事
 * 提交PR
 * 反馈问题
 * 提出您的想法/建议
 * 通过[Open Collective][open-collective]捐赠
-* 通过支付宝或微信捐赠
+* 通过支付宝或微信支付捐赠
 
   <table>
     <thead align="center">
       <tr>
         <th>支付宝</th>
-        <th>微信</th>
+        <th>微信支付</th>
       </tr>
-    <tr></tr>
+    </thead>
     <tr align="center">
       <td><img src="./images/alipay.png"></td>
       <td><img src="./images/wechat.png"></td>
