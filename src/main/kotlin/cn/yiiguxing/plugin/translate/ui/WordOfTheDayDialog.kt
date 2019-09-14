@@ -72,7 +72,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         check(currentWordIndex > 0) { "No more words in front" }
         setWord(words[--currentWordIndex])
 
-        previousWordAction.isEnabled = (currentWordIndex - 1) > 0
+        previousWordAction.isEnabled = (currentWordIndex - 1) >= 0
         nextWordAction.isEnabled = (currentWordIndex + 1) < words.size
     }
 
@@ -80,7 +80,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         check(currentWordIndex < words.size) { "No more words" }
         setWord(words[++currentWordIndex])
 
-        previousWordAction.isEnabled = (currentWordIndex - 1) > 0
+        previousWordAction.isEnabled = (currentWordIndex - 1) >= 0
         nextWordAction.isEnabled = (currentWordIndex + 1) < words.size
     }
 
