@@ -37,7 +37,7 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
                 return@executeOnPooledThread
             }
 
-            val words = WordBookService.getWords()
+            val words = WordBookService.getWords().sortedBy { Math.random() }
             invokeLater {
                 if (project?.isDisposed != true) {
                     if (words.isNotEmpty()) {
