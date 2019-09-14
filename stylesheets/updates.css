@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    color: #474860;
+    padding: 0 12rem;
+    overflow: auto;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #2f2f48;
+    font-weight: 100;
+}
+
+h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 + h3{
+    margin-top: 1rem;
+}
+
+hr {
+    border-color: #dfe2e5;
+    border-style: solid;
+    border-width: 1px 0 0 0;
+    margin: 1.5rem 0;
+}
+
+a {
+    color: #00A3E1;
+    text-decoration: none;
+}
+
+.content {
+    margin-bottom: 2rem;
+}
+
+.reference {
+    padding: 0.5rem 1rem;
+    border-left: 4px solid #dfe2e5;
+    background-color: #fcfcfc;
+}
