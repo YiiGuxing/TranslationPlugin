@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发行说明 - TranslationPlugin</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html">开始使用</a>
+    <a href="updates.html" class="selected">发行说明</a>
+    <a href="support.html">支持</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="images/github.svg"></a>
+</header>
+
+<div class="frame_content updates">
+    <div class="version-list">
+        <div class="version-title">版本</div>
+        <ul id="version-list">
+            <li class="selected">v2.4</li>
+        </ul>
+    </div>
+    <div class="version-content">
+        <iframe id="content-frame" src="updates/v2_4.html" width="0" height="0"></iframe>
+    </div>
+</div>
+<script>
+    /*
+    var versionList = ['2_4'];
+    var versionContainer = document.getElementById("#version-list");
+    for (var v in versionList) {
+
+    }
+    */
+
+    function updateSize() {
+        var content = document.querySelector(".version-content");
+        var contentFrame = document.getElementById("content-frame");
+        contentFrame.width = content.clientWidth;
+        contentFrame.height = content.clientHeight;
+    }
+
+    updateSize();
+    window.onresize = function () {
+        updateSize();
+    }
+</script>
+</body>
+</html>

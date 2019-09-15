@@ -12,8 +12,9 @@ body {
     width: 100%;
     margin: 0;
     color: #474860;
-    padding: 0 12rem;
-    overflow: auto;
+    padding: 0 20% 0 2rem;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", sans-serif;
 }
 
@@ -32,7 +33,7 @@ h3 {
     margin-bottom: 1rem;
 }
 
-h2 + h3{
+h2 + h3 {
     margin-top: 1rem;
 }
 

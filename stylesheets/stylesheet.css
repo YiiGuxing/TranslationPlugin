@@ -526,3 +526,61 @@ table td {
     padding: 6px 13px;
     border: 1px solid #dfe2e5;
 }
+
+.updates {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    position: absolute;
+}
+
+.updates .version-list {
+    font-size: 1.3rem;
+    width: 8rem;
+    left: 16%;
+    top: 0;
+    right: auto;
+    bottom: 0;
+    position: absolute;
+}
+
+.updates .version-content {
+    left: 16%;
+    margin-left: 8rem;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    overflow: hidden;
+}
+
+.version-list .version-title {
+    margin-top: 1.8rem;
+    padding-left: 1.5rem;
+}
+
+.version-list ul {
+    list-style: none;
+    margin: 0.5rem 0;
+    padding-left: 0;
+}
+
+.version-list ul li {
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    font-weight: 100;
+    cursor: pointer;
+    border-left: 1px solid #d3d6d9;
+}
+
+.version-list ul li:hover {
+    border-color: #0288D1;
+}
+
+.version-list ul li.selected {
+    color: #0288D1;
+}
+
+iframe {
+    border: none;
+}
