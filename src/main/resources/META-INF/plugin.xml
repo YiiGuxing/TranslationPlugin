@@ -71,6 +71,7 @@
                     secondary="true"
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
 
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
 
@@ -143,6 +144,12 @@
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"
                 text="Word of the Day"/>
+
+        <action id="$WhatsNewInTranslationAction"
+                text="What's New in Translation"
+                class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
+            <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
+        </action>
 
         <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">
             <separator/>

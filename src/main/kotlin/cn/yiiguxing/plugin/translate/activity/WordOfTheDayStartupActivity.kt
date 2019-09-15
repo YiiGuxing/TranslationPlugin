@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
-import com.intellij.openapi.wm.ToolWindowManager
 
 
 /**
@@ -22,36 +21,23 @@ class WordOfTheDayStartupActivity : StartupActivity, DumbAware {
         }
 
         veryFirstProjectOpening = true
-        run(project, 3)
-    }
-
-
-    companion object {
-        private fun run(project: Project, delayCount: Int) {
-            if (project.isDisposed || !Settings.showWordsOnStartup) {
-                return
-            }
-
-            if (delayCount > 0) {
-                ToolWindowManager.getInstance(project).invokeLater { run(project, delayCount - 1) }
-            } else {
-                executeOnPooledThread {
-                    if (project.isDisposed) {
-                        return@executeOnPooledThread
-                    }
-                    WordBookService
-                        .takeIf { it.isInitialized }
-                        ?.getWords()
-                        ?.takeIf { it.isNotEmpty() }
-                        ?.let { words ->
-                            val sortedWords = words.sortedBy { Math.random() }
-                            invokeLater {
-                                if (!project.isDisposed) {
-                                    TranslationUIManager.showWordOfTheDayDialog(project, sortedWords)
-                                }
+        Activity.runLater(project, 3) {
+            executeOnPooledThread {
+                if (project.isDisposed) {
+                    return@executeOnPooledThread
+                }
+                WordBookService
+                    .takeIf { it.isInitialized }
+                    ?.getWords()
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.let { words ->
+                        val sortedWords = words.sortedBy { Math.random() }
+                        invokeLater {
+                            if (!project.isDisposed) {
+                                TranslationUIManager.showWordOfTheDayDialog(project, sortedWords)
                             }
                         }
-                }
+                    }
             }
         }
     }
