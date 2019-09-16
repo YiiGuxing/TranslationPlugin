@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.4.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.0) (2019-09-16)
+
+- 添加版本发行说明
+- 新增单词本功能
+- 优化了一些图标
+- 修复了一些BUG
+
 ## [v2.3.8](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.8) (2019-07-30)
 
 - 修复翻译长文本时显示不全的问题
