@@ -12,11 +12,13 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.ide.IdeBundle
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.notification.Notification
 import com.intellij.notification.Notifications
+import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ex.ApplicationInfoEx
@@ -33,13 +35,13 @@ import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.concurrent.Future
 
-object App {
+object Plugin {
 
     const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
 
-    val plugin: IdeaPluginDescriptor get() = PluginManager.getPlugin(PluginId.getId(PLUGIN_ID))!!
+    val descriptor: IdeaPluginDescriptor = PluginManager.getPlugin(PluginId.getId(PLUGIN_ID))!!
 
-    val pluginVersion: String by lazy { plugin.version }
+    val version: String by lazy { descriptor.version }
 
     val systemInfo: String by lazy {
         val appInfo = ApplicationInfoEx.getInstanceEx() as ApplicationInfoImpl
@@ -65,25 +67,34 @@ object App {
         val vmVendor = properties.getProperty("java.vendor", "unknown")
         val jvmInfo = IdeBundle.message("about.box.vm", vmVersion, vmVendor)
 
-        val pluginInfo = "Plugin v$pluginVersion"
+        val pluginInfo = "Plugin v$version"
         val osInfo = "OS: " + SystemInfo.getOsNameAndVersion()
 
         "$pluginInfo\n$appName\n$buildInfo\n$jreInfo\n$jvmInfo\n$osInfo"
     }
 }
 
+inline val Application: Application get() = ApplicationManager.getApplication()
+
 val AppStorage: AppStorage = AppStorage.instance
 val Settings: Settings = Settings.instance
 val TranslateService: TranslateService = TranslateService.instance
 val TextToSpeech: TextToSpeech = TextToSpeech.instance
 val TranslationUIManager: TranslationUIManager = TranslationUIManager.instance
+val WordBookService: WordBookService = WordBookService.instance
+
+
+/**
+ * Asserts whether the method is being called from the event dispatch thread.
+ */
+inline fun assertIsDispatchThread() = Application.assertIsDispatchThread()
 
 /**
  * Throws an [IllegalStateException] with the result of calling [lazyMessage] if
  * the current thread is not the Swing dispatch thread.
  */
 inline fun checkDispatchThread(lazyMessage: () -> Any) {
-    check(ApplicationManager.getApplication().isDispatchThread, lazyMessage)
+    check(Application.isDispatchThread, lazyMessage)
 }
 
 /**
@@ -100,13 +111,13 @@ inline fun checkDispatchThread(clazz: Class<*>) = checkDispatchThread {
  * Requests pooled thread to execute the [action].
  */
 inline fun executeOnPooledThread(crossinline action: () -> Unit)
-        : Future<*> = ApplicationManager.getApplication().executeOnPooledThread { action() }
+        : Future<*> = Application.executeOnPooledThread { action() }
 
 /**
  * Asynchronously execute the [action] on the AWT event dispatching thread.
  */
 inline fun invokeOnDispatchThread(crossinline action: () -> Unit) {
-    with(ApplicationManager.getApplication()) {
+    with(Application) {
         if (isDispatchThread) {
             action()
         } else {
@@ -128,7 +139,7 @@ fun invokeLater(delayMillis: Long, modalityState: ModalityState = ModalityState.
  * Asynchronously execute the [action] on the AWT event dispatching thread.
  */
 inline fun invokeLater(crossinline action: () -> Unit) {
-    ApplicationManager.getApplication().invokeLater { action() }
+    Application.invokeLater { action() }
 }
 
 /**
@@ -137,7 +148,7 @@ inline fun invokeLater(crossinline action: () -> Unit) {
  * @param state the state in which the runnable will be executed.
  */
 inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
-    ApplicationManager.getApplication().invokeLater({ action() }, state)
+    Application.invokeLater({ action() }, state)
 }
 
 /**
@@ -158,7 +169,7 @@ fun Throwable.copyToClipboard(message: String? = null) {
             it.println()
         }
 
-        it.println(App.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
+        it.println(Plugin.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
         it.println()
 
         it.println("```")

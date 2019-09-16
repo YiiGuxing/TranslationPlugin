@@ -111,6 +111,16 @@ class Settings : PersistentStateComponent<Settings> {
     var showWordForms: Boolean = true
 
     /**
+     * 启动时显示每日单词
+     */
+    var showWordsOnStartup: Boolean = false
+
+    /**
+     * 每日单词默认显示释义
+     */
+    var showExplanation: Boolean = false
+
+    /**
      * 翻译替换结果唯一时自动替换
      */
     var autoReplace: Boolean = false

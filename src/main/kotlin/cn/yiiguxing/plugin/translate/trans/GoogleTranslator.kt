@@ -1,15 +1,12 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_CN_URL
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.UrlBuilder
-import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.RequestBuilder
+import icons.Icons
 import java.lang.reflect.Type
 import javax.swing.Icon
 
@@ -25,10 +22,11 @@ object GoogleTranslator : AbstractTranslator() {
 
     private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
+    @Suppress("SpellCheckingInspection")
     private val gson: Gson = GsonBuilder()
-            .registerTypeAdapter(Lang::class.java, LangDeserializer)
-            .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
-            .create()
+        .registerTypeAdapter(Lang::class.java, LangDeserializer)
+        .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
+        .create()
 
     override val id: String = TRANSLATOR_ID
 
@@ -45,32 +43,32 @@ object GoogleTranslator : AbstractTranslator() {
     private val notSupportedLanguages = arrayListOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
 
     override val supportedSourceLanguages: List<Lang> = Lang.sortedValues()
-            .toMutableList()
-            .apply { removeAll(notSupportedLanguages) }
+        .toMutableList()
+        .apply { removeAll(notSupportedLanguages) }
     override val supportedTargetLanguages: List<Lang> = Lang.sortedValues()
-            .toMutableList()
-            .apply {
-                remove(Lang.AUTO)
-                removeAll(notSupportedLanguages)
-            }
+        .toMutableList()
+        .apply {
+            remove(Lang.AUTO)
+            removeAll(notSupportedLanguages)
+        }
 
     override fun buildRequest(builder: RequestBuilder) {
-        builder.userAgent(DEFAULT_USER_AGENT)
+        builder.userAgent().googleReferer()
     }
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String = UrlBuilder(baseUrl)
-            .addQueryParameter("client", "gtx")
-            .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
-            .addQueryParameter("dj", "1")
-            .addQueryParameter("ie", "UTF-8")
-            .addQueryParameter("oe", "UTF-8")
-            .addQueryParameter("sl", srcLang.code)
-            .addQueryParameter("tl", targetLang.code)
-            .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
-            .addQueryParameter("tk", text.tk())
-            .addQueryParameter("q", text)
-            .build()
-            .also { logger.i("Translate url: $it") }
+        .addQueryParameter("client", "gtx")
+        .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
+        .addQueryParameter("dj", "1")
+        .addQueryParameter("ie", "UTF-8")
+        .addQueryParameter("oe", "UTF-8")
+        .addQueryParameter("sl", srcLang.code)
+        .addQueryParameter("tl", targetLang.code)
+        .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
+        .addQueryParameter("tk", text.tk())
+        .addQueryParameter("q", text)
+        .build()
+        .also { logger.i("Translate url: $it") }
 
     override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
         logger.i("Translate result: $result")
@@ -86,6 +84,7 @@ object GoogleTranslator : AbstractTranslator() {
                 : Lang = Lang.valueOfCode(jsonElement.asString)
     }
 
+    @Suppress("SpellCheckingInspection")
     private object GSentenceDeserializer : JsonDeserializer<GSentence> {
         override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext): GSentence {
             val jsonObject = jsonElement.asJsonObject

@@ -125,6 +125,14 @@ Actions
   - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
   - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
 
+- **Show Instant Translation Dialog**
+
+  显示即时翻译对话框。默认快捷键: (无)
+
+- **Word of the Day**
+
+  显示每日单词对话框。默认快捷键: (无)
+
 FAQ
 ---
 1. **翻译内容出现乱码怎么办？**
@@ -157,9 +165,12 @@ FAQ
 
 更新日志
 --------
-## [v2.3.8](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.3.8) (2019-07-30)
+## [v2.4.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.0) (2019-09-16)
 
-- 修复翻译长文本时显示不全的问题
+- 添加版本发行说明
+- 新增单词本功能
+- 优化了一些图标
+- 修复了一些BUG
 
 [完整的更新历史记录](./CHANGELOG.md)
 
@@ -167,22 +178,22 @@ FAQ
 Support
 -------
 
-您可以通过以下操作为项目提供支持：
-* 在GitHub上Star此项目
+您可以通过执行以下任意操作来贡献和支持此项目：
+* 在GitHub上标星
 * 将插件分享给您的朋友/同事
 * 提交PR
 * 反馈问题
-* 提出您的建议
+* 提出您的想法/建议
 * 通过[Open Collective][open-collective]捐赠
-* 通过支付宝或微信捐赠
+* 通过支付宝或微信支付捐赠
 
   <table>
     <thead align="center">
       <tr>
         <th>支付宝</th>
-        <th>微信</th>
+        <th>微信支付</th>
       </tr>
-    <tr></tr>
+    </thead>
     <tr align="center">
       <td><img src="./images/alipay.png"></td>
       <td><img src="./images/wechat.png"></td>

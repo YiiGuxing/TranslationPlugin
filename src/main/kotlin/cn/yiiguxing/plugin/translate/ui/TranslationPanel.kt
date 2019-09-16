@@ -7,8 +7,9 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
@@ -17,6 +18,8 @@ import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
+import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.ui.components.labels.LinkListener
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.layout.CCFlags
 import com.intellij.ui.layout.Row
@@ -26,12 +29,14 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import icons.Icons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import java.lang.ref.WeakReference
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.SimpleAttributeSet
@@ -313,8 +318,8 @@ abstract class TranslationPanel<T : JComponent>(
 
     private fun JTextPane.setupPopupMenu() {
         componentPopupMenu = JBPopupMenu().apply {
-            val copy = JBMenuItem("Copy", Icons.Copy).apply {
-                disabledIcon = Icons.Copy
+            val copy = JBMenuItem("Copy", AllIcons.Actions.Copy).apply {
+                disabledIcon = AllIcons.Actions.Copy
                 addActionListener { copy() }
             }
             val translate = JBMenuItem("Translate", Icons.Translate).apply {
@@ -351,7 +356,7 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun JLabel.setupPopupMenu() {
-        val copy = JBMenuItem("Copy", Icons.Copy)
+        val copy = JBMenuItem("Copy", AllIcons.Actions.Copy)
         copy.addActionListener { CopyPasteManager.getInstance().setContents(StringSelection(text)) }
         componentPopupMenu = JBPopupMenu().apply { add(copy) }
     }
@@ -406,7 +411,7 @@ abstract class TranslationPanel<T : JComponent>(
         transTTSLink.isEnabled =
             !translation.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
 
-        updateOriginalViewer(translation.original)
+        updateOriginalViewer(translation)
         updateViewer(transViewer, transViewerRow, translation.trans)
 
         srcTransliterationLabel.apply {
@@ -425,32 +430,73 @@ abstract class TranslationPanel<T : JComponent>(
         updateOtherExplains(translation.otherExplains)
     }
 
-    private fun updateOriginalViewer(text: String) {
+    private fun updateOriginalViewer(translation: Translation) {
+        val text = translation.original
+        val viewer = originalViewer
         if (text.isEmpty()) {
-            originalViewer.empty()
+            viewer.empty()
             originalViewerRow.visible = false
             return
         }
 
-        with(originalViewer) {
-            if (settings.foldOriginal && text.length > originalFoldingLength) {
-                val display = text.splitSentence(originalFoldingLength).first()
-                setText(display)
-
-                val attr = SimpleAttributeSet()
-                StyleConstants.setComponent(attr, FoldingButton {
-                    setText(text)
-                    caretPosition = 0
-                    onRevalidateHandler?.invoke()
-                })
-                styledDocument.appendString(" ").appendString(" ", attr)
-            } else {
-                setText(text)
-            }
-
-            caretPosition = 0
+        if (settings.foldOriginal && text.length > originalFoldingLength) {
+            viewer.setFoldedText(text)
+        } else {
+            viewer.text = text
         }
+
+        if (WordBookService.canAddToWordbook(text)) {
+            viewer.appendStarButton(translation)
+        }
+
+        viewer.caretPosition = 0
         originalViewerRow.visible = true
+    }
+
+    private fun Viewer.appendStarButton(translation: Translation) {
+        val starIcon = if (translation.favoriteId == null) Icons.StarOff else Icons.StarOn
+        val starLabel = LinkLabel<Translation>("", starIcon, LinkListener { starLabel, trans ->
+            starLabel.isEnabled = false
+            val starLabelRef = WeakReference(starLabel)
+            executeOnPooledThread {
+                val favoriteId = trans.favoriteId
+                if (favoriteId == null) {
+                    val newFavoriteId = WordBookService.addWord(trans.toWordBookItem())
+                    invokeLater {
+                        if (trans.favoriteId == null) {
+                            trans.favoriteId = newFavoriteId
+                        }
+                        starLabelRef.get()?.isEnabled = true
+                    }
+                } else {
+                    WordBookService.removeWord(favoriteId)
+                    invokeLater { starLabelRef.get()?.isEnabled = true }
+                }
+            }
+        }, translation)
+        starLabel.alignmentY = 0.9f
+        starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
+        translation.observableFavoriteId.observe(this@TranslationPanel) { favoriteId, _ ->
+            starLabel.icon = if (favoriteId == null) Icons.StarOff else Icons.StarOn
+            starLabel.toolTipText = getStarButtonToolTipText(favoriteId)
+        }
+
+        val starAttribute = SimpleAttributeSet().also { StyleConstants.setComponent(it, starLabel) }
+        styledDocument.appendString("  ").appendString(" ", starAttribute)
+    }
+
+    private fun Viewer.setFoldedText(text: String) {
+        val foldedText = text.splitSentence(originalFoldingLength).first()
+        setText(foldedText)
+
+        val foldedLength = foldedText.length
+        val foldingAttribute = SimpleAttributeSet()
+        StyleConstants.setComponent(foldingAttribute, FoldingButton {
+            styledDocument.replace(0, foldedLength + 2, text)
+            caretPosition = 0
+            onRevalidateHandler?.invoke()
+        })
+        styledDocument.appendString(" ").appendString(" ", foldingAttribute)
     }
 
     private class FoldingButton(private val action: () -> Unit) : JButton("..."), MouseListener {
@@ -603,6 +649,49 @@ abstract class TranslationPanel<T : JComponent>(
             }
 
             return primaryFont to phoneticFont
+        }
+
+        @Suppress("InvalidBundleOrProperty")
+        private fun getStarButtonToolTipText(favoriteId: Long?): String {
+            return if (favoriteId == null) {
+                message("tooltip.addToWordBook")
+            } else {
+                message("tooltip.removeFormWordBook")
+            }
+        }
+
+        private fun Translation.toWordBookItem(): WordBookItem {
+            val explainsBuilder = StringBuilder()
+            if (!trans.isNullOrBlank()) {
+                explainsBuilder.append(trans)
+                if (dictionaries.isNotEmpty() || basicExplains.isNotEmpty()) {
+                    explainsBuilder.append("\n\n")
+                }
+            }
+
+            val wordsBuilder = StringBuilder()
+            dictionaries.joinTo(explainsBuilder, "\n") { dict ->
+                wordsBuilder.also { builder ->
+                    builder.setLength(0)
+                    builder.append(dict.partOfSpeech, ": ")
+                    dict.terms.joinTo(builder, "; ")
+                }
+            }
+
+            if (dictionaries.isNotEmpty() && basicExplains.isNotEmpty()) {
+                explainsBuilder.append("\n\n")
+            }
+
+            basicExplains.joinTo(explainsBuilder, "\n")
+
+            return WordBookItem(
+                null,
+                original,
+                srcLang,
+                targetLang,
+                srcTransliteration,
+                explainsBuilder.toString()
+            )
         }
     }
 }

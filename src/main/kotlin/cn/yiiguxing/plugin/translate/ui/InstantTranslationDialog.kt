@@ -1,16 +1,16 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.AppStorage
+import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.TextToSpeech
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -19,6 +19,7 @@ import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.SideBorder
 import com.intellij.util.Alarm
+import icons.Icons
 import java.awt.datatransfer.StringSelection
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
@@ -57,9 +58,7 @@ class InstantTranslationDialog(private val project: Project?) :
         initComponents()
         peer.setContentPane(createCenterPanel())
 
-        ApplicationManager
-            .getApplication()
-            .messageBus
+        Application.messageBus
             .connect(this)
             .subscribe(SettingsChangeListener.TOPIC, this)
     }
@@ -178,7 +177,7 @@ class InstantTranslationDialog(private val project: Project?) :
         addActionListener { onTranslate() }
     }
 
-    private fun requestTranslate(delay: Int = 300) {
+    private fun requestTranslate(delay: Int = if (presenter.translatorId == BaiduTranslator.id) 1000 else 500) {
         alarm.apply {
             cancelAllRequests()
             addRequest(translateAction, delay)

@@ -9,16 +9,16 @@ package cn.yiiguxing.plugin.translate.trans
 import com.google.gson.annotations.SerializedName
 
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 data class BaiduTranslation(
-        @SerializedName("error_code")
-        val code: Int = 0,
-        @SerializedName("from")
-        val srcLanguage: String? = null,
-        @SerializedName("to")
-        val targetLanguage: String? = null,
-        @SerializedName("trans_result")
-        val trans: List<BTrans> = emptyList()
+    @SerializedName("error_code")
+    val code: Int = 0,
+    @SerializedName("from")
+    val srcLanguage: String? = null,
+    @SerializedName("to")
+    val targetLanguage: String? = null,
+    @SerializedName("trans_result")
+    val trans: List<BTrans> = emptyList()
 ) : TranslationAdapter {
 
     val isSuccessful get() = code == 0 || code == 52000
@@ -38,7 +38,8 @@ data class BaiduTranslation(
 }
 
 data class BTrans(
-        @SerializedName("src")
-        val src: String,
-        @SerializedName("dst")
-        val dst: String)
+    @SerializedName("src")
+    val src: String,
+    @SerializedName("dst")
+    val dst: String
+)

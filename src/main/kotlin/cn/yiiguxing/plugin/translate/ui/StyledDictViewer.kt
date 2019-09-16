@@ -2,11 +2,11 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.DictEntry
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.addStyle
 import cn.yiiguxing.plugin.translate.util.appendString
 import cn.yiiguxing.plugin.translate.util.clear
 import cn.yiiguxing.plugin.translate.util.insert
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
@@ -261,7 +261,7 @@ class StyledDictViewer {
         return currentOffset
     }
 
-    private class CopyItem : JBMenuItem("Copy", Icons.Copy) {
+    private class CopyItem : JBMenuItem("Copy", AllIcons.Actions.Copy) {
 
         var textSelection: String? = null
             set(value) {
@@ -271,7 +271,7 @@ class StyledDictViewer {
 
         init {
             isEnabled = false
-            disabledIcon = Icons.Copy
+            disabledIcon = AllIcons.Actions.Copy
             addActionListener {
                 if (!textSelection.isNullOrEmpty()) {
                     CopyPasteManager.getInstance().setContents(StringSelection(textSelection))

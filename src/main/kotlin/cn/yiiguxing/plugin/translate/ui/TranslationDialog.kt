@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
-import cn.yiiguxing.plugin.translate.ui.icon.Icons
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -26,6 +25,7 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import icons.Icons
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
@@ -389,7 +389,10 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     private fun update() {
         if (isShowing && inputModel.size > 0) {
+            ignoreInputEvent = true
             inputComboBox.selectedIndex = 0
+            ignoreInputEvent = false
+            translate(inputModel.getElementAt(0))
         }
     }
 

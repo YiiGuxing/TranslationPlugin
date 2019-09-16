@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="cn.yiiguxing.plugin.translate.ui.form.WordBookWindowForm">
+  <grid id="27dc6" binding="root" layout-manager="CardLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="f38ee" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <card name="CARD_MESSAGE"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="b619e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="b1d2d" class="com.intellij.ui.components.labels.LinkLabel" binding="downloadLinkLabel" custom-create="true">
+                <constraints/>
+                <properties>
+                  <text resource-bundle="messages/TranslationBundle" key="wordbook.window.message.download"/>
+                </properties>
+              </component>
+              <component id="51867" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <text resource-bundle="messages/TranslationBundle" key="wordbook.window.message.driver.files"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <scrollpane id="e539a">
+        <constraints>
+          <card name="CARD_TABLE"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="bd5d2" class="com.intellij.ui.table.TableView" binding="tableView">
+            <constraints/>
+            <properties>
+              <enabled value="true"/>
+              <striped value="true"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+    </children>
+  </grid>
+</form>

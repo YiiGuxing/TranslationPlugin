@@ -42,7 +42,10 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>修复翻译长文本时显示不全的问题</li>
+        <li>添加版本发行说明</li>
+        <li>新增单词本功能</li>
+        <li>优化了一些图标</li>
+        <li>修复了一些BUG</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -60,8 +63,19 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUIManager"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
+
+        <toolWindow id="Word Book"
+                    icon="Icons.Wordbook"
+                    anchor="right"
+                    secondary="true"
+                    factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
+
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
 
     <application-components>
@@ -78,27 +92,30 @@
 
     <actions>
         <action id="$ShowTranslationDialogAction"
+                icon="Icons.Translate"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
-                description="Open Translation Dialog">
+                description="Open translation dialog">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
         <action id="$ShowInstantTranslationDialogAction"
+                icon="Icons.Translate2"
                 class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
                 text="Show Instant Translation Dialog..."
-                description="Open Instant Translation Dialog">
+                description="Open instant translation dialog">
         </action>
         <action id="$ChooseTranslatorAction"
                 class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
                 text="Choose Translator"
-                description="Choose Translator">
+                description="Choose translator">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
         </action>
         <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
+                icon="Icons.Translate"
                 text="Translate"
                 description="Translate">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
@@ -126,6 +143,16 @@
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 text="Translate Text Component"
                 use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$ShowWordOfTheDayAction"
+                icon="AllIcons.Actions.IntentionBulb"
+                class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"
+                text="Word of the Day"/>
+
+        <action id="$WhatsNewInTranslationAction"
+                text="What's New in Translation"
+                class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
+            <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
+        </action>
 
         <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">
             <separator/>

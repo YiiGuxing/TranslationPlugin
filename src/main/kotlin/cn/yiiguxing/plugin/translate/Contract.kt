@@ -13,6 +13,8 @@ data class SupportedLanguages(val source: List<Lang>, val target: List<Lang>)
 
 interface Presenter {
 
+    val translatorId: String
+
     /**
      * 历史记录列表
      */

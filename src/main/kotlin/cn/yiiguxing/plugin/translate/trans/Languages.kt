@@ -11,21 +11,24 @@ private const val LANGUAGE_BUNDLE = "messages.LanguageBundle"
 
 private object LanguageBundle : AbstractBundle(LANGUAGE_BUNDLE)
 
+
 @Tag("language-pair")
-data class LanguagePair(@Attribute var source: Lang = Lang.AUTO,
-                        @Attribute var target: Lang = Lang.AUTO)
+data class LanguagePair(
+    @Attribute var source: Lang = Lang.AUTO,
+    @Attribute var target: Lang = Lang.AUTO
+)
 
 
 /**
  * 语言
  */
-@Suppress("InvalidBundleOrProperty")
+@Suppress("InvalidBundleOrProperty", "SpellCheckingInspection", "unused")
 enum class Lang(
-        @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
-        langNameKey: String,
-        val code: String,
-        youdaoCode: String? = null,
-        baiduCode: String? = null
+    @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
+    langNameKey: String,
+    val code: String,
+    youdaoCode: String? = null,
+    baiduCode: String? = null
 ) {
 
     /** 自动检测 */
@@ -269,15 +272,15 @@ enum class Lang(
         }
 
         fun valueOfCode(code: String): Lang = values()
-                .find { it.code.equals(code, ignoreCase = true) }
-                ?: throw IllegalArgumentException("Unknown language code:$code")
+            .find { it.code.equals(code, ignoreCase = true) }
+            ?: throw IllegalArgumentException("Unknown language code:$code")
 
         fun valueOfYoudaoCode(code: String): Lang = values()
-                .find { it.youdaoCode.equals(code, ignoreCase = true) }
-                ?: throw IllegalArgumentException("Unknown language code:$code")
+            .find { it.youdaoCode.equals(code, ignoreCase = true) }
+            ?: throw IllegalArgumentException("Unknown language code:$code")
 
         fun valueOfBaiduCode(code: String): Lang = values()
-                .find { it.baiduCode.equals(code, ignoreCase = true) }
-                ?: throw IllegalArgumentException("Unknown language code:$code")
+            .find { it.baiduCode.equals(code, ignoreCase = true) }
+            ?: throw IllegalArgumentException("Unknown language code:$code")
     }
 }

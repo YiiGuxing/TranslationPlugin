@@ -2,12 +2,10 @@
 
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
-import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
-import cn.yiiguxing.plugin.translate.ui.TranslationDialog
-import cn.yiiguxing.plugin.translate.ui.TranslatorWidget
+import cn.yiiguxing.plugin.translate.ui.*
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.editor.Editor
@@ -24,9 +22,10 @@ import com.intellij.util.ui.PositionTracker
  */
 class TranslationUIManager private constructor() {
 
-    private val balloonMap: MutableMap<Project?, TranslationBalloon> = mutableMapOf()
-    private val dialogMap: MutableMap<Project?, TranslationDialog> = mutableMapOf()
-    private val instantTranslationDialogMap: MutableMap<Project?, InstantTranslationDialog> = mutableMapOf()
+    private val balloonMap: MutableMap<Project?, TranslationBalloon> = HashMap()
+    private val dialogMap: MutableMap<Project?, TranslationDialog> = HashMap()
+    private val instantTranslationDialogMap: MutableMap<Project?, InstantTranslationDialog> = HashMap()
+    private val wordOfTheDayDialogMap: MutableMap<Project?, WordOfTheDayDialog> = HashMap()
 
     /**
      * 显示气泡
@@ -73,6 +72,15 @@ class TranslationUIManager private constructor() {
     }
 
     /**
+     * 显示每日单词对话框
+     *
+     * @return 对话框实例
+     */
+    fun showWordOfTheDayDialog(project: Project?, words: List<WordBookItem>): WordOfTheDayDialog {
+        return showDialog(project, wordOfTheDayDialogMap, { it.setWords(words) }) { WordOfTheDayDialog(project, words) }
+    }
+
+    /**
      * 显示状态栏图标
      */
     fun installStatusWidget(project: Project) {
@@ -116,6 +124,7 @@ class TranslationUIManager private constructor() {
         private inline fun <D : DialogWrapper> showDialog(
             project: Project?,
             cache: MutableMap<Project?, D>,
+            onBeforeShow: (D) -> Unit = {},
             dialog: () -> D
         ): D {
             checkThread()
@@ -127,7 +136,10 @@ class TranslationUIManager private constructor() {
                         cache.remove(project, it)
                     })
                 }
-            }.apply { show() }
+            }.also {
+                onBeforeShow(it)
+                it.show()
+            }
         }
     }
 }

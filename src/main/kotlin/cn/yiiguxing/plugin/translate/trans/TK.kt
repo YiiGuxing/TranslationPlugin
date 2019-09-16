@@ -5,14 +5,11 @@
  */
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.DEFAULT_USER_AGENT
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
-import java.lang.Math.abs
+import java.lang.StrictMath.abs
 import java.util.*
 import java.util.regex.Pattern
 
@@ -72,9 +69,9 @@ object TKK {
 
         return try {
             val elementJS = HttpRequests.request(updateUrl)
-                .userAgent(DEFAULT_USER_AGENT)
-                .connect { it.readString(null) }
-
+                .userAgent()
+                .googleReferer()
+                .readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {
                 val value1 = matcher.group(1).toLong()
@@ -95,7 +92,13 @@ object TKK {
             }
         } catch (e: Throwable) {
             logger.w("TKK update failed", e)
-            Notifications.showErrorNotification(null, NOTIFICATION_DISPLAY_ID, "TKK", "Failed to update TKK.", e)
+            Notifications.showErrorNotification(
+                null,
+                NOTIFICATION_DISPLAY_ID,
+                "TKK",
+                message("notification.ttk.update.failed"),
+                e
+            )
 
             null
         }
