@@ -94,11 +94,13 @@ class UpdateManager : StartupActivity, DumbAware {
             .createNotification(
                 title, content, NotificationType.INFORMATION,
                 object : NotificationListener.Adapter() {
+                    private val urlOpeningBehavior = NotificationListener.UrlOpeningListener(false)
+
                     override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
                         if (hyperlinkEvent.description == HTML_DESCRIPTION_SUPPORT) {
                             SupportDialog.show()
                         } else {
-                            URL_OPENING_LISTENER.hyperlinkUpdate(notification, hyperlinkEvent)
+                            urlOpeningBehavior.hyperlinkUpdate(notification, hyperlinkEvent)
                         }
                     }
                 }
