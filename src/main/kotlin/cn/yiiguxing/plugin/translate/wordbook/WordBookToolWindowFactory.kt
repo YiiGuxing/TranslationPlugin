@@ -16,4 +16,8 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         WordBookView.instance.setup(project, toolWindow)
     }
 
+    companion object{
+        const val TOOL_WINDOW_ID = "Word Book"
+    }
+
 }
