@@ -272,7 +272,7 @@ class UpdateManager : StartupActivity, DumbAware {
                 
                 <h2>单词本</h2>
                 <img src="${imageResource("word_book.gif")}" style="margin-top: ${JBUI.scale(8)}px" alt="单词本">
-                <p>某些IED（如：WebStorm）可能需要下载支持库才能使用“<b>单词本</b>”功能，这时候只需在“<b>单词本</b>”面板中点击“下载”并等待下载完成后即可正常使用。</p>
+                <p>某些IDE（如：WebStorm）可能需要下载支持库才能使用“<b>单词本</b>”功能，这时候只需在“<b>单词本</b>”面板中点击“下载”并等待下载完成后即可正常使用。</p>
                 <h3>每日单词</h3>
                 <p>“<b>每日单词</b>”会将单词本中所有单词打乱顺序后逐个显示，可以通过 “<b>Word of the Day</b>” 动作（无默认快捷键）来打开它。</p>
                 <img src="${imageResource("word_of_the_day.png")}" alt="每日单词">
