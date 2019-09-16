@@ -32,6 +32,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.intellij.xml.util.XmlStringUtil
 import icons.Icons
+import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.JEditorPane
 import javax.swing.UIManager
@@ -71,14 +72,21 @@ class UpdateManager : StartupActivity, DumbAware {
 
 
     private fun showUpdateNotification(project: Project, plugin: IdeaPluginDescriptor) {
+        val version = plugin.version
         val displayId = "${plugin.name} Plugin Update"
-        val title = "${plugin.name} plugin updated to v${plugin.version}"
+        val title = "${plugin.name} plugin updated to v$version"
+        val color = getBorderColor()
+        val partStyle = "margin: ${JBUI.scale(8)}px 0;"
+        val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
         val content = """
             If you find my plugin helpful, please
             <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>:</b>
             <b><a href="$HTML_DESCRIPTION_SUPPORT">Donate</a></b> with
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">AliPay/WeChatPay</a>.</b><br/>
-            Thank you for your support!<br/><br/>
+            <a href="$HTML_DESCRIPTION_SUPPORT">AliPay/WeChatPay</a>.<br/>
+            Thank you for your support!
+            <div style="$partStyle $refStyle">
+                This update addresses these <a href="${MILESTONE_URL.format(version)}">issues</a>.
+            </div>
             Change notes:<br/>
             ${plugin.changeNotes}
         """.trimIndent()
@@ -107,9 +115,12 @@ class UpdateManager : StartupActivity, DumbAware {
 
         private const val UPDATE_TOOL_WINDOW_ID = "Translation Assistant"
 
-        private val DEFAULT_BORDER_COLOR = JBColor(0xD0D0D0, 0x555555)
+        private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 
         private const val UPDATES_BASE_URL = "http://yiiguxing.github.io/TranslationPlugin/updates"
+
+        private const val MILESTONE_URL =
+            "https://github.com/YiiGuxing/TranslationPlugin/issues?q=is%%3Aissue+milestone%%3Av%s+is%%3Aclosed"
 
 
         private fun String.toVersionParts(): IntArray {
@@ -172,6 +183,11 @@ class UpdateManager : StartupActivity, DumbAware {
             Disposer.dispose(contentManager)
         }
 
+        private fun getBorderColor(): String {
+            val color = UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR
+            return (color.rgb and 0xffffff).toString(16)
+        }
+
         private fun getHTMLEditorKit(): HTMLEditorKit {
             val htmlEditorKit = UIUtil.getHTMLEditorKit()
             val styleSheet = htmlEditorKit.styleSheet
@@ -181,12 +197,11 @@ class UpdateManager : StartupActivity, DumbAware {
             styleSheet.addRule("h2 { padding-top: ${JBUI.scale(15)}px; }")
             styleSheet.addRule("h3 { padding-top: ${JBUI.scale(8)}px; }")
 
-            val color = UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR
-            val colorValue = (color.rgb and 0xffffff).toString(16)
+            val color = getBorderColor()
             styleSheet.addRule(
                 """
                     .hr {
-                        border-color: #$colorValue;
+                        border-color: #$color;
                         border-style: solid;
                         border-width: 1px 0 0 0;
                         margin-top: ${JBUI.scale(8)}px;
@@ -203,7 +218,7 @@ class UpdateManager : StartupActivity, DumbAware {
                     .reference {
                         margin: ${margin}px 0;
                         padding: ${paddingTB}px ${paddingLR}px;
-                        border-left: ${borderWidth}px solid #$colorValue;
+                        border-left: ${borderWidth}px solid #$color;
                     }
                 """.trimIndent()
             )
@@ -238,7 +253,7 @@ class UpdateManager : StartupActivity, DumbAware {
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
                 "发行说明" to "新功能一目了然",
-                "单词本" to "新增了单词本功能，希望您会喜欢它"
+                "单词本" to "此次更新的主要功能，希望您会喜欢"
             )
         }
 
