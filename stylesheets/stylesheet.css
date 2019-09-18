@@ -584,3 +584,11 @@ table td {
 iframe {
     border: none;
 }
+
+.support {
+    width: 100%;
+}
+
+.support table {
+    text-align: center;
+}
