@@ -11,8 +11,11 @@ import kotlin.reflect.KProperty
  *
  * Created by Yii.Guxing on 2017/11/9
  */
-class PasswordSafeDelegate(private val attributes: CredentialAttributes) : ReadWriteProperty<Any?, String?> {
-    constructor(serviceName: String, userName: String? = null) : this(CredentialAttributes(serviceName, userName))
+class PasswordSafeDelegate private constructor(private val attributes: CredentialAttributes) :
+    ReadWriteProperty<Any?, String?> {
+
+    constructor(serviceName: String, userName: String? = null) :
+            this(CredentialAttributesFactory.create(serviceName, userName))
 
     private val store = PasswordSafe.getInstance()
 
