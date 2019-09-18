@@ -184,17 +184,22 @@ Support
 * 提交PR
 * 反馈问题
 * 提出您的想法/建议
-* 通过[Open Collective][open-collective]捐赠
-* 通过支付宝或微信支付捐赠
+* 如果您喜欢这个插件，请考虑捐赠以维持插件的相关活动：
 
   <table>
     <thead align="center">
       <tr>
+        <th>Open Collective</th>
         <th>支付宝</th>
         <th>微信支付</th>
       </tr>
     </thead>
     <tr align="center">
+      <td>
+        <a href="https://opencollective.com/translation-plugin" target="_blank">
+            <img src="./images/open_collective.png">
+        </a>
+      </td>
       <td><img src="./images/alipay.png"></td>
       <td><img src="./images/wechat.png"></td>
     </tr>

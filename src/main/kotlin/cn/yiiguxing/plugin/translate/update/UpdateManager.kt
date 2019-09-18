@@ -57,7 +57,7 @@ class UpdateManager : StartupActivity, DumbAware {
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersion = properties.getValue(VERSION_PROPERTY)
         if (version == lastVersion) {
-            return
+            //return
         }
 
         val versionParts = version.toVersionParts()
@@ -81,8 +81,8 @@ class UpdateManager : StartupActivity, DumbAware {
         val content = """
             If you find my plugin helpful, please
             <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>.</b>
-            If you like this plugin, please consider
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain related activities.
+            If you love this plugin, please consider
+            <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain the plugin related activities.<br/>
             Thank you for your support!
             <div style="$partStyle $refStyle">
                 This update addresses these <a href="${MILESTONE_URL.format(version)}">issues</a>.
