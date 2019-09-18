@@ -80,9 +80,9 @@ class UpdateManager : StartupActivity, DumbAware {
         val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
         val content = """
             If you find my plugin helpful, please
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>:</b>
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">Donate</a></b> with
-            <a href="$HTML_DESCRIPTION_SUPPORT">AliPay/WeChatPay</a>.<br/>
+            <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>.</b>
+            If you like this plugin, please consider
+            <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain related activities.
             Thank you for your support!
             <div style="$partStyle $refStyle">
                 This update addresses these <a href="${MILESTONE_URL.format(version)}">issues</a>.
