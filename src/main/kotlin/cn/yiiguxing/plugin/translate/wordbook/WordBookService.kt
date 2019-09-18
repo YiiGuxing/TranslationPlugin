@@ -66,22 +66,24 @@ class WordBookService {
     }
 
     private fun findDriverClassLoader(): ClassLoader? {
-        var classLoader: ClassLoader? = javaClass.classLoader
-        if (classLoader?.canDriveService == true) {
-            return classLoader
+        val defaultClassLoader: ClassLoader? = javaClass.classLoader
+        if (defaultClassLoader?.canDriveService == true) {
+            return defaultClassLoader
         }
 
-        lock {
-            if (Files.exists(DRIVER_JAR)) {
-                val urlClassLoader = URLClassLoader(arrayOf(DRIVER_JAR.toUri().toURL()), classLoader)
-                if (urlClassLoader.canDriveService) {
-                    classLoader = urlClassLoader
-                } else {
-                    Files.delete(DRIVER_JAR)
-                }
+        return lock {
+            if (!Files.exists(DRIVER_JAR)) {
+                return@lock null
+            }
+
+            val urlClassLoader = URLClassLoader(arrayOf(DRIVER_JAR.toUri().toURL()), defaultClassLoader)
+            return@lock if (urlClassLoader.canDriveService) {
+                urlClassLoader
+            } else {
+                Files.delete(DRIVER_JAR)
+                null
             }
         }
-        return classLoader
     }
 
     fun downloadDriver(): Boolean {
