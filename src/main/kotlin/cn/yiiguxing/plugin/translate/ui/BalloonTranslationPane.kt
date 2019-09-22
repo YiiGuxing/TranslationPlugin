@@ -91,7 +91,9 @@ class BalloonTranslationPane(
 
     override fun onRowCreated(row: JComponent) {
         if (row !is ScrollPane) {
-            row.border = JBUI.Borders.empty(0, 0, 0, OFFSET + GAP)
+            val border = row.border
+            val toMerge = JBUI.Borders.empty(0, 0, 0, OFFSET + GAP)
+            row.border = if (border != null) JBUI.Borders.merge(border, toMerge, false) else toMerge
         }
     }
 
