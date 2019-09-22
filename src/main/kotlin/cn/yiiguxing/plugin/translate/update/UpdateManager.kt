@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.activity.Activity
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.Plugin
@@ -105,7 +106,7 @@ class UpdateManager : StartupActivity, DumbAware {
                     }
                 }
             )
-            .addAction(object : DumbAwareAction("Support!", null, Icons.Support) {
+            .addAction(object : DumbAwareAction(message("support.notification"), null, Icons.Support) {
                 override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
             })
             .setImportant(true)
