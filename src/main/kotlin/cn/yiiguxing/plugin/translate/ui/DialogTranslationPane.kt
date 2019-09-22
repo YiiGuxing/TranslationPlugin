@@ -11,8 +11,10 @@ import javax.swing.JLabel
  *
  * Created by Yii.Guxing on 2017/12/27
  */
-class DialogTranslationPanel(project: Project?, settings: Settings) :
-    TranslationPanel<JLabel>(project, settings) {
+class DialogTranslationPane(project: Project?, settings: Settings) :
+    TranslationPane<JLabel>(project, settings) {
+
+    private var onBeforeFoldingExpandHandler: (() -> Unit)? = null
 
     override val originalFoldingLength: Int = 50
 
@@ -22,6 +24,14 @@ class DialogTranslationPanel(project: Project?, settings: Settings) :
 
     override fun JLabel.updateLanguage(lang: Lang?) {
         text = lang?.langName
+    }
+
+    override fun onBeforeFoldingExpand() {
+        onBeforeFoldingExpandHandler?.invoke()
+    }
+
+    fun onBeforeFoldingExpand(handler: () -> Unit) {
+        onBeforeFoldingExpandHandler = handler
     }
 
 }

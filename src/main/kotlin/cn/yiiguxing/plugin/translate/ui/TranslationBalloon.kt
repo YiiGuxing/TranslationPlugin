@@ -44,7 +44,7 @@ class TranslationBalloon(
     private val errorPane = JTextPane()
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
-    private val translationPane = BalloonTranslationPanel(project, Settings, getMaxWidth(project))
+    private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
     private val pinButton = ActionLink(icon = Icons.Pin) {
         showOnTranslationDialog(text, translationPane.sourceLanguage, translationPane.targetLanguage)
     }
@@ -115,8 +115,8 @@ class TranslationBalloon(
                 alignmentX = RIGHT_ALIGNMENT
                 alignmentY = TOP_ALIGNMENT
             })
-            add(translationPane.component.apply {
-                border = JBEmptyBorder(16, 16, 10, 16)
+            add(translationPane.apply {
+                border = JBUI.Borders.empty(10)
             })
         }
     }

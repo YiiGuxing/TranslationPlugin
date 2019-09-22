@@ -15,20 +15,17 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.Row
-import com.intellij.ui.layout.panel
 import com.intellij.util.containers.isNullOrEmpty
 import com.intellij.util.ui.JBDimension
-import com.intellij.util.ui.JBEmptyBorder
-import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.components.BorderLayoutPanel
 import icons.Icons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
@@ -37,63 +34,59 @@ import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.lang.ref.WeakReference
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JTextPane
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import kotlin.properties.Delegates
 
-/**
- * TranslationPanel
- *
- * Created by Yii.Guxing on 2017/12/10
- */
-abstract class TranslationPanel<T : JComponent>(
+abstract class TranslationPane<T : JComponent>(
     private val project: Project?,
     protected val settings: Settings
-) : Disposable {
+) : NonOpaquePanel(VerticalFlowLayout(JBUI.scale(GAP), JBUI.scale(GAP))), Disposable {
 
-    protected val sourceLangComponent: T by lazy { onCreateLanguageComponent() }
-    protected val targetLangComponent: T by lazy { onCreateLanguageComponent() }
+    protected lateinit var sourceLangComponent: T
+        private set
+    protected lateinit var targetLangComponent: T
+        private set
 
-    protected val originalViewer = Viewer()
-    protected val transViewer = Viewer()
-    private val srcTransliterationLabel = JLabel()
+    private val originalViewer = Viewer()
+    private val translationViewer = Viewer()
+    private val originalTransliterationLabel = JLabel()
     private val transliterationLabel = JLabel()
     private val dictViewer = StyledDictViewer()
-    private val basicExplainViewer = Viewer()
-    @Suppress("InvalidBundleOrProperty")
-    private val otherExplainLabel = JLabel(message("tip.label.webInterpretation"))
-    private val otherExplainViewer = Viewer()
+    private val basicExplanationViewer = Viewer()
+    private val otherExplanationLabel = JLabel(message("tip.label.webInterpretation"))
+    private val otherExplanationViewer = Viewer()
 
-    private var dictViewerScrollWrapper: JScrollPane? = null
-    private var lastScrollValue: Int = 0
-
-    private lateinit var sourceLangRow: Row
-    private lateinit var targetLangRow: Row
-    private lateinit var originalViewerRow: Row
-    private lateinit var transViewerRow: Row
-    private lateinit var dictViewerRow: Row
-    private lateinit var basicExplainsViewerRow: Row
-    private lateinit var otherExplainsViewerRow: Row
+    private lateinit var sourceLangRowComponent: JComponent
+    private lateinit var fixLanguageComponent: JComponent
+    private lateinit var targetRowComponent: JComponent
+    private lateinit var originalComponent: JComponent
+    private lateinit var translationComponent: JComponent
+    private lateinit var dictComponent: JComponent
+    private lateinit var basicExplanationComponent: JComponent
+    private lateinit var otherExplanationComponent: JComponent
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
+    @Suppress("SpellCheckingInspection")
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
 
     private val originalTTSLink = createTTSButton {
         translation?.run { original to srcLang }
     }
-
     private val transTTSLink = createTTSButton {
         translation?.run {
             trans?.let { it to targetLang }
         }
     }
 
-    @Suppress("InvalidBundleOrProperty")
-    private val fixLanguageLinkLabel = JLabel("${message("tip.label.sourceLanguage")}: ")
+    private val fixLanguageLabel = JLabel("${message("tip.label.sourceLanguage")}: ")
     private val fixLanguageLink = ActionLink {
         translation?.srclangs?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
     }
@@ -105,66 +98,42 @@ abstract class TranslationPanel<T : JComponent>(
                 }
             }
 
-    val component: JComponent by lazy {
+    init {
+        init()
+    }
+
+    private fun init() {
+        sourceLangComponent = onCreateLanguageComponent()
+        targetLangComponent = onCreateLanguageComponent()
+
+        fixLanguageComponent = flow(fixLanguageLabel, fixLanguageLink)
+        sourceLangRowComponent = spaceBetween(flow(originalTTSLink, sourceLangComponent), fixLanguageComponent)
+        targetRowComponent = flow(transTTSLink, targetLangComponent)
+        originalComponent = onWrapViewer(originalViewer)
+        translationComponent = onWrapViewer(translationViewer)
+
+        add(sourceLangRowComponent)
+        add(originalComponent)
+        add(originalTransliterationLabel)
+        add(targetRowComponent)
+        add(translationComponent)
+        add(transliterationLabel)
+
+        dictComponent = onWrapViewer(dictViewer.component as Viewer)
+        add(dictComponent)
+
+        basicExplanationComponent = onWrapViewer(basicExplanationViewer)
+        otherExplanationComponent = onWrapViewer(otherExplanationViewer)
+        add(basicExplanationComponent)
+        add(otherExplanationLabel)
+        add(otherExplanationComponent)
+
         initFont()
         initColorScheme()
         initActions()
 
-        panel {
-            sourceLangRow = row {
-                createRow(originalTTSLink, sourceLangComponent, fixLanguageLinkLabel, fixLanguageLink)()
-            }
-
-            originalViewerRow = row { onWrapViewer(originalViewer)(CCFlags.grow) }
-            row { srcTransliterationLabel(CCFlags.grow) }
-
-            targetLangRow = row {
-                createRow(transTTSLink, targetLangComponent).apply {
-                    border = JBEmptyBorder(10, 0, 0, 0)
-                }()
-            }
-
-            transViewerRow = row { onWrapViewer(transViewer)(CCFlags.grow) }
-            row { transliterationLabel(CCFlags.grow) }
-
-            val wrapped = onWrapViewer(dictViewer.component as Viewer).apply {
-                border = JBEmptyBorder(10, 0, 0, 0)
-            }
-            dictViewerScrollWrapper = (wrapped as? JScrollPane)?.apply {
-                verticalScrollBar.addAdjustmentListener { lastScrollValue = it.value }
-            }
-            dictViewerRow = row { wrapped(CCFlags.grow) }
-
-            basicExplainsViewerRow = row {
-                onWrapViewer(basicExplainViewer).apply {
-                    border = JBEmptyBorder(10, 0, 0, 0)
-                }(CCFlags.grow)
-            }
-
-            row { otherExplainLabel() }
-            otherExplainsViewerRow = row { onWrapViewer(otherExplainViewer)(CCFlags.grow) }
-        }.apply {
-            isOpaque = false /* 可使淡入淡出动画流畅自然 */
-            onComponentCreated()
-        }
+        minimumSize = Dimension(0, 0)
     }
-
-    init {
-        otherExplainLabel.border = JBEmptyBorder(10, 0, 0, 0)
-        fixLanguageLinkLabel.border = JBEmptyBorder(0, 10, 0, 0)
-        JBEmptyBorder(0, 0, 0, 5).let {
-            originalTTSLink.border = it
-            transTTSLink.border = it
-        }
-    }
-
-    private fun createRow(vararg components: JComponent) // 默认的布局组件的间隔太大了，又不能改。。。
-            : JPanel = NonOpaquePanel(FlowLayout(FlowLayout.LEFT, 0, 0))
-        .apply {
-            for (c in components) {
-                add(c)
-            }
-        }
 
     private fun createTTSButton(block: () -> Pair<String, Lang>?): TTSButton {
         val translationPanel = this
@@ -175,33 +144,39 @@ abstract class TranslationPanel<T : JComponent>(
         }
     }
 
-    protected open fun onComponentCreated() {}
-
     protected abstract fun onCreateLanguageComponent(): T
 
     protected open fun onWrapViewer(viewer: Viewer): JComponent = viewer
 
+    protected fun isOriginalOrTranslationViewer(viewer: Viewer): Boolean {
+        return viewer === originalViewer || viewer === translationViewer
+    }
+
+    protected fun isDictViewer(viewer: Viewer): Boolean {
+        return viewer === dictViewer.component
+    }
+
     private fun initFont() {
-        getOverrideFonts(settings).let { (primaryFont, phoneticFont) ->
+        UI.getFonts(FONT_SIZE_DEFAULT, FONT_SIZE_PHONETIC).let { (primaryFont, phoneticFont) ->
             sourceLangComponent.font = primaryFont
             targetLangComponent.font = primaryFont
-            fixLanguageLinkLabel.font = primaryFont
+            fixLanguageLabel.font = primaryFont
             fixLanguageLink.font = primaryFont
             originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
-            transViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
+            translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             dictViewer.font = primaryFont.biggerOn(1f)
-            basicExplainViewer.font = primaryFont.biggerOn(1f)
-            otherExplainViewer.font = primaryFont
-            otherExplainLabel.font = primaryFont
-            srcTransliterationLabel.font = phoneticFont
+            basicExplanationViewer.font = primaryFont.biggerOn(1f)
+            otherExplanationViewer.font = primaryFont
+            otherExplanationLabel.font = primaryFont
+            originalTransliterationLabel.font = phoneticFont
             transliterationLabel.font = phoneticFont
         }
     }
 
     private fun initColorScheme() {
         originalViewer.foreground = JBColor(0xEE6000, 0xCC7832)
-        transViewer.foreground = JBColor(0x170591, 0xFFC66D)
-        srcTransliterationLabel.foreground = JBColor(
+        translationViewer.foreground = JBColor(0x170591, 0xFFC66D)
+        originalTransliterationLabel.foreground = JBColor(
             Color(0xEE, 0x60, 0x00, 0xA0),
             Color(0xCC, 0x78, 0x32, 0xA0)
         )
@@ -209,9 +184,9 @@ abstract class TranslationPanel<T : JComponent>(
             Color(0x17, 0x05, 0x91, 0xA0),
             Color(0xFF, 0xC6, 0x6D, 0xA0)
         )
-        basicExplainViewer.foreground = JBColor(0x2A237A, 0xFFDB89)
-        otherExplainLabel.foreground = JBColor(0x707070, 0x808080)
-        fixLanguageLinkLabel.foreground = JBColor(0x666666, 0x909090)
+        basicExplanationViewer.foreground = JBColor(0x2A237A, 0xFFDB89)
+        otherExplanationLabel.foreground = JBColor(0x707070, 0x808080)
+        fixLanguageLabel.foreground = JBColor(0x666666, 0x909090)
 
         fixLanguageLink.apply {
             setPaintUnderline(false)
@@ -224,7 +199,7 @@ abstract class TranslationPanel<T : JComponent>(
             targetLangComponent.foreground = it
         }
 
-        with(otherExplainViewer) {
+        with(otherExplanationViewer) {
             foreground = JBColor(0x555555, 0xACACAC)
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
             styledDocument.addStyle(EXPLAIN_KEY_STYLE, defaultStyle) {
@@ -236,27 +211,15 @@ abstract class TranslationPanel<T : JComponent>(
         }
     }
 
-    fun setMaxWidth(maxWidth: Int) {
-        val maximumSize = Dimension(maxWidth, Int.MAX_VALUE)
-
-        originalViewer.maximumSize = maximumSize
-        srcTransliterationLabel.maximumSize = maximumSize
-        transViewer.maximumSize = maximumSize
-        transliterationLabel.maximumSize = maximumSize
-        dictViewer.component.maximumSize = maximumSize
-        otherExplainLabel.maximumSize = maximumSize
-        otherExplainViewer.maximumSize = maximumSize
-    }
-
     private fun initActions() {
         originalViewer.setupPopupMenu()
-        originalViewer.setFocusListener(transViewer, basicExplainViewer, otherExplainViewer)
-        transViewer.setupPopupMenu()
-        transViewer.setFocusListener(originalViewer, basicExplainViewer, otherExplainViewer)
-        basicExplainViewer.setupPopupMenu()
-        basicExplainViewer.setFocusListener(originalViewer, transViewer, otherExplainViewer)
-        otherExplainViewer.setupPopupMenu()
-        otherExplainViewer.setFocusListener(originalViewer, transViewer, basicExplainViewer)
+        originalViewer.setFocusListener(translationViewer, basicExplanationViewer, otherExplanationViewer)
+        translationViewer.setupPopupMenu()
+        translationViewer.setFocusListener(originalViewer, basicExplanationViewer, otherExplanationViewer)
+        basicExplanationViewer.setupPopupMenu()
+        basicExplanationViewer.setFocusListener(originalViewer, translationViewer, otherExplanationViewer)
+        otherExplanationViewer.setupPopupMenu()
+        otherExplanationViewer.setFocusListener(originalViewer, translationViewer, basicExplanationViewer)
         dictViewer.onEntryClicked { entry ->
             translation?.run {
                 val src: Lang
@@ -275,16 +238,21 @@ abstract class TranslationPanel<T : JComponent>(
                 onNewTranslateHandler?.invoke(entry.value, src, target)
             }
         }
+        dictViewer.onBeforeFoldingExpand {
+            onBeforeFoldingExpand()
+        }
         dictViewer.onFoldingExpanded {
-            dictViewerScrollWrapper?.verticalScrollBar?.run {
-                invokeLater { value = lastScrollValue }
-            }
+            onFoldingExpanded()
             onRevalidateHandler?.invoke()
         }
 
-        srcTransliterationLabel.setupPopupMenu()
+        originalTransliterationLabel.setupPopupMenu()
         transliterationLabel.setupPopupMenu()
     }
+
+    protected open fun onBeforeFoldingExpand() {}
+
+    protected open fun onFoldingExpanded() {}
 
     private fun Viewer.setFocusListener(vararg vs: Viewer) {
         addFocusListener(object : FocusAdapter() {
@@ -308,6 +276,7 @@ abstract class TranslationPanel<T : JComponent>(
         onNewTranslateHandler = handler
     }
 
+    @Suppress("SpellCheckingInspection")
     fun onRevalidate(handler: () -> Unit) {
         onRevalidateHandler = handler
     }
@@ -368,10 +337,10 @@ abstract class TranslationPanel<T : JComponent>(
                 fixLanguageLink.text = it
                 !it.isNullOrEmpty()
             }
-            fixLanguageLinkLabel.isVisible = visible
+            fixLanguageLabel.isVisible = visible
             fixLanguageLink.isVisible = visible
         } else {
-            fixLanguageLinkLabel.isVisible = false
+            fixLanguageLabel.isVisible = false
             fixLanguageLink.isVisible = false
             fixLanguageLink.text = null
         }
@@ -382,7 +351,6 @@ abstract class TranslationPanel<T : JComponent>(
     protected abstract val originalFoldingLength: Int
 
     private fun update() {
-        component // initialize components
         checkSourceLanguage()
         translation.let {
             if (it != null) {
@@ -404,17 +372,14 @@ abstract class TranslationPanel<T : JComponent>(
         sourceLangComponent.updateLanguage(translation.srcLang)
         targetLangComponent.updateLanguage(translation.targetLang)
 
-        sourceLangRow.visible = true
-        targetLangRow.visible = true
-
         originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
         transTTSLink.isEnabled =
             !translation.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
 
         updateOriginalViewer(translation)
-        updateViewer(transViewer, transViewerRow, translation.trans)
+        updateViewer(translationViewer, translationComponent, translation.trans)
 
-        srcTransliterationLabel.apply {
+        originalTransliterationLabel.apply {
             val srcTransliteration = translation.srcTransliteration
             updateText(srcTransliteration)
             toolTipText = srcTransliteration
@@ -426,7 +391,7 @@ abstract class TranslationPanel<T : JComponent>(
         }
 
         updateDictViewer(translation.dictionaries)
-        updateViewer(basicExplainViewer, basicExplainsViewerRow, translation.basicExplains.joinToString("\n"))
+        updateViewer(basicExplanationViewer, basicExplanationComponent, translation.basicExplains.joinToString("\n"))
         updateOtherExplains(translation.otherExplains)
     }
 
@@ -435,7 +400,7 @@ abstract class TranslationPanel<T : JComponent>(
         val viewer = originalViewer
         if (text.isEmpty()) {
             viewer.empty()
-            originalViewerRow.visible = false
+            originalComponent.isVisible = false
             return
         }
 
@@ -450,7 +415,7 @@ abstract class TranslationPanel<T : JComponent>(
         }
 
         viewer.caretPosition = 0
-        originalViewerRow.visible = true
+        originalComponent.isVisible = true
     }
 
     private fun Viewer.appendStarButton(translation: Translation) {
@@ -476,7 +441,7 @@ abstract class TranslationPanel<T : JComponent>(
         }, translation)
         starLabel.alignmentY = 0.9f
         starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
-        translation.observableFavoriteId.observe(this@TranslationPanel) { favoriteId, _ ->
+        translation.observableFavoriteId.observe(this@TranslationPane) { favoriteId, _ ->
             starLabel.icon = if (favoriteId == null) Icons.StarOff else Icons.StarOn
             starLabel.toolTipText = getStarButtonToolTipText(favoriteId)
         }
@@ -532,31 +497,32 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     private fun resetComponents() {
+        sourceLangComponent.updateLanguage(null)
         targetLangComponent.updateLanguage(null)
 
-        sourceLangRow.visible = false
-        targetLangRow.visible = false
-        originalViewerRow.visible = false
-        transViewerRow.visible = false
-        dictViewerRow.visible = false
-        basicExplainsViewerRow.visible = false
-        otherExplainsViewerRow.visible = false
+        sourceLangRowComponent.isVisible = false
+        targetRowComponent.isVisible = false
+        fixLanguageComponent.isVisible = false
+        originalComponent.isVisible = false
+        translationComponent.isVisible = false
+        dictComponent.isVisible = false
+        basicExplanationComponent.isVisible = false
+        otherExplanationComponent.isVisible = false
 
         originalViewer.empty()
-        srcTransliterationLabel.empty()
-        transViewer.empty()
+        originalTransliterationLabel.empty()
+        translationViewer.empty()
         transliterationLabel.empty()
-        otherExplainViewer.empty()
+        otherExplanationViewer.empty()
 
-        otherExplainLabel.isVisible = false
-        dictViewer.component.isVisible = false
+        otherExplanationLabel.isVisible = false
         dictViewer.dictionaries = null
     }
 
-    private fun updateViewer(viewer: Viewer, row: Row, text: String?) {
+    private fun updateViewer(viewer: Viewer, wrapper: JComponent, text: String?) {
         with(viewer) {
             updateText(text)
-            row.visible = isVisible
+            wrapper.isVisible = isVisible
         }
     }
 
@@ -565,19 +531,19 @@ abstract class TranslationPanel<T : JComponent>(
             this.dictionaries = dictionaries
             (!dictionaries.isNullOrEmpty()).let {
                 component.isVisible = it
-                dictViewerRow.visible = it
+                dictComponent.isVisible = it
             }
         }
     }
 
     private fun updateOtherExplains(explains: Map<String, String>) {
-        with(otherExplainViewer) {
+        with(otherExplanationViewer) {
             styledDocument.clear()
 
             if (explains.isEmpty()) {
                 isVisible = false
-                otherExplainLabel.isVisible = false
-                otherExplainsViewerRow.visible = false
+                otherExplanationLabel.isVisible = false
+                otherExplanationComponent.isVisible = false
                 return
             }
 
@@ -599,8 +565,8 @@ abstract class TranslationPanel<T : JComponent>(
 
             caretPosition = 0
             isVisible = true
-            otherExplainLabel.isVisible = true
-            otherExplainsViewerRow.visible = true
+            otherExplanationLabel.isVisible = true
+            otherExplanationComponent.isVisible = true
         }
     }
 
@@ -626,29 +592,32 @@ abstract class TranslationPanel<T : JComponent>(
     }
 
     companion object {
+        private const val GAP = 5
+
         private const val FONT_SIZE_LARGE = 18f
-        private const val FONT_SIZE_DEFAULT = 14f
-        private const val FONT_SIZE_PHONETIC = 12f
+        private const val FONT_SIZE_DEFAULT = 14
+        private const val FONT_SIZE_PHONETIC = 12
 
         private const val EXPLAIN_KEY_STYLE = "explain_key"
         private const val EXPLAIN_VALUE_STYLE = "explain_value"
 
-        private fun getOverrideFonts(settings: Settings): Pair<JBFont, JBFont> {
-            var primaryFont: JBFont = UI.defaultFont.deriveScaledFont(FONT_SIZE_DEFAULT)
-            var phoneticFont: JBFont = UI.defaultFont.deriveScaledFont(FONT_SIZE_PHONETIC)
+        private fun flow(vararg components: JComponent): JComponent {
+            val gap = JBUI.scale(GAP)
+            val panel = NonOpaquePanel(FlowLayout(FlowLayout.LEFT, gap, 0))
+            panel.border = JBUI.Borders.empty(0, -GAP, 0, 0)
 
-            with(settings) {
-                if (isOverrideFont) {
-                    primaryFont = primaryFontFamily
-                        ?.let { JBUI.Fonts.create(it, FONT_SIZE_DEFAULT.toInt()) }
-                        ?: primaryFont
-                    phoneticFont = phoneticFontFamily
-                        ?.let { JBUI.Fonts.create(it, FONT_SIZE_PHONETIC.toInt()) }
-                        ?: phoneticFont
-                }
+            for (component in components) {
+                panel.add(component)
             }
 
-            return primaryFont to phoneticFont
+            return panel
+        }
+
+        private fun spaceBetween(left: JComponent, right: JComponent): JComponent {
+            return BorderLayoutPanel()
+                .andTransparent()
+                .addToLeft(left)
+                .addToRight(right)
         }
 
         @Suppress("InvalidBundleOrProperty")

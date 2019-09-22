@@ -40,6 +40,7 @@ class StyledDictViewer {
     data class Entry(val entryType: EntryType, val value: String)
 
     private var onEntryClickedHandler: ((entry: Entry) -> Unit)? = null
+    private var onBeforeFoldingExpandHandler: ((List<DictEntry>) -> Unit)? = null
     private var onFoldingExpandedHandler: ((List<DictEntry>) -> Unit)? = null
 
     private val viewer: Viewer = Viewer()
@@ -155,6 +156,10 @@ class StyledDictViewer {
         onEntryClickedHandler = handler
     }
 
+    fun onBeforeFoldingExpand(handler: ((List<DictEntry>) -> Unit)?) {
+        onBeforeFoldingExpandHandler = handler
+    }
+
     fun onFoldingExpanded(handler: ((List<DictEntry>) -> Unit)?) {
         onFoldingExpandedHandler = handler
     }
@@ -189,53 +194,53 @@ class StyledDictViewer {
 
         setParagraphStyle(style = if (isLast) entryEndParagraphStyle else entryParagraphStyle)
         val hasWordOnly = dict.entries
-                .asSequence()
-                .filter { it.reverseTranslation.isEmpty() }
-                .map { it.word }
-                .toList()
-                .run {
-                    forEachIndexed { index, word ->
-                        if (index > 0) {
-                            appendString(", ", separatorStyle)
-                        }
-                        appendString(word, wordStyle)
+            .asSequence()
+            .filter { it.reverseTranslation.isEmpty() }
+            .map { it.word }
+            .toList()
+            .run {
+                forEachIndexed { index, word ->
+                    if (index > 0) {
+                        appendString(", ", separatorStyle)
                     }
-
-                    isNotEmpty()
+                    appendString(word, wordStyle)
                 }
+
+                isNotEmpty()
+            }
 
         dict.entries
-                .filter { it.reverseTranslation.isNotEmpty() }
-                .takeIf { it.isNotEmpty() }
-                ?.let { entries ->
-                    if (hasWordOnly) {
+            .filter { it.reverseTranslation.isNotEmpty() }
+            .takeIf { it.isNotEmpty() }
+            ?.let { entries ->
+                if (hasWordOnly) {
+                    appendString("\n")
+                }
+
+                val displayCount = if (hasWordOnly) 2 else 3
+                val lastIndex = entries.size - 1
+                entries.take(displayCount).forEachIndexed { index, dictEntry ->
+                    if (index > 0) {
                         appendString("\n")
                     }
+                    insertDictEntry(length, dictEntry, index == lastIndex)
+                }
 
-                    val displayCount = if (hasWordOnly) 2 else 3
-                    val lastIndex = entries.size - 1
-                    entries.take(displayCount).forEachIndexed { index, dictEntry ->
-                        if (index > 0) {
-                            appendString("\n")
-                        }
-                        insertDictEntry(length, dictEntry, index == lastIndex)
+                if (entries.size > displayCount) {
+                    appendString("\n")
+
+                    val foldingEntries = entries.takeLast(entries.size - displayCount)
+                    val placeholder = foldingEntries.run {
+                        take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
                     }
 
-                    if (entries.size > displayCount) {
-                        appendString("\n")
-
-                        val foldingEntries = entries.takeLast(entries.size - displayCount)
-                        val placeholder = foldingEntries.run {
-                            take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
-                        }
-
-                        setParagraphStyle(style = entryEndParagraphStyle)
-                        SimpleAttributeSet(foldingStyle).let {
-                            it.addAttribute(StyleConstant.MOUSE_LISTENER, FoldingMouseListener(foldingEntries))
-                            appendString(placeholder, it)
-                        }
+                    setParagraphStyle(style = entryEndParagraphStyle)
+                    SimpleAttributeSet(foldingStyle).let {
+                        it.addAttribute(StyleConstant.MOUSE_LISTENER, FoldingMouseListener(foldingEntries))
+                        appendString(placeholder, it)
                     }
                 }
+            }
 
         if (!isLast) {
             appendString("\n")
@@ -351,9 +356,9 @@ class StyledDictViewer {
     }
 
     private inner class EntryMouseListener(
-            private val entryType: EntryType,
-            color: Color,
-            hoverColor: Color? = null
+        private val entryType: EntryType,
+        color: Color,
+        hoverColor: Color? = null
     ) : BaseMouseListener() {
 
         private val regularAttributes = SimpleAttributeSet().apply {
@@ -391,6 +396,7 @@ class StyledDictViewer {
     private inner class FoldingMouseListener(private val foldingEntries: List<DictEntry>) : BaseMouseListener() {
 
         override fun mouseClicked(element: Element) {
+            onBeforeFoldingExpandHandler?.invoke(foldingEntries)
             with(element) {
                 styledDocument.apply {
                     var startOffset = startOffset
@@ -428,9 +434,11 @@ class StyledDictViewer {
             get() = document.getText(startOffset, offsetLength)
 
         @Suppress("NOTHING_TO_INLINE")
-        private inline fun StyledDocument.setParagraphStyle(offset: Int? = null,
-                                                            style: Style,
-                                                            replace: Boolean = true) {
+        private inline fun StyledDocument.setParagraphStyle(
+            offset: Int? = null,
+            style: Style,
+            replace: Boolean = true
+        ) {
             setParagraphAttributes(offset ?: length, 0, style, replace)
         }
     }
