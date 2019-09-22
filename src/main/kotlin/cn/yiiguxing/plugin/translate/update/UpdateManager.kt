@@ -106,11 +106,13 @@ class UpdateManager : StartupActivity, DumbAware {
                     }
                 }
             )
-            .addAction(object : DumbAwareAction(message("support.notification"), null, Icons.Support) {
-                override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
-            })
+            .addAction(SupportAction())
             .setImportant(true)
             .show(project)
+    }
+
+    class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
+        override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
     }
 
     companion object {
