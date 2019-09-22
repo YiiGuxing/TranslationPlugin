@@ -4,24 +4,24 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.e
-import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.intellij.util.download.DownloadableFileService
-import com.intellij.util.download.FileDownloader
+import com.intellij.util.concurrency.AppExecutorUtil
+import com.intellij.util.io.HttpRequests
 import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
 import org.sqlite.SQLiteErrorCode
+import java.io.IOException
 import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.ResultSet
@@ -66,22 +66,24 @@ class WordBookService {
     }
 
     private fun findDriverClassLoader(): ClassLoader? {
-        var classLoader: ClassLoader? = javaClass.classLoader
-        if (classLoader?.canDriveService == true) {
-            return classLoader
+        val defaultClassLoader: ClassLoader? = javaClass.classLoader
+        if (defaultClassLoader?.canDriveService == true) {
+            return defaultClassLoader
         }
 
-        lock {
-            if (Files.exists(DRIVER_JAR)) {
-                val urlClassLoader = URLClassLoader(arrayOf(DRIVER_JAR.toUri().toURL()), classLoader)
-                if (urlClassLoader.canDriveService) {
-                    classLoader = urlClassLoader
-                } else {
-                    Files.delete(DRIVER_JAR)
-                }
+        return lock {
+            if (!Files.exists(DRIVER_JAR)) {
+                return@lock null
+            }
+
+            val urlClassLoader = URLClassLoader(arrayOf(DRIVER_JAR.toUri().toURL()), defaultClassLoader)
+            return@lock if (urlClassLoader.canDriveService) {
+                urlClassLoader
+            } else {
+                Files.delete(DRIVER_JAR)
+                null
             }
         }
-        return classLoader
     }
 
     fun downloadDriver(): Boolean {
@@ -89,47 +91,69 @@ class WordBookService {
             return false
         }
 
-        val service = DownloadableFileService.getInstance()
-        val downloader = service.createDownloader(
-            listOf(service.createFileDescription(DRIVER_FILE_URL, DRIVER_FILE_NAME)),
-            "Downloading Word Book Driver..."
-        )
-
-        ProgressManager.getInstance().run(object : Task.Backgroundable(null, "Downloading Word Book Driver...", true) {
-            override fun run(indicator: ProgressIndicator) = downloader.downloadDriver()
-
-            override fun onFinished() {
-                isDownloading.set(false)
-            }
-        })
+        ProgressManager.getInstance()
+            .run(object : Task.Backgroundable(null, "Downloading Word Book Driver...", true) {
+                override fun run(indicator: ProgressIndicator) = downloadDriverAndInitializeService(indicator)
+                override fun onFinished() = isDownloading.set(false)
+            })
 
         return true
     }
 
-    private fun FileDownloader.downloadDriver() {
-        val download = download(TRANSLATION_DIRECTORY.toFile())
-        if (download.isNotEmpty()) {
-            val driverClassLoader = findDriverClassLoader()
-            if (driverClassLoader != null) {
-                initialize(driverClassLoader)
+    private fun downloadDriverAndInitializeService(indicator: ProgressIndicator) {
+        indicator.isIndeterminate = true
+        indicator.text = "Downloading..."
+
+        try {
+            AppExecutorUtil.getAppExecutorService().submit {
+                indicator.checkCanceled()
+                downloadDriverFile(indicator)
+            }.get()
+        } catch (e: Exception) {
+            throw e.cause?.takeIf { it is ProcessCanceledException } ?: e
+        }
+
+        indicator.text = "Initializing Service..."
+        findDriverClassLoader()?.let { initialize(it) }
+    }
+
+    private fun downloadDriverFile(indicator: ProgressIndicator) {
+        var downloadedFile: Path? = null
+        try {
+            val downloaded = HttpRequests.request(DRIVER_FILE_URL)
+                .connect(HttpRequests.RequestProcessor { request ->
+                    val size = request.connection.contentLength.toLong()
+                    val finished = lock {
+                        Files.exists(DRIVER_JAR) && Files.size(DRIVER_JAR) == size
+                    } ?: false
+                    if (finished) {
+                        return@RequestProcessor null
+                    }
+
+                    val tempFile = Files.createTempFile(TRANSLATION_DIRECTORY, "download.", ".tmp")
+
+                    indicator.isIndeterminate = false
+                    request.saveToFile(tempFile.toFile(), indicator)
+                    return@RequestProcessor tempFile.takeIf { Files.exists(it) }
+                }) ?: return
+
+            downloadedFile = downloaded
+            indicator.checkCanceled()
+
+            lock {
+                if (Files.exists(DRIVER_JAR) && Files.size(DRIVER_JAR) == Files.size(downloaded)) {
+                    return@lock
+                }
+
+                Files.move(downloaded, DRIVER_JAR, StandardCopyOption.REPLACE_EXISTING)
             }
 
-            val downloadFile = download.first().first
-            if (downloadFile.name != DRIVER_FILE_NAME) {
-                if (driverClassLoader == null) {
-                    lock {
-                        try {
-                            Files.move(downloadFile.toPath(), DRIVER_JAR, StandardCopyOption.ATOMIC_MOVE)
-                        } catch (e: Throwable) {
-                            LOGGER.e("Move ${downloadFile.name} to $DRIVER_FILE_NAME", e)
-                        }
-                    }
-                    // try again
-                    findDriverClassLoader()?.let { initialize(it) }
-                } else {
-                    Files.deleteIfExists(downloadFile.toPath())
-                }
-            }
+            indicator.fraction = 1.0
+            indicator.isIndeterminate = true
+        } catch (e: IOException) {
+            throw  IOException("Failed to download driver file", e)
+        } finally {
+            downloadedFile?.let { Files.deleteIfExists(it) }
         }
     }
 
@@ -164,7 +188,11 @@ class WordBookService {
         return try {
             action()
         } catch (e: Throwable) {
-            LOGGER.e(e.message ?: "", e)
+            if (e is SQLException) {
+                LOGGER.e(e.message ?: "", e)
+            } else {
+                LOGGER.w(e.message ?: "", e)
+            }
             null
         } finally {
             fileLock.release()

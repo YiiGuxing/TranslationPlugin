@@ -42,10 +42,9 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>添加版本发行说明</li>
-        <li>新增单词本功能</li>
-        <li>优化了一些图标</li>
-        <li>修复了一些BUG</li>
+        <li>修复了导致在2019.2.3版本上崩溃的一个致命错误</li>
+        <li>修复了导致在2019.3版本上崩溃的一个致命错误</li>
+        <li>修复了其他的一些BUG</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>

@@ -38,8 +38,8 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     SettingsChangeListener {
 
     private val processPane = ProcessComponent("Querying...")
-    private val translationPane = DialogTranslationPanel(project, Settings)
-    private val translationPanel = ScrollPane(translationPane.component)
+    private val translationPane = DialogTranslationPane(project, Settings)
+    private val translationPanel = ScrollPane(translationPane)
     private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
 
     private val presenter: Presenter = TranslationPresenter(this)
@@ -74,7 +74,6 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     override fun createCenterPanel(): JComponent = component.apply {
         preferredSize = JBDimension(WIDTH, HEIGHT)
-        translationPane.setMaxWidth(JBUI.scale(WIDTH - INIT_MARGINS))
         border = BORDER_ACTIVE
     }
 
@@ -241,7 +240,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     private fun initTranslationPanel() {
         with(translationPane) {
-            component.border = JBEmptyBorder(10, 10, 5, 10)
+            border = JBUI.Borders.empty(8)
 
             onNewTranslate { text, src, target ->
                 val srcLang: Lang = if (sourceLangComboBox.selected == Lang.AUTO) Lang.AUTO else src
@@ -249,6 +248,9 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
                 translate(text, srcLang, targetLang)
             }
             onFixLanguage { sourceLangComboBox.selected = it }
+            onBeforeFoldingExpand {
+                lastScrollValue = translationPanel.verticalScrollBar.value
+            }
             onRevalidate {
                 invokeLater { translationPanel.verticalScrollBar.value = lastScrollValue }
             }
@@ -258,8 +260,6 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
             val view = viewport.view
             viewport = ScrollPane.Viewport(CONTENT_BACKGROUND, 10)
             viewport.view = view
-
-            verticalScrollBar.addAdjustmentListener { lastScrollValue = it.value }
         }
     }
 
@@ -693,9 +693,6 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
             }
 
             window.setBounds(x, startLocation.y, w, h)
-            val scrollBarWidth = translationPanel.verticalScrollBar.let { if (it.isVisible) it.width else 0 };
-            val maxWidth = mainContentPanel.width - JBUI.scale(MARGINS) - scrollBarWidth
-            translationPane.setMaxWidth(maxWidth)
             window.revalidate()
         }
     }
@@ -704,8 +701,6 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         private const val WIDTH = 400
         private const val HEIGHT = 500
 
-        private const val INIT_MARGINS = 54
-        private const val MARGINS = 20
 
         private const val RESIZE_TOUCH_SIZE = 3
         private const val RESIZE_FLAG_LEFT = 0b001

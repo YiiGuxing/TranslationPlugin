@@ -8,7 +8,7 @@ TranslationPlugin
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
-[![Financial Contributors on Open Collective](https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors)](https://opencollective.com/translation-plugin) 
+[![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 ### JetBrains IDE/Android Studio 翻译插件
 
@@ -166,12 +166,11 @@ FAQ
 
 更新日志
 --------
-## [v2.4.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.0) (2019-09-16)
+## [v2.4.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.1) (2019-09-22)
 
-- 添加版本发行说明
-- 新增单词本功能
-- 优化了一些图标
-- 修复了一些BUG
+* 修复了导致在2019.2.3版本上崩溃的一个致命错误
+* 修复了导致在2019.3版本上崩溃的一个致命错误
+* 修复了其他的一些BUG
 
 [完整的更新历史记录](./CHANGELOG.md)
 
@@ -185,17 +184,22 @@ Support
 * 提交PR
 * 反馈问题
 * 提出您的想法/建议
-* 通过[Open Collective][open-collective]捐赠
-* 通过支付宝或微信支付捐赠
+* 如果您喜欢这个插件，请考虑捐赠以维持插件的相关活动：
 
   <table>
     <thead align="center">
       <tr>
+        <th>Open Collective</th>
         <th>支付宝</th>
         <th>微信支付</th>
       </tr>
     </thead>
     <tr align="center">
+      <td>
+        <a href="https://opencollective.com/translation-plugin" target="_blank">
+            <img src="./images/open_collective.png">
+        </a>
+      </td>
       <td><img src="./images/alipay.png"></td>
       <td><img src="./images/wechat.png"></td>
     </tr>
@@ -222,6 +226,7 @@ Support
 [travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
 [plugin]: https://plugins.jetbrains.com/plugin/8579
 [open-collective]: https://opencollective.com/translation-plugin
+[open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
 
 ## Contributors
 

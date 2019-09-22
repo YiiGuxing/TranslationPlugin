@@ -9,6 +9,7 @@ package cn.yiiguxing.plugin.translate
 
 const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
 const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
+const val OPEN_COLLECTIVE_URL = "https://opencollective.com/translation-plugin"
 
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"

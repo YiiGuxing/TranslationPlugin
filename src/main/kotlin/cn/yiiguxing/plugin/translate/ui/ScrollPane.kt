@@ -13,7 +13,7 @@ import javax.swing.UIManager
  *
  * Created by Yii.Guxing on 2017/12/22
  */
-class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER) {
+open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER) {
 
     init {
         isOpaque = false
@@ -39,10 +39,14 @@ class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_AS_NEE
 
         private val transparent = fadingEdgeColor.withAlpha(0f)
         private val fadingEdgeSize = JBUI.scale(fadingEdgeSize)
-        private val fadingEdgeStart = GradientPaint(0f, 0f, fadingEdgeColor,
-                0f, this.fadingEdgeSize.toFloat(), transparent)
-        private val fadingEdgeEnd = GradientPaint(0f, 0f, transparent,
-                0f, this.fadingEdgeSize.toFloat(), fadingEdgeColor)
+        private val fadingEdgeStart = GradientPaint(
+            0f, 0f, fadingEdgeColor,
+            0f, this.fadingEdgeSize.toFloat(), transparent
+        )
+        private val fadingEdgeEnd = GradientPaint(
+            0f, 0f, transparent,
+            0f, this.fadingEdgeSize.toFloat(), fadingEdgeColor
+        )
 
         init {
             // 不绘制背景，包括图像背景

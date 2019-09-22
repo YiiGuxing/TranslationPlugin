@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.GITHUB_URL
 import cn.yiiguxing.plugin.translate.NEW_ISSUES_URL
+import cn.yiiguxing.plugin.translate.OPEN_COLLECTIVE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.SupportForm
 import com.intellij.ide.BrowserUtil
@@ -36,10 +37,13 @@ class SupportDialog private constructor() : DialogWrapper(null) {
         prLinkLab.init(GITHUB_URL)
         reportLinkLabel.init(NEW_ISSUES_URL)
         ideaLinkLabel.init(NEW_ISSUES_URL)
+        openCollectiveLinkLabel.init(OPEN_COLLECTIVE_URL, false)
     }
 
-    private fun LinkLabel<String>.init(url: String) {
-        icon = null
+    private fun LinkLabel<String>.init(url: String, cleanIcon: Boolean = true) {
+        if (cleanIcon) {
+            icon = null
+        }
         setListener({ _, linkUrl -> BrowserUtil.browse(linkUrl) }, url)
     }
 

@@ -2,22 +2,22 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
-import com.intellij.util.ui.JBDimension
+import java.awt.Dimension
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
+import javax.swing.JScrollPane
 
-/**
- * BalloonTranslationPanel
- *
- * Created by Yii.Guxing on 2017/12/13
- */
-class BalloonTranslationPanel(
+class BalloonTranslationPane(
     project: Project?,
     settings: Settings,
     private val maxWidth: Int
-) : TranslationPanel<ComboBox<Lang>>(project, settings) {
+) : TranslationPane<ComboBox<Lang>>(project, settings) {
+
+    private lateinit var dictViewerScrollWrapper: JScrollPane
+    private var lastScrollValue: Int = 0
 
     private var ignoreEvent = false
     private var onLanguageChangedHandler: ((Lang, Lang) -> Unit)? = null
@@ -28,6 +28,7 @@ class BalloonTranslationPanel(
     val targetLanguage: Lang? get() = targetLangComponent.selected
 
     init {
+        maximumSize = Dimension(maxWidth, Int.MAX_VALUE)
         onFixLanguage { sourceLangComponent.selected = it }
     }
 
@@ -37,10 +38,6 @@ class BalloonTranslationPanel(
             selectedItem = old
             ignoreEvent = false
         }
-    }
-
-    override fun onComponentCreated() {
-        setMaxWidth(maxWidth)
     }
 
     override fun onCreateLanguageComponent(): ComboBox<Lang> = ComboBox<Lang>().apply {
@@ -69,13 +66,44 @@ class BalloonTranslationPanel(
         }
     }
 
-    override fun onWrapViewer(viewer: Viewer): JComponent = ScrollPane(viewer).apply {
-        val maxHeight = if (viewer === originalViewer || viewer === transViewer) {
-            MAX_VIEWER_SMALL
-        } else {
-            MAX_VIEWER_HEIGHT
+    override fun onWrapViewer(viewer: Viewer): JComponent {
+        val maxHeight = if (isOriginalOrTranslationViewer(viewer)) MAX_VIEWER_SMALL else MAX_VIEWER_HEIGHT
+        val scrollPane = object : ScrollPane(viewer) {
+            override fun getPreferredSize(): Dimension {
+                val preferredSize = super.getPreferredSize()
+                if (preferredSize.height > maxHeight) {
+                    return Dimension(preferredSize.width, maxHeight)
+                }
+                return preferredSize
+            }
         }
-        maximumSize = JBDimension(maxWidth, maxHeight)
+
+        if (isDictViewer(viewer)) {
+            dictViewerScrollWrapper = scrollPane
+        }
+
+        return scrollPane
+    }
+
+    override fun onBeforeFoldingExpand() {
+        lastScrollValue = dictViewerScrollWrapper.verticalScrollBar.value
+        dictViewerScrollWrapper.let {
+            it.preferredSize = Dimension(it.width, it.height)
+        }
+    }
+
+    override fun onFoldingExpanded() {
+        dictViewerScrollWrapper.verticalScrollBar.run {
+            invokeLater { value = lastScrollValue }
+        }
+    }
+
+    override fun getPreferredSize(): Dimension {
+        val preferredSize = super.getPreferredSize()
+        if (preferredSize.width > maxWidth) {
+            return Dimension(maxWidth, preferredSize.height)
+        }
+        return preferredSize
     }
 
     override fun ComboBox<Lang>.updateLanguage(lang: Lang?) {

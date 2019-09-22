@@ -138,6 +138,9 @@
       <item class="cn.yiiguxing.plugin.translate.ui.TTSButton" removable="false" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
       </item>
+      <item class="cn.yiiguxing.plugin.translate.ui.ListItemCircleComponent" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
+      </item>
     </group>
   </component>
 </project>

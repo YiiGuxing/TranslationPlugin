@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.activity.Activity
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.Plugin
@@ -80,9 +81,9 @@ class UpdateManager : StartupActivity, DumbAware {
         val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
         val content = """
             If you find my plugin helpful, please
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>:</b>
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">Donate</a></b> with
-            <a href="$HTML_DESCRIPTION_SUPPORT">AliPay/WeChatPay</a>.<br/>
+            <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>.</b>
+            If you love this plugin, please consider
+            <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain the plugin related activities.<br/>
             Thank you for your support!
             <div style="$partStyle $refStyle">
                 This update addresses these <a href="${MILESTONE_URL.format(version)}">issues</a>.
@@ -105,7 +106,7 @@ class UpdateManager : StartupActivity, DumbAware {
                     }
                 }
             )
-            .addAction(object : DumbAwareAction("Support!", null, Icons.Support) {
+            .addAction(object : DumbAwareAction(message("support.notification"), null, Icons.Support) {
                 override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
             })
             .setImportant(true)
@@ -272,7 +273,7 @@ class UpdateManager : StartupActivity, DumbAware {
                 
                 <h2>单词本</h2>
                 <img src="${imageResource("word_book.gif")}" style="margin-top: ${JBUI.scale(8)}px" alt="单词本">
-                <p>某些IED（如：WebStorm）可能需要下载支持库才能使用“<b>单词本</b>”功能，这时候只需在“<b>单词本</b>”面板中点击“下载”并等待下载完成后即可正常使用。</p>
+                <p>某些IDE（如：WebStorm）可能需要下载支持库才能使用“<b>单词本</b>”功能，这时候只需在“<b>单词本</b>”面板中点击“下载”并等待下载完成后即可正常使用。</p>
                 <h3>每日单词</h3>
                 <p>“<b>每日单词</b>”会将单词本中所有单词打乱顺序后逐个显示，可以通过 “<b>Word of the Day</b>” 动作（无默认快捷键）来打开它。</p>
                 <img src="${imageResource("word_of_the_day.png")}" alt="每日单词">

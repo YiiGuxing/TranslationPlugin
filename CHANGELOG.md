@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.4.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.1) (2019-09-22)
+
+* 修复了导致在2019.2.3版本上崩溃的一个致命错误
+* 修复了导致在2019.3版本上崩溃的一个致命错误
+* 修复了其他的一些BUG
+
 ## [v2.4.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.0) (2019-09-16)
 
 - 添加版本发行说明

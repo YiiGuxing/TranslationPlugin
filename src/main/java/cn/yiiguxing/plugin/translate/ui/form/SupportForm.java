@@ -15,4 +15,5 @@ public class SupportForm {
     public LinkLabel<String> prLinkLab;
     public LinkLabel<String> reportLinkLabel;
     public LinkLabel<String> ideaLinkLabel;
+    public LinkLabel<String> openCollectiveLinkLabel;
 }
