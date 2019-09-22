@@ -165,12 +165,11 @@ FAQ
 
 更新日志
 --------
-## [v2.4.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.0) (2019-09-16)
+## [v2.4.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.1) (2019-09-22)
 
-- 添加版本发行说明
-- 新增单词本功能
-- 优化了一些图标
-- 修复了一些BUG
+* 修复了导致在2019.2.3版本上崩溃的一个致命错误
+* 修复了导致在2019.3版本上崩溃的一个致命错误
+* 修复了其他的一些BUG
 
 [完整的更新历史记录](./CHANGELOG.md)
 
