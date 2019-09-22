@@ -8,7 +8,7 @@ TranslationPlugin
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
-[![Financial Contributors on Open Collective](https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors)](https://opencollective.com/translation-plugin) 
+[![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 ### JetBrains IDE/Android Studio 翻译插件
 
@@ -226,6 +226,7 @@ Support
 [travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
 [plugin]: https://plugins.jetbrains.com/plugin/8579
 [open-collective]: https://opencollective.com/translation-plugin
+[open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
 
 ## Contributors
 
