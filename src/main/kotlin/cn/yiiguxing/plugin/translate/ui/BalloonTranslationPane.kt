@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.util.ui.JBUI
 import java.awt.Dimension
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
@@ -28,6 +29,7 @@ class BalloonTranslationPane(
     val targetLanguage: Lang? get() = targetLangComponent.selected
 
     init {
+        border = JBUI.Borders.empty(OFFSET, OFFSET, OFFSET, -GAP)
         maximumSize = Dimension(maxWidth, Int.MAX_VALUE)
         onFixLanguage { sourceLangComponent.selected = it }
     }
@@ -78,11 +80,19 @@ class BalloonTranslationPane(
             }
         }
 
+        viewer.border = JBUI.Borders.empty(0, 0, 0, OFFSET + GAP)
+
         if (isDictViewer(viewer)) {
             dictViewerScrollWrapper = scrollPane
         }
 
         return scrollPane
+    }
+
+    override fun onRowCreated(row: JComponent) {
+        if (row !is ScrollPane) {
+            row.border = JBUI.Borders.empty(0, 0, 0, OFFSET + GAP)
+        }
     }
 
     override fun onBeforeFoldingExpand() {
@@ -122,6 +132,8 @@ class BalloonTranslationPane(
     }
 
     companion object {
+        private const val OFFSET = 10
+
         const val MAX_VIEWER_SMALL = 200
         const val MAX_VIEWER_HEIGHT = 250
 

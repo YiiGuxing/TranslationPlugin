@@ -115,9 +115,7 @@ class TranslationBalloon(
                 alignmentX = RIGHT_ALIGNMENT
                 alignmentY = TOP_ALIGNMENT
             })
-            add(translationPane.apply {
-                border = JBUI.Borders.empty(10)
-            })
+            add(translationPane)
         }
     }
 

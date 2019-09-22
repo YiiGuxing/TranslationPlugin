@@ -112,6 +112,13 @@ abstract class TranslationPane<T : JComponent>(
         originalComponent = onWrapViewer(originalViewer)
         translationComponent = onWrapViewer(translationViewer)
 
+        onRowCreated(sourceLangRowComponent)
+        onRowCreated(originalComponent)
+        onRowCreated(originalTransliterationLabel)
+        onRowCreated(targetRowComponent)
+        onRowCreated(translationComponent)
+        onRowCreated(transliterationLabel)
+
         add(sourceLangRowComponent)
         add(originalComponent)
         add(originalTransliterationLabel)
@@ -120,10 +127,16 @@ abstract class TranslationPane<T : JComponent>(
         add(transliterationLabel)
 
         dictComponent = onWrapViewer(dictViewer.component as Viewer)
+        onRowCreated(dictComponent)
         add(dictComponent)
 
         basicExplanationComponent = onWrapViewer(basicExplanationViewer)
         otherExplanationComponent = onWrapViewer(otherExplanationViewer)
+
+        onRowCreated(basicExplanationComponent)
+        onRowCreated(otherExplanationLabel)
+        onRowCreated(otherExplanationComponent)
+
         add(basicExplanationComponent)
         add(otherExplanationLabel)
         add(otherExplanationComponent)
@@ -143,6 +156,8 @@ abstract class TranslationPane<T : JComponent>(
             Disposer.register(translationPanel, this)
         }
     }
+
+    protected open fun onRowCreated(row: JComponent) {}
 
     protected abstract fun onCreateLanguageComponent(): T
 
@@ -592,7 +607,7 @@ abstract class TranslationPane<T : JComponent>(
     }
 
     companion object {
-        private const val GAP = 5
+        const val GAP = 5
 
         private const val FONT_SIZE_LARGE = 18f
         private const val FONT_SIZE_DEFAULT = 14
