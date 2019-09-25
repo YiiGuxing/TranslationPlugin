@@ -46,7 +46,7 @@ TranslationPlugin
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
 
 - **手动安装:**
-  - 下载[`插件包`][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd> > <kbd>选择插件包并安装（无需解压）</kbd>
+  - 下载[插件包][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd> -> 选择插件包并安装（无需解压）
 
 重启**IDE**.
 
