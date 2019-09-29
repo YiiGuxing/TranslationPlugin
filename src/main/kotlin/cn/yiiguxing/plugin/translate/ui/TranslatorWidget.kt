@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.WindowOption
+import cn.yiiguxing.plugin.translate.action.TranslatorAction
 import cn.yiiguxing.plugin.translate.action.TranslatorActionGroup
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
@@ -30,7 +31,7 @@ import javax.swing.Icon
  * Created by Yii.Guxing on 2018/1/19
  */
 class TranslatorWidget(
-        private val project: Project
+    private val project: Project
 ) : StatusBarWidget, StatusBarWidget.IconPresentation, StatusBarWidget.Multiframe {
 
     private val translateService = TranslateService
@@ -68,7 +69,17 @@ class TranslatorWidget(
         val group = TranslatorActionGroup()
         val context = DataManager.getInstance().getDataContext(component)
         return JBPopupFactory.getInstance()
-                .createActionGroupPopup(TranslatorActionGroup.TITLE, group, context, false, null, 5)
+            .createActionGroupPopup(
+                "Translators",
+                group,
+                context,
+                false,
+                false,
+                false,
+                null,
+                5,
+                TranslatorAction.PRESELECT_CONDITION
+            )
     }
 
     override fun dispose() {
@@ -87,8 +98,8 @@ class TranslatorWidget(
             if (!isInstalled) {
                 isInstalled = true
                 WindowManager.getInstance()
-                        .getStatusBar(project)
-                        ?.addWidget(this, "before ${MemoryUsagePanel.WIDGET_ID}", project)
+                    .getStatusBar(project)
+                    ?.addWidget(this, "before ${MemoryUsagePanel.WIDGET_ID}", project)
             }
         }
     }

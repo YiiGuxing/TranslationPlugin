@@ -46,7 +46,7 @@ TranslationPlugin
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
 
 - **手动安装:**
-  - 下载[`最新发布的插件包`][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
+  - 下载[插件包][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd> -> 选择插件包并安装（无需解压）
 
 重启**IDE**.
 
@@ -166,11 +166,11 @@ FAQ
 
 更新日志
 --------
-## [v2.4.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.1) (2019-09-22)
+## [v2.4.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.2) (2019-09-29)
 
-* 修复了导致在2019.2.3版本上崩溃的一个致命错误
-* 修复了导致在2019.3版本上崩溃的一个致命错误
-* 修复了其他的一些BUG
+* 修复了在Android Studio上切换翻译引擎时崩溃的问题
+* 修复了在Android Studio中点击通知上的Action时崩溃的问题
+* 界面上的一个小优化
 
 [完整的更新历史记录](./CHANGELOG.md)
 
