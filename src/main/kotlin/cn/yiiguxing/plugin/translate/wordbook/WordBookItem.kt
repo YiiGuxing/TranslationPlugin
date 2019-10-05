@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import java.sql.Date
+import java.util.*
 
 /**
  * WordBookItem

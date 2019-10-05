@@ -7,9 +7,12 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.ActionGroup
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.JBMenuItem
@@ -19,6 +22,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
+import com.intellij.tools.SimpleActionGroup
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.datatransfer.StringSelection
@@ -45,7 +49,11 @@ class WordBookView {
 
         val contentManager = toolWindow.contentManager
         if (!Application.isUnitTestMode) {
-            (toolWindow as ToolWindowEx).setTitleActions(RefreshAction(), ShowWordOfTheDayAction())
+            (toolWindow as ToolWindowEx).apply {
+                val gearActions = SimpleActionGroup().apply { add(ExportActionGroup()) }
+                setAdditionalGearActions(gearActions)
+                setTitleActions(RefreshAction(), ShowWordOfTheDayAction())
+            }
         }
 
         val panel = wordBookPanels.getOrPut(project) {
@@ -181,7 +189,7 @@ class WordBookView {
         WordDetailsDialog(word).show()
     }
 
-    private abstract inner class WordBookAction(text: String, description: String?, icon: Icon) :
+    private abstract inner class WordBookAction(text: String, description: String? = null, icon: Icon? = null) :
         DumbAwareAction(text, description, icon) {
 
         final override fun actionPerformed(e: AnActionEvent) {
@@ -229,6 +237,21 @@ class WordBookView {
                 )
             }
         }
+    }
+
+    private inner class ExportAction(private val exporter: WordBookExporter) : WordBookAction(exporter.name) {
+        override fun doAction(e: AnActionEvent) = exporter.export(e.project, words)
+    }
+
+    private inner class ExportActionGroup : ActionGroup(message("wordbook.window.action.export"), true), DumbAware {
+
+        private val actions: Array<AnAction> = arrayOf(
+            ExportAction(JsonWordBookExporter()),
+            ExportAction(XmlWordBookExporter()),
+            ExportAction(YoudaoXmlWordBookExporter())
+        )
+
+        override fun getChildren(e: AnActionEvent?): Array<AnAction> = actions
     }
 
     companion object {
