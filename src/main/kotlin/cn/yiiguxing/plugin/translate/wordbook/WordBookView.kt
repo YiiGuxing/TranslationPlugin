@@ -50,7 +50,10 @@ class WordBookView {
         val contentManager = toolWindow.contentManager
         if (!Application.isUnitTestMode) {
             (toolWindow as ToolWindowEx).apply {
-                val gearActions = SimpleActionGroup().apply { add(ExportActionGroup()) }
+                val gearActions = SimpleActionGroup().apply {
+                    add(ImportAction())
+                    add(ExportActionGroup())
+                }
                 setAdditionalGearActions(gearActions)
                 setTitleActions(RefreshAction(), ShowWordOfTheDayAction())
             }
@@ -237,6 +240,10 @@ class WordBookView {
                 )
             }
         }
+    }
+
+    private inner class ImportAction : WordBookAction(message("wordbook.window.action.import")) {
+        override fun doAction(e: AnActionEvent) = importWordBook(e.project)
     }
 
     private inner class ExportAction(private val exporter: WordBookExporter) : WordBookAction(exporter.name) {

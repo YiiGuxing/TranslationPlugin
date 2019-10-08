@@ -211,7 +211,7 @@ class WordBookService {
     /**
      * Adds the specified word to the word book and returns id if word is inserted.
      */
-    fun addWord(item: WordBookItem): Long? {
+    fun addWord(item: WordBookItem, notifyOnFailed: Boolean = true): Long? {
         checkIsInitialized()
         return lock {
             val sql = """
@@ -245,14 +245,16 @@ class WordBookService {
                 }
             } catch (e: SQLException) {
                 if (e.errorCode != SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
-                    @Suppress("InvalidBundleOrProperty")
-                    Notifications.showErrorNotification(
-                        null,
-                        NOTIFICATION_DISPLAY_ID,
-                        message("notification.title.wordbook"),
-                        message("notification.content.wordbook.addFailed"),
-                        e
-                    )
+                    LOGGER.w("Insert word", e)
+                    if (notifyOnFailed) {
+                        Notifications.showErrorNotification(
+                            null,
+                            NOTIFICATION_DISPLAY_ID,
+                            message("notification.title.wordbook"),
+                            message("notification.content.wordbook.addFailed"),
+                            e
+                        )
+                    }
                 }
                 null
             }

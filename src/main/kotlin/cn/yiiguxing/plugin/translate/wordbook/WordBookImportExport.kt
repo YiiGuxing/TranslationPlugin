@@ -2,34 +2,44 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
-import com.intellij.notification.NotificationType
+import cn.yiiguxing.plugin.translate.util.e
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.application.WriteAction
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileElement
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 
 private const val EXPORT_NOTIFICATIONS_ID = "Word Book Export"
 
+private const val IMPORT_NOTIFICATIONS_ID = "Word Book Import"
+
 private const val EXTENSION_XML = "xml"
 private const val EXTENSION_JSON = "json"
 
+private val LOG = Logger.getInstance("#WordBookImportExport")
+
 fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
-    val targetFile = FileChooserFactory
+    val targetFileWrapper = FileChooserFactory
         .getInstance()
         .createSaveFileDialog(
             FileSaverDescriptor(
-                message("wordbook.window.export.ui.file.chooser.title"),
-                message("wordbook.window.export.ui.file.chooser.message"),
+                message("wordbook.window.ui.file.chooser.title"),
+                "",
                 extension
             ),
             project
         )
-        .save(null, "wordbook.$extension")
-        ?.getVirtualFile(true)
+        .save(null, "wordbook.$extension") ?: return
+
+    val targetFile = targetFileWrapper.getVirtualFile(true)
 
     val title = message("wordbook.window.export.notification.title")
     if (targetFile != null) {
@@ -51,19 +61,17 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
             return
         }
 
-        Notifications.showNotification(
+        Notifications.showInfoNotification(
             EXPORT_NOTIFICATIONS_ID,
             title,
             message("wordbook.window.export.notification.exported.message", targetFile.presentableUrl),
-            NotificationType.INFORMATION,
             project
         )
     } else {
-        Notifications.showNotification(
+        Notifications.showErrorNotification(
             EXPORT_NOTIFICATIONS_ID,
             title,
             message("wordbook.window.export.notification.cannot.write.message"),
-            NotificationType.ERROR,
             project
         )
     }
@@ -71,18 +79,47 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
 
 fun importWordBook(project: Project?) {
     val selectFile = selectImportSource(project) ?: return
+    val title = message("wordbook.window.import.notification.title")
 
-    when {
-        EXTENSION_XML.equals(selectFile.extension, true) -> {
-
-        }
-        EXTENSION_JSON.equals(selectFile.extension, true) -> {
-
-        }
+    val importer = when {
+        EXTENSION_XML.equals(selectFile.extension, true) -> XmlWordBookImporter()
+        EXTENSION_JSON.equals(selectFile.extension, true) -> JsonWordBookImporter()
         else -> {
-
+            LOG.e("Word book import: file extension=${selectFile.extension}")
+            Notifications.showErrorNotification(
+                IMPORT_NOTIFICATIONS_ID,
+                title,
+                message("wordbook.window.import.notification.cannot.import"),
+                project
+            )
+            return
         }
     }
+
+    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Importing Word Book...", true) {
+        override fun run(indicator: ProgressIndicator) {
+            selectFile.inputStream.use { importer.import(it, indicator) }
+        }
+
+        override fun onSuccess() {
+            Notifications.showInfoNotification(
+                IMPORT_NOTIFICATIONS_ID,
+                title,
+                message("wordbook.window.import.notification.imported.message"),
+                project
+            )
+        }
+
+        override fun onThrowable(error: Throwable) {
+            LOG.w("Word book import", error)
+            Notifications.showErrorNotification(
+                IMPORT_NOTIFICATIONS_ID,
+                title,
+                message("wordbook.window.import.notification.cannot.import"),
+                project
+            )
+        }
+    })
 }
 
 private fun selectImportSource(project: Project?): VirtualFile? {
@@ -99,6 +136,8 @@ private fun selectImportSource(project: Project?): VirtualFile? {
             }
         }
     }
+
+    descriptor.title = message("wordbook.window.ui.file.chooser.title")
 
     return FileChooserFactory.getInstance()
         .createFileChooser(descriptor, project, null)
