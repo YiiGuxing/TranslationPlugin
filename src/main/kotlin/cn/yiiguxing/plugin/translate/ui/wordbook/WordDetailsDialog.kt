@@ -8,6 +8,8 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.DocumentAdapter
 import javax.swing.Action
 import javax.swing.event.DocumentEvent
+import javax.swing.text.AttributeSet
+import javax.swing.text.DefaultStyledDocument
 
 /**
  * Word details dialog.
@@ -75,6 +77,42 @@ class WordDetailsDialog(private var word: WordBookItem) : WordDetailsDialogForm(
                 setWord(newWord)
             }
         }
+    }
+
+    private class TagsDocument : DefaultStyledDocument() {
+
+        override fun insertString(offset: Int, string: String?, attr: AttributeSet?) {
+            var insertText: String = string ?: return
+            if (length == 0) {
+                insertText = insertText.trim()
+            } else {
+                if (offset == 0 || getText(offset - 1, 1)[0].isWhitespace()) {
+                    insertText = insertText.trimStart()
+                }
+                if (offset != length && getText(offset, 1)[0].isWhitespace()) {
+                    insertText = insertText.trimEnd()
+                }
+            }
+
+            insertText = insertText.replace(",", "").replace(REGEX_WHITESPACE, " ")
+            if (insertText.isEmpty()) return
+
+            super.insertString(offset, insertText, attr)
+        }
+
+        override fun remove(offset: Int, len: Int) {
+            var removeLength = len
+            if (offset == 0 && removeLength < length && getText(offset + removeLength, 1)[0].isWhitespace()) {
+                removeLength++
+            }
+
+            super.remove(offset, removeLength)
+        }
+
+    }
+
+    companion object {
+        private val REGEX_WHITESPACE = "\\s+".toRegex()
     }
 
 }
