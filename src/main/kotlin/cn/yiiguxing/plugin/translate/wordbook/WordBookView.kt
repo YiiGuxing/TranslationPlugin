@@ -188,18 +188,6 @@ class WordBookView {
         val newWords = WordBookService.getWords()
         words.clear()
         words.addAll(newWords)
-        updateGroupedWords()
-    }
-
-    private fun updateGroupedWords() {
-        val newGroupedWords = HashMap<String, MutableList<WordBookItem>>()
-        for (word in words) {
-            for (tag in word.tags) {
-                newGroupedWords.getOrPut(tag) { ArrayList() } += word
-            }
-        }
-
-        groupedWords = newGroupedWords.toSortedMap()
         notifyWordsChanged()
     }
 
@@ -211,9 +199,21 @@ class WordBookView {
     }
 
     private fun notifyWordsChanged() {
+        updateGroupedWords()
         for ((project, toolWindow) in windows) {
             updateContent(project, toolWindow)
         }
+    }
+
+    private fun updateGroupedWords() {
+        val newGroupedWords = HashMap<String, MutableList<WordBookItem>>()
+        for (word in words) {
+            for (tag in word.tags) {
+                newGroupedWords.getOrPut(tag) { ArrayList() } += word
+            }
+        }
+
+        groupedWords = newGroupedWords.toSortedMap()
     }
 
     private fun updateContent(project: Project, toolWindow: ToolWindow) {
