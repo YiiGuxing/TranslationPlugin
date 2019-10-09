@@ -23,6 +23,8 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import com.intellij.tools.SimpleActionGroup
+import com.intellij.ui.content.ContentManagerAdapter
+import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.datatransfer.StringSelection
@@ -38,6 +40,7 @@ class WordBookView {
     private var isInitialized: Boolean = false
 
     private val words: MutableList<WordBookItem> = ArrayList()
+    private var groupedWords: Map<String, MutableList<WordBookItem>> = HashMap()
 
     private val windows: MutableMap<Project, ToolWindow> = HashMap()
     private val wordBookPanels: MutableMap<Project, WordBookPanel> = HashMap()
@@ -59,22 +62,24 @@ class WordBookView {
             }
         }
 
-        val panel = wordBookPanels.getOrPut(project) {
-            WordBookPanel().apply {
-                setupMenu()
-                setWords(this@WordBookView.words)
-                onWordDoubleClicked { word -> openWordDetails(word) }
-                onDownloadDriver {
-                    if (!WordBookService.downloadDriver()) {
-                        val message = message("wordbook.window.message.in.download")
-                        Popups.showBalloonForComponent(it, message, MessageType.INFO, project, JBUI.scale(10))
+        val panel = getWordBookPanel(project)
+        val content = contentManager.factory.createContent(panel, null, false)
+        content.tabName = TAB_NAME_ALL
+        contentManager.addContent(content)
+        contentManager.addContentManagerListener(object : ContentManagerAdapter() {
+            override fun selectionChanged(event: ContentManagerEvent) {
+                val words =
+                    if (event.content.tabName == TAB_NAME_ALL) {
+                        words
+                    } else {
+                        groupedWords[event.content.displayName]
                     }
+                wordBookPanels[project]?.apply {
+                    setWords(words ?: emptyList())
+                    fireWordsChanged()
                 }
             }
-        }
-
-        val content = contentManager.factory.createContent(panel, null, false)
-        contentManager.addContent(content)
+        })
         contentManager.setSelectedContent(content)
 
         if (WordBookService.isInitialized) {
@@ -91,6 +96,21 @@ class WordBookView {
 
         subscribeWordBookTopic()
         isInitialized = true
+    }
+
+    private fun getWordBookPanel(project: Project): WordBookPanel {
+        return wordBookPanels.getOrPut(project) {
+            WordBookPanel().apply {
+                setupMenu()
+                onWordDoubleClicked { word -> openWordDetails(word) }
+                onDownloadDriver {
+                    if (!WordBookService.downloadDriver()) {
+                        val message = message("wordbook.window.message.in.download")
+                        Popups.showBalloonForComponent(it, message, MessageType.INFO, project, JBUI.scale(10))
+                    }
+                }
+            }
+        }
     }
 
     private fun WordBookPanel.setupMenu() {
@@ -141,7 +161,7 @@ class WordBookView {
                     override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
                         assertIsDispatchThread()
                         words.add(wordBookItem)
-                        notifyWordsChanged(words.lastIndex, WordBookPanel.ChangeType.INSERT)
+                        notifyWordsChanged()
                     }
 
                     override fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {
@@ -149,7 +169,7 @@ class WordBookView {
                         val index = words.indexOfFirst { it.id == wordBookItem.id }
                         if (index >= 0) {
                             words[index] = wordBookItem
-                            notifyWordsChanged(index, WordBookPanel.ChangeType.UPDATE)
+                            notifyWordsChanged()
                         }
                     }
 
@@ -158,7 +178,7 @@ class WordBookView {
                         val index = words.indexOfFirst { it.id == id }
                         if (index >= 0) {
                             words.removeAt(index)
-                            notifyWordsChanged(index, WordBookPanel.ChangeType.DELETE)
+                            notifyWordsChanged()
                         }
                     }
                 })
@@ -169,6 +189,18 @@ class WordBookView {
         val newWords = WordBookService.getWords()
         words.clear()
         words.addAll(newWords)
+        updateGroupedWords()
+    }
+
+    private fun updateGroupedWords() {
+        val newGroupedWords = HashMap<String, MutableList<WordBookItem>>()
+        for (word in words) {
+            for (tag in word.tags) {
+                newGroupedWords.getOrPut(tag) { ArrayList() } += word
+            }
+        }
+
+        groupedWords = newGroupedWords.toSortedMap()
         notifyWordsChanged()
     }
 
@@ -179,12 +211,66 @@ class WordBookView {
         }
     }
 
-    private fun notifyWordsChanged(
-        row: Int = WordBookPanel.ALL_ROWS,
-        type: WordBookPanel.ChangeType = WordBookPanel.ChangeType.UPDATE
-    ) {
-        for ((_, panel) in wordBookPanels) {
-            panel.fireWordsChanged(row, type)
+    private fun notifyWordsChanged() {
+        for ((project, toolWindow) in windows) {
+            updateContent(project, toolWindow)
+        }
+    }
+
+    private fun updateContent(project: Project, toolWindow: ToolWindow) {
+        val groupedWords = groupedWords
+        val contentManager = toolWindow.contentManager
+        val allContent = contentManager.getContent(0)!!
+        val groupedContents = contentManager.contents.takeLast(contentManager.contentCount - 1)
+        var selectedContent = contentManager.selectedContent
+
+        if (groupedWords.isEmpty()) {
+            allContent.displayName = null
+            allContent.tabName = TAB_NAME_ALL
+            for (content in groupedContents) {
+                contentManager.removeContent(content, true)
+            }
+            contentManager.setSelectedContent(allContent)
+            selectedContent = allContent
+        } else {
+            allContent.displayName = message("wordbook.window.ui.tab.title.all")
+            allContent.tabName = TAB_NAME_ALL
+
+            val keys = groupedWords.keys
+            val livingContents = ArrayList<String>()
+            for (content in groupedContents) {
+                val isDead = content.displayName !in keys
+                if (isDead) {
+                    contentManager.removeContent(content, true)
+                    if (selectedContent === content) {
+                        selectedContent = null
+                    }
+                } else {
+                    livingContents += content.displayName
+                }
+            }
+
+            val factory = contentManager.factory
+            for ((name) in groupedWords) {
+                val index = livingContents.binarySearch(name)
+                if (index < 0) {
+                    val content = factory.createContent(getWordBookPanel(project), name, false)
+                    contentManager.addContent(content, -(index + 1))
+                }
+            }
+
+            selectedContent = selectedContent ?: allContent
+            contentManager.setSelectedContent(selectedContent)
+        }
+
+        val wordsToDisplay = if (selectedContent === allContent) {
+            words
+        } else {
+            groupedWords[selectedContent.displayName] ?: words
+        }
+        getWordBookPanel(project).apply {
+            setWords(wordsToDisplay)
+            fireWordsChanged()
         }
     }
 
@@ -262,6 +348,8 @@ class WordBookView {
     }
 
     companion object {
+        private const val TAB_NAME_ALL = "ALL"
+
         val instance: WordBookView
             get() = ServiceManager.getService(WordBookView::class.java)
     }
