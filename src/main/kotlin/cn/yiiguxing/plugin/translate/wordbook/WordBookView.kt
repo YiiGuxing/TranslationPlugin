@@ -68,12 +68,11 @@ class WordBookView {
         contentManager.addContent(content)
         contentManager.addContentManagerListener(object : ContentManagerAdapter() {
             override fun selectionChanged(event: ContentManagerEvent) {
-                val words =
-                    if (event.content.tabName == TAB_NAME_ALL) {
-                        words
-                    } else {
-                        groupedWords[event.content.displayName]
-                    }
+                val words = if (event.content.tabName == TAB_NAME_ALL) {
+                    words
+                } else {
+                    groupedWords[event.content.displayName]
+                }
                 wordBookPanels[project]?.apply {
                     setWords(words ?: emptyList())
                     fireWordsChanged()
@@ -221,7 +220,9 @@ class WordBookView {
         val groupedWords = groupedWords
         val contentManager = toolWindow.contentManager
         val allContent = contentManager.getContent(0)!!
-        val groupedContents = contentManager.contents.takeLast(contentManager.contentCount - 1)
+        val groupedContents = contentManager.contents.let { contents ->
+            if (contents.size > 1) contents.copyOfRange(1, contents.size) else emptyArray()
+        }
         var selectedContent = contentManager.selectedContent
 
         if (groupedWords.isEmpty()) {
@@ -251,11 +252,13 @@ class WordBookView {
             }
 
             val factory = contentManager.factory
-            for ((name) in groupedWords) {
+            for (name in groupedWords.keys) {
                 val index = livingContents.binarySearch(name)
                 if (index < 0) {
+                    val insertIndex = -index - 1
+                    livingContents.add(insertIndex, name)
                     val content = factory.createContent(getWordBookPanel(project), name, false)
-                    contentManager.addContent(content, -(index + 1))
+                    contentManager.addContent(content, insertIndex + 1)
                 }
             }
 
