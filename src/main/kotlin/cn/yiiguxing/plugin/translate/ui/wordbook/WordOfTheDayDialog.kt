@@ -1,8 +1,9 @@
 @file:Suppress("InvalidBundleOrProperty")
 
-package cn.yiiguxing.plugin.translate.ui
+package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.FixedSizeCardLayout
 import cn.yiiguxing.plugin.translate.ui.form.WordDialogForm
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -49,10 +50,14 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
             removeAll()
             layout = this@WordOfTheDayDialog.layout
             add(maskPanel, CARD_MASK)
-            add(explanationView, CARD_EXPLAINS_VIEW)
+            add(explanationView,
+                CARD_EXPLAINS_VIEW
+            )
         }
 
-        showExplanationButton.addActionListener { layout.show(explainsCard, CARD_EXPLAINS_VIEW) }
+        showExplanationButton.addActionListener { layout.show(explainsCard,
+            CARD_EXPLAINS_VIEW
+        ) }
     }
 
     override fun createActions(): Array<Action> = arrayOf(previousWordAction, nextWordAction, cancelAction)
