@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_HOST
+import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_HOST_CN
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.io.RequestBuilder
 
@@ -9,6 +11,14 @@ private const val GOOGLE_REFERER_CN = "https://translate.google.cn/"
 private const val CHROME_VERSION = "77.0.3865.75"
 
 private val USER_AGENT = getUserAgent()
+
+
+val googleHost: String
+    get() = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
+        GOOGLE_TRANSLATE_HOST
+    } else {
+        GOOGLE_TRANSLATE_HOST_CN
+    }
 
 @Suppress("SpellCheckingInspection")
 private fun getUserAgent(): String {

@@ -1,14 +1,11 @@
 package cn.yiiguxing.plugin.translate.tts
 
-import cn.yiiguxing.plugin.translate.GOOGLE_TTS
-import cn.yiiguxing.plugin.translate.GOOGLE_TTS_CN
+import cn.yiiguxing.plugin.translate.GOOGLE_TTS_FORMAT
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.NetworkException
 import cn.yiiguxing.plugin.translate.trans.tk
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.notification.NotificationDisplayType
-import com.intellij.notification.NotificationGroup
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
@@ -57,11 +54,7 @@ class GoogleTTSPlayer(
     private var duration = 0
 
     private val playlist: List<String> by lazy {
-        val baseUrl = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
-            GOOGLE_TTS
-        } else {
-            GOOGLE_TTS_CN
-        }
+        val baseUrl = GOOGLE_TTS_FORMAT.format(googleHost)
         text.splitSentence(MAX_TEXT_LENGTH).let {
             it.mapIndexed { index, sentence ->
                 @Suppress("SpellCheckingInspection")
@@ -97,15 +90,25 @@ class GoogleTTSPlayer(
             if (error is HttpRequests.HttpStatusException && error.statusCode == 404) {
                 LOGGER.w("TTS Error: Unsupported language: ${lang.code}.")
 
-                @Suppress("InvalidBundleOrProperty")
-                NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.TOOL_WINDOW, true)
-                    .createNotification(
-                        "TTS", message("error.unsupportedLanguage", lang.langName),
-                        NotificationType.WARNING, null
-                    )
-                    .show(project)
+                Notifications.showWarningNotification(
+                    NOTIFICATION_ID,
+                    "TTS",
+                    message("error.unsupportedLanguage", lang.langName),
+                    project
+                )
             } else {
-                LOGGER.e("TTS Error", error)
+                val throwable = NetworkException.wrapIfIsNetworkException(error, googleHost)
+                if (throwable is NetworkException) {
+                    Notifications.showErrorNotification(
+                        project,
+                        NOTIFICATION_ID,
+                        "TTS",
+                        message("error.network"),
+                        throwable
+                    )
+                } else {
+                    LOGGER.e("TTS Error", error)
+                }
             }
         }
 
@@ -208,7 +211,7 @@ class GoogleTTSPlayer(
 
         private const val MAX_TEXT_LENGTH = 200
 
-        private const val NOTIFICATION_ID = "TTS Error"
+        private const val NOTIFICATION_ID = "TTS"
 
         val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.CHINESE, Lang.ENGLISH, Lang.CHINESE_TRADITIONAL, Lang.ALBANIAN, Lang.ARABIC, Lang.ESTONIAN,

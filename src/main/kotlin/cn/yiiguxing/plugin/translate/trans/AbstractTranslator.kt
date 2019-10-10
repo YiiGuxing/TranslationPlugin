@@ -51,6 +51,9 @@ abstract class AbstractTranslator : Translator {
     } catch (throwable: Throwable) {
         @Suppress("InvalidBundleOrProperty")
         val errorMessage = message("error.translate.failed", createErrorMessage(throwable))
-        throw TranslateException(errorMessage, name, throwable)
+        throw TranslateException(errorMessage, name, onError(throwable))
     }
+
+    protected open fun onError(throwable: Throwable): Throwable = throwable
+
 }
