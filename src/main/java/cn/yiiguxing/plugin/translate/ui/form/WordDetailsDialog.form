@@ -43,16 +43,6 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="de75c" class="javax.swing.JTextField" binding="phoneticField">
-                <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <opaque value="false"/>
-                </properties>
-              </component>
               <component id="4e25d" class="javax.swing.JLabel">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -71,6 +61,14 @@
                 <border type="none"/>
                 <children/>
               </grid>
+              <component id="7968" class="com.intellij.ui.EditorTextField" binding="phoneticField">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <toolTipText resource-bundle="messages/TranslationBundle" key="word.details.tip.phonetic"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <component id="a226f" class="javax.swing.JLabel" binding="explanationLabel">
@@ -104,6 +102,7 @@
           <component id="26f8d" class="javax.swing.JButton" binding="saveEditingButton" default-binding="true">
             <constraints/>
             <properties>
+              <opaque value="false"/>
               <text resource-bundle="messages/TranslationBundle" key="word.details.action.edit.save"/>
               <visible value="false"/>
             </properties>
@@ -111,6 +110,7 @@
           <component id="f41bf" class="javax.swing.JButton" binding="cancelEditingButton" default-binding="true">
             <constraints/>
             <properties>
+              <opaque value="false"/>
               <text resource-bundle="messages/TranslationBundle" key="word.details.action.edit.cancel"/>
               <visible value="false"/>
             </properties>
@@ -118,6 +118,7 @@
           <component id="d2c69" class="javax.swing.JButton" binding="closeButton" default-binding="true">
             <constraints/>
             <properties>
+              <opaque value="false"/>
               <text resource-bundle="messages/TranslationBundle" key="word.dialog.close"/>
             </properties>
           </component>

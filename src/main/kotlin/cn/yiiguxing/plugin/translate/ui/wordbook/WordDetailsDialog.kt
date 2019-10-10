@@ -20,6 +20,8 @@ import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.TextFieldWithAutoCompletion
 import com.intellij.util.ui.JBUI
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
 import javax.swing.Action
 import javax.swing.JComponent
 import javax.swing.event.DocumentEvent
@@ -76,21 +78,36 @@ class WordDetailsDialog(
             tagsField.text = tagsString
         }
 
-        val listener = object : DocumentAdapter() {
+        phoneticField.addDocumentListener(object : EditorDocumentAdapter() {
+            override fun documentChanged(e: EditorDocumentEvent?) = checkModification()
+        })
+        phoneticField.addFocusListener(object : FocusAdapter() {
+            private var toShowHint = true
+
+            override fun focusGained(e: FocusEvent?) {
+                if (toShowHint && phoneticField.text.isEmpty()) {
+                    invokeLater {
+                        phoneticField.editor?.let {
+                            HintManager.getInstance().showInformationHint(it, message("word.details.tip.phonetic"))
+                        }
+                    }
+                    toShowHint = false
+                }
+            }
+        })
+        explanationView.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) = checkModification()
-        }
-        phoneticField.document.addDocumentListener(listener)
-        explanationView.document.addDocumentListener(listener)
+        })
     }
 
     private fun EditorEx.install() {
         setFontSize(JBUI.scale(14))
 
-        var toShowHintRef = true
+        var toShowHint = true
         document.addDocumentListener(object : EditorDocumentAdapter() {
             override fun documentChanged(e: EditorDocumentEvent?) {
                 checkModification()
-                toShowHintRef = false
+                toShowHint = false
             }
         })
 
@@ -102,7 +119,7 @@ class WordDetailsDialog(
             }
 
             override fun focusGained(editor: Editor) {
-                if (toShowHintRef && editor.document.text.isEmpty()) {
+                if (toShowHint && editor.document.text.isEmpty()) {
                     invokeLater {
                         HintManager.getInstance().showInformationHint(editor, message("word.details.tags.hit"))
                     }

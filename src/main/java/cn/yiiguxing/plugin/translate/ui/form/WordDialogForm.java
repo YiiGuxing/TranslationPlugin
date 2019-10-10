@@ -32,6 +32,7 @@ public class WordDialogForm extends DialogWrapper {
         super(project);
 
         wordView.setBorder(null);
+        rootPanel.setBackground(UIManager.getColor("TextArea.background"));
         WordFormUtil.setRootPanelStyle(rootPanel, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         WordFormUtil.setExplanationPaneBorder(explanationView);
         WordFormUtil.setFonts(wordView, ttsButton, explanationView);

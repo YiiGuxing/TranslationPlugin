@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.ui.Viewer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.OnePixelDivider;
+import com.intellij.ui.EditorTextField;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class WordDetailsDialogForm extends DialogWrapper {
     protected Viewer wordView;
     protected JLabel languageLabel;
     protected TTSButton ttsButton;
-    protected JTextField phoneticField;
+    protected EditorTextField phoneticField;
     protected JLabel explanationLabel;
     protected JScrollPane scrollPane;
     protected JEditorPane explanationView;
@@ -47,8 +48,12 @@ public class WordDetailsDialogForm extends DialogWrapper {
         WordFormUtil.setExplanationPaneBorder(explanationView);
         WordFormUtil.setFonts(wordView, phoneticField, explanationView);
 
-        final Color bg = UIManager.getColor("DialogWrapper.southPanelBackground");
-        actionsPanel.setBackground(bg);
+        Color background = UIManager.getColor("TextArea.background");
+        actionsPanel.setBackground(background);
+        explanationView.setBackground(background);
+        scrollPane.setBackground(background);
+        scrollPane.getVerticalScrollBar().setBackground(background);
+        scrollPane.getHorizontalScrollBar().setBackground(background);
 
         final Color color = UIManager.getColor("DialogWrapper.southPanelDivider");
         final Border line = new CustomLineBorder(color != null ? color : OnePixelDivider.BACKGROUND, 1, 0, 0, 0);

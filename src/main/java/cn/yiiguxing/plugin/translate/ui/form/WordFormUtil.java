@@ -17,7 +17,6 @@ final class WordFormUtil {
     }
 
     static void setRootPanelStyle(JPanel rootPanel, int width, int height) {
-        rootPanel.setBackground(UIManager.getColor("TextArea.background"));
         rootPanel.setBorder(JBUI.Borders.empty(10, 12));
         rootPanel.setPreferredSize(new JBDimension(width, height));
         rootPanel.setMinimumSize(new JBDimension(width, height));
