@@ -2,7 +2,11 @@
 
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.ui.*
+import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
+import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
+import cn.yiiguxing.plugin.translate.ui.TranslationDialog
+import cn.yiiguxing.plugin.translate.ui.TranslatorWidget
+import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
@@ -14,6 +18,9 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.ui.PositionTracker
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.set
 
 /**
  * TranslationUIManager

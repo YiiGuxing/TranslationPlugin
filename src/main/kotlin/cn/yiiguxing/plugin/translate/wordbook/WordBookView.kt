@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.ui.WordBookPanel
-import cn.yiiguxing.plugin.translate.ui.WordDetailsDialog
+import cn.yiiguxing.plugin.translate.ui.wordbook.WordBookPanel
+import cn.yiiguxing.plugin.translate.ui.wordbook.WordDetailsDialog
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import com.intellij.icons.AllIcons
