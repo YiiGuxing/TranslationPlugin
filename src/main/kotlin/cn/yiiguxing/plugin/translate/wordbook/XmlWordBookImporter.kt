@@ -30,9 +30,6 @@ class XmlWordBookImporter : WordBookImporter {
             val phonetic = getChildText("phonetic")
             val explanation = getChildText("explanation")
             val tags = getChildText("tags")
-                ?.split(',')
-                ?.mapNotNull { tag -> tag.trim().takeIf { it.isNotEmpty() } }
-                ?: emptyList()
             val createdAt = getChildText("createdAt")?.toLongOrNull() ?: return null
 
             return WordBookItem(

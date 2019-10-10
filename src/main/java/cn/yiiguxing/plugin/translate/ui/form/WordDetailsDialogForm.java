@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.form;
 
 import cn.yiiguxing.plugin.translate.ui.TTSButton;
 import cn.yiiguxing.plugin.translate.ui.Viewer;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.ui.border.CustomLineBorder;
@@ -36,9 +37,10 @@ public class WordDetailsDialogForm extends DialogWrapper {
     protected JButton saveEditingButton;
     protected JButton cancelEditingButton;
     protected JButton closeButton;
+    protected JPanel tagsPanel;
 
-    protected WordDetailsDialogForm() {
-        super(true);
+    protected WordDetailsDialogForm(Project project) {
+        super(project);
 
         wordView.setBorder(null);
         WordFormUtil.setRootPanelStyle(contentPanel, DEFAULT_WIDTH, DEFAULT_HEIGHT);

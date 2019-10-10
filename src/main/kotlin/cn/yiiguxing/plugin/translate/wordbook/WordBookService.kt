@@ -265,8 +265,17 @@ class WordBookService {
         checkIsInitialized()
 
         val id = requireNotNull(word.id) { "Required word id was null." }
-        val sql = "UPDATE wordbook SET $COLUMN_PHONETIC = ?, $COLUMN_EXPLANATION = ? WHERE $COLUMN_ID = ?"
-        val updated = lock { queryRunner.update(sql, word.phonetic, word.explanation, id) > 0 } == true
+        val sql =
+            "UPDATE wordbook SET $COLUMN_PHONETIC = ?, $COLUMN_EXPLANATION = ?, $COLUMN_TAGS = ? WHERE $COLUMN_ID = ?"
+        val updated = lock {
+            queryRunner.update(
+                sql,
+                word.phonetic,
+                word.explanation,
+                word.tags.joinToString(","),
+                id
+            ) > 0
+        } == true
         if (updated) {
             invokeOnDispatchThread {
                 settingsPublisher.onWordUpdated(this@WordBookService, word)
@@ -389,7 +398,7 @@ class WordBookService {
                 Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
                 getString(COLUMN_PHONETIC),
                 getString(COLUMN_EXPLANATION),
-                getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
+                getString(COLUMN_TAGS),
                 getDate(COLUMN_CREATED_AT)
             )
         }

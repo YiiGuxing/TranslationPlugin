@@ -25,7 +25,7 @@ class XmlWordBookExporter : AbsXmlWordBookExporter() {
                 addChildElement("targetLanguage", targetLanguage.code)
                 addChildElement("phonetic", phonetic, true)
                 addChildElement("explanation", explanation, true)
-                addChildElement("tags", tags.joinToString(","))
+                addChildElement("tags", tags.joinToString(",").takeIf { it.isNotEmpty() })
                 addChildElement("createdAt", createdAt.time.toString())
             }
         }

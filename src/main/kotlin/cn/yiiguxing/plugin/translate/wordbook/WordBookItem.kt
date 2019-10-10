@@ -15,6 +15,27 @@ data class WordBookItem(
     val targetLanguage: Lang,
     val phonetic: String?,
     val explanation: String?,
-    val tags: List<String> = emptyList(),
+    val tags: Set<String> = emptySet(),
     val createdAt: Date = Date(System.currentTimeMillis())
-)
+) {
+    constructor(
+        id: Long?,
+        word: String,
+        sourceLanguage: Lang,
+        targetLanguage: Lang,
+        phonetic: String?,
+        explanation: String?,
+        tags: String? = null,
+        createdAt: Date = Date(System.currentTimeMillis())
+    ) : this(id, word, sourceLanguage, targetLanguage, phonetic, explanation, tags.toTagSet(), createdAt)
+}
+
+private val REGEX_SEPARATOR = "[\\s,]+".toRegex()
+
+private fun String?.toTagSet(): Set<String> {
+    return this?.takeIf { it.isNotEmpty() }
+        ?.split(REGEX_SEPARATOR)
+        ?.filter { it.isNotEmpty() }
+        ?.toSet()
+        ?: emptySet()
+}

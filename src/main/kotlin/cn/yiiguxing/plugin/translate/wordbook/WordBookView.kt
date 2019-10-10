@@ -100,8 +100,8 @@ class WordBookView {
     private fun getWordBookPanel(project: Project): WordBookPanel {
         return wordBookPanels.getOrPut(project) {
             WordBookPanel().apply {
-                setupMenu()
-                onWordDoubleClicked { word -> openWordDetails(word) }
+                setupMenu(project)
+                onWordDoubleClicked { word -> openWordDetails(project, word) }
                 onDownloadDriver {
                     if (!WordBookService.downloadDriver()) {
                         val message = message("wordbook.window.message.in.download")
@@ -112,10 +112,10 @@ class WordBookView {
         }
     }
 
-    private fun WordBookPanel.setupMenu() {
+    private fun WordBookPanel.setupMenu(project: Project) {
         val panel = this@setupMenu
         popupMenu = JBPopupMenu()
-            .addMenuItem(panel, message("wordbook.window.menu.detail"), Icons.Detail) { openWordDetails(it) }
+            .addMenuItem(panel, message("wordbook.window.menu.detail"), Icons.Detail) { openWordDetails(project, it) }
             .addMenuItem(panel, message("wordbook.window.menu.copy"), AllIcons.Actions.Copy) { word ->
                 CopyPasteManager.getInstance().setContents(StringSelection(word.word))
             }
@@ -209,7 +209,9 @@ class WordBookView {
         val newGroupedWords = HashMap<String, MutableList<WordBookItem>>()
         for (word in words) {
             for (tag in word.tags) {
-                newGroupedWords.getOrPut(tag) { ArrayList() } += word
+                if (tag.isNotEmpty()) {
+                    newGroupedWords.getOrPut(tag) { ArrayList() } += word
+                }
             }
         }
 
@@ -277,8 +279,8 @@ class WordBookView {
         }
     }
 
-    private fun openWordDetails(word: WordBookItem) {
-        WordDetailsDialog(word).show()
+    private fun openWordDetails(project: Project?, word: WordBookItem) {
+        WordDetailsDialog(project, word, groupedWords.keys).show()
     }
 
     private abstract inner class WordBookAction(text: String, description: String? = null, icon: Icon? = null) :

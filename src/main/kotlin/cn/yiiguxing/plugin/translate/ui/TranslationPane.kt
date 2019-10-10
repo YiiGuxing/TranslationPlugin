@@ -674,7 +674,8 @@ abstract class TranslationPane<T : JComponent>(
                 srcLang,
                 targetLang,
                 srcTransliteration,
-                explainsBuilder.toString()
+                explainsBuilder.toString(),
+                null
             )
         }
     }
