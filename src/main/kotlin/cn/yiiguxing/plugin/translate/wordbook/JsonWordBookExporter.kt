@@ -12,7 +12,7 @@ class JsonWordBookExporter : WordBookExporter {
     override val extension: String = "json"
 
     override fun export(words: List<WordBookItem>, outputStream: OutputStream) {
-        val writer = OutputStreamWriter(outputStream)
+        val writer = OutputStreamWriter(outputStream, Charsets.UTF_8.name())
         GsonBuilder()
             .registerDateTypeAdapter()
             .setPrettyPrinting()

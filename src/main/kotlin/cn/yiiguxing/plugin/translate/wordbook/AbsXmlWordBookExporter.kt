@@ -19,9 +19,13 @@ abstract class AbsXmlWordBookExporter : WordBookExporter {
 
     companion object {
         private fun Element.writeToStream(outputStream: OutputStream) {
-            val writer = OutputStreamWriter(outputStream)
-            val format = Format.getPrettyFormat().apply { lineSeparator = "\n" }
+            val writer = OutputStreamWriter(outputStream, Charsets.UTF_8.name())
+            val format = Format.getPrettyFormat().apply {
+                encoding = Charsets.UTF_8.name()
+                lineSeparator = "\n"
+            }
             XMLOutputter(format).output(this, writer)
+            writer.close()
         }
 
         fun Element.addChildElement(name: String, content: String?, cdata: Boolean = false): Element {
