@@ -7,9 +7,6 @@ import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.codeInsight.hint.HintManager
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CustomShortcutSet
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ex.EditorEx
@@ -19,11 +16,9 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.TextFieldWithAutoCompletion
-import com.intellij.util.ui.JBUI
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.Action
-import javax.swing.JComponent
 import javax.swing.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentAdapter as EditorDocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
@@ -44,6 +39,10 @@ class WordDetailsDialog(
     private val tagsField: TextFieldWithAutoCompletion<String> = object : TextFieldWithAutoCompletion<String>(
         project, StringsCompletionProvider(tags, null), false, null
     ) {
+        init {
+            font = phoneticField.font
+        }
+
         override fun createEditor(): EditorEx = super.createEditor().apply { install() }
     }
 
@@ -68,9 +67,14 @@ class WordDetailsDialog(
     override fun createActions(): Array<Action> = emptyArray()
 
     private fun initActions() {
-        registerEnterAction(tagsField)
-        registerEnterAction(phoneticField)
-        closeButton.addActionListener { close(OK_EXIT_CODE) }
+        rootPane.defaultButton.addActionListener {
+            if (closeButton.isFocusOwner) {
+                close(OK_EXIT_CODE)
+            } else {
+                val focusTarget = if (isModified) saveEditingButton else closeButton
+                IdeFocusManager.findInstance().requestFocus(focusTarget, true)
+            }
+        }
         saveEditingButton.addActionListener { saveEditing() }
         cancelEditingButton.addActionListener {
             phoneticField.text = word.phonetic
@@ -101,8 +105,6 @@ class WordDetailsDialog(
     }
 
     private fun EditorEx.install() {
-        setFontSize(JBUI.scale(14))
-
         var toShowHint = true
         document.addDocumentListener(object : EditorDocumentAdapter() {
             override fun documentChanged(e: EditorDocumentEvent?) {
@@ -126,15 +128,6 @@ class WordDetailsDialog(
                 }
             }
         })
-    }
-
-    private fun registerEnterAction(component: JComponent) {
-        object : AnAction() {
-            override fun actionPerformed(e: AnActionEvent) {
-                val focusTarget = if (isModified) saveEditingButton else closeButton
-                IdeFocusManager.findInstance().requestFocus(focusTarget, true)
-            }
-        }.registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), component, disposable)
     }
 
     private fun checkModification() {
