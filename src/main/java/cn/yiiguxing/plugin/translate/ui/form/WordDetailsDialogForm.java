@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,14 +40,18 @@ public class WordDetailsDialogForm extends DialogWrapper {
     protected JButton cancelEditingButton;
     protected JButton closeButton;
     protected JPanel tagsPanel;
+    private JPanel neckPanel;
 
     protected WordDetailsDialogForm(Project project) {
         super(project);
 
-        wordView.setBorder(null);
+        wordView.setBorder(JBUI.Borders.empty(0, 2, 10, 2));
         WordFormUtil.setRootPanelStyle(contentPanel, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         WordFormUtil.setExplanationPaneBorder(explanationView);
         WordFormUtil.setFonts(wordView, phoneticField, explanationView);
+
+        neckPanel.setBorder(JBUI.Borders.empty(10, 0));
+        ((GridLayoutManager) neckPanel.getLayout()).setVGap(JBUI.scale(5));
 
         Color background = UIManager.getColor("TextArea.background");
         actionsPanel.setBackground(background);
