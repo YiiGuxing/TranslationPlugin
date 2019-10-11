@@ -6,6 +6,8 @@ import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import com.intellij.codeInsight.AutoPopupController
+import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
@@ -107,7 +109,12 @@ class WordDetailsDialog(
     private fun EditorEx.install() {
         var toShowHint = true
         document.addDocumentListener(object : EditorDocumentAdapter() {
-            override fun documentChanged(e: EditorDocumentEvent?) {
+            override fun documentChanged(e: EditorDocumentEvent) {
+                if (e.newFragment.toString() == " ") {
+                    AutoPopupController
+                        .getInstance(project)
+                        .autoPopupMemberLookup(this@install, CompletionType.SMART, null)
+                }
                 checkModification()
                 toShowHint = false
             }
