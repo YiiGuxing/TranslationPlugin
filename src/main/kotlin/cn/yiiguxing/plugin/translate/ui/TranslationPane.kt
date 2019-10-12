@@ -656,24 +656,18 @@ abstract class TranslationPane<T : JComponent>(
 
         private fun Translation.toWordBookItem(): WordBookItem {
             val explainsBuilder = StringBuilder()
-            val dictionaries = (dictDocument as? GoogleDictDocument)?.dictionaries ?: emptyList()
+            val dictText = dictDocument?.text ?: ""
+
             if (!trans.isNullOrBlank()) {
                 explainsBuilder.append(trans)
-                if (dictionaries.isNotEmpty() || basicExplains.isNotEmpty()) {
+                if (dictText.isNotEmpty() || basicExplains.isNotEmpty()) {
                     explainsBuilder.append("\n\n")
                 }
             }
 
-            val wordsBuilder = StringBuilder()
-            dictionaries.joinTo(explainsBuilder, "\n") { dict ->
-                wordsBuilder.also { builder ->
-                    builder.setLength(0)
-                    builder.append(dict.partOfSpeech, ": ")
-                    dict.terms.joinTo(builder, "; ")
-                }
-            }
+            explainsBuilder.append(dictText)
 
-            if (dictionaries.isNotEmpty() && basicExplains.isNotEmpty()) {
+            if (dictText.isNotEmpty() && basicExplains.isNotEmpty()) {
                 explainsBuilder.append("\n\n")
             }
 

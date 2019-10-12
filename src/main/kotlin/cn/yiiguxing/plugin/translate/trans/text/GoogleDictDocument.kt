@@ -20,6 +20,8 @@ class GoogleDictDocument private constructor(val dictionaries: List<Dict>) : Tra
 
     override val translations: Set<String> = dictionaries.map { it.terms }.flatten().toSet()
 
+    override val text: String = dictionaries.toText()
+
     override fun setupTo(viewer: StyledViewer) {
         viewer.styledDocument.apply {
             initStyle()
@@ -43,8 +45,8 @@ class GoogleDictDocument private constructor(val dictionaries: List<Dict>) : Tra
      */
     data class DictEntry(val word: String, val reverseTranslation: List<String> = emptyList())
 
-    object Parser : TranslationDocument.Parser<GoogleTranslation, GoogleDictDocument> {
-        override fun parse(input: GoogleTranslation): GoogleDictDocument {
+    object Factory : TranslationDocument.Factory<GoogleTranslation, GoogleDictDocument> {
+        override fun getDocument(input: GoogleTranslation): GoogleDictDocument {
             val dictionaries = input.dict?.map { gDict ->
                 val entries = gDict.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
                 Dict(gDict.pos, gDict.terms, entries)
@@ -64,6 +66,17 @@ class GoogleDictDocument private constructor(val dictionaries: List<Dict>) : Tra
         private const val REVERSE_TRANSLATION_STYLE = "g_dict_reverse_translation"
         private const val SEPARATOR_STYLE = "g_dict_separator"
         private const val FOLDING_STYLE = "g_dict_folding"
+
+        private fun List<Dict>.toText(): String {
+            val wordsBuilder = StringBuilder()
+            return joinToString("\n") { dict ->
+                wordsBuilder.also { builder ->
+                    builder.setLength(0)
+                    builder.append(dict.partOfSpeech, ": ")
+                    dict.terms.joinTo(builder, "; ")
+                }
+            }
+        }
 
         private fun StyledDocument.initStyle() {
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)

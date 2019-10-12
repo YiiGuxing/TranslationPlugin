@@ -38,7 +38,7 @@ data class GoogleTranslation(
             ldResult.srclangs,
             translit?.srcTranslit,
             translit?.translit,
-            GoogleDictDocument.Parser.parse(this)
+            GoogleDictDocument.Factory.getDocument(this)
         )
     }
 }

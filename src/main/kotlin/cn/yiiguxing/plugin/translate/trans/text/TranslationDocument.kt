@@ -4,12 +4,14 @@ import cn.yiiguxing.plugin.translate.ui.StyledViewer
 
 interface TranslationDocument {
 
-    val translations: Set<String>
+    val translations: Set<String> get() = emptySet()
+
+    val text: String
 
     fun setupTo(viewer: StyledViewer)
 
-    interface Parser<T, R : TranslationDocument> {
-        fun parse(input: T): R
+    interface Factory<T, R : TranslationDocument> {
+        fun getDocument(input: T): R
     }
 
 }
