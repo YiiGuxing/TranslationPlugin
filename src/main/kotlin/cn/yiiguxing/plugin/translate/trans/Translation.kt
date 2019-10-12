@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.util.ObservableValue
 
 interface TranslationAdapter {
@@ -18,7 +19,7 @@ data class Translation(
     val srclangs: List<Lang>,
     val srcTransliteration: String? = null,
     val transliteration: String? = null,
-    val dictionaries: List<Dict> = emptyList(),
+    val dictDocument: TranslationDocument? = null,
     val basicExplains: List<String> = emptyList(),
     val otherExplains: Map<String, String> = emptyMap()
 ) {
@@ -26,17 +27,3 @@ data class Translation(
 
     var favoriteId: Long? by observableFavoriteId
 }
-
-/**
- * Dictionary
- */
-data class Dict(
-    val partOfSpeech: String,
-    val terms: List<String> = emptyList(),
-    val entries: List<DictEntry> = emptyList()
-)
-
-/**
- * Entry of Dictionary
- */
-data class DictEntry(val word: String, val reverseTranslation: List<String> = emptyList())

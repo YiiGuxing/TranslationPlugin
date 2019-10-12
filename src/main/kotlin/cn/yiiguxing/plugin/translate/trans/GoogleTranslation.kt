@@ -8,6 +8,7 @@
 
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
 import com.google.gson.annotations.SerializedName
 
 
@@ -29,11 +30,6 @@ data class GoogleTranslation(
         val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
         val trans = sentences.asSequence().mapNotNull { (it as? GTransSentence)?.trans }.joinToString("")
 
-        val dictionaries = dict?.map { gDict ->
-            val entries = gDict.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
-            Dict(gDict.pos, gDict.terms, entries)
-        } ?: emptyList()
-
         return Translation(
             original!!,
             trans,
@@ -42,7 +38,7 @@ data class GoogleTranslation(
             ldResult.srclangs,
             translit?.srcTranslit,
             translit?.translit,
-            dictionaries
+            GoogleDictDocument.Parser.parse(this)
         )
     }
 }

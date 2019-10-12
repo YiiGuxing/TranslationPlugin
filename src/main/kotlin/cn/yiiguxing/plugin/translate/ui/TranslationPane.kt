@@ -4,10 +4,13 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TTSSource.ORIGINAL
 import cn.yiiguxing.plugin.translate.TTSSource.TRANSLATION
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.Dict
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.text.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
@@ -22,7 +25,6 @@ import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.intellij.util.containers.isNullOrEmpty
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel
@@ -58,7 +60,7 @@ abstract class TranslationPane<T : JComponent>(
     private val translationViewer = Viewer()
     private val originalTransliterationLabel = JLabel()
     private val transliterationLabel = JLabel()
-    private val dictViewer = StyledDictViewer()
+    private val dictViewer = StyledViewer()
     private val basicExplanationViewer = Viewer()
     private val otherExplanationLabel = JLabel(message("tip.label.webInterpretation"))
     private val otherExplanationViewer = Viewer()
@@ -126,7 +128,7 @@ abstract class TranslationPane<T : JComponent>(
         add(translationComponent)
         add(transliterationLabel)
 
-        dictComponent = onWrapViewer(dictViewer.component as Viewer)
+        dictComponent = onWrapViewer(dictViewer)
         onRowCreated(dictComponent)
         add(dictComponent)
 
@@ -168,7 +170,7 @@ abstract class TranslationPane<T : JComponent>(
     }
 
     protected fun isDictViewer(viewer: Viewer): Boolean {
-        return viewer === dictViewer.component
+        return viewer === dictViewer
     }
 
     private fun initFont() {
@@ -235,25 +237,30 @@ abstract class TranslationPane<T : JComponent>(
         basicExplanationViewer.setFocusListener(originalViewer, translationViewer, otherExplanationViewer)
         otherExplanationViewer.setupPopupMenu()
         otherExplanationViewer.setFocusListener(originalViewer, translationViewer, basicExplanationViewer)
-        dictViewer.onEntryClicked { entry ->
+
+        dictViewer.addPopupMenuItem("Copy", AllIcons.Actions.Copy) { _, element, _ ->
+            CopyPasteManager.getInstance().setContents(StringSelection(element.text))
+        }
+        dictViewer.onClick { element, data ->
             translation?.run {
                 val src: Lang
                 val target: Lang
-                when (entry.entryType) {
-                    StyledDictViewer.EntryType.WORD -> {
+                when (data) {
+                    GoogleDictDocument.EntryType.WORD -> {
                         src = targetLang
                         target = srcLang
                     }
-                    StyledDictViewer.EntryType.REVERSE_TRANSLATION -> {
+                    GoogleDictDocument.EntryType.REVERSE_TRANSLATION -> {
                         src = srcLang
                         target = targetLang
                     }
+                    else -> return@onClick
                 }
 
-                onNewTranslateHandler?.invoke(entry.value, src, target)
+                onNewTranslateHandler?.invoke(element.text, src, target)
             }
         }
-        dictViewer.onBeforeFoldingExpand {
+        dictViewer.onBeforeFoldingExpand { _, _ ->
             onBeforeFoldingExpand()
         }
         dictViewer.onFoldingExpanded {
@@ -405,7 +412,7 @@ abstract class TranslationPane<T : JComponent>(
             toolTipText = transliteration
         }
 
-        updateDictViewer(translation.dictionaries)
+        updateDictViewer(translation.dictDocument)
         updateViewer(basicExplanationViewer, basicExplanationComponent, translation.basicExplains.joinToString("\n"))
         updateOtherExplains(translation.otherExplains)
     }
@@ -531,7 +538,7 @@ abstract class TranslationPane<T : JComponent>(
         otherExplanationViewer.empty()
 
         otherExplanationLabel.isVisible = false
-        dictViewer.dictionaries = null
+        updateDictViewer(null)
     }
 
     private fun updateViewer(viewer: Viewer, wrapper: JComponent, text: String?) {
@@ -541,14 +548,17 @@ abstract class TranslationPane<T : JComponent>(
         }
     }
 
-    private fun updateDictViewer(dictionaries: List<Dict>?) {
-        with(dictViewer) {
-            this.dictionaries = dictionaries
-            (!dictionaries.isNullOrEmpty()).let {
-                component.isVisible = it
-                dictComponent.isVisible = it
-            }
+    private fun updateDictViewer(dictDocument: TranslationDocument?) {
+        dictViewer.document.clear()
+        if (dictDocument != null) {
+            dictViewer.setup(dictDocument)
+            dictViewer.isVisible = true
+            dictComponent.isVisible = true
+        } else {
+            dictViewer.isVisible = false
+            dictComponent.isVisible = false
         }
+        dictViewer.caretPosition = 0
     }
 
     private fun updateOtherExplains(explains: Map<String, String>) {
@@ -646,6 +656,7 @@ abstract class TranslationPane<T : JComponent>(
 
         private fun Translation.toWordBookItem(): WordBookItem {
             val explainsBuilder = StringBuilder()
+            val dictionaries = (dictDocument as? GoogleDictDocument)?.dictionaries ?: emptyList()
             if (!trans.isNullOrBlank()) {
                 explainsBuilder.append(trans)
                 if (dictionaries.isNotEmpty() || basicExplains.isNotEmpty()) {

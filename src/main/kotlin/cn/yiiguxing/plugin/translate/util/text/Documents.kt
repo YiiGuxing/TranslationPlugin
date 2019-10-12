@@ -5,7 +5,7 @@
  */
 @file:Suppress("unused")
 
-package cn.yiiguxing.plugin.translate.util
+package cn.yiiguxing.plugin.translate.util.text
 
 import javax.swing.text.AttributeSet
 import javax.swing.text.Document
@@ -23,6 +23,8 @@ fun Document.insert(offset: Int, str: String, attr: AttributeSet? = null): Int {
     return offset + str.length
 }
 
+fun StyledDocument.insert(offset: Int, str: String, style: String): Int = insert(offset, str, getStyle(style))
+
 /**
  * 将字符串([str])替换指定范围内的内容并返回替换后的偏移量，被替换的范围从偏移量[offset]开始，长度为[length]
  */
@@ -39,6 +41,8 @@ fun Document.replace(offset: Int, length: Int, str: String, attr: AttributeSet? 
  * @see Document.insertString
  */
 fun Document.appendString(str: String, attr: AttributeSet? = null) = apply { insertString(length, str, attr) }
+
+fun StyledDocument.appendString(str: String, style: String) = apply { appendString(str, getStyle(style)) }
 
 /**
  * 清空[Document]内容
@@ -62,3 +66,7 @@ fun Document.trimEnd(predicate: (Char) -> Boolean = Char::isWhitespace) = apply 
  */
 inline fun StyledDocument.addStyle(name: String, parent: Style? = null, init: Style.() -> Unit = {}): Style =
     addStyle(name, parent).apply(init)
+
+inline fun StyledDocument.getStyleOrAdd(name: String, parent: Style? = null, init: (style: Style) -> Unit = {}): Style {
+    return getStyle(name) ?: addStyle(name, parent).also(init)
+}
