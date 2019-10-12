@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent
 import javax.swing.Icon
 import javax.swing.JMenuItem
 import javax.swing.event.PopupMenuEvent
-import javax.swing.event.PopupMenuListener
 import javax.swing.text.Element
 import javax.swing.text.MutableAttributeSet
 import javax.swing.text.SimpleAttributeSet
@@ -41,11 +40,6 @@ class StyledViewer : Viewer() {
         }
 
         popupMenu.addPopupMenuListener(object : PopupMenuListenerAdapter() {
-            override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent?) {
-                popupMenuTargetElement = null
-                popupMenuTargetData = null
-            }
-
             override fun popupMenuCanceled(e: PopupMenuEvent?) {
                 popupMenuTargetElement = null
                 popupMenuTargetData = null
@@ -56,14 +50,17 @@ class StyledViewer : Viewer() {
     fun addPopupMenuItem(
         text: String,
         icon: Icon? = null,
-        action: (item: JMenuItem, element: Element) -> Unit
+        action: (item: JMenuItem, element: Element, data: Any?) -> Unit
     ): JMenuItem {
-        return JBMenuItem(text, icon).apply {
-            addActionListener { popupMenuTargetElement?.let { action(this, it) } }
+        val item = JBMenuItem(text, icon)
+        item.addActionListener {
+            popupMenuTargetElement?.let { action(item, it, popupMenuTargetData) }
+            popupMenuTargetElement = null
+            popupMenuTargetData = null
         }
-    }
 
-    fun addPopupMenuListener(listener: PopupMenuListener) = popupMenu.addPopupMenuListener(listener)
+        return popupMenu.add(item)
+    }
 
     fun onClick(handler: ((element: Element, data: Any?) -> Unit)?) {
         onClickHandler = handler
@@ -81,17 +78,16 @@ class StyledViewer : Viewer() {
         if (popupMenu.componentCount > 0) {
             popupMenuTargetElement = element
             popupMenuTargetData = data
-            val popupLocation = getPopupLocation(event)
-            popupMenu.show(this, popupLocation.x, popupLocation.y)
+            popupMenu.show(this, event.x, event.y)
         }
     }
 
-    private enum class StyleConstants {
+    enum class StyleConstants {
         MouseListener;
 
         companion object {
-            fun MutableAttributeSet.setMouseListener(listener: StyledViewer.MouseListener) {
-                addAttribute(MouseListener, listener)
+            fun setMouseListener(attrs: MutableAttributeSet, listener: StyledViewer.MouseListener) {
+                attrs.addAttribute(MouseListener, listener)
             }
         }
     }
@@ -134,15 +130,14 @@ class StyledViewer : Viewer() {
         }
 
         override fun mouseReleased(event: MouseEvent) { // 使用`mouseClicked`在MacOS下会出现事件丢失的情况...
-            with(event) {
-                characterElement.takeIf { it === activeElement }?.let { elem ->
-                    (elem.attributes.getAttribute(StyleConstants.MouseListener) as? MouseListener)?.run {
-                        if (modifiers and MouseEvent.BUTTON1_MASK != 0) {
-                            mouseClicked(this@StyledViewer, event, elem)
+            event.characterElement.takeIf { it === activeElement }?.let { elem ->
+                (elem.attributes.getAttribute(StyleConstants.MouseListener) as? MouseListener)?.let { listener ->
+                    when {
+                        event.button == MouseEvent.BUTTON1 && event.clickCount == 1 -> {
+                            listener.mouseClicked(this@StyledViewer, event, elem)
                         }
-
-                        if (isMetaDown) {
-                            mouseRightButtonClicked(this@StyledViewer, event, elem)
+                        event.button == MouseEvent.BUTTON3 && event.clickCount == 1 -> {
+                            listener.mouseRightButtonClicked(this@StyledViewer, event, elem)
                         }
                     }
                 }
