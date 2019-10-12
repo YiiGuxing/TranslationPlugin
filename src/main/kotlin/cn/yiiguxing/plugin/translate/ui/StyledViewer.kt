@@ -17,8 +17,6 @@ import javax.swing.text.StyleConstants as DefaultStyleConstants
 
 /**
  * StyledViewer
- *
- * Created by Yii.Guxing on 2019/10/11.
  */
 class StyledViewer : Viewer() {
 
@@ -31,9 +29,6 @@ class StyledViewer : Viewer() {
     private var popupMenuTargetData: Any? = null
 
     init {
-        dragEnabled = false
-        disableSelection()
-
         ViewerMouseAdapter().let {
             addMouseListener(it)
             addMouseMotionListener(it)

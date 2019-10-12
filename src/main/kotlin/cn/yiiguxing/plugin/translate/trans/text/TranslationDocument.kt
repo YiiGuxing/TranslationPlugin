@@ -13,7 +13,8 @@ interface TranslationDocument {
     interface Factory<T, R : TranslationDocument> {
         fun getDocument(input: T): R
     }
-
 }
+
+class NamedTranslationDocument(val name: String, document: TranslationDocument) : TranslationDocument by document
 
 fun StyledViewer.setup(document: TranslationDocument) = document.setupTo(this)

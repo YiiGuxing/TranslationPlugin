@@ -13,16 +13,16 @@ import javax.swing.text.*
 
 /**
  * GoogleDictDocument
- *
- * Created by Yii.Guxing on 2019/10/12.
  */
-class GoogleDictDocument private constructor(val dictionaries: List<Dict>) : TranslationDocument {
+class GoogleDictDocument private constructor(private val dictionaries: List<Dict>) : TranslationDocument {
 
     override val translations: Set<String> = dictionaries.map { it.terms }.flatten().toSet()
 
     override val text: String = dictionaries.toText()
 
     override fun setupTo(viewer: StyledViewer) {
+        viewer.dragEnabled = false
+        viewer.disableSelection()
         viewer.styledDocument.apply {
             initStyle()
             insertDictionaries(dictionaries)
