@@ -150,7 +150,7 @@ FAQ
    - 检查IDE代理配置，查看是否是因为IDE代理配置导致的问题。
    - 如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`使用translate.google.com`选项（如果系统语言环境是非中文的话，此选项是默认勾选的），translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
 
-3. **MacOS、Linux下无法保存应用密钥，出现校验签名失败?**
+3. **无法保存应用密钥?**
 
    **答**：可以尝试将密码保存方式改成`In KeePass`方式 (<kbd>Settings</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>)，原因与细节：
    - MacOS，请另阅 [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
