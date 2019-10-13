@@ -29,6 +29,8 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
         }
     }
 
+    override fun toString(): String = text
+
     enum class EntryType { WORD, REVERSE_TRANSLATION }
 
     /**
