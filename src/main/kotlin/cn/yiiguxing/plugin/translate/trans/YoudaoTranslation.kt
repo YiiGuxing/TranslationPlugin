@@ -103,8 +103,4 @@ data class YWordForm(
     val name: String,
     @SerializedName(value = "value")
     val value: String
-) {
-    override fun toString(): String {
-        return "$name: ${value.replace("\\s*或\\s*".toRegex(), ", ")}"
-    }
-}
+)
