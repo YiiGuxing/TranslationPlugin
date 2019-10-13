@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.YoudaoDictDocument
 import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.*
@@ -61,7 +62,6 @@ abstract class TranslationPane<T : JComponent>(
     private val originalTransliterationLabel = JLabel()
     private val transliterationLabel = JLabel()
     private val dictViewer = StyledViewer()
-    private val basicExplanationViewer = Viewer()
     private val otherExplanationLabel = JLabel(message("tip.label.webInterpretation"))
     private val otherExplanationViewer = Viewer()
 
@@ -71,7 +71,6 @@ abstract class TranslationPane<T : JComponent>(
     private lateinit var originalComponent: JComponent
     private lateinit var translationComponent: JComponent
     private lateinit var dictComponent: JComponent
-    private lateinit var basicExplanationComponent: JComponent
     private lateinit var otherExplanationComponent: JComponent
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
@@ -132,14 +131,11 @@ abstract class TranslationPane<T : JComponent>(
         onRowCreated(dictComponent)
         add(dictComponent)
 
-        basicExplanationComponent = onWrapViewer(basicExplanationViewer)
         otherExplanationComponent = onWrapViewer(otherExplanationViewer)
 
-        onRowCreated(basicExplanationComponent)
         onRowCreated(otherExplanationLabel)
         onRowCreated(otherExplanationComponent)
 
-        add(basicExplanationComponent)
         add(otherExplanationLabel)
         add(otherExplanationComponent)
 
@@ -182,7 +178,6 @@ abstract class TranslationPane<T : JComponent>(
             originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
             translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             dictViewer.font = primaryFont.biggerOn(1f)
-            basicExplanationViewer.font = primaryFont.biggerOn(1f)
             otherExplanationViewer.font = primaryFont
             otherExplanationLabel.font = primaryFont
             originalTransliterationLabel.font = phoneticFont
@@ -201,7 +196,6 @@ abstract class TranslationPane<T : JComponent>(
             Color(0x17, 0x05, 0x91, 0xA0),
             Color(0xFF, 0xC6, 0x6D, 0xA0)
         )
-        basicExplanationViewer.foreground = JBColor(0x2A237A, 0xFFDB89)
         otherExplanationLabel.foreground = JBColor(0x707070, 0x808080)
         fixLanguageLabel.foreground = JBColor(0x666666, 0x909090)
 
@@ -230,13 +224,11 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun initActions() {
         originalViewer.setupPopupMenu()
-        originalViewer.setFocusListener(translationViewer, basicExplanationViewer, otherExplanationViewer)
+        originalViewer.setFocusListener(translationViewer, otherExplanationViewer)
         translationViewer.setupPopupMenu()
-        translationViewer.setFocusListener(originalViewer, basicExplanationViewer, otherExplanationViewer)
-        basicExplanationViewer.setupPopupMenu()
-        basicExplanationViewer.setFocusListener(originalViewer, translationViewer, otherExplanationViewer)
+        translationViewer.setFocusListener(originalViewer, otherExplanationViewer)
         otherExplanationViewer.setupPopupMenu()
-        otherExplanationViewer.setFocusListener(originalViewer, translationViewer, basicExplanationViewer)
+        otherExplanationViewer.setFocusListener(originalViewer, translationViewer)
 
         dictViewer.addPopupMenuItem("Copy", AllIcons.Actions.Copy) { _, element, _ ->
             CopyPasteManager.getInstance().setContents(StringSelection(element.text))
@@ -246,11 +238,13 @@ abstract class TranslationPane<T : JComponent>(
                 val src: Lang
                 val target: Lang
                 when (data) {
-                    GoogleDictDocument.EntryType.WORD -> {
+                    GoogleDictDocument.EntryType.WORD,
+                    YoudaoDictDocument.EntryType.WORD -> {
                         src = targetLang
                         target = srcLang
                     }
-                    GoogleDictDocument.EntryType.REVERSE_TRANSLATION -> {
+                    GoogleDictDocument.EntryType.REVERSE_TRANSLATION,
+                    YoudaoDictDocument.EntryType.VARIANT -> {
                         src = srcLang
                         target = targetLang
                     }
@@ -413,7 +407,6 @@ abstract class TranslationPane<T : JComponent>(
         }
 
         updateDictViewer(translation.dictDocument)
-        updateViewer(basicExplanationViewer, basicExplanationComponent, translation.basicExplains.joinToString("\n"))
         updateOtherExplains(translation.otherExplains)
     }
 
@@ -528,7 +521,6 @@ abstract class TranslationPane<T : JComponent>(
         originalComponent.isVisible = false
         translationComponent.isVisible = false
         dictComponent.isVisible = false
-        basicExplanationComponent.isVisible = false
         otherExplanationComponent.isVisible = false
 
         originalViewer.empty()
