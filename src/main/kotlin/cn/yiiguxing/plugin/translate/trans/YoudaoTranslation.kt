@@ -7,7 +7,10 @@
 
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.YoudaoDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.YoudaoWebTranslationDocument
 import com.google.gson.annotations.SerializedName
 
 
@@ -53,7 +56,9 @@ data class YoudaoTranslation(
             transLang,
             listOf(srcLang),
             basicExplain?.phonetic,
-            dictDocument = YoudaoDictDocument.Factory.getDocument(this)
+            dictDocument = YoudaoDictDocument.Factory.getDocument(this),
+            extraDocument = YoudaoWebTranslationDocument.Factory.getDocument(this)
+                ?.let { NamedTranslationDocument(message("tip.label.webInterpretation"), it) }
         )
     }
 }
