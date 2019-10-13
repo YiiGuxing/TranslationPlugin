@@ -11,7 +11,7 @@ interface TranslationDocument {
     fun setupTo(viewer: StyledViewer)
 
     interface Factory<T, R : TranslationDocument> {
-        fun getDocument(input: T): R
+        fun getDocument(input: T): R?
     }
 }
 

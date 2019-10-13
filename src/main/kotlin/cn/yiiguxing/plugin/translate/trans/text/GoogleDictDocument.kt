@@ -46,11 +46,11 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
     data class DictEntry(val word: String, val reverseTranslation: List<String> = emptyList())
 
     object Factory : TranslationDocument.Factory<GoogleTranslation, GoogleDictDocument> {
-        override fun getDocument(input: GoogleTranslation): GoogleDictDocument {
+        override fun getDocument(input: GoogleTranslation): GoogleDictDocument? {
             val dictionaries = input.dict?.map { gDict ->
                 val entries = gDict.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
                 Dict(gDict.pos, gDict.terms, entries)
-            } ?: emptyList()
+            }?.takeIf { it.isNotEmpty() } ?: return null
 
             return GoogleDictDocument(dictionaries)
         }
