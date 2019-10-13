@@ -1,5 +1,8 @@
+@file:Suppress("SpellCheckingInspection")
+
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.util.ObservableValue
 
@@ -15,13 +18,11 @@ data class Translation(
     val trans: String?,
     val srcLang: Lang,
     val targetLang: Lang,
-    @Suppress("SpellCheckingInspection")
     val srclangs: List<Lang>,
     val srcTransliteration: String? = null,
     val transliteration: String? = null,
     val dictDocument: TranslationDocument? = null,
-    val basicExplains: List<String> = emptyList(),
-    val otherExplains: Map<String, String> = emptyMap()
+    val extraDocument: NamedTranslationDocument? = null
 ) {
     val observableFavoriteId: ObservableValue<Long?> = ObservableValue(null)
 
