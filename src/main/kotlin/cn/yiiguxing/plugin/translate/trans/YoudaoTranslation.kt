@@ -49,13 +49,27 @@ data class YoudaoTranslation(
         val srcLang = Lang.valueOfYoudaoCode(languagesList[0])
         val transLang = Lang.valueOfYoudaoCode(languagesList[1])
 
+        val phonetic = basicExplain?.let { basicExplain ->
+            val phoneticUK = basicExplain.phoneticUK?.let { "[UK]$it" } ?: ""
+            val phoneticUS = basicExplain.phoneticUS?.let { "[US]$it" } ?: ""
+            "$phoneticUK $phoneticUS"
+                .let {
+                    val base = basicExplain.phonetic
+                    if (base != null && !it.contains(base)) {
+                        "$base $it"
+                    } else it
+                }
+                .trim()
+                .takeIf { it.isNotEmpty() }
+        }
+
         return Translation(
             query!!,
             translation?.firstOrNull(),
             srcLang,
             transLang,
             listOf(srcLang),
-            basicExplain?.phonetic,
+            phonetic,
             dictDocument = YoudaoDictDocument.Factory.getDocument(this),
             extraDocument = YoudaoWebTranslationDocument.Factory.getDocument(this)
                 ?.let { NamedTranslationDocument(message("tip.label.webInterpretation"), it) }
