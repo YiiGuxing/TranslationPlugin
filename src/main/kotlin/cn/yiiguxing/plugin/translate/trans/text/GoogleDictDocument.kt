@@ -25,7 +25,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
         viewer.disableSelection()
         viewer.styledDocument.apply {
             initStyle()
-            insertDictionaries(dictionaries)
+            appendDictionaries(dictionaries)
         }
     }
 
@@ -145,7 +145,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
             }
         }
 
-        private fun StyledDocument.insertDictionaries(dictionaries: List<Dict>) {
+        private fun StyledDocument.appendDictionaries(dictionaries: List<Dict>) {
             with(dictionaries) {
                 if (isEmpty()) {
                     return
@@ -153,7 +153,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
 
                 val lastIndex = size - 1
                 forEachIndexed { index, dict ->
-                    insertDict(dict, index == 0, index == lastIndex)
+                    appendDict(dict, index == 0, index == lastIndex)
                 }
             }
         }
@@ -167,7 +167,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
             setParagraphAttributes(offset ?: length, len, getStyle(style), replace)
         }
 
-        private fun StyledDocument.insertDict(dict: Dict, isFirst: Boolean, isLast: Boolean) {
+        private fun StyledDocument.appendDict(dict: Dict, isFirst: Boolean, isLast: Boolean) {
             setParagraphStyle(style = if (isFirst) POS_PARAGRAPH_STYLE_FIRST else POS_PARAGRAPH_STYLE)
             appendString(dict.partOfSpeech, POS_STYLE)
             appendString("\n")
