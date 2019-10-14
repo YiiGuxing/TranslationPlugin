@@ -6,10 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
-import cn.yiiguxing.plugin.translate.util.AppStorage
-import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.TextToSpeech
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
@@ -25,6 +22,7 @@ import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import javax.swing.border.LineBorder
 import javax.swing.event.DocumentEvent
+import kotlin.text.isNullOrBlank
 
 /**
  * InstantTranslationDialog
@@ -65,6 +63,7 @@ class InstantTranslationDialog(private val project: Project?) :
 
     private fun initComponents() {
         initBorders()
+        initBackground()
         initLangComboBoxes()
         initTextAreas()
         initToolBar()
@@ -75,16 +74,23 @@ class InstantTranslationDialog(private val project: Project?) :
     private fun initBorders() {
         inputScrollPane.border = null
         translationScrollPane.border = null
-        inputContentPanel.border = BORDER
-        translationContentPanel.border = BORDER
-        inputToolBar.apply {
-            border = TOOLBAR_BORDER
-            background = TOOLBAR_BACKGROUND
-        }
-        translationToolBar.apply {
-            border = TOOLBAR_BORDER
-            background = TOOLBAR_BACKGROUND
-        }
+
+        val borderColor = UI.getBordersColor(BORDER_COLOR)
+        val border = LineBorder(borderColor)
+        val borderTop = SideBorder(borderColor, SideBorder.TOP)
+
+        inputContentPanel.border = border
+        translationContentPanel.border = border
+        inputToolBar.border = borderTop
+        translationToolBar.border = borderTop
+    }
+
+    private fun initBackground() {
+        val background = UI.getColor("ToolWindow.Header.background", TOOLBAR_BACKGROUND)
+            ?.alphaBlend(inputTextArea.background, 0.6f)
+
+        inputToolBar.background = background
+        translationToolBar.background = background
     }
 
     private fun initLangComboBoxes() {
@@ -278,8 +284,7 @@ class InstantTranslationDialog(private val project: Project?) :
 
     companion object {
         private const val NOTIFICATION_DISPLAY_ID = "Instant Translate Error"
-        private val BORDER = LineBorder(JBColor(0x808080, 0x303030))
-        private val TOOLBAR_BORDER = SideBorder(JBColor(0x9F9F9F, 0x3C3C3C), SideBorder.TOP)
+        private val BORDER_COLOR = JBColor(0x808080, 0x303030)
         private val TOOLBAR_BACKGROUND = JBColor(0xEEF1F3, 0x4E5556)
     }
 }

@@ -27,7 +27,7 @@ final class WordFormUtil {
     }
 
     static void setFonts(JComponent word, JComponent phonetic, JComponent explanation) {
-        UI.FontPair fonts = UI.INSTANCE.getFonts(15, 14);
+        UI.FontPair fonts = UI.getFonts(15, 14);
         word.setFont(fonts.getPrimary().biggerOn(3f).asBold());
         phonetic.setFont(fonts.getPhonetic());
         explanation.setFont(fonts.getPrimary());

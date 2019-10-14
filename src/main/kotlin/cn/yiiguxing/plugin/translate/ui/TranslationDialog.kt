@@ -5,10 +5,7 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
@@ -74,7 +71,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     override fun createCenterPanel(): JComponent = component.apply {
         preferredSize = JBDimension(WIDTH, HEIGHT)
-        border = BORDER_ACTIVE
+        border = BORDER
     }
 
     override fun getPreferredFocusedComponent(): JComponent? = inputComboBox
@@ -105,7 +102,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
             preferredSize = JBDimension(45, (preferredSize.height / JBUI.scale(1f)).toInt())
         }
         mainContentPanel.apply {
-            border = BORDER_ACTIVE
+            border = BORDER
             background = CONTENT_BACKGROUND
         }
         contentContainer.apply {
@@ -171,8 +168,10 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     private fun initLanguagePanel() {
         languagePanel.apply {
-            background = JBColor(0xEEF1F3, 0x353739)
-            border = SideBorder(JBColor(0xB1B1B1, 0x282828), SideBorder.BOTTOM)
+            background = UI.getColor("ToolWindow.Header.background", JBColor(0xEEF1F3, 0x353739))
+                ?.alphaBlend(CONTENT_BACKGROUND, 0.6f)
+            val borderColor = UI.getBordersColor(JBColor(0xB1B1B1, 0x282828))
+            border = SideBorder(borderColor, SideBorder.BOTTOM)
         }
 
         presenter.supportedLanguages.let { (source, target) ->
@@ -303,13 +302,11 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         windowListener = object : WindowAdapter() {
             override fun windowActivated(e: WindowEvent) {
                 titlePanel.setActive(true)
-                component.border = BORDER_ACTIVE
                 focusManager.requestFocus(inputComboBox, true)
             }
 
             override fun windowDeactivated(e: WindowEvent) {
                 titlePanel.setActive(false)
-                component.border = BORDER_PASSIVE
             }
 
             override fun windowClosed(e: WindowEvent) {
@@ -701,15 +698,15 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         private const val WIDTH = 400
         private const val HEIGHT = 500
 
-
         private const val RESIZE_TOUCH_SIZE = 3
         private const val RESIZE_FLAG_LEFT = 0b001
         private const val RESIZE_FLAG_RIGHT = 0b010
         private const val RESIZE_FLAG_BOTTOM = 0b100
 
-        private val CONTENT_BACKGROUND = JBColor(0xFFFFFF, 0x2B2B2B)
-        private val BORDER_ACTIVE = LineBorder(JBColor(0x808080, 0x232323))
-        private val BORDER_PASSIVE = LineBorder(JBColor(0xC0C0C0, 0x4B4B4B))
+        private val CONTENT_BACKGROUND
+            get() = JBColor(Color.WHITE, UI.getColor("Editor.background", Color(0x2B2B2B)))
+        private val DEFAULT_BORDER_COLOR = JBColor(0x808080, 0x232323)
+        private val BORDER get() = LineBorder(UI.getBordersColor(DEFAULT_BORDER_COLOR))
 
         private const val CARD_MASSAGE = "message"
         private const val CARD_PROCESSING = "processing"
