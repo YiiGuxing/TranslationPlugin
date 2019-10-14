@@ -82,6 +82,7 @@ class WordDetailsDialog(
             phoneticField.text = word.phonetic
             explanationView.text = word.explanation
             tagsField.text = tagsString
+            IdeFocusManager.findInstance().requestFocus(closeButton, true)
         }
 
         phoneticField.addDocumentListener(object : EditorDocumentAdapter() {
@@ -167,6 +168,7 @@ class WordDetailsDialog(
             )
             if (WordBookService.updateWord(newWord)) {
                 setWord(newWord)
+                IdeFocusManager.findInstance().requestFocus(closeButton, true)
             }
         }
     }
