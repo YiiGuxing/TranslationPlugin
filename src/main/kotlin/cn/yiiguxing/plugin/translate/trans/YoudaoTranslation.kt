@@ -50,13 +50,13 @@ data class YoudaoTranslation(
         val transLang = Lang.valueOfYoudaoCode(languagesList[1])
 
         val phonetic = basicExplain?.let { basicExplain ->
-            val phoneticUK = basicExplain.phoneticUK?.let { "[UK]$it" } ?: ""
-            val phoneticUS = basicExplain.phoneticUS?.let { "[US]$it" } ?: ""
-            "$phoneticUK $phoneticUS"
+            val phoneticUK = basicExplain.phoneticUK?.let { "[UK] $it" } ?: ""
+            val phoneticUS = basicExplain.phoneticUS?.let { "[US] $it" } ?: ""
+            "$phoneticUK    $phoneticUS"
                 .let {
                     val base = basicExplain.phonetic
                     if (base != null && !it.contains(base)) {
-                        "$base $it"
+                        "$base    $it"
                     } else it
                 }
                 .trim()
