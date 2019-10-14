@@ -6,13 +6,17 @@ import cn.yiiguxing.plugin.translate.trans.YWordFormWrapper
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslation
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.alphaBlend
 import cn.yiiguxing.plugin.translate.util.text.StyledString
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import org.tritonus.share.ArraySet
+import java.awt.Color
 import java.util.*
+import javax.swing.JComponent
 import javax.swing.text.*
 
 class YoudaoDictDocument private constructor(
@@ -39,34 +43,45 @@ class YoudaoDictDocument private constructor(
             StyleConstants.setForeground(style, JBColor(0x2A237A, 0xA9B7C6))
         }
         styledDocument.getStyleOrAdd(POS_STYLE, defaultStyle) { style ->
-            StyleConstants.setForeground(style, JBColor(0x9C27B0, 0xDF7CFF))
+            StyleConstants.setBold(style, true)
+            StyleConstants.setItalic(style, true)
+
+            val fg = JBColor(0x9C27B0, 0xDF7CFF)
+            val bg = fg.alphaBlend(getBackgroundColor(), 0.08f)
+            StyleConstants.setForeground(style, fg)
+            StyleConstants.setBackground(style, bg)
         }
-        styledDocument.getStyleOrAdd(WORD_STYLE, defaultStyle) { style ->
+        val wordStyle = styledDocument.getStyleOrAdd(WORD_STYLE, defaultStyle) { style ->
             StyleConstants.setForeground(style, WORD_COLOR)
+        }
+        styledDocument.getStyleOrAdd(VARIANT_STYLE, wordStyle) { style ->
+            StyleConstants.setItalic(style, true)
         }
         styledDocument.getStyleOrAdd(SEPARATOR_STYLE, defaultStyle) { style ->
             StyleConstants.setForeground(style, JBColor(0xFF5555, 0x2196F3))
         }
         styledDocument.getStyleOrAdd(VARIANT_NAME_STYLE, defaultStyle) { style ->
+            StyleConstants.setItalic(style, true)
             StyleConstants.setForeground(style, JBColor(0x067D17, 0xA8C023))
         }
 
         val metrics = getFontMetrics(font)
         val tabWidth = wordStrings.asSequence()
             .filter { it is StyledString && it.style == POS_STYLE }
-            .map { metrics.stringWidth(it.toString()) }
+            .map { metrics.stringWidth(" $it") }
             .max()
             ?: return
 
         val attrs = SimpleAttributeSet()
-        val pos = tabWidth + JBUI.scale(2f)
-        StyleConstants.setTabSet(attrs, TabSet(arrayOf(TabStop(pos, TabStop.ALIGN_RIGHT, TabStop.LEAD_NONE))))
+        val pos = tabWidth.toFloat() + JBUI.scale(2)
+        val tabSet = TabSet(arrayOf(TabStop(pos, TabStop.ALIGN_RIGHT, TabStop.LEAD_NONE)))
+        StyleConstants.setTabSet(attrs, tabSet)
         styledDocument.setParagraphAttributes(0, styledDocument.length, attrs, true)
     }
 
     private fun StyledDocument.appendContents() {
         appendStrings(wordStrings) { wordString ->
-            if (wordString.style == POS_STYLE) "\t$wordString\t" else wordString.toString()
+            if (wordString.style == POS_STYLE) "\t $wordString\t" else wordString.toString()
         }
 
         if (variantStrings.isNotEmpty()) {
@@ -97,9 +112,6 @@ class YoudaoDictDocument private constructor(
         val stringBuilder = StringBuilder()
         for (wordString in wordStrings) {
             stringBuilder.append(wordString)
-            if (wordString is StyledString && wordString.style == POS_STYLE) {
-                stringBuilder.append(' ')
-            }
         }
 
         if (variantStrings.isNotEmpty() && Settings.showWordForms) {
@@ -141,6 +153,7 @@ class YoudaoDictDocument private constructor(
                 val matchResult = REGEX_EXPLANATION.find(explanation)
                 val words = if (matchResult != null) {
                     wordStrings += StyledString(matchResult.groups[GROUP_PART_OF_SPEECH]!!.value, POS_STYLE)
+                    wordStrings += " "
                     matchResult.groups[GROUP_WORDS]!!.value.trim()
                 } else explanation.trim()
 
@@ -180,7 +193,7 @@ class YoudaoDictDocument private constructor(
                     if (index > 0) {
                         variantStrings += StyledString(", ", SEPARATOR_STYLE)
                     }
-                    variantStrings += StyledString(value, WORD_STYLE, EntryType.VARIANT)
+                    variantStrings += StyledString(value, VARIANT_STYLE, EntryType.VARIANT)
                 }
             }
 
@@ -208,12 +221,21 @@ class YoudaoDictDocument private constructor(
         private const val REGULAR_STYLE = "yd_dict_regular"
         private const val POS_STYLE = "yd_dict_part_of_speech"
         private const val WORD_STYLE = "yd_dict_word"
+        private const val VARIANT_STYLE = "yd_dict_variant"
         private const val SEPARATOR_STYLE = "yd_dict_separator"
         private const val VARIANT_NAME_STYLE = "yd_dict_variant_name"
 
         private val WORD_COLOR = JBColor(0x3333E8, 0xFFC66D)
         private val WORD_HOVER_COLOR = JBColor(0x762DFF, 0xDF7000)
 
-    }
+        private tailrec fun JComponent.getBackgroundColor(): Color {
+            val bg = if (isOpaque) background else null
+            if (bg != null) {
+                return bg
+            }
 
+            val parent = parent as? JComponent ?: return UIUtil.getLabelBackground()
+            return parent.getBackgroundColor()
+        }
+    }
 }
