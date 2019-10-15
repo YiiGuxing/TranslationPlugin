@@ -3,7 +3,6 @@
  * <p>
  * Created by Yii.Guxing on 2017-09-17 0017.
  */
-@file:Suppress("unused")
 
 package cn.yiiguxing.plugin.translate.util.text
 
@@ -52,21 +51,8 @@ fun Document.clear() = apply {
 }
 
 /**
- * Removes trailing whitespace
- */
-fun Document.trimEnd(predicate: (Char) -> Boolean = Char::isWhitespace) = apply {
-    var length = this.length
-    while (length > 0 && predicate(getText(--length, 1)[0])) {
-        remove(length, 1)
-    }
-}
-
-/**
  * 添加样式
  */
-inline fun StyledDocument.addStyle(name: String, parent: Style? = null, init: Style.() -> Unit = {}): Style =
-    addStyle(name, parent).apply(init)
-
 inline fun StyledDocument.getStyleOrAdd(name: String, parent: Style? = null, init: (style: Style) -> Unit = {}): Style {
     return getStyle(name) ?: addStyle(name, parent).also(init)
 }

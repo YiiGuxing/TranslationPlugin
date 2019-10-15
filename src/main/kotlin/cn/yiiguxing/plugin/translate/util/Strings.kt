@@ -74,9 +74,7 @@ fun String.splitSentence(maxSentenceLength: Int): List<String> = when {
  * @throws IllegalArgumentException 如果[maxSentenceLength] <= 0.
  */
 fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSentenceLength: Int): C {
-    if (maxSentenceLength <= 0) {
-        throw IllegalArgumentException("maxSentenceLength must be greater than 0.")
-    }
+    require(maxSentenceLength > 0) { "maxSentenceLength must be greater than 0." }
 
     if (isBlank()) {
         return destination
@@ -90,8 +88,8 @@ fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSe
         return destination
     }
 
-    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) { _ ->
-        splitSentenceTo(destination, maxSentenceLength, String::splitBySpace) { _ ->
+    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) {
+        splitSentenceTo(destination, maxSentenceLength, String::splitBySpace) {
             splitByLengthTo(destination, maxSentenceLength)
         }
     }
@@ -140,7 +138,7 @@ private fun String.splitBy(regex: Regex): List<String> {
     val splits = mutableListOf<String>()
     var currIndex = 0
     for (mr in regex.findAll(this)) {
-        val index = mr.range.endInclusive + 1
+        val index = mr.range.last + 1
         if (index > currIndex) {
             splits += substring(currIndex, index)
         }

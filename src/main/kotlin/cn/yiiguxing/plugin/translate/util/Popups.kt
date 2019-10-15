@@ -24,6 +24,7 @@ object Popups {
 
     private val LOG = Logger.getInstance(Popups::class.java)
 
+    @Suppress("unused")
     fun showBalloonForActiveFrame(message: String, type: MessageType) {
         val frame = IdeFocusManager.findInstance().lastFocusedFrame
         if (frame == null) {
