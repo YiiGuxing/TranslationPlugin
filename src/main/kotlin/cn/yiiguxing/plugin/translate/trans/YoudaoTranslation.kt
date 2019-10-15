@@ -52,15 +52,7 @@ data class YoudaoTranslation(
         val phonetic = basicExplain?.let { basicExplain ->
             val phoneticUK = basicExplain.phoneticUK?.let { "[UK] $it" } ?: ""
             val phoneticUS = basicExplain.phoneticUS?.let { "[US] $it" } ?: ""
-            "$phoneticUK    $phoneticUS"
-                .let {
-                    val base = basicExplain.phonetic
-                    if (base != null && !it.contains(base)) {
-                        "$base    $it"
-                    } else it
-                }
-                .trim()
-                .takeIf { it.isNotEmpty() }
+            "$phoneticUK    $phoneticUS".trim().takeIf { it.isNotEmpty() }
         }
 
         return Translation(
