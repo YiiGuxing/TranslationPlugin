@@ -127,12 +127,13 @@ abstract class TranslationPane<T : JComponent>(
         add(transliterationLabel)
 
         dictComponent = onWrapViewer(dictViewer)
+        dictComponent.border = TOP_MARGIN_BORDER
         onRowCreated(dictComponent)
         add(dictComponent)
 
         extraComponent = onWrapViewer(extraViewer)
 
-        extraLabel.border = JBUI.Borders.empty(8, 0, 0, 0)
+        extraLabel.border = TOP_MARGIN_BORDER
         onRowCreated(extraLabel)
         onRowCreated(extraComponent)
 
@@ -586,6 +587,8 @@ abstract class TranslationPane<T : JComponent>(
         private const val FONT_SIZE_LARGE = 18f
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
+
+        private val TOP_MARGIN_BORDER = JBUI.Borders.emptyTop(8)
 
         private fun flow(vararg components: JComponent): JComponent {
             val gap = JBUI.scale(GAP)
