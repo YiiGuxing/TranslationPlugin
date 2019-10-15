@@ -220,7 +220,7 @@ abstract class TranslationPane<T : JComponent>(
         extraViewer.setupPopupMenu()
         extraViewer.setFocusListener(originalViewer, translationViewer)
 
-        dictViewer.addPopupMenuItem("Copy", AllIcons.Actions.Copy) { _, element, _ ->
+        dictViewer.addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
             CopyPasteManager.getInstance().setContents(StringSelection(element.text))
         }
         dictViewer.onClick { element, data ->
@@ -293,11 +293,11 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun JTextPane.setupPopupMenu() {
         componentPopupMenu = JBPopupMenu().apply {
-            val copy = JBMenuItem("Copy", AllIcons.Actions.Copy).apply {
+            val copy = JBMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy).apply {
                 disabledIcon = AllIcons.Actions.Copy
                 addActionListener { copy() }
             }
-            val translate = JBMenuItem("Translate", Icons.Translate).apply {
+            val translate = JBMenuItem(message("menu.item.translate"), Icons.Translate).apply {
                 disabledIcon = Icons.Translate
                 addActionListener {
                     translation?.let { translation ->
