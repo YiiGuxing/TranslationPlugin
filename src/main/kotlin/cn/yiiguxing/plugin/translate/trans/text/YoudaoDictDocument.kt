@@ -65,6 +65,10 @@ class YoudaoDictDocument private constructor(
             StyleConstants.setForeground(style, JBColor(0x067D17, 0xA8C023))
         }
 
+        setTabPosition()
+    }
+
+    private fun StyledViewer.setTabPosition() {
         val metrics = getFontMetrics(font)
         val tabWidth = wordStrings.asSequence()
             .filter { it is StyledString && it.style == POS_STYLE }
