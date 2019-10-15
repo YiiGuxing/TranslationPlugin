@@ -20,7 +20,7 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
-    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+    private val SUPPORTED_SOURCE_LANGUAGES: List<Lang> = listOf(
         Lang.AUTO,
         Lang.CHINESE,
         Lang.ENGLISH,
@@ -35,6 +35,17 @@ object YoudaoTranslator : AbstractTranslator() {
         Lang.RUSSIAN,
         Lang.SPANISH,
         Lang.VIETNAMESE
+    )
+
+    private val SUPPORTED_TARGET_LANGUAGES: List<Lang> = listOf(
+        Lang.AUTO,
+        Lang.CHINESE,
+        Lang.ENGLISH,
+        Lang.GERMAN,
+        Lang.INDONESIAN,
+        Lang.ITALIAN,
+        Lang.PORTUGUESE,
+        Lang.RUSSIAN
     )
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
@@ -54,8 +65,8 @@ object YoudaoTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = Settings.youdaoTranslateSettings.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val supportedSourceLanguages: List<Lang> = SUPPORTED_SOURCE_LANGUAGES
+    override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
 
     override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
         val settings = Settings.youdaoTranslateSettings

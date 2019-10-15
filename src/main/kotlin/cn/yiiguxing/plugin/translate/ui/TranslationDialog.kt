@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.actionSystem.CommonShortcuts
@@ -535,6 +536,12 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         translationPane.translation = translation
         showCard(CARD_TRANSLATION)
         invokeLater { translationPanel.verticalScrollBar.apply { value = 0 } }
+
+        if (request.translatorId == YoudaoTranslator.id &&
+            request.targetLang != Lang.AUTO &&
+            request.targetLang != translation.targetLang) {
+        }
+
         setLanguageComponentsEnable(true)
     }
 
