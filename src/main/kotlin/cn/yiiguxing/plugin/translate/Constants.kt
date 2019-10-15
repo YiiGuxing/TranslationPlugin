@@ -21,7 +21,7 @@ const val GOOGLE_TRANSLATE_HOST_CN = "translate.google.cn"
 const val GOOGLE_TRANSLATE_URL_FORMAT = "https://%s/translate_a/single"
 const val GOOGLE_TTS_FORMAT = "https://%s/translate_tts"
 
-const val YOUDAO_TRANSLATE_URL = "http://openapi.youdao.com/api"
+const val YOUDAO_TRANSLATE_URL = "https://openapi.youdao.com/api"
 const val YOUDAO_AI_URL = "http://ai.youdao.com"
 
 const val BAIDU_TRANSLATE_URL = "http://api.fanyi.baidu.com/api/trans/vip/translate"

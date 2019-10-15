@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.md5
+import cn.yiiguxing.plugin.translate.util.sha256
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import icons.Icons
@@ -24,12 +24,17 @@ object YoudaoTranslator : AbstractTranslator() {
         Lang.AUTO,
         Lang.CHINESE,
         Lang.ENGLISH,
+        Lang.ARABIC,
         Lang.FRENCH,
+        Lang.GERMAN,
+        Lang.INDONESIAN,
+        Lang.ITALIAN,
         Lang.JAPANESE,
         Lang.KOREAN,
         Lang.PORTUGUESE,
         Lang.RUSSIAN,
-        Lang.SPANISH
+        Lang.SPANISH,
+        Lang.VIETNAMESE
     )
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
@@ -56,8 +61,11 @@ object YoudaoTranslator : AbstractTranslator() {
         val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
-        val salt = System.currentTimeMillis().toString()
-        val sign = (appId + text + salt + privateKey).md5()
+        val salt = UUID.randomUUID().toString()
+        val curTime = (System.currentTimeMillis() / 1000).toString()
+        val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
+        val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
+
 
         return UrlBuilder(YOUDAO_TRANSLATE_URL)
             .addQueryParameter("appKey", appId)
@@ -65,6 +73,8 @@ object YoudaoTranslator : AbstractTranslator() {
             .addQueryParameter("to", targetLang.baiduCode)
             .addQueryParameter("salt", salt)
             .addQueryParameter("sign", sign)
+            .addQueryParameter("signType", "v3")
+            .addQueryParameter("curtime", curTime)
             .addQueryParameter("q", text)
             .build()
             .also { logger.i("Translate url: $it") }
