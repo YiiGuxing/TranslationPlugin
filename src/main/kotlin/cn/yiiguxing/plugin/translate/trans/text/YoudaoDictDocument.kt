@@ -182,20 +182,22 @@ class YoudaoDictDocument private constructor(
 
         private fun getVariantStrings(wordForms: Array<out YWordFormWrapper>?): List<CharSequence> {
             val variantStrings = LinkedList<CharSequence>()
-            wordForms?.takeIf { it.isNotEmpty() }?.forEachIndexed { i, wrapper ->
-                if (i > 0) {
-                    variantStrings += "\n"
-                }
-
-                val wordForm = wrapper.wordForm
-                variantStrings += StyledString("${wordForm.name}: ", VARIANT_NAME_STYLE)
-                wordForm.value.split(REGEX_VARIANTS_SEPARATOR).forEachIndexed { index, value ->
-                    if (index > 0) {
-                        variantStrings += StyledString(", ", SEPARATOR_STYLE)
+            wordForms?.takeIf { it.isNotEmpty() }
+                ?.map { it.wordForm }
+                ?.sortedBy { it.name.length }
+                ?.forEachIndexed { i, wordForm ->
+                    if (i > 0) {
+                        variantStrings += "\n"
                     }
-                    variantStrings += StyledString(value, VARIANT_STYLE, EntryType.VARIANT)
+
+                    variantStrings += StyledString("${wordForm.name}: ", VARIANT_NAME_STYLE)
+                    wordForm.value.split(REGEX_VARIANTS_SEPARATOR).forEachIndexed { index, value ->
+                        if (index > 0) {
+                            variantStrings += StyledString(", ", SEPARATOR_STYLE)
+                        }
+                        variantStrings += StyledString(value, VARIANT_STYLE, EntryType.VARIANT)
+                    }
                 }
-            }
 
             return variantStrings.toList()
         }
