@@ -132,8 +132,10 @@ class YoudaoDictDocument private constructor(
 
     object Factory : TranslationDocument.Factory<YoudaoTranslation, YoudaoDictDocument> {
 
-        private val REGEX_EXPLANATION =
-            Regex("^((a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)$")
+        private val REGEX_WORD = Regex("[a-zA-Z]+")
+        private val REGEX_EXPLANATION = Regex(
+            "^((a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)$"
+        )
         private val REGEX_WORDS_SEPARATOR = Regex("[,;，；]")
         private val REGEX_VARIANTS_SEPARATOR = Regex("\\s*或\\s*")
         private val REGEX_WORD_ANNOTATION = Regex("\\(.*?\\)|（.*?）|\\[.*?]|【.*?】|<.*?>")
@@ -170,11 +172,17 @@ class YoudaoDictDocument private constructor(
                         wordStrings += StyledString(separator, SEPARATOR_STYLE)
                     } else {
                         separatorOrWord.trim().blocks(REGEX_WORD_ANNOTATION) { wordOrAnnotation, isAnnotation ->
-                            wordStrings += if (isAnnotation) {
-                                wordOrAnnotation
+                            if (isAnnotation) {
+                                wordOrAnnotation.blocks(REGEX_WORD) { annotationString, isWord ->
+                                    wordStrings += if (isWord) {
+                                        StyledString(annotationString, WORD_STYLE, EntryType.VARIANT)
+                                    } else {
+                                        annotationString
+                                    }
+                                }
                             } else {
                                 translations += wordOrAnnotation
-                                StyledString(wordOrAnnotation, WORD_STYLE, EntryType.WORD)
+                                wordStrings += StyledString(wordOrAnnotation, WORD_STYLE, EntryType.WORD)
                             }
                         }
                     }
