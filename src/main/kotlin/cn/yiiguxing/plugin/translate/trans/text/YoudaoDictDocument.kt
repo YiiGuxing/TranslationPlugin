@@ -96,7 +96,7 @@ class YoudaoDictDocument private constructor(
 
     object Factory : TranslationDocument.Factory<YoudaoTranslation, YoudaoDictDocument> {
 
-        private val REGEX_WORD = Regex("[a-zA-Z]+")
+        private val REGEX_WORD = Regex("([a-zA-Z]+[ -]?[a-zA-Z]+)+")
         private val REGEX_EXPLANATION = Regex(
             "^((a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)$"
         )
