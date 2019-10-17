@@ -126,6 +126,7 @@ class StyledViewer : Viewer() {
         override fun mouseExited(event: MouseEvent) = exitLastElement(event)
 
         override fun mousePressed(event: MouseEvent) {
+            event.component.requestFocus()
             activeElement = event.characterElement
         }
 
