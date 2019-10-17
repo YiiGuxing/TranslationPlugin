@@ -84,6 +84,11 @@ class StyledViewer : Viewer() {
             fun setMouseListener(attrs: MutableAttributeSet, listener: StyledViewer.MouseListener) {
                 attrs.addAttribute(MouseListener, listener)
             }
+
+            fun setClickable(attrs: MutableAttributeSet, color: Color, hoverColor: Color? = null, data: Any? = null) {
+                val mouseListener = ColoredMouseListener(color, hoverColor, data)
+                setMouseListener(attrs, mouseListener)
+            }
         }
     }
 

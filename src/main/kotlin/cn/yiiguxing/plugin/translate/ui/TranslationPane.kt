@@ -228,13 +228,13 @@ abstract class TranslationPane<T : JComponent>(
                 val src: Lang
                 val target: Lang
                 when (data) {
-                    GoogleDictDocument.EntryType.WORD,
-                    YoudaoDictDocument.EntryType.WORD -> {
+                    GoogleDictDocument.WordType.WORD,
+                    YoudaoDictDocument.WordType.WORD -> {
                         src = targetLang
                         target = srcLang
                     }
-                    GoogleDictDocument.EntryType.REVERSE_TRANSLATION,
-                    YoudaoDictDocument.EntryType.VARIANT -> {
+                    GoogleDictDocument.WordType.REVERSE,
+                    YoudaoDictDocument.WordType.VARIANT -> {
                         src = srcLang
                         target = targetLang
                     }

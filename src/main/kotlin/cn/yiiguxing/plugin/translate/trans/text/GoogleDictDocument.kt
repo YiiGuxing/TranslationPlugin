@@ -31,7 +31,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
 
     override fun toString(): String = text
 
-    enum class EntryType { WORD, REVERSE_TRANSLATION }
+    enum class WordType { WORD, REVERSE }
 
     /**
      * Dictionary
@@ -116,11 +116,9 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
         private fun StyledDocument.initWordStyle(defaultStyle: Style?) {
             getStyleOrAdd(WORD_STYLE, defaultStyle) { style ->
                 val color = JBColor(0x9C27B0, 0xFFFF00)
-                StyleConstants.setForeground(style, color)
-
                 val hoverColor = JBColor(0x7400FF, 0xDF9B00)
-                val mouseListener = StyledViewer.ColoredMouseListener(color, hoverColor, EntryType.WORD)
-                StyledViewer.StyleConstants.setMouseListener(style, mouseListener)
+                StyleConstants.setForeground(style, color)
+                StyledViewer.StyleConstants.setClickable(style, color, hoverColor, WordType.WORD)
             }
         }
 
@@ -128,11 +126,9 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
             getStyleOrAdd(REVERSE_TRANSLATION_STYLE, defaultStyle) { style ->
                 StyleConstants.setItalic(style, true)
                 val color = JBColor(0x3333E8, 0xFFC66D)
-                StyleConstants.setForeground(style, color)
-
                 val hoverColor = JBColor(0x762DFF, 0xDF7000)
-                val mouseListener = StyledViewer.ColoredMouseListener(color, hoverColor, EntryType.REVERSE_TRANSLATION)
-                StyledViewer.StyleConstants.setMouseListener(style, mouseListener)
+                StyleConstants.setForeground(style, color)
+                StyledViewer.StyleConstants.setClickable(style, color, hoverColor, WordType.REVERSE)
             }
             getStyleOrAdd(SEPARATOR_STYLE, defaultStyle) { style ->
                 StyleConstants.setForeground(style, JBColor(0xFF5555, 0x2196F3))

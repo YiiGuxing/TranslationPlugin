@@ -32,40 +32,9 @@ class YoudaoDictDocument private constructor(
             dragEnabled = false
             disableSelection()
             initStyle()
+            setTabPosition()
             styledDocument.appendContents()
         }
-    }
-
-    private fun StyledViewer.initStyle() {
-        val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
-
-        styledDocument.getStyleOrAdd(REGULAR_STYLE, defaultStyle) { style ->
-            StyleConstants.setForeground(style, JBColor(0x2A237A, 0xA9B7C6))
-        }
-        styledDocument.getStyleOrAdd(POS_STYLE, defaultStyle) { style ->
-            StyleConstants.setBold(style, true)
-            StyleConstants.setItalic(style, true)
-
-            val fg = JBColor(0x9C27B0, 0xDF7CFF)
-            val bg = fg.alphaBlend(getBackgroundColor(), 0.08f)
-            StyleConstants.setForeground(style, fg)
-            StyleConstants.setBackground(style, bg)
-        }
-        val wordStyle = styledDocument.getStyleOrAdd(WORD_STYLE, defaultStyle) { style ->
-            StyleConstants.setForeground(style, WORD_COLOR)
-        }
-        styledDocument.getStyleOrAdd(VARIANT_STYLE, wordStyle) { style ->
-            StyleConstants.setItalic(style, true)
-        }
-        styledDocument.getStyleOrAdd(SEPARATOR_STYLE, defaultStyle) { style ->
-            StyleConstants.setForeground(style, JBColor(0xFF5555, 0x2196F3))
-        }
-        styledDocument.getStyleOrAdd(VARIANT_NAME_STYLE, defaultStyle) { style ->
-            StyleConstants.setItalic(style, true)
-            StyleConstants.setForeground(style, JBColor(0x067D17, 0xA8C023))
-        }
-
-        setTabPosition()
     }
 
     private fun StyledViewer.setTabPosition() {
@@ -100,12 +69,7 @@ class YoudaoDictDocument private constructor(
     ) {
         for (string in strings) {
             if (string is StyledString) {
-                val style = getStyle(string.style)
-                string.clickDate?.let { data ->
-                    val listener = StyledViewer.ColoredMouseListener(WORD_COLOR, WORD_HOVER_COLOR, data)
-                    StyledViewer.StyleConstants.setMouseListener(style, listener)
-                }
-                appendString(transform(string), style)
+                appendString(transform(string), string.style)
             } else {
                 appendString(string.toString(), REGULAR_STYLE)
             }
@@ -128,7 +92,7 @@ class YoudaoDictDocument private constructor(
         return stringBuilder.toString()
     }
 
-    enum class EntryType { WORD, VARIANT }
+    enum class WordType { WORD, VARIANT }
 
     object Factory : TranslationDocument.Factory<YoudaoTranslation, YoudaoDictDocument> {
 
@@ -175,14 +139,14 @@ class YoudaoDictDocument private constructor(
                             if (isAnnotation) {
                                 wordOrAnnotation.blocks(REGEX_WORD) { annotationString, isWord ->
                                     wordStrings += if (isWord) {
-                                        StyledString(annotationString, WORD_STYLE, EntryType.VARIANT)
+                                        StyledString(annotationString, WORD_STYLE, WordType.VARIANT)
                                     } else {
                                         annotationString
                                     }
                                 }
                             } else {
                                 translations += wordOrAnnotation
-                                wordStrings += StyledString(wordOrAnnotation, WORD_STYLE, EntryType.WORD)
+                                wordStrings += StyledString(wordOrAnnotation, WORD_STYLE, WordType.WORD)
                             }
                         }
                     }
@@ -207,7 +171,7 @@ class YoudaoDictDocument private constructor(
                         if (index > 0) {
                             variantStrings += StyledString(", ", SEPARATOR_STYLE)
                         }
-                        variantStrings += StyledString(value, VARIANT_STYLE, EntryType.VARIANT)
+                        variantStrings += StyledString(value, VARIANT_STYLE, WordType.VARIANT)
                     }
                 }
 
@@ -234,6 +198,7 @@ class YoudaoDictDocument private constructor(
     companion object {
         private const val REGULAR_STYLE = "yd_dict_regular"
         private const val POS_STYLE = "yd_dict_part_of_speech"
+        private const val WORD_BASE_STYLE = "yd_dict_word_base"
         private const val WORD_STYLE = "yd_dict_word"
         private const val VARIANT_STYLE = "yd_dict_variant"
         private const val SEPARATOR_STYLE = "yd_dict_separator"
@@ -241,6 +206,41 @@ class YoudaoDictDocument private constructor(
 
         private val WORD_COLOR = JBColor(0x3333E8, 0xFFC66D)
         private val WORD_HOVER_COLOR = JBColor(0x762DFF, 0xDF7000)
+
+        private fun StyledViewer.initStyle() {
+            val styledDocument = styledDocument
+            val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
+
+            styledDocument.getStyleOrAdd(REGULAR_STYLE, defaultStyle) { style ->
+                StyleConstants.setForeground(style, JBColor(0x2A237A, 0xA9B7C6))
+            }
+            styledDocument.getStyleOrAdd(POS_STYLE, defaultStyle) { style ->
+                StyleConstants.setBold(style, true)
+                StyleConstants.setItalic(style, true)
+
+                val fg = JBColor(0x9C27B0, 0xDF7CFF)
+                val bg = fg.alphaBlend(getBackgroundColor(), 0.08f)
+                StyleConstants.setForeground(style, fg)
+                StyleConstants.setBackground(style, bg)
+            }
+            val wordBaseStyle = styledDocument.getStyleOrAdd(WORD_BASE_STYLE, defaultStyle) { style ->
+                StyleConstants.setForeground(style, WORD_COLOR)
+            }
+            styledDocument.getStyleOrAdd(WORD_STYLE, wordBaseStyle) { style ->
+                StyledViewer.StyleConstants.setClickable(style, WORD_COLOR, WORD_HOVER_COLOR, WordType.WORD)
+            }
+            styledDocument.getStyleOrAdd(VARIANT_STYLE, wordBaseStyle) { style ->
+                StyleConstants.setItalic(style, true)
+                StyledViewer.StyleConstants.setClickable(style, WORD_COLOR, WORD_HOVER_COLOR, WordType.WORD)
+            }
+            styledDocument.getStyleOrAdd(SEPARATOR_STYLE, defaultStyle) { style ->
+                StyleConstants.setForeground(style, JBColor(0xFF5555, 0x2196F3))
+            }
+            styledDocument.getStyleOrAdd(VARIANT_NAME_STYLE, defaultStyle) { style ->
+                StyleConstants.setItalic(style, true)
+                StyleConstants.setForeground(style, JBColor(0x067D17, 0xA8C023))
+            }
+        }
 
         private tailrec fun JComponent.getBackgroundColor(): Color {
             val bg = if (isOpaque) background else null
