@@ -11,13 +11,16 @@ import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import javax.swing.text.StyledDocument
 
-class YoudaoWebTranslationDocument(private val webTranslations: Map<String, String>) : TranslationDocument {
+class YoudaoWebTranslationDocument private constructor(private val webTranslations: List<WebTranslation>) :
+    TranslationDocument {
 
-    override val text: String = webTranslations
-        .map { (key, value) -> "$key - $value" }
-        .joinToString(separator = "\n")
+    override val text: String = webTranslations.joinToString(separator = "\n") { translation ->
+        "${translation.key} - ${translation.values.joinToString("; ")}"
+    }
 
     override fun setupTo(viewer: StyledViewer) {
+        viewer.dragEnabled = false
+        viewer.disableSelection()
         viewer.styledDocument.apply {
             initStyle()
             appendContents(webTranslations)
@@ -26,17 +29,20 @@ class YoudaoWebTranslationDocument(private val webTranslations: Map<String, Stri
 
     override fun toString(): String = text
 
+    enum class WordType { WEB_KEY, WEB_VALUE }
+
+    private class WebTranslation(val key: String, val values: Array<out String>)
+
     object Factory : TranslationDocument.Factory<YoudaoTranslation, YoudaoWebTranslationDocument> {
         override fun getDocument(input: YoudaoTranslation): YoudaoWebTranslationDocument? {
             val webTranslations = input.webExplains
                 ?.mapNotNull { (key, values) ->
-                    if (key == null || values == null) {
+                    if (key == null || values == null || values.isEmpty()) {
                         null
                     } else {
-                        key to values.joinToString(separator = "; ")
+                        WebTranslation(key, values)
                     }
                 }
-                ?.toMap()
                 ?.takeIf { it.isNotEmpty() }
                 ?: return null
 
@@ -52,28 +58,36 @@ class YoudaoWebTranslationDocument(private val webTranslations: Map<String, Stri
         private fun StyledDocument.initStyle() {
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
             getStyleOrAdd(REGULAR_STYLE) { style ->
-                StyleConstants.setForeground(style, JBColor(0x555555, 0xACACAC))
+                StyleConstants.setForeground(style, JBColor(0x555555, 0x738E5B))
             }
             getStyleOrAdd(KEY_STYLE, defaultStyle) { style ->
-                StyleConstants.setForeground(style, JBColor(0x293B2B, 0x77B767))
+                val color = JBColor(0x293B2B, 0x77B767)
+                val hoverColor = JBColor(0x5B6E5D, 0x8CD07C)
+                StyleConstants.setForeground(style, color)
+                StyledViewer.StyleConstants.setClickable(style, color, hoverColor, WordType.WEB_KEY)
             }
             getStyleOrAdd(VALUE_STYLE, defaultStyle) { style ->
-                StyleConstants.setForeground(style, JBColor(0x707070, 0x6A8759))
+                val color = JBColor(0x707070, 0x6A8759)
+                val hoverColor = JBColor(0x505050, 0x8BA870)
+                StyleConstants.setForeground(style, color)
+                StyledViewer.StyleConstants.setClickable(style, color, hoverColor, WordType.WEB_VALUE)
             }
         }
 
-        private fun StyledDocument.appendContents(webTranslations: Map<String, String>) {
-            var isFirst = true
-            for ((key, value) in webTranslations) {
-                if (!isFirst) {
+        private fun StyledDocument.appendContents(webTranslations: List<WebTranslation>) {
+            webTranslations.forEachIndexed { index, webTranslation ->
+                if (index > 0) {
                     appendString("\n")
-                } else {
-                    isFirst = false
                 }
-
-                appendString(key, KEY_STYLE)
+                appendString(webTranslation.key, KEY_STYLE)
                 appendString(" - ", REGULAR_STYLE)
-                appendString(value, VALUE_STYLE)
+
+                webTranslation.values.forEachIndexed { i, value ->
+                    if (i > 0) {
+                        appendString("; ", REGULAR_STYLE)
+                    }
+                    appendString(value, VALUE_STYLE)
+                }
             }
         }
     }

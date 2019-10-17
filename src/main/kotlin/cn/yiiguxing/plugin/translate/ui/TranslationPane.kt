@@ -214,27 +214,45 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun initActions() {
         originalViewer.setupPopupMenu()
-        originalViewer.setFocusListener(translationViewer, extraViewer)
+        originalViewer.setFocusListener(translationViewer, dictViewer, extraViewer)
         translationViewer.setupPopupMenu()
-        translationViewer.setFocusListener(originalViewer, extraViewer)
-        extraViewer.setupPopupMenu()
-        extraViewer.setFocusListener(originalViewer, translationViewer)
+        translationViewer.setFocusListener(originalViewer, dictViewer, extraViewer)
+        dictViewer.setFocusListener(originalViewer, translationViewer, extraViewer)
+        extraViewer.setFocusListener(originalViewer, translationViewer, dictViewer)
 
-        dictViewer.addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
+        dictViewer.setupActions()
+        dictViewer.onBeforeFoldingExpand { _, _ ->
+            onBeforeFoldingExpand()
+        }
+        dictViewer.onFoldingExpanded {
+            onFoldingExpanded()
+            onRevalidateHandler?.invoke()
+        }
+
+        extraViewer.setupActions()
+
+        originalTransliterationLabel.setupPopupMenu()
+        transliterationLabel.setupPopupMenu()
+    }
+
+    private fun StyledViewer.setupActions() {
+        addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
             CopyPasteManager.getInstance().setContents(StringSelection(element.text))
         }
-        dictViewer.onClick { element, data ->
+        onClick { element, data ->
             translation?.run {
                 val src: Lang
                 val target: Lang
                 when (data) {
                     GoogleDictDocument.WordType.WORD,
-                    YoudaoDictDocument.WordType.WORD -> {
+                    YoudaoDictDocument.WordType.WORD,
+                    YoudaoWebTranslationDocument.WordType.WEB_VALUE -> {
                         src = targetLang
                         target = srcLang
                     }
                     GoogleDictDocument.WordType.REVERSE,
-                    YoudaoDictDocument.WordType.VARIANT -> {
+                    YoudaoDictDocument.WordType.VARIANT,
+                    YoudaoWebTranslationDocument.WordType.WEB_KEY -> {
                         src = srcLang
                         target = targetLang
                     }
@@ -244,16 +262,6 @@ abstract class TranslationPane<T : JComponent>(
                 onNewTranslateHandler?.invoke(element.text, src, target)
             }
         }
-        dictViewer.onBeforeFoldingExpand { _, _ ->
-            onBeforeFoldingExpand()
-        }
-        dictViewer.onFoldingExpanded {
-            onFoldingExpanded()
-            onRevalidateHandler?.invoke()
-        }
-
-        originalTransliterationLabel.setupPopupMenu()
-        transliterationLabel.setupPopupMenu()
     }
 
     protected open fun onBeforeFoldingExpand() {}
