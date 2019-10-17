@@ -37,10 +37,10 @@ class YoudaoWebTranslationDocument private constructor(private val webTranslatio
         override fun getDocument(input: YoudaoTranslation): YoudaoWebTranslationDocument? {
             val webTranslations = input.webExplains
                 ?.mapNotNull { (key, values) ->
-                    if (key == null || values == null || values.isEmpty()) {
+                    if (key == null || key.isBlank() || values == null || values.isEmpty()) {
                         null
                     } else {
-                        WebTranslation(key, values)
+                        WebTranslation(key.trim(), values)
                     }
                 }
                 ?.takeIf { it.isNotEmpty() }
