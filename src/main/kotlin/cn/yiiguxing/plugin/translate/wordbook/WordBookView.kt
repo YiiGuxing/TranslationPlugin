@@ -342,12 +342,7 @@ class WordBookView {
     }
 
     private inner class ExportActionGroup : ActionGroup(message("wordbook.window.action.export"), true), DumbAware {
-
-        private val actions: Array<AnAction> = arrayOf(
-            ExportAction(JsonWordBookExporter()),
-            ExportAction(XmlWordBookExporter()),
-            ExportAction(YoudaoXmlWordBookExporter())
-        )
+        private val actions: Array<AnAction> = WORD_BOOK_EXPORTERS.map { ExportAction(it) }.toTypedArray()
 
         override fun getChildren(e: AnActionEvent?): Array<AnAction> = actions
     }

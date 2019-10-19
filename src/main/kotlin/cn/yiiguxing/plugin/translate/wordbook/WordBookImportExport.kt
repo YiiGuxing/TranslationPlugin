@@ -17,14 +17,52 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 
-private const val EXPORT_NOTIFICATIONS_ID = "Word Book Export"
-
-private const val IMPORT_NOTIFICATIONS_ID = "Word Book Import"
+/**
+ *                                                       █████
+ *                                                      ░░███
+ *     ██████  █████ █████ ████████   ██████  ████████  ███████    ██████  ████████   █████
+ *    ███░░███░░███ ░░███ ░░███░░███ ███░░███░░███░░███░░░███░    ███░░███░░███░░███ ███░░
+ *   ░███████  ░░░█████░   ░███ ░███░███ ░███ ░███ ░░░   ░███    ░███████  ░███ ░░░ ░░█████
+ *   ░███░░░    ███░░░███  ░███ ░███░███ ░███ ░███       ░███ ███░███░░░   ░███      ░░░░███
+ *   ░░██████  █████ █████ ░███████ ░░██████  █████      ░░█████ ░░██████  █████     ██████
+ *    ░░░░░░  ░░░░░ ░░░░░  ░███░░░   ░░░░░░  ░░░░░        ░░░░░   ░░░░░░  ░░░░░     ░░░░░░
+ *                         ░███
+ *                         █████
+ *                        ░░░░░
+ */
+val WORD_BOOK_EXPORTERS: List<WordBookExporter> = listOf(
+    JsonWordBookExporter(),
+    XmlWordBookExporter(),
+    YoudaoXmlWordBookExporter()
+)
 
 private const val EXTENSION_XML = "xml"
 private const val EXTENSION_JSON = "json"
 
+/**
+ *     ███                                                █████
+ *    ░░░                                                ░░███
+ *    ████  █████████████   ████████   ██████  ████████  ███████    ██████  ████████   █████
+ *   ░░███ ░░███░░███░░███ ░░███░░███ ███░░███░░███░░███░░░███░    ███░░███░░███░░███ ███░░
+ *    ░███  ░███ ░███ ░███  ░███ ░███░███ ░███ ░███ ░░░   ░███    ░███████  ░███ ░░░ ░░█████
+ *    ░███  ░███ ░███ ░███  ░███ ░███░███ ░███ ░███       ░███ ███░███░░░   ░███      ░░░░███
+ *    █████ █████░███ █████ ░███████ ░░██████  █████      ░░█████ ░░██████  █████     ██████
+ *   ░░░░░ ░░░░░ ░░░ ░░░░░  ░███░░░   ░░░░░░  ░░░░░        ░░░░░   ░░░░░░  ░░░░░     ░░░░░░
+ *                          ░███
+ *                          █████
+ *                         ░░░░░
+ */
+val WORD_BOOK_IMPORTERS: Map<String, WordBookImporter> = mapOf(
+    EXTENSION_JSON to JsonWordBookImporter(),
+    EXTENSION_XML to XmlWordBookImporter()
+)
+
+
+private const val EXPORT_NOTIFICATIONS_ID = "Word Book Export"
+private const val IMPORT_NOTIFICATIONS_ID = "Word Book Import"
+
 private val LOG = Logger.getInstance("#WordBookImportExport")
+
 
 fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
     val targetFileWrapper = FileChooserFactory
@@ -81,19 +119,16 @@ fun importWordBook(project: Project?) {
     val selectFile = selectImportSource(project) ?: return
     val title = message("wordbook.window.import.notification.title")
 
-    val importer = when {
-        EXTENSION_XML.equals(selectFile.extension, true) -> XmlWordBookImporter()
-        EXTENSION_JSON.equals(selectFile.extension, true) -> JsonWordBookImporter()
-        else -> {
-            LOG.e("Word book import: file extension=${selectFile.extension}")
-            Notifications.showErrorNotification(
-                IMPORT_NOTIFICATIONS_ID,
-                title,
-                message("wordbook.window.import.notification.cannot.import"),
-                project
-            )
-            return
-        }
+    val importer = WORD_BOOK_IMPORTERS[selectFile.extension?.toLowerCase()]
+    if (importer == null) {
+        LOG.e("Word book import: file extension=${selectFile.extension}")
+        Notifications.showErrorNotification(
+            IMPORT_NOTIFICATIONS_ID,
+            title,
+            message("wordbook.window.import.notification.cannot.import"),
+            project
+        )
+        return
     }
 
     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Importing Word Book...", true) {
@@ -122,18 +157,19 @@ fun importWordBook(project: Project?) {
     })
 }
 
+private fun VirtualFile.isValidExtension(): Boolean {
+    val extension = extension ?: return false
+    return WORD_BOOK_IMPORTERS.containsKey(extension.toLowerCase())
+}
+
 private fun selectImportSource(project: Project?): VirtualFile? {
     val descriptor = object : FileChooserDescriptor(true, false, false, false, false, false) {
         override fun isFileVisible(file: VirtualFile, showHiddenFiles: Boolean): Boolean {
-            return (file.isDirectory || file.extension.let { ext ->
-                EXTENSION_XML.equals(ext, true) || EXTENSION_JSON.equals(ext, true)
-            }) && (showHiddenFiles || !FileElement.isFileHidden(file))
+            return (file.isDirectory || file.isValidExtension()) && (showHiddenFiles || !FileElement.isFileHidden(file))
         }
 
         override fun isFileSelectable(file: VirtualFile): Boolean {
-            return !file.isDirectory && file.extension.let { ext ->
-                EXTENSION_XML.equals(ext, true) || EXTENSION_JSON.equals(ext, true)
-            }
+            return !file.isDirectory && file.isValidExtension()
         }
     }
 
