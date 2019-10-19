@@ -5,7 +5,9 @@ import cn.yiiguxing.plugin.translate.ui.form.WordDetailsDialogForm
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.wordbook.REGEX_TAGS_SEPARATOR
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import cn.yiiguxing.plugin.translate.wordbook.toTagSet
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.hint.HintManager
@@ -64,7 +66,7 @@ class WordDetailsDialog(
     private val isModified: Boolean
         get() = (phoneticField.text ?: "") != (word.phonetic ?: "") ||
                 (explanationView.text ?: "") != (word.explanation ?: "") ||
-                tagsField.text.trim(*TRIM_CHARS) != tagsString
+                tagsField.text.replace(REGEX_WHITESPACE, " ").trim(*TRIM_CHARS) != tagsString
 
     override fun createActions(): Array<Action> = emptyArray()
 
@@ -164,7 +166,7 @@ class WordDetailsDialog(
             val newWord = word.copy(
                 phonetic = phoneticField.text,
                 explanation = explanationView.text,
-                tags = tagsField.text.split(REGEX_SEPARATOR).filter { it.isNotEmpty() }.toSet()
+                tags = tagsField.text.toTagSet()
             )
             if (WordBookService.updateWord(newWord)) {
                 setWord(newWord)
@@ -174,14 +176,14 @@ class WordDetailsDialog(
     }
 
     companion object {
-        private val REGEX_SEPARATOR = "[\\s,]+".toRegex()
-
         private const val TAG_SEPARATOR = ", "
 
-        private val TRIM_CHARS = charArrayOf(',', ' ')
+        private val TRIM_CHARS = charArrayOf(',', '，', ' ', ' ' /* 0xA0 */)
+
+        private val REGEX_WHITESPACE = Regex("[\\s ]+")
 
         private fun Document.fixSeparator() {
-            setText(text.replace(REGEX_SEPARATOR, TAG_SEPARATOR).trim(*TRIM_CHARS))
+            setText(text.replace(REGEX_WHITESPACE, " ").replace(REGEX_TAGS_SEPARATOR, TAG_SEPARATOR).trim(*TRIM_CHARS))
         }
     }
 }

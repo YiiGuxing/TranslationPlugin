@@ -30,11 +30,14 @@ data class WordBookItem(
     ) : this(id, word, sourceLanguage, targetLanguage, phonetic, explanation, tags.toTagSet(), createdAt)
 }
 
-private val REGEX_SEPARATOR = "[\\s,]+".toRegex()
+val REGEX_TAGS_SEPARATOR = Regex("(\\s*[,，]\\s*)+")
+private val REGEX_WHITESPACE = Regex("[\\s ]+")
 
-private fun String?.toTagSet(): Set<String> {
-    return this?.takeIf { it.isNotEmpty() }
-        ?.split(REGEX_SEPARATOR)
+fun String?.toTagSet(): Set<String> {
+    return this?.trim(' ', ',', '，', ' ' /* 0xA0 */)
+        ?.takeIf { it.isNotEmpty() }
+        ?.replace(REGEX_WHITESPACE, " ")
+        ?.split(REGEX_TAGS_SEPARATOR)
         ?.filter { it.isNotEmpty() }
         ?.toSet()
         ?: emptySet()
