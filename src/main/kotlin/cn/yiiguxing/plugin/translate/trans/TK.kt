@@ -30,8 +30,7 @@ private fun `fun`(a: Long, b: String): Long {
  */
 object TKK {
     private const val MIM = 60 * 60 * 1000
-    private const val ELEMENT_URL = "https://translate.google.com/translate_a/element.js"
-    private const val ELEMENT_URL_CN = "https://translate.google.cn/translate_a/element.js"
+    private const val ELEMENT_URL_FORMAT = "https://%s/translate_a/element.js"
     private const val NOTIFICATION_DISPLAY_ID = "TKK Update Failed"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
@@ -61,11 +60,7 @@ object TKK {
     }
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
-        val updateUrl = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
-            ELEMENT_URL
-        } else {
-            ELEMENT_URL_CN
-        }
+        val updateUrl = ELEMENT_URL_FORMAT.format(googleHost)
 
         return try {
             val elementJS = HttpRequests.request(updateUrl)
@@ -91,13 +86,15 @@ object TKK {
                 null
             }
         } catch (e: Throwable) {
-            logger.w("TKK update failed", e)
+            val error = NetworkException.wrapIfIsNetworkException(e, googleHost)
+
+            logger.w("TKK update failed", error)
             Notifications.showErrorNotification(
                 null,
                 NOTIFICATION_DISPLAY_ID,
                 "TKK",
                 message("notification.ttk.update.failed"),
-                e
+                error
             )
 
             null

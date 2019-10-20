@@ -211,7 +211,7 @@ class WordBookService {
     /**
      * Adds the specified word to the word book and returns id if word is inserted.
      */
-    fun addWord(item: WordBookItem): Long? {
+    fun addWord(item: WordBookItem, notifyOnFailed: Boolean = true): Long? {
         checkIsInitialized()
         return lock {
             val sql = """
@@ -245,14 +245,16 @@ class WordBookService {
                 }
             } catch (e: SQLException) {
                 if (e.errorCode != SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
-                    @Suppress("InvalidBundleOrProperty")
-                    Notifications.showErrorNotification(
-                        null,
-                        NOTIFICATION_DISPLAY_ID,
-                        message("notification.title.wordbook"),
-                        message("notification.content.wordbook.addFailed"),
-                        e
-                    )
+                    LOGGER.w("Insert word", e)
+                    if (notifyOnFailed) {
+                        Notifications.showErrorNotification(
+                            null,
+                            NOTIFICATION_DISPLAY_ID,
+                            message("notification.title.wordbook"),
+                            message("notification.content.wordbook.addFailed"),
+                            e
+                        )
+                    }
                 }
                 null
             }
@@ -263,8 +265,17 @@ class WordBookService {
         checkIsInitialized()
 
         val id = requireNotNull(word.id) { "Required word id was null." }
-        val sql = "UPDATE wordbook SET $COLUMN_PHONETIC = ?, $COLUMN_EXPLANATION = ? WHERE $COLUMN_ID = ?"
-        val updated = lock { queryRunner.update(sql, word.phonetic, word.explanation, id) > 0 } == true
+        val sql =
+            "UPDATE wordbook SET $COLUMN_PHONETIC = ?, $COLUMN_EXPLANATION = ?, $COLUMN_TAGS = ? WHERE $COLUMN_ID = ?"
+        val updated = lock {
+            queryRunner.update(
+                sql,
+                word.phonetic,
+                word.explanation,
+                word.tags.joinToString(","),
+                id
+            ) > 0
+        } == true
         if (updated) {
             invokeOnDispatchThread {
                 settingsPublisher.onWordUpdated(this@WordBookService, word)
@@ -387,7 +398,7 @@ class WordBookService {
                 Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
                 getString(COLUMN_PHONETIC),
                 getString(COLUMN_EXPLANATION),
-                getString(COLUMN_TAGS)?.split(",") ?: emptyList(),
+                getString(COLUMN_TAGS),
                 getDate(COLUMN_CREATED_AT)
             )
         }

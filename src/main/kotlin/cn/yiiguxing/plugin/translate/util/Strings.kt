@@ -27,10 +27,10 @@ private const val REPLACEMENT_SPLIT_GROUP = "$1 $2"
  */
 fun String.splitWords(): String {
     return replace(REGEX_UNDERLINE, REPLACEMENT_SPLIT_GROUP)
-            .replace(REGEX_NUM_WORD, REPLACEMENT_SPLIT_GROUP)
-            .replace(REGEX_WORD_NUM, REPLACEMENT_SPLIT_GROUP)
-            .replace(REGEX_LOWER_UPPER, REPLACEMENT_SPLIT_GROUP)
-            .replace(REGEX_UPPER_WORD, REPLACEMENT_SPLIT_GROUP)
+        .replace(REGEX_NUM_WORD, REPLACEMENT_SPLIT_GROUP)
+        .replace(REGEX_WORD_NUM, REPLACEMENT_SPLIT_GROUP)
+        .replace(REGEX_LOWER_UPPER, REPLACEMENT_SPLIT_GROUP)
+        .replace(REGEX_UPPER_WORD, REPLACEMENT_SPLIT_GROUP)
 }
 
 fun String.filterIgnore(): String {
@@ -48,8 +48,8 @@ fun String.processBeforeTranslate(): String? {
     } else filteredIgnore
 
     return formatted.trim()
-            .takeIf { it.isNotBlank() }
-            ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) splitWords() else it }
+        .takeIf { it.isNotBlank() }
+        ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) splitWords() else it }
 }
 
 /**
@@ -74,9 +74,7 @@ fun String.splitSentence(maxSentenceLength: Int): List<String> = when {
  * @throws IllegalArgumentException 如果[maxSentenceLength] <= 0.
  */
 fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSentenceLength: Int): C {
-    if (maxSentenceLength <= 0) {
-        throw IllegalArgumentException("maxSentenceLength must be greater than 0.")
-    }
+    require(maxSentenceLength > 0) { "maxSentenceLength must be greater than 0." }
 
     if (isBlank()) {
         return destination
@@ -90,18 +88,18 @@ fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSe
         return destination
     }
 
-    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) { _ ->
-        splitSentenceTo(destination, maxSentenceLength, String::splitBySpace) { _ ->
+    return optimized.splitSentenceTo(destination, maxSentenceLength, String::splitByPunctuation) {
+        splitSentenceTo(destination, maxSentenceLength, String::splitBySpace) {
             splitByLengthTo(destination, maxSentenceLength)
         }
     }
 }
 
 private fun <C : MutableCollection<String>> String.splitSentenceTo(
-        destination: C,
-        maxSentenceLength: Int,
-        splitFun: String.() -> List<String>,
-        reSplitFun: String.(C) -> Unit
+    destination: C,
+    maxSentenceLength: Int,
+    splitFun: String.() -> List<String>,
+    reSplitFun: String.(C) -> Unit
 ): C {
     val sentences = splitFun()
     val sentenceBuilder = StringBuilder()
@@ -140,7 +138,7 @@ private fun String.splitBy(regex: Regex): List<String> {
     val splits = mutableListOf<String>()
     var currIndex = 0
     for (mr in regex.findAll(this)) {
-        val index = mr.range.endInclusive + 1
+        val index = mr.range.last + 1
         if (index > currIndex) {
             splits += substring(currIndex, index)
         }
@@ -165,24 +163,32 @@ private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLe
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
 
 private val hexDigits = charArrayOf(
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 )
 
-/**
- * 生成32位MD5摘要
- * @return MD5摘要
- */
-fun String.md5(): String {
-    val md5Digest = with(MessageDigest.getInstance("MD5")) {
+fun String.getMessageDigest(algorithm: String): String {
+    val messageDigest = with(MessageDigest.getInstance(algorithm)) {
         update(toByteArray(Charsets.UTF_8))
         digest()
     }
 
-    val result = CharArray(md5Digest.size * 2)
-    md5Digest.forEachIndexed { index, byte ->
+    val result = CharArray(messageDigest.size * 2)
+    messageDigest.forEachIndexed { index, byte ->
         result[index * 2] = hexDigits[byte.toInt() ushr 4 and 0xf]
         result[index * 2 + 1] = hexDigits[byte.toInt() and 0xf]
     }
 
     return String(result)
 }
+
+/**
+ * 生成32位MD5摘要
+ * @return MD5摘要
+ */
+fun String.md5(): String = getMessageDigest("MD5")
+
+/**
+ * 生成SHA-256摘要
+ * @return SHA-256摘要
+ */
+fun String.sha256(): String = getMessageDigest("SHA-256")

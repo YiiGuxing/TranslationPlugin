@@ -18,7 +18,7 @@ object Notifications {
         message: String,
         throwable: Throwable
     ) {
-        NotificationGroup(displayId, NotificationDisplayType.TOOL_WINDOW, true)
+        NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
             .createNotification(
                 title,
                 """$message (<a href="$HTML_DESC_COPY_TO_CLIPBOARD">Copy to Clipboard</a>)""",
@@ -42,13 +42,21 @@ object Notifications {
         type: NotificationType,
         project: Project? = null
     ) {
-        NotificationGroup(displayId, NotificationDisplayType.TOOL_WINDOW, true)
+        NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
             .createNotification(title, message, type, null)
             .show(project)
     }
 
+    fun showInfoNotification(displayId: String, title: String, message: String, project: Project? = null) {
+        showNotification(displayId, title, message, NotificationType.INFORMATION, project)
+    }
+
     fun showWarningNotification(displayId: String, title: String, message: String, project: Project? = null) {
         showNotification(displayId, title, message, NotificationType.WARNING, project)
+    }
+
+    fun showErrorNotification(displayId: String, title: String, message: String, project: Project? = null) {
+        showNotification(displayId, title, message, NotificationType.ERROR, project)
     }
 
 }

@@ -72,9 +72,7 @@ open class LruCache<K, V>(maxSize: Int) {
         @Synchronized get() = LinkedHashMap(map)
 
     init {
-        if (maxSize <= 0) {
-            throw IllegalArgumentException("maxSize <= 0")
-        }
+        require(maxSize > 0) { "maxSize <= 0" }
         this.map = LinkedHashMap(0, 0.75f, true)
     }
 
@@ -84,9 +82,7 @@ open class LruCache<K, V>(maxSize: Int) {
      * @param maxSize The new maximum size.
      */
     fun resize(maxSize: Int) {
-        if (maxSize <= 0) {
-            throw IllegalArgumentException("maxSize <= 0")
-        }
+        require(maxSize > 0) { "maxSize <= 0" }
 
         synchronized(this) {
             this.maxSize = maxSize
@@ -170,8 +166,8 @@ open class LruCache<K, V>(maxSize: Int) {
     fun trimToSize(maxSize: Int) {
         while (true) {
             val toEvict = synchronized(this) {
-                if (size < 0 || map.isEmpty() && size != 0) {
-                    throw IllegalStateException(javaClass.name + ".sizeOf() is reporting inconsistent results!")
+                check(!(size < 0 || map.isEmpty() && size != 0)) {
+                    javaClass.name + ".sizeOf() is reporting inconsistent results!"
                 }
 
                 if (size <= maxSize || map.isEmpty()) {
@@ -244,9 +240,7 @@ open class LruCache<K, V>(maxSize: Int) {
 
     private fun safeSizeOf(key: K, value: V): Int {
         val result = sizeOf(key, value)
-        if (result < 0) {
-            throw IllegalStateException("Negative size: $key=$value")
-        }
+        check(result >= 0) { "Negative size: $key=$value" }
         return result
     }
 
@@ -268,7 +262,8 @@ open class LruCache<K, V>(maxSize: Int) {
         trimToSize(-1) // -1 will evict 0-sized elements
     }
 
-    @Synchronized override fun toString(): String {
+    @Synchronized
+    override fun toString(): String {
         val accesses = hitCount + missCount
         val hitPercent = if (accesses != 0) 100 * hitCount / accesses else 0
         return "LruCache[maxSize=$maxSize,hits=$hitCount,misses=$missCount,hitRate=$hitPercent%]"

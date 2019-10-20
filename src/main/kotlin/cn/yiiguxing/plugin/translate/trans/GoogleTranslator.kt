@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_CN_URL
-import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL
+import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
@@ -37,8 +36,7 @@ object GoogleTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = settings.primaryLanguage
 
-    private val baseUrl: String
-        get() = if (settings.useTranslateGoogleCom) GOOGLE_TRANSLATE_URL else GOOGLE_TRANSLATE_CN_URL
+    private val baseUrl: String get() = GOOGLE_TRANSLATE_URL_FORMAT.format(googleHost)
 
     private val notSupportedLanguages = arrayListOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
 
@@ -77,6 +75,10 @@ object GoogleTranslator : AbstractTranslator() {
             this.original = original
             target = targetLang
         }.toTranslation()
+    }
+
+    override fun onError(throwable: Throwable): Throwable {
+        return NetworkException.wrapIfIsNetworkException(throwable, googleHost)
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {

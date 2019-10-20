@@ -4,7 +4,9 @@ import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import java.awt.Color
 import java.awt.Font
+import javax.swing.UIManager
 import javax.swing.text.html.HTMLEditorKit
 
 /**
@@ -35,6 +37,7 @@ object UI {
         defaultFont.deriveScaledFont(size.toFloat())
     }
 
+    @JvmStatic
     fun getFonts(primaryFontSize: Int, phoneticFontSize: Int): FontPair {
         var primaryFont: JBFont? = null
         var phoneticFont: JBFont? = null
@@ -50,4 +53,13 @@ object UI {
     }
 
     data class FontPair(val primary: JBFont, val phonetic: JBFont)
+
+    @JvmStatic
+    @JvmOverloads
+    fun getColor(key: String, default: Color? = null): Color? = UIManager.getColor(key) ?: default
+
+    @JvmStatic
+    @JvmOverloads
+    fun getBordersColor(default: Color? = null): Color? = UIManager.getColor("Borders.color") ?: default
+
 }

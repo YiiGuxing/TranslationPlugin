@@ -94,10 +94,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                             } else {
                                 val items = translation
                                     .run {
-                                        dictionaries
-                                            .map { it.terms }
-                                            .flatten()
-                                            .toMutableSet()
+                                        (dictDocument?.translations?.toMutableSet() ?: mutableSetOf())
                                             .apply { trans?.let { add(it) } }
                                     }
                                     .asSequence()

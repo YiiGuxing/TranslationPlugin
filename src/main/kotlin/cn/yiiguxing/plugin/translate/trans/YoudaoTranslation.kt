@@ -7,7 +7,10 @@
 
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.YoudaoDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.YoudaoWebTranslationDocument
 import com.google.gson.annotations.SerializedName
 
 
@@ -18,13 +21,13 @@ data class YoudaoTranslation(
     var errorCode: Int = -1,
     var message: String? = null,
     @SerializedName("translation")
-    var translation: Array<String>? = null,
+    var translation: Array<out String>? = null,
     @SerializedName("basic")
     var basicExplain: YBasicExplain? = null,
     @SerializedName("l")
     var languages: String? = null,
     @SerializedName("web")
-    var webExplains: Array<YWebExplain>? = null
+    var webExplains: Array<out YWebExplain>? = null
 ) : TranslationAdapter {
 
     val isSuccessful get() = errorCode == 0
@@ -46,21 +49,10 @@ data class YoudaoTranslation(
         val srcLang = Lang.valueOfYoudaoCode(languagesList[0])
         val transLang = Lang.valueOfYoudaoCode(languagesList[1])
 
-        val otherExplains: Map<String, String> = webExplains?.mapNotNull { (key, values) ->
-            if (key == null || values == null) {
-                null
-            } else {
-                key to values.joinToString(separator = "; ")
-            }
-        }?.let {
-            mapOf(*it.toTypedArray())
-        } ?: emptyMap()
-
-        val basicExplains = ArrayList<String>()
-        basicExplain?.explains?.let { basicExplains.addAll(it) }
-        if (Settings.showWordForms) {
-            basicExplain?.wordForms?.joinToString("\n", "\n") { it.wordForm.toString() }
-                ?.let { basicExplains.add(it) }
+        val phonetic = basicExplain?.let { basicExplain ->
+            val phoneticUK = basicExplain.phoneticUK?.let { "[UK] $it" } ?: ""
+            val phoneticUS = basicExplain.phoneticUS?.let { "[US] $it" } ?: ""
+            "$phoneticUK    $phoneticUS".takeIf { it.isNotBlank() }
         }
 
         return Translation(
@@ -69,9 +61,10 @@ data class YoudaoTranslation(
             srcLang,
             transLang,
             listOf(srcLang),
-            basicExplain?.phonetic,
-            basicExplains = basicExplains,
-            otherExplains = otherExplains
+            phonetic,
+            dictDocument = YoudaoDictDocument.Factory.getDocument(this),
+            extraDocument = YoudaoWebTranslationDocument.Factory.getDocument(this)
+                ?.let { NamedTranslationDocument(message("tip.label.webInterpretation"), it) }
         )
     }
 }
@@ -84,16 +77,16 @@ data class YBasicExplain(
     @SerializedName(value = "us-phonetic")
     var phoneticUS: String? = null,
     @SerializedName(value = "explains")
-    var explains: Array<String>? = null,
+    var explains: Array<out String>? = null,
     @SerializedName(value = "wfs")
-    var wordForms: Array<YWordFormWrapper>? = null
+    var wordForms: Array<out YWordFormWrapper>? = null
 )
 
 data class YWebExplain(
     @SerializedName(value = "key")
     var key: String? = null,
     @SerializedName(value = "value")
-    var values: Array<String>? = null
+    var values: Array<out String>? = null
 )
 
 data class YWordFormWrapper(@SerializedName(value = "wf") val wordForm: YWordForm)
@@ -102,8 +95,4 @@ data class YWordForm(
     val name: String,
     @SerializedName(value = "value")
     val value: String
-) {
-    override fun toString(): String {
-        return "$name: ${value.replace("\\s*或\\s*".toRegex(), ", ")}"
-    }
-}
+)

@@ -257,8 +257,9 @@ class UpdateManager : StartupActivity, DumbAware {
 
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
-                "发行说明" to "新功能一目了然",
-                "单词本" to "此次更新的主要功能，希望您会喜欢"
+                "有道词典视图" to "全新的有道词典视图",
+                "单词本单词标签" to "为单词本中的单词分组和归类",
+                "单词本导入导出" to "实现单词本共享"
             )
         }
 
@@ -266,21 +267,25 @@ class UpdateManager : StartupActivity, DumbAware {
             fun imageResource(resource: String): String = "$UPDATES_BASE_URL/img/v$version/$resource"
 
             return """
-                <h2>发行说明</h2>
-                <p>
-                    现在，您可以通过阅读“<b>发行说明</b>”来了解某次更新中更新了哪些功能，并学习如何去使用这些功能。它将会在版本升级后弹出，如果您错过了，不用担心，您可以通过选择主菜单项
-                    <b>Help | What's New in Translation</b> 重新打开它。
-                </p>
-                <img src="${imageResource("whats_new.png")}" alt="发行说明">
+                <h2>翻译</h2>
+                <h3>有道词典视图</h3>
+                <p>全新的有道词典视图，解析并结构化有道翻译的词典内容，使得有道翻译的词典内容与谷歌翻译的词典内容一样清晰易辩：</p>
+                <img src="${imageResource("translation.gif")}" alt="全新的有道词典视图">
                 
                 <h2>单词本</h2>
-                <img src="${imageResource("word_book.gif")}" style="margin-top: ${JBUI.scale(8)}px" alt="单词本">
-                <p>某些IDE（如：WebStorm）可能需要下载支持库才能使用“<b>单词本</b>”功能，这时候只需在“<b>单词本</b>”面板中点击“下载”并等待下载完成后即可正常使用。</p>
-                <h3>每日单词</h3>
-                <p>“<b>每日单词</b>”会将单词本中所有单词打乱顺序后逐个显示，可以通过 “<b>Word of the Day</b>” 动作（无默认快捷键）来打开它。</p>
-                <img src="${imageResource("word_of_the_day.png")}" alt="每日单词">
-                <p>也可以通过勾选设置页的 “启动时显示每日单词” 选项，使之在IDE启动后弹出显示。另外，“<b>每日单词</b>”默认会隐藏单词释义，如需取消隐藏，勾选设置页的 “默认显示单词释义” 选项即可。</p>
-                <img src="${imageResource("word_of_the_day_opts.png")}" alt="每日单词选项">
+                <h3>单词标签</h3>
+                <p>现在，您可以为每一个单词指定一个或者一组标签，对其进行分组与归类：</p>
+                <img src="${imageResource("group.gif")}" alt="单词分组">
+                <p>编辑单词标签（使用逗号分隔多个标签）：</p>
+                <img src="${imageResource("tags.gif")}" alt="编辑单词标签">
+                <h3>导入导出</h3>
+                <p>单词本现在可以导入或导出，实现单词本共享。单词本可以导出为以下格式：</p>
+                <ul>
+                    <li><b>JSON</b><i>（可用于单词本导入）</i></li>
+                    <li><b>XML</b><i>（可用于单词本导入）</i></li>
+                    <li><b>有道XML</b><i>（用于导入到有道词典，但不可用于单词本导入）</i></li>
+                </ul>
+                <img src="${imageResource("import_export.png")}" alt="导入导出">
             """.trimIndent()
         }
     }

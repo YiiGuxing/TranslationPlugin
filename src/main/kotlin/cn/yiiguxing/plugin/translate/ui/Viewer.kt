@@ -10,7 +10,7 @@ import javax.swing.JTextPane
  *
  * Created by Yii.Guxing on 2017/12/09
  */
-class Viewer : JTextPane() {
+open class Viewer : JTextPane() {
 
     init {
         isOpaque = false
