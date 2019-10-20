@@ -1,5 +1,14 @@
 # Change Log
 
+## [v2.5.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.0) (2019-10-20)
+
+* 全新的有道词典视图
+* 新增单词本单词标签功能，为单词本中的单词分组和归类
+* 新增单词本导入导出功能
+* UI主题适配
+* 升级了有道翻译API
+* 其他一些优化
+
 ## [v2.4.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.2) (2019-09-29)
 
 * 修复了在Android Studio上切换翻译引擎时崩溃的问题
