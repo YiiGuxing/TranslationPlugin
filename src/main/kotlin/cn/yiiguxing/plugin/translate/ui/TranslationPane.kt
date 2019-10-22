@@ -640,7 +640,7 @@ abstract class TranslationPane<T : JComponent>(
 
             return WordBookItem(
                 null,
-                original,
+                original.trim(),
                 srcLang,
                 targetLang,
                 srcTransliteration,
