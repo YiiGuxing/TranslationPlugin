@@ -572,18 +572,21 @@ table td {
     padding-left: 0;
 }
 
-.version-list ul li {
+.version-list ul li a {
+    color: #555;
     padding: 0.5rem 0 0.5rem 1.5rem;
     font-weight: 100;
     cursor: pointer;
+    display: block;
+    text-decoration: none;
     border-left: 1px solid #d3d6d9;
 }
 
-.version-list ul li:hover {
+.version-list ul li a:hover {
     border-color: #0288D1;
 }
 
-.version-list ul li.selected {
+.version-list ul li a.selected {
     color: #0288D1;
 }
 
