@@ -25,8 +25,8 @@ Please describe the problem in detail. Be sure to include:
 - Plugin version: <!-- x.x.x -->
 - IDE version: <!-- IDEA 20xx.x.x -->
 - Operating System and version: <!-- Windows 10 -->
-<!--
-- Stack Trace (for crash):
+<!-- (for crash)
+- Stack Trace:
 -->
 
 <!-- Get the Environment & Stack Trace: http://yiiguxing.github.io/TranslationPlugin/start.html#faq-fb -->
