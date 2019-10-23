@@ -50,14 +50,18 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
             removeAll()
             layout = this@WordOfTheDayDialog.layout
             add(maskPanel, CARD_MASK)
-            add(explanationView,
+            add(
+                explanationView,
                 CARD_EXPLAINS_VIEW
             )
         }
 
-        showExplanationButton.addActionListener { layout.show(explainsCard,
-            CARD_EXPLAINS_VIEW
-        ) }
+        showExplanationButton.addActionListener {
+            layout.show(
+                explainsCard,
+                CARD_EXPLAINS_VIEW
+            )
+        }
     }
 
     override fun createActions(): Array<Action> = arrayOf(previousWordAction, nextWordAction, cancelAction)
@@ -101,7 +105,10 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
     }
 
     override fun show() {
-        super.show()
+        if (!isShowing) {
+            super.show()
+        }
+
         invokeLater { focusManager.requestFocus(window, true) }
     }
 
