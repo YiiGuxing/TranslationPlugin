@@ -12,7 +12,6 @@ import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
@@ -142,6 +141,16 @@ class UpdateManager : StartupActivity, DumbAware {
             showUpdateToolWindow(project, versionParts)
         }
 
+        private class OpenInBrowserAction(private val versionUrl: String) :
+            DumbAwareAction("在浏览器中打开", null, AllIcons.General.Web) {
+            override fun actionPerformed(e: AnActionEvent?) = BrowserUtil.browse(versionUrl)
+        }
+
+        private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
+            DumbAwareAction("关闭", null, AllIcons.Actions.Close) {
+            override fun actionPerformed(e: AnActionEvent?) = toolWindow.dispose(project)
+        }
+
         private fun showUpdateToolWindow(project: Project, versionParts: IntArray) {
             val version = versionParts.joinToString(".")
             val versionUrl = "$UPDATES_BASE_URL.html?v=$version"
@@ -155,17 +164,14 @@ class UpdateManager : StartupActivity, DumbAware {
                     project,
                     true,
                     false
-                ).apply {
-                    icon = AllIcons.Toolwindows.ToolWindowPalette
-                    setAvailable(true, null)
-                    isToHideOnEmptyContent = false
-                    val openInBrowserAction = object : AnAction("在浏览器中打开", null, AllIcons.General.Web) {
-                        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
-                    }
-                    val closeAction = object : AnAction("关闭", null, AllIcons.Actions.Close) {
-                        override fun actionPerformed(e: AnActionEvent) = dispose(project)
-                    }
-                    (this as ToolWindowEx).setTitleActions(openInBrowserAction, closeAction)
+                ).also { toolWindow ->
+                    toolWindow.icon = AllIcons.Toolwindows.ToolWindowPalette
+                    toolWindow.setAvailable(true, null)
+                    toolWindow.isToHideOnEmptyContent = false
+                    (toolWindow as ToolWindowEx).setTitleActions(
+                        OpenInBrowserAction(versionUrl),
+                        CloseAction(project, toolWindow)
+                    )
                 }
 
             val contentManager = toolWindow.contentManager
