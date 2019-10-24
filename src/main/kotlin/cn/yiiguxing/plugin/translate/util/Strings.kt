@@ -49,7 +49,7 @@ fun String.processBeforeTranslate(): String? {
 
     return formatted.trim()
         .takeIf { it.isNotBlank() }
-        ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) splitWords() else it }
+        ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) it.splitWords() else it }
 }
 
 /**
