@@ -7,7 +7,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 
 /**
- * Text to speech.
+ * Provide text-to-speech conversion.
  */
 class TextToSpeech private constructor() {
 

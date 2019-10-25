@@ -9,13 +9,11 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
 
 /**
- * AutoSelectAction
- *
- * Created by Yii.Guxing on 2017/9/12
+ * Auto select action.
  */
 abstract class AutoSelectAction(
-        private val checkSelection: Boolean,
-        private val wordPartCondition: CharCondition = DEFAULT_CONDITION
+    private val checkSelection: Boolean,
+    private val wordPartCondition: CharCondition = DEFAULT_CONDITION
 ) : AnAction() {
 
     protected abstract val selectionMode: SelectionMode
@@ -70,9 +68,9 @@ abstract class AutoSelectAction(
         }
 
         return TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
-                .let { document.getText(it) }
-                .filterIgnore()
-                .any(wordPartCondition)
+            .let { document.getText(it) }
+            .filterIgnore()
+            .any(wordPartCondition)
     }
 
     private fun AnActionEvent.getSelectionRange() = editor?.run {

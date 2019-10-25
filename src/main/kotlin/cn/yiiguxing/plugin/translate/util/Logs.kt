@@ -1,7 +1,5 @@
 /*
  * Logs
- * 
- * Created by Yii.Guxing on 2017/10/30
  */
 @file:Suppress("unused")
 

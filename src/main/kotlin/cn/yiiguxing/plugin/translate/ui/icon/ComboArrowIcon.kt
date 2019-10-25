@@ -8,8 +8,6 @@ import javax.swing.Icon
 
 /**
  * ComboArrowIcon
- *
- * Created by Yii.Guxing on 2017/11/20
  */
 class ComboArrowIcon(var color: Color = Color.WHITE) : Icon {
 

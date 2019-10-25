@@ -21,8 +21,6 @@ import java.awt.*;
 
 /**
  * Word details dialog form.
- * <p>
- * Created by Yii.Guxing on 2019/09/06.
  */
 public class WordDetailsDialogForm extends DialogWrapper {
 

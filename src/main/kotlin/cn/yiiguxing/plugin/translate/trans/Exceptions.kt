@@ -9,8 +9,6 @@ import javax.net.ssl.SSLHandshakeException
 
 /**
  * TranslateException
- *
- * Created by Yii.Guxing on 2017/10/30
  */
 open class TranslateException(
     override val message: String,

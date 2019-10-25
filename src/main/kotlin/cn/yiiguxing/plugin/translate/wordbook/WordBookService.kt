@@ -30,8 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Word book service.
- *
- * Created by Yii.Guxing on 2019/08/05.
  */
 class WordBookService {
 

@@ -8,8 +8,6 @@ import javax.swing.*;
 
 /**
  * WordFormUtil
- * <p>
- * Created by Yii.Guxing on 2019/09/09.
  */
 final class WordFormUtil {
 

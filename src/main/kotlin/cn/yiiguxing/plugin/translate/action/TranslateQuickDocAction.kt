@@ -12,8 +12,6 @@ import com.intellij.openapi.project.Project
 
 /**
  * TranslateQuickDocAction
- *
- * Created by Yii.Guxing on 2017/9/11
  */
 class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToIgnore {
 

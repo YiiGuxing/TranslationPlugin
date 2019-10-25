@@ -32,8 +32,6 @@ import javax.swing.Icon
 
 /**
  * Word book view.
- *
- * Created by Yii.Guxing on 2019/08/28.
  */
 class WordBookView {
 

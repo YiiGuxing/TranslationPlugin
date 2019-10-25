@@ -8,8 +8,6 @@ import javax.swing.*;
 
 /**
  * GoogleApiPanel
- * <p>
- * Created by Yii.Guxing on 2017/11/8
  */
 public class GoogleTranslateSettingsForm {
     private JPanel mContentPanel;

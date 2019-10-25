@@ -7,8 +7,6 @@ import java.awt.Dimension
 
 /**
  * FixedSizeCardLayout
- *
- * Created by Yii.Guxing on 2017/11/8
  */
 class FixedSizeCardLayout : CardLayout() {
 

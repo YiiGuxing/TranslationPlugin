@@ -27,8 +27,6 @@ import javax.swing.Icon
 
 /**
  * TranslatorWidget
- *
- * Created by Yii.Guxing on 2018/1/19
  */
 class TranslatorWidget(
     private val project: Project

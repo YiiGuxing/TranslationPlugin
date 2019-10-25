@@ -8,8 +8,6 @@ import javax.swing.JLabel
 
 /**
  * DialogTranslationPanel
- *
- * Created by Yii.Guxing on 2017/12/27
  */
 class DialogTranslationPane(project: Project?, settings: Settings) :
     TranslationPane<JLabel>(project, settings) {

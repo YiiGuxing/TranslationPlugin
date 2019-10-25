@@ -16,9 +16,6 @@ import javax.swing.JPanel
 
 /**
  * ProcessComponent
- *
- *
- * Created by Yii.Guxing on 2017/11/27
  */
 class ProcessComponent(text: String, insets: Insets = JBUI.emptyInsets()) : JPanel(), Disposable {
 

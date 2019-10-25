@@ -9,8 +9,6 @@ import javax.swing.Icon
 
 /**
  * YoudaoAppKeySettingsPanel
- *
- * Created by Yii.Guxing on 2018/04/19
  */
 class YoudaoAppKeySettingsPanel(settings: Settings)
     : AppKeySettingsPanel(settings.youdaoTranslateSettings, YoudaoTranslator) {
