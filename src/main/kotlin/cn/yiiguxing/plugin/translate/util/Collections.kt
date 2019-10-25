@@ -1,7 +1,5 @@
 /*
  * Collections
- *
- * Created by Yii.Guxing on 2017-09-16 0016.
  */
 package cn.yiiguxing.plugin.translate.util
 

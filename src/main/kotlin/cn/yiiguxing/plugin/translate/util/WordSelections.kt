@@ -1,7 +1,5 @@
 /*
  * 单词选择工具
- * 
- * Created by Yii.Guxing on 2017/9/11
  */
 @file:Suppress("unused", "NOTHING_TO_INLINE")
 

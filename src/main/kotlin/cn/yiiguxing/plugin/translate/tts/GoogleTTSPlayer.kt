@@ -27,9 +27,7 @@ import javax.sound.sampled.*
 
 
 /**
- * NetworkTTSPlayer
- *
- * Created by Yii.Guxing on 2017-10-28 0028.
+ * Google TTS player.
  */
 class GoogleTTSPlayer(
     project: Project?,

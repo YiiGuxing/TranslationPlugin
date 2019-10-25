@@ -7,8 +7,6 @@ import javax.swing.ComboBoxModel
 
 /**
  * LanguageListModel
- *
- * Created by Yii.Guxing on 2018/08/02.
  */
 class LanguageListModel(languages: Collection<Lang>, selection: Lang? = null)
     : AbstractListModel<Lang>(), ComboBoxModel<Lang> {

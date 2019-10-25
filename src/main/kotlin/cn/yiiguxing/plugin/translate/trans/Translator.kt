@@ -5,8 +5,6 @@ import javax.swing.Icon
 
 /**
  * Translator
- *
- * Created by Yii.Guxing on 2017-10-29 0029.
  */
 interface Translator {
 

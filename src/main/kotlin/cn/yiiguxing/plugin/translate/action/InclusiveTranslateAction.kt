@@ -5,8 +5,6 @@ import cn.yiiguxing.plugin.translate.util.SelectionMode
 
 /**
  * InclusiveTranslateAction
- *
- * Created by Yii.Guxing on 2018/2/7
  */
 class InclusiveTranslateAction : TranslateAction(false) {
 

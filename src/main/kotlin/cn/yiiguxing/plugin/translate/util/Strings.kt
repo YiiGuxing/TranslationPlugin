@@ -1,7 +1,5 @@
 /*
  * Strings
- * 
- * Created by Yii.Guxing on 2017/9/11
  */
 @file:Suppress("unused")
 

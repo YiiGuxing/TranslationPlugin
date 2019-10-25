@@ -16,8 +16,6 @@ import javax.swing.plaf.basic.BasicComboBoxUI
 
 /**
  * LangComboBoxUI
- *
- * Created by Yii.Guxing on 2017/11/20
  */
 class LangComboBoxUI(
         private val myComboBox: ComboBox<Lang>,

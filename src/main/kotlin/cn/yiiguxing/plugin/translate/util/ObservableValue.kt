@@ -8,8 +8,6 @@ import kotlin.reflect.KProperty
 
 /**
  * An [ObservableValue] is an entity that wraps a value and allows to observe the value for changes.
- *
- * Created by Yii.Guxing on 2019/08/14.
  */
 class ObservableValue<T>(
     initialValue: T,

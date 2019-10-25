@@ -10,8 +10,6 @@ import com.intellij.openapi.util.Condition
 
 /**
  * TranslatorAction
- *
- * Created by Yii.Guxing on 2019/09/25.
  */
 class TranslatorAction(private val translator: Translator) :
     DumbAwareAction(translator.name, null, translator.icon) {

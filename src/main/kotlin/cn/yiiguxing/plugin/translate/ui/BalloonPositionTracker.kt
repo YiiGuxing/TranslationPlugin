@@ -11,12 +11,10 @@ import java.awt.Point
 
 /**
  * BalloonPositionTracker
- *
- * Created by Yii.Guxing on 2018/01/21
  */
 class BalloonPositionTracker(
-        private val editor: Editor,
-        private val caretRangeMarker: RangeMarker
+    private val editor: Editor,
+    private val caretRangeMarker: RangeMarker
 ) : PositionTracker<Balloon>(editor.contentComponent) {
 
     private var lastLocation: RelativePoint? = null

@@ -8,8 +8,6 @@ import javax.swing.Icon
 
 /**
  * SuspendIcon
- *
- * Created by Yii.Guxing on 2018/1/12
  */
 class SuspendIcon(val color: Color) : Icon {
 
