@@ -1,7 +1,5 @@
 /*
  * 计算谷歌翻译的tk值.
- * 
- * Created by Yii.Guxing on 2017/10/27
  */
 package cn.yiiguxing.plugin.translate.trans
 

@@ -1,12 +1,8 @@
 package cn.yiiguxing.plugin.translate.util
 
-import java.lang.StringBuilder
-
 @Suppress("unused")
 /**
  * UrlBuilder
- *
- * Created by Yii.Guxing on 2018/04/19.
  */
 class UrlBuilder(private val baseUrl: String) {
 

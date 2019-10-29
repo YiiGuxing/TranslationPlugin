@@ -15,8 +15,6 @@ import javax.swing.JComponent
 
 /**
  * CheckRegExpDialog
- *
- * Created by Yii.Guxing on 2018/07/29
  */
 class CheckRegExpDialog(project: Project, regExp: String, private val ok: (String) -> Unit) : DialogWrapper(project) {
 

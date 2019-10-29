@@ -1,7 +1,5 @@
 /*
  * Strings
- * 
- * Created by Yii.Guxing on 2017/9/11
  */
 @file:Suppress("unused")
 
@@ -13,13 +11,13 @@ import java.security.MessageDigest
 fun String?.isNullOrBlank() = (this as CharSequence?).isNullOrBlank()
 
 
-private val REGEX_UNDERLINE = "([A-Za-z])_+([A-Za-z])".toRegex()
-private val REGEX_NUM_WORD = "([0-9])([A-Za-z])".toRegex()
-private val REGEX_WORD_NUM = "([A-Za-z])([0-9])".toRegex()
-private val REGEX_LOWER_UPPER = "([a-z])([A-Z])".toRegex()
-private val REGEX_UPPER_WORD = "([A-Z])([A-Z][a-z])".toRegex()
-private val REGEX_WHITESPACE_CHARACTER = "\\s".toRegex()
-private val REGEX_WHITESPACE_CHARACTERS = "\\s{2,}".toRegex()
+private val REGEX_UNDERLINE = Regex("([A-Za-z])_+([A-Za-z])")
+private val REGEX_NUM_WORD = Regex("([0-9])([A-Za-z])")
+private val REGEX_WORD_NUM = Regex("([A-Za-z])([0-9])")
+private val REGEX_LOWER_UPPER = Regex("([a-z])([A-Z])")
+private val REGEX_UPPER_WORD = Regex("([A-Z])([A-Z][a-z])")
+private val REGEX_WHITESPACE_CHARACTER = Regex("\\s")
+private val REGEX_WHITESPACE_CHARACTERS = Regex("\\s+")
 private const val REPLACEMENT_SPLIT_GROUP = "$1 $2"
 
 /**
@@ -35,7 +33,11 @@ fun String.splitWords(): String {
 
 fun String.filterIgnore(): String {
     return try {
-        Settings.ignoreRegExp?.takeIf { it.isNotEmpty() }?.toRegex()?.let { replace(it, " ") } ?: this
+        Settings.ignoreRegExp
+            ?.takeIf { it.isNotEmpty() }
+            ?.toRegex(RegexOption.MULTILINE)
+            ?.let { replace(it, "") }
+            ?: this
     } catch (e: Exception) {
         this
     }
@@ -80,7 +82,7 @@ fun <C : MutableCollection<String>> String.splitSentenceTo(destination: C, maxSe
         return destination
     }
 
-    val whitespaceReg = "[ \\u3000\\n\\r\\t\\s]+".toRegex() // \u3000:全角空格
+    val whitespaceReg = Regex("[ \\u3000\\n\\r\\t\\s]+") // \u3000:全角空格
     val optimized = replace(whitespaceReg, " ")
 
     if (optimized.length <= maxSentenceLength) {
@@ -131,8 +133,8 @@ private fun <C : MutableCollection<String>> String.splitSentenceTo(
     return destination
 }
 
-private fun String.splitByPunctuation() = splitBy("([?.,;:!][ ]+)|([、。！（），．：；？][ ]?)".toRegex())
-private fun String.splitBySpace() = splitBy(" ".toRegex())
+private fun String.splitByPunctuation() = splitBy(Regex("([?.,;:!][ ]+)|([、。！（），．：；？][ ]?)"))
+private fun String.splitBySpace() = splitBy(Regex(" "))
 
 private fun String.splitBy(regex: Regex): List<String> {
     val splits = mutableListOf<String>()

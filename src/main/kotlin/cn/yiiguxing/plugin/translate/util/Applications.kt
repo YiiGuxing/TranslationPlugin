@@ -1,7 +1,5 @@
 /*
  * ApplicationUtils
- * 
- * Created by Yii.Guxing on 2017/12/22
  */
 @file:Suppress("unused", "NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
 

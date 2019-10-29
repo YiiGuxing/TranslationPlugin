@@ -1,7 +1,5 @@
 /*
  * Extensions
- * 
- * Created by Yii.Guxing on 2017/11/20
  */
 @file:Suppress("unused")
 

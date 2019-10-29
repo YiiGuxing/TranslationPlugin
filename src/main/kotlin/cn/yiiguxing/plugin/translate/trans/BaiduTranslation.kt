@@ -1,13 +1,6 @@
-/*
- * BaiduTranslation
- * 
- * Created by Yii.Guxing on 2018/04/19.
- */
-
 package cn.yiiguxing.plugin.translate.trans
 
 import com.google.gson.annotations.SerializedName
-
 
 @Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 data class BaiduTranslation(

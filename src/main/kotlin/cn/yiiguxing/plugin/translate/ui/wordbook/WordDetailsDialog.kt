@@ -29,8 +29,6 @@ import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
 
 /**
  * Word details dialog.
- *
- * Created by Yii.Guxing on 2019/09/06.
  */
 class WordDetailsDialog(
     project: Project?,

@@ -16,8 +16,6 @@ import javax.swing.*;
 
 /**
  * YoudaoApiPanel
- * <p>
- * Created by Yii.Guxing on 2017/11/8
  */
 public abstract class AppKeySettingsForm {
 

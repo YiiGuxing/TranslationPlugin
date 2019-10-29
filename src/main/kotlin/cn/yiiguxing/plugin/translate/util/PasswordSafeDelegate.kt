@@ -8,8 +8,6 @@ import kotlin.reflect.KProperty
 
 /**
  * PasswordSafeDelegate
- *
- * Created by Yii.Guxing on 2017/11/9
  */
 class PasswordSafeDelegate private constructor(private val attributes: CredentialAttributes) :
     ReadWriteProperty<Any?, String?> {

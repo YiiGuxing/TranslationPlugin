@@ -8,8 +8,6 @@ import com.intellij.openapi.project.DumbAware
 
 /**
  * 显示翻译对话框动作
- *
- * Created by Yii.Guxing on 2017/9/11
  */
 class ShowTranslationDialogAction : AnAction(), DumbAware {
 

@@ -17,8 +17,6 @@ import javax.swing.Action
 
 /**
  * Word of the day dialog
- *
- * Created by Yii.Guxing on 2019/08/20.
  */
 class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(project) {
 

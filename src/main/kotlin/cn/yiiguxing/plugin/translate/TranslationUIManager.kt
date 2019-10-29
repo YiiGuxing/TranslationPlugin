@@ -24,8 +24,6 @@ import kotlin.collections.set
 
 /**
  * TranslationUIManager
- * <p>
- * Created by Yii.Guxing on 2017-09-14 0014.
  */
 class TranslationUIManager private constructor() {
 

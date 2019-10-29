@@ -7,8 +7,6 @@ import javax.swing.Icon
 
 /**
  * ActionLink
- *
- * Created by Yii.Guxing on 2017/12/15
  */
 class ActionLink(
         text: String? = null,

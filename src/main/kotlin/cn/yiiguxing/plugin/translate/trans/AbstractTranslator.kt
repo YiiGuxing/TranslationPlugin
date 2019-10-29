@@ -12,9 +12,7 @@ import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 /**
- * AbstractTranslator
- *
- * Created by Yii.Guxing on 2017-10-29 0029.
+ * Provides a skeletal implementation of the [Translator] interface.
  */
 abstract class AbstractTranslator : Translator {
 
