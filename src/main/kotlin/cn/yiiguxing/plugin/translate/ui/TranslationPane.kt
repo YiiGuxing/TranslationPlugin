@@ -417,7 +417,7 @@ abstract class TranslationPane<T : JComponent>(
             return
         }
 
-        if (settings.foldOriginal && text.length > originalFoldingLength) {
+        if (settings.foldOriginal && (text.length > originalFoldingLength || text.count { it == '\n' } >= 3)) {
             viewer.setFoldedText(text)
         } else {
             viewer.text = text

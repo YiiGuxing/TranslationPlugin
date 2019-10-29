@@ -44,10 +44,10 @@ fun String.filterIgnore(): String {
 fun String.processBeforeTranslate(): String? {
     val filteredIgnore = filterIgnore()
     val formatted = if (!Settings.keepFormat) {
-        filteredIgnore.replace(REGEX_WHITESPACE_CHARACTERS, " ")
+        filteredIgnore.replace(REGEX_WHITESPACE_CHARACTERS, " ").trim()
     } else filteredIgnore
 
-    return formatted.trim()
+    return formatted
         .takeIf { it.isNotBlank() }
         ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) it.splitWords() else it }
 }
