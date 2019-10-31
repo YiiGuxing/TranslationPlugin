@@ -24,10 +24,11 @@ TranslationPlugin
 - 语音朗读
 - 自动选词
 - 自动单词拆分
+- 单词本
 
-兼容产品编译号为143及以上的 Jetbrains IDE 产品。  
-支持的 IDE:
+支持的 **Jetbrains IDE** 产品:
 - Android Studio
+- AppCode
 - CLion
 - DataGrip
 - GoLand
@@ -35,7 +36,6 @@ TranslationPlugin
 - IntelliJ IDEA Community
 - IntelliJ IDEA Educational
 - MPS
-- AppCode
 - PhpStorm
 - PyCharm Professional
 - PyCharm Community
