@@ -34,29 +34,27 @@
                 <li>语音朗读</li>
                 <li>自动选词</li>
                 <li>自动单词拆分</li>
+                <li>单词本</li>
             </ul>
-            <p class="column_tip">
-                兼容除 MPS 外所有产品<a
-                    href="http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html#branch-and-build-numbers-for-intellij-platform-pre-20162"
-                    target="_blank">编译号</a>为 <b>143</b> 以上的
-                <a href="https://www.jetbrains.com" target="_blank">Jetbrains IDE</a>
-                产品。
-            </p>
             <div class="column_tip">
-                支持的 IDE:
+                支持的 <a href="https://www.jetbrains.com" target="_blank">Jetbrains IDE</a> 产品：
                 <ul class="column_tip">
                     <li>Android Studio</li>
-                    <li>IntelliJ IDEA</li>
-                    <li>IntelliJ IDEA Community Edition</li>
-                    <li>PhpStorm</li>
-                    <li>WebStorm</li>
-                    <li>PyCharm</li>
-                    <li>PyCharm Community Edition</li>
-                    <li>RubyMine</li>
                     <li>AppCode</li>
                     <li>CLion</li>
                     <li>DataGrip</li>
+                    <li>GoLand</li>
+                    <li>IntelliJ IDEA Ultimate</li>
+                    <li>IntelliJ IDEA Community</li>
+                    <li>IntelliJ IDEA Educational</li>
+                    <li>MPS</li>
+                    <li>PhpStorm</li>
+                    <li>PyCharm Professional</li>
+                    <li>PyCharm Community</li>
+                    <li>PyCharm Educational</li>
                     <li>Rider</li>
+                    <li>RubyMine</li>
+                    <li>WebStorm</li>
                 </ul>
             </div>
         </div>
@@ -190,11 +188,6 @@
 
             <ul>
                 <li>
-                    <h4 id="faq-gc" class="column_item_title">翻译内容出现乱码怎么办？</h4>
-                    <p>答：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。</p>
-                    <img src="images/settings_font.png">
-                </li>
-                <li>
                     <h4 id="faq-ne" class="column_item_title">出现网络错误或者网络连接超时怎么办？</h4>
                     <p>答：</p>
                     <ul>
@@ -204,6 +197,11 @@
                         <li>如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`<strong>使用translate.google.com</strong>`选项（如果系统语言环境是非中文的话，此选项是默认勾选的），translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
                         </li>
                     </ul>
+                </li>
+                <li>
+                    <h4 id="faq-gc" class="column_item_title">翻译内容出现乱码怎么办？</h4>
+                    <p>答：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。</p>
+                    <img src="images/settings_font.png">
                 </li>
                 <li>
                     <h4 id="faq-os" class="column_item_title">无法保存应用密钥怎么办？</h4>
@@ -219,10 +217,6 @@
                     </ul>
                 </li>
                 <li>
-                    <h4 id="faq-km" class="column_item_title">为什么2.0以前的版本快捷键在新版本都不能用了?</h4>
-                    <p>答：由于2.0以前的版本的快捷键大多与IDE默认的快捷键有冲突，抢占了IDE的默认快捷键。所以，从2.0版本以后，重新设置了插件的默认快捷键，而2.0以前的版本的快捷键已被废弃。</p>
-                </li>
-                <li>
                     <h4 id="faq-km2" class="column_item_title">快捷键不能使用怎么办?</h4>
                     <p>答：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。</p>
                 </li>
@@ -230,7 +224,9 @@
                     <h4 id="faq-fb" class="column_item_title">如何反馈一个问题，在哪里反馈?</h4>
                     <p>答：如果发现插件的任何问题，或者对插件有任何意见或建议，可以<a
                             href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank"
-                    >点击这里</a>反馈。在反馈问题时，请记得附上错误信息，其收集如下图所示（错误信息将会被拷贝到剪贴板）：
+                    >点击这里</a>反馈。在反馈问题之前，请先阅读<a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues/365" target="_blank"
+                    >Issue 管理公告</a>。在反馈问题时，请记得附上错误信息，其收集如下图所示（错误信息将会被拷贝到剪贴板）：
                     </p>
                     <img style="float: left" src="images/ctc_balloon.png"><img src="images/ctc_dialog.png">
                 </li>
