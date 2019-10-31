@@ -25,20 +25,24 @@ TranslationPlugin
 - 自动选词
 - 自动单词拆分
 
-兼容除 MPS 外所有产品编译号为143以上的 Jetbrains IDE 产品。  
+兼容产品编译号为143及以上的 Jetbrains IDE 产品。  
 支持的 IDE:
 - Android Studio
-- IntelliJ IDEA
-- IntelliJ IDEA Community Edition
-- PhpStorm
-- WebStorm
-- PyCharm
-- PyCharm Community Edition
-- RubyMine
-- AppCode
 - CLion
 - DataGrip
+- GoLand
+- IntelliJ IDEA Ultimate
+- IntelliJ IDEA Community
+- IntelliJ IDEA Educational
+- MPS
+- AppCode
+- PhpStorm
+- PyCharm Professional
+- PyCharm Community
+- PyCharm Educational
 - Rider
+- RubyMine
+- WebStorm
 
 安装
 ----
