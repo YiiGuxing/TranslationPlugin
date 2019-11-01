@@ -1,12 +1,5 @@
 # Change Log
 
-## [v2.5.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.1) (2019-11-01)
-
-* 修复了导致在Android Studio上崩溃的一个致命错误
-* 修复了忽略内容在一些特定的情况下会失效的问题
-* 修复了重复显示每日单词对话框会导致界面异常的问题
-* 一些功能增强与优化
-
 ## [v2.5.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.0) (2019-10-20)
 
 * 全新的有道词典视图
