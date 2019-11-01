@@ -17,8 +17,6 @@ import java.awt.Point
 
 /**
  * Popups
- *
- * Created by Yii.Guxing on 2019/08/23.
  */
 object Popups {
 

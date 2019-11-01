@@ -6,8 +6,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 
 /**
  * TranslatorActionGroup
- *
- * Created by Yii.Guxing on 2018/01/19
  */
 class TranslatorActionGroup : ActionGroup() {
 

@@ -8,8 +8,6 @@ import java.awt.*;
 
 /**
  * TranslatorSettingsContainerForm
- * <p>
- * Created by Yii.Guxing on 2017/11/8
  */
 public class TranslatorSettingsContainerForm<T> extends JPanel {
 

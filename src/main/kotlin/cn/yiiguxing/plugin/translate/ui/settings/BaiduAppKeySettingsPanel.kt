@@ -9,8 +9,6 @@ import javax.swing.Icon
 
 /**
  * BaiduAppKeySettingsPanel
- *
- * Created by Yii.Guxing on 2018/04/19
  */
 class BaiduAppKeySettingsPanel(settings: Settings)
     : AppKeySettingsPanel(settings.baiduTranslateSettings, BaiduTranslator) {

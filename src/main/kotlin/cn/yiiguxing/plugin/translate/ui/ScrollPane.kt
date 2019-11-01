@@ -10,8 +10,6 @@ import javax.swing.UIManager
 
 /**
  * ScrollPane
- *
- * Created by Yii.Guxing on 2017/12/22
  */
 open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER) {
 

@@ -7,8 +7,6 @@ import com.intellij.openapi.wm.ToolWindowFactory
 
 /**
  * Word book tool window factory
- *
- * Created by Yii.Guxing on 2019/08/26.
  */
 class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 

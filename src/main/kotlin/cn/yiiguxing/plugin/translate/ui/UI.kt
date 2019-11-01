@@ -11,8 +11,6 @@ import javax.swing.text.html.HTMLEditorKit
 
 /**
  * UI
- *
- * Created by Yii.Guxing on 2017/11/29
  */
 object UI {
 

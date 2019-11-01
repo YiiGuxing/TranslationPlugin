@@ -5,8 +5,6 @@ import org.junit.Test
 
 /**
  * TKTest
- *
- * Created by Yii.Guxing on 2017/11/17
  */
 class TKTest {
 

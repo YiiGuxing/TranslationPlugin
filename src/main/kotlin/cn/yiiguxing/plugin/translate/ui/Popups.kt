@@ -1,7 +1,5 @@
 /*
  * Popups
- * 
- * Created by Yii.Guxing on 2019/01/25.
  */
 
 @file:Suppress("unused")

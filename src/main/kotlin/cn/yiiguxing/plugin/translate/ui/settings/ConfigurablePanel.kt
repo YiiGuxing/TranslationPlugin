@@ -5,8 +5,6 @@ import javax.swing.JComponent
 /**
  * ConfigurablePanel
  *
- *
- * Created by Yii.Guxing on 2017/11/8
  */
 interface ConfigurablePanel {
 

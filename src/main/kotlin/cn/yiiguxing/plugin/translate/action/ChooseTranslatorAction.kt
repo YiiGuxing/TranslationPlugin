@@ -15,8 +15,6 @@ import javax.swing.JComponent
 
 /**
  * ChooseTranslatorAction
- *
- * Created by Yii.Guxing on 2018/01/08
  */
 class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
 

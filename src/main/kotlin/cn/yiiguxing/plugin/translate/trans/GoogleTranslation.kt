@@ -1,7 +1,5 @@
 /*
  * GoogleTranslation
- *
- * Created by Yii.Guxing on 2018/01/06
  */
 
 @file:Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")

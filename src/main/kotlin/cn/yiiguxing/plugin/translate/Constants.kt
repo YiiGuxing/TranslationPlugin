@@ -1,7 +1,5 @@
 /**
  * Constants
- * <p>
- * Created by Yii.Guxing on 2017-09-17 0017.
  */
 @file:Suppress("SpellCheckingInspection")
 

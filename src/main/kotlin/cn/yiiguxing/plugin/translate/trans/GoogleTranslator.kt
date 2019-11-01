@@ -11,8 +11,6 @@ import javax.swing.Icon
 
 /**
  * GoogleTranslator
- *
- * Created by Yii.Guxing on 2017/11/10
  */
 object GoogleTranslator : AbstractTranslator() {
 

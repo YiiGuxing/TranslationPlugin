@@ -98,6 +98,7 @@
                     </constraints>
                     <properties>
                       <text value="_-"/>
+                      <toolTipText resource-bundle="messages/TranslationBundle" key="settings.tip.separators"/>
                     </properties>
                   </component>
                   <hspacer id="97894">

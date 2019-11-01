@@ -30,8 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Word book service.
- *
- * Created by Yii.Guxing on 2019/08/05.
  */
 class WordBookService {
 
@@ -318,12 +316,17 @@ class WordBookService {
     fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Long? {
         checkIsInitialized()
 
+        val wordToQuery = word.trim()
+        if (wordToQuery.isEmpty()) {
+            return null
+        }
+
         val sql = """
                 SELECT $COLUMN_ID FROM wordbook 
                     WHERE $COLUMN_WORD = ? AND $COLUMN_SOURCE_LANGUAGE = ? AND $COLUMN_TARGET_LANGUAGE = ?
             """.trimIndent()
         return try {
-            queryRunner.query(sql, WordIdHandler, word, sourceLanguage.code, targetLanguage.code)
+            queryRunner.query(sql, WordIdHandler, wordToQuery, sourceLanguage.code, targetLanguage.code)
         } catch (e: SQLException) {
             LOGGER.e(e.message ?: "", e)
             null

@@ -10,8 +10,6 @@ import javax.swing.*;
 
 /**
  * Word book window form.
- * <p>
- * Created by Yii.Guxing on 2019/09/03.
  */
 public class WordBookWindowForm extends SimpleToolWindowPanel {
     protected JPanel root;

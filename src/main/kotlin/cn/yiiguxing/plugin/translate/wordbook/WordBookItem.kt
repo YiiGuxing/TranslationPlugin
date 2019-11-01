@@ -5,8 +5,6 @@ import java.util.*
 
 /**
  * WordBookItem
- *
- * Created by Yii.Guxing on 2019/08/06.
  */
 data class WordBookItem(
     var id: Long?,

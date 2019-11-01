@@ -1,7 +1,5 @@
 /**
  * Documents
- * <p>
- * Created by Yii.Guxing on 2017-09-17 0017.
  */
 
 package cn.yiiguxing.plugin.translate.util.text

@@ -26,8 +26,6 @@ import kotlin.text.isNullOrBlank
 
 /**
  * InstantTranslationDialog
- *
- * Created by Yii.Guxing on 2018/06/18
  */
 class InstantTranslationDialog(private val project: Project?) :
     InstantTranslationDialogForm(project),
