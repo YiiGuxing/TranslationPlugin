@@ -166,14 +166,12 @@ FAQ
 
 更新日志
 --------
-## [v2.5.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.0) (2019-10-20)
+## [v2.5.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.1) (2019-11-01)
 
-* 全新的有道词典视图
-* 新增单词本单词标签功能，为单词本中的单词分组和归类
-* 新增单词本导入导出功能
-* UI主题适配
-* 升级了有道翻译API
-* 其他一些优化
+* 修复了导致在Android Studio上崩溃的一个致命错误
+* 修复了忽略内容在一些特定的情况下会失效的问题
+* 修复了重复显示每日单词对话框会导致界面异常的问题
+* 一些功能增强与优化
 
 [完整的更新历史记录](./CHANGELOG.md)
 
