@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mWholePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="732" height="630"/>
+      <xy x="20" y="20" width="732" height="634"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -208,23 +208,44 @@
                   <enabled value="false"/>
                 </properties>
               </component>
-              <component id="2a884" class="javax.swing.JTextPane" binding="mFontPreview">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="3" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <editable value="false"/>
-                  <enabled value="false"/>
-                  <margin top="10" left="3" bottom="3" right="3"/>
-                  <opaque value="false"/>
-                  <text resource-bundle="messages/TranslationBundle" key="settings.font.preview"/>
-                </properties>
-              </component>
               <hspacer id="aca2a">
                 <constraints>
                   <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
+              <grid id="d4d43" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="5" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="3" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="ad1e1" class="javax.swing.JLabel" binding="mPrimaryFontPreview">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="messages/TranslationBundle" key="settings.font.preview"/>
+                    </properties>
+                  </component>
+                  <component id="b987e" class="javax.swing.JLabel" binding="mPhoneticFontPreview">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text value="[ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw]"/>
+                    </properties>
+                  </component>
+                  <hspacer id="7a844">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="d1cc4" binding="mHistoryPanel" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

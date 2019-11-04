@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
+import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
@@ -15,15 +16,12 @@ import com.intellij.ui.*
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.Dimension
-import java.awt.Font
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.text.AttributeSet
 import javax.swing.text.PlainDocument
-import javax.swing.text.SimpleAttributeSet
-import javax.swing.text.StyleConstants
 
 /**
  * SettingsPanel
@@ -147,18 +145,19 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
             val selected = fontCheckBox.isSelected
             primaryFontComboBox.isEnabled = selected
             phoneticFontComboBox.isEnabled = selected
-            fontPreview.isEnabled = selected
+            primaryFontPreview.isEnabled = selected
             primaryFontLabel.isEnabled = selected
             phoneticFontLabel.isEnabled = selected
+            phoneticFontPreview.isEnabled = selected
         }
         primaryFontComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                previewPrimaryFont(primaryFontComboBox.fontName)
+                primaryFontPreview.previewFont(primaryFontComboBox.fontName)
             }
         }
         phoneticFontComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                previewPhoneticFont(phoneticFontComboBox.fontName)
+                phoneticFontPreview.previewFont(phoneticFontComboBox.fontName)
             }
         }
         clearHistoriesButton.addActionListener {
@@ -199,26 +198,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         })
     }
 
-    private fun previewPrimaryFont(primary: String?) {
-        if (primary.isNullOrBlank()) {
-            fontPreview.font = JBUI.Fonts.label(14f)
-        } else {
-            fontPreview.font = JBUI.Fonts.create(primary, 14)
-        }
-    }
-
-    private fun previewPhoneticFont(primary: String?) {
-        val document = fontPreview.styledDocument
-
-        val font: Font = if (primary.isNullOrBlank()) {
-            JBUI.Fonts.label(14f)
-        } else {
-            JBUI.Fonts.create(primary, 14)
-        }
-
-        val attributeSet = SimpleAttributeSet()
-        StyleConstants.setFontFamily(attributeSet, font.family)
-        document.setCharacterAttributes(4, 41, attributeSet, true)
+    private fun JComponent.previewFont(primary: String?) {
+        font = if (primary.isNullOrBlank()) UI.defaultFont else JBUI.Fonts.create(primary, 14)
     }
 
     private fun getMaxHistorySize(): Int {
@@ -312,8 +293,8 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         showExplanationCheckBox.isSelected = settings.showExplanation
         primaryFontComboBox.fontName = settings.primaryFontFamily
         phoneticFontComboBox.fontName = settings.phoneticFontFamily
-        previewPrimaryFont(settings.primaryFontFamily)
-        previewPhoneticFont(settings.phoneticFontFamily)
+        primaryFontPreview.previewFont(settings.primaryFontFamily)
+        phoneticFontPreview.previewFont(settings.phoneticFontFamily)
 
         maxHistoriesSizeComboBox.editor.item = appStorage.maxHistorySize.toString()
         selectionModeComboBox.selected = settings.autoSelectionMode
