@@ -11,8 +11,6 @@ import javax.swing.JComponent
 
 /**
  * AppKeySettingsPanel
- *
- * Created by Yii.Guxing on 2018/1/18
  */
 abstract class AppKeySettingsPanel(private val settings: AppKeySettings, translator: Translator)
     : AppKeySettingsForm(), TranslatorSettingsPanel {

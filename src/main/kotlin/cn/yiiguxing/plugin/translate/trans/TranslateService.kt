@@ -15,8 +15,6 @@ import com.intellij.util.messages.MessageBusConnection
 
 /**
  * TranslateService
- *
- * Created by Yii.Guxing on 2017/10/30
  */
 class TranslateService private constructor() {
 

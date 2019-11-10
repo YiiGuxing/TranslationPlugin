@@ -11,8 +11,6 @@ import com.intellij.openapi.editor.actions.TextComponentEditorAction
 
 /**
  * 文本组件（如文本框、提示气泡、输入框……）翻译
- *
- * Created by Yii.Guxing on 2017/9/11
  */
 class TranslateTextComponentAction : TextComponentEditorAction(Handler()), HintManagerImpl.ActionToIgnore {
 

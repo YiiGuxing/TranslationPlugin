@@ -7,8 +7,6 @@ import javax.swing.JTextPane
 
 /**
  * Viewer
- *
- * Created by Yii.Guxing on 2017/12/09
  */
 open class Viewer : JTextPane() {
 

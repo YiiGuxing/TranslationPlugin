@@ -22,9 +22,11 @@ Please describe the problem in detail. Be sure to include:
 -->
 
 ### Environment & Stack Trace
-- Plugin version:
-- IDE version:
-- Operating System and version:
-- Stack Trace (for crash):
+- Plugin version: <!-- x.x.x -->
+- IDE version: <!-- IDEA 20xx.x.x -->
+- Operating System and version: <!-- Windows 10 -->
+<!-- (for crash)
+- Stack Trace:
+-->
 
 <!-- Get the Environment & Stack Trace: http://yiiguxing.github.io/TranslationPlugin/start.html#faq-fb -->

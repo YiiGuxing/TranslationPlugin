@@ -131,7 +131,7 @@ class Settings : PersistentStateComponent<Settings> {
     var selectTargetLanguageBeforeReplacement: Boolean = false
 
     /**
-     * 状态栏图标
+     * 折叠原文
      */
     var foldOriginal: Boolean = false
 

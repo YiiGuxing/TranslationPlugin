@@ -27,8 +27,6 @@ import javax.swing.text.StyleConstants
 
 /**
  * SettingsPanel
- *
- * Created by Yii.Guxing on 2018/1/18
  */
 class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(settings, appStorage),
     ConfigurablePanel {

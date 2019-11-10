@@ -4,8 +4,6 @@ import com.intellij.util.messages.Topic
 
 /**
  * WordBookChangeListener
- *
- * Created by Yii.Guxing on 2019/08/14.
  */
 interface WordBookListener {
 

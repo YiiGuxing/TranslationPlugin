@@ -24,21 +24,25 @@ TranslationPlugin
 - 语音朗读
 - 自动选词
 - 自动单词拆分
+- 单词本
 
-兼容除 MPS 外所有产品编译号为143以上的 Jetbrains IDE 产品。  
-支持的 IDE:
+支持的 **Jetbrains IDE** 产品:
 - Android Studio
-- IntelliJ IDEA
-- IntelliJ IDEA Community Edition
-- PhpStorm
-- WebStorm
-- PyCharm
-- PyCharm Community Edition
-- RubyMine
 - AppCode
 - CLion
 - DataGrip
+- GoLand
+- IntelliJ IDEA Ultimate
+- IntelliJ IDEA Community
+- IntelliJ IDEA Educational
+- MPS
+- PhpStorm
+- PyCharm Professional
+- PyCharm Community
+- PyCharm Educational
 - Rider
+- RubyMine
+- WebStorm
 
 安装
 ----
@@ -142,13 +146,7 @@ Actions
 
 FAQ
 ---
-1. **翻译内容出现乱码怎么办？**
-
-   **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
-   
-   ![screenshots](./images/settings_font.png)
-
-2. **出现网络错误或者网络连接超时怎么办？**
+1. **出现网络错误或者网络连接超时怎么办？**
 
    **答**：  
    - 检查网络环境，确保网络畅通。
@@ -156,30 +154,30 @@ FAQ
    - 检查IDE代理配置，查看是否是因为IDE代理配置导致的问题。
    - 如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`使用translate.google.com`选项（如果系统语言环境是非中文的话，此选项是默认勾选的），translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
 
-3. **无法保存应用密钥?**
+2. **翻译内容出现乱码怎么办？**
+
+   **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
+   
+   ![screenshots](./images/settings_font.png)
+
+3. **无法保存应用密钥怎么办?**
 
    **答**：可以尝试将密码保存方式改成`In KeePass`方式 (<kbd>Settings</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>)，原因与细节：
    - MacOS，请另阅 [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
    - Linux，请另阅 [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)
 
-4. **为什么2.0以前的版本快捷键在新版本都不能用了?**
-
-   **答**：由于2.0以前的版本的快捷键大多与IDE默认的快捷键有冲突，抢占了IDE的默认快捷键。所以，从2.0版本以后，重新设置了插件的默认快捷键，而2.0以前的版本的快捷键已被废弃。
-
-5. **快捷键不能使用怎么办？**
+4. **快捷键不能使用怎么办？**
 
    **答**：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
 
 更新日志
 --------
-## [v2.5.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.0) (2019-10-20)
+## [v2.5.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.1) (2019-11-01)
 
-* 全新的有道词典视图
-* 新增单词本单词标签功能，为单词本中的单词分组和归类
-* 新增单词本导入导出功能
-* UI主题适配
-* 升级了有道翻译API
-* 其他一些优化
+- 修复了导致在Android Studio上崩溃的一个致命错误
+- 修复了忽略内容在一些特定的情况下会失效的问题
+- 修复了重复显示每日单词对话框会导致界面异常的问题
+- 一些功能增强与优化
 
 [完整的更新历史记录](./CHANGELOG.md)
 

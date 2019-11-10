@@ -1,25 +1,32 @@
 # Change Log
 
+## [v2.5.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.1) (2019-11-01)
+
+- 修复了导致在Android Studio上崩溃的一个致命错误
+- 修复了忽略内容在一些特定的情况下会失效的问题
+- 修复了重复显示每日单词对话框会导致界面异常的问题
+- 一些功能增强与优化
+
 ## [v2.5.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.5.0) (2019-10-20)
 
-* 全新的有道词典视图
-* 新增单词本单词标签功能，为单词本中的单词分组和归类
-* 新增单词本导入导出功能
-* UI主题适配
-* 升级了有道翻译API
-* 其他一些优化
+- 全新的有道词典视图
+- 新增单词本单词标签功能，为单词本中的单词分组和归类
+- 新增单词本导入导出功能
+- UI主题适配
+- 升级了有道翻译API
+- 其他一些优化
 
 ## [v2.4.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.2) (2019-09-29)
 
-* 修复了在Android Studio上切换翻译引擎时崩溃的问题
-* 修复了在Android Studio中点击通知上的Action时崩溃的问题
-* 界面上的一个小优化
+- 修复了在Android Studio上切换翻译引擎时崩溃的问题
+- 修复了在Android Studio中点击通知上的Action时崩溃的问题
+- 界面上的一个小优化
 
 ## [v2.4.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.1) (2019-09-22)
 
-* 修复了导致在2019.2.3版本上崩溃的一个致命错误
-* 修复了导致在2019.3版本上崩溃的一个致命错误
-* 修复了其他的一些BUG
+- 修复了导致在2019.2.3版本上崩溃的一个致命错误
+- 修复了导致在2019.3版本上崩溃的一个致命错误
+- 修复了其他的一些BUG
 
 ## [v2.4.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.4.0) (2019-09-16)
 

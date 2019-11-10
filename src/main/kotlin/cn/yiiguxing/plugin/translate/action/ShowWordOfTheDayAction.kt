@@ -15,8 +15,6 @@ import com.intellij.openapi.wm.ToolWindowManager
 
 /**
  * Show word of the day action.
- *
- * Created by Yii.Guxing on 2019/08/23.
  */
 class ShowWordOfTheDayAction : AnAction(), DumbAware {
 

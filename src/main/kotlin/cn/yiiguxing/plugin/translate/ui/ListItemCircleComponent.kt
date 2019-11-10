@@ -10,8 +10,6 @@ import javax.swing.JComponent
 
 /**
  * List item circle component
- *
- * Created by Yii.Guxing on 2019/09/18.
  */
 class ListItemCircleComponent : JComponent() {
 

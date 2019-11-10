@@ -14,8 +14,6 @@ import javax.swing.border.LineBorder;
 
 /**
  * Word of the day dialog form
- * <p>
- * Created by Yii.Guxing on 2019/08/19.
  */
 public class WordDialogForm extends DialogWrapper {
 

@@ -12,8 +12,6 @@ import javax.swing.JComponent
 
 /**
  * GoogleTranslateSettingsPanel
- *
- * Created by Yii.Guxing on 2018/1/18
  */
 class GoogleTranslateSettingsPanel(
         private val settings: GoogleTranslateSettings

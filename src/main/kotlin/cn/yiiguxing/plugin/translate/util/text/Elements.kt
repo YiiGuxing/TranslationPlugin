@@ -1,7 +1,5 @@
 /*
  * Elements
- * 
- * Created by Yii.Guxing on 2019/10/12.
  */
 
 package cn.yiiguxing.plugin.translate.util.text

@@ -6,8 +6,6 @@ import com.intellij.openapi.components.ApplicationComponent
 
 /**
  * TranslationAppComponent
- *
- * Created by Yii.Guxing on 2018/1/11
  */
 class TranslationAppComponent : ApplicationComponent {
 

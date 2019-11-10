@@ -7,8 +7,6 @@ import java.awt.Dimension
 
 /**
  * FrameLayout
- *
- * Created by Yii.Guxing on 2017/12/23
  */
 class FrameLayout : AbstractLayoutManager() {
 

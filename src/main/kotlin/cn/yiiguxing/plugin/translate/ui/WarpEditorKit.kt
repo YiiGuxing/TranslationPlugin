@@ -5,8 +5,6 @@ import javax.swing.text.*
 
 /**
  * WarpEditorKit
- *
- * Created by Yii.Guxing on 2017/12/1
  */
 class WarpEditorKit : StyledEditorKit() {
 

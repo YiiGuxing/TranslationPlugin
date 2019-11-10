@@ -13,8 +13,6 @@ import javax.swing.*;
 
 /**
  * TranslationDialogForm
- * <p>
- * Created by Yii.Guxing on 2017/12/27
  */
 public abstract class TranslationDialogForm extends DialogWrapper {
 

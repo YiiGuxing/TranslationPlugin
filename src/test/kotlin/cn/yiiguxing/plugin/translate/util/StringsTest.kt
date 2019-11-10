@@ -5,8 +5,6 @@ import org.junit.Test
 
 /**
  * StringsTest
- *
- * Created by Yii.Guxing on 2017/11/17
  */
 class StringsTest {
 

@@ -12,8 +12,6 @@ import javax.swing.JList
 
 /**
  * TranslatorSettingsContainer
- *
- * Created by Yii.Guxing on 2018/1/18
  */
 class TranslatorSettingsContainer(private val settings: Settings)
     : TranslatorSettingsContainerForm<TranslatorSettingsPanel>(), ConfigurablePanel {

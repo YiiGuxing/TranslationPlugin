@@ -8,8 +8,6 @@ import com.intellij.openapi.startup.StartupActivity
 
 /**
  * Word of the day startup activity.
- *
- * Created by Yii.Guxing on 2019/08/22.
  */
 class WordOfTheDayStartupActivity : StartupActivity, DumbAware {
 

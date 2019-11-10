@@ -12,8 +12,6 @@ import javax.swing.SwingConstants
 
 /**
  * TTSButton
- *
- * Created by Yii.Guxing on 2018/06/30
  */
 class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
 
