@@ -391,15 +391,20 @@ a:hover {
     color: white;
 }
 
+.frame_wrapper {
+    left: 0;
+    right: 0;
+    top: 64px;
+    bottom: 0;
+    position: absolute;
+    overflow: auto;
+}
+
 .frame_content {
     color: #474860;
     padding-bottom: 5rem;
     padding-left: 12rem;
     padding-right: 12rem;
-    top: 64px;
-    bottom: 0;
-    position: absolute;
-    overflow: auto;
 }
 
 .frame_content a {
@@ -533,6 +538,7 @@ table td {
     right: 0;
     padding: 0;
     position: absolute;
+    overflow: hidden;
 }
 
 .updates .version-list {
