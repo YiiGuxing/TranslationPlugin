@@ -140,6 +140,7 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
         <action id="$TranslateDocumentationAction"
+                icon="AllIcons.Toolwindows.Documentation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"
                 text="Translate Documentation" description="Translate documentation">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$TranslateAndReplaceAction"/>
