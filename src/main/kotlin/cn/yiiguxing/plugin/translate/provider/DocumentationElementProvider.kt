@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.provider
 
+import cn.yiiguxing.plugin.translate.util.Plugin
 import cn.yiiguxing.plugin.translate.util.findElementOfTypeAt
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
@@ -24,7 +25,7 @@ interface DocumentationElementProvider {
 
     companion object {
         private val PROVIDERS = LanguageExtension<DocumentationElementProvider>(
-            "cn.yiiguxing.plugin.translate.docElementProvider",
+            "${Plugin.PLUGIN_ID}.docElementProvider",
             DefaultDocumentationElementProvider
         )
 
