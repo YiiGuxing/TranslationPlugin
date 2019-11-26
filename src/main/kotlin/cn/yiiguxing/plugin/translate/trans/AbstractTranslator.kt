@@ -16,11 +16,22 @@ import javax.net.ssl.SSLHandshakeException
  */
 abstract class AbstractTranslator : Translator {
 
-    protected abstract fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String
+    protected abstract fun getTranslateUrl(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): String
 
-    protected open fun buildRequest(builder: RequestBuilder) {}
+    protected open fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {}
 
-    protected abstract fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation
+    protected abstract fun parserResult(
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        result: String,
+        forDocumentation: Boolean
+    ): BaseTranslation
 
     @Suppress("InvalidBundleOrProperty")
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
@@ -33,7 +44,12 @@ abstract class AbstractTranslator : Translator {
         else -> message("error.unknown")
     }
 
-    override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = try {
+    protected open fun doTranslate(
+        `in`: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): BaseTranslation {
         if (srcLang !in supportedSourceLanguages) {
             throw UnsupportedLanguageException(srcLang, name)
         }
@@ -41,13 +57,24 @@ abstract class AbstractTranslator : Translator {
             throw UnsupportedLanguageException(targetLang, name)
         }
 
-        HttpRequests.request(getTranslateUrl(text, srcLang, targetLang))
-            .also { buildRequest(it) }
+        return HttpRequests.request(getTranslateUrl(`in`, srcLang, targetLang, forDocumentation))
+            .also { buildRequest(it, forDocumentation) }
             .connect {
-                parserResult(text, srcLang, targetLang, it.readString(null))
+                parserResult(`in`, srcLang, targetLang, it.readString(null), forDocumentation)
             }
+    }
+
+    override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = run {
+        doTranslate(text, srcLang, targetLang, false) as Translation
+    }
+
+    override fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation = run {
+        doTranslate(documentation, srcLang, targetLang, true)
+    }
+
+    private inline fun <T> run(action: () -> T): T = try {
+        action()
     } catch (throwable: Throwable) {
-        @Suppress("InvalidBundleOrProperty")
         val errorMessage = message("error.translate.failed", createErrorMessage(throwable))
         throw TranslateException(errorMessage, name, onError(throwable))
     }

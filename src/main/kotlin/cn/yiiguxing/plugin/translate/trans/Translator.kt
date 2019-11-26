@@ -22,6 +22,8 @@ interface Translator {
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation
 
+    fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation
+
     val defaultLangForLocale: Lang
         get() = when (Locale.getDefault().language) {
             Locale.CHINESE.language -> {

@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
@@ -34,8 +35,6 @@ object GoogleTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = settings.primaryLanguage
 
-    private val baseUrl: String get() = GOOGLE_TRANSLATE_URL_FORMAT.format(googleHost)
-
     private val notSupportedLanguages = arrayListOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
 
     override val supportedSourceLanguages: List<Lang> = Lang.sortedValues()
@@ -48,31 +47,62 @@ object GoogleTranslator : AbstractTranslator() {
             removeAll(notSupportedLanguages)
         }
 
-    override fun buildRequest(builder: RequestBuilder) {
+    override fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {
         builder.userAgent().googleReferer()
     }
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String = UrlBuilder(baseUrl)
-        .addQueryParameter("client", "gtx")
-        .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
-        .addQueryParameter("dj", "1")
-        .addQueryParameter("ie", "UTF-8")
-        .addQueryParameter("oe", "UTF-8")
-        .addQueryParameter("sl", srcLang.code)
-        .addQueryParameter("tl", targetLang.code)
-        .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
-        .addQueryParameter("tk", text.tk())
-        .addQueryParameter("q", text)
-        .build()
-        .also { logger.i("Translate url: $it") }
+    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang, forDocumentation: Boolean): String {
+        val baseUrl = if (forDocumentation) {
+            GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
+        } else {
+            GOOGLE_TRANSLATE_URL_FORMAT
+        }.format(googleHost)
 
-    override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
+        val urlBuilder = UrlBuilder(baseUrl)
+            .addQueryParameter("sl", srcLang.code)
+            .addQueryParameter("tl", targetLang.code)
+
+        if (forDocumentation) {
+            urlBuilder
+                .addQueryParameter("client", "te_lib")
+                .addQueryParameter("format", "html")
+        } else {
+            urlBuilder
+                .addQueryParameter("client", "gtx")
+                .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
+                .addQueryParameter("dj", "1")
+                .addQueryParameter("ie", "UTF-8")
+                .addQueryParameter("oe", "UTF-8")
+                .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
+        }
+
+        return urlBuilder
+            .addQueryParameter("tk", text.tk())
+            .addQueryParameter("q", text)
+            .build()
+            .also { logger.i("Translate url: $it") }
+    }
+
+    override fun parserResult(
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        result: String,
+        forDocumentation: Boolean
+    ): BaseTranslation {
         logger.i("Translate result: $result")
 
-        return gson.fromJson(result, GoogleTranslation::class.java).apply {
-            this.original = original
-            target = targetLang
-        }.toTranslation()
+        return if (forDocumentation) {
+            val results = gson.fromJson(result, Array<String>::class.java)
+            val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
+
+            BaseTranslation(sLang, targetLang, results[0])
+        } else {
+            gson.fromJson(result, GoogleTranslation::class.java).apply {
+                this.original = original
+                target = targetLang
+            }.toTranslation()
+        }
     }
 
     override fun onError(throwable: Throwable): Throwable {
