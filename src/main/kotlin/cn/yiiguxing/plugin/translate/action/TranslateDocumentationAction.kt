@@ -24,14 +24,15 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         return true
     }
 
-    override fun getTranslateContent(editor: Editor, element: PsiElement, dataContext: DataContext): String? {
-        val docCommentOwner = (if (element is PsiDocCommentBase) element.owner else element.parent) ?: return null
-        val provider = docCommentOwner.documentationProvider ?: return null
-        val doc = provider.generateDoc(docCommentOwner, element) ?: return null
+    override fun doTranslate(editor: Editor, element: PsiElement, dataContext: DataContext) {
+        val docCommentOwner = (if (element is PsiDocCommentBase) element.owner else element.parent) ?: return
+        val provider = docCommentOwner.documentationProvider ?: return
+        val doc = provider.generateDoc(docCommentOwner, element) ?: return
 
         val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(doc), it, 0) }
-        return htmlDocument.getText(0, htmlDocument.length).trim()
+        htmlDocument.getText(0, htmlDocument.length).trim()
     }
+
 
     companion object {
         private val HTML_KIT = HTMLEditorKit()
