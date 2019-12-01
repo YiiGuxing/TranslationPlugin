@@ -165,6 +165,9 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         private val PsiElement.documentationProvider: DocumentationProvider?
             get() = DocumentationManager.getProviderFromElement(this)
 
+        /**
+         * 修复HTML格式。[DocumentationComponent]识别不了`attr="val"`的属性表达形式，只识别`attr='val'`的表达形式，导致样式显示异常。
+         */
         private fun String.fixHtml(): String = replace(HTML_HEAD_REGEX, HTML_HEAD_REPLACEMENT)
 
         private val PsiElement.title: String?
