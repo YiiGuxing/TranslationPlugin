@@ -26,6 +26,8 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.presentation.java.SymbolPresentationUtil
 import com.intellij.ui.popup.AbstractPopup
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.io.StringReader
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
@@ -48,12 +50,13 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         val provider = docCommentOwner.documentationProvider ?: return
 
         executeOnPooledThread {
-            if (!element.isValid || !docCommentOwner.isValid) return@executeOnPooledThread
-
             val documentationComponentRef = Ref<DocumentationComponent>()
             try {
-                val doc = Application.runReadAction(Computable { provider.generateDoc(docCommentOwner, element) })
-                    ?: return@executeOnPooledThread
+                val doc = Application.runReadAction(Computable {
+                    if (element.isValid && docCommentOwner.isValid) {
+                        provider.generateDoc(docCommentOwner, element)
+                    } else null
+                }) ?: return@executeOnPooledThread
 
                 Application.invokeAndWait {
                     val documentationComponent = showPopup(project, docCommentOwner.title)
@@ -61,44 +64,55 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     Disposer.register(documentationComponent, Disposable { documentationComponentRef.set(null) })
                 }
 
-                val translatedDocumentation = getTranslatedDocumentation(doc)
+                val translatedDocumentation = getTranslatedDocumentation(doc).fixHtml()
                 invokeLater {
                     if (element.isValid) {
                         documentationComponentRef.get()?.setContent(translatedDocumentation, element)
                     }
                 }
             } catch (e: Throwable) {
-                documentationComponentRef.get()?.hint?.cancel()
-                Notifications.showErrorNotification(
-                    project,
-                    NOTIFICATION_DISPLAY_ID,
-                    "Documentation",
-                    "Failed to translate documentation.",
-                    e
-                )
+                invokeLater {
+                    documentationComponentRef.get()?.hint?.cancel()
+                    Notifications.showErrorNotification(
+                        project,
+                        NOTIFICATION_DISPLAY_ID,
+                        "Documentation",
+                        "Failed to translate documentation: ${e.message}",
+                        e
+                    )
+                }
             }
         }
     }
 
     private fun getTranslatedDocumentation(documentation: String): String {
         val document = Jsoup.parse(documentation)
-        val body = document.body()
-        val definition = body.selectFirst(".definition")?.apply { remove() }
-
         val translator = TranslateService.translator
         return if (translator is GoogleTranslator) {
-            translator.getTranslatedDocumentation(document.body().html())
+            translator.getTranslatedDocumentation(document)
         } else {
-            translator.getTranslatedDocumentation(document.body().html())
+            translator.getTranslatedDocumentation(document)
         }
     }
 
-    private fun Translator.getTranslatedDocumentation(documentation: String): String {
-        val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(documentation), it, 0) }
+    private fun Translator.getTranslatedDocumentation(document: Document): String {
+        val body = document.body()
+        val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
+
+        val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
         val formatted = htmlDocument.getText(0, htmlDocument.length).trim()
         val translation = translateDocumentation(formatted, Lang.AUTO, primaryLanguage).translation ?: ""
 
-        return translation.replace("\n", "<br/>")
+        val newBody = Element("body")
+        definition?.let { newBody.appendChild(it) }
+        Element("div")
+            .addClass("content")
+            .append(translation.replace("\n", "<br/>"))
+            .let { newBody.appendChild(it) }
+
+        body.replaceWith(newBody)
+
+        return document.outerHtml()
     }
 
     private fun showPopup(project: Project?, title: String?): DocumentationComponent {
@@ -130,7 +144,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 DocumentationManager.JAVADOC_LOCATION_AND_SIZE
             }
 
-        component.setContent(message("documentation.loading"), null)
+        component.setContent(message("documentation.loading"))
         return component
     }
 
@@ -140,10 +154,18 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         private const val NEW_JAVADOC_LOCATION_AND_SIZE = "javadoc.popup.new"
 
+        private const val CSS_QUERY_DEFINITION = ".definition"
+        private const val CSS_QUERY_PRE = "pre"
+
+        private val HTML_HEAD_REGEX = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
+        private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
+
         private val HTML_KIT = HTMLEditorKit()
 
         private val PsiElement.documentationProvider: DocumentationProvider?
             get() = DocumentationManager.getProviderFromElement(this)
+
+        private fun String.fixHtml(): String = replace(HTML_HEAD_REGEX, HTML_HEAD_REPLACEMENT)
 
         private val PsiElement.title: String?
             get() {

@@ -23,25 +23,23 @@ private val SET_TEXT_METHOD: Method? by lazy {
     }
 }
 
-private val SET_DATA_METHOD: Method? by lazy {
+private val SET_TEXT_METHOD2: Method? by lazy {
     try {
         DocumentationComponent::class.java.getMethod(
-            "setData",
+            "setText",
+            String::class.java,
             PsiElement::class.java,
-            String::class.java,
-            String::class.java,
-            String::class.java,
             DocumentationProvider::class.java
         )
     } catch (e: Throwable) {
-        LOGGER.w("Cant not get method: setData(PsiElement, String, String, String, DocumentationProvider)", e)
+        LOGGER.w("Cant not get method: setText(PsiElement, String, DocumentationProvider)", e)
         null
     }
 }
 
-fun DocumentationComponent.setContent(content: String, element: PsiElement?) {
+fun DocumentationComponent.setContent(content: String, element: PsiElement? = null) {
     when {
         SET_TEXT_METHOD != null -> SET_TEXT_METHOD?.invoke(this, content, element, true)
-        SET_DATA_METHOD != null -> SET_DATA_METHOD?.invoke(this, element, content, null, null, null)
+        SET_TEXT_METHOD2 != null -> SET_TEXT_METHOD2?.invoke(this, content, element, null)
     }
 }
