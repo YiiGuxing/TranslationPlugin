@@ -17,16 +17,26 @@ data class BaiduTranslation(
     val isSuccessful get() = code == 0 || code == 52000
 
     override fun toTranslation(): Translation {
-        check(isSuccessful) { "Can not convert to Translation: errorCode=$code" }
-        check(srcLanguage != null) { "Can not convert to Translation: srcLanguage=null" }
-        check(targetLanguage != null) { "Can not convert to Translation: targetLanguage=null" }
-        check(trans.isNotEmpty()) { "Can not convert to Translation: trans=[]" }
+        check(isSuccessful) { "Cannot convert to Translation: errorCode=$code" }
+        check(srcLanguage != null) { "Cannot convert to Translation: srcLanguage=null" }
+        check(targetLanguage != null) { "Cannot convert to Translation: targetLanguage=null" }
+        check(trans.isNotEmpty()) { "Cannot convert to Translation: trans=[]" }
 
         val srcLang = Lang.valueOfBaiduCode(srcLanguage!!)
         val transLang = Lang.valueOfBaiduCode(targetLanguage!!)
-        val translation = trans.first()
+        val original = StringBuilder()
+        val translation = StringBuilder()
 
-        return Translation(translation.src, translation.dst, srcLang, transLang, listOf(srcLang))
+        trans.forEachIndexed { index, (src, dst) ->
+            if (index > 0) {
+                original.append('\n')
+                translation.append('\n')
+            }
+            original.append(src)
+            translation.append(dst)
+        }
+
+        return Translation(original.toString(), translation.toString(), srcLang, transLang, listOf(srcLang))
     }
 }
 
