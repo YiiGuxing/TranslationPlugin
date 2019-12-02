@@ -68,7 +68,7 @@ object YoudaoTranslator : AbstractTranslator() {
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_SOURCE_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
+    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang, forDocumentation: Boolean): String {
         val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
@@ -91,7 +91,13 @@ object YoudaoTranslator : AbstractTranslator() {
             .also { logger.i("Translate url: $it") }
     }
 
-    override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
+    override fun parserResult(
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        result: String,
+        forDocumentation: Boolean
+    ): BaseTranslation {
         logger.i("Translate result: $result")
 
         return Gson().fromJson(result, YoudaoTranslation::class.java).apply {

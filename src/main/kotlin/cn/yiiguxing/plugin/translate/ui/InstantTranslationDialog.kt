@@ -133,7 +133,7 @@ class InstantTranslationDialog(private val project: Project?) :
         translationTTSButton.isEnabled = false
 
         inputTTSButton.dataSource { lastTranslation?.run { original to srcLang } }
-        translationTTSButton.dataSource { lastTranslation?.run { trans?.let { it to targetLang } } }
+        translationTTSButton.dataSource { lastTranslation?.run { translation?.let { it to targetLang } } }
 
         clearButton.apply {
             isEnabled = false
@@ -171,7 +171,7 @@ class InstantTranslationDialog(private val project: Project?) :
                     targetLangComboBox.selected = srcLang.takeIf { target.contains(it) } ?: presenter.primaryLanguage
                 }
 
-                lastTranslation?.trans?.let { inputTextArea.text = it }
+                lastTranslation?.translation?.let { inputTextArea.text = it }
             }
         }
     }
@@ -208,7 +208,7 @@ class InstantTranslationDialog(private val project: Project?) :
         swapButton.isEnabled = false
         inputTTSButton.isEnabled = false
         translationTTSButton.isEnabled = false
-        translationTextArea.text = "${lastTranslation?.trans ?: ""}..."
+        translationTextArea.text = "${lastTranslation?.translation ?: ""}..."
     }
 
     override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
@@ -221,7 +221,7 @@ class InstantTranslationDialog(private val project: Project?) :
         swapButton.isEnabled = true
         inputTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
         translationTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.targetLang)
-        translationTextArea.text = translation.trans
+        translationTextArea.text = translation.translation
     }
 
     override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {

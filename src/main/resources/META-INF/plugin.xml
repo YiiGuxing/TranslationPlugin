@@ -57,6 +57,14 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="kotlin-doc.xml">org.jetbrains.kotlin</depends>
+
+    <extensionPoints>
+        <extensionPoint name="docElementProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
+            <with attribute="implementationClass"
+                  implements="cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider"/>
+        </extensionPoint>
+    </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
@@ -130,6 +138,12 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
+        <action id="$TranslateDocumentationAction"
+                icon="AllIcons.Toolwindows.Documentation"
+                class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"
+                text="Translate Documentation" description="Translate documentation">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$TranslateAndReplaceAction"/>
+        </action>
         <action id="$InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
                 text="Translate(Inclusive)"/>
@@ -159,6 +173,7 @@
             <separator/>
             <reference ref="$EditorTranslateAction"/>
             <reference ref="$TranslateAndReplaceAction"/>
+            <reference ref="$TranslateDocumentationAction"/>
             <separator/>
 
             <add-to-group group-id="BasicEditorPopupMenu" anchor="first"/>
