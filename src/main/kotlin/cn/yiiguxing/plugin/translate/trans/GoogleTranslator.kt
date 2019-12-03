@@ -35,17 +35,11 @@ object GoogleTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = settings.primaryLanguage
 
-    private val notSupportedLanguages = arrayListOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
+    private val notSupportedLanguages = listOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
 
-    override val supportedSourceLanguages: List<Lang> = Lang.sortedValues()
-        .toMutableList()
-        .apply { removeAll(notSupportedLanguages) }
-    override val supportedTargetLanguages: List<Lang> = Lang.sortedValues()
-        .toMutableList()
-        .apply {
-            remove(Lang.AUTO)
-            removeAll(notSupportedLanguages)
-        }
+    override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - notSupportedLanguages).toList()
+    override val supportedTargetLanguages: List<Lang> =
+        (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
 
     override fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {
         builder.userAgent().googleReferer()
