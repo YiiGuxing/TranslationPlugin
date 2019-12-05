@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.plugin.translate.ui.BalloonPositionTracker
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.createCaretRangeMarker
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.Disposable
@@ -16,7 +17,6 @@ import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.TextRange
 import com.intellij.ui.JBColor
-import java.awt.Color
 import java.util.*
 
 /**
@@ -34,17 +34,21 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
         editor.document.getText(selectionRange).processBeforeTranslate()?.let { text ->
             val highlightManager = HighlightManager.getInstance(project)
             val highlighters = ArrayList<RangeHighlighter>()
-            HighlightManager.getInstance(project).addRangeHighlight(
-                editor, selectionRange.startOffset, selectionRange.endOffset, HIGHLIGHT_ATTRIBUTES, true, highlighters
+            val startLine = editor.offsetToVisualPosition(selectionRange.startOffset).line
+            val endLine = editor.offsetToVisualPosition(selectionRange.endOffset).line
+            val highlightAttributes = if (startLine == endLine) HIGHLIGHT_ATTRIBUTES else MULTILINE_HIGHLIGHT_ATTRIBUTES
+
+            highlightManager.addRangeHighlight(
+                editor, selectionRange.startOffset, selectionRange.endOffset, highlightAttributes, true, highlighters
             )
 
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val tracker = BalloonPositionTracker(editor, caretRangeMarker)
             val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
 
-            highlighters.takeIf { it.isNotEmpty() }?.let {
+            if (highlighters.isNotEmpty()) {
                 Disposer.register(balloon, Disposable {
-                    for (highlighter in it) {
+                    for (highlighter in highlighters) {
                         highlightManager.removeSegmentHighlighter(editor, highlighter)
                     }
                 })
@@ -53,17 +57,16 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
     }
 
     private companion object {
+        val EFFECT_COLOR = JBColor(0xFFEE6000.toInt(), 0xFFCC7832.toInt())
+
         val HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
-            backgroundColor = JBColor(Color(0xFFE4E4FF.toInt()), Color(0xFF344134.toInt()))
             effectType = EffectType.LINE_UNDERSCORE
-            effectColor = JBColor(0xFFEE6000.toInt(), 0xFFCC7832.toInt())
+            effectColor = EFFECT_COLOR
         }
 
-        fun Editor.createCaretRangeMarker(selectionRange: TextRange) = document
-            .createRangeMarker(selectionRange)
-            .apply {
-                isGreedyToLeft = true
-                isGreedyToRight = true
-            }
+        val MULTILINE_HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
+            effectType = EffectType.BOXED
+            effectColor = EFFECT_COLOR
+        }
     }
 }

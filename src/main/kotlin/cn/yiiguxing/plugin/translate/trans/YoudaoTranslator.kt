@@ -20,33 +20,16 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private const val TRANSLATOR_NAME = "Youdao Translate"
 
-    private val SUPPORTED_SOURCE_LANGUAGES: List<Lang> = listOf(
-        Lang.AUTO,
-        Lang.CHINESE,
-        Lang.ENGLISH,
-        Lang.ARABIC,
-        Lang.FRENCH,
-        Lang.GERMAN,
-        Lang.INDONESIAN,
-        Lang.ITALIAN,
-        Lang.JAPANESE,
-        Lang.KOREAN,
-        Lang.PORTUGUESE,
-        Lang.RUSSIAN,
-        Lang.SPANISH,
-        Lang.VIETNAMESE
-    )
-
-    private val SUPPORTED_TARGET_LANGUAGES: List<Lang> = listOf(
-        Lang.AUTO,
-        Lang.CHINESE,
-        Lang.ENGLISH,
-        Lang.GERMAN,
-        Lang.INDONESIAN,
-        Lang.ITALIAN,
-        Lang.PORTUGUESE,
-        Lang.RUSSIAN
-    )
+    private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedValues() - listOf(
+        Lang.CHINESE_TRADITIONAL,
+        Lang.CHINESE_CLASSICAL,
+        Lang.AFRIKAANS,
+        Lang.KYRGYZ,
+        Lang.CATALAN,
+        Lang.HMONG,
+        Lang.SERBIAN,
+        Lang.SLOVENIAN
+    )).toList()
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
 
@@ -65,10 +48,10 @@ object YoudaoTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = Settings.youdaoTranslateSettings.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_SOURCE_LANGUAGES
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
+    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang): String {
+    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang, forDocumentation: Boolean): String {
         val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
@@ -80,8 +63,8 @@ object YoudaoTranslator : AbstractTranslator() {
 
         return UrlBuilder(YOUDAO_TRANSLATE_URL)
             .addQueryParameter("appKey", appId)
-            .addQueryParameter("from", srcLang.baiduCode)
-            .addQueryParameter("to", targetLang.baiduCode)
+            .addQueryParameter("from", srcLang.youdaoCode)
+            .addQueryParameter("to", targetLang.youdaoCode)
             .addQueryParameter("salt", salt)
             .addQueryParameter("sign", sign)
             .addQueryParameter("signType", "v3")
@@ -91,7 +74,13 @@ object YoudaoTranslator : AbstractTranslator() {
             .also { logger.i("Translate url: $it") }
     }
 
-    override fun parserResult(original: String, srcLang: Lang, targetLang: Lang, result: String): Translation {
+    override fun parserResult(
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        result: String,
+        forDocumentation: Boolean
+    ): BaseTranslation {
         logger.i("Translate result: $result")
 
         return Gson().fromJson(result, YoudaoTranslation::class.java).apply {

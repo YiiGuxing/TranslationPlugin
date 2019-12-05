@@ -17,6 +17,7 @@ const val HTML_DESC_COPY_TO_CLIPBOARD = "#COPY_TO_CLIPBOARD"
 const val GOOGLE_TRANSLATE_HOST = "translate.google.com"
 const val GOOGLE_TRANSLATE_HOST_CN = "translate.google.cn"
 const val GOOGLE_TRANSLATE_URL_FORMAT = "https://%s/translate_a/single"
+const val GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT = "https://%s/translate_a/t"
 const val GOOGLE_TTS_FORMAT = "https://%s/translate_tts"
 
 const val YOUDAO_TRANSLATE_URL = "https://openapi.youdao.com/api"

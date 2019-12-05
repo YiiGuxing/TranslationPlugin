@@ -82,7 +82,7 @@ abstract class TranslationPane<T : JComponent>(
     }
     private val transTTSLink = createTTSButton {
         translation?.run {
-            trans?.let { it to targetLang }
+            translation?.let { it to targetLang }
         }
     }
 
@@ -388,10 +388,10 @@ abstract class TranslationPane<T : JComponent>(
 
         originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
         transTTSLink.isEnabled =
-            !translation.trans.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
+            !translation.translation.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
 
         updateOriginalViewer(translation)
-        updateViewer(translationViewer, translationComponent, translation.trans)
+        updateViewer(translationViewer, translationComponent, translation.translation)
 
         originalTransliterationLabel.apply {
             val srcTransliteration = translation.srcTransliteration
@@ -630,8 +630,8 @@ abstract class TranslationPane<T : JComponent>(
             val explainsBuilder = StringBuilder()
             val dictText = dictDocument?.text ?: ""
 
-            if (!trans.isNullOrBlank()) {
-                explainsBuilder.append(trans)
+            if (!translation.isNullOrBlank()) {
+                explainsBuilder.append(translation)
                 if (dictText.isNotEmpty()) {
                     explainsBuilder.append("\n\n")
                 }

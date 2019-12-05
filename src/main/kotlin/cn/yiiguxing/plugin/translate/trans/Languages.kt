@@ -42,7 +42,7 @@ enum class Lang(
     /** 文言文 */
     CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL", baiduCode = "wyw"),
     /** 粤语 */
-    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", baiduCode = "yue"),
+    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", "yue", baiduCode = "yue"),
     /** 阿尔巴尼亚语 */
     ALBANIAN("albanian", "sq"),
     /** 阿拉伯语 */
@@ -214,7 +214,7 @@ enum class Lang(
     /** 西班牙语 */
     SPANISH("spanish", "es", baiduCode = "spa"),
     /** 希伯来语 */
-    HEBREW("hebrew", "iw"),
+    HEBREW("hebrew", "iw", "he"),
     /** 希腊语 */
     GREEK("greek", "el"),
     /** 夏威夷语 */

@@ -1,0 +1,7 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
+        <docElementProvider
+                language="kotlin"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.KotlinDocumentationElementProvider"/>
+    </extensions>
+</idea-plugin>

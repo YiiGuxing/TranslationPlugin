@@ -248,11 +248,11 @@ class UpdateManager : StartupActivity, DumbAware {
                 """
                     <h1>What's New in $version</h1>
                     <div class="hr"></div>
-                    <div>欢迎阅读v${version}的发行说明，此版本中有许多更新，希望您会喜欢，其中一些主要亮点包括：</div>
+                    <div>欢迎使用<b>Translation v${version}</b>，此版本中包含了以下主要更新：</div>
                     <ul>
                     ${keyHighlights.joinToString("\n") { "<li><b>${it.first}</b> - ${it.second}</li>" }}
                     </ul>
-                    <div class="reference">如果您想在线阅读这些发行说明，请访问<a href="$versionUrl">这里</a>。</div>
+                    <div class="reference">如果您想在线阅读此发行说明，请访问<a href="$versionUrl">这里</a>。</div>
                     <div class="reference">如果您想稍后再次打开此面板，请从主菜单中选择 <b>Help | What's New in Translation</b>.</div>
                     ${getUpdatedContent(version.replace('.', '_'))}
                 """.trimIndent()
@@ -263,9 +263,9 @@ class UpdateManager : StartupActivity, DumbAware {
 
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
-                "有道词典视图" to "全新的有道词典视图",
-                "单词本单词标签" to "为单词本中的单词分组和归类",
-                "单词本导入导出" to "实现单词本共享"
+                "文档注释翻译" to "支持一键翻译文档注释",
+                "有道翻译支持语言" to "支持超多新语言",
+                "字体预览" to "展示真实的文本渲染情况"
             )
         }
 
@@ -274,24 +274,31 @@ class UpdateManager : StartupActivity, DumbAware {
 
             return """
                 <h2>翻译</h2>
-                <h3>有道词典视图</h3>
-                <p>全新的有道词典视图，解析并结构化有道翻译的词典内容，使得有道翻译的词典内容与谷歌翻译的词典内容一样清晰易辩：</p>
-                <img src="${imageResource("translation.gif")}" alt="全新的有道词典视图">
-                
-                <h2>单词本</h2>
-                <h3>单词标签</h3>
-                <p>现在，您可以为每一个单词指定一个或者一组标签，对其进行分组与归类：</p>
-                <img src="${imageResource("group.gif")}" alt="单词分组">
-                <p>编辑单词标签（使用逗号分隔多个标签）：</p>
-                <img src="${imageResource("tags.gif")}" alt="编辑单词标签">
-                <h3>导入导出</h3>
-                <p>单词本现在可以导入或导出，实现单词本共享。单词本可以导出为以下格式：</p>
+                <h3>文档注释翻译</h3>
+                <p>现在，您可以对代码中的文档注释进行一键翻译，不再需要手动选择文本后再进行翻译了，也无需再担心文档注释中的一些元素（如文档特殊标记符号、HTML元素等）的干扰。</p>
+                <p><b>注：</b>使用此功能时，建议使用谷歌翻译并将IDE升级至最新版，以获得最佳的翻译效果。</p>
+                <p>待翻译文档：</p>
+                <img src="${imageResource("doc_code.png")}" alt="待翻译文档">
+                <p>Google翻译效果：</p>
+                <img src="${imageResource("doc_google.gif")}" alt="Google翻译效果">
+                <p>有道翻译效果：</p>
+                <img src="${imageResource("doc_youdao.png")}" alt="有道翻译效果">
+                <p>百度翻译效果：</p>
+                <img src="${imageResource("doc_baidu.png")}" alt="百度翻译效果">
+            
+                <h3>有道翻译支持语言</h3>
+                <p>我们更新了有道翻译的支持语言列表，新的支持语言列表包含了超过100种语言：</p>
+                <img src="${imageResource("languages.gif")}" alt="有道翻译支持语言">
+            
+                <h2>选项</h2>
+                <h3>字体预览</h3>
+                <p>我们优化发选项面板中的字体预览，以展示真实的文本渲染情况。在此之前，由于受到IDE主字体的影响，预览文本在选定的字体下本应该不能正确渲染，却得到了渲染，从而导致预览与插件UI上所展示的不一致。</p>
+                <img src="${imageResource("font.gif")}" alt="字体预览">
+            
+                <h2>重要修复</h2>
                 <ul>
-                    <li><b>JSON</b><i>（可用于单词本导入）</i></li>
-                    <li><b>XML</b><i>（可用于单词本导入）</i></li>
-                    <li><b>有道XML</b><i>（用于导入到有道词典，但不可用于单词本导入）</i></li>
+                    <li><a href="https://github.com/YiiGuxing/TranslationPlugin/issues/402" target="_blank">#402</a>：使用百度翻译引擎翻译带有换行内容时显示的翻译内容不全，仅显示第一行的翻译内容。</li>
                 </ul>
-                <img src="${imageResource("import_export.png")}" alt="导入导出">
             """.trimIndent()
         }
     }

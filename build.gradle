@@ -9,8 +9,8 @@ buildscript {
 
 plugins {
     // https://github.com/JetBrains/gradle-intellij-plugin
-    id "org.jetbrains.intellij" version "0.4.10"
-    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
+    id "org.jetbrains.intellij" version "0.4.14"
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
 
 repositories {
@@ -26,6 +26,7 @@ intellij {
     pluginName = 'TranslationPlugin'
     downloadSources = Boolean.valueOf(sources)
     sandboxDirectory 'sandbox'
+    plugins "org.jetbrains.kotlin:1.2.40-release-IJ2017.1-1"
 }
 
 patchPluginXml {
@@ -36,6 +37,7 @@ patchPluginXml {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
+    compile 'org.jsoup:jsoup:1.12.1'
     compile 'org.apache.commons:commons-dbcp2:2.6.0'
     compile 'commons-dbutils:commons-dbutils:1.7'
     compile('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
@@ -46,10 +48,19 @@ dependencies {
 sourceCompatibility = javaVersion
 targetCompatibility = javaTargetVersion
 
-[compileKotlin, compileTestKotlin]*.kotlinOptions {
-    languageVersion = kotlinLanguageVersion
-    apiVersion = kotlinTargetVersion
-    jvmTarget = javaTargetVersion
+compileKotlin {
+    kotlinOptions {
+        languageVersion = kotlinLanguageVersion
+        apiVersion = kotlinTargetVersion
+        jvmTarget = javaTargetVersion
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        languageVersion = kotlinLanguageVersion
+        apiVersion = kotlinTargetVersion
+        jvmTarget = javaTargetVersion
+    }
 }
 
 tasks.withType(JavaCompile) {
@@ -59,15 +70,5 @@ tasks.withType(JavaCompile) {
 tasks.withType(ProcessResources) {
     filesMatching('**/*.properties') {
         filter EscapeUnicode
-    }
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }

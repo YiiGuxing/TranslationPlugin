@@ -599,7 +599,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
                 if (src != null && target != null) {
                     presenter.getCache(value, src, target)?.let {
                         append("  -  <i><small>")
-                        append(it.trans)
+                        append(it.translation)
                         append("</small></i>")
                     }
                 }

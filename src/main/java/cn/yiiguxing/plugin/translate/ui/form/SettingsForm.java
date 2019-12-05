@@ -43,7 +43,8 @@ public class SettingsForm {
     private JBCheckBox mFontCheckBox;
     private FontComboBox mPrimaryFontComboBox;
     private FontComboBox mPhoneticFontComboBox;
-    private JTextPane mFontPreview;
+    private JLabel mPrimaryFontPreview;
+    private JLabel mPhoneticFontPreview;
     private JLabel mPrimaryFontLabel;
     private JLabel mPhoneticFontLabel;
     private TranslatorSettingsContainer mTransPanelContainer;
@@ -192,8 +193,13 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JTextPane getFontPreview() {
-        return mFontPreview;
+    public final JLabel getPrimaryFontPreview() {
+        return mPrimaryFontPreview;
+    }
+
+    @NotNull
+    public final JLabel getPhoneticFontPreview() {
+        return mPhoneticFontPreview;
     }
 
     @NotNull
