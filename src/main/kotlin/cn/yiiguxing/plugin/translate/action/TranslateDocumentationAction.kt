@@ -15,7 +15,6 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.DimensionService
@@ -30,6 +29,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.io.StringReader
+import java.lang.ref.WeakReference
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 
@@ -46,6 +46,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
     }
 
     override fun doTranslate(editor: Editor, element: PsiElement, dataContext: DataContext) {
+        val editorRef = WeakReference(editor)
         val project = editor.project
         val docCommentOwner = (if (element is PsiDocCommentBase) element.owner else element.parent) ?: return
         val provider = docCommentOwner.documentationProvider ?: return
@@ -60,15 +61,25 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 }) ?: return@executeOnPooledThread
 
                 Application.invokeAndWait {
-                    val documentationComponent = showPopup(project, docCommentOwner.title)
+                    val e = editorRef.get()?.takeUnless { it.isDisposed } ?: return@invokeAndWait
+                    val documentationComponent = showPopup(e, docCommentOwner.title)
                     documentationComponentRef.set(documentationComponent)
                     Disposer.register(documentationComponent, Disposable { documentationComponentRef.set(null) })
                 }
 
+                if (documentationComponentRef.isNull) {
+                    return@executeOnPooledThread
+                }
+
                 val translatedDocumentation = getTranslatedDocumentation(doc)
                 invokeLater {
-                    if (element.isValid) {
-                        documentationComponentRef.get()?.setContent(translatedDocumentation, element)
+                    val documentationComponent = documentationComponentRef.get() ?: return@invokeLater
+                    val e = editorRef.get()?.takeUnless { it.isDisposed }
+                    if (element.isValid && e != null) {
+                        documentationComponent.setContent(translatedDocumentation, element)
+                        (documentationComponent.hint as? AbstractPopup)?.showInEditor(e)
+                    } else {
+                        documentationComponent.hint?.cancel()
                     }
                 }
             } catch (e: Throwable) {
@@ -152,10 +163,11 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         return document.outerHtml()
     }
 
-    private fun showPopup(project: Project?, title: String?): DocumentationComponent {
+    private fun showPopup(editor: Editor, title: String?): DocumentationComponent {
+        val project = editor.project
         val component = DocumentationComponent(DocumentationManager.getInstance(project))
-        val hint = JBPopupFactory
-            .getInstance()
+        val popupFactory = JBPopupFactory.getInstance()
+        val hint = popupFactory
             .createComponentPopupBuilder(component, component)
             .setProject(project)
             .setTitle(title)
@@ -182,6 +194,8 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
 
         component.setContent(message("documentation.loading"))
+        hint.showInEditor(editor)
+
         return component
     }
 
@@ -228,5 +242,16 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 val title = SymbolPresentationUtil.getSymbolPresentableText(this)
                 return CodeInsightBundle.message("javadoc.info.title", title ?: text)
             }
+
+        private fun AbstractPopup.showInEditor(editor: Editor) {
+            if (isDisposed) {
+                return
+            }
+            if (isVisible) {
+                setLocation(JBPopupFactory.getInstance().guessBestPopupLocation(editor))
+            } else {
+                showInBestPositionFor(editor)
+            }
+        }
     }
 }
