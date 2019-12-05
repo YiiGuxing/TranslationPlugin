@@ -43,10 +43,10 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>修复了导致在Android Studio上崩溃的一个致命错误</li>
-        <li>修复了忽略内容在一些特定的情况下会失效的问题</li>
-        <li>修复了重复显示每日单词对话框会导致界面异常的问题</li>
-        <li>一些功能增强与优化</li>
+        <li>新增了文档注释翻译功能</li>
+        <li>更新了有道翻译支持语言列表，支持超过100种语言</li>
+        <li>优化了字体预览</li>
+        <li>修复了使用百度翻译引擎翻译带有换行内容时显示翻译内容不全的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
