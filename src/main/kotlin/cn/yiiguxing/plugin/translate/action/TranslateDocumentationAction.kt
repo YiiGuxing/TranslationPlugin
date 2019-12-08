@@ -15,6 +15,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.DimensionService
@@ -25,9 +26,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.presentation.java.SymbolPresentationUtil
 import com.intellij.ui.popup.AbstractPopup
+import com.intellij.util.ui.JBDimension
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.awt.Dimension
 import java.io.StringReader
 import java.lang.ref.WeakReference
 import javax.swing.text.html.HTMLDocument
@@ -77,7 +80,10 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     val e = editorRef.get()?.takeUnless { it.isDisposed }
                     if (element.isValid && e != null) {
                         documentationComponent.setContent(translatedDocumentation, element)
-                        (documentationComponent.hint as? AbstractPopup)?.showInEditor(e)
+                        (documentationComponent.hint as? AbstractPopup)?.apply {
+                            showInEditor(e)
+                            updateSize(project)
+                        }
                     } else {
                         documentationComponent.hint?.cancel()
                     }
@@ -176,25 +182,28 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             .setFocusable(true)
             .setCancelOnClickOutside(true)
             .setModalContext(false)
+            .setDimensionServiceKey(project, DOCUMENTATION_POPUP_SIZE, false)
             .setKeyEventHandler { e ->
                 if (AbstractPopup.isCloseRequest(e)) {
                     component.hint?.cancel()?.let { true } ?: false
                 } else false
+            }
+            .setCancelCallback {
+                component.hint?.size?.let { size ->
+                    DimensionService.getInstance()
+                        .setSize(DOCUMENTATION_POPUP_SIZE, size.takeIf { it.height > MIN_HEIGHT }, project)
+                }
+                true
             }
             .createPopup() as AbstractPopup
 
         Disposer.register(hint, component)
 
         component.hint = hint
-        hint.dimensionServiceKey =
-            if (DimensionService.getInstance().getSize(NEW_JAVADOC_LOCATION_AND_SIZE, project) != null) {
-                NEW_JAVADOC_LOCATION_AND_SIZE
-            } else {
-                DocumentationManager.JAVADOC_LOCATION_AND_SIZE
-            }
 
         component.setContent(message("documentation.loading"))
         hint.showInEditor(editor)
+        hint.updateSize(project, false)
 
         return component
     }
@@ -203,7 +212,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
     companion object {
         private const val NOTIFICATION_DISPLAY_ID = "Document Translation"
 
-        private const val NEW_JAVADOC_LOCATION_AND_SIZE = "javadoc.popup.new"
+        private const val DOCUMENTATION_POPUP_SIZE = "documentation.popup.size"
 
         private const val CSS_QUERY_DEFINITION = ".definition"
         private const val CSS_QUERY_CONTENT = ".content"
@@ -216,6 +225,9 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         private val HTML_HEAD_REGEX = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
         private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
+
+        private const val MIN_HEIGHT = 50
+        private val MAX_DEFAULT = JBDimension(500, 350)
 
         private val HTML_KIT = HTMLEditorKit()
 
@@ -252,6 +264,29 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             } else {
                 showInBestPositionFor(editor)
             }
+        }
+
+        private fun AbstractPopup.updateSize(project: Project?, restore: Boolean = true) {
+            val restoreSize = if (restore) {
+                DimensionService.getInstance().getSize(DOCUMENTATION_POPUP_SIZE, project)
+            } else null
+
+            val sizeToSet = if (restoreSize == null) {
+                val preferredSize = component.preferredSize
+                val width = minOf(preferredSize.width, MAX_DEFAULT.width)
+                val height = minOf(preferredSize.height, MAX_DEFAULT.height)
+                Dimension(width, height)
+            } else restoreSize
+
+            if (restore) {
+                getUserData(Dimension::class.java)?.let {
+                    sizeToSet.width = maxOf(sizeToSet.width, it.width)
+                    sizeToSet.height = maxOf(sizeToSet.height, it.height)
+                }
+            }
+
+            size = sizeToSet
+            setUserData(if (!restore) listOf(sizeToSet.clone()) else null)
         }
     }
 }
