@@ -1,19 +1,26 @@
 package cn.yiiguxing.plugin.translate.provider
 
+import cn.yiiguxing.plugin.translate.util.elementType
+import cn.yiiguxing.plugin.translate.util.findParent
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.jetbrains.python.PyTokenTypes
+import com.jetbrains.python.psi.PyClass
+import com.jetbrains.python.psi.PyFile
+import com.jetbrains.python.psi.PyFunction
 
 class PythonDocumentationElementProvider : DocumentationElementProvider {
     override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
-        val offsetElement = psiFile.findElementAt(offset)
-        // TODO check DocStringElementType
-
-        return null
+        return psiFile.findElementAt(offset)
+            ?.takeIf { it.elementType == PyTokenTypes.DOCSTRING }
     }
 
     override fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
-        // TODO get owner: Function, Class or File.
-        return super.getDocumentationOwner(documentationElement)
+        return documentationElement.findParent(OWNER_CONDITION)
+    }
+
+    companion object {
+        private val OWNER_CONDITION: (PsiElement) -> Boolean = { it is PyFile || it is PyClass || it is PyFunction }
     }
 
 }
