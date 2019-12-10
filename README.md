@@ -176,12 +176,9 @@ FAQ
 
 更新日志
 --------
-## [v2.6.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.0) (2019-12-05)
+## [v2.6.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.1) (2019-12-10)
 
-- 新增了文档注释翻译功能
-- 更新了有道翻译支持语言列表，支持超过100种语言
-- 优化了字体预览
-- 修复了使用百度翻译引擎翻译带有换行内容时显示翻译内容不全的问题
+- 修复了文档注释翻译窗口大小异常的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 

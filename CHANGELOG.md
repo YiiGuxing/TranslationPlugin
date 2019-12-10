@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.6.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.1) (2019-12-10)
+
+- 修复了文档注释翻译窗口大小异常的问题
+
 ## [v2.6.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.0) (2019-12-05)
 
 - 新增了文档注释翻译功能
