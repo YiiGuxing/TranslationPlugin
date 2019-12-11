@@ -143,12 +143,12 @@ class UpdateManager : StartupActivity, DumbAware {
 
         private class OpenInBrowserAction(private val versionUrl: String) :
             DumbAwareAction("在浏览器中打开", null, AllIcons.General.Web) {
-            override fun actionPerformed(e: AnActionEvent?) = BrowserUtil.browse(versionUrl)
+            override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
         }
 
         private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
             DumbAwareAction("关闭", null, AllIcons.Actions.Close) {
-            override fun actionPerformed(e: AnActionEvent?) = toolWindow.dispose(project)
+            override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
         }
 
         private fun showUpdateToolWindow(project: Project, versionParts: IntArray) {

@@ -711,7 +711,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         private const val RESIZE_FLAG_BOTTOM = 0b100
 
         private val CONTENT_BACKGROUND
-            get() = JBColor(Color.WHITE, UI.getColor("Editor.background", Color(0x2B2B2B)))
+            get() = JBColor(Color.WHITE, UI.getColor("Editor.background", Color(0x2B2B2B))!!)
         private val DEFAULT_BORDER_COLOR = JBColor(0x808080, 0x232323)
         private val BORDER get() = LineBorder(UI.getBordersColor(DEFAULT_BORDER_COLOR))
 
