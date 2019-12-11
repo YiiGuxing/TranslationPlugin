@@ -57,6 +57,7 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="oc-doc.xml">com.intellij.modules.cidr.lang</depends>
 
     <extensionPoints>
         <extensionPoint name="docElementProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">

@@ -26,6 +26,7 @@ interface DocumentationElementProvider {
     private object DefaultDocumentationElementProvider : DocumentationElementProvider {
 
         override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
+            val findElementAt = psiFile.findElementAt(offset)
             return psiFile.findElementOfTypeAt(offset, PsiDocCommentBase::class.java)
         }
 

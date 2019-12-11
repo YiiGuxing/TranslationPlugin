@@ -1,0 +1,7 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
+        <docElementProvider
+                language="ObjectiveC"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.ObjectiveCDocumentationElementProvider"/>
+    </extensions>
+</idea-plugin>
