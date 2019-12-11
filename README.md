@@ -24,6 +24,7 @@ TranslationPlugin
 - 语音朗读
 - 自动选词
 - 自动单词拆分
+- 文档注释翻译
 - 单词本
 
 支持的 **Jetbrains IDE** 产品:
