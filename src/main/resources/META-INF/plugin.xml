@@ -1,22 +1,21 @@
 <idea-plugin url="http://yiiguxing.github.io/TranslationPlugin">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>2.0</version>
+    <version>2.x</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
-      <h1>Translation</h1>
+      <p><b>A translation plugin.</b></p>
       <br/>
       <p>
       <b>
       <a href="http://yiiguxing.github.io/TranslationPlugin">Website</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a> |
-      <a href="http://yiiguxing.github.io/TranslationPlugin/start.html">Doc</a>
+      <a href="http://yiiguxing.github.io/TranslationPlugin/start.html">Doc</a> |
+      <a href="http://yiiguxing.github.io/TranslationPlugin/support.html">Donate</a>
       </b>
       </p>
-      <br/>
-      <p><b>A translation plugin.</b></p>
       <br/>
       <p><b>Features:</b>
       <ul>
@@ -28,6 +27,7 @@
           </ul>
         </li>
         <li>Multiple languages inter-translation.</li>
+        <li>Document comment translation.</li>
         <li>Text to speech.</li>
         <li>Automatic word selection.</li>
         <li>Automatic word division.</li>
