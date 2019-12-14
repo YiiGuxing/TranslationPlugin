@@ -50,7 +50,7 @@ class DartDocumentationElementProvider : DocumentationElementProvider {
          */
         private val PsiComment.owner: PsiElement?
             get() {
-                // 文档注释类型中，多行注释是最高的优先级。
+                // 文档注释类型中，多行注释有最高的优先级。
                 // 如果当前注释不是多行注释(DartDocComment)，
                 // 则向上寻找，如果上方有多行注释，则说明当前的注释是无效的。
                 if (this !is DartDocComment && !checkPreviousComments()) {
@@ -58,7 +58,7 @@ class DartDocumentationElementProvider : DocumentationElementProvider {
                 }
 
                 val sibling = getNextSiblingSkippingCondition(SKIPPING_CONDITION)
-                    ?.takeUnless { it is DartDocComment }
+                    ?.takeUnless { it is DartDocComment } // 最下方的多行文档注释有最高的优先级，如遇文档注释，则当前的注释是无效的。
                     ?: return null
                 return when (sibling.elementType) {
                     DartTokenTypes.CLASS_DEFINITION,
