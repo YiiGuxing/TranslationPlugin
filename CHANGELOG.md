@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.6.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.2) (2019-12-16)
+
+- 修复了导致插件无法被初始化的致命错误
+
 ## [v2.6.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.1) (2019-12-10)
 
 - 修复了文档注释翻译窗口大小异常的问题

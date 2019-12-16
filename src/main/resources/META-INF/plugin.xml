@@ -43,7 +43,7 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>修复了文档注释翻译窗口大小异常的问题</li>
+        <li>修复了导致插件无法被初始化的致命错误</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
