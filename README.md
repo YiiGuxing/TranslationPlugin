@@ -21,6 +21,7 @@ TranslationPlugin
   - 有道翻译
   - 百度翻译
 - 多语言互译
+- 文档注释翻译
 - 语音朗读
 - 自动选词
 - 自动单词拆分
@@ -176,9 +177,9 @@ FAQ
 
 更新日志
 --------
-## [v2.6.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.1) (2019-12-10)
+## [v2.6.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.2) (2019-12-16)
 
-- 修复了文档注释翻译窗口大小异常的问题
+- 修复了导致插件无法被初始化的致命错误
 
 [完整的更新历史记录](./CHANGELOG.md)
 
