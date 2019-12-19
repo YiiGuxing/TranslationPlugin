@@ -110,8 +110,7 @@
                 icon="Icons.Translate2"
                 class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
                 text="Show Instant Translation Dialog..."
-                description="Open instant translation dialog">
-        </action>
+                description="Open instant translation dialog"/>
         <action id="$ChooseTranslatorAction"
                 class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
                 text="Choose Translator"
@@ -130,7 +129,6 @@
         </action>
         <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                 text="Translate and Replace..." description="Translate and Replace">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
@@ -138,9 +136,7 @@
         <action id="$TranslateDocumentationAction"
                 icon="AllIcons.Toolwindows.Documentation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"
-                text="Translate Documentation" description="Translate documentation">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$TranslateAndReplaceAction"/>
-        </action>
+                text="Translate Documentation" description="Translate documentation"/>
         <action id="$InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
                 text="Translate(Inclusive)"/>
