@@ -64,7 +64,7 @@ class DartDocumentationElementProvider : DocumentationElementProvider {
                     DartTokenTypes.CLASS_DEFINITION,
                     DartTokenTypes.FUNCTION_DECLARATION_WITH_BODY,
                     DartTokenTypes.FUNCTION_DECLARATION_WITH_BODY_OR_NATIVE -> sibling
-                    DartTokenTypes.VAR_DECLARATION_LIST -> sibling.findChild(DART_COMPONENT_NAME_CONDITION)
+                    DartTokenTypes.VAR_DECLARATION_LIST -> sibling.findChild(condition = DART_COMPONENT_NAME_CONDITION)
                     else -> null
                 }
             }
