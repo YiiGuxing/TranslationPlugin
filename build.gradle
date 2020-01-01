@@ -35,12 +35,13 @@ patchPluginXml {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'org.jsoup:jsoup:1.12.1'
-    compile 'org.apache.commons:commons-dbcp2:2.6.0'
-    compile 'commons-dbutils:commons-dbutils:1.7'
-    compile('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
+    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'org.apache.commons:commons-dbcp2:2.6.0'
+    implementation 'commons-dbutils:commons-dbutils:1.7'
+    implementation('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
         exclude module: 'junit'
     }
 }
