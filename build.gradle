@@ -26,6 +26,7 @@ intellij {
     pluginName = 'TranslationPlugin'
     downloadSources = Boolean.valueOf(sources)
     sandboxDirectory 'sandbox'
+    plugins 'psiviewer:191.4212'
 }
 
 patchPluginXml {
