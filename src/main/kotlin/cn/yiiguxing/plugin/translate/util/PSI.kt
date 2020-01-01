@@ -40,13 +40,13 @@ tailrec fun PsiElement.findParent(condition: (PsiElement) -> Boolean): PsiElemen
 /**
  * 查找当前元素满足指定[条件][condition]的子元素
  */
-fun PsiElement.findChild(condition: (PsiElement) -> Boolean): PsiElement? {
+fun PsiElement.findChild(depth: Boolean = true, condition: (PsiElement) -> Boolean): PsiElement? {
     var child: PsiElement? = firstChild
     while (child != null) {
         if (condition(child)) {
             return child
-        } else {
-            child.findChild(condition)?.let {
+        } else if (depth) {
+            child.findChild(depth, condition)?.let {
                 return@findChild it
             }
         }
