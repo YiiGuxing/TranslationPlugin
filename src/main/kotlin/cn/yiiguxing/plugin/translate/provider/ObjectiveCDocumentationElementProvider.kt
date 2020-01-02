@@ -11,11 +11,11 @@ import com.jetbrains.cidr.lang.types.OCStructType
 class ObjectiveCDocumentationElementProvider : DocumentationElementProvider {
     override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
         val element = psiFile.findElementAt(offset)
-        return (element as? PsiComment)?.takeIf { it.owner != null }
+        return (element as? PsiDocCommentBase)?.takeIf { it.innerOwner != null }
     }
 
     override fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
-        return (documentationElement as? PsiComment)?.owner
+        return (documentationElement as? PsiDocCommentBase)?.innerOwner
     }
 
     companion object {
@@ -30,10 +30,27 @@ class ObjectiveCDocumentationElementProvider : DocumentationElementProvider {
             it is PsiWhiteSpace || it is PsiComment
         }
 
-        private val PsiComment.owner: PsiElement?
+        private val PsiDocCommentBase.innerOwner: PsiElement?
+            get() {
+                findOwner()?.let { return it }
+
+                return when (val element = getNextSiblingSkippingCondition(DOC_COMMENT_SKIPPING_CONDITION)) {
+                    is OCDeclaration -> element.innerOwner
+                    is OCDeclarationStatement -> element.declaration.innerOwner
+                    else -> null
+                }
+            }
+
+        /*
+        * 此实现包含普通注释的翻译，然，普通注释在文档中被包裹在`PRE`块内而不会被翻译，因此不用也罢。
+        */
+        @Suppress("unused")
+        private val PsiComment.innerOwner: PsiElement?
             get() {
                 if (this is PsiDocCommentBase) {
-                    innerOwner?.let { return it }
+                    findOwner()?.let { return it }
+                } else {
+                    (parent as? OCDeclaration)?.innerOwner?.let { return it }
                 }
 
                 val condition = if (this is PsiDocCommentBase) DOC_COMMENT_SKIPPING_CONDITION else SKIPPING_CONDITION
@@ -44,8 +61,9 @@ class ObjectiveCDocumentationElementProvider : DocumentationElementProvider {
                 }
             }
 
-        private val PsiDocCommentBase.innerOwner: PsiElement?
-            get() = owner?.let { owner -> return (owner as? OCDeclaration)?.innerOwner ?: owner }
+        private fun PsiDocCommentBase.findOwner(): PsiElement? {
+            return owner?.let { owner -> return (owner as? OCDeclaration)?.innerOwner ?: owner }
+        }
 
         private val OCDeclaration.innerOwner: PsiElement?
             get() = if (type is OCStructType) {
