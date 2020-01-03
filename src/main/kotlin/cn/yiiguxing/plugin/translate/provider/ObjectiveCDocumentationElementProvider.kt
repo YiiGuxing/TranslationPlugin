@@ -9,6 +9,7 @@ import com.jetbrains.cidr.lang.psi.OCStruct
 import com.jetbrains.cidr.lang.types.OCStructType
 
 class ObjectiveCDocumentationElementProvider : DocumentationElementProvider {
+
     override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
         val element = psiFile.findElementAt(offset)
         return (element as? PsiDocCommentBase)?.takeIf { it.innerOwner != null }

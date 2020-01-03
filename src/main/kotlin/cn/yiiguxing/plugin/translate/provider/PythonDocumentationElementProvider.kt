@@ -10,6 +10,7 @@ import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.psi.PyFunction
 
 class PythonDocumentationElementProvider : DocumentationElementProvider {
+
     override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
         return psiFile.findElementAt(offset)
             ?.takeIf { it.elementType == PyTokenTypes.DOCSTRING }
