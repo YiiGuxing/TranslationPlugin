@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.util.SKIP_WHITE_SPACE
 import cn.yiiguxing.plugin.translate.util.elementType
 import cn.yiiguxing.plugin.translate.util.getNextSiblingSkippingCondition
 import com.intellij.lang.documentation.DocumentationProvider
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -37,7 +36,6 @@ class CSharpDocumentationElementProvider : DocumentationElementProvider {
     }
 
     private companion object {
-        private val logger: Logger = Logger.getInstance(CSharpDocumentationElementProvider::class.java)
         val SKIP_WHITE_SPACE_AND_COMMENT: (PsiElement) -> Boolean = { it is PsiWhiteSpace || it is PsiComment }
 
         val PsiComment.isDocComment: Boolean
@@ -57,7 +55,6 @@ class CSharpDocumentationElementProvider : DocumentationElementProvider {
                     ?: return null
                 val nextNode = element.getNextSiblingSkippingCondition(SKIP_WHITE_SPACE)
                 if (nextNode is CSharpDummyDeclaration) {
-                    logger.info("=== " + nextNode.declaredElement?.text)
                     return nextNode.declaredElement
                 }
 
@@ -74,7 +71,6 @@ class CSharpDocumentationElementProvider : DocumentationElementProvider {
                         CSharpTokenType.RBRACKET, CSharpTokenType.RPARENTH -> brackets--
                         CSharpTokenType.IDENTIFIER -> {
                             if (brackets == 0) {
-                                logger.info(element.text)
                                 return element
                             }
                         }
