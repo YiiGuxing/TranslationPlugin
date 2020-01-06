@@ -79,14 +79,14 @@ class WordDetailsDialog(
         }
         saveEditingButton.addActionListener { saveEditing() }
         cancelEditingButton.addActionListener {
-            phoneticField.text = word.phonetic
+            phoneticField.text = word.phonetic ?: ""
             explanationView.text = word.explanation
             tagsField.text = tagsString
             IdeFocusManager.findInstance().requestFocus(closeButton, true)
         }
 
         phoneticField.addDocumentListener(object : EditorDocumentAdapter() {
-            override fun documentChanged(e: EditorDocumentEvent?) = checkModification()
+            override fun documentChanged(e: EditorDocumentEvent) = checkModification()
         })
         phoneticField.addFocusListener(object : FocusAdapter() {
             private var toShowHint = true
@@ -150,7 +150,7 @@ class WordDetailsDialog(
         wordView.text = word.word
         languageLabel.text = word.sourceLanguage.langName
         ttsButton.dataSource { word.word to word.sourceLanguage }
-        phoneticField.text = word.phonetic
+        phoneticField.text = word.phonetic ?: ""
         explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
         explanationView.text = word.explanation
         explanationView.caretPosition = 0

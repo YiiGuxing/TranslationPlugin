@@ -15,6 +15,14 @@ interface DocumentationElementProvider {
      */
     fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement?
 
+    fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
+        return if (documentationElement is PsiDocCommentBase) {
+            documentationElement.owner
+        } else {
+            documentationElement.parent
+        }
+    }
+
     private object DefaultDocumentationElementProvider : DocumentationElementProvider {
 
         override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {

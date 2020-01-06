@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     // https://github.com/JetBrains/gradle-intellij-plugin
-    id "org.jetbrains.intellij" version "0.4.14"
+    id "org.jetbrains.intellij" version "0.4.15"
     id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
 
@@ -26,7 +26,7 @@ intellij {
     pluginName = 'TranslationPlugin'
     downloadSources = Boolean.valueOf(sources)
     sandboxDirectory 'sandbox'
-    plugins "org.jetbrains.kotlin:1.2.40-release-IJ2017.1-1"
+    plugins "org.jetbrains.kotlin:1.2.40-release-IJ2017.1-1", "Pythonid:2017.1.171.3780.116", "Dart:171.4006"
 }
 
 patchPluginXml {
@@ -35,12 +35,13 @@ patchPluginXml {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'org.jsoup:jsoup:1.12.1'
-    compile 'org.apache.commons:commons-dbcp2:2.6.0'
-    compile 'commons-dbutils:commons-dbutils:1.7'
-    compile('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
+    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'org.apache.commons:commons-dbcp2:2.6.0'
+    implementation 'commons-dbutils:commons-dbutils:1.7'
+    implementation('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
         exclude module: 'junit'
     }
 }

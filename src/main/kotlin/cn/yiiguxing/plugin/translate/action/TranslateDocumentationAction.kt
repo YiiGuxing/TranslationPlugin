@@ -21,7 +21,6 @@ import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.DimensionService
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.Ref
-import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.presentation.java.SymbolPresentationUtil
@@ -51,7 +50,10 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
     override fun doTranslate(editor: Editor, element: PsiElement, dataContext: DataContext) {
         val editorRef = WeakReference(editor)
         val project = editor.project
-        val docCommentOwner = (if (element is PsiDocCommentBase) element.owner else element.parent) ?: return
+        val docCommentOwner = DocumentationElementProvider
+            .forLanguage(element.language)
+            .getDocumentationOwner(element)
+            ?: return
         val provider = docCommentOwner.documentationProvider ?: return
 
         executeOnPooledThread {
