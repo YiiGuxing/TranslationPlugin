@@ -31,28 +31,46 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
         val project = editor.project ?: return
-        editor.document.getText(selectionRange).processBeforeTranslate()?.let { text ->
-            val highlightManager = HighlightManager.getInstance(project)
-            val highlighters = ArrayList<RangeHighlighter>()
-            val startLine = editor.offsetToVisualPosition(selectionRange.startOffset).line
-            val endLine = editor.offsetToVisualPosition(selectionRange.endOffset).line
-            val highlightAttributes = if (startLine == endLine) HIGHLIGHT_ATTRIBUTES else MULTILINE_HIGHLIGHT_ATTRIBUTES
+        val selectionModel = editor.selectionModel
+        val isColumnSelectionMode = editor.caretModel.caretCount > 1
 
-            highlightManager.addRangeHighlight(
-                editor, selectionRange.startOffset, selectionRange.endOffset, highlightAttributes, true, highlighters
-            )
+        val text: String
+        val starts: IntArray
+        val ends: IntArray
+        if (selectionModel.hasSelection(true) && isColumnSelectionMode) {
+            starts = selectionModel.blockSelectionStarts
+            ends = selectionModel.blockSelectionEnds
+            text = selectionModel.getSelectedText(true)?.processBeforeTranslate() ?: return
+        } else {
+            starts = intArrayOf(selectionRange.startOffset)
+            ends = intArrayOf(selectionRange.endOffset)
+            text = editor.document.getText(selectionRange).processBeforeTranslate() ?: return
+        }
 
-            val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
-            val tracker = BalloonPositionTracker(editor, caretRangeMarker)
-            val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
+        val startLine by lazy { editor.offsetToVisualPosition(selectionRange.startOffset).line }
+        val endLine by lazy { editor.offsetToVisualPosition(selectionRange.endOffset).line }
+        val highlightAttributes = if (starts.size > 1 || startLine == endLine) {
+            HIGHLIGHT_ATTRIBUTES
+        } else {
+            MULTILINE_HIGHLIGHT_ATTRIBUTES
+        }
 
-            if (highlighters.isNotEmpty()) {
-                Disposer.register(balloon, Disposable {
-                    for (highlighter in highlighters) {
-                        highlightManager.removeSegmentHighlighter(editor, highlighter)
-                    }
-                })
-            }
+        val highlightManager = HighlightManager.getInstance(project)
+        val highlighters = ArrayList<RangeHighlighter>()
+        for (i in starts.indices) {
+            highlightManager.addRangeHighlight(editor, starts[i], ends[i], highlightAttributes, true, highlighters)
+        }
+
+        val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
+        val tracker = BalloonPositionTracker(editor, caretRangeMarker)
+        val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
+
+        if (highlighters.isNotEmpty()) {
+            Disposer.register(balloon, Disposable {
+                for (highlighter in highlighters) {
+                    highlightManager.removeSegmentHighlighter(editor, highlighter)
+                }
+            })
         }
     }
 
