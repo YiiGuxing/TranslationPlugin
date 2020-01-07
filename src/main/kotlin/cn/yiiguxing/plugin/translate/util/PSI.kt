@@ -25,6 +25,23 @@ fun <T : PsiElement> PsiFile.findElementOfTypeAt(offset: Int, type: Class<T>): T
     return PsiTreeUtil.getParentOfType(offsetElement, type)
 }
 
+@Suppress("UNCHECKED_CAST")
+fun <T : PsiElement> PsiElement.findChildOfType(type: Class<T>, depth: Boolean = false): T? {
+    var child: PsiElement? = firstChild
+    while (child != null) {
+        if (type.isInstance(child)) {
+            return child as? T
+        } else if (depth) {
+            child.findChildOfType(type, depth)?.let {
+                return@findChildOfType it
+            }
+        }
+        child = child.nextSibling
+    }
+
+    return null
+}
+
 /**
  * 查找当前元素满足指定[条件][condition]的父元素
  */
