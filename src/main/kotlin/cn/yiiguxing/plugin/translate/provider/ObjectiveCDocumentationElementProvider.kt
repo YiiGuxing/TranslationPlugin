@@ -23,7 +23,7 @@ class ObjectiveCDocumentationElementProvider : DocumentationElementProvider {
         private val IS_OC_STRUCT: (PsiElement) -> Boolean = { it is OCStruct }
 
         private val SKIPPING_CONDITION: (PsiElement) -> Boolean = {
-            (it is PsiWhiteSpace && it.text.count { char -> char == '\n' } == 1) ||
+            (it is PsiWhiteSpace && it.text.count { char -> char == '\n' } <= 1) ||
                     (it is PsiComment && it !is PsiDocCommentBase)
         }
 
