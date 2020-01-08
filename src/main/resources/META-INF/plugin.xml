@@ -43,7 +43,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>修复了导致插件无法被初始化的致命错误</li>
+        <li>新增对Go, Dart, Python, C, C++, Objective-C/C++语言的文档注释翻译支持</li>
+        <li>支持列选择模式的翻译</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>

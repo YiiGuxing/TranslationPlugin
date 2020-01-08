@@ -263,7 +263,7 @@ class UpdateManager : StartupActivity, DumbAware {
 
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
-                "更多语言的文档注释翻译" to "支持包括Go，Dart，Python等语言的翻译文档注释",
+                "更多语言的文档注释翻译" to "支持包括Go，Dart，Python等语言的文档注释翻译",
                 "列选择模式" to "支持列选择模式的翻译"
             )
         }
