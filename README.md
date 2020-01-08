@@ -177,9 +177,11 @@ FAQ
 
 更新日志
 --------
-## [v2.6.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.6.2) (2019-12-16)
 
-- 修复了导致插件无法被初始化的致命错误
+## [v2.7.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.0) (2020-01-08)
+
+- 新增对Go, Dart, Python, C, C++, Objective-C/C++语言的文档注释翻译支持
+- 支持列选择模式的翻译
 
 [完整的更新历史记录](./CHANGELOG.md)
 

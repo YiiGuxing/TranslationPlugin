@@ -43,7 +43,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>修复了导致插件无法被初始化的致命错误</li>
+        <li>新增对Go, Dart, Python, C, C++, Objective-C/C++语言的文档注释翻译支持</li>
+        <li>支持列选择模式的翻译</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -54,7 +55,13 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
+    <!-- Rider模块不可用 -->
+    <!--<depends optional="true" config-file="csharp-doc.xml">com.intellij.modules.rider</depends>-->
+    <depends optional="true" config-file="oc-doc.xml">com.intellij.modules.cidr.lang</depends>
     <depends optional="true" config-file="kotlin-doc.xml">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="go-doc.xml">org.jetbrains.plugins.go</depends>
+    <depends optional="true" config-file="python-doc.xml">Pythonid</depends>
+    <depends optional="true" config-file="dart-doc.xml">Dart</depends>
 
     <extensionPoints>
         <extensionPoint name="docElementProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -110,8 +117,7 @@
                 icon="Icons.Translate2"
                 class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
                 text="Show Instant Translation Dialog..."
-                description="Open instant translation dialog">
-        </action>
+                description="Open instant translation dialog"/>
         <action id="$ChooseTranslatorAction"
                 class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
                 text="Choose Translator"
@@ -130,7 +136,6 @@
         </action>
         <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                 text="Translate and Replace..." description="Translate and Replace">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$EditorTranslateAction"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
@@ -138,9 +143,7 @@
         <action id="$TranslateDocumentationAction"
                 icon="AllIcons.Toolwindows.Documentation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"
-                text="Translate Documentation" description="Translate documentation">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$TranslateAndReplaceAction"/>
-        </action>
+                text="Translate Documentation" description="Translate documentation"/>
         <action id="$InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
                 text="Translate(Inclusive)"/>
