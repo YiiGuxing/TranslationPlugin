@@ -25,6 +25,10 @@ fun <T : PsiElement> PsiFile.findElementOfTypeAt(offset: Int, type: Class<T>): T
     return PsiTreeUtil.getParentOfType(offsetElement, type)
 }
 
+/**
+ * 从当前元素的子元素中查找类型为[type]的元素并返回。如果指定[depth]为`true`（默认为`false`），
+ * 则从所有的子孙元素树中查找，否则仅从第一代子元素中查找。
+ */
 @Suppress("UNCHECKED_CAST")
 fun <T : PsiElement> PsiElement.findChildOfType(type: Class<T>, depth: Boolean = false): T? {
     var child: PsiElement? = firstChild
