@@ -15,6 +15,9 @@ interface DocumentationElementProvider {
      */
     fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement?
 
+    /**
+     * Returns the owner of the specified [documentationElement].
+     */
     fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
         return if (documentationElement is PsiDocCommentBase) {
             documentationElement.owner
