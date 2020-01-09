@@ -24,27 +24,21 @@ class GoDocumentationElementProvider : DocumentationElementProvider {
             (it is PsiWhiteSpace && it.text.count { char -> char == '\n' } <= 1) || it is PsiComment
         }
 
-        val GoTypeDeclaration.innerOwner: PsiElement?
-            get() = findChildOfType(GoTypeSpec::class.java)
-
-        val GoVarDeclaration.innerOwner: PsiElement?
-            get() = findChildOfType(GoVarDefinition::class.java, true)
-
         val PsiComment.owner: PsiElement?
-            get() {
-                val element = getNextSiblingSkippingCondition(SKIP_WHITE_SPACE_AND_COMMENT)
+            get() = when (val element = getNextSiblingSkippingCondition(SKIP_WHITE_SPACE_AND_COMMENT)) {
+                null -> null
 
-                println(element)
-                println(element is GoMethodSpec)
-                println(element?.javaClass?.name)
+                is GoPackageClause -> element.takeIf { parent is GoFile }
+                is GoMethodSpec, is GoFunctionOrMethodDeclaration -> element
 
-                return when (element) {
-                    is GoPackageClause -> element.takeIf { parent is GoFile }
-                    is GoTypeDeclaration -> element.innerOwner
-                    is GoMethodDeclaration -> element
-                    is GoMethodSpec -> element
-                    is GoVarDeclaration -> element.innerOwner
+                else -> when (element) {
+                    is GoTypeDeclaration -> GoTypeSpec::class.java to false
+                    is GoFieldDeclaration -> GoFieldDefinition::class.java to false
+                    is GoConstDeclaration -> GoConstDefinition::class.java to true
+                    is GoVarDeclaration -> GoVarDefinition::class.java to true
                     else -> null
+                }?.let { (type, depth) ->
+                    element.findChildOfType(type, depth)
                 }
             }
     }
