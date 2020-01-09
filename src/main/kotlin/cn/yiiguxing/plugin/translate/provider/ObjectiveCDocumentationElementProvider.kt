@@ -2,22 +2,22 @@ package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.util.findChild
 import cn.yiiguxing.plugin.translate.util.getNextSiblingSkippingCondition
-import com.intellij.psi.*
+import com.intellij.psi.PsiComment
+import com.intellij.psi.PsiDocCommentBase
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
 import com.jetbrains.cidr.lang.psi.OCDeclaration
 import com.jetbrains.cidr.lang.psi.OCDeclarationStatement
 import com.jetbrains.cidr.lang.psi.OCStruct
 import com.jetbrains.cidr.lang.types.OCStructType
 
-class ObjectiveCDocumentationElementProvider : DocumentationElementProvider {
+class ObjectiveCDocumentationElementProvider : AbstractDocumentationElementProvider<PsiDocCommentBase>() {
 
-    override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
-        val element = psiFile.findElementAt(offset)
-        return (element as? PsiDocCommentBase)?.takeIf { it.innerOwner != null }
-    }
+    override val PsiDocCommentBase.isDocComment: Boolean
+        get() = true
 
-    override fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
-        return (documentationElement as? PsiDocCommentBase)?.innerOwner
-    }
+    override val PsiDocCommentBase.documentationOwner: PsiElement?
+        get() = innerOwner
 
     companion object {
         private val IS_OC_STRUCT: (PsiElement) -> Boolean = { it is OCStruct }

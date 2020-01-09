@@ -18,11 +18,21 @@ val SKIP_WHITE_SPACE: (PsiElement) -> Boolean = { it is PsiWhiteSpace }
 val PsiElement.elementType: IElementType get() = node.elementType
 
 /**
+ * 开始偏移
+ */
+val PsiElement.startOffset: Int get() = textRange.startOffset
+
+/**
+ * 结束偏移
+ */
+val PsiElement.endOffset: Int get() = textRange.endOffset
+
+/**
  * 从[PsiFile]中在指定[offset]处查找类型为[type]的元素并返回，如果未找到则返回`null`
  */
 fun <T : PsiElement> PsiFile.findElementOfTypeAt(offset: Int, type: Class<T>): T? {
     val offsetElement = findElementAt(offset) ?: return null
-    return PsiTreeUtil.getParentOfType(offsetElement, type)
+    return PsiTreeUtil.getParentOfType(offsetElement, type, false)
 }
 
 /**

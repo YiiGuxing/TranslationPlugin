@@ -30,6 +30,7 @@ interface DocumentationElementProvider {
 
         override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
             return psiFile.findElementOfTypeAt(offset, PsiDocCommentBase::class.java)
+                ?.takeIf { it.owner != null }
         }
 
     }
