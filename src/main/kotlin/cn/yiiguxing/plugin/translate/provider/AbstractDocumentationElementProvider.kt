@@ -15,11 +15,11 @@ abstract class AbstractDocumentationElementProvider<T : PsiComment> : Documentat
         val offsetElement = psiFile.findElementAt(offset) ?: return null
         val comment = PsiTreeUtil.getParentOfType(offsetElement, PsiComment::class.java, false)
         val documentationElement: T? = if (
-            comment == null // 如果父元素是注释，则跳过边缘拾取
+            comment == null // 如果当前元素或其父元素是注释元素，则跳过边缘拾取
             && offsetElement is PsiWhiteSpace
             && offsetElement.startOffset == offset // 光标处于边缘处
         ) {
-            // 从末尾边缘处拾取
+            // 如果可在边缘拾取，则从末尾边缘处拾取
             (offsetElement.prevSibling as? T)?.takeIf { it.isPickAtEdge }
         } else {
             comment as? T
@@ -50,10 +50,10 @@ abstract class AbstractDocumentationElementProvider<T : PsiComment> : Documentat
     protected val T.cachedOwner: CachedOwner
         get() {
             val modificationStamp = containingFile.modificationStamp
-            return DOCUMENTATION_OWNER_CACHE[this@cachedOwner]?.takeIf { it.isValid(modificationStamp) }
-                ?: CachedOwner(if (isDocComment) documentationOwner else null, modificationStamp).also {
-                    DOCUMENTATION_OWNER_CACHE[this@cachedOwner] = it
-                }
+            return DOCUMENTATION_OWNER_CACHE[this@cachedOwner]
+                ?.takeIf { it.isValid(modificationStamp) }
+                ?: CachedOwner(if (isDocComment) documentationOwner else null, modificationStamp)
+                    .also { DOCUMENTATION_OWNER_CACHE[this@cachedOwner] = it }
         }
 
     /**
@@ -63,11 +63,20 @@ abstract class AbstractDocumentationElementProvider<T : PsiComment> : Documentat
 
     /**
      * 缓存的注释所有者
+     *
      * @property owner 注释所有者
+     * @property modificationStamp 修改标记
+     *
+     * @see PsiFile.getModificationStamp
      */
     protected data class CachedOwner(val owner: PsiElement?, val modificationStamp: Long) {
+        /**
+         * 通过指定的[修改标记][modificationStamp]检测当前缓存是否有效
+         *
+         * @see PsiFile.getModificationStamp
+         */
         fun isValid(modificationStamp: Long): Boolean {
-            return this.modificationStamp == modificationStamp && owner?.isValid == true
+            return this.modificationStamp == modificationStamp && (owner?.isValid ?: true)
         }
     }
 
