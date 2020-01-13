@@ -43,8 +43,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>新增对Go, Dart, Python, C, C++, Objective-C/C++语言的文档注释翻译支持</li>
-        <li>支持列选择模式的翻译</li>
+        <li>优化了单行文档注释的交互体验</li>
+        <li>修复了Go语言在一些情况下无法进行文档翻译的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
