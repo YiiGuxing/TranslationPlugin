@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.7.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.1) (2020-01-13)
+
+- 优化了单行文档注释的交互体验
+- 修复了Go语言在一些情况下无法进行文档翻译的问题
+
 ## [v2.7.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.0) (2020-01-08)
 
 - 新增对Go, Dart, Python, C, C++, Objective-C/C++语言的文档注释翻译支持
