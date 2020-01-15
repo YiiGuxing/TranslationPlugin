@@ -8,10 +8,7 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.jetbrains.lang.dart.DartTokenTypesSets
-import com.jetbrains.lang.dart.psi.DartComponent
-import com.jetbrains.lang.dart.psi.DartComponentName
-import com.jetbrains.lang.dart.psi.DartDocComment
-import com.jetbrains.lang.dart.psi.DartVarDeclarationList
+import com.jetbrains.lang.dart.psi.*
 
 class DartDocumentationElementProvider : AbstractDocumentationElementProvider<PsiComment>() {
 
@@ -33,6 +30,7 @@ class DartDocumentationElementProvider : AbstractDocumentationElementProvider<Ps
 
             return when (val sibling = getNextSiblingSkippingCondition(SKIPPING_CONDITION)) {
                 is DartComponent -> sibling.componentName
+                is DartClassMembers,
                 is DartVarDeclarationList -> sibling.findChildOfType(DartComponent::class.java)?.componentName
                 else -> null
             }
