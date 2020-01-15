@@ -8,7 +8,10 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.jetbrains.lang.dart.DartTokenTypesSets
-import com.jetbrains.lang.dart.psi.*
+import com.jetbrains.lang.dart.psi.DartClassMembers
+import com.jetbrains.lang.dart.psi.DartComponent
+import com.jetbrains.lang.dart.psi.DartDocComment
+import com.jetbrains.lang.dart.psi.DartVarDeclarationList
 
 class DartDocumentationElementProvider : AbstractDocumentationElementProvider<PsiComment>() {
 
@@ -40,8 +43,6 @@ class DartDocumentationElementProvider : AbstractDocumentationElementProvider<Ps
         private val SKIPPING_CONDITION: (PsiElement) -> Boolean = {
             it is PsiWhiteSpace || (it is PsiComment && it !is DartDocComment)
         }
-
-        private val DART_COMPONENT_NAME_CONDITION: (PsiElement) -> Boolean = { it is DartComponentName }
 
         /**
          * 向上检查是否存在多行文档注释
