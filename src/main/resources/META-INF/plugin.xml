@@ -43,8 +43,7 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>优化了单行文档注释的交互体验</li>
-        <li>修复了Go语言在一些情况下无法进行文档翻译的问题</li>
+        <li>修复了Dart语言中无法对类的第一个成员的文档注释进行文档翻译的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>

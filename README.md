@@ -178,10 +178,9 @@ FAQ
 更新日志
 --------
 
-## [v2.7.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.1) (2020-01-13)
+## [v2.7.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.2) (2020-01-21)
 
-- 优化了单行文档注释的交互体验
-- 修复了Go语言在一些情况下无法进行文档翻译的问题
+- 修复了Dart语言中无法对类的第一个成员的文档注释进行文档翻译的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 

@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.7.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.2) (2020-01-21)
+
+- 修复了Dart语言中无法对类的第一个成员的文档注释进行文档翻译的问题
+
 ## [v2.7.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.1) (2020-01-13)
 
 - 优化了单行文档注释的交互体验
