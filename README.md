@@ -48,10 +48,10 @@ TranslationPlugin
 安装
 ----
 - **使用 IDE 内置插件系统安装:**
-  - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>搜索并找到"Translation"</kbd> > <kbd>Install Plugin</kbd>
+  - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>搜索并找到<b>"Translation"</b></kbd> > <kbd>Install</kbd>
 
 - **手动安装:**
-  - 下载[插件包][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd> -> 选择插件包并安装（无需解压）
+  - 下载[插件包][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd> -> 选择插件包并安装（无需解压）
 
 重启**IDE**.
 
@@ -178,10 +178,9 @@ FAQ
 更新日志
 --------
 
-## [v2.7.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.1) (2020-01-13)
+## [v2.7.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.2) (2020-01-21)
 
-- 优化了单行文档注释的交互体验
-- 修复了Go语言在一些情况下无法进行文档翻译的问题
+- 修复了Dart语言中无法对类的第一个成员的文档注释进行文档翻译的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 
