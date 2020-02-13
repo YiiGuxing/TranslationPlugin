@@ -87,6 +87,7 @@
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
 
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
 
