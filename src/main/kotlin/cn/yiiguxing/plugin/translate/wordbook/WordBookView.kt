@@ -117,7 +117,7 @@ class WordBookView {
             .addMenuItem(panel, message("wordbook.window.menu.copy"), AllIcons.Actions.Copy) { word ->
                 CopyPasteManager.getInstance().setContents(StringSelection(word.word))
             }
-            .addMenuItem(panel, message("wordbook.window.menu.delete"), AllIcons.Actions.Delete) { word ->
+            .addMenuItem(panel, message("wordbook.window.menu.delete"), AllIcons.Actions.Cancel) { word ->
                 val id = word.id
                 if (id != null) {
                     val confirmed = Messages.showOkCancelDialog(

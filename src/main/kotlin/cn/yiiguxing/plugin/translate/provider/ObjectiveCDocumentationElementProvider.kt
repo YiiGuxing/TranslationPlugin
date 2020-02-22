@@ -11,13 +11,13 @@ import com.jetbrains.cidr.lang.psi.OCDeclarationStatement
 import com.jetbrains.cidr.lang.psi.OCStruct
 import com.jetbrains.cidr.lang.types.OCStructType
 
-class ObjectiveCDocumentationElementProvider : AbstractDocumentationElementProvider<PsiDocCommentBase>() {
+class ObjectiveCDocumentationElementProvider : AbstractDocumentationElementProvider() {
 
-    override val PsiDocCommentBase.isDocComment: Boolean
-        get() = true
+    override val PsiComment.isDocComment: Boolean
+        get() = this@isDocComment is PsiDocCommentBase
 
-    override val PsiDocCommentBase.documentationOwner: PsiElement?
-        get() = innerOwner
+    override val PsiComment.documentationOwner: PsiElement?
+        get() = (this@documentationOwner as PsiDocCommentBase).innerOwner
 
     companion object {
         private val IS_OC_STRUCT: (PsiElement) -> Boolean = { it is OCStruct }
