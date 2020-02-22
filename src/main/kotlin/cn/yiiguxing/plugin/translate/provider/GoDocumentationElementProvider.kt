@@ -8,7 +8,7 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 
-class GoDocumentationElementProvider : AbstractDocumentationElementProvider<PsiComment>() {
+class GoDocumentationElementProvider : AbstractDocumentationElementProvider() {
 
     override val PsiComment.isDocComment: Boolean
         get() = true

@@ -13,7 +13,7 @@ import com.jetbrains.lang.dart.psi.DartComponent
 import com.jetbrains.lang.dart.psi.DartDocComment
 import com.jetbrains.lang.dart.psi.DartVarDeclarationList
 
-class DartDocumentationElementProvider : AbstractDocumentationElementProvider<PsiComment>() {
+class DartDocumentationElementProvider : AbstractDocumentationElementProvider() {
 
     override val PsiComment.isDocComment: Boolean
         get() = this@isDocComment is DartDocComment || elementType == DartTokenTypesSets.SINGLE_LINE_DOC_COMMENT
