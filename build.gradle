@@ -38,7 +38,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.apache.commons:commons-dbcp2:2.6.0'
     implementation 'commons-dbutils:commons-dbutils:1.7'
     implementation('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
