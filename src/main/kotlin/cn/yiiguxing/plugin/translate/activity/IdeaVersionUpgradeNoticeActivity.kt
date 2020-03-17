@@ -16,7 +16,7 @@ class IdeaVersionUpgradeNoticeActivity : StartupActivity, DumbAware {
     private var veryFirstProjectOpening: Boolean = true
 
     override fun runActivity(project: Project) {
-        if (IdeVersion.isIde2019OrNewer
+        if (IdeVersion.isIde2019_3OrNewer
             || !veryFirstProjectOpening
             || Application.isUnitTestMode
             || PropertiesComponent.getInstance().getBoolean(DO_NOT_NOTIFY_AGAIN_PROPERTY, false)
