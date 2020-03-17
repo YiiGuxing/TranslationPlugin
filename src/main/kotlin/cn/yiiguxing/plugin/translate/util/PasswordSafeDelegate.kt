@@ -15,7 +15,7 @@ class PasswordSafeDelegate private constructor(private val attributes: Credentia
     constructor(serviceName: String, userName: String? = null) :
             this(CredentialAttributesFactory.create(serviceName, userName))
 
-    private val store = PasswordSafe.getInstance()
+    private val store = PasswordSafe.instance
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): String? = store.getPassword(attributes)
 

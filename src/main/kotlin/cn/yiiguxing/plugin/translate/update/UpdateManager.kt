@@ -128,7 +128,7 @@ class UpdateManager : StartupActivity, DumbAware {
 
 
         private fun String.toVersionParts(): IntArray {
-            val versionParts = split('.').take(2)
+            val versionParts = replace("-SNAPSHOT", "").split('.').take(2)
             return when (versionParts.size) {
                 1 -> intArrayOf(versionParts[0].toInt(), 0)
                 2 -> intArrayOf(versionParts[0].toInt(), versionParts[1].toInt())
