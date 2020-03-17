@@ -18,6 +18,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     private var configurablePanel: ConfigurablePanel? = null
 
+    @Suppress("SpellCheckingInspection")
     override fun getId(): String = "yiiguxing.plugin.translate"
 
     override fun enableSearch(option: String?): Runnable? = null

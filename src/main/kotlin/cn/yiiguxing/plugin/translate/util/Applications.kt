@@ -35,6 +35,7 @@ import java.util.concurrent.Future
 
 object Plugin {
 
+    @Suppress("SpellCheckingInspection")
     const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
 
     val descriptor: IdeaPluginDescriptor = PluginManager.getPlugin(PluginId.getId(PLUGIN_ID))!!
@@ -74,12 +75,12 @@ object Plugin {
 
 inline val Application: Application get() = ApplicationManager.getApplication()
 
-val AppStorage: AppStorage = AppStorage.instance
-val Settings: Settings = Settings.instance
-val TranslateService: TranslateService = TranslateService.instance
-val TextToSpeech: TextToSpeech = TextToSpeech.instance
-val TranslationUIManager: TranslationUIManager = TranslationUIManager.instance
-val WordBookService: WordBookService = WordBookService.instance
+inline val AppStorage: AppStorage get() = AppStorage.instance
+inline val Settings: Settings get() = Settings.instance
+inline val TranslateService: TranslateService get() = TranslateService.instance
+inline val TextToSpeech: TextToSpeech get() = TextToSpeech.instance
+inline val TranslationUIManager: TranslationUIManager get() = TranslationUIManager.instance
+inline val WordBookService: WordBookService get() = WordBookService.instance
 
 
 /**
