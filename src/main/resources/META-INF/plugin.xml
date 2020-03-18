@@ -189,7 +189,13 @@
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="NavBarToolBar" anchor="last"/>
+        </group>
+        <group id="TranslationNavBarToolBar" text="Translation Navigation Bar Actions">
+            <separator/>
+            <reference ref="$ShowTranslationDialogAction"/>
+            <separator/>
+
+            <add-to-group group-id="NavBarToolBar" relative-to-action="ShowProjectStructureSettings" anchor="after"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>
