@@ -24,7 +24,6 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.labels.LinkLabel
-import com.intellij.ui.components.labels.LinkListener
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
