@@ -82,8 +82,9 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?.let { text ->
+                val processedText = text.processBeforeTranslate() ?: text
                 fun translate(targetLang: Lang, reTranslate: Boolean = false) {
-                    TranslateService.translate(text, Lang.AUTO, targetLang, object : TranslateListener {
+                    TranslateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
                         override fun onSuccess(translation: Translation) {
                             val primaryLanguage = TranslateService.translator.primaryLanguage
                             if (reTranslate && translation.srcLang == Lang.ENGLISH
@@ -153,6 +154,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         /** 谷歌翻译的空格符：`0xA0` */
         const val GT_WHITESPACE_CHARACTER = ' ' // 0xA0
+
         /** 空格符：`0x20` */
         const val WHITESPACE_CHARACTER = ' ' // 0x20
 
@@ -172,6 +174,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 if (it == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(it)
             }
             val index = languages.indexOf(appStorage.lastReplacementTargetLanguage)
+
             @Suppress("InvalidBundleOrProperty")
             val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
                 override fun getTextFor(value: Lang): String = value.langName
