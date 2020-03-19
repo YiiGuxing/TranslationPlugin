@@ -21,6 +21,7 @@ data class Translation(
     val srclangs: List<Lang>,
     val srcTransliteration: String? = null,
     val transliteration: String? = null,
+    val spell: String? = null,
     val dictDocument: TranslationDocument? = null,
     val extraDocument: NamedTranslationDocument? = null
 ) : BaseTranslation(srcLang, targetLang, translation) {

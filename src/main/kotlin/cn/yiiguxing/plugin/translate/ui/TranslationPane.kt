@@ -37,10 +37,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.lang.ref.WeakReference
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JTextPane
+import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
@@ -66,6 +63,7 @@ abstract class TranslationPane<T : JComponent>(
 
     private lateinit var sourceLangRowComponent: JComponent
     private lateinit var fixLanguageComponent: JComponent
+    private lateinit var spellComponent: JComponent
     private lateinit var targetRowComponent: JComponent
     private lateinit var originalComponent: JComponent
     private lateinit var translationComponent: JComponent
@@ -73,6 +71,9 @@ abstract class TranslationPane<T : JComponent>(
     private lateinit var extraComponent: JComponent
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
+
+    private var onSpellFixedHandler: ((String) -> Unit)? = null
+
     @Suppress("SpellCheckingInspection")
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
@@ -91,6 +92,16 @@ abstract class TranslationPane<T : JComponent>(
         translation?.srclangs?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
     }
 
+    private val spellLabel = JLabel(
+        message("translation.ui.pane.label.spell"),
+        Icons.AutoAwesome,
+        SwingConstants.LEADING
+    )
+    private val spellText = ActionLink("是不是Are you OK?") {
+        val handler = onSpellFixedHandler ?: return@ActionLink
+        translation?.spell?.let { handler(it) }
+    }
+
     var translation: Translation?
             by Delegates.observable(null) { _, oldValue: Translation?, newValue: Translation? ->
                 if (oldValue !== newValue) {
@@ -107,6 +118,7 @@ abstract class TranslationPane<T : JComponent>(
         targetLangComponent = onCreateLanguageComponent()
 
         fixLanguageComponent = flow(fixLanguageLabel, fixLanguageLink)
+        spellComponent = flow2(spellLabel, spellText)
         sourceLangRowComponent = spaceBetween(flow(originalTTSLink, sourceLangComponent), fixLanguageComponent)
         targetRowComponent = flow(transTTSLink, targetLangComponent)
         originalComponent = onWrapViewer(originalViewer)
@@ -114,6 +126,7 @@ abstract class TranslationPane<T : JComponent>(
 
         onRowCreated(sourceLangRowComponent)
         onRowCreated(originalComponent)
+        onRowCreated(spellComponent)
         onRowCreated(originalTransliterationLabel)
         onRowCreated(targetRowComponent)
         onRowCreated(translationComponent)
@@ -121,6 +134,7 @@ abstract class TranslationPane<T : JComponent>(
 
         add(sourceLangRowComponent)
         add(originalComponent)
+        add(spellComponent)
         add(originalTransliterationLabel)
         add(targetRowComponent)
         add(translationComponent)
@@ -176,6 +190,8 @@ abstract class TranslationPane<T : JComponent>(
             targetLangComponent.font = primaryFont
             fixLanguageLabel.font = primaryFont
             fixLanguageLink.font = primaryFont
+            spellLabel.font = primaryFont.lessOn(2f)
+            spellText.font = primaryFont.deriveFont(Font.BOLD or Font.ITALIC, spellLabel.font.size.toFloat())
             originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
             translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             dictViewer.font = primaryFont.biggerOn(1f)
@@ -204,6 +220,13 @@ abstract class TranslationPane<T : JComponent>(
             setPaintUnderline(false)
             normalColor = JBColor(0xF00000, 0xFF0000)
             activeColor = JBColor(0xA00000, 0xCC0000)
+        }
+
+        spellLabel.foreground = JBColor(0x666666, 0x909090)
+        spellText.apply {
+            setPaintUnderline(false)
+            normalColor = JBColor(0x4285F4, 0x2196F3)
+            activeColor = JBColor(0x3B65CA, 0x03A9F4)
         }
 
         JBColor(0x555555, 0xACACAC).let {
@@ -288,6 +311,10 @@ abstract class TranslationPane<T : JComponent>(
 
     fun onNewTranslate(handler: (text: String, src: Lang, target: Lang) -> Unit) {
         onNewTranslateHandler = handler
+    }
+
+    fun onSpellFixed(handler: (spell: String) -> Unit) {
+        onSpellFixedHandler = handler
     }
 
     @Suppress("SpellCheckingInspection")
@@ -391,6 +418,7 @@ abstract class TranslationPane<T : JComponent>(
             !translation.translation.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
 
         updateOriginalViewer(translation)
+        updateSpell(translation)
         updateViewer(translationViewer, translationComponent, translation.translation)
 
         originalTransliterationLabel.apply {
@@ -433,7 +461,7 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun Viewer.appendStarButton(translation: Translation) {
         val starIcon = if (translation.favoriteId == null) Icons.StarOff else Icons.StarOn
-        val starLabel = LinkLabel<Translation>("", starIcon, LinkListener { starLabel, trans ->
+        val starLabel = LinkLabel<Translation>("", starIcon, { starLabel, trans ->
             starLabel.isEnabled = false
             val starLabelRef = WeakReference(starLabel)
             executeOnPooledThread {
@@ -516,6 +544,7 @@ abstract class TranslationPane<T : JComponent>(
         sourceLangRowComponent.isVisible = false
         targetRowComponent.isVisible = false
         fixLanguageComponent.isVisible = false
+        spellComponent.isVisible = false
         originalComponent.isVisible = false
         translationComponent.isVisible = false
         dictComponent.isVisible = false
@@ -529,6 +558,12 @@ abstract class TranslationPane<T : JComponent>(
 
         extraLabel.isVisible = false
         updateDictViewer(null)
+    }
+
+    private fun updateSpell(translation: Translation) {
+        val spell = translation.spell
+        spellComponent.isVisible = spell != null
+        spellText.text = spell ?: ""
     }
 
     private fun updateViewer(viewer: Viewer, wrapper: JComponent, text: String?) {
@@ -608,6 +643,13 @@ abstract class TranslationPane<T : JComponent>(
             }
 
             return panel
+        }
+
+        private fun flow2(left: JComponent, right: JComponent): JComponent {
+            return BorderLayoutPanel()
+                .andTransparent()
+                .addToLeft(left)
+                .addToCenter(right)
         }
 
         private fun spaceBetween(left: JComponent, right: JComponent): JComponent {

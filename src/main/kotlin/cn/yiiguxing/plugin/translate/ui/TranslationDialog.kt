@@ -248,6 +248,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
                 translate(text, srcLang, targetLang)
             }
             onFixLanguage { sourceLangComboBox.selected = it }
+            onSpellFixed { spell -> translate(spell, null, null) }
             onBeforeFoldingExpand {
                 lastScrollValue = translationPanel.verticalScrollBar.value
             }
@@ -539,7 +540,8 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
         if (request.translatorId == YoudaoTranslator.id &&
             request.targetLang != Lang.AUTO &&
-            request.targetLang != translation.targetLang) {
+            request.targetLang != translation.targetLang
+        ) {
         }
 
         setLanguageComponentsEnable(true)

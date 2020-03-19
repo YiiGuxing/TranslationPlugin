@@ -130,6 +130,10 @@ class TranslationBalloon(
         onNewTranslate { text, src, target ->
             invokeLater { showOnTranslationDialog(text, src, target) }
         }
+        onSpellFixed { spell ->
+            val targetLang = presenter.getTargetLang(spell)
+            invokeLater { showOnTranslationDialog(spell, Lang.AUTO, targetLang) }
+        }
 
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
     }
@@ -207,7 +211,7 @@ class TranslationBalloon(
     }
 
     fun show(tracker: PositionTracker<Balloon>, position: Balloon.Position) {
-        check(!disposed) { "Balloon was disposed." }
+        check(!disposed) { "Balloon has been disposed." }
 
         if (!isShowing) {
             isShowing = true

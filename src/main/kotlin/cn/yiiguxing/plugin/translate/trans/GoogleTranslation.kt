@@ -16,14 +16,14 @@ data class GoogleTranslation(
     var target: Lang? = null,
     val sentences: List<GSentence>,
     val dict: List<GDict>?,
+    val spell: GSpell?,
     @SerializedName("ld_result") val ldResult: GLDResult,
-    // For dt=at
     @SerializedName("alternative_translations") val alternativeTranslations: List<GAlternativeTranslations>?
 ) : TranslationAdapter {
 
     override fun toTranslation(): Translation {
-        check(original != null) { "Can not convert to Translation: original=null" }
-        check(target != null) { "Can not convert to Translation: target=null" }
+        check(original != null) { "Cannot convert to Translation: original=null" }
+        check(target != null) { "Cannot convert to Translation: target=null" }
 
         val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
         val trans = sentences.asSequence().mapNotNull { (it as? GTransSentence)?.trans }.joinToString("")
@@ -36,6 +36,7 @@ data class GoogleTranslation(
             ldResult.srclangs,
             translit?.srcTranslit,
             translit?.translit,
+            spell?.spell,
             GoogleDictDocument.Factory.getDocument(this)
         )
     }
@@ -60,6 +61,7 @@ data class GLDResult(
     @SerializedName("srclangs_confidences") val srclangsConfidences: List<Float>
 )
 
+// For dt=at
 data class GAlternativeTranslations(
     @SerializedName("src_phrase") val srcPhrase: String,
     @SerializedName("raw_src_segment") val rawSrcSegment: String,
@@ -72,3 +74,6 @@ data class GAlternative(
     @SerializedName("has_preceding_space") val hasPrecedingSpace: Boolean,
     @SerializedName("attach_to_next_token") val attachToNextToken: Boolean
 )
+
+// For dt=qca
+data class GSpell(@SerializedName("spell_res") val spell: String)
