@@ -66,6 +66,10 @@ class WordBookPanel : WordBookWindowForm() {
         fireWordsChanged()
     }
 
+    fun selectWord(wordBookItem: WordBookItem) {
+        tableView.selection = arrayListOf(wordBookItem)
+    }
+
     fun fireWordsChanged() {
         tableModel.fireTableDataChanged()
     }
