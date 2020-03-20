@@ -7,7 +7,7 @@ package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.TranslationUIManager
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
