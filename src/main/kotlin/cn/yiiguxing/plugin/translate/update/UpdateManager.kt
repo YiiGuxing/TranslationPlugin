@@ -4,14 +4,16 @@ import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.Plugin
-import cn.yiiguxing.plugin.translate.util.show
+import cn.yiiguxing.plugin.translate.util.*
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -26,6 +28,7 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.content.ContentManagerAdapter
 import com.intellij.ui.content.ContentManagerEvent
+import com.intellij.util.io.HttpRequests
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.intellij.xml.util.XmlStringUtil
@@ -39,27 +42,61 @@ import javax.swing.text.html.HTMLEditorKit
 
 class UpdateManager : BaseStartupActivity(), DumbAware {
 
-    override fun onRunActivity(project: Project) = checkUpdate(project)
+    override fun onRunActivity(project: Project) {
+        checkUpdate(project)
+        checkUpdateFromGithub(project)
+    }
 
     private fun checkUpdate(project: Project) {
         val plugin = Plugin.descriptor
-        val version = plugin.version
+        val versionString = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
-        val lastVersion = properties.getValue(VERSION_PROPERTY)
-        if (version == lastVersion) {
+        val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0")
+        if (versionString == lastVersionString) {
             return
         }
 
-        val versionParts = version.toVersionParts()
-        val lastVersionParts = lastVersion?.toVersionParts()
-        if (lastVersionParts != null && !versionParts.contentEquals(lastVersionParts)) {
-            showUpdateToolWindow(project, versionParts)
+        val version = Version(versionString)
+        val lastVersion = Version(lastVersionString)
+        if (version > lastVersion) {
+            showUpdateToolWindow(project, version)
         }
 
         showUpdateNotification(project, plugin)
-        properties.setValue(VERSION_PROPERTY, version)
+        properties.setValue(VERSION_PROPERTY, versionString)
     }
 
+    private fun checkUpdateFromGithub(project: Project) {
+        if (IdeVersion.isIde2019_3OrNewer) return
+
+        executeOnPooledThread {
+            val newVersion = try {
+                HttpRequests.request(UPDATES_API)
+                    .connect { Gson().fromJson(it.readString(null), Version::class.java) }!!
+            } catch (e: Throwable) {
+                LOGGER.w("Cannot get update info from Github.", e)
+                return@executeOnPooledThread
+            }
+
+            LOGGER.d("Latest released plugin version: $newVersion")
+
+            if (newVersion.versionNumbers.first >= 3) {
+                val properties: PropertiesComponent = PropertiesComponent.getInstance()
+                val lastVersionString = properties.getValue(VERSION_IN_GITHUB_PROPERTY, "0.0")
+                val lastVersion = Version(lastVersionString)
+
+                if (newVersion > lastVersion) {
+                    invokeOnDispatchThread {
+                        if (!project.isDisposed) {
+                            showUpdateNotification(project, newVersion)
+                        }
+                    }
+                }
+
+                properties.setValue(VERSION_PROPERTY, newVersion.versionString)
+            }
+        }
+    }
 
     private fun showUpdateNotification(project: Project, plugin: IdeaPluginDescriptor) {
         val version = plugin.version
@@ -100,12 +137,40 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             .show(project)
     }
 
+    private fun showUpdateNotification(project: Project, version: Version) {
+        NotificationGroup("Translation Plugin Update", NotificationDisplayType.STICKY_BALLOON, false)
+            .createNotification(
+                message("notification.updater.v3.title", version.versionString),
+                message("notification.updater.v3.content", version.versionString),
+                NotificationType.INFORMATION,
+                null
+            )
+            .addAction(SupportAction())
+            .setImportant(true)
+            .show(project)
+    }
+
     class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
         override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
     }
 
+    data class Version(@SerializedName("tag_name") val version: String) {
+
+        val versionNumbers: Pair<Int, Int> by lazy { version.toVersionParts() }
+
+        val versionString: String by lazy { "${versionNumbers.first}.${versionNumbers.second}" }
+
+        operator fun compareTo(other: Version): Int {
+            val compare = versionNumbers.first.compareTo(other.versionNumbers.first)
+            return if (compare == 0) versionNumbers.second.compareTo(other.versionNumbers.second) else compare
+        }
+
+    }
+
     companion object {
         private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
+
+        private const val VERSION_IN_GITHUB_PROPERTY = "${Plugin.PLUGIN_ID}.version.github"
 
         private const val UPDATE_TOOL_WINDOW_ID = "Translation Assistant"
 
@@ -116,19 +181,23 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=is%%3Aissue+milestone%%3Av%s+is%%3Aclosed"
 
+        private const val UPDATES_API = "https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest"
 
-        private fun String.toVersionParts(): IntArray {
-            val versionParts = split('.').take(2)
+        private val LOGGER: Logger = Logger.getInstance(UpdateManager::class.java)
+
+
+        private fun String.toVersionParts(): Pair<Int, Int> {
+            val versionString = if (this[0].equals('v', true)) substring(1) else this
+            val versionParts = versionString.replace("-SNAPSHOT", "").split('.').take(2)
             return when (versionParts.size) {
-                1 -> intArrayOf(versionParts[0].toInt(), 0)
-                2 -> intArrayOf(versionParts[0].toInt(), versionParts[1].toInt())
+                1 -> versionParts[0].toInt() to 0
+                2 -> versionParts[0].toInt() to versionParts[1].toInt()
                 else -> throw IllegalStateException("Invalid version number: $this")
             }
         }
 
         fun showUpdateToolWindow(project: Project) {
-            val versionParts = Plugin.descriptor.version.toVersionParts()
-            showUpdateToolWindow(project, versionParts)
+            showUpdateToolWindow(project, Version(Plugin.descriptor.version))
         }
 
         private class OpenInBrowserAction(private val versionUrl: String) :
@@ -141,9 +210,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
         }
 
-        private fun showUpdateToolWindow(project: Project, versionParts: IntArray) {
-            val version = versionParts.joinToString(".")
-            val versionUrl = "$UPDATES_BASE_URL.html?v=$version"
+        private fun showUpdateToolWindow(project: Project, version: Version) {
+            val versionString = version.versionString
+            val versionUrl = "$UPDATES_BASE_URL.html?v=$versionString"
 
             val toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
             val toolWindow = toolWindowManagerEx.getToolWindow(UPDATE_TOOL_WINDOW_ID)
@@ -166,7 +235,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
             val contentManager = toolWindow.contentManager
             if (contentManager.contentCount == 0) {
-                val contentComponent = createContentComponent(version, versionUrl)
+                val contentComponent = createContentComponent(versionString, versionUrl)
                 val content = ContentFactory.SERVICE.getInstance().createContent(contentComponent, "What's New", false)
                 contentManager.addContent(content)
                 contentManager.addContentManagerListener(object : ContentManagerAdapter() {
