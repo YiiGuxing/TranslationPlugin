@@ -1,10 +1,9 @@
 package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
-import cn.yiiguxing.plugin.translate.activity.Activity
+import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.Plugin
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.icons.AllIcons
@@ -16,7 +15,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
@@ -39,17 +37,9 @@ import javax.swing.UIManager
 import javax.swing.event.HyperlinkEvent
 import javax.swing.text.html.HTMLEditorKit
 
-class UpdateManager : StartupActivity, DumbAware {
+class UpdateManager : BaseStartupActivity(), DumbAware {
 
-    override fun runActivity(project: Project) {
-        if (Application.isUnitTestMode) {
-            return
-        }
-
-        Activity.runLater(project, 3) {
-            checkUpdate(project)
-        }
-    }
+    override fun onRunActivity(project: Project) = checkUpdate(project)
 
     private fun checkUpdate(project: Project) {
         val plugin = Plugin.descriptor
