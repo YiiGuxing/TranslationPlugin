@@ -7,7 +7,6 @@ import com.intellij.openapi.project.Project
 class TranslationProjectComponent(project: Project) : AbstractProjectComponent(project) {
 
     override fun projectOpened() {
-        TranslationUIManager.installStatusWidget(myProject)
     }
 
     override fun disposeComponent() {

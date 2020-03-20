@@ -5,9 +5,7 @@ package cn.yiiguxing.plugin.translate
 import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog
-import cn.yiiguxing.plugin.translate.ui.TranslatorWidget
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.Disposable
@@ -83,18 +81,6 @@ class TranslationUIManager private constructor() {
      */
     fun showWordOfTheDayDialog(project: Project?, words: List<WordBookItem>): WordOfTheDayDialog {
         return showDialog(project, wordOfTheDayDialogMap, { it.setWords(words) }) { WordOfTheDayDialog(project, words) }
-    }
-
-    /**
-     * 显示状态栏图标
-     */
-    fun installStatusWidget(project: Project) {
-        checkThread()
-        TranslatorWidget(project).apply {
-            if (Settings.showStatusIcon) {
-                install()
-            }
-        }
     }
 
     /**
