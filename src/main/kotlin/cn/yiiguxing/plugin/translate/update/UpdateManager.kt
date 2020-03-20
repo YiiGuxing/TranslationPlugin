@@ -74,7 +74,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 HttpRequests.request(UPDATES_API)
                     .connect { Gson().fromJson(it.readString(null), Version::class.java) }!!
             } catch (e: Throwable) {
-                LOGGER.w("Cannot get update info from Github.", e)
+                LOGGER.w("Cannot get release info from Github.", e)
                 return@executeOnPooledThread
             }
 
@@ -88,12 +88,12 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 if (newVersion > lastVersion) {
                     invokeOnDispatchThread {
                         if (!project.isDisposed) {
-                            showUpdateNotification(project, newVersion)
+                            showUpdateIDENotification(project, newVersion)
                         }
                     }
                 }
 
-                properties.setValue(VERSION_PROPERTY, newVersion.versionString)
+                properties.setValue(VERSION_IN_GITHUB_PROPERTY, newVersion.versionString)
             }
         }
     }
@@ -137,21 +137,37 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             .show(project)
     }
 
-    private fun showUpdateNotification(project: Project, version: Version) {
-        NotificationGroup("Translation Plugin Update", NotificationDisplayType.STICKY_BALLOON, false)
+    private fun showUpdateIDENotification(project: Project, version: Version) {
+        NotificationGroup("Translation Plugin Update(IDE)", NotificationDisplayType.STICKY_BALLOON, false)
             .createNotification(
-                message("notification.updater.v3.title", version.versionString),
-                message("notification.updater.v3.content", version.versionString),
+                message("updater.v3.notification.title", version.versionString),
+                message("updater.v3.notification.content", version.versionString),
                 NotificationType.INFORMATION,
                 null
             )
             .addAction(SupportAction())
+            .addAction(UpdateDetailsAction(version))
             .setImportant(true)
             .show(project)
     }
 
-    class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
+    private class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
         override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
+    }
+
+    private class UpdateDetailsAction(private val version: Version) :
+        DumbAwareAction(message("updater.v3.notification.action.detail")) {
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(version.updatesUrl)
+    }
+
+    private class OpenInBrowserAction(private val versionUrl: String) :
+        DumbAwareAction(message("updater.notification.action.read.in.a.browser"), null, AllIcons.General.Web) {
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
+    }
+
+    private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
+        DumbAwareAction(message("updater.notification.action.close"), null, AllIcons.Actions.Close) {
+        override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
     }
 
     data class Version(@SerializedName("tag_name") val version: String) {
@@ -196,24 +212,14 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             }
         }
 
+        private val Version.updatesUrl: String get() = "$UPDATES_BASE_URL.html?v=$versionString"
+
         fun showUpdateToolWindow(project: Project) {
             showUpdateToolWindow(project, Version(Plugin.descriptor.version))
         }
 
-        private class OpenInBrowserAction(private val versionUrl: String) :
-            DumbAwareAction("在浏览器中打开", null, AllIcons.General.Web) {
-            override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
-        }
-
-        private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
-            DumbAwareAction("关闭", null, AllIcons.Actions.Close) {
-            override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
-        }
-
         private fun showUpdateToolWindow(project: Project, version: Version) {
-            val versionString = version.versionString
-            val versionUrl = "$UPDATES_BASE_URL.html?v=$versionString"
-
+            val versionUrl = version.updatesUrl
             val toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
             val toolWindow = toolWindowManagerEx.getToolWindow(UPDATE_TOOL_WINDOW_ID)
                 ?: toolWindowManagerEx.registerToolWindow(
@@ -235,7 +241,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
             val contentManager = toolWindow.contentManager
             if (contentManager.contentCount == 0) {
-                val contentComponent = createContentComponent(versionString, versionUrl)
+                val contentComponent = createContentComponent(version.versionString, versionUrl)
                 val content = ContentFactory.SERVICE.getInstance().createContent(contentComponent, "What's New", false)
                 contentManager.addContent(content)
                 contentManager.addContentManagerListener(object : ContentManagerAdapter() {
