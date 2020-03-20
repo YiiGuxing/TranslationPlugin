@@ -138,11 +138,6 @@ class Settings : PersistentStateComponent<Settings> {
     var foldOriginal: Boolean = false
 
     /**
-     * 是否关闭设置APP KEY通知
-     */
-    var isDisableAppKeyNotification = false
-
-    /**
      * 自动取词模式
      */
     var autoSelectionMode: SelectionMode = SelectionMode.INCLUSIVE
@@ -177,6 +172,7 @@ class Settings : PersistentStateComponent<Settings> {
 
 @Suppress("SpellCheckingInspection")
 private const val YOUDAO_SERVICE_NAME = "YIIGUXING.TRANSLATION"
+
 @Suppress("SpellCheckingInspection")
 private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
 private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
@@ -193,13 +189,11 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default, var
 /**
  * @property primaryLanguage    主要语言
  * @property appId              应用ID
- * @property isAppKeyConfigured 应用密钥设置标志
  */
 @Tag("app-key")
 abstract class AppKeySettings(
     var primaryLanguage: Lang,
     var appId: String = "",
-    var isAppKeyConfigured: Boolean = false,
     securityName: String,
     securityKey: String
 ) {
@@ -214,7 +208,6 @@ abstract class AppKeySettings(
     /** 设置应用密钥. */
     @Transient
     fun setAppKey(value: String?) {
-        isAppKeyConfigured = !value.isNullOrBlank()
         _appKey = if (value.isNullOrBlank()) null else value
     }
 }

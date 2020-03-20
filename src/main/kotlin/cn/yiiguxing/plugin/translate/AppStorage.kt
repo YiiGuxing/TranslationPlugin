@@ -14,7 +14,6 @@ import com.intellij.util.xmlb.annotations.CollectionBean
 import com.intellij.util.xmlb.annotations.MapAnnotation
 import com.intellij.util.xmlb.annotations.Transient
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.properties.Delegates
 
 /**
@@ -27,7 +26,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     private val histories: MutableList<String> = ArrayList(DEFAULT_HISTORY_SIZE)
 
     @MapAnnotation
-    private val languageScores: MutableMap<Lang, Int> = HashMap()
+    private val languageScores: MutableMap<Lang, Int> = EnumMap(Lang::class.java)
 
     val lastLanguages: LanguagePair = LanguagePair()
 
@@ -118,7 +117,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
      * 清除历史启启记录
      */
     fun clearHistories() {
-        if (!histories.isEmpty()) {
+        if (histories.isNotEmpty()) {
             histories.clear()
             dataChangePublisher.onHistoriesChanged()
         }
