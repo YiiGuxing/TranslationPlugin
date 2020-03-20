@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
@@ -24,9 +23,15 @@ class TranslateService private constructor() {
 
     private val cache = LruCache<CacheKey, Translation>(500)
 
-    private var messageBus: MessageBusConnection? = null
-
     private val listeners = mutableMapOf<ListenerKey, MutableSet<TranslateListener>>()
+
+    init {
+        setTranslator(Settings.instance.translator)
+        Application.messageBus
+            .connect()
+            .subscribeSettingsTopic()
+            .subscribeWordBookTopic()
+    }
 
     fun setTranslator(translatorId: String) {
         checkThread()
@@ -135,21 +140,6 @@ class TranslateService private constructor() {
         }
     }
 
-    fun install() {
-        checkThread()
-        if (messageBus != null) {
-            return
-        }
-
-        setTranslator(Settings.instance.translator)
-        messageBus = ApplicationManager
-            .getApplication()
-            .messageBus
-            .connect()
-            .subscribeSettingsTopic()
-            .subscribeWordBookTopic()
-    }
-
     private fun MessageBusConnection.subscribeSettingsTopic() = apply {
         subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
             override fun onTranslatorChanged(settings: Settings, translatorId: String) {
@@ -166,12 +156,6 @@ class TranslateService private constructor() {
 
             override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
         })
-    }
-
-    fun uninstall() {
-        checkThread()
-        messageBus?.disconnect()
-        messageBus = null
     }
 
     private data class ListenerKey(val text: String, val srcLang: Lang, val targetLang: Lang)

@@ -6,9 +6,11 @@ import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
+import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.util.d
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import com.intellij.ide.AppLifecycleListener
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
@@ -31,6 +33,12 @@ class TranslationUIManager private constructor() {
     private val dialogMap: MutableMap<Project?, TranslationDialog> = HashMap()
     private val instantTranslationDialogMap: MutableMap<Project?, InstantTranslationDialog> = HashMap()
     private val wordOfTheDayDialogMap: MutableMap<Project?, WordOfTheDayDialog> = HashMap()
+
+    init {
+        Application.messageBus.connect().subscribe(AppLifecycleListener.TOPIC, object : AppLifecycleListener {
+            override fun appClosing() = disposeUI()
+        })
+    }
 
     /**
      * 显示气泡

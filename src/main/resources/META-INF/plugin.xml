@@ -95,12 +95,6 @@
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
 
-    <application-components>
-        <component>
-            <implementation-class>cn.yiiguxing.plugin.translate.TranslationAppComponent</implementation-class>
-        </component>
-    </application-components>
-
     <actions>
         <action id="$ShowTranslationDialogAction"
                 icon="Icons.Translate"
