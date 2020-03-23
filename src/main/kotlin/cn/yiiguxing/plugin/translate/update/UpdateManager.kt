@@ -170,11 +170,13 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
     }
 
-    data class Version(@SerializedName("tag_name") val version: String) {
+    data class Version @JvmOverloads constructor(@SerializedName("tag_name") val version: String = "v0.0") {
 
         val versionNumbers: Pair<Int, Int> by lazy { version.toVersionParts() }
 
         val versionString: String by lazy { "${versionNumbers.first}.${versionNumbers.second}" }
+
+        override fun toString(): String = "Version(version=$version, versionNumbers=$versionNumbers)"
 
         operator fun compareTo(other: Version): Int {
             val compare = versionNumbers.first.compareTo(other.versionNumbers.first)
