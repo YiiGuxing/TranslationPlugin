@@ -56,7 +56,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             <i><b>名字/昵称 [&lt;网站>][：留言]</i></b><br/>
             网站与留言为可选部分，以下是一个例子：<br/>
             <i><b>Yii.Guxing &lt;github.com/YiiGuxing>：加油！</i></b><br/>
-            提供的信息将会被添加到“<a href="#patrons"><b>Patrons/捐赠者</b></a>”列表，列表按捐赠总额最多仅列出50名捐赠者。
+            提供的信息将会被添加到“<a href="#patrons"><b>Patrons/捐赠者</b></a>”列表，列表将按捐赠总额列出前50名捐赠者。
         """.trimIndent()
         JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(content, null, BALLOON_FILL_COLOR) {
