@@ -20,6 +20,7 @@ object GoogleTranslator : AbstractTranslator() {
 
     private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
+
     @Suppress("SpellCheckingInspection")
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
@@ -63,7 +64,7 @@ object GoogleTranslator : AbstractTranslator() {
         } else {
             urlBuilder
                 .addQueryParameter("client", "gtx")
-                .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm")
+                .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm", "qca")
                 .addQueryParameter("dj", "1")
                 .addQueryParameter("ie", "UTF-8")
                 .addQueryParameter("oe", "UTF-8")

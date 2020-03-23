@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
+import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.ex.ActionUtil
@@ -248,6 +249,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
                 translate(text, srcLang, targetLang)
             }
             onFixLanguage { sourceLangComboBox.selected = it }
+            onSpellFixed { spell -> translate(spell, null, null) }
             onBeforeFoldingExpand {
                 lastScrollValue = translationPanel.verticalScrollBar.value
             }
@@ -539,7 +541,8 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
         if (request.translatorId == YoudaoTranslator.id &&
             request.targetLang != Lang.AUTO &&
-            request.targetLang != translation.targetLang) {
+            request.targetLang != translation.targetLang
+        ) {
         }
 
         setLanguageComponentsEnable(true)

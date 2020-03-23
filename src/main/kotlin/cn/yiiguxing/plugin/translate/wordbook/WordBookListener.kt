@@ -8,7 +8,7 @@ import com.intellij.util.messages.Topic
 interface WordBookListener {
 
     /**
-     * Called after the service is initialized.
+     * Called after the service initialized.
      */
     fun onInitialized(service: WordBookService) {}
 
@@ -23,7 +23,7 @@ interface WordBookListener {
     fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {}
 
     /**
-     * Called when a word is removed.
+     * Called when a word removed.
      */
     fun onWordRemoved(service: WordBookService, id: Long) {}
 

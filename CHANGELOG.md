@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.8.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.0) (2020-03-23)
+
+- 谷歌翻译新增拼写检查功能
+- 翻译与替换功能支持自动单词拆分
+- 单词本自动聚焦新增的单词
+
 ## [v2.7.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.3) (2020-02-22)
 
 - 修复了一些Bug

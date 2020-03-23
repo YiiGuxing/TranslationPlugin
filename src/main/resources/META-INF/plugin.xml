@@ -44,7 +44,9 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>修复了一些Bug</li>
+        <li>谷歌翻译新增拼写检查功能</li>
+        <li>翻译与替换功能支持自动单词拆分</li>
+        <li>单词本自动聚焦新增的单词</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -75,11 +77,13 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationUIManager"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
-        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.OptionsConfigurable"/>
+        <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.StatusService"/>
+
+        <applicationConfigurable instance="cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable"/>
 
         <toolWindow id="Word Book"
                     icon="Icons.Wordbook"
@@ -87,22 +91,11 @@
                     secondary="true"
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
 
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.TranslationStartupActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
     </extensions>
-
-    <application-components>
-        <component>
-            <implementation-class>cn.yiiguxing.plugin.translate.TranslationAppComponent</implementation-class>
-        </component>
-    </application-components>
-
-    <project-components>
-        <component>
-            <implementation-class>cn.yiiguxing.plugin.translate.TranslationProjectComponent</implementation-class>
-        </component>
-    </project-components>
 
     <actions>
         <action id="$ShowTranslationDialogAction"
@@ -189,7 +182,14 @@
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="NavBarToolBar" anchor="last"/>
+        </group>
+        <group id="TranslationNavBarToolBar" text="Translation Navigation Bar Actions">
+            <separator/>
+            <reference ref="$ShowTranslationDialogAction"/>
+            <separator/>
+
+            <!--suppress PluginXmlValidity -->
+            <add-to-group group-id="NavBarToolBar" relative-to-action="RunAnything" anchor="before"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>

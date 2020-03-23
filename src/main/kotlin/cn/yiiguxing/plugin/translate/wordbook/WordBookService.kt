@@ -248,8 +248,8 @@ class WordBookService {
                         Notifications.showErrorNotification(
                             null,
                             NOTIFICATION_DISPLAY_ID,
-                            message("notification.title.wordbook"),
-                            message("notification.content.wordbook.addFailed"),
+                            message("wordbook.notification.title"),
+                            message("wordbook.notification.content.addFailed"),
                             e
                         )
                     }

@@ -1,22 +1,22 @@
 package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
-import cn.yiiguxing.plugin.translate.activity.Activity
+import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.Plugin
-import cn.yiiguxing.plugin.translate.util.show
+import cn.yiiguxing.plugin.translate.util.*
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
@@ -28,6 +28,7 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.content.ContentManagerAdapter
 import com.intellij.ui.content.ContentManagerEvent
+import com.intellij.util.io.HttpRequests
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.intellij.xml.util.XmlStringUtil
@@ -39,37 +40,63 @@ import javax.swing.UIManager
 import javax.swing.event.HyperlinkEvent
 import javax.swing.text.html.HTMLEditorKit
 
-class UpdateManager : StartupActivity, DumbAware {
+class UpdateManager : BaseStartupActivity(), DumbAware {
 
-    override fun runActivity(project: Project) {
-        if (Application.isUnitTestMode) {
-            return
-        }
-
-        Activity.runLater(project, 3) {
-            checkUpdate(project)
-        }
+    override fun onRunActivity(project: Project) {
+        checkUpdate(project)
+        checkUpdateFromGithub(project)
     }
 
     private fun checkUpdate(project: Project) {
         val plugin = Plugin.descriptor
-        val version = plugin.version
+        val versionString = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
-        val lastVersion = properties.getValue(VERSION_PROPERTY)
-        if (version == lastVersion) {
+        val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0")
+        if (versionString == lastVersionString) {
             return
         }
 
-        val versionParts = version.toVersionParts()
-        val lastVersionParts = lastVersion?.toVersionParts()
-        if (lastVersionParts != null && !versionParts.contentEquals(lastVersionParts)) {
-            showUpdateToolWindow(project, versionParts)
+        val version = Version(versionString)
+        val lastVersion = Version(lastVersionString)
+        if (version > lastVersion) {
+            showUpdateToolWindow(project, version)
         }
 
         showUpdateNotification(project, plugin)
-        properties.setValue(VERSION_PROPERTY, version)
+        properties.setValue(VERSION_PROPERTY, versionString)
     }
 
+    private fun checkUpdateFromGithub(project: Project) {
+        if (IdeVersion.isIde2019_3OrNewer) return
+
+        executeOnPooledThread {
+            val newVersion = try {
+                HttpRequests.request(UPDATES_API)
+                    .connect { Gson().fromJson(it.readString(null), Version::class.java) }!!
+            } catch (e: Throwable) {
+                LOGGER.w("Cannot get release info from Github.", e)
+                return@executeOnPooledThread
+            }
+
+            LOGGER.d("Latest released plugin version: $newVersion")
+
+            if (newVersion.versionNumbers.first >= 3) {
+                val properties: PropertiesComponent = PropertiesComponent.getInstance()
+                val lastVersionString = properties.getValue(VERSION_IN_GITHUB_PROPERTY, "0.0")
+                val lastVersion = Version(lastVersionString)
+
+                if (newVersion > lastVersion) {
+                    invokeOnDispatchThread {
+                        if (!project.isDisposed) {
+                            showUpdateIDENotification(project, newVersion)
+                        }
+                    }
+                }
+
+                properties.setValue(VERSION_IN_GITHUB_PROPERTY, newVersion.versionString)
+            }
+        }
+    }
 
     private fun showUpdateNotification(project: Project, plugin: IdeaPluginDescriptor) {
         val version = plugin.version
@@ -110,12 +137,58 @@ class UpdateManager : StartupActivity, DumbAware {
             .show(project)
     }
 
-    class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
+    private fun showUpdateIDENotification(project: Project, version: Version) {
+        NotificationGroup("Translation Plugin Update(IDE)", NotificationDisplayType.STICKY_BALLOON, false)
+            .createNotification(
+                message("updater.v3.notification.title", version.versionString),
+                message("updater.v3.notification.content", version.versionString),
+                NotificationType.INFORMATION,
+                null
+            )
+            .addAction(SupportAction())
+            .addAction(UpdateDetailsAction(version))
+            .setImportant(true)
+            .show(project)
+    }
+
+    private class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
         override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
+    }
+
+    private class UpdateDetailsAction(private val version: Version) :
+        DumbAwareAction(message("updater.v3.notification.action.detail")) {
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(version.updatesUrl)
+    }
+
+    private class OpenInBrowserAction(private val versionUrl: String) :
+        DumbAwareAction(message("updater.notification.action.read.in.a.browser"), null, AllIcons.General.Web) {
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
+    }
+
+    private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
+        DumbAwareAction(message("updater.notification.action.close"), null, AllIcons.Actions.Close) {
+        override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
+    }
+
+    data class Version @JvmOverloads constructor(@SerializedName("tag_name") val version: String = "v0.0") {
+
+        val versionNumbers: Pair<Int, Int> by lazy { version.toVersionParts() }
+
+        val versionString: String by lazy { "${versionNumbers.first}.${versionNumbers.second}" }
+
+        override fun toString(): String = "Version(version=$version, versionNumbers=$versionNumbers)"
+
+        operator fun compareTo(other: Version): Int {
+            val compare = versionNumbers.first.compareTo(other.versionNumbers.first)
+            return if (compare == 0) versionNumbers.second.compareTo(other.versionNumbers.second) else compare
+        }
+
     }
 
     companion object {
         private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
+
+        private const val VERSION_IN_GITHUB_PROPERTY = "${Plugin.PLUGIN_ID}.version.github"
 
         private const val UPDATE_TOOL_WINDOW_ID = "Translation Assistant"
 
@@ -126,35 +199,29 @@ class UpdateManager : StartupActivity, DumbAware {
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=is%%3Aissue+milestone%%3Av%s+is%%3Aclosed"
 
+        private const val UPDATES_API = "https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest"
 
-        private fun String.toVersionParts(): IntArray {
-            val versionParts = split('.').take(2)
+        private val LOGGER: Logger = Logger.getInstance(UpdateManager::class.java)
+
+
+        private fun String.toVersionParts(): Pair<Int, Int> {
+            val versionString = if (this[0].equals('v', true)) substring(1) else this
+            val versionParts = versionString.replace("-SNAPSHOT", "").split('.').take(2)
             return when (versionParts.size) {
-                1 -> intArrayOf(versionParts[0].toInt(), 0)
-                2 -> intArrayOf(versionParts[0].toInt(), versionParts[1].toInt())
+                1 -> versionParts[0].toInt() to 0
+                2 -> versionParts[0].toInt() to versionParts[1].toInt()
                 else -> throw IllegalStateException("Invalid version number: $this")
             }
         }
 
+        private val Version.updatesUrl: String get() = "$UPDATES_BASE_URL.html?v=$versionString"
+
         fun showUpdateToolWindow(project: Project) {
-            val versionParts = Plugin.descriptor.version.toVersionParts()
-            showUpdateToolWindow(project, versionParts)
+            showUpdateToolWindow(project, Version(Plugin.descriptor.version))
         }
 
-        private class OpenInBrowserAction(private val versionUrl: String) :
-            DumbAwareAction("在浏览器中打开", null, AllIcons.General.Web) {
-            override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
-        }
-
-        private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
-            DumbAwareAction("关闭", null, AllIcons.Actions.Close) {
-            override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
-        }
-
-        private fun showUpdateToolWindow(project: Project, versionParts: IntArray) {
-            val version = versionParts.joinToString(".")
-            val versionUrl = "$UPDATES_BASE_URL.html?v=$version"
-
+        private fun showUpdateToolWindow(project: Project, version: Version) {
+            val versionUrl = version.updatesUrl
             val toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
             val toolWindow = toolWindowManagerEx.getToolWindow(UPDATE_TOOL_WINDOW_ID)
                 ?: toolWindowManagerEx.registerToolWindow(
@@ -176,7 +243,7 @@ class UpdateManager : StartupActivity, DumbAware {
 
             val contentManager = toolWindow.contentManager
             if (contentManager.contentCount == 0) {
-                val contentComponent = createContentComponent(version, versionUrl)
+                val contentComponent = createContentComponent(version.versionString, versionUrl)
                 val content = ContentFactory.SERVICE.getInstance().createContent(contentComponent, "What's New", false)
                 contentManager.addContent(content)
                 contentManager.addContentManagerListener(object : ContentManagerAdapter() {
@@ -263,8 +330,9 @@ class UpdateManager : StartupActivity, DumbAware {
 
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
-                "更多语言的文档注释翻译" to "支持包括Go，Dart，Python等语言的文档注释翻译",
-                "列选择模式" to "支持列选择模式的翻译"
+                "拼写检查" to "谷歌翻译新增拼写检查功能",
+                "翻译与替换支持单词拆分" to "翻译与替换现已支持自动单词拆分",
+                "单词本自动聚焦" to "添加新单词时单词本自动聚焦到新增的单词"
             )
         }
 
@@ -273,19 +341,18 @@ class UpdateManager : StartupActivity, DumbAware {
 
             return """
                 <h2>翻译</h2>
-                <h3>文档注释翻译</h3>
-                <p>新增多种语言的文档注释翻译的支持，新支持的语言有：</p>
-                <ul>
-                    <li><i>Go</i></li>
-                    <li><i>Dart</i></li>
-                    <li><i>Python</i></li>
-                    <li><i>C, C++, Objective-C/C++</i></li>
-                </ul>
-                <img src="${imageResource("doc.png")}" alt="文档注释翻译">
-
-                <h3>列选择模式</h3>
-                <p>现在，通过列选择模式选择的文本，可以完整地被读取并翻译，而不再是只读取最后一行了。</p>
-                <img src="${imageResource("column_selection_mode.gif")}" alt="列选择模式">
+                <h3>拼写检查</h3>
+                <p>使用谷歌时，将会对翻译的文字进行拼写检查并尝试纠正。</p>
+                <img src="${imageResource("spelling_check.gif")}" alt="拼写检查">
+            
+                <h3>翻译与替换</h3>
+                <p>现在，翻译与替换操作已支持对单词进行自动拆分。</p>
+                <img src="${imageResource("tar.gif")}" alt="翻译与替换">
+            
+                <h2>单词本</h2>
+                <h3>自动聚焦新增的单词</h3>
+                <p>当一个单词被添加到单词本中时，新增的单词词条将会在单词本单词列表中自动被聚焦。</p>
+                <img src="${imageResource("wordbook.gif")}" alt="单词本">
             """.trimIndent()
         }
     }

@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
+import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -130,6 +131,10 @@ class TranslationBalloon(
         onNewTranslate { text, src, target ->
             invokeLater { showOnTranslationDialog(text, src, target) }
         }
+        onSpellFixed { spell ->
+            val targetLang = presenter.getTargetLang(spell)
+            invokeLater { showOnTranslationDialog(spell, Lang.AUTO, targetLang) }
+        }
 
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
     }
@@ -207,7 +212,7 @@ class TranslationBalloon(
     }
 
     fun show(tracker: PositionTracker<Balloon>, position: Balloon.Position) {
-        check(!disposed) { "Balloon was disposed." }
+        check(!disposed) { "Balloon has been disposed." }
 
         if (!isShowing) {
             isShowing = true

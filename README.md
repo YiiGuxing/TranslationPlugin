@@ -157,7 +157,7 @@ FAQ
    - 检查网络环境，确保网络畅通。
    - 检查是否是因为使用了代理软件而导致插件无法访问翻译API。
    - 检查IDE代理配置，查看是否是因为IDE代理配置导致的问题。
-   - 如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`使用translate.google.com`选项（如果系统语言环境是非中文的话，此选项是默认勾选的），translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
+   - 如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`使用translate.google.com`选项，translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
 
 2. **翻译内容出现乱码怎么办？**
 
@@ -178,9 +178,11 @@ FAQ
 更新日志
 --------
 
-## [v2.7.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.3) (2020-02-22)
+## [v2.8.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.0) (2020-03-23)
 
-- 修复了一些Bug
+- 谷歌翻译新增拼写检查功能
+- 翻译与替换功能支持自动单词拆分
+- 单词本自动聚焦新增的单词
 
 [完整的更新历史记录](./CHANGELOG.md)
 
@@ -214,8 +216,13 @@ Support
       <td><img src="./images/wechat.png"></td>
     </tr>
   </table>
+  使用支付宝/微信支付捐赠时请提供名字/昵称和网站，格式为：
 
-感谢您的支持！
+  `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
+
+  提供的信息将会被添加到“[**Patrons/捐赠者**][financial-contributors]”列表，列表按捐赠总额最多仅列出50名捐赠者。
+
+**感谢您的支持！**
 
 其他插件
 ------
@@ -237,6 +244,7 @@ Support
 [plugin]: https://plugins.jetbrains.com/plugin/8579
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
+[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 ## Contributors
 
@@ -267,3 +275,11 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/translation-plugin/organization/7/website"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
+
+#### Patrons/捐赠者
+
+| **姓名** | **网站** | **捐赠总额** |
+| -------- | -------- | ------------ |
+|          |          |              |
+
+[更多捐赠者][financial-contributors]

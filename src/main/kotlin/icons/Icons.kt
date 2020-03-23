@@ -96,4 +96,7 @@ object Icons {
     @JvmField
     val Support: Icon = IconLoader.getIcon("/icons/support.png")
 
+    @JvmField
+    val AutoAwesome: Icon = IconLoader.getIcon("/icons/autoAwesome.png")
+
 }
