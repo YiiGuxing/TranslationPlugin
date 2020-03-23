@@ -601,3 +601,17 @@ iframe {
 .support table {
     text-align: center;
 }
+
+.support-patrons-note {
+    font-size: 0.95rem;
+    line-height: 1.8rem;
+    margin-top: 1rem;
+}
+
+.support-patrons {
+    color: #000000;
+    font-style: italic;
+    padding: 2px 6px;
+    background-color: #efefef;
+    border-radius: 3px;
+}
