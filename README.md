@@ -216,8 +216,13 @@ Support
       <td><img src="./images/wechat.png"></td>
     </tr>
   </table>
+  使用支付宝/微信支付捐赠时请提供名字/昵称和网站，格式为：
+  
+  *`名字/昵称 [<网站>][：留言] `*（网站与留言为可选部分，例子：*`Yii.Guxing <github.com/YiiGuxing>：加油！`*）
+  
+  提供的信息将会被添加到“[**Patrons/捐赠者**][financial-contributors]”列表，列表按捐赠总额最多仅列出50名捐赠者。
 
-感谢您的支持！
+**感谢您的支持！**
 
 其他插件
 ------
@@ -239,6 +244,7 @@ Support
 [plugin]: https://plugins.jetbrains.com/plugin/8579
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
+[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 ## Contributors
 
@@ -269,3 +275,11 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/translation-plugin/organization/7/website"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
+
+#### Patrons/捐赠者
+
+| **姓名** | **网站** | **捐赠总额** |
+| -------- | -------- | ------------ |
+|          |          |              |
+
+[更多捐赠者][financial-contributors]
