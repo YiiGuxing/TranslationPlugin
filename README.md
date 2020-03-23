@@ -216,10 +216,8 @@ Support
       <td><img src="./images/wechat.png"></td>
     </tr>
   </table>
-  使用支付宝/微信支付捐赠时请提供名字/昵称和网站，格式为：
-  
-  `名字/昵称 [<网站>][：留言] `（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
-  
+  使用支付宝/微信支付捐赠时请提供名字/昵称和网站，格式为：<br/>
+  `名字/昵称 [<网站>][：留言] `（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）<br/>
   提供的信息将会被添加到“[**Patrons/捐赠者**][financial-contributors]”列表，列表按捐赠总额最多仅列出50名捐赠者。
 
 **感谢您的支持！**
