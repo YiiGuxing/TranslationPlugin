@@ -44,7 +44,9 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>修复了一些Bug</li>
+        <li>谷歌翻译新增拼写检查功能</li>
+        <li>翻译与替换功能支持自动单词拆分</li>
+        <li>单词本自动聚焦新增的单词</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -186,6 +188,7 @@
             <reference ref="$ShowTranslationDialogAction"/>
             <separator/>
 
+            <!--suppress PluginXmlValidity -->
             <add-to-group group-id="NavBarToolBar" relative-to-action="RunAnything" anchor="before"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
