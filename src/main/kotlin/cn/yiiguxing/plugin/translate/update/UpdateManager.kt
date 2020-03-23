@@ -330,8 +330,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
-                "更多语言的文档注释翻译" to "支持包括Go，Dart，Python等语言的文档注释翻译",
-                "列选择模式" to "支持列选择模式的翻译"
+                "拼写检查" to "谷歌翻译新增拼写检查功能",
+                "翻译与替换支持单词拆分" to "翻译与替换现已支持自动单词拆分",
+                "单词本自动聚焦" to "添加新单词时单词本自动聚焦到新增的单词"
             )
         }
 
@@ -340,19 +341,18 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
             return """
                 <h2>翻译</h2>
-                <h3>文档注释翻译</h3>
-                <p>新增多种语言的文档注释翻译的支持，新支持的语言有：</p>
-                <ul>
-                    <li><i>Go</i></li>
-                    <li><i>Dart</i></li>
-                    <li><i>Python</i></li>
-                    <li><i>C, C++, Objective-C/C++</i></li>
-                </ul>
-                <img src="${imageResource("doc.png")}" alt="文档注释翻译">
-
-                <h3>列选择模式</h3>
-                <p>现在，通过列选择模式选择的文本，可以完整地被读取并翻译，而不再是只读取最后一行了。</p>
-                <img src="${imageResource("column_selection_mode.gif")}" alt="列选择模式">
+                <h3>拼写检查</h3>
+                <p>使用谷歌时，将会对翻译的文字进行拼写检查并尝试纠正。</p>
+                <img src="${imageResource("spelling_check.gif")}" alt="拼写检查">
+            
+                <h3>翻译与替换</h3>
+                <p>现在，翻译与替换操作已支持对单词进行自动拆分。</p>
+                <img src="${imageResource("tar.gif")}" alt="翻译与替换">
+            
+                <h2>单词本</h2>
+                <h3>自动聚焦新增的单词</h3>
+                <p>当一个单词被添加到单词本中时，新增的单词词条将会在单词本单词列表中自动被聚焦。</p>
+                <img src="${imageResource("wordbook.gif")}" alt="单词本">
             """.trimIndent()
         }
     }
