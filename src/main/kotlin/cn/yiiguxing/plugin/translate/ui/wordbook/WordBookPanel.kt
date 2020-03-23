@@ -67,7 +67,13 @@ class WordBookPanel : WordBookWindowForm() {
     }
 
     fun selectWord(wordBookItem: WordBookItem) {
-        tableView.selection = arrayListOf(wordBookItem)
+        tableView.apply {
+            selection = arrayListOf(wordBookItem)
+            val offsetRow = if (rowHeight > 0) parent.height / rowHeight / 2 else 0
+            val visibleRow = minOf(selectedRow + offsetRow, rowCount - 1)
+            val rect = getCellRect(visibleRow, 0, true)
+            scrollRectToVisible(rect)
+        }
     }
 
     fun fireWordsChanged() {
