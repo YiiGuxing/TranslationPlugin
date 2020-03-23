@@ -220,7 +220,7 @@ Support
 
   `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
 
-  提供的信息将会被添加到“[**Patrons/捐赠者**][financial-contributors]”列表，列表按捐赠总额最多仅列出50名捐赠者。
+  提供的信息将会被添加到[**Patrons/捐赠者**][financial-contributors]列表中，列表将按捐赠总额列出前50名捐赠者。
 
 **感谢您的支持！**
 
