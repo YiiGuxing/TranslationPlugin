@@ -562,7 +562,8 @@ abstract class TranslationPane<T : JComponent>(
     private fun updateSpell(translation: Translation) {
         val spell = translation.spell
         spellComponent.isVisible = spell != null
-        spellText.text = spell ?: ""
+        spellText.text = spell
+        spellText.toolTipText = spell
     }
 
     private fun updateViewer(viewer: Viewer, wrapper: JComponent, text: String?) {
