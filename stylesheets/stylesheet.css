@@ -582,12 +582,10 @@ table td {
     border-left: 1px solid #d3d6d9;
 }
 
-.version-list ul li a:hover {
-    border-color: #0288D1;
-}
-
+.version-list ul li a:hover,
 .version-list ul li a.selected {
     color: #0288D1;
+    border-color: #0288D1;
 }
 
 iframe {
@@ -614,4 +612,52 @@ iframe {
     padding: 2px 6px;
     background-color: #efefef;
     border-radius: 3px;
+}
+
+.support #patrons {
+    border: 1px #00BCD4 solid;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.support #patrons > .title {
+    color: white;
+    font-size: 20px;
+    background-color: #00BCD4;
+    padding: 8px 20px;
+}
+
+.support #patrons > table {
+    width: 100%;
+    border: none;
+}
+
+.support #patrons > table tr:first-child {
+    border: none;
+}
+
+.support #patrons > table th.donator {
+    width: 30%;
+}
+
+.support #patrons > table th.website {
+    width: 55%;
+}
+
+.support #patrons > table th.amount {
+    width: 15%;
+}
+
+.support #patrons > table th,
+.support #patrons > table td {
+    padding: 8px 8px 8px 12px;
+    text-align: left;
+    border: none;
+}
+
+.support #patrons > .empty {
+    color: #bbbbbb;
+    padding: 100px;
+    text-align: center;
+    border-top: 1px solid #c6cbd1;
 }
