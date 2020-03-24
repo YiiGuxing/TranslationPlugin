@@ -9,6 +9,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.util.ui.JBUI
+import org.apache.http.client.utils.URIBuilder
+import java.awt.Desktop
 import javax.swing.Action
 import javax.swing.JComponent
 import javax.swing.UIManager
@@ -52,16 +54,22 @@ class SupportDialog private constructor() : DialogWrapper(null) {
     private fun showDonatePop(component: JComponent) {
         @Suppress("SpellCheckingInspection")
         val content = """
-            使用支付宝/微信支付捐赠时请提供名字/昵称和网站，格式为：<br/>
+            使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：<br/>
             <i><b>名字/昵称 [&lt;网站>][：留言]</i></b><br/>
             网站与留言为可选部分，以下是一个例子：<br/>
             <i><b>Yii.Guxing &lt;github.com/YiiGuxing>：加油！</i></b><br/>
-            提供的信息将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。
+            提供的信息将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。<br/>
+            邮箱地址：<a href="#e-mail"><b>yii.guxing@gmail.com</b></a><br/>
+            感谢您的慷慨捐赠！
         """.trimIndent()
         JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(content, null, BALLOON_FILL_COLOR) {
                 if (it.eventType == HyperlinkEvent.EventType.ACTIVATED) {
-                    BrowserUtil.browse(SUPPORT_PATRONS_URL)
+                    if (it.description == "#e-mail") {
+                        mail()
+                    } else {
+                        BrowserUtil.browse(SUPPORT_PATRONS_URL)
+                    }
                 }
             }
             .setShadow(true)
@@ -74,6 +82,16 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             .setContentInsets(JBUI.insets(10))
             .createBalloon()
             .show(JBPopupFactory.getInstance().guessBestPopupLocation(component), Balloon.Position.above)
+    }
+
+    private fun mail() {
+        val uri = URIBuilder()
+            .setScheme("mailto")
+            .setPath("yii.guxing@gmail.com")
+            .setParameter("subject", "Donate")
+            .setParameter("body", "名字/昵称<网站>：您的留言\n\n捐赠金额：\n平台：支付宝/微信支付\n支付宝用户名/微信用户名/单号（后5位）：\n\n")
+            .build()
+        Desktop.getDesktop().mail(uri)
     }
 
     override fun createCenterPanel(): JComponent = form.rootPane
