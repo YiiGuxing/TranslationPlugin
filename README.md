@@ -282,6 +282,6 @@ Support this project with your organization. Your logo will show up here with a 
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-|          |          |              |
+| afa      |          | 5 CNY        |
 
 [更多捐赠者][financial-contributors]
