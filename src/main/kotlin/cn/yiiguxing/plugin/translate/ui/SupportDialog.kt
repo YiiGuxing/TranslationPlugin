@@ -59,7 +59,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             网站与留言为可选部分，以下是一个例子：<br/>
             <i><b>Yii.Guxing &lt;github.com/YiiGuxing>：加油！</i></b><br/>
             提供的信息将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。<br/>
-            邮箱地址：<a href="#e-mail"><b>yii.guxing@gmail.com</b></a><br/>
+            邮箱地址：<a href="#e-mail"><b>yii.guxing@gmail.com</b></a> (点击发送邮件)<br/>
             感谢您的慷慨捐赠！
         """.trimIndent()
         JBPopupFactory.getInstance()
