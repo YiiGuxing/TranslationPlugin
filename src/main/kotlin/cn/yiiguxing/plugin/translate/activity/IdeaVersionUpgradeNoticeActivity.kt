@@ -32,7 +32,7 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
             "yii.guxing.translate.IdeaVersionUpgradeNotice.${IdeVersion.buildNumber}.disable"
 
         private fun showNotification(project: Project) {
-            NotificationGroup(DISPLAY_ID, NotificationDisplayType.STICKY_BALLOON, false)
+            NotificationGroup(DISPLAY_ID, NotificationDisplayType.BALLOON, false)
                 .createNotification(
                     message("notification.idea.version.title"),
                     message("notification.idea.version"),
