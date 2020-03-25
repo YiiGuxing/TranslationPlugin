@@ -231,15 +231,16 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                     project,
                     true,
                     false
-                ).also { toolWindow ->
-                    toolWindow.icon = AllIcons.Toolwindows.ToolWindowPalette
-                    toolWindow.setAvailable(true, null)
-                    toolWindow.isToHideOnEmptyContent = false
-                    (toolWindow as ToolWindowEx).setTitleActions(
-                        OpenInBrowserAction(versionUrl),
-                        CloseAction(project, toolWindow)
-                    )
-                }
+                )
+
+            toolWindow as ToolWindowEx
+            toolWindow.icon = AllIcons.Toolwindows.ToolWindowPalette
+            toolWindow.setAvailable(true, null)
+            toolWindow.isToHideOnEmptyContent = false
+            toolWindow.setTitleActions(
+                OpenInBrowserAction(versionUrl),
+                CloseAction(project, toolWindow)
+            )
 
             val contentManager = toolWindow.contentManager
             if (contentManager.contentCount == 0) {
@@ -247,7 +248,10 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 val content = ContentFactory.SERVICE.getInstance().createContent(contentComponent, "What's New", false)
                 contentManager.addContent(content)
                 contentManager.addContentManagerListener(object : ContentManagerAdapter() {
-                    override fun contentRemoved(event: ContentManagerEvent) = toolWindow.dispose(project)
+                    override fun contentRemoved(event: ContentManagerEvent) {
+                        contentManager.removeContentManagerListener(this)
+                        toolWindow.dispose(project)
+                    }
                 })
             }
 
@@ -257,7 +261,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         private fun ToolWindow.dispose(project: Project) {
             val toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
             toolWindowManagerEx.hideToolWindow(UPDATE_TOOL_WINDOW_ID, false)
-            toolWindowManagerEx.unregisterToolWindow(UPDATE_TOOL_WINDOW_ID)
+            if (toolWindowManagerEx.getToolWindow(UPDATE_TOOL_WINDOW_ID) != null) {
+                toolWindowManagerEx.unregisterToolWindow(UPDATE_TOOL_WINDOW_ID)
+            }
             Disposer.dispose(contentManager)
         }
 
