@@ -58,10 +58,10 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             <i><b>名字/昵称 [&lt;网站>][：留言]</i></b><br/>
             网站与留言为可选部分，以下是一个例子：<br/>
             <i><b>Yii.Guxing &lt;github.com/YiiGuxing>：加油！</i></b><br/>
-            通过邮件发送时，请还提供以下信息：<br/>
+            通过邮件发送时，请还提供以下信息：<br/><i><b>
             捐赠金额：
             支付平台：支付宝/微信支付
-            支付宝用户名/微信用户名/单号（后5位）：<br/>
+            支付宝用户名/微信用户名/单号（后5位）：</i></b><br/>
             您提供的名字、网站和捐赠总额将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。<br/>
             邮箱地址：<a href="#e-mail"><b>yii.guxing@gmail.com</b></a> (点击发送邮件)<br/>
             感谢您的慷慨捐赠！
