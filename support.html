@@ -5,6 +5,7 @@
     <title>支持 - TranslationPlugin</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <script src="//cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 <header class="frame_head">
@@ -64,27 +65,59 @@
         <div id="patrons" class="column">
             <div class="title">Patrons/捐赠者</div>
             <table>
-                <tbody>
+                <tbody id="patronsTableBody">
                 <tr>
                     <th class="donator">姓名</th>
                     <th class="website">网站</th>
                     <th class="amount">捐赠总额</th>
                 </tr>
-                <tr>
-                    <td>Afa</td>
-                    <td></td>
-                    <td>5 CNY</td>
-                </tr>
-                <tr>
-                    <td>Futao</td>
-                    <td><a href="http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0" target="_blank">《喜欢天文》</a></td>
-                    <td>5 CNY</td>
-                </tr>
                 </tbody>
             </table>
-            <div class="empty" style="display: none">暂无数据</div>
+            <div id="placeholder" class="patrons-placeholder">加载中…</div>
         </div>
     </div>
 </div>
+<script>
+    function processPatronsList(patronsList) {
+        var regx = /^\|\s*(.+?)\s*\|\s*(\[\s*(.+?)\s*]\(\s*(.+?)\s*\))?\s*\|\s*(.+?)\s*\|$/;
+        for (var i = 0; i < patronsList.length; i++) {
+            var patronsLine = patronsList[i];
+            if (patronsLine) {
+                var parsedPatron = regx.exec(patronsLine);
+                var name = parsedPatron[1];
+                var websiteName = parsedPatron[3];
+                var websiteUrl = parsedPatron[4];
+                var website;
+                if (websiteName && websiteUrl) {
+                    website = {name: websiteName, url: websiteUrl};
+                }
+                var amount = parsedPatron[5];
+                appendPatron(name, website, amount);
+            }
+        }
+    }
+
+    var $patronsTableBody = $("#patronsTableBody");
+
+    function appendPatron(name, website, amount) {
+        var nameTd = "<td>" + name + "</td>";
+        var websiteTd = "<td>" + (website ? "<a href='" + website.url + "' target='_blank'>" + website.name + "</a>" : "") + "</td>";
+        var amountTd = "<td>" + amount + "</td>";
+        $patronsTableBody.append($("<tr>" + nameTd + websiteTd + amountTd + "</tr>"))
+    }
+
+    $.ajax({
+        url: "https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/FINANCIAL_CONTRIBUTORS.md",
+        type: "GET",
+        dataType: "TEXT",
+        success: function (data) {
+            processPatronsList(data.split(/\s*\n+\s*/).slice(3));
+            $("#placeholder").hide();
+        },
+        error: function () {
+            $("#placeholder").text("加载失败！")
+        }
+    });
+</script>
 </body>
 </html>
