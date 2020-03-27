@@ -92,7 +92,9 @@
                     website = {name: websiteName, url: websiteUrl};
                 }
                 var amount = parsedPatron[5];
-                appendPatron(name, website, amount);
+                if (name&&website&&amount) {
+                    appendPatron(name, website, amount);
+                }
             }
         }
     }
