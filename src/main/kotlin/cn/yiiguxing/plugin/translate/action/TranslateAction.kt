@@ -66,11 +66,16 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
         val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
 
         if (highlighters.isNotEmpty()) {
-            Disposer.register(balloon, Disposable {
+            val disposable = Disposable {
                 for (highlighter in highlighters) {
                     highlightManager.removeSegmentHighlighter(editor, highlighter)
                 }
-            })
+            }
+            if (balloon.disposed) {
+                disposable.dispose()
+            } else {
+                Disposer.register(balloon, disposable)
+            }
         }
     }
 
