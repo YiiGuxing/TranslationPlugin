@@ -44,9 +44,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>谷歌翻译新增拼写检查功能</li>
-        <li>翻译与替换功能支持自动单词拆分</li>
-        <li>单词本自动聚焦新增的单词</li>
+        <li>修复了一些Bug</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
