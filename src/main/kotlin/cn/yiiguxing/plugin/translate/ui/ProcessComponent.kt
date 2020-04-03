@@ -35,7 +35,7 @@ class ProcessComponent(text: String, insets: Insets = JBUI.emptyInsets()) : JPan
 
     init {
         isOpaque = false
-        layout = GridLayoutManager(1, 2, insets, JBUI.scale(5), 0)
+        layout = GridLayoutManager(1, 2, insets, JBUI.scale(10), 0)
 
         add(icon, GridConstraints().apply {
             column = 0
