@@ -178,11 +178,9 @@ FAQ
 更新日志
 --------
 
-## [v2.8.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.0) (2020-03-23)
+## [v2.8.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-04-07)
 
-- 谷歌翻译新增拼写检查功能
-- 翻译与替换功能支持自动单词拆分
-- 单词本自动聚焦新增的单词
+- 修复了一些Bug
 
 [完整的更新历史记录](./CHANGELOG.md)
 
