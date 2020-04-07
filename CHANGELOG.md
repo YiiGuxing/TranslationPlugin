@@ -1,5 +1,9 @@
 # Change Log
 
+## [v2.8.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-04-07)
+
+- 修复了一些Bug
+
 ## [v2.8.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.0) (2020-03-23)
 
 - 谷歌翻译新增拼写检查功能
