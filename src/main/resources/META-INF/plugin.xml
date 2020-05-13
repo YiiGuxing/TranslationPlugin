@@ -62,6 +62,24 @@
     <depends optional="true" config-file="go-doc.xml">org.jetbrains.plugins.go</depends>
     <depends optional="true" config-file="python-doc.xml">com.intellij.modules.python</depends>
     <depends optional="true" config-file="dart-doc.xml">Dart</depends>
+    <depends optional="true" config-file="css-doc.xml">com.intellij.css</depends>
+    <depends optional="true" config-file="groovy-doc.xml">org.intellij.groovy</depends>
+    <depends optional="true" config-file="java-doc.xml">com.intellij.modules.java</depends>
+    <depends optional="true" config-file="javaScript-doc.xml">JavaScript</depends>
+    <depends optional="true" config-file="json-doc.xml">com.intellij.modules.json</depends>
+    <depends optional="true" config-file="jsp-doc.xml">com.intellij.jsp</depends>
+    <depends optional="true" config-file="php-doc.xml">com.jetbrains.php</depends>
+    <depends optional="true" config-file="properties-doc.xml">com.intellij.properties</depends>
+    <depends optional="true" config-file="rest-doc.xml">com.jetbrains.restClient</depends>
+    <depends optional="true" config-file="ruby-doc.xml">com.intellij.modules.ruby</depends>
+    <depends optional="true" config-file="scala-doc.xml">org.intellij.scala</depends>
+    <depends optional="true" config-file="shell-doc.xml">com.jetbrains.sh</depends>
+    <depends optional="true" config-file="sql-doc.xml">com.intellij.modules.sql</depends>
+    <depends optional="true" config-file="swift-doc.xml">com.intellij.modules.swift.lang</depends>
+    <depends optional="true" config-file="vue-doc.xml">org.jetbrains.plugins.vue</depends>
+    <depends optional="true" config-file="xml-doc.xml">com.intellij.modules.xml</depends>
+    <depends optional="true" config-file="xpath-doc.xml">XPathView</depends>
+    <depends optional="true" config-file="yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
         <extensionPoint name="docElementProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
