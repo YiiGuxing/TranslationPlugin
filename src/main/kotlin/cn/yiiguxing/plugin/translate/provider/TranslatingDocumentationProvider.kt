@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.provider
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProviderEx
@@ -18,6 +19,9 @@ import java.util.concurrent.TimeoutException
 class TranslatingDocumentationProvider : DocumentationProviderEx() {
 
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+        if (!Settings.instance.translateDocumentation)
+            return null
+
         return nullIfRecursive {
             translateOriginalDoc(element, originalElement)
         }

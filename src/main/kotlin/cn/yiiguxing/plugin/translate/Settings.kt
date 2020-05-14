@@ -147,6 +147,8 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
+    var translateDocumentation: Boolean = true
+
     @Transient
     private val settingsChangePublisher: SettingsChangeListener =
         ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)

@@ -231,6 +231,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                     || settings.selectTargetLanguageBeforeReplacement != selectTargetLanguageCheckBox.isSelected
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
                     || settings.showExplanation != showExplanationCheckBox.isSelected
+                    || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
         }
 
 
@@ -265,6 +266,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
             selectTargetLanguageBeforeReplacement = selectTargetLanguageCheckBox.isSelected
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
             showExplanation = showExplanationCheckBox.isSelected
+            translateDocumentation = translateDocumentationCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
@@ -298,6 +300,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         selectionModeComboBox.selected = settings.autoSelectionMode
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ttsSourceComboBox.selected = settings.ttsSource
+        translateDocumentationCheckBox.isSelected = settings.translateDocumentation
     }
 
     companion object {
