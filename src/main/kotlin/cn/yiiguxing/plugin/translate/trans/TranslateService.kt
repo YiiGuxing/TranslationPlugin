@@ -34,7 +34,6 @@ class TranslateService private constructor() {
     }
 
     fun setTranslator(translatorId: String) {
-        checkThread()
         if (translatorId != translator.id) {
             translator = when (translatorId) {
                 YoudaoTranslator.TRANSLATOR_ID -> YoudaoTranslator
