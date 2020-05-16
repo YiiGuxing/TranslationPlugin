@@ -11,14 +11,20 @@ class TxtWordBookExporter : WordBookExporter {
 
     override fun export(words: List<WordBookItem>, outputStream: OutputStream) {
         val writer = OutputStreamWriter(outputStream, Charsets.UTF_8.name())
-        words.forEach {
-            writer.write(
-                it.word + "\t"
-                        + (if (it.phonetic.isNullOrEmpty()) "" else it.phonetic + "\t")
-                        + (it.explanation?.replace(Regex("[\n\t]"), " ")?:" ")
-                        + "\n"
-            )
+        words.forEach { item ->
+            writer.write(item.word)
+            writer.write(SEPARATOR)
+            item.phonetic?.let { writer.write(it) }
+            writer.write(SEPARATOR)
+            item.explanation?.let { writer.write(it.replace(EXPLANATION_REPLACE_REGEX, " ")) }
+            writer.write(ITEM_SEPARATOR)
         }
         writer.flush()
+    }
+
+    companion object {
+        private const val SEPARATOR = '\t'.toInt()
+        private const val ITEM_SEPARATOR = '\n'.toInt()
+        private val EXPLANATION_REPLACE_REGEX = Regex("[\n\t]")
     }
 }
