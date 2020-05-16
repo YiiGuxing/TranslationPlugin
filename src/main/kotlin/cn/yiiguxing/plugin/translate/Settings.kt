@@ -77,15 +77,6 @@ class Settings : PersistentStateComponent<Settings> {
     }
 
     /**
-     * 状态栏图标
-     */
-    var showStatusIcon: Boolean by Delegates.observable(true) { _, oldValue: Boolean, newValue: Boolean ->
-        if (oldValue != newValue) {
-            settingsChangePublisher.onWindowOptionsChanged(this, WindowOption.STATUS_ICON)
-        }
-    }
-
-    /**
      * 翻译时需要忽略的内容
      */
     var ignoreRegExp: String? = null
@@ -234,8 +225,6 @@ class BaiduTranslateSettings : AppKeySettings(
     securityKey = BAIDU_APP_KEY
 )
 
-enum class WindowOption { STATUS_ICON }
-
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),
     TRANSLATION(message("settings.item.translation"))
@@ -253,8 +242,6 @@ interface SettingsChangeListener {
     fun onTranslatorChanged(settings: Settings, translatorId: String) {}
 
     fun onOverrideFontChanged(settings: Settings) {}
-
-    fun onWindowOptionsChanged(settings: Settings, option: WindowOption) {}
 
     companion object {
         val TOPIC: Topic<SettingsChangeListener> =
