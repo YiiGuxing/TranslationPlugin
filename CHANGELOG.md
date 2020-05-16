@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.9.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-05-16)
+
+- 增加了对 *Quick Documentation* 的翻译的支持（感谢 [Nikolay Tropin](https://github.com/niktrop) ）
+- 单词本支持导出为txt文本（感谢 [Kaiattrib](https://github.com/kaiattrib) ）
+
+- 修复了一些Bug
 ## [v2.8.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-04-07)
 
 - 修复了一些Bug
