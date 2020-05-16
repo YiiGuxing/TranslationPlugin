@@ -159,6 +159,7 @@ class WordBookView {
                         assertIsDispatchThread()
                         words.add(wordBookItem)
                         notifyWordsChanged()
+                        selectWord(wordBookItem)
                     }
 
                     override fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {
@@ -214,6 +215,17 @@ class WordBookView {
         }
 
         groupedWords = newGroupedWords.toSortedMap()
+    }
+
+    private fun selectWord(wordBookItem: WordBookItem) {
+        for ((_, toolWindow) in windows) {
+            val contentManager = toolWindow.contentManager
+            val allContent = contentManager.contents.find { it.tabName == TAB_NAME_ALL } ?: continue
+            if (contentManager.selectedContent != allContent) {
+                contentManager.setSelectedContent(allContent)
+            }
+            (allContent.component as? WordBookPanel)?.selectWord(wordBookItem)
+        }
     }
 
     private fun updateContent(project: Project, toolWindow: ToolWindow) {

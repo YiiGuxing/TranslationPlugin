@@ -1,17 +1,19 @@
 @file:Suppress("unused")
 
-package cn.yiiguxing.plugin.translate
+package cn.yiiguxing.plugin.translate.service
 
 import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog
-import cn.yiiguxing.plugin.translate.ui.TranslatorWidget
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
-import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
+import cn.yiiguxing.plugin.translate.util.d
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import com.intellij.ide.AppLifecycleListener
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -31,6 +33,12 @@ class TranslationUIManager private constructor() {
     private val dialogMap: MutableMap<Project?, TranslationDialog> = HashMap()
     private val instantTranslationDialogMap: MutableMap<Project?, InstantTranslationDialog> = HashMap()
     private val wordOfTheDayDialogMap: MutableMap<Project?, WordOfTheDayDialog> = HashMap()
+
+    init {
+        Application.messageBus.connect().subscribe(AppLifecycleListener.TOPIC, object : AppLifecycleListener {
+            override fun appClosing() = disposeUI()
+        })
+    }
 
     /**
      * 显示气泡
@@ -64,7 +72,10 @@ class TranslationUIManager private constructor() {
      * @return 对话框实例
      */
     fun showDialog(project: Project?): TranslationDialog {
-        return showDialog(project, dialogMap) { TranslationDialog(project) }
+        return showDialog(
+            project,
+            dialogMap
+        ) { TranslationDialog(project) }
     }
 
     /**
@@ -73,7 +84,10 @@ class TranslationUIManager private constructor() {
      * @return 对话框实例
      */
     fun showInstantTranslationDialog(project: Project?): InstantTranslationDialog {
-        return showDialog(project, instantTranslationDialogMap) { InstantTranslationDialog(project) }
+        return showDialog(
+            project,
+            instantTranslationDialogMap
+        ) { InstantTranslationDialog(project) }
     }
 
     /**
@@ -82,19 +96,10 @@ class TranslationUIManager private constructor() {
      * @return 对话框实例
      */
     fun showWordOfTheDayDialog(project: Project?, words: List<WordBookItem>): WordOfTheDayDialog {
-        return showDialog(project, wordOfTheDayDialogMap, { it.setWords(words) }) { WordOfTheDayDialog(project, words) }
-    }
-
-    /**
-     * 显示状态栏图标
-     */
-    fun installStatusWidget(project: Project) {
-        checkThread()
-        TranslatorWidget(project).apply {
-            if (Settings.showStatusIcon) {
-                install()
-            }
-        }
+        return showDialog(
+            project,
+            wordOfTheDayDialogMap,
+            { it.setWords(words) }) { WordOfTheDayDialog(project, words) }
     }
 
     /**
@@ -118,9 +123,13 @@ class TranslationUIManager private constructor() {
             dialogMap[project]?.close()
             instantTranslationDialogMap[project]?.close()
         }
+
+        LOGGER.d("Dispose project's UI: project=$project")
     }
 
     companion object {
+        private val LOGGER: Logger = Logger.getInstance(TranslationUIManager::class.java)
+
         val instance: TranslationUIManager
             get() = ServiceManager.getService(TranslationUIManager::class.java)
 

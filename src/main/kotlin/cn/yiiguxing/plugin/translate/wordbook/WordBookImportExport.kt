@@ -33,7 +33,8 @@ import com.intellij.openapi.vfs.VirtualFile
 val WORD_BOOK_EXPORTERS: List<WordBookExporter> = listOf(
     JsonWordBookExporter(),
     XmlWordBookExporter(),
-    YoudaoXmlWordBookExporter()
+    YoudaoXmlWordBookExporter(),
+    TxtWordBookExporter()
 )
 
 private const val EXTENSION_XML = "xml"

@@ -1,7 +1,5 @@
-package cn.yiiguxing.plugin.translate
+package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.ui.settings.ConfigurablePanel
-import cn.yiiguxing.plugin.translate.ui.settings.SettingsPanel
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.Disposable

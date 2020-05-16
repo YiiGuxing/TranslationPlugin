@@ -86,12 +86,6 @@ TranslationPlugin
    点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
 
 
-插件配置
-------
-
-![settings](./images/settings.png)
-
-
 Actions
 -------
 - **Show Translation Dialog...**
@@ -157,7 +151,7 @@ FAQ
    - 检查网络环境，确保网络畅通。
    - 检查是否是因为使用了代理软件而导致插件无法访问翻译API。
    - 检查IDE代理配置，查看是否是因为IDE代理配置导致的问题。
-   - 如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`使用translate.google.com`选项（如果系统语言环境是非中文的话，此选项是默认勾选的），translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
+   - 如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`使用translate.google.com`选项，translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
 
 2. **翻译内容出现乱码怎么办？**
 
@@ -178,9 +172,10 @@ FAQ
 更新日志
 --------
 
-## [v2.7.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.7.3) (2020-02-22)
+## [v2.9.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-05-16)
 
-- 修复了一些Bug
+- 增加了对 *Quick Documentation* 的翻译的支持（感谢 [Nikolay Tropin](https://github.com/niktrop) ）
+- 单词本支持导出为txt文本（感谢 [Kaiattrib](https://github.com/kaiattrib) ）
 
 [完整的更新历史记录](./CHANGELOG.md)
 
@@ -214,8 +209,15 @@ Support
       <td><img src="./images/wechat.png"></td>
     </tr>
   </table>
+  使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
 
-感谢您的支持！
+  `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
+
+  您提供的名字、网站和捐赠总额将会被添加到[**Patrons/捐赠者**][financial-contributors]列表中，列表将按捐赠总额列出前50名捐赠者。
+  
+  邮箱地址：[yii.guxing@gmail.com](mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A) (点击发送邮件)
+
+**感谢您的支持！**
 
 其他插件
 ------
@@ -237,6 +239,7 @@ Support
 [plugin]: https://plugins.jetbrains.com/plugin/8579
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
+[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 ## Contributors
 
@@ -267,3 +270,11 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/translation-plugin/organization/7/website"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
+
+#### Patrons/捐赠者
+
+| **姓名** | **网站** | **捐赠总额** |
+| -------- | -------- | ------------ |
+|          |          |              |
+
+[更多捐赠者][financial-contributors]

@@ -1,0 +1,8 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                language="Properties" order="first"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+    </extensions>
+
+</idea-plugin>

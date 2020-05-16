@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.activity
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.ide.util.PropertiesComponent
@@ -9,28 +8,15 @@ import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
 
-class IdeaVersionUpgradeNoticeActivity : StartupActivity, DumbAware {
+class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
 
-    private var veryFirstProjectOpening: Boolean = true
-
-    override fun runActivity(project: Project) {
-        if (IdeVersion.isIde2019OrNewer
-            || !veryFirstProjectOpening
-            || Application.isUnitTestMode
-            || PropertiesComponent.getInstance().getBoolean(DO_NOT_NOTIFY_AGAIN_PROPERTY, false)
-        ) {
-            return
-        }
-
-        println(DO_NOT_NOTIFY_AGAIN_PROPERTY)
-
-        veryFirstProjectOpening = false
-        Activity.runLater(project, 3) {
-            showNotification(project)
-        }
+    override fun onBeforeRunActivity(project: Project): Boolean {
+        return !(IdeVersion.isIde2019_3OrNewer || PropertiesComponent.getInstance()
+            .getBoolean(DO_NOT_NOTIFY_AGAIN_PROPERTY, false))
     }
+
+    override fun onRunActivity(project: Project) = showNotification(project)
 
     private class DoNotShowAgainAction : NotificationAction(message("notification.idea.version.do.not.show.again")) {
         override fun actionPerformed(e: AnActionEvent, notification: Notification) {
@@ -46,7 +32,7 @@ class IdeaVersionUpgradeNoticeActivity : StartupActivity, DumbAware {
             "yii.guxing.translate.IdeaVersionUpgradeNotice.${IdeVersion.buildNumber}.disable"
 
         private fun showNotification(project: Project) {
-            NotificationGroup(DISPLAY_ID, NotificationDisplayType.STICKY_BALLOON, false)
+            NotificationGroup(DISPLAY_ID, NotificationDisplayType.BALLOON, false)
                 .createNotification(
                     message("notification.idea.version.title"),
                     message("notification.idea.version"),

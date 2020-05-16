@@ -49,6 +49,7 @@ public class SettingsForm {
     private JLabel mPhoneticFontLabel;
     private TranslatorSettingsContainer mTransPanelContainer;
     private JPanel mOptionsPanel;
+    private JBCheckBox mTranslateDocumentationCheckBox;
     private JBCheckBox mShowStatusIconCheckBox;
     private JBCheckBox mFoldOriginalCheckBox;
     private JBCheckBox mKeepFormatCheckBox;
@@ -275,5 +276,9 @@ public class SettingsForm {
     @NotNull
     public final LinkLabel getSupportLinkLabel() {
         return mSupportLinkLabel;
+    }
+
+    public JBCheckBox getTranslateDocumentationCheckBox() {
+        return mTranslateDocumentationCheckBox;
     }
 }
