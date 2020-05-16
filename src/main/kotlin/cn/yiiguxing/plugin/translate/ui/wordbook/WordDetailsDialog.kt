@@ -13,6 +13,7 @@ import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.project.Project
@@ -24,7 +25,6 @@ import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.Action
 import javax.swing.event.DocumentEvent
-import com.intellij.openapi.editor.event.DocumentAdapter as EditorDocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
 
 /**
@@ -62,7 +62,7 @@ class WordDetailsDialog(
     }
 
     private val isModified: Boolean
-        get() = (phoneticField.text ?: "") != (word.phonetic ?: "") ||
+        get() = phoneticField.text != (word.phonetic ?: "") ||
                 (explanationView.text ?: "") != (word.explanation ?: "") ||
                 tagsField.text.replace(REGEX_WHITESPACE, " ").trim(*TRIM_CHARS) != tagsString
 
@@ -85,7 +85,7 @@ class WordDetailsDialog(
             IdeFocusManager.findInstance().requestFocus(closeButton, true)
         }
 
-        phoneticField.addDocumentListener(object : EditorDocumentAdapter() {
+        phoneticField.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: EditorDocumentEvent) = checkModification()
         })
         phoneticField.addFocusListener(object : FocusAdapter() {
@@ -109,11 +109,11 @@ class WordDetailsDialog(
 
     private fun EditorEx.install() {
         var toShowHint = true
-        document.addDocumentListener(object : EditorDocumentAdapter() {
+        document.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: EditorDocumentEvent) {
                 if (e.newFragment.toString() == " ") {
                     AutoPopupController
-                        .getInstance(project)
+                        .getInstance(project!!)
                         .autoPopupMemberLookup(this@install, CompletionType.SMART, null)
                 }
                 checkModification()
