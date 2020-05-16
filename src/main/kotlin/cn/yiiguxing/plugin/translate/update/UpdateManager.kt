@@ -197,7 +197,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         private const val UPDATES_BASE_URL = "http://yiiguxing.github.io/TranslationPlugin/updates"
 
         private const val MILESTONE_URL =
-            "https://github.com/YiiGuxing/TranslationPlugin/issues?q=is%%3Aissue+milestone%%3Av%s+is%%3Aclosed"
+            "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"
 
         private const val UPDATES_API = "https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest"
 
