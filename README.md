@@ -86,12 +86,6 @@ TranslationPlugin
    点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
 
 
-插件配置
-------
-
-![settings](./images/settings.png)
-
-
 Actions
 -------
 - **Show Translation Dialog...**
@@ -178,9 +172,10 @@ FAQ
 更新日志
 --------
 
-## [v2.8.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-04-07)
+## [v2.9.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.8.1) (2020-05-16)
 
-- 修复了一些Bug
+- 增加了对 *Quick Documentation* 的翻译的支持（感谢 [Nikolay Tropin](https://github.com/niktrop) ）
+- 单词本支持导出为txt文本（感谢 [Kaiattrib](https://github.com/kaiattrib) ）
 
 [完整的更新历史记录](./CHANGELOG.md)
 

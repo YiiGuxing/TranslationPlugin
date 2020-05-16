@@ -35,8 +35,11 @@
       </ul>
       </p>
       <br/>
-      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots-balloon.png" width="500" height="480" alt="screenshots-balloon.png"/></p>
-      <p><img src="https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/images/screenshots-dialog.png" width="400" height="500" alt="screenshots-dialog.png"/></p>
+      <p>
+      <b>Sponsors</b><br/><br/>
+      <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner"><img src="https://alt-images.codestream.com/codestream_logo_translation.png" width="294" alt="CodeStream"></a><br/>
+      Request and perform code reviews from inside your IDE. Review any code, even if it's a work-in-progress that hasn't been committed yet, and use jump-to-definition, your favorite keybindings, and other IDE tools. <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">Try it free</a>
+      </p>
       <br/>
       <p><a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Send feedback</a></p>
     ]]></description>
@@ -44,7 +47,8 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>修复了一些Bug</li>
+        <li>增加了对 <i>Quick Documentation</i> 的翻译的支持（感谢<a href="https://github.com/niktrop">Nikolay Tropin</a>）</li>
+        <li>单词本支持导出为txt文本（感谢<a href="https://github.com/kaiattrib">Kaiattrib</a>）</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -60,8 +64,26 @@
     <depends optional="true" config-file="oc-doc.xml">com.intellij.modules.cidr.lang</depends>
     <depends optional="true" config-file="kotlin-doc.xml">org.jetbrains.kotlin</depends>
     <depends optional="true" config-file="go-doc.xml">org.jetbrains.plugins.go</depends>
-    <depends optional="true" config-file="python-doc.xml">Pythonid</depends>
+    <depends optional="true" config-file="python-doc.xml">com.intellij.modules.python</depends>
     <depends optional="true" config-file="dart-doc.xml">Dart</depends>
+    <depends optional="true" config-file="css-doc.xml">com.intellij.css</depends>
+    <depends optional="true" config-file="groovy-doc.xml">org.intellij.groovy</depends>
+    <depends optional="true" config-file="java-doc.xml">com.intellij.modules.java</depends>
+    <depends optional="true" config-file="javaScript-doc.xml">JavaScript</depends>
+    <depends optional="true" config-file="json-doc.xml">com.intellij.modules.json</depends>
+    <depends optional="true" config-file="jsp-doc.xml">com.intellij.jsp</depends>
+    <depends optional="true" config-file="php-doc.xml">com.jetbrains.php</depends>
+    <depends optional="true" config-file="properties-doc.xml">com.intellij.properties</depends>
+    <depends optional="true" config-file="rest-doc.xml">com.jetbrains.restClient</depends>
+    <depends optional="true" config-file="ruby-doc.xml">com.intellij.modules.ruby</depends>
+    <depends optional="true" config-file="scala-doc.xml">org.intellij.scala</depends>
+    <depends optional="true" config-file="shell-doc.xml">com.jetbrains.sh</depends>
+    <depends optional="true" config-file="sql-doc.xml">com.intellij.modules.sql</depends>
+    <depends optional="true" config-file="swift-doc.xml">com.intellij.modules.swift.lang</depends>
+    <depends optional="true" config-file="vue-doc.xml">org.jetbrains.plugins.vue</depends>
+    <depends optional="true" config-file="xml-doc.xml">com.intellij.modules.xml</depends>
+    <depends optional="true" config-file="xpath-doc.xml">XPathView</depends>
+    <depends optional="true" config-file="yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
         <extensionPoint name="docElementProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">

@@ -4,4 +4,11 @@
                 language="Dart"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.DartDocumentationElementProvider"/>
     </extensions>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                language="Dart" order="first"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+    </extensions>
 </idea-plugin>

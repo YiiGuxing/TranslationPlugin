@@ -206,7 +206,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private fun String.toVersionParts(): Pair<Int, Int> {
             val versionString = if (this[0].equals('v', true)) substring(1) else this
-            val versionParts = versionString.replace("-SNAPSHOT", "").split('.').take(2)
+            val versionParts = versionString.split('.', '-').take(2)
             return when (versionParts.size) {
                 1 -> versionParts[0].toInt() to 0
                 2 -> versionParts[0].toInt() to versionParts[1].toInt()
@@ -336,9 +336,8 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private fun getKeyHighlights(): Array<Pair<String, String>> {
             return arrayOf(
-                "拼写检查" to "谷歌翻译新增拼写检查功能",
-                "翻译与替换支持单词拆分" to "翻译与替换现已支持自动单词拆分",
-                "单词本自动聚焦" to "添加新单词时单词本自动聚焦到新增的单词"
+                "Quick Documentation翻译" to "支持对Quick Documentation进行翻译",
+                "单词本txt文本导出" to "单词本支持导出为txt文本"
             )
         }
 
@@ -347,18 +346,18 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
             return """
                 <h2>翻译</h2>
-                <h3>拼写检查</h3>
-                <p>使用谷歌时，将会对翻译的文字进行拼写检查并尝试纠正。</p>
-                <img src="${imageResource("spelling_check.gif")}" alt="拼写检查">
-            
-                <h3>翻译与替换</h3>
-                <p>现在，翻译与替换操作已支持对单词进行自动拆分。</p>
-                <img src="${imageResource("tar.gif")}" alt="翻译与替换">
+                <h3>Quick Documentation翻译</h3>
+                <p><i>感谢 <a href="https://github.com/niktrop" target="_blank">Nikolay Tropin</a>(来自 <a href="https://www.jetbrains.com" target="_blank">JetBrains</a>) 提供的功能实现！</i></p>
+                <p>我们增加了对 <i>Quick Documentation</i> 的翻译的支持。现在，你可以随时随地对代码中的文档进行翻译，而不是受限于源代码中的文档注释。例如在 Windows 平台中，当你使用 Ctrl+Q 查看 <i>Quick Documentation</i> 时，你得到的将是已翻译好的文档。</p>
+                <p><img src="${imageResource("quick_doc1.gif")}" alt="Quick Documentation"></p>
+                <p><img src="${imageResource("quick_doc2.gif")}" alt="Quick Documentation"></p>
+                <p><i>Quick Documentation</i> 翻译选项是默认开启的，如果你想关闭此选项，可到在插件配置页面进行关闭。</p>
+                <p><img src="${imageResource("quick_doc_opt.png")}" alt="翻译文档选项"></p>
             
                 <h2>单词本</h2>
-                <h3>自动聚焦新增的单词</h3>
-                <p>当一个单词被添加到单词本中时，新增的单词词条将会在单词本单词列表中自动被聚焦。</p>
-                <img src="${imageResource("wordbook.gif")}" alt="单词本">
+                <h3>导出为txt文本</h3>
+                <img src="${imageResource("wordbook_exporter.png")}" alt="单词本">
+                <p><i>感谢 <a href="https://github.com/kaiattrib" target="_blank">Kaiattrib</a> 提供的功能实现！</i></p>
             """.trimIndent()
         }
     }

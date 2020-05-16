@@ -1,0 +1,11 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                language="Vue" order="first"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+        <lang.documentationProvider
+                language="VueJS" order="first"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+    </extensions>
+
+</idea-plugin>

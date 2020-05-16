@@ -4,4 +4,11 @@
                 language="ObjectiveC"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.ObjectiveCDocumentationElementProvider"/>
     </extensions>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                language="ObjectiveC" order="first"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+    </extensions>
 </idea-plugin>

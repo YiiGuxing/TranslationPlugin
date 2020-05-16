@@ -4,4 +4,11 @@
                 language="Python"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.PythonDocumentationElementProvider"/>
     </extensions>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                language="Python" order="first"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+    </extensions>
 </idea-plugin>
