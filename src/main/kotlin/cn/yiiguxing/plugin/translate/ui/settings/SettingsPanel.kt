@@ -8,8 +8,8 @@ import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.TranslateService
-import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.*
@@ -18,7 +18,6 @@ import icons.Icons
 import java.awt.Dimension
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
-import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.text.AttributeSet
 import javax.swing.text.PlainDocument
@@ -58,23 +57,15 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
     private fun initSelectionModeComboBox() {
         with(selectionModeComboBox) {
             model = CollectionComboBoxModel(listOf(SelectionMode.INCLUSIVE, SelectionMode.EXCLUSIVE))
-            renderer = object : ListCellRendererWrapper<SelectionMode>() {
-                override fun customize(
-                    list: JList<*>,
-                    value: SelectionMode,
-                    index: Int,
-                    selected: Boolean,
-                    hasFocus: Boolean
-                ) {
-                    when (value) {
-                        SelectionMode.EXCLUSIVE -> {
-                            setText("Exclusive")
-                            setToolTipText(message("settings.tooltip.exclusive"))
-                        }
-                        else -> {
-                            setText("Inclusive")
-                            setToolTipText(message("settings.tooltip.inclusive"))
-                        }
+            renderer = SimpleListCellRenderer.create { label, value, _ ->
+                when (value) {
+                    SelectionMode.EXCLUSIVE -> {
+                        label.text = "Exclusive"
+                        label.toolTipText = message("settings.tooltip.exclusive")
+                    }
+                    else -> {
+                        label.text = "Inclusive"
+                        label.toolTipText = message("settings.tooltip.inclusive")
                     }
                 }
             }
@@ -84,34 +75,14 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
     private fun initTargetLangSelectionComboBox() {
         with(targetLangSelectionComboBox) {
             model = CollectionComboBoxModel(TargetLanguageSelection.values().asList())
-            renderer = object : ListCellRendererWrapper<TargetLanguageSelection>() {
-                override fun customize(
-                    list: JList<*>,
-                    value: TargetLanguageSelection,
-                    index: Int,
-                    selected: Boolean,
-                    hasFocus: Boolean
-                ) {
-                    setText(value.displayName)
-                }
-            }
+            renderer = SimpleListCellRenderer.create("") { it.displayName }
         }
     }
 
     private fun initTTSSourceComboBox() {
         with(ttsSourceComboBox) {
             model = CollectionComboBoxModel(TTSSource.values().asList())
-            renderer = object : ListCellRendererWrapper<TTSSource>() {
-                override fun customize(
-                    list: JList<*>,
-                    value: TTSSource,
-                    index: Int,
-                    selected: Boolean,
-                    hasFocus: Boolean
-                ) {
-                    setText(value.displayName)
-                }
-            }
+            renderer = SimpleListCellRenderer.create("") { it.displayName }
             preferredSize = Dimension(preferredSize.width, JBUI.scale(26))
         }
     }
@@ -176,7 +147,7 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         }
 
         val background = ignoreRegExp.background
-        ignoreRegExp.addDocumentListener(object : DocumentAdapter() {
+        ignoreRegExp.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: DocumentEvent) {
                 try {
                     e.document.text.takeUnless { it.isBlank() }?.toRegex()
@@ -221,7 +192,6 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
                     || settings.isOverrideFont != fontCheckBox.isSelected
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
                     || settings.phoneticFontFamily != phoneticFontComboBox.fontName
-                    || settings.showStatusIcon != showStatusIconCheckBox.isSelected
                     || settings.foldOriginal != foldOriginalCheckBox.isSelected
                     || settings.keepFormat != keepFormatCheckBox.isSelected
                     || settings.autoPlayTTS != autoPlayTTSCheckBox.isSelected
@@ -257,7 +227,6 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
             ttsSource = ttsSourceComboBox.selected ?: TTSSource.ORIGINAL
             separators = separatorsTextField.text
-            showStatusIcon = showStatusIconCheckBox.isSelected
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
             autoPlayTTS = autoPlayTTSCheckBox.isSelected
@@ -282,7 +251,6 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         ignoreRegExp.text = settings.ignoreRegExp ?: ""
         separatorsTextField.text = settings.separators
         fontCheckBox.isSelected = settings.isOverrideFont
-        showStatusIconCheckBox.isSelected = settings.showStatusIcon
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
         autoPlayTTSCheckBox.isSelected = settings.autoPlayTTS

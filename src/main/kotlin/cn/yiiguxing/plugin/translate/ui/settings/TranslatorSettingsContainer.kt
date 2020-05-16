@@ -4,17 +4,16 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.ui.FixedSizeCardLayout
 import cn.yiiguxing.plugin.translate.ui.form.TranslatorSettingsContainerForm
 import cn.yiiguxing.plugin.translate.ui.selected
-import com.intellij.ui.ListCellRendererWrapper
+import com.intellij.ui.SimpleListCellRenderer
 import java.awt.event.ItemEvent
 import javax.swing.Icon
 import javax.swing.JComponent
-import javax.swing.JList
 
 /**
  * TranslatorSettingsContainer
  */
-class TranslatorSettingsContainer(private val settings: Settings)
-    : TranslatorSettingsContainerForm<TranslatorSettingsPanel>(), ConfigurablePanel {
+class TranslatorSettingsContainer(private val settings: Settings) :
+    TranslatorSettingsContainerForm<TranslatorSettingsPanel>(), ConfigurablePanel {
 
     private val layout = FixedSizeCardLayout()
 
@@ -27,12 +26,9 @@ class TranslatorSettingsContainer(private val settings: Settings)
         add(YoudaoAppKeySettingsPanel(settings))
         add(BaiduAppKeySettingsPanel(settings))
 
-        comboBox.renderer = object : ListCellRendererWrapper<TranslatorSettingsPanel>() {
-            override fun customize(list: JList<*>, value: TranslatorSettingsPanel, index: Int, selected: Boolean,
-                                   hasFocus: Boolean) {
-                setText(value.name)
-                setIcon(value.icon)
-            }
+        comboBox.renderer = SimpleListCellRenderer.create { label, value, _ ->
+            label.text = value.name
+            label.icon = value.icon
         }
         comboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {

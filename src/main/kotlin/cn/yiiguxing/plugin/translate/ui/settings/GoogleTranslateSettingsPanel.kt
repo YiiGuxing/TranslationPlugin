@@ -14,11 +14,11 @@ import javax.swing.JComponent
  * GoogleTranslateSettingsPanel
  */
 class GoogleTranslateSettingsPanel(
-        private val settings: GoogleTranslateSettings
+    private val settings: GoogleTranslateSettings
 ) : GoogleTranslateSettingsForm(), TranslatorSettingsPanel {
 
     override val id: String = GoogleTranslator.id
-    @Suppress("InvalidBundleOrProperty")
+
     override val name: String = message("translator.name.google")
     override val icon: Icon = GoogleTranslator.icon
     override val component: JComponent = contentPanel

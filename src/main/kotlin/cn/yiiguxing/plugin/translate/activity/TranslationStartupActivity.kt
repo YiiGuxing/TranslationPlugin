@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.activity
 
-import cn.yiiguxing.plugin.translate.service.StatusService
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import com.intellij.openapi.Disposable
@@ -14,7 +13,6 @@ class TranslationStartupActivity : StartupActivity, DumbAware {
     override fun runActivity(project: Project) {
         if (Application.isUnitTestMode) return
 
-        StatusService.getInstance(project).installStatusWidget()
         Disposer.register(project, Disposable { TranslationUIManager.disposeUI(project) })
     }
 

@@ -8,13 +8,13 @@ import javax.swing.Icon
 object Icons {
 
     @JvmField
-    val Translate: Icon = IconLoader.getIcon("/icons/translate.png")
+    val Translate: Icon = IconLoader.getIcon("/icons/translate.svg")
 
     @JvmField
-    val Translate2: Icon = IconLoader.getIcon("/icons/translate2.png")
+    val Translate2: Icon = IconLoader.getIcon("/icons/translate2.svg")
 
     @JvmField
-    val Wordbook: Icon = IconLoader.getIcon("/icons/wordbook.png")
+    val Wordbook: Icon = IconLoader.getIcon("/icons/wordbook.svg")
 
     @JvmField
     val Pin: Icon = IconLoader.getIcon("/icons/pin.png")
@@ -32,13 +32,13 @@ object Icons {
     val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.png")
 
     @JvmField
-    val StarOff: Icon = IconLoader.getIcon("/icons/starOff.png")
+    val StarOff: Icon = IconLoader.getIcon("/icons/starOff.svg")
 
     @JvmField
-    val StarOn: Icon = IconLoader.getIcon("/icons/starOn.png")
+    val StarOn: Icon = IconLoader.getIcon("/icons/starOn.svg")
 
     @JvmField
-    val Detail: Icon = IconLoader.getIcon("/icons/detail.png")
+    val Detail: Icon = IconLoader.getIcon("/icons/detail.svg")
 
     @JvmField
     val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
@@ -83,7 +83,7 @@ object Icons {
     val CopyToClipboard: Icon = IconLoader.getIcon("/icons/copyToClipboard.png")
 
     @JvmField
-    val Google: Icon = IconLoader.getIcon("/icons/google.png")
+    val Google: Icon = IconLoader.getIcon("/icons/google.svg")
 
     @JvmField
     @Suppress("SpellCheckingInspection")
@@ -94,9 +94,9 @@ object Icons {
     val Baidu: Icon = IconLoader.getIcon("/icons/baidu.png")
 
     @JvmField
-    val Support: Icon = IconLoader.getIcon("/icons/support.png")
+    val Support: Icon = IconLoader.getIcon("/icons/support.svg")
 
     @JvmField
-    val AutoAwesome: Icon = IconLoader.getIcon("/icons/autoAwesome.png")
+    val AutoAwesome: Icon = IconLoader.getIcon("/icons/autoAwesome.svg")
 
 }

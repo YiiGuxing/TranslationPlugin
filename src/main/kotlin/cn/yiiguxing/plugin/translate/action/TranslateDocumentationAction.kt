@@ -101,7 +101,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
     }
 
     private fun showPopup(editor: Editor, title: String?): DocumentationComponent {
-        val project = editor.project
+        val project = editor.project!!
         val component = DocumentationComponent(DocumentationManager.getInstance(project))
         val popupFactory = JBPopupFactory.getInstance()
         val hint = popupFactory

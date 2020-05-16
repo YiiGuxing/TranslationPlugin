@@ -9,8 +9,8 @@ internal class ProcessIcon : AnimatedIcon(
     companion object {
         private const val CYCLE_LENGTH = 400
 
-        private val ICONS = Array(9) { IconLoader.getIcon("/icons/spinner/step_${it}.png") }
+        private val ICONS = Array(9) { IconLoader.getIcon("/icons/spinner/step_${it}.svg") }
 
-        private val STEP_PASSIVE = IconLoader.getIcon("/icons/spinner/step_passive.png")
+        private val STEP_PASSIVE = IconLoader.getIcon("/icons/spinner/step_passive.svg")
     }
 }

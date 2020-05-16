@@ -26,7 +26,7 @@ intellij {
     pluginName = 'TranslationPlugin'
     downloadSources = Boolean.valueOf(sources)
     sandboxDirectory 'sandbox'
-    plugins "org.jetbrains.kotlin:1.2.40-release-IJ2017.1-1", "Pythonid:2017.1.171.3780.116", "Dart:171.4006", "org.jetbrains.plugins.go:171.4694.35"
+    plugins "java", "org.jetbrains.kotlin", "Pythonid:193.5233.12", "Dart:193.5233.18", "org.jetbrains.plugins.go:193.5233.48.65"
 }
 
 patchPluginXml {

@@ -50,7 +50,6 @@
               <focusPainted value="true"/>
               <focusTraversalPolicyProvider value="false"/>
               <focusable value="true"/>
-              <icon value="icons/translate.png"/>
               <opaque value="true"/>
               <requestFocusEnabled value="false"/>
               <text value=""/>

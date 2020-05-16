@@ -123,6 +123,8 @@ class WordBookView {
                     val confirmed = Messages.showOkCancelDialog(
                         message("wordbook.window.confirmation.delete.message", word.word),
                         message("wordbook.window.confirmation.delete.title"),
+                        Messages.OK_BUTTON,
+                        Messages.CANCEL_BUTTON,
                         null
                     ) == Messages.OK
                     if (confirmed) {

@@ -26,7 +26,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class SettingsForm {
 
-    private static Logger LOGGER = Logger.getInstance(SettingsForm.class);
+    private static final Logger LOGGER = Logger.getInstance(SettingsForm.class);
 
     private JPanel mWholePanel;
     private JPanel mTranslateSettingsPanel;
@@ -37,7 +37,7 @@ public class SettingsForm {
     private JButton mCheckIgnoreRegExpButton;
     private JLabel mIgnoreRegExpMsg;
     private JPanel mHistoryPanel;
-    private ComboBox mMaxHistoriesSize;
+    private ComboBox<?> mMaxHistoriesSize;
     private JButton mClearHistoriesButton;
     private JPanel mFontPanel;
     private JBCheckBox mFontCheckBox;
@@ -50,7 +50,6 @@ public class SettingsForm {
     private TranslatorSettingsContainer mTransPanelContainer;
     private JPanel mOptionsPanel;
     private JBCheckBox mTranslateDocumentationCheckBox;
-    private JBCheckBox mShowStatusIconCheckBox;
     private JBCheckBox mFoldOriginalCheckBox;
     private JBCheckBox mKeepFormatCheckBox;
     private JBCheckBox mAutoPlayTTSCheckBox;
@@ -60,7 +59,7 @@ public class SettingsForm {
     private JBCheckBox mSelectTargetLanguageCheckBox;
     private JBCheckBox mShowWordsOnStartupCheckBox;
     private JBCheckBox mShowExplanationCheckBox;
-    private LinkLabel mSupportLinkLabel;
+    private LinkLabel<?> mSupportLinkLabel;
 
     private final Settings mSettings;
     private final AppStorage mAppStorage;
@@ -84,7 +83,6 @@ public class SettingsForm {
     private static FontComboBox createFontComboBox(boolean filterNonLatin) {
         try {
             LogsKt.d(LOGGER, String.format("Try new FontComboBox(false, %b, false).", filterNonLatin));
-            //noinspection JavaReflectionMemberAccess
             return FontComboBox.class
                     .getDeclaredConstructor(Boolean.TYPE, Boolean.TYPE, Boolean.TYPE)
                     .newInstance(false, filterNonLatin, false);
@@ -92,6 +90,7 @@ public class SettingsForm {
                 IllegalAccessException | InvocationTargetException e) {
             try {
                 LogsKt.d(LOGGER, String.format("Try new FontComboBox(false, %b).", filterNonLatin));
+                // noinspection JavaReflectionMemberAccess
                 return FontComboBox.class
                         .getDeclaredConstructor(Boolean.TYPE, Boolean.TYPE)
                         .newInstance(false, filterNonLatin);
@@ -164,7 +163,7 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final ComboBox getMaxHistoriesSizeComboBox() {
+    public final ComboBox<?> getMaxHistoriesSizeComboBox() {
         return mMaxHistoriesSize;
     }
 
@@ -224,11 +223,6 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final JBCheckBox getShowStatusIconCheckBox() {
-        return mShowStatusIconCheckBox;
-    }
-
-    @NotNull
     public final JBCheckBox getFoldOriginalCheckBox() {
         return mFoldOriginalCheckBox;
     }
@@ -274,7 +268,7 @@ public class SettingsForm {
     }
 
     @NotNull
-    public final LinkLabel getSupportLinkLabel() {
+    public final LinkLabel<?> getSupportLinkLabel() {
         return mSupportLinkLabel;
     }
 

@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDocumentManager
@@ -30,7 +30,7 @@ class CheckRegExpDialog(project: Project, regExp: String, private val ok: (Strin
         document = PsiDocumentManager.getInstance(project).getDocument(regExpPsiFile)!!
 
         val documentManager = PsiDocumentManager.getInstance(project)
-        document.addDocumentListener(object : DocumentAdapter() {
+        document.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: DocumentEvent) {
                 documentManager.commitDocument(e.document)
             }

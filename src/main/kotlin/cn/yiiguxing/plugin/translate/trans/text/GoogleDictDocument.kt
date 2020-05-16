@@ -7,7 +7,7 @@ import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
 import cn.yiiguxing.plugin.translate.util.text.insert
 import cn.yiiguxing.plugin.translate.util.text.rangeSize
 import com.intellij.ui.JBColor
-import com.intellij.util.ui.JBUI
+import com.intellij.ui.scale.JBUIScale
 import java.awt.Color
 import javax.swing.text.*
 
@@ -95,18 +95,18 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
                 StyleConstants.setItalic(style, true)
             }
             getStyleOrAdd(POS_PARAGRAPH_STYLE_FIRST, defaultStyle) { style ->
-                StyleConstants.setSpaceBelow(style, JBUI.scale(2f))
+                StyleConstants.setSpaceBelow(style, JBUIScale.scale(2f))
             }
             getStyleOrAdd(POS_PARAGRAPH_STYLE, defaultStyle) { style ->
-                StyleConstants.setSpaceAbove(style, JBUI.scale(10f))
-                StyleConstants.setSpaceBelow(style, JBUI.scale(3f))
+                StyleConstants.setSpaceAbove(style, JBUIScale.scale(10f))
+                StyleConstants.setSpaceBelow(style, JBUIScale.scale(3f))
             }
         }
 
         private fun StyledDocument.initEntryStyle(defaultStyle: Style?) {
             val entryParagraphStyle = getStyleOrAdd(ENTRY_PARAGRAPH_STYLE, defaultStyle) { style ->
-                StyleConstants.setLeftIndent(style, JBUI.scale(12f))
-                StyleConstants.setSpaceBelow(style, JBUI.scale(8f))
+                StyleConstants.setLeftIndent(style, JBUIScale.scale(12f))
+                StyleConstants.setSpaceBelow(style, JBUIScale.scale(8f))
             }
             getStyleOrAdd(ENTRY_END_PARAGRAPH_STYLE, entryParagraphStyle) { style ->
                 StyleConstants.setSpaceBelow(style, 0f)

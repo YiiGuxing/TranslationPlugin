@@ -104,7 +104,6 @@ object BaiduTranslator : AbstractTranslator() {
         }.toTranslation()
     }
 
-    @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is TranslateResultException -> when (throwable.code) {
             52001 -> message("error.request.timeout")

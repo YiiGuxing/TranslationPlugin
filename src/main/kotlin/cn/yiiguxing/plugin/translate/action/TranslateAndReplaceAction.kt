@@ -8,9 +8,9 @@ import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.codeInsight.highlighting.HighlightManager
-import com.intellij.codeInsight.lookup.LookupAdapter
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.codeInsight.lookup.LookupEvent
+import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -254,7 +254,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             val highlightManager = HighlightManager.getInstance(project)
             val highlighters = highlightManager.addHighlight(this, selectionRange)
 
-            lookup.addLookupListener(object : LookupAdapter() {
+            lookup.addLookupListener(object : LookupListener {
                 override fun itemSelected(event: LookupEvent) {
                     highlightManager.removeSegmentHighlighters(this@showLookup, highlighters)
                 }

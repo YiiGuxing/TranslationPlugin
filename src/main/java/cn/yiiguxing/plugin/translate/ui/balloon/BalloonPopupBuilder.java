@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class BalloonPopupBuilder implements BalloonBuilder {
 
-    private static final Map<Disposable, List<Balloon>> DEFAULT_STORAGE = new WeakHashMap<>();
+    private static final Map<Disposable, List<Balloon>> DEFAULT_STORAGE = ContainerUtil.createWeakMap();
 
     @Nullable
     private final Map<Disposable, List<Balloon>> myStorage;
