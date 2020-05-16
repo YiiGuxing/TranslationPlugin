@@ -8,8 +8,7 @@ import java.util.*
 
 class XmlWordBookImporter : WordBookImporter {
     override fun InputStream.readWords(): List<WordBookItem> {
-        val document = JDOMUtil.loadDocument(this)
-        val wordBookElement = document.rootElement
+        val wordBookElement = JDOMUtil.load(this)
 
         check(wordBookElement.name == "wordbook" && wordBookElement.getAttributeValue("target").isNullOrEmpty()) {
             "Invalid word book"
