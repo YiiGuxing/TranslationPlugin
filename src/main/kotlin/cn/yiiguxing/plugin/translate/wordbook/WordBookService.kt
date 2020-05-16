@@ -388,7 +388,8 @@ class WordBookService {
 
         private val ClassLoader.canDriveService: Boolean
             get() = try {
-                Class.forName(DATABASE_DRIVER, false, this) != null
+                Class.forName(DATABASE_DRIVER, false, this)
+                true
             } catch (e: Throwable) {
                 false
             }

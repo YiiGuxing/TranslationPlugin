@@ -4,10 +4,12 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.alphaBlend
+import cn.yiiguxing.plugin.translate.util.copyToClipboard
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
@@ -20,6 +22,7 @@ import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.*
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.panels.NonOpaquePanel
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBUI
@@ -101,7 +104,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
             addActionListener { translateInternal(inputComboBox.editor.item.toString()) }
             minimumSize = JBDimension(45, 0)
             maximumSize = JBDimension(45, Int.MAX_VALUE)
-            preferredSize = JBDimension(45, (preferredSize.height / JBUI.scale(1f)).toInt())
+            preferredSize = JBDimension(45, (preferredSize.height / JBUIScale.scale(1f)).toInt())
         }
         mainContentPanel.apply {
             border = BORDER
@@ -141,7 +144,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     }
 
     private fun initInputComboBox() = with(inputComboBox) {
-        val scale = JBUI.scale(1f)
+        val scale = JBUIScale.scale(1f)
         val width = (preferredSize.width / scale).toInt()
         minimumSize = JBDimension(width, 0)
         maximumSize = JBDimension(width, Int.MAX_VALUE)
@@ -477,11 +480,11 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
                 val srcSelected = selected.takeIf { src.contains(it) } ?: src.first()
-                model = CollectionComboBoxModel<Lang>(src, srcSelected)
+                model = CollectionComboBoxModel(src, srcSelected)
             }
             targetLangComboBox.apply {
                 val targetSelected = selected.takeIf { target.contains(it) } ?: presenter.primaryLanguage
-                model = CollectionComboBoxModel<Lang>(target, targetSelected)
+                model = CollectionComboBoxModel(target, targetSelected)
             }
         }
         onTranslate()
@@ -538,13 +541,6 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         translationPane.translation = translation
         showCard(CARD_TRANSLATION)
         invokeLater { translationPanel.verticalScrollBar.apply { value = 0 } }
-
-        if (request.translatorId == YoudaoTranslator.id &&
-            request.targetLang != Lang.AUTO &&
-            request.targetLang != translation.targetLang
-        ) {
-        }
-
         setLanguageComponentsEnable(true)
     }
 
@@ -578,16 +574,23 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         }
     }
 
-    private inner class ComboRenderer : ListCellRendererWrapper<String>() {
+    private inner class ComboRenderer : SimpleListCellRenderer<String>() {
         private val builder = StringBuilder()
 
-        override fun customize(list: JList<*>, value: String?, index: Int, isSelected: Boolean, cellHasFocus: Boolean) {
+        override fun customize(
+            list: JList<out String>,
+            value: String?,
+            index: Int,
+            selected: Boolean,
+            hasFocus: Boolean
+        ) {
             if (list.width == 0 || value.isNullOrBlank()) { // 在没有确定大小之前不设置真正的文本,否则控件会被过长的文本撑大.
-                setText(null)
+                text = null
             } else {
-                setRenderText(value!!)
+                setRenderText(value)
             }
         }
+
 
         private fun setRenderText(value: String) {
             val text = with(builder) {

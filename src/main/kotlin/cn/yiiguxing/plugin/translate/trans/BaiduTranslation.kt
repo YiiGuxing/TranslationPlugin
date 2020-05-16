@@ -22,8 +22,8 @@ data class BaiduTranslation(
         check(targetLanguage != null) { "Cannot convert to Translation: targetLanguage=null" }
         check(trans.isNotEmpty()) { "Cannot convert to Translation: trans=[]" }
 
-        val srcLang = Lang.valueOfBaiduCode(srcLanguage!!)
-        val transLang = Lang.valueOfBaiduCode(targetLanguage!!)
+        val srcLang = Lang.valueOfBaiduCode(srcLanguage)
+        val transLang = Lang.valueOfBaiduCode(targetLanguage)
         val original = StringBuilder()
         val translation = StringBuilder()
 

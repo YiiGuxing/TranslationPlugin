@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.icon.ComboArrowIcon
 import com.intellij.openapi.ui.ComboBox
-import com.intellij.ui.ListCellRendererWrapper
+import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.util.ui.JBInsets
 import com.intellij.util.ui.JBUI
 import sun.swing.DefaultLookup
@@ -18,8 +18,8 @@ import javax.swing.plaf.basic.BasicComboBoxUI
  * LangComboBoxUI
  */
 class LangComboBoxUI(
-        private val myComboBox: ComboBox<Lang>,
-        horizontalAlignment: Int = SwingConstants.LEFT
+    private val myComboBox: ComboBox<Lang>,
+    horizontalAlignment: Int = SwingConstants.LEFT
 ) : BasicComboBoxUI() {
 
     private val label: JLabel
@@ -28,11 +28,9 @@ class LangComboBoxUI(
     init {
         myComboBox.apply {
             border = BorderFactory.createEmptyBorder()
-            renderer = object : ListCellRendererWrapper<Lang>() {
-                override fun customize(list: JList<*>?, value: Lang, index: Int, selected: Boolean, hasFocus: Boolean) {
-                    setText(value.langName)
-                    setFont(this@apply.font)
-                }
+            renderer = SimpleListCellRenderer.create<Lang> { label, value, _ ->
+                label.text = value.langName
+                label.font = this@apply.font
             }
             isEditable = false
         }
@@ -55,7 +53,7 @@ class LangComboBoxUI(
     override fun createArrowButton(): JButton? = null
 
     override fun getSizeForComponent(comp: Component): Dimension =
-            super.getSizeForComponent(comp).apply { width += JBUI.scale(10) }
+        super.getSizeForComponent(comp).apply { width += JBUI.scale(10) }
 
     override fun getMinimumSize(c: JComponent): Dimension {
         if (!isMinimumSizeDirty) {
@@ -91,7 +89,7 @@ class LangComboBoxUI(
         }
 
         currentValuePane.paintComponent(g, label, myComboBox,
-                Rectangle(bounds).also { JBInsets.removeFrom(it, padding) })
+            Rectangle(bounds).also { JBInsets.removeFrom(it, padding) })
     }
 
     override fun rectangleForCurrentValue(): Rectangle = Rectangle(comboBox.width, comboBox.height).apply {
