@@ -655,7 +655,7 @@ iframe {
     border: none;
 }
 
-.support #patrons > .empty {
+.support #patrons > .patrons-placeholder {
     color: #bbbbbb;
     padding: 100px;
     text-align: center;

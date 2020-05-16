@@ -5,6 +5,7 @@
     <title>支持 - TranslationPlugin</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <script src="//cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 <header class="frame_head">
@@ -44,10 +45,18 @@
                             <td><img src="./images/wechat.png" width="240px" alt></td>
                         </tr>
                     </table>
-                    <div class="support-patrons-note"><b>注：</b>使用支付宝/微信支付捐赠时请提供名字/昵称和网站，格式为：<br/><span
+                    <div class="support-patrons-note"><b>注：</b>使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：<br/><span
                             class="support-patrons">名字/昵称 [&lt;网站>][：留言]</span>（网站与留言为可选部分，例子：<span
                             class="support-patrons">Yii.Guxing &lt;github.com/YiiGuxing>：加油！</span>）<br/>
-                        提供的信息将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。
+                        通过邮件发送时，请还提供以下信息：<br/>
+                        <div class="support-patrons" style="max-width: 450px">
+                            捐赠金额：<br/>
+                            支付平台：支付宝/微信支付<br/>
+                            支付宝用户名/微信用户名/单号（后5位）：
+                        </div>
+                        邮箱地址：<a href="mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A">yii.guxing@gmail.com</a>
+                        (点击发送邮件)<br/>
+                        您提供的名字、网站和捐赠总额将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。
                     </div>
                 </li>
             </ul>
@@ -56,7 +65,7 @@
         <div id="patrons" class="column">
             <div class="title">Patrons/捐赠者</div>
             <table>
-                <tbody>
+                <tbody id="patronsTableBody">
                 <tr>
                     <th class="donator">姓名</th>
                     <th class="website">网站</th>
@@ -64,9 +73,53 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="empty">暂无数据</div>
+            <div id="placeholder" class="patrons-placeholder">加载中…</div>
         </div>
     </div>
 </div>
+<script>
+    function processPatronsList(patronsList) {
+        var regx = /^\|\s*(.+?)\s*\|\s*(\[\s*(.+?)\s*]\(\s*(.+?)\s*\))?\s*\|\s*(.+?)\s*\|$/;
+        for (var i = 0; i < patronsList.length; i++) {
+            var patronsLine = patronsList[i];
+            if (patronsLine) {
+                var parsedPatron = regx.exec(patronsLine);
+                var name = parsedPatron[1];
+                var websiteName = parsedPatron[3];
+                var websiteUrl = parsedPatron[4];
+                var website = null;
+                if (websiteName && websiteUrl) {
+                    website = {name: websiteName, url: websiteUrl};
+                }
+                var amount = parsedPatron[5];
+                if (name&&amount) {
+                    appendPatron(name, website, amount);
+                }
+            }
+        }
+    }
+
+    var $patronsTableBody = $("#patronsTableBody");
+
+    function appendPatron(name, website, amount) {
+        var nameTd = "<td>" + name + "</td>";
+        var websiteTd = "<td>" + (website ? "<a href='" + website.url + "' target='_blank'>" + website.name + "</a>" : "") + "</td>";
+        var amountTd = "<td>" + amount + "</td>";
+        $patronsTableBody.append($("<tr>" + nameTd + websiteTd + amountTd + "</tr>"))
+    }
+
+    $.ajax({
+        url: "https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/FINANCIAL_CONTRIBUTORS.md",
+        type: "GET",
+        dataType: "TEXT",
+        success: function (data) {
+            processPatronsList(data.split(/\s*\n+\s*/).slice(3));
+            $("#placeholder").hide();
+        },
+        error: function () {
+            $("#placeholder").text("加载失败！")
+        }
+    });
+</script>
 </body>
 </html>
