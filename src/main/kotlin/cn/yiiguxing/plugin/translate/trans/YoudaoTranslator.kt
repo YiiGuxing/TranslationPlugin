@@ -92,7 +92,6 @@ object YoudaoTranslator : AbstractTranslator() {
         }.toTranslation()
     }
 
-    @Suppress("InvalidBundleOrProperty")
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is TranslateResultException -> when (throwable.code) {
             101 -> message("error.missingParameter")

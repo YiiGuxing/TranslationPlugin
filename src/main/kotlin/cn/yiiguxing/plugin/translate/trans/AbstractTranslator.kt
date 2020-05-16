@@ -33,7 +33,6 @@ abstract class AbstractTranslator : Translator {
         forDocumentation: Boolean
     ): BaseTranslation
 
-    @Suppress("InvalidBundleOrProperty")
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
         is SocketException, is SSLHandshakeException -> message("error.network")
