@@ -206,7 +206,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private fun String.toVersionParts(): Pair<Int, Int> {
             val versionString = if (this[0].equals('v', true)) substring(1) else this
-            val versionParts = versionString.replace("-SNAPSHOT", "").split('.').take(2)
+            val versionParts = versionString.split('.', '-').take(2)
             return when (versionParts.size) {
                 1 -> versionParts[0].toInt() to 0
                 2 -> versionParts[0].toInt() to versionParts[1].toInt()
