@@ -170,6 +170,11 @@
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 text="Translate Text Component"
                 use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$TerminalTranslationAction"
+                class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
+                icon="Icons.Translate"
+                text="Translate Text in Terminal"
+                use-shortcut-of="$EditorTranslateAction"/>
         <action id="$ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"
