@@ -54,7 +54,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
         private var lastTranslation: TranslationTask? = null
 
         private fun translate(text: String?): String? {
-            if (text.isNullOrEmpty()) return null
+            if (text == null || text.isEmpty()) return null
 
             val lastTask = lastTranslation
 
