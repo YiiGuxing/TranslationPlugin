@@ -275,6 +275,7 @@ Support this project with your organization. Your logo will show up here with a 
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | 梅少锋 | | 10 CNY |
 | Afa | | 5 CNY |
