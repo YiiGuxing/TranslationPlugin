@@ -3,6 +3,7 @@
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
+| Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
