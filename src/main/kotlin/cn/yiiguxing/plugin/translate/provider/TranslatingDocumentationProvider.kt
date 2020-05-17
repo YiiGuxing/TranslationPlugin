@@ -35,7 +35,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
     }
 
     companion object {
-        private val recursion = ThreadLocal.withInitial{0}
+        private val recursion = ThreadLocal.withInitial { 0 }
 
         private fun <T> nullIfRecursive(computation: () -> T?): T? {
             if (recursion.get() > 0)
@@ -54,7 +54,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
         private var lastTranslation: TranslationTask? = null
 
         private fun translate(text: String?): String? {
-            text ?: return null
+            if (text.isNullOrEmpty()) return null
 
             val lastTask = lastTranslation
 
@@ -85,11 +85,9 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
                     ProgressManager.checkCanceled()
                     try {
                         return promise.blockingGet(timeToBlockMs)
-                    }
-                    catch (t: TimeoutException) {
+                    } catch (t: TimeoutException) {
                         //ignore
-                    }
-                    catch (e: Throwable) {
+                    } catch (e: Throwable) {
                         TranslateDocumentationAction.logAndShowWarning(e, null)
                         return null
                     }
