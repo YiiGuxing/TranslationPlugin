@@ -17,7 +17,6 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
 
     init {
         isEnabledInModalContext = true
-        @Suppress("InvalidBundleOrProperty")
         templatePresentation.description = message("action.description.quickDoc")
     }
 

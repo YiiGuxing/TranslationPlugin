@@ -1,5 +1,3 @@
-@file:Suppress("InvalidBundleOrProperty")
-
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message

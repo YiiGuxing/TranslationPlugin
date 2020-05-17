@@ -45,7 +45,6 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         initSupport()
     }
 
-    @Suppress("InvalidBundleOrProperty")
     private fun setTitles() {
         translateSettingsPanel.setTitledBorder(message("settings.title.translate"))
         fontPanel.setTitledBorder(message("settings.title.font"))
@@ -53,7 +52,6 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
         optionsPanel.setTitledBorder(message("settings.title.options"))
     }
 
-    @Suppress("InvalidBundleOrProperty")
     private fun initSelectionModeComboBox() {
         with(selectionModeComboBox) {
             model = CollectionComboBoxModel(listOf(SelectionMode.INCLUSIVE, SelectionMode.EXCLUSIVE))

@@ -10,14 +10,13 @@ import javax.swing.Icon
 /**
  * BaiduAppKeySettingsPanel
  */
-class BaiduAppKeySettingsPanel(settings: Settings)
-    : AppKeySettingsPanel(settings.baiduTranslateSettings, BaiduTranslator) {
+class BaiduAppKeySettingsPanel(settings: Settings) :
+    AppKeySettingsPanel(settings.baiduTranslateSettings, BaiduTranslator) {
 
     init {
         logo.icon = logoImage
     }
 
-    @Suppress("InvalidBundleOrProperty")
     override val name: String = message("translator.name.baidu")
 
     override fun getAppKeyLink(): String = BAIDU_FANYI_URL

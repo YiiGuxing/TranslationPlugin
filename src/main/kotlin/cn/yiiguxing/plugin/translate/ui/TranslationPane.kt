@@ -659,7 +659,6 @@ abstract class TranslationPane<T : JComponent>(
                 .addToRight(right)
         }
 
-        @Suppress("InvalidBundleOrProperty")
         private fun getStarButtonToolTipText(favoriteId: Long?): String {
             return if (favoriteId == null) {
                 message("tooltip.addToWordBook")
