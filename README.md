@@ -21,7 +21,7 @@ TranslationPlugin
   - 有道翻译
   - 百度翻译
 - 多语言互译
-- 文档注释翻译
+- 文档翻译
 - 语音朗读
 - 自动选词
 - 自动单词拆分
@@ -172,10 +172,9 @@ FAQ
 更新日志
 --------
 
-## [v2.9.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.0-192) (2020-05-16)
+## [v2.9.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.1-192) (2020-05-18)
 
-- 增加了对 *Quick Documentation* 的翻译的支持（感谢 [Nikolay Tropin](https://github.com/niktrop) ）
-- 单词本支持导出为txt文本（感谢 [Kaiattrib](https://github.com/kaiattrib) ）
+- 修复了一些Bug
 
 [完整的更新历史记录](./CHANGELOG.md)
 
