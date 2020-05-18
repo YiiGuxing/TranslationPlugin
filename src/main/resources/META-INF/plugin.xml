@@ -47,8 +47,8 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>增加了对 <i>Quick Documentation</i> 翻译的支持（感谢<a href="https://github.com/niktrop">Nikolay Tropin</a>）</li>
-        <li>单词本支持导出为txt文本（感谢<a href="https://github.com/kaiattrib">Kaiattrib</a>）</li>
+        <li>增强了运行控制台的取词翻译</li>
+        <li>修复了一些Bug</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -169,6 +169,11 @@
         <action id="$TranslateTextComponent"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 text="Translate Text Component"
+                use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$TerminalTranslationAction"
+                class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
+                icon="Icons.Translate"
+                text="Translate Text in Terminal"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"

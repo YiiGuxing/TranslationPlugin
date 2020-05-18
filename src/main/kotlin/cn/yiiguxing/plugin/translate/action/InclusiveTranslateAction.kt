@@ -9,7 +9,6 @@ import cn.yiiguxing.plugin.translate.util.SelectionMode
 class InclusiveTranslateAction : TranslateAction(false) {
 
     init {
-        @Suppress("InvalidBundleOrProperty")
         templatePresentation.description = message("action.description.inclusive")
     }
 

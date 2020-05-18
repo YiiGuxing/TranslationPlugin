@@ -175,7 +175,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }
             val index = languages.indexOf(appStorage.lastReplacementTargetLanguage)
 
-            @Suppress("InvalidBundleOrProperty")
             val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
                 override fun getTextFor(value: Lang): String = value.langName
                 override fun onChosen(selectedValue: Lang, finalChoice: Boolean): PopupStep<*>? {

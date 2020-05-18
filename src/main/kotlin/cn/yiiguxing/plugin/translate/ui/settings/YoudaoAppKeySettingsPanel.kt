@@ -10,14 +10,13 @@ import javax.swing.Icon
 /**
  * YoudaoAppKeySettingsPanel
  */
-class YoudaoAppKeySettingsPanel(settings: Settings)
-    : AppKeySettingsPanel(settings.youdaoTranslateSettings, YoudaoTranslator) {
+class YoudaoAppKeySettingsPanel(settings: Settings) :
+    AppKeySettingsPanel(settings.youdaoTranslateSettings, YoudaoTranslator) {
 
     init {
         logo.icon = logoImage
     }
 
-    @Suppress("InvalidBundleOrProperty")
     override val name: String = message("translator.name.youdao")
 
     override fun getAppKeyLink(): String = YOUDAO_AI_URL

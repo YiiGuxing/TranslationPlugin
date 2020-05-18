@@ -230,7 +230,6 @@ enum class TTSSource(val displayName: String) {
     TRANSLATION(message("settings.item.translation"))
 }
 
-@Suppress("InvalidBundleOrProperty")
 enum class TargetLanguageSelection(val displayName: String) {
     DEFAULT(message("default")),
     PRIMARY_LANGUAGE(message("settings.item.primaryLanguage")),

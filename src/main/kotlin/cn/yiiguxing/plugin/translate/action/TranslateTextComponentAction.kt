@@ -16,7 +16,6 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()), HintM
 
     init {
         isEnabledInModalContext = true
-        @Suppress("InvalidBundleOrProperty")
         templatePresentation.description = message("action.description.textComponent")
     }
 
