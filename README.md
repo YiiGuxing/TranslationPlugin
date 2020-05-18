@@ -269,16 +269,3 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/translation-plugin/organization/7/website"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
-
-#### Patrons/捐赠者
-
-| **姓名** | **网站** | **捐赠总额** |
-| -------- | -------- | ------------ |
-| 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| 梅少锋 | | 10 CNY |
-| Afa | | 5 CNY |
-| Futao | [《喜欢天文》](http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0) | 5 CNY |
-| Oliveryuchang | [github.com/oliveryunchang](https://github.com/oliveryunchang) | 5 CNY |
-| Qiuyukuhe |  | 5 CNY |
-
-[更多捐赠者][financial-contributors]
