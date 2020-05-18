@@ -31,7 +31,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.awt.Dimension
 import java.io.StringReader
-import java.lang.Exception
 import java.lang.ref.WeakReference
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
@@ -154,6 +153,8 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         private const val TAG_STRONG = "strong"
         private const val TAG_SPAN = "span"
 
+        private const val TRANSLATED_ATTR = "translated"
+
         private val HTML_HEAD_REGEX = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
         private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
 
@@ -166,6 +167,10 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         fun getTranslatedDocumentation(documentation: String): String {
             val document = Jsoup.parse(documentation)
+            if (document.body().hasAttr(TRANSLATED_ATTR)) {
+                return documentation
+            }
+
             val translator = TranslateService.translator
             val translatedDocumentation = if (translator is GoogleTranslator) {
                 translator.getTranslatedDocumentation(document)
@@ -173,18 +178,20 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 translator.getTranslatedDocumentation(document)
             }
 
-            return translatedDocumentation.fixHtml()
+            translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, null)
+
+            return translatedDocumentation.outerHtml().fixHtml()
         }
 
-        private fun GoogleTranslator.getTranslatedDocumentation(document: Document): String {
+        private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Document {
             val body = document.body()
             val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
             // 删除多余的 `p` 标签。
             body.selectFirst(CSS_QUERY_CONTENT)
-                    ?.nextElementSibling()
-                    ?.takeIf { it.isEmptyParagraph() }
-                    ?.remove()
+                ?.nextElementSibling()
+                ?.takeIf { it.isEmptyParagraph() }
+                ?.remove()
 
             val preElements = body.select(TAG_PRE)
             preElements.forEachIndexed { index, element ->
@@ -193,7 +200,9 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
             // 翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
             val content = body.html().replaceTag(TAG_B, TAG_STRONG).replaceTag(TAG_I, TAG_EM)
-            val translation = translateDocumentation(content, Lang.AUTO, primaryLanguage).translation ?: ""
+            val translation =
+                if (content.isBlank()) ""
+                else translateDocumentation(content, Lang.AUTO, primaryLanguage).translation ?: ""
 
             body.html(translation)
             // 去除原文标签。
@@ -206,7 +215,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
             definition?.let { body.prependChild(it) }
 
-            return document.outerHtml()
+            return document
         }
 
         fun logAndShowWarning(e: Throwable, project: Project?) {
@@ -222,24 +231,26 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
         }
 
-        private fun Translator.getTranslatedDocumentation(document: Document): String {
+        private fun Translator.getTranslatedDocumentation(document: Document): Document {
             val body = document.body()
             val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
             val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
             val formatted = htmlDocument.getText(0, htmlDocument.length).trim()
-            val translation = translateDocumentation(formatted, Lang.AUTO, primaryLanguage).translation ?: ""
+            val translation =
+                if (formatted.isEmpty()) ""
+                else translateDocumentation(formatted, Lang.AUTO, primaryLanguage).translation ?: ""
 
             val newBody = Element("body")
             definition?.let { newBody.appendChild(it) }
             Element("div")
-                    .addClass("content")
-                    .append(translation.replace("\n", "<br/>"))
-                    .let { newBody.appendChild(it) }
+                .addClass("content")
+                .append(translation.replace("\n", "<br/>"))
+                .let { newBody.appendChild(it) }
 
             body.replaceWith(newBody)
 
-            return document.outerHtml()
+            return document
         }
 
 
