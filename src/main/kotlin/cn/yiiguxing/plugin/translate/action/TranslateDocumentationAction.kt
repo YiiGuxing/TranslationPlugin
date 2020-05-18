@@ -178,7 +178,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 translator.getTranslatedDocumentation(document)
             }
 
-            translatedDocumentation.body().attributes().add(TRANSLATED_ATTR, null)
+            translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, null)
 
             return translatedDocumentation.outerHtml().fixHtml()
         }
