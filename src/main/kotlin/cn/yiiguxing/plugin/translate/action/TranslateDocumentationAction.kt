@@ -153,6 +153,8 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         private const val TAG_STRONG = "strong"
         private const val TAG_SPAN = "span"
 
+        private const val TRANSLATED_ATTR = "translated"
+
         private val HTML_HEAD_REGEX = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
         private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
 
@@ -165,6 +167,10 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         fun getTranslatedDocumentation(documentation: String): String {
             val document = Jsoup.parse(documentation)
+            if (document.body().hasAttr(TRANSLATED_ATTR)) {
+                return documentation
+            }
+
             val translator = TranslateService.translator
             val translatedDocumentation = if (translator is GoogleTranslator) {
                 translator.getTranslatedDocumentation(document)
@@ -172,10 +178,12 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 translator.getTranslatedDocumentation(document)
             }
 
-            return translatedDocumentation.fixHtml()
+            translatedDocumentation.body().attributes().add(TRANSLATED_ATTR, null)
+
+            return translatedDocumentation.outerHtml().fixHtml()
         }
 
-        private fun GoogleTranslator.getTranslatedDocumentation(document: Document): String {
+        private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Document {
             val body = document.body()
             val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
@@ -207,7 +215,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
             definition?.let { body.prependChild(it) }
 
-            return document.outerHtml()
+            return document
         }
 
         fun logAndShowWarning(e: Throwable, project: Project?) {
@@ -223,7 +231,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
         }
 
-        private fun Translator.getTranslatedDocumentation(document: Document): String {
+        private fun Translator.getTranslatedDocumentation(document: Document): Document {
             val body = document.body()
             val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
@@ -242,7 +250,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
             body.replaceWith(newBody)
 
-            return document.outerHtml()
+            return document
         }
 
 
