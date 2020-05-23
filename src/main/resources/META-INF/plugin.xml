@@ -113,6 +113,7 @@
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.TranslationStartupActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
+        <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.ToggleDocTranslationPromoter"/>
     </extensions>
 
     <actions>
@@ -184,6 +185,12 @@
                 text="What's New in Translation"
                 class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
             <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
+        </action>
+
+        <action id="ToggleQuickDocTranslationAction"
+                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
+                text="Toggle Quick Documentation Translation"
+                use-shortcut-of="$EditorTranslateAction">
         </action>
 
         <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">
