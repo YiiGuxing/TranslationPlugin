@@ -63,7 +63,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             支付平台：支付宝/微信支付
             支付宝用户名/微信用户名/单号（后5位）：</i></b><br/>
             邮箱地址：<a href="#e-mail"><b>yii.guxing@gmail.com</b></a> (点击发送邮件)<br/>
-            您提供的名字、网站和捐赠总额将会被添加到<a href="#patrons"><b>Patrons/捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。<br/>
+            您提供的名字、网站和捐赠总额将会被添加到<a href="#patrons"><b>捐赠者</b></a>列表中，列表将按捐赠总额列出前50名捐赠者。<br/>
             感谢您的慷慨捐赠！
         """.trimIndent()
         JBPopupFactory.getInstance()
