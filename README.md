@@ -278,7 +278,7 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
 
-#### Patrons/捐赠者
+#### 捐赠者
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
