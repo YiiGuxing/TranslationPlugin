@@ -26,10 +26,10 @@ object Icons {
     val ClosePressed: Icon = IconLoader.getIcon("/icons/closePressed.png")
 
     @JvmField
-    val Audio: Icon = IconLoader.getIcon("/icons/audio.png")
+    val Audio: Icon = IconLoader.getIcon("/icons/audio.svg")
 
     @JvmField
-    val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.png")
+    val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.svg")
 
     @JvmField
     val StarOff: Icon = IconLoader.getIcon("/icons/starOff.svg")
@@ -41,7 +41,7 @@ object Icons {
     val Detail: Icon = IconLoader.getIcon("/icons/detail.svg")
 
     @JvmField
-    val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
+    val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.svg")
 
     @JvmField
     val TTSSuspend: Icon = SuspendIcon(JBColor(0x757575, 0xABABAB))
