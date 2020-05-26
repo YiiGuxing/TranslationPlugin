@@ -47,7 +47,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         ActionLink(icon = AllIcons.Windows.CloseActive, hoveringIcon = AllIcons.Windows.CloseInactive) { close() }
 
     private val presenter: Presenter = TranslationPresenter(this)
-    private val inputModel: MyModel = MyModel(presenter.histories)
+    private val historyModel: HistoryModel = HistoryModel(presenter.histories)
 
     private var ignoreLanguageEvent: Boolean = false
     private var ignoreInputEvent: Boolean = false
@@ -151,8 +151,8 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         minimumSize = JBDimension(width, 0)
         maximumSize = JBDimension(width, Int.MAX_VALUE)
         preferredSize = JBDimension(width, (preferredSize.height / scale).toInt())
-        model = inputModel
-        renderer = ComboRenderer()
+        model = historyModel
+        renderer = HistoryRenderer(sourceLangComboBox, targetLangComboBox, presenter)
 
         (editor.editorComponent as JTextComponent).let {
             it.addFocusListener(object : FocusAdapter() {
@@ -393,11 +393,11 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     }
 
     private fun update() {
-        if (isShowing && inputModel.size > 0) {
+        if (isShowing && historyModel.size > 0) {
             ignoreInputEvent = true
             inputComboBox.selectedIndex = 0
             ignoreInputEvent = false
-            translate(inputModel.getElementAt(0))
+            translate(historyModel.getElementAt(0))
         }
     }
 
@@ -494,7 +494,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     override fun onHistoriesChanged() {
         if (!disposed) {
-            inputModel.fireContentsChanged()
+            historyModel.fireContentsChanged()
         }
     }
 
@@ -530,7 +530,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
             return
         }
 
-        inputModel.setSelectedItem(text)
+        historyModel.setSelectedItem(text)
         showCard(CARD_PROCESSING)
         setLanguageComponentsEnable(false)
     }
@@ -555,68 +555,6 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         messagePane.text = errorMessage
         showCard(CARD_MASSAGE)
         setLanguageComponentsEnable(true)
-    }
-
-    private class MyModel(private val fullList: List<String>) : AbstractListModel<String>(), ComboBoxModel<String> {
-        private var selectedItem: Any? = null
-
-        override fun getElementAt(index: Int): String = fullList[index]
-
-        override fun getSize(): Int = fullList.size
-
-        override fun getSelectedItem(): Any? = selectedItem
-
-        override fun setSelectedItem(anItem: Any) {
-            selectedItem = anItem
-            fireContentsChanged()
-        }
-
-        internal fun fireContentsChanged() {
-            fireContentsChanged(this, -1, -1)
-        }
-    }
-
-    private inner class ComboRenderer : SimpleListCellRenderer<String>() {
-        private val builder = StringBuilder()
-
-        override fun customize(
-            list: JList<out String>,
-            value: String?,
-            index: Int,
-            selected: Boolean,
-            hasFocus: Boolean
-        ) {
-            if (list.width == 0 || value.isNullOrBlank()) { // 在没有确定大小之前不设置真正的文本,否则控件会被过长的文本撑大.
-                text = null
-            } else {
-                setRenderText(value)
-            }
-        }
-
-
-        private fun setRenderText(value: String) {
-            val text = with(builder) {
-                setLength(0)
-
-                append("<html><body><b>")
-                append(value)
-                append("</b>")
-
-                val src = sourceLangComboBox.selected
-                val target = targetLangComboBox.selected
-                if (src != null && target != null) {
-                    presenter.getCache(value, src, target)?.let {
-                        append("  -  <i><small>")
-                        append(it.translation)
-                        append("</small></i>")
-                    }
-                }
-
-                builder.append("</body></html>")
-                toString()
-            }
-            setText(text)
-        }
     }
 
     private inner class ResizableListener : MouseAdapter() {
