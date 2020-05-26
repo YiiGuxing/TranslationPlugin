@@ -42,7 +42,7 @@ object GoogleTranslator : AbstractTranslator() {
     override val supportedTargetLanguages: List<Lang> =
         (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
 
-    override fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {
+    override fun buildRequest(builder: RequestBuilder, forDocumentation: Boolean) {
         builder.userAgent().googleReferer()
     }
 

@@ -23,7 +23,7 @@ abstract class AbstractTranslator : Translator {
         forDocumentation: Boolean
     ): String
 
-    protected open fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {}
+    protected open fun buildRequest(builder: RequestBuilder, forDocumentation: Boolean) {}
 
     protected abstract fun parserResult(
         original: String,
