@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.documentation
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
-import cn.yiiguxing.plugin.translate.util.TranslateService
+import com.intellij.codeInsight.documentation.DocumentationComponent
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -27,23 +27,30 @@ private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
 
 private val HTML_KIT = HTMLEditorKit()
 
-fun getTranslatedDocumentation(documentation: String): String {
+fun Translator.getTranslatedDocumentation(documentation: String): String {
     val document = Jsoup.parse(documentation)
     if (document.body().hasAttr(TRANSLATED_ATTR)) {
         return documentation
     }
 
-    val translator = TranslateService.translator
-    val translatedDocumentation = if (translator is GoogleTranslator) {
-        translator.getTranslatedDocumentation(document)
+    val translatedDocumentation = if (this is GoogleTranslator) {
+        getTranslatedDocumentation(document)
     } else {
-        translator.getTranslatedDocumentation(document)
+        getTranslatedDocumentation(document)
     }
 
     translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, null)
 
     return translatedDocumentation.outerHtml().fixHtml()
 }
+
+/**
+ * 修复HTML格式。[DocumentationComponent]识别不了`attr="val"`的属性表达形式，只识别`attr='val'`的表达形式，导致样式显示异常。
+ */
+private fun String.fixHtml(): String = replace(
+    HTML_HEAD_REGEX,
+    HTML_HEAD_REPLACEMENT
+)
 
 private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Document {
     val body = document.body()
@@ -82,14 +89,6 @@ private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Doc
 
     return document
 }
-
-/**
- * 修复HTML格式。[DocumentationComponent]识别不了`attr="val"`的属性表达形式，只识别`attr='val'`的表达形式，导致样式显示异常。
- */
-private fun String.fixHtml(): String = replace(
-    HTML_HEAD_REGEX,
-    HTML_HEAD_REPLACEMENT
-)
 
 private fun String.replaceTag(targetTag: String, replacementTag: String): String {
     return replace(Regex("<(?<pre>/??)$targetTag(?<pos>( .+?)*?)>"), "<${'$'}{pre}$replacementTag${'$'}{pos}>")

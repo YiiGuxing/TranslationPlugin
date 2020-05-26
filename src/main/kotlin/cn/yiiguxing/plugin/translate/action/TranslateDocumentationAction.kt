@@ -68,7 +68,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     return@executeOnPooledThread
                 }
 
-                val translatedDocumentation = getTranslatedDocumentation(doc)
+                val translatedDocumentation = TranslateService.translator.getTranslatedDocumentation(doc)
                 invokeLater {
                     val documentationComponent = documentationComponentRef.get() ?: return@invokeLater
                     val e = editorRef.get()?.takeUnless { it.isDisposed }

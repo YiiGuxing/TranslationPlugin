@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProviderEx
 import com.intellij.psi.PsiElement
@@ -54,10 +55,11 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
             if (text.isNullOrEmpty()) return null
 
             val lastTask = lastTranslation
+            val translator = TranslateService.translator
 
             val task =
-                if (lastTask != null && lastTask.text == text) lastTask
-                else TranslateDocumentationTask(text)
+                if (lastTask != null && lastTask.translator.id == translator.id && lastTask.text == text) lastTask
+                else TranslateDocumentationTask(text, translator)
 
             lastTranslation = task
 
