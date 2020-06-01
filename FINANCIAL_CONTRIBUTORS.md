@@ -9,6 +9,7 @@
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
 | Kirill Semenchenko | | 2 USD |
+| GameXG | [github.com/gamexg](https://github.com/gamexg) | 10 CNY |
 | 随风 | [github.com/lzf971107](https://github.com/lzf971107) | 10 CNY |
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
