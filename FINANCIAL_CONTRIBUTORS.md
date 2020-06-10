@@ -5,6 +5,7 @@
 | CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 50 USD |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
