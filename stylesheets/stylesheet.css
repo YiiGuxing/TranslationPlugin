@@ -177,8 +177,7 @@ a:hover {
 }
 
 .project-version {
-    margin-top: 2rem;
-    margin-bottom: 4rem;
+    margin: 1.5rem 0;
     font-size: 15px;
     font-weight: normal;
     opacity: 0.8;
