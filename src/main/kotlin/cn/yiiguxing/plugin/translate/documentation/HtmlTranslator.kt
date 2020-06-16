@@ -68,10 +68,9 @@ private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Doc
     }
 
     // 翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
-    val content = body.html().replaceTag(TAG_B, TAG_STRONG).replaceTag(
-        TAG_I,
-        TAG_EM
-    )
+    val content = body.html()
+        .replaceTag(TAG_B, TAG_STRONG)
+        .replaceTag(TAG_I, TAG_EM)
     val translation =
         if (content.isBlank()) ""
         else translateDocumentation(content, Lang.AUTO, primaryLanguage).translation ?: ""
