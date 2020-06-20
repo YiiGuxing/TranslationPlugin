@@ -57,7 +57,7 @@ class YoudaoDictDocument private constructor(
             if (wordString.style == POS_STYLE) "\t $wordString\t" else wordString.toString()
         }
 
-        if (variantStrings.isNotEmpty()) {
+        if (variantStrings.isNotEmpty() && Settings.showWordForms) {
             appendString("\n\n")
             appendStrings(variantStrings)
         }
