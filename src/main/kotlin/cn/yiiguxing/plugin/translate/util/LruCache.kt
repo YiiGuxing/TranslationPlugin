@@ -24,6 +24,7 @@ open class LruCache<K, V>(maxSize: Int) {
     var size: Int = 0
         private set
         @Synchronized get
+
     /**
      * For caches that do not override [.sizeOf][sizeOf], this returns the maximum
      * number of entries in the cache. For all other caches, this returns the
@@ -39,24 +40,28 @@ open class LruCache<K, V>(maxSize: Int) {
     var putCount: Int = 0
         private set
         @Synchronized get
+
     /**
      * The number of times [.create][create] returned a value.
      */
     var createCount: Int = 0
         private set
         @Synchronized get
+
     /**
      * The number of values that have been evicted.
      */
     var evictionCount: Int = 0
         private set
         @Synchronized get
+
     /**
      * The number of times [.get][get] returned a value that was already present in the cache.
      */
     var hitCount: Int = 0
         private set
         @Synchronized get
+
     /**
      * The number of times [.get][get] returned null or required a new value to be created.
      */
