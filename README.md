@@ -1,6 +1,5 @@
 
-TranslationPlugin
-=================
+# TranslationPlugin
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
@@ -10,12 +9,11 @@ TranslationPlugin
 [![Downloads][downloads-img]][plugin]
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
-### JetBrains IDE/Android Studio 翻译插件
+<p align="center"><b>Translation plugin for JetBrains IDEs/Android Studio.</b></p>
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
 
-![screenshots](./images/screenshots.gif)
+## Features
 
-特征
-----
 - 多翻译引擎
   - Google翻译
   - 有道翻译
@@ -27,7 +25,8 @@ TranslationPlugin
 - 自动单词拆分
 - 单词本
 
-支持的 **Jetbrains IDE** 产品:
+## Compatibility:
+
 - Android Studio
 - AppCode
 - CLion
@@ -45,8 +44,14 @@ TranslationPlugin
 - RubyMine
 - WebStorm
 
-安装
-----
+## Sponsors
+
+[![CodeStream](https://alt-images.codestream.com/codestream_logo_translation.png)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner)
+
+[![GitAds](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/git-ads.png)](https://tracking.gitads.io/?campaign=gitads&repo=TranslationPlugin&redirect=gitads.io)
+
+## Installation
+
 - **使用 IDE 内置插件系统安装:**
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>搜索并找到<b>"Translation"</b></kbd> > <kbd>Install</kbd>
 
@@ -55,8 +60,8 @@ TranslationPlugin
 
 重启**IDE**.
 
-使用
-----
+## Usage
+
 1. **申请有道智云翻译服务（可选）:**
    - 注册[有道智云](http://ai.youdao.com)帐号并获取其**应用ID**和**应用密钥**
    - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>有道翻译</kbd>
@@ -86,8 +91,8 @@ TranslationPlugin
    点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
 
 
-Actions
--------
+## Actions
+
 - **Show Translation Dialog...**
 
   打开翻译对话框。默认显示在工具栏上。默认快捷键:
@@ -150,8 +155,8 @@ Actions
 
   显示每日单词对话框。默认快捷键: (无)
 
-FAQ
----
+## FAQ
+
 1. **出现网络错误或者网络连接超时怎么办？**
 
    **答**：  
@@ -164,7 +169,7 @@ FAQ
 
    **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
    
-   ![screenshots](./images/settings_font.png)
+   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
 
 3. **无法保存应用密钥怎么办?**
 
@@ -176,8 +181,7 @@ FAQ
 
    **答**：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
 
-更新日志
---------
+## Change Notes
 
 ## [v2.9.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.1) (2020-05-18)
 
@@ -187,8 +191,7 @@ FAQ
 [完整的更新历史记录](./CHANGELOG.md)
 
 
-Support
--------
+## Support
 
 您可以通过执行以下任意操作来贡献和支持此项目：
 * 在GitHub上标星
@@ -209,11 +212,11 @@ Support
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="./images/open_collective.png">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open_collective.png" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="./images/alipay.png"></td>
-      <td><img src="./images/wechat.png"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
   使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
@@ -226,8 +229,7 @@ Support
 
 **感谢您的支持！**
 
-其他插件
-------
+## 其他插件
 
 - [FIGlet](https://github.com/YiiGuxing/intellij-figlet)
 - [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
