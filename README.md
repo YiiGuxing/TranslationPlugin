@@ -10,7 +10,7 @@
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 <p align="center"><b>Translation plugin for JetBrains IDEs/Android Studio.</b></p>
-<p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
+<p align="center"><img src="./images/screenshots.gif" alt="screenshots"></p>
 
 ## Features
 
@@ -48,7 +48,7 @@
 
 [![CodeStream](https://alt-images.codestream.com/codestream_logo_translation.png)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner)
 
-[![GitAds](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/git-ads.png)](https://tracking.gitads.io/?campaign=gitads&repo=TranslationPlugin&redirect=gitads.io)
+[![GitAds](./images/git-ads.png)](https://tracking.gitads.io/?campaign=gitads&repo=TranslationPlugin&redirect=gitads.io)
 
 ## Installation
 
@@ -162,7 +162,7 @@
 
    **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
    
-   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
+   ![screenshots](./images/settings_font.png)
 
 3. **无法保存应用密钥怎么办?**
 
@@ -205,11 +205,11 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
+            <img src="./images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
+      <td><img src="./images/alipay.png" alt="Alipay"></td>
+      <td><img src="./images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
   使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
