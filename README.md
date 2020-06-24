@@ -205,7 +205,7 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open_collective.png" alt="OpenCollective">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
       <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
