@@ -14,7 +14,7 @@
     <a href="updates.html">更新</a>
     <a href="support.html" class="selected">支持与捐赠</a>
     <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
-        <img class="github-icon" src="images/github.svg"></a>
+        <img class="github-icon" src="images/github.svg" alt="GitHub"></a>
 </header>
 <div class="frame_wrapper">
     <div class="frame_content support">
@@ -36,11 +36,17 @@
                     <table style="margin-top: 1rem;">
                         <thead>
                         <tr>
+                            <th>Open Collective</th>
                             <th>支付宝</th>
                             <th>微信支付</th>
                         </tr>
                         </thead>
                         <tr>
+                            <td>
+                                <a href="https://opencollective.com/translation-plugin" target="_blank">
+                                    <img src="./images/open-collective.svg" width="171px" alt>
+                                </a>
+                            </td>
                             <td><img src="./images/alipay.png" width="240px" alt></td>
                             <td><img src="./images/wechat.png" width="240px" alt></td>
                         </tr>
@@ -92,7 +98,7 @@
                     website = {name: websiteName, url: websiteUrl};
                 }
                 var amount = parsedPatron[5];
-                if (name&&amount) {
+                if (name && amount) {
                     appendPatron(name, website, amount);
                 }
             }
