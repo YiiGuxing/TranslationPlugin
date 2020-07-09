@@ -48,7 +48,7 @@
 
 [![CodeStream](https://alt-images.codestream.com/codestream_logo_translation.png)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner)
 
-[![GitAds](./images/git-ads.png)](https://tracking.gitads.io/?repo=TranslationPlugin)
+<a href="https://tracking.gitads.io/?repo=TranslationPlugin"><img src="TranslationPlugin" alt="GitAds"/></a>
 
 ## Installation
 
