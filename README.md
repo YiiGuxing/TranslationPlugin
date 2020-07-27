@@ -279,6 +279,7 @@ Support this project with your organization. Your logo will show up here with a 
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
@@ -288,6 +289,5 @@ Support this project with your organization. Your logo will show up here with a 
 | 随风 | [github.com/lzf971107](https://github.com/lzf971107) | 10 CNY |
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
-| Chunlife.top |  | 5 CNY |
 
 [更多捐赠者][financial-contributors]
