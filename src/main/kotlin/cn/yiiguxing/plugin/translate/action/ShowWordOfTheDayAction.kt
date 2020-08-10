@@ -1,7 +1,11 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.Application
+import cn.yiiguxing.plugin.translate.util.WordBookService
+import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
