@@ -7,7 +7,6 @@ package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
@@ -79,7 +78,6 @@ inline val AppStorage: AppStorage get() = AppStorage.instance
 inline val Settings: Settings get() = Settings.instance
 inline val TranslateService: TranslateService get() = TranslateService.instance
 inline val TextToSpeech: TextToSpeech get() = TextToSpeech.instance
-inline val TranslationUIManager: TranslationUIManager get() = TranslationUIManager.instance
 inline val WordBookService: WordBookService get() = WordBookService.instance
 
 

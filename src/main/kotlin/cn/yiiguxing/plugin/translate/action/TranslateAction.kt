@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.BalloonPositionTracker
 import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.createCaretRangeMarker
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.highlighting.HighlightManager
