@@ -59,7 +59,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val version = Version(versionString)
         val lastVersion = Version(lastVersionString)
         if (version > lastVersion) {
-            showUpdateToolWindow(project, version)
+            invokeLater {
+                showUpdateToolWindow(project, version)
+            }
         }
 
         showUpdateNotification(project, plugin)
