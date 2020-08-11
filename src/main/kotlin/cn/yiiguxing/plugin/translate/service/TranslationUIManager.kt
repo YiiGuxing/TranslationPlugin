@@ -74,7 +74,7 @@ class TranslationUIManager private constructor() : Disposable {
          * Project or application should not be used as parent disposables for plugin classes
          * https://jetbrains.org/intellij/sdk/docs/basics/disposers.html#choosing-a-disposable-parent
          */
-        fun disposable(project: Project?): Disposable = instance(project)
+        fun disposable(project: Project? = null): Disposable = instance(project)
 
         private inline fun <D : DialogWrapper> showDialog(
                 cache: Ref<D>,
