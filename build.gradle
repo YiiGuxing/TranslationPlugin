@@ -64,6 +64,10 @@ compileTestKotlin {
     }
 }
 
+runIde {
+    systemProperty "idea.auto.reload.plugins", false
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
