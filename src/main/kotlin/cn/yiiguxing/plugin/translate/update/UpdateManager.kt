@@ -234,9 +234,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 )
 
             toolWindow as ToolWindowEx
-            toolWindow.icon = AllIcons.Toolwindows.ToolWindowPalette
+            toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowPalette)
             toolWindow.setAvailable(true, null)
-            toolWindow.isToHideOnEmptyContent = false
+            toolWindow.setToHideOnEmptyContent(false)
             toolWindow.setTitleActions(
                 OpenInBrowserAction(versionUrl),
                 CloseAction(project, toolWindow)

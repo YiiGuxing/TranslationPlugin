@@ -31,9 +31,9 @@ abstract class BaseStartupActivity(private val runOnlyOnce: Boolean = false) : S
             }
 
             if (delayCount > 0) {
-                ToolWindowManager.getInstance(project).invokeLater {
-                    runLater(project, delayCount - 1, action)
-                }
+                ToolWindowManager.getInstance(project).invokeLater(
+                    Runnable { runLater(project, delayCount - 1, action) }
+                )
             } else {
                 action()
             }
