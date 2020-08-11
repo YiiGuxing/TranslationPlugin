@@ -86,7 +86,7 @@ class TranslationBalloon(
         balloon = createBalloon(contentPanel)
         initActions()
 
-        project?.let { Disposer.register(it, balloon) }
+        Disposer.register(TranslationUIManager.disposable(project), balloon)
         // 如果使用`Disposer.register(balloon, this)`的话，
         // `TranslationBalloon`在外部以子`Disposable`再次注册时将会使之无效。
         Disposer.register(balloon, Disposable { Disposer.dispose(this) })
