@@ -25,7 +25,7 @@ abstract class AppKeySettingsPanel(private val settings: AppKeySettings, transla
     init {
         primaryLanguage.apply {
             model = CollectionComboBoxModel(supportedLanguages)
-            setRenderer(LanguageRenderer)
+            setRenderer(LanguageRenderer())
         }
     }
 
