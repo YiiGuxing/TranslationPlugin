@@ -90,7 +90,7 @@ class WordBookView {
             panel.showMessagePane()
         }
 
-        Disposer.register(project, Disposable {
+        Disposer.register(TranslationUIManager.disposable(project), Disposable {
             windows.remove(project)
             wordBookPanels.remove(project)
         })

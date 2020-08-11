@@ -22,7 +22,7 @@ import com.intellij.util.ui.PositionTracker
 /**
  * TranslationUIManager
  */
-class TranslationUIManager private constructor(): Disposable {
+class TranslationUIManager private constructor() : Disposable {
 
     private var balloonRef: Ref<TranslationBalloon> = Ref.create()
     private var dialogRef: Ref<TranslationDialog> = Ref.create()
@@ -45,9 +45,6 @@ class TranslationUIManager private constructor(): Disposable {
 
 
     companion object {
-
-        val instance: TranslationUIManager
-            get() = ServiceManager.getService(TranslationUIManager::class.java)
 
         private inline fun <T> Ref<T>.getOrPut(create: () -> T): T {
             val cached = get()
@@ -72,6 +69,12 @@ class TranslationUIManager private constructor(): Disposable {
             else
                 ServiceManager.getService(project, TranslationUIManager::class.java)
         }
+
+        /**
+         * Project or application should not be used as parent disposables for plugin classes
+         * https://jetbrains.org/intellij/sdk/docs/basics/disposers.html#choosing-a-disposable-parent
+         */
+        fun disposable(project: Project?): Disposable = instance(project)
 
         private inline fun <D : DialogWrapper> showDialog(
                 cache: Ref<D>,
