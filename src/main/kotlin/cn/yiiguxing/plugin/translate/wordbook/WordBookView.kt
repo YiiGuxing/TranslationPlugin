@@ -154,7 +154,7 @@ class WordBookView {
     private fun subscribeWordBookTopic() {
         if (!isInitialized) {
             Application.messageBus
-                .connect()
+                .connect(TranslationUIManager.disposable())
                 .subscribe(WordBookListener.TOPIC, object : WordBookListener {
                     override fun onInitialized(service: WordBookService) {
                         assertIsDispatchThread()
