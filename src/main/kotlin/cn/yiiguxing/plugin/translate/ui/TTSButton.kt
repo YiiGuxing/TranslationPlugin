@@ -34,7 +34,7 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
         dataSource = ds
     }
 
-    override fun linkSelected(aSource: LinkLabel<*>?, aLinkData: Any?) {
+    override fun linkSelected(aSource: LinkLabel<Any?>?, aLinkData: Any?) {
         play()
     }
 

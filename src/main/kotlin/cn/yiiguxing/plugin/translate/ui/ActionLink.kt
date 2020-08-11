@@ -36,7 +36,7 @@ class ActionLink(
         return normalColor ?: super.getNormal()
     }
 
-    override fun linkSelected(aSource: LinkLabel<*>, aLinkData: Any?) {
+    override fun linkSelected(aSource: LinkLabel<Any?>, aLinkData: Any?) {
         if (isEnabled) {
             action(this)
         }
