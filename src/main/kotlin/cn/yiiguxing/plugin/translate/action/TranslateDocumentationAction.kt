@@ -9,7 +9,10 @@ import com.intellij.codeInsight.CodeInsightBundle
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProvider
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationAction
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
@@ -149,8 +152,16 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     NOTIFICATION_DISPLAY_ID,
                     "Documentation",
                     "Failed to translate documentation: ${e.message}",
-                    e
+                    e,
+                    DisableAutoDocTranslationAction()
                 )
+            }
+        }
+
+        class DisableAutoDocTranslationAction : NotificationAction(message("translate.documentation.disable")) {
+            override fun actionPerformed(e: AnActionEvent, notification: Notification) {
+                Settings.translateDocumentation = false
+                notification.expire()
             }
         }
 
