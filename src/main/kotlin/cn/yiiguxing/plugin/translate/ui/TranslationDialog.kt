@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.CommonShortcuts
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
@@ -42,7 +43,8 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     private val processPane = ProcessComponent("Querying...")
     private val translationPane = DialogTranslationPane(project, Settings)
     private val translationPanel = ScrollPane(translationPane)
-    private val closeButton = ActionLink(icon = Icons.Close, hoveringIcon = Icons.ClosePressed) { close() }
+    private val closeButton =
+        ActionLink(icon = AllIcons.Windows.CloseActive, hoveringIcon = AllIcons.Windows.CloseInactive) { close() }
 
     private val presenter: Presenter = TranslationPresenter(this)
     private val inputModel: MyModel = MyModel(presenter.histories)
@@ -119,7 +121,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     private fun initTitle() {
         closeButton.apply {
             isVisible = false
-            disabledIcon = Icons.ClosePressed
+            disabledIcon = AllIcons.Windows.CloseInactive
         }
         titlePanel.apply {
             setText("Translation")

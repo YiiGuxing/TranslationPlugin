@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.9.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.2) (2020-08-15)
+
+- 添加快速切换自动文档翻译的快捷键
+- 修复了一些Bug
+
 ## [v2.9.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.1) (2020-05-18)
 
 - 增强了运行控制台的取词翻译

@@ -5,6 +5,7 @@ package cn.yiiguxing.plugin.translate.util
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import com.intellij.notification.*
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
@@ -16,7 +17,8 @@ object Notifications {
         displayId: String,
         title: String,
         message: String,
-        throwable: Throwable
+        throwable: Throwable,
+        vararg actions: AnAction
     ) {
         NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
             .createNotification(
@@ -32,6 +34,7 @@ object Notifications {
                     }
                 })
             .addAction(CopyToClipboardAction(message, throwable))
+            .apply { for (action in actions) addAction(action) }
             .show(project)
     }
 

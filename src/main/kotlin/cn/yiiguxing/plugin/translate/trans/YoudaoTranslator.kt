@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.sha256
 import com.google.gson.Gson
@@ -51,7 +50,19 @@ object YoudaoTranslator : AbstractTranslator() {
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang, forDocumentation: Boolean): String {
+    override fun getRequestUrl(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): String = YOUDAO_TRANSLATE_URL
+
+    override fun getRequestParams(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): List<Pair<String, String>> {
         val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
@@ -60,18 +71,16 @@ object YoudaoTranslator : AbstractTranslator() {
         val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
         val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
 
-
-        return UrlBuilder(YOUDAO_TRANSLATE_URL)
-            .addQueryParameter("appKey", appId)
-            .addQueryParameter("from", srcLang.youdaoCode)
-            .addQueryParameter("to", targetLang.youdaoCode)
-            .addQueryParameter("salt", salt)
-            .addQueryParameter("sign", sign)
-            .addQueryParameter("signType", "v3")
-            .addQueryParameter("curtime", curTime)
-            .addQueryParameter("q", text)
-            .build()
-            .also { logger.i("Translate url: $it") }
+        return ArrayList<Pair<String, String>>().apply {
+            add("appKey" to appId)
+            add("from" to srcLang.youdaoCode)
+            add("to" to targetLang.youdaoCode)
+            add("salt" to salt)
+            add("sign" to sign)
+            add("signType" to "v3")
+            add("curtime" to curTime)
+            add("q" to text)
+        }
     }
 
     override fun parserResult(
