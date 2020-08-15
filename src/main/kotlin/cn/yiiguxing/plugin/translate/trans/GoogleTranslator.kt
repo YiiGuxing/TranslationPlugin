@@ -42,11 +42,16 @@ object GoogleTranslator : AbstractTranslator() {
     override val supportedTargetLanguages: List<Lang> =
         (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
 
-    override fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {
+    override fun buildRequest(builder: RequestBuilder, forDocumentation: Boolean) {
         builder.userAgent().googleReferer()
     }
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang, forDocumentation: Boolean): String {
+    override fun getRequestUrl(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): String {
         val baseUrl = if (forDocumentation) {
             GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
         } else {
@@ -73,9 +78,17 @@ object GoogleTranslator : AbstractTranslator() {
 
         return urlBuilder
             .addQueryParameter("tk", text.tk())
-            .addQueryParameter("q", text)
             .build()
             .also { logger.i("Translate url: $it") }
+    }
+
+    override fun getRequestParams(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): List<Pair<String, String>> {
+        return listOf("q" to text)
     }
 
     override fun parserResult(

@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.urlEncode
 import com.google.gson.JsonSyntaxException
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
@@ -16,14 +17,21 @@ import javax.net.ssl.SSLHandshakeException
  */
 abstract class AbstractTranslator : Translator {
 
-    protected abstract fun getTranslateUrl(
+    protected abstract fun getRequestUrl(
         text: String,
         srcLang: Lang,
         targetLang: Lang,
         forDocumentation: Boolean
     ): String
 
-    protected open fun buildRequest(builder: RequestBuilder, orDocumentation: Boolean) {}
+    protected abstract fun getRequestParams(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): List<Pair<String, String>>
+
+    protected open fun buildRequest(builder: RequestBuilder, forDocumentation: Boolean) {}
 
     protected abstract fun parserResult(
         original: String,
@@ -56,10 +64,15 @@ abstract class AbstractTranslator : Translator {
             throw UnsupportedLanguageException(targetLang, name)
         }
 
-        return HttpRequests.request(getTranslateUrl(`in`, srcLang, targetLang, forDocumentation))
+        val url = getRequestUrl(`in`, srcLang, targetLang, forDocumentation)
+        val params = getRequestParams(`in`, srcLang, targetLang, forDocumentation)
+        val data = params.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
+
+        return HttpRequests.post(url, "application/x-www-form-urlencoded")
             .also { buildRequest(it, forDocumentation) }
             .connect {
-                parserResult(`in`, srcLang, targetLang, it.readString(null), forDocumentation)
+                it.write(data)
+                parserResult(`in`, srcLang, targetLang, it.readString(), forDocumentation)
             }
     }
 

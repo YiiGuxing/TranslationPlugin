@@ -125,6 +125,13 @@
   
   翻译文档注释内容。默认显示在编辑器右键菜单上，光标在文档注释块内时可用。默认快捷键: (无)
 
+- **Toggle Quick Documentation Translation**
+  
+  快速文档中将文档内容在译文和原文之间切换。窗口聚焦于快速文档弹出窗或者文档工具窗口时可用。默认快捷键(同**Translate**): 
+  
+  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
+  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+
 - **Translate Text Component**
 
   翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本，不支持自动取词。默认快捷键:
@@ -175,9 +182,9 @@
 
 ## Change Notes
 
-## [v2.9.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.1) (2020-05-18)
+## [v2.9.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.2) (2020-08-15)
 
-- 增强了运行控制台的取词翻译
+- 添加快速切换自动文档翻译的快捷键
 - 修复了一些Bug
 
 [完整的更新历史记录](./CHANGELOG.md)
@@ -215,13 +222,13 @@
 
   `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
 
-  您提供的名字、网站和捐赠总额将会被添加到[**捐赠者**][financial-contributors]列表中，列表将按捐赠总额列出前50名捐赠者。
+  您提供的名字、网站和捐赠总额将会被添加到[**捐赠者**][financial-contributors]列表中。
   
   邮箱地址：[yii.guxing@gmail.com](mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A) (点击发送邮件)
 
 **感谢您的支持！**
 
-## 其他插件
+## More Plugins
 
 - [FIGlet](https://github.com/YiiGuxing/intellij-figlet)
 - [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)

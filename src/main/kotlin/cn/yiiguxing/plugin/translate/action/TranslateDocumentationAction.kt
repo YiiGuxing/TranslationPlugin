@@ -9,7 +9,10 @@ import com.intellij.codeInsight.CodeInsightBundle
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProvider
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationAction
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
@@ -68,7 +71,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     return@executeOnPooledThread
                 }
 
-                val translatedDocumentation = getTranslatedDocumentation(doc)
+                val translatedDocumentation = TranslateService.translator.getTranslatedDocumentation(doc)
                 invokeLater {
                     val documentationComponent = documentationComponentRef.get() ?: return@invokeLater
                     val e = editorRef.get()?.takeUnless { it.isDisposed }
@@ -142,15 +145,23 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         private val LOGGER: Logger = Logger.getInstance(TranslateDocumentationAction::class.java)
 
         fun logAndShowWarning(e: Throwable, project: Project?) {
-            LOGGER.w(e.message ?: "", e)
             invokeLater {
+                LOGGER.w(e.message ?: "", e)
                 Notifications.showErrorNotification(
                     project,
                     NOTIFICATION_DISPLAY_ID,
                     "Documentation",
                     "Failed to translate documentation: ${e.message}",
-                    e
+                    e,
+                    DisableAutoDocTranslationAction()
                 )
+            }
+        }
+
+        class DisableAutoDocTranslationAction : NotificationAction(message("translate.documentation.disable")) {
+            override fun actionPerformed(e: AnActionEvent, notification: Notification) {
+                Settings.translateDocumentation = false
+                notification.expire()
             }
         }
 
@@ -196,7 +207,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
 
             size = sizeToSet
-            setUserData(if (!restore) listOf(sizeToSet.clone()) else null)
+            setUserData(if (!restore) listOf(sizeToSet.clone()) else emptyList())
         }
     }
 }

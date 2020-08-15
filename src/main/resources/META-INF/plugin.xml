@@ -47,7 +47,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>增强了运行控制台的取词翻译</li>
+        <li>添加快速切换自动文档翻译的快捷键</li>
         <li>修复了一些Bug</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
@@ -58,7 +58,7 @@
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="action-group.xml">com.intellij.modules.lang</depends>
     <!-- Rider模块不可用 -->
     <!--<depends optional="true" config-file="csharp-doc.xml">com.intellij.modules.rider</depends>-->
     <depends optional="true" config-file="oc-doc.xml">com.intellij.modules.cidr.lang</depends>
@@ -212,14 +212,6 @@
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
-        </group>
-        <group id="TranslationNavBarToolBar" text="Translation Navigation Bar Actions">
-            <separator/>
-            <reference ref="$ShowTranslationDialogAction"/>
-            <separator/>
-
-            <!--suppress PluginXmlValidity -->
-            <add-to-group group-id="NavBarToolBar" relative-to-action="RunAnything" anchor="before"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>

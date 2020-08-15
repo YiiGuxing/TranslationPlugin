@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.ProjectManager
@@ -210,10 +209,6 @@ class SettingsPanel(settings: Settings, appStorage: AppStorage) : SettingsForm(s
             if (it >= 0) {
                 appStorage.maxHistorySize = it
             }
-        }
-
-        if (settings.showWordForms != showWordFormsCheckBox.isSelected) {
-            TranslateService.clearCaches()
         }
 
         @Suppress("Duplicates")

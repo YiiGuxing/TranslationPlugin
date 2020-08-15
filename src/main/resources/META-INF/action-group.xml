@@ -1,0 +1,12 @@
+<idea-plugin>
+    <actions>
+        <group id="TranslationNavBarToolBar" text="Translation Navigation Bar Actions">
+            <separator/>
+            <reference ref="$ShowTranslationDialogAction"/>
+            <separator/>
+
+            <!--suppress PluginXmlValidity -->
+            <add-to-group group-id="NavBarToolBar" relative-to-action="RunAnything" anchor="before"/>
+        </group>
+    </actions>
+</idea-plugin>

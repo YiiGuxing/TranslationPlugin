@@ -138,7 +138,7 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
-    var translateDocumentation: Boolean = true
+    var translateDocumentation: Boolean = false
 
     @Transient
     private val settingsChangePublisher: SettingsChangeListener =

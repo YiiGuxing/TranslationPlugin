@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
@@ -70,22 +69,33 @@ object BaiduTranslator : AbstractTranslator() {
         .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
-    override fun getTranslateUrl(text: String, srcLang: Lang, targetLang: Lang, forDocumentation: Boolean): String {
+    override fun getRequestUrl(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): String = BAIDU_TRANSLATE_URL
+
+    override fun getRequestParams(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        forDocumentation: Boolean
+    ): List<Pair<String, String>> {
         val settings = Settings.baiduTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()
         val sign = (appId + text + salt + privateKey).md5().toLowerCase()
 
-        return UrlBuilder(BAIDU_TRANSLATE_URL)
-            .addQueryParameter("appid", appId)
-            .addQueryParameter("from", srcLang.baiduCode)
-            .addQueryParameter("to", targetLang.baiduCode)
-            .addQueryParameter("salt", salt)
-            .addQueryParameter("sign", sign)
-            .addQueryParameter("q", text)
-            .build()
-            .also { logger.i("Translate url: $it") }
+        return ArrayList<Pair<String, String>>().apply {
+            add("appid" to appId)
+            add("from" to srcLang.baiduCode)
+            add("to" to targetLang.baiduCode)
+            add("salt" to salt)
+            add("sign" to sign)
+            add("q" to text)
+        }
     }
 
     override fun parserResult(

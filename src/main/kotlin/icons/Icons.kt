@@ -1,47 +1,41 @@
 package icons
 
 import cn.yiiguxing.plugin.translate.ui.icon.SuspendIcon
-import com.intellij.openapi.util.IconLoader
+import com.intellij.ui.IconManager
 import com.intellij.ui.JBColor
 import javax.swing.Icon
 
 object Icons {
 
     @JvmField
-    val Translate: Icon = IconLoader.getIcon("/icons/translate.svg")
+    val Translate: Icon = load("/icons/translate.svg")
 
     @JvmField
-    val Translate2: Icon = IconLoader.getIcon("/icons/translate2.svg")
+    val Translate2: Icon = load("/icons/translate2.svg")
 
     @JvmField
-    val Wordbook: Icon = IconLoader.getIcon("/icons/wordbook.svg")
+    val Wordbook: Icon = load("/icons/wordbook.svg")
 
     @JvmField
-    val Pin: Icon = IconLoader.getIcon("/icons/pin.png")
+    val Pin: Icon = load("/icons/pin.svg")
 
     @JvmField
-    val Close: Icon = IconLoader.getIcon("/icons/close.png")
+    val Audio: Icon = load("/icons/audio.svg")
 
     @JvmField
-    val ClosePressed: Icon = IconLoader.getIcon("/icons/closePressed.png")
+    val AudioPressed: Icon = load("/icons/audioPressed.svg")
 
     @JvmField
-    val Audio: Icon = IconLoader.getIcon("/icons/audio.png")
+    val StarOff: Icon = load("/icons/starOff.svg")
 
     @JvmField
-    val AudioPressed: Icon = IconLoader.getIcon("/icons/audioPressed.png")
+    val StarOn: Icon = load("/icons/starOn.svg")
 
     @JvmField
-    val StarOff: Icon = IconLoader.getIcon("/icons/starOff.svg")
+    val Detail: Icon = load("/icons/detail.svg")
 
     @JvmField
-    val StarOn: Icon = IconLoader.getIcon("/icons/starOn.svg")
-
-    @JvmField
-    val Detail: Icon = IconLoader.getIcon("/icons/detail.svg")
-
-    @JvmField
-    val AudioDisabled: Icon = IconLoader.getIcon("/icons/audioDisabled.png")
+    val AudioDisabled: Icon = load("/icons/audioDisabled.svg")
 
     @JvmField
     val TTSSuspend: Icon = SuspendIcon(JBColor(0x757575, 0xABABAB))
@@ -50,53 +44,57 @@ object Icons {
     val TTSSuspendHovering: Icon = SuspendIcon(JBColor(0x555555, 0x8A8A8A))
 
     @JvmField
-    val Swap: Icon = IconLoader.getIcon("/icons/swap.png")
+    val Swap: Icon = load("/icons/swap.svg")
 
     @JvmField
-    val Swap2: Icon = IconLoader.getIcon("/icons/swap2.png")
+    val Swap2: Icon = load("/icons/swap2.svg")
 
     @JvmField
-    val SwapHovering: Icon = IconLoader.getIcon("/icons/swapHovering.png")
+    val SwapHovering: Icon = load("/icons/swapHovering.svg")
 
     @JvmField
-    val SwapDisabled: Icon = IconLoader.getIcon("/icons/swapDisabled.png")
+    val SwapDisabled: Icon = load("/icons/swapDisabled.svg")
 
     @JvmField
-    val ClearText: Icon = IconLoader.getIcon("/icons/clearText.png")
+    val ClearText: Icon = load("/icons/clearText.svg")
 
     @JvmField
-    val ClearTextHovering: Icon = IconLoader.getIcon("/icons/clearTextHovering.png")
+    val ClearTextHovering: Icon = load("/icons/clearTextHovering.svg")
 
     @JvmField
-    val ClearTextDisabled: Icon = IconLoader.getIcon("/icons/clearTextDisabled.png")
+    val ClearTextDisabled: Icon = load("/icons/clearTextDisabled.svg")
 
     @JvmField
-    val CopyAll: Icon = IconLoader.getIcon("/icons/copy.png")
+    val CopyAll: Icon = load("/icons/copy.svg")
 
     @JvmField
-    val CopyAllHovering: Icon = IconLoader.getIcon("/icons/copyHovering.png")
+    val CopyAllHovering: Icon = load("/icons/copyHovering.svg")
 
     @JvmField
-    val CopyAllDisabled: Icon = IconLoader.getIcon("/icons/copyDisabled.png")
+    val CopyAllDisabled: Icon = load("/icons/copyDisabled.svg")
 
     @JvmField
-    val CopyToClipboard: Icon = IconLoader.getIcon("/icons/copyToClipboard.png")
+    val CopyToClipboard: Icon = load("/icons/copyToClipboard.svg")
 
     @JvmField
-    val Google: Icon = IconLoader.getIcon("/icons/google.svg")
-
-    @JvmField
-    @Suppress("SpellCheckingInspection")
-    val Youdao: Icon = IconLoader.getIcon("/icons/youdao.png")
+    val Google: Icon = load("/icons/google.svg")
 
     @JvmField
     @Suppress("SpellCheckingInspection")
-    val Baidu: Icon = IconLoader.getIcon("/icons/baidu.png")
+    val Youdao: Icon = load("/icons/youdao.png")
 
     @JvmField
-    val Support: Icon = IconLoader.getIcon("/icons/support.svg")
+    @Suppress("SpellCheckingInspection")
+    val Baidu: Icon = load("/icons/baidu.svg")
 
     @JvmField
-    val AutoAwesome: Icon = IconLoader.getIcon("/icons/autoAwesome.svg")
+    val Support: Icon = load("/icons/support.svg")
 
+    @JvmField
+    val AutoAwesome: Icon = load("/icons/autoAwesome.svg")
+
+    @JvmStatic
+    private fun load(path: String): Icon {
+        return IconManager.getInstance().getIcon(path, Icons::class.java)
+    }
 }
