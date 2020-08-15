@@ -142,8 +142,8 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         private val LOGGER: Logger = Logger.getInstance(TranslateDocumentationAction::class.java)
 
         fun logAndShowWarning(e: Throwable, project: Project?) {
-            LOGGER.w(e.message ?: "", e)
             invokeLater {
+                LOGGER.w(e.message ?: "", e)
                 Notifications.showErrorNotification(
                     project,
                     NOTIFICATION_DISPLAY_ID,
