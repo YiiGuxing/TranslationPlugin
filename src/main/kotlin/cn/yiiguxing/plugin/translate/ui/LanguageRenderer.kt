@@ -7,7 +7,7 @@ import javax.swing.JList
 /**
  * LanguageRenderer
  */
-class LanguageRenderer : SimpleListCellRenderer<Lang>() {
+object LanguageRenderer : SimpleListCellRenderer<Lang>() {
     override fun customize(list: JList<out Lang>, value: Lang, index: Int, selected: Boolean, hasFocus: Boolean) {
         text = value.langName
     }

@@ -59,9 +59,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val version = Version(versionString)
         val lastVersion = Version(lastVersionString)
         if (version > lastVersion) {
-            invokeLater {
-                showUpdateToolWindow(project, version)
-            }
+            showUpdateToolWindow(project, version)
         }
 
         showUpdateNotification(project, plugin)
@@ -236,9 +234,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 )
 
             toolWindow as ToolWindowEx
-            toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowPalette)
+            toolWindow.icon = AllIcons.Toolwindows.ToolWindowPalette
             toolWindow.setAvailable(true, null)
-            toolWindow.setToHideOnEmptyContent(false)
+            toolWindow.isToHideOnEmptyContent = false
             toolWindow.setTitleActions(
                 OpenInBrowserAction(versionUrl),
                 CloseAction(project, toolWindow)

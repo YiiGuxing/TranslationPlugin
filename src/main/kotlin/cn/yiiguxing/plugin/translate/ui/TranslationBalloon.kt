@@ -1,15 +1,11 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
-import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
@@ -86,7 +82,7 @@ class TranslationBalloon(
         balloon = createBalloon(contentPanel)
         initActions()
 
-        Disposer.register(TranslationUIManager.disposable(project), balloon)
+        project?.let { Disposer.register(it, balloon) }
         // 如果使用`Disposer.register(balloon, this)`的话，
         // `TranslationBalloon`在外部以子`Disposable`再次注册时将会使之无效。
         Disposer.register(balloon, Disposable { Disposer.dispose(this) })

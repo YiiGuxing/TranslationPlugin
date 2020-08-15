@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
@@ -16,7 +15,7 @@ import com.intellij.util.messages.MessageBusConnection
 /**
  * TranslateService
  */
-class TranslateService private constructor(): Disposable {
+class TranslateService private constructor() {
 
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
@@ -27,7 +26,7 @@ class TranslateService private constructor(): Disposable {
     init {
         setTranslator(Settings.instance.translator)
         Application.messageBus
-            .connect(this)
+            .connect()
             .subscribeSettingsTopic()
             .subscribeWordBookTopic()
     }
@@ -132,8 +131,6 @@ class TranslateService private constructor(): Disposable {
             override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
         })
     }
-
-    override fun dispose() {}
 
     private data class ListenerKey(val text: String, val srcLang: Lang, val targetLang: Lang)
 
