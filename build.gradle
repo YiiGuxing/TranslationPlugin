@@ -26,7 +26,7 @@ intellij {
     pluginName = 'TranslationPlugin'
     downloadSources = Boolean.valueOf(sources)
     sandboxDirectory 'sandbox'
-    plugins "java", "org.jetbrains.kotlin", "Pythonid:193.5233.12", "Dart:193.5233.18", "org.jetbrains.plugins.go:193.5233.48.65"
+    plugins "java", "org.jetbrains.kotlin", "Pythonid:201.8743.12", "Dart:201.8538.45", "org.jetbrains.plugins.go:201.8538.31.199"
 }
 
 patchPluginXml {
@@ -62,6 +62,10 @@ compileTestKotlin {
         apiVersion = kotlinTargetVersion
         jvmTarget = javaTargetVersion
     }
+}
+
+runIde {
+    systemProperty "idea.auto.reload.plugins", false
 }
 
 tasks.withType(JavaCompile) {

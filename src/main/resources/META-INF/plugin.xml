@@ -54,7 +54,7 @@
     ]]></change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="193.2252"/>
+    <idea-version since-build="201.8743"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -97,20 +97,21 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
+        <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
+
         <applicationConfigurable instance="cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable"/>
 
-        <statusBarWidgetProvider implementation="cn.yiiguxing.plugin.translate.provider.TranslatorWidgetProvider"/>
+        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslatorWidgetFactory"/>
         <toolWindow id="Word Book"
                     icon="Icons.Wordbook"
                     anchor="right"
                     secondary="true"
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
 
-        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.TranslationStartupActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.ToggleDocTranslationPromoter"/>

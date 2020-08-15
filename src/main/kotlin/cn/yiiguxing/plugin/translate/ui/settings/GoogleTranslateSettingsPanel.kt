@@ -26,7 +26,7 @@ class GoogleTranslateSettingsPanel(
     init {
         primaryLanguage.apply {
             model = CollectionComboBoxModel(GoogleTranslator.supportedTargetLanguages)
-            setRenderer(LanguageRenderer)
+            setRenderer(LanguageRenderer())
         }
     }
 

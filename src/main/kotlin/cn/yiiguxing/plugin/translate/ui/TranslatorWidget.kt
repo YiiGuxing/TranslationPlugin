@@ -25,14 +25,9 @@ import javax.swing.Icon
 class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBarWidget.IconPresentation {
 
     private var statusBar: StatusBar? = null
-    private var isInstalled: Boolean = false
-
-    init {
-        project.messageBus.connect(this).subscribeToSettingsChangeEvents()
-    }
 
     @Suppress("FunctionName")
-    override fun ID(): String = javaClass.name
+    override fun ID(): String = ID
 
     override fun getTooltipText(): String = TranslateService.translator.name
 
@@ -42,6 +37,7 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
 
     override fun install(statusBar: StatusBar) {
         this.statusBar = statusBar
+        project.messageBus.connect(this).subscribeToSettingsChangeEvents()
     }
 
     override fun getClickConsumer(): Consumer<MouseEvent> = Consumer {
@@ -70,7 +66,6 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
 
     override fun dispose() {
         statusBar = null
-        isInstalled = false
     }
 
     private fun MessageBusConnection.subscribeToSettingsChangeEvents() {
@@ -79,5 +74,9 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
                 statusBar?.updateWidget(ID())
             }
         })
+    }
+
+    companion object {
+        val ID = "TranslatorWidget"
     }
 }

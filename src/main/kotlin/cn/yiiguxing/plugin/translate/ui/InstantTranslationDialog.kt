@@ -92,8 +92,8 @@ class InstantTranslationDialog(private val project: Project?) :
     }
 
     private fun initLangComboBoxes() {
-        sourceLangComboBox.renderer = LanguageRenderer
-        targetLangComboBox.renderer = LanguageRenderer
+        sourceLangComboBox.renderer = LanguageRenderer()
+        targetLangComboBox.renderer = LanguageRenderer()
 
         val itemListener = ItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {

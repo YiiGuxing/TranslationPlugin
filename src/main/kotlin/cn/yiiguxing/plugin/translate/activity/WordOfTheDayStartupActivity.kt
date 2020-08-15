@@ -1,6 +1,10 @@
 package cn.yiiguxing.plugin.translate.activity
 
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.WordBookService
+import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 
