@@ -196,7 +196,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
 
             size = sizeToSet
-            setUserData(if (!restore) listOf(sizeToSet.clone()) else null)
+            setUserData(if (!restore) listOf(sizeToSet.clone()) else emptyList())
         }
     }
 }
