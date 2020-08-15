@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
