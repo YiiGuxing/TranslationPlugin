@@ -1,11 +1,15 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.util.Settings
+import com.intellij.openapi.util.IconLoader
+import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.util.IconUtil
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
 import java.awt.Font
+import javax.swing.Icon
 import javax.swing.UIManager
 import javax.swing.text.html.HTMLEditorKit
 
@@ -60,4 +64,9 @@ object UI {
     @JvmOverloads
     fun getBordersColor(default: Color? = null): Color? = UIManager.getColor("Borders.color") ?: default
 
+    fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
+        icon = baseIcon
+        disabledIcon = IconLoader.getDisabledIcon(baseIcon)
+        setHoveringIcon(IconUtil.darker(baseIcon, 3))
+    }
 }

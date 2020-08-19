@@ -152,7 +152,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         maximumSize = JBDimension(width, Int.MAX_VALUE)
         preferredSize = JBDimension(width, (preferredSize.height / scale).toInt())
         model = historyModel
-        renderer = HistoryRenderer(sourceLangComboBox, targetLangComboBox, presenter)
+        renderer = HistoryRenderer({ sourceLangComboBox.selected }, { targetLangComboBox.selected }, presenter)
 
         (editor.editorComponent as JTextComponent).let {
             it.addFocusListener(object : FocusAdapter() {
@@ -214,7 +214,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         andTransparent()
         foreground = JBColor(0x555555, 0xACACAC)
         ui = LangComboBoxUI(this, SwingConstants.CENTER)
-        model = LanguageListModel(languages)
+        model = LanguageListModel.sorted(languages)
 
         fun ComboBox<Lang>.swap(old: Any?, new: Any?) {
             if (new == selectedItem && old != Lang.AUTO && new != Lang.AUTO) {

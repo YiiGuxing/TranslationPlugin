@@ -8,14 +8,41 @@ import javax.swing.ComboBoxModel
 /**
  * LanguageListModel
  */
-class LanguageListModel(languages: Collection<Lang>, selection: Lang? = null)
-    : AbstractListModel<Lang>(), ComboBoxModel<Lang> {
+
+abstract class LanguageListModel : AbstractListModel<Lang>(), ComboBoxModel<Lang> {
+    abstract var selected: Lang?
+
+    companion object {
+        fun sorted(languages: Collection<Lang>, selection: Lang? = null): LanguageListModel =
+                SortedLanguageListModel(languages, selection)
+
+        fun simple(languages: List<Lang>): LanguageListModel =
+                SimpleLanguageListModel(languages)
+    }
+}
+
+private class SimpleLanguageListModel(private val languages: List<Lang>) : LanguageListModel() {
+    override var selected: Lang? = languages.elementAtOrNull(0)
+
+    override fun getElementAt(index: Int): Lang = languages[index]
+
+    override fun getSize(): Int = languages.size
+
+    override fun setSelectedItem(anItem: Any?) {
+        selected = languages.find { it == anItem }
+    }
+
+    override fun getSelectedItem(): Lang? = selected
+}
+
+private class SortedLanguageListModel(languages: Collection<Lang>, selection: Lang? = null)
+    : LanguageListModel() {
 
     private val appStorage = AppStorage
 
     private val languageList: MutableList<Lang> = ArrayList(languages).apply { sort() }
 
-    var selected: Lang? = selection ?: languageList.firstOrNull()
+    override var selected: Lang? = selection ?: languageList.firstOrNull()
         set(value) {
             if (field != value) {
                 field = value?.apply { score += 1 }

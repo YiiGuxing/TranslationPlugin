@@ -3,6 +3,7 @@
 package cn.yiiguxing.plugin.translate.service
 
 import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
+import cn.yiiguxing.plugin.translate.ui.NewTranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
@@ -26,6 +27,7 @@ class TranslationUIManager private constructor() : Disposable {
     private var balloonRef: Ref<TranslationBalloon> = Ref.create()
     private var dialogRef: Ref<TranslationDialog> = Ref.create()
     private var instantTranslationDialogRef: Ref<InstantTranslationDialog> = Ref.create()
+    private var newTranslationDialogRef: Ref<NewTranslationDialog> = Ref.create()
     private var wordOfTheDayDialogRef: Ref<WordOfTheDayDialog> = Ref.create()
 
     /**
@@ -36,6 +38,7 @@ class TranslationUIManager private constructor() : Disposable {
         balloonRef.get()?.hide()
         dialogRef.get()?.close()
         instantTranslationDialogRef.get()?.close()
+        newTranslationDialogRef.get()?.close()
     }
 
     override fun dispose() {
@@ -133,6 +136,12 @@ class TranslationUIManager private constructor() : Disposable {
         fun showInstantTranslationDialog(project: Project?): InstantTranslationDialog {
             return showDialog(instance(project).instantTranslationDialogRef) {
                 InstantTranslationDialog(project)
+            }
+        }
+
+        fun showNewTranslationDialog(project: Project?): NewTranslationDialog {
+            return showDialog(instance(project).newTranslationDialogRef) {
+                NewTranslationDialog(project)
             }
         }
 

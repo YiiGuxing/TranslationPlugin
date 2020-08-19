@@ -140,6 +140,12 @@ class Settings : PersistentStateComponent<Settings> {
 
     var translateDocumentation: Boolean = false
 
+    var pinNewTranslationDialog: Boolean = false
+
+    var newTranslationDialogX: Int? = null
+    var newTranslationDialogY: Int? = null
+    var newTranslationDialogWidth: Int = 600
+
     @Transient
     private val settingsChangePublisher: SettingsChangeListener =
         ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)

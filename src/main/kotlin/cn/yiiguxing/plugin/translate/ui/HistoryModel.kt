@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Presenter
 import cn.yiiguxing.plugin.translate.trans.Lang
-import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.ui.SimpleListCellRenderer
 import javax.swing.AbstractListModel
@@ -28,8 +27,8 @@ class HistoryModel(private val fullList: List<String>) : AbstractListModel<Strin
     }
 }
 
-class HistoryRenderer(private val sourceLangComboBox: ComboBox<Lang>,
-                      private val targetLangComboBox: ComboBox<Lang>,
+class HistoryRenderer(private val sourceLangProvider: () -> Lang?,
+                      private val targetLangProvider: () -> Lang?,
                       private val presenter: Presenter)
     : SimpleListCellRenderer<String>() {
 
@@ -59,8 +58,8 @@ class HistoryRenderer(private val sourceLangComboBox: ComboBox<Lang>,
             append(trim(value))
             append("</b>")
 
-            val src = sourceLangComboBox.selected
-            val target = targetLangComboBox.selected
+            val src = sourceLangProvider()
+            val target = targetLangProvider()
             if (src != null && target != null) {
                 presenter.getCache(value, src, target)?.let {
                     append("  -  <i><small>")

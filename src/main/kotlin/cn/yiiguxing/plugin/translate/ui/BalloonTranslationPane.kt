@@ -140,7 +140,7 @@ class BalloonTranslationPane(
         const val MAX_VIEWER_HEIGHT = 250
 
         private fun ComboBox<Lang>.setLanguages(languages: List<Lang>) {
-            model = LanguageListModel(languages, selected)
+            model = LanguageListModel.sorted(languages, selected)
         }
     }
 
