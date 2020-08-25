@@ -5,9 +5,13 @@ import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.setup
+import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.text.clear
 import com.intellij.icons.AllIcons
 import com.intellij.ide.IdeBundle
 import com.intellij.openapi.Disposable
@@ -90,6 +94,7 @@ class NewTranslationDialog(private val project: Project?,
         initTextAreas()
         initButtons()
         initFonts(UI.getFonts(FONT_SIZE_DEFAULT, FONT_SIZE_PHONETIC))
+        initDictViewer()
         updateOnTranslation(null)
     }
 
@@ -252,10 +257,24 @@ class NewTranslationDialog(private val project: Project?,
         }, null)
     }
 
+    private fun initDictViewer() {
+        dictViewer.setupActions(this::lastTranslation) { text, src, target ->
+            sourceLangComboBox.selected = src
+            targetLangComboBox.selected = target
+            inputTextArea.text = text
+        }
+        dictViewerCollapsible.isCollapsed = Settings.newTranslationDialogCollapseDictViewer
+        dictViewerCollapsible.setExpandCollapseListener {
+            fixWindowHeight()
+            Settings.newTranslationDialogCollapseDictViewer = dictViewerCollapsible.isCollapsed
+        }
+    }
+
     private fun updateOnTranslation(translation: Translation?) {
         updateStarButton(translation)
         updateDetectedLangLabel(translation)
         updateTransliterations(translation)
+        updateDictViewer(translation?.dictDocument)
         fixWindowHeight()
     }
 
@@ -286,6 +305,17 @@ class NewTranslationDialog(private val project: Project?,
     private fun updateTransliterations(translation: Translation?) {
         srcTransliterationLabel.text = translation?.srcTransliteration
         targetTransliterationLabel.text = translation?.transliteration
+    }
+
+    private fun updateDictViewer(dictDocument: TranslationDocument?) {
+        dictViewer.document.clear()
+        if (dictDocument != null) {
+            dictViewer.setup(dictDocument)
+            dictViewerCollapsible.panel.isVisible = true
+        } else {
+            dictViewerCollapsible.panel.isVisible = false
+        }
+        dictViewer.caretPosition = 0
     }
 
     private fun requestTranslate(delay: Int = if (presenter.translatorId == BaiduTranslator.id) 1000 else 500) {

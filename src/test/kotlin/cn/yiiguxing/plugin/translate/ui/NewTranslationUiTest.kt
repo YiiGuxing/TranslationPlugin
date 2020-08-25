@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.setup
 import com.intellij.ide.ui.laf.IntelliJLaf
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.IconManager
@@ -29,6 +31,28 @@ fun main() {
     ui.detectedLanguageLabel.text = "English"
     ui.srcTransliterationLabel.text = "transˈlāSH(ə)n"
     ui.targetTransliterationLabel.text = "Fānyì"
+
+    val googleTranslation = GoogleTranslation("translation",
+        Lang.ENGLISH,
+        Lang.CHINESE,
+        listOf(GTransSentence("translation", "翻译", 2), GTranslitSentence("transˈlāSH(ə)n", "Fānyì")),
+        listOf(
+            GDict("noun",
+                listOf("翻译", "翻", "解答"),
+                listOf(
+                    GDictEntry("翻译", listOf("translation", "interpretation", "rendering", "rendition", "version", "decipherment"), 0f),
+                    GDictEntry("翻", listOf("turn", "translation", "turnover"), 0f),
+                    GDictEntry("解答", listOf("answer", "solution", "explanation", "response", "reply", "translation"), 0f)
+                )
+            )
+        ),
+        GSpell(""),
+        GLDResult(listOf(Lang.ENGLISH), listOf(0.80f)),
+        null
+    )
+
+    val document = GoogleDictDocument.Factory.getDocument(googleTranslation)
+    ui.dictViewer.setup(document!!)
 
     val panel = ui.createMainPanel()
 

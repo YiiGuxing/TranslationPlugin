@@ -6,12 +6,14 @@ import cn.yiiguxing.plugin.translate.TTSSource.TRANSLATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.text.*
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.setup
+import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.replace
-import cn.yiiguxing.plugin.translate.util.text.text
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
@@ -242,7 +244,7 @@ abstract class TranslationPane<T : JComponent>(
         dictViewer.setFocusListener(originalViewer, translationViewer, extraViewer)
         extraViewer.setFocusListener(originalViewer, translationViewer, dictViewer)
 
-        dictViewer.setupActions()
+        dictViewer.setupActions(this::translation , this.onNewTranslateHandler)
         dictViewer.onBeforeFoldingExpand { _, _ ->
             onBeforeFoldingExpand()
         }
@@ -251,39 +253,10 @@ abstract class TranslationPane<T : JComponent>(
             onRevalidateHandler?.invoke()
         }
 
-        extraViewer.setupActions()
+        extraViewer.setupActions(this::translation , this.onNewTranslateHandler)
 
         originalTransliterationLabel.setupPopupMenu()
         transliterationLabel.setupPopupMenu()
-    }
-
-    private fun StyledViewer.setupActions() {
-        addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
-            CopyPasteManager.getInstance().setContents(StringSelection(element.text))
-        }
-        onClick { element, data ->
-            translation?.run {
-                val src: Lang
-                val target: Lang
-                when (data) {
-                    GoogleDictDocument.WordType.WORD,
-                    YoudaoDictDocument.WordType.WORD,
-                    YoudaoWebTranslationDocument.WordType.WEB_VALUE -> {
-                        src = targetLang
-                        target = srcLang
-                    }
-                    GoogleDictDocument.WordType.REVERSE,
-                    YoudaoDictDocument.WordType.VARIANT,
-                    YoudaoWebTranslationDocument.WordType.WEB_KEY -> {
-                        src = srcLang
-                        target = targetLang
-                    }
-                    else -> return@onClick
-                }
-
-                onNewTranslateHandler?.invoke(element.text, src, target)
-            }
-        }
     }
 
     protected open fun onBeforeFoldingExpand() {}

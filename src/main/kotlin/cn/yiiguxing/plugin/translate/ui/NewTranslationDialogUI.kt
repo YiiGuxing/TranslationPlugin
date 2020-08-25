@@ -1,6 +1,15 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
+import cn.yiiguxing.plugin.translate.ui.UI.fill
+import cn.yiiguxing.plugin.translate.ui.UI.fillX
+import cn.yiiguxing.plugin.translate.ui.UI.lineAbove
+import cn.yiiguxing.plugin.translate.ui.UI.lineBelow
+import cn.yiiguxing.plugin.translate.ui.UI.lineToRight
+import cn.yiiguxing.plugin.translate.ui.UI.migLayout
+import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import com.intellij.icons.AllIcons
@@ -8,21 +17,16 @@ import com.intellij.ui.PopupBorder
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
-import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import icons.Icons
-import net.miginfocom.layout.CC
-import net.miginfocom.layout.LC
-import net.miginfocom.swing.MigLayout
 import java.awt.Dimension
 import java.awt.Graphics
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextArea
-import javax.swing.border.Border
 
 interface NewTranslationDialogUI {
     val topPanel: JPanel
@@ -42,6 +46,8 @@ interface NewTranslationDialogUI {
     val targetTransliterationLabel: JLabel
     val pinButton: JComponent
     val settingsButton: JComponent
+    val dictViewerCollapsible: CollapsiblePanel
+    val dictViewer: StyledViewer
 
     fun createMainPanel(): JPanel
 
@@ -55,8 +61,8 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val sourceLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val targetLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val swapButton: LinkLabel<Void> = LinkLabel()
-    override val inputTextArea: JTextArea = JBTextArea()
-    override val translationTextArea: JTextArea = JBTextArea()
+    override val inputTextArea: JTextArea = JBTextArea(1, 1)
+    override val translationTextArea: JTextArea = JBTextArea(1, 1)
 
     override val inputTTSButton: TTSButton = TTSButton()
     override val translationTTSButton: TTSButton = TTSButton()
@@ -70,6 +76,10 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
     override val pinButton: JComponent = uiProvider.createPinButton()
     override val settingsButton: JComponent = uiProvider.createSettingsButton()
+
+    override val dictViewer: StyledViewer = StyledViewer()
+    override val dictViewerCollapsible: CollapsiblePanel =
+        CollapsiblePanel(dictViewer, message("translation.dialog.more.translations"))
 
     override fun createMainPanel(): JPanel {
         layoutMainPanel()
@@ -144,6 +154,9 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             }
 
             add(transliterations, fillX().span(2).wrap())
+
+            val dictViewerPanel = dictViewerCollapsible.panel.apply { border = emptyBorder(6, 10) + lineAbove() }
+            add(dictViewerPanel, fillX().span(2))
         }
 
         return mRoot
@@ -203,20 +216,6 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         starButton.setIcons(Icons.GrayStarOff)
     }
 
-    private fun emptyBorder(topAndBottom: Int, leftAndRight: Int) = JBUI.Borders.empty(topAndBottom, leftAndRight)
-
-    private fun emptyBorder(offsets: Int) = JBUI.Borders.empty(offsets)
-
-    private fun lineAbove() = JBUI.Borders.customLine(UI.getBordersColor(), 1, 0, 0, 0)
-    private fun lineBelow() = JBUI.Borders.customLine(UI.getBordersColor(), 0, 0, 1, 0)
-    private fun lineToRight() = JBUI.Borders.customLine(UI.getBordersColor(), 0, 0, 0, 1)
-
-    private operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
-
-    private fun fill(): CC = CC().grow().push()
-
-    private fun fillX(): CC = CC().growX().pushX()
-
     private class Separator : JComponent() {
         val myColor = JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground()
         val myHGap = 2
@@ -238,12 +237,5 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         override fun getMaximumSize(): Dimension? {
             return preferredSize
         }
-    }
-
-    companion object {
-        private fun layoutConstraints(): LC = LC().fill().gridGap("0!", "0!").insets("0").hideMode(3)
-
-        private fun migLayout() =
-            MigLayout(layoutConstraints())
     }
 }
