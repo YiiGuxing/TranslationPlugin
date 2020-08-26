@@ -28,7 +28,6 @@ import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.IdeGlassPane
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl
 import com.intellij.ui.DocumentAdapter
-import com.intellij.ui.ScreenUtil
 import com.intellij.ui.WindowMoveListener
 import com.intellij.ui.WindowResizeListener
 import com.intellij.ui.awt.RelativePoint
@@ -36,12 +35,14 @@ import com.intellij.util.Alarm
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import icons.Icons
-import java.awt.*
+import java.awt.Component
+import java.awt.Cursor
+import java.awt.Dimension
+import java.awt.Point
 import java.awt.datatransfer.StringSelection
 import java.awt.event.MouseEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.lang.Math.min
 import javax.swing.JComponent
 import javax.swing.JTextArea
 import javax.swing.ListSelectionModel
@@ -124,9 +125,10 @@ class NewTranslationDialog(private val project: Project?,
 
             override fun mouseReleased(event: MouseEvent?) {
                 super.mouseReleased(event)
-                if (windowWidthOrLocationChanged()) {
-                    fixWindowHeight()
+                if (windowWidthChanged()) {
+                    invokeLater { fixWindowHeight() }
                 }
+                storeWindowLocation()
             }
         }
         glassPane.addMouseMotionPreprocessor(resizeListener, this.disposable)
@@ -457,53 +459,27 @@ class NewTranslationDialog(private val project: Project?,
     private fun fixWindowHeight(width: Int = window.width) {
         window.preferredSize = null
 
-        fun withFixedWidth(action: () -> Unit) {
-            window.minimumSize = Dimension(width, 0)
-            window.maximumSize = Dimension(width, Int.MAX_VALUE)
+        window.minimumSize = Dimension(width, 0)
+        window.maximumSize = Dimension(width, Int.MAX_VALUE)
 
-            try {
-                action()
-            }
-            finally {
-                window.minimumSize = Dimension(0, 0)
-                window.preferredSize = Dimension(0, 0)
-                window.maximumSize = Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
-            }
+        try {
+            window.setSize(width, window.preferredSize.height)
         }
-
-        //pack() may move dialog if it doesn't fit to screen
-        //try to trim height and do nothing if it doesn't help
-        val location = window.location
-        val screenRectangle = ScreenUtil.getScreenRectangle(location)
-        val fittingHeight = min(window.preferredSize.height, screenRectangle.height - location.y)
-        val newDimension = Dimension(window.width, fittingHeight)
-
-        val expectedRectangle = Rectangle(location, newDimension)
-        ScreenUtil.fitToScreen(expectedRectangle)
-
-        if (expectedRectangle.location == location) {
-            withFixedWidth {
-                window.pack()
-            }
+        finally {
+            window.minimumSize = Dimension(0, 0)
+            window.preferredSize = Dimension(0, 0)
+            window.maximumSize = Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
         }
     }
 
-    private fun windowWidthOrLocationChanged(): Boolean {
-        var isChanged = false
-        if (Settings.newTranslationDialogX != window.location.x) {
-            Settings.newTranslationDialogX = window.location.x
-            isChanged = true
-        }
-        if (Settings.newTranslationDialogY != window.location.y) {
-            Settings.newTranslationDialogY = window.location.y
-            isChanged = true
-        }
-        if (Settings.newTranslationDialogWidth != window.width) {
-            Settings.newTranslationDialogWidth = window.width
-            isChanged = true
-        }
+    private fun windowWidthChanged(): Boolean {
+        return Settings.newTranslationDialogWidth != window.width
+    }
 
-        return isChanged
+    private fun storeWindowLocation() {
+        Settings.newTranslationDialogX = window.location.x
+        Settings.newTranslationDialogY = window.location.y
+        Settings.newTranslationDialogWidth = window.width
     }
 
     private fun restoreWindowLocation() {
@@ -554,6 +530,8 @@ class NewTranslationDialog(private val project: Project?,
 
 
     companion object {
+        val defaultWidth = 600
+
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
 
