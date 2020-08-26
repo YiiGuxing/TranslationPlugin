@@ -241,6 +241,11 @@ class NewTranslationDialog(private val project: Project?,
 
         updateStarButton(null)
         initSwapButton()
+
+        spellComponent.onSpellFixed {
+            inputTextArea.text = it
+            sourceLangComboBox.selected = Lang.AUTO
+        }
     }
 
     private fun initSwapButton() = with(swapButton) {
@@ -277,6 +282,7 @@ class NewTranslationDialog(private val project: Project?,
         updateDetectedLangLabel(translation)
         updateTransliterations(translation)
         updateDictViewer(translation?.dictDocument)
+        spellComponent.spell = translation?.spell
         fixWindowHeight()
     }
 

@@ -26,7 +26,9 @@ fun main() {
 
     ui.initFonts(UI.FontPair(UI.defaultFont, UI.defaultFont.lessOn(2f)))
 
-    ui.inputTextArea.text = "translation"
+    ui.inputTextArea.text = "translaton"
+    ui.spellComponent.spell = "translation"
+
     ui.translationTextArea.text = "翻译"
     ui.detectedLanguageLabel.text = "English"
     ui.srcTransliterationLabel.text = "transˈlāSH(ə)n"

@@ -22,6 +22,7 @@ import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.Dimension
+import java.awt.Font
 import java.awt.Graphics
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -48,6 +49,7 @@ interface NewTranslationDialogUI {
     val settingsButton: JComponent
     val dictViewerCollapsible: CollapsiblePanel
     val dictViewer: StyledViewer
+    val spellComponent: SpellComponent
 
     fun createMainPanel(): JPanel
 
@@ -80,6 +82,8 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val dictViewer: StyledViewer = StyledViewer()
     override val dictViewerCollapsible: CollapsiblePanel =
         CollapsiblePanel(dictViewer, message("translation.dialog.more.translations"))
+
+    override val spellComponent: SpellComponent = createSpellComponent()
 
     override fun createMainPanel(): JPanel {
         layoutMainPanel()
@@ -136,6 +140,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
             val leftPanel = JPanel(migLayout()).apply {
                 add(inputTextArea, fill().wrap())
+                add(spellComponent)
                 add(createToolbar(clearButton, historyButton), fillX())
                 border = lineToRight()
                 background = inputTextArea.background
@@ -205,6 +210,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             add(button, HorizontalLayout.LEFT)
             add(label, HorizontalLayout.LEFT)
             border = emptyBorder(6, 10) + lineAbove()
+        }
+    }
+
+    private fun createSpellComponent(): SpellComponent = SpellComponent().apply {
+        border = emptyBorder(6)
+        spellText.apply {
+            font = font.deriveFont(Font.BOLD or Font.ITALIC, spellLabel.font.size.toFloat())
         }
     }
 
