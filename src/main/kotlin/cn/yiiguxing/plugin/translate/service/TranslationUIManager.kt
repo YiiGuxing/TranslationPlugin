@@ -45,6 +45,7 @@ class TranslationUIManager private constructor() : Disposable {
         disposeUI()
     }
 
+    fun currentNewTranslationDialog(): NewTranslationDialog? = newTranslationDialogRef.get()
 
     companion object {
 
