@@ -3,6 +3,7 @@
         <group id="TranslationNavBarToolBar" text="Translation Navigation Bar Actions">
             <separator/>
             <reference ref="$ShowTranslationDialogAction"/>
+            <reference ref="$ShowNewTranslationDialogAction"/>
             <separator/>
 
             <!--suppress PluginXmlValidity -->
