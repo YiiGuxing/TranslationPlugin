@@ -194,9 +194,6 @@ class NewTranslationDialog(private val project: Project?,
 
         inputTextArea.addListener { e ->
             clearButton.isEnabled = e.document.length > 0
-            if (e.document.length == 0) {
-                updateOnTranslation(null)
-            }
             requestTranslate()
         }
         translationTextArea.addListener { e ->
@@ -348,6 +345,7 @@ class NewTranslationDialog(private val project: Project?,
         currentRequest = null
         lastTranslation = null
         translationTextArea.text = null
+        updateOnTranslation(null)
     }
 
     override fun showStartTranslate(request: Presenter.Request, text: String) {

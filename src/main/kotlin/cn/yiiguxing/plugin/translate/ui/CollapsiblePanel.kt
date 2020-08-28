@@ -1,10 +1,12 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
+import cn.yiiguxing.plugin.translate.ui.UI.fillY
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import com.intellij.icons.AllIcons
 import com.intellij.ui.components.labels.LinkLabel
 import net.miginfocom.layout.CC
+import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -23,36 +25,46 @@ class CollapsiblePanel(content: JComponent, expandTitle: String) {
             add(collapseButton, CC().dockNorth())
         }
         add(collapseButtonPanel, CC().dockEast())
-        isVisible = !isCollapsed
     }
     private val collapsedPanel = JPanel(migLayout()).apply {
         add(expandButton, CC().dockEast())
-        isVisible = isCollapsed
     }
 
     private var listener: (() -> Unit)? = null
-
-    val panel = JPanel(migLayout()).apply {
-        add(expandedPanel, fillX())
-        add(collapsedPanel, fillX())
-    }
 
     var isCollapsed: Boolean = true
         set(value) {
             if (value != field) {
                 field = value
-                onExpandOrCollapse()
+                onExpandOrCollapse(value)
             }
         }
 
-    init {
-        collapseButton.setListener({_, _ ->  isCollapsed = !isCollapsed}, null)
-        expandButton.setListener({_, _ ->  isCollapsed = !isCollapsed}, null)
+    val panel = JPanel(BorderLayout()).apply {
+        if (isCollapsed) add(collapsedPanel, BorderLayout.NORTH)
+        else add(expandedPanel, BorderLayout.NORTH)
     }
 
-    private fun onExpandOrCollapse() {
-        collapsedPanel.isVisible = !collapsedPanel.isVisible
-        expandedPanel.isVisible = !expandedPanel.isVisible
+    init {
+        collapseButton.setListener({_, _ ->  isCollapsed = true}, null)
+        expandButton.setListener({_, _ ->  isCollapsed = false}, null)
+    }
+
+    private fun onExpandOrCollapse(becameCollapsed: Boolean) {
+        val panelToAdd: JPanel
+        val panelToRemove: JPanel
+        if (becameCollapsed) {
+            panelToAdd = collapsedPanel
+            panelToRemove = expandedPanel
+        } else {
+            panelToAdd = expandedPanel
+            panelToRemove = collapsedPanel
+        }
+        panel.remove(panelToRemove)
+        panel.add(panelToAdd, BorderLayout.NORTH)
+        panel.validate()
+        panel.repaint()
+
         listener?.invoke()
     }
 
