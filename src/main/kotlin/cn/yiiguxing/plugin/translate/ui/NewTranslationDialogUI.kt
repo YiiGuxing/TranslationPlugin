@@ -50,6 +50,7 @@ interface NewTranslationDialogUI {
     val dictViewerCollapsible: CollapsiblePanel
     val dictViewer: StyledViewer
     val spellComponent: SpellComponent
+    val fixLangComponent: FixLangComponent
 
     fun createMainPanel(): JPanel
 
@@ -84,6 +85,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         CollapsiblePanel(dictViewer, message("translation.dialog.more.translations"))
 
     override val spellComponent: SpellComponent = createSpellComponent()
+    override val fixLangComponent: FixLangComponent = FixLangComponent()
 
     override fun createMainPanel(): JPanel {
         layoutMainPanel()
@@ -141,6 +143,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             val leftPanel = JPanel(migLayout()).apply {
                 add(inputTextArea, fill().wrap())
                 add(spellComponent)
+                add(fixLangComponent)
                 add(createToolbar(clearButton, historyButton), fillX())
                 border = lineToRight()
                 background = inputTextArea.background

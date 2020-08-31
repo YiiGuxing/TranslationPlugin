@@ -27,8 +27,6 @@ fun main() {
     ui.initFonts(UI.FontPair(UI.defaultFont, UI.defaultFont.lessOn(2f)))
 
     ui.inputTextArea.text = "translaton"
-    ui.spellComponent.spell = "translation"
-
     ui.translationTextArea.text = "翻译"
     ui.detectedLanguageLabel.text = "English"
     ui.srcTransliterationLabel.text = "transˈlāSH(ə)n"
@@ -55,6 +53,10 @@ fun main() {
 
     val document = GoogleDictDocument.Factory.getDocument(googleTranslation)
     ui.dictViewer.setup(document!!)
+
+//    ui.spellComponent.spell = "translation"
+    val translation = googleTranslation.toTranslation().copy(srcLang = Lang.CHINESE)
+    ui.fixLangComponent.updateOnTranslation(translation)
 
     val panel = ui.createMainPanel()
 
