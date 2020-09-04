@@ -133,6 +133,9 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
         init(inputTextArea)
         init(translationTextArea)
+
+        translationTextArea.isEditable = false
+        translationTextArea.background = topPanel.background
     }
 
     override fun expandDictViewer() {
@@ -183,7 +186,6 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
         translationPanel = JPanel(migLayout()).apply {
             val leftPanel = JPanel(migLayout()).apply {
-                border = lineToRight()
                 background = inputTextArea.background
 
                 add(createScrollPane(inputTextArea), fill().wrap())
