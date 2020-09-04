@@ -470,7 +470,6 @@ class NewTranslationDialog(private val project: Project?,
 
     private fun fixWindowHeight(width: Int = window.width) {
         rootPane.preferredSize = null
-        translationPanel.preferredSize = Dimension(Settings.newTranslationDialogWidth, Settings.newTranslationDialogHeight)
         window.setSize(width, rootPane.preferredSize.height)
     }
 
