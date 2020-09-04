@@ -7,7 +7,6 @@ import com.intellij.ide.ui.laf.IntelliJLaf
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.IconManager
 import com.intellij.util.ui.JBDimension
-import java.awt.BorderLayout
 import javax.swing.JFrame
 import javax.swing.UIManager
 
@@ -21,6 +20,8 @@ fun main() {
     val frame = JFrame("dialog test");
 
     val ui = NewTranslationDialogUiImpl(NewTranslationDialogUiProvider.testProvider())
+    val panel = ui.createMainPanel()
+
     ui.sourceLangComboBox.model = LanguageListModel.simple(listOf(Lang.AUTO, Lang.ENGLISH, Lang.CHINESE))
     ui.targetLangComboBox.model = LanguageListModel.simple(listOf(Lang.CHINESE, Lang.ENGLISH))
 
@@ -53,16 +54,14 @@ fun main() {
 
     val document = GoogleDictDocument.Factory.getDocument(googleTranslation)
     ui.dictViewer.setup(document!!)
+    ui.expandDictViewer()
 
 //    ui.spellComponent.spell = "translation"
     val translation = googleTranslation.toTranslation().copy(srcLang = Lang.CHINESE)
     ui.fixLangComponent.updateOnTranslation(translation)
 
-    val panel = ui.createMainPanel()
-
     frame.size = JBDimension(600, 500)
-    frame.contentPane.layout = BorderLayout()
-    frame.contentPane.add(panel, BorderLayout.NORTH)
+    frame.contentPane = panel
     frame.isVisible = true
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 }

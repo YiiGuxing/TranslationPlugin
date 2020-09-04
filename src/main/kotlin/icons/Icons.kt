@@ -102,6 +102,12 @@ object Icons {
     @JvmField
     val AutoAwesome: Icon = load("/icons/autoAwesome.svg")
 
+    @JvmField
+    val ArrowDownExpand: Icon = load("/icons/arrowDownExpand.svg")
+
+    @JvmField
+    val ArrowUpCollapse: Icon = load("/icons/arrowUpCollapse.svg")
+
     @JvmStatic
     private fun load(path: String): Icon {
         return IconManager.getInstance().getIcon(path, Icons::class.java)

@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import com.intellij.ui.components.panels.HorizontalLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -16,7 +15,6 @@ class FixLangComponent : JPanel() {
 
     init {
         layout = HorizontalLayout(0)
-        border = emptyBorder(6, 10)
         isOpaque = false
         isVisible = false
         actionLink = ActionLink {

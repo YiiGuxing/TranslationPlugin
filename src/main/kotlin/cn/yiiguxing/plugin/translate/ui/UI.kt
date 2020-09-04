@@ -75,7 +75,10 @@ object UI {
     }
 
     fun migLayout() =
-        MigLayout(LC().fill().gridGap("0!", "0!").insets("0").hideMode(3))
+        MigLayout(LC().fill().gridGap("0!", "0!").insets("0"))
+
+    fun migLayoutVertical() =
+        MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
 
 
     fun fill(): CC = CC().grow().push()

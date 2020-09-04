@@ -9,28 +9,30 @@ import cn.yiiguxing.plugin.translate.ui.UI.lineAbove
 import cn.yiiguxing.plugin.translate.ui.UI.lineBelow
 import cn.yiiguxing.plugin.translate.ui.UI.lineToRight
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
+import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import com.intellij.icons.AllIcons
 import com.intellij.ui.PopupBorder
+import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil.getLineHeight
 import icons.Icons
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JTextArea
+import javax.swing.*
+import javax.swing.text.JTextComponent
 
 interface NewTranslationDialogUI {
     val topPanel: JPanel
+    val translationPanel: JPanel
     val sourceLangComboBox: LangComboBoxLink
     val targetLangComboBox: LangComboBoxLink
     val swapButton: LinkLabel<Void>
@@ -47,19 +49,27 @@ interface NewTranslationDialogUI {
     val targetTransliterationLabel: JLabel
     val pinButton: JComponent
     val settingsButton: JComponent
-    val dictViewerCollapsible: CollapsiblePanel
     val dictViewer: StyledViewer
+    val dictViewerPanel: JScrollPane
     val spellComponent: SpellComponent
     val fixLangComponent: FixLangComponent
+
+    val expandDictViewerButton: LinkLabel<Void>
+    val collapseDictViewerButton: LinkLabel<Void>
 
     fun createMainPanel(): JPanel
 
     fun initFonts(pair: UI.FontPair)
+
+    fun expandDictViewer()
+    fun collapseDictViewer()
+    fun hideDictViewer()
 }
 
 class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : NewTranslationDialogUI {
     private val mRoot: JPanel = JPanel()
     override val topPanel: JPanel = JPanel()
+    override lateinit var translationPanel: JPanel
 
     override val sourceLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val targetLangComboBox: LangComboBoxLink = LangComboBoxLink()
@@ -81,17 +91,19 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val settingsButton: JComponent = uiProvider.createSettingsButton()
 
     override val dictViewer: StyledViewer = StyledViewer()
-    override val dictViewerCollapsible: CollapsiblePanel =
-        CollapsiblePanel(dictViewer, message("translation.dialog.more.translations"))
+    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer)
+
+    override val expandDictViewerButton: LinkLabel<Void> = LinkLabel()
+    override val collapseDictViewerButton: LinkLabel<Void> = LinkLabel()
 
     override val spellComponent: SpellComponent = createSpellComponent()
     override val fixLangComponent: FixLangComponent = FixLangComponent()
 
     override fun createMainPanel(): JPanel {
-        layoutMainPanel()
-        layoutTopPanel()
-        layoutLangComboBoxes()
         initTextAreas()
+        initDictViewer()
+        layoutTopPanel()
+        layoutMainPanel()
         setButtonIcons()
 
         return mRoot
@@ -110,61 +122,101 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
     }
 
-    private fun layoutLangComboBoxes() {
-        fun update(comboBox: LangComboBoxLink) {
-            comboBox.background = topPanel.background
-            comboBox.border = JBUI.Borders.empty(4, 10, 4, 0)
-        }
-
-        update(sourceLangComboBox)
-        update(targetLangComboBox)
-    }
-
     private fun initTextAreas() {
         fun init(textArea: JTextArea) {
             textArea.apply {
                 lineWrap = true
                 wrapStyleWord = true
-                border = JBUI.Borders.empty(10, 10, 0, 10)
-                minimumSize = JBDimension(0, textArea.getFontMetrics(textArea.font).height + 10)
+                border = emptyBorder(10)
+                minimumSize = JBDimension(0, minHeight(textArea))
             }
         }
         init(inputTextArea)
         init(translationTextArea)
     }
 
+    override fun expandDictViewer() {
+        expandDictViewerButton.isVisible = false
+        collapseDictViewerButton.isVisible = true
+
+        mRoot.add(dictViewerPanel, fillX())
+        mRoot.validate()
+    }
+
+    override fun collapseDictViewer() {
+        expandDictViewerButton.isVisible = true
+        collapseDictViewerButton.isVisible = false
+
+        mRoot.remove(dictViewerPanel)
+        mRoot.validate()
+    }
+
+    override fun hideDictViewer() {
+        expandDictViewerButton.isVisible = false
+        collapseDictViewerButton.isVisible = false
+
+        mRoot.remove(dictViewerPanel)
+        mRoot.validate()
+    }
+
+    private fun initDictViewer() {
+        dictViewer.apply {
+            border = emptyBorder(6, 10) + lineAbove()
+            minimumSize = Dimension(0, 0)
+        }
+        dictViewerPanel.maximumSize = Dimension(Int.MAX_VALUE, 20 * getLineHeight(dictViewer))
+
+        expandDictViewerButton.apply {
+            setIcons(Icons.ArrowDownExpand)
+            text = message("translation.dialog.more.translations")
+            horizontalTextPosition = SwingConstants.LEADING
+            foreground = JBUI.CurrentTheme.Label.foreground()
+            setPaintUnderline(false)
+            setListener({_, _ -> expandDictViewer() }, null)
+        }
+        collapseDictViewerButton.apply {
+            setIcons(Icons.ArrowUpCollapse)
+            setListener({_, _ -> collapseDictViewer() }, null) }
+    }
+
     private fun layoutMainPanel(): JPanel {
-        mRoot.apply {
-            layout = migLayout()
-            border = PopupBorder.Factory.create(true, true)
 
-            add(topPanel, fillX().span(2).wrap())
-
+        translationPanel = JPanel(migLayout()).apply {
             val leftPanel = JPanel(migLayout()).apply {
-                add(inputTextArea, fill().wrap())
-                add(spellComponent)
-                add(fixLangComponent)
-                add(createToolbar(clearButton, historyButton), fillX())
                 border = lineToRight()
                 background = inputTextArea.background
+
+                add(createScrollPane(inputTextArea), fill().wrap())
+                add(createToolbar(inputTTSButton, srcTransliterationLabel, clearButton, historyButton), fillX())
             }
             val rightPanel = JPanel(migLayout()).apply {
-                add(translationTextArea, fill().wrap())
-                add(createToolbar(copyButton, starButton), fillX())
                 background = translationTextArea.background
+
+                add(createScrollPane(translationTextArea), fill().wrap())
+                add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), fillX())
             }
+
             add(leftPanel, fill().sizeGroup("content"))
             add(rightPanel, fill().sizeGroup("content").wrap())
+        }
 
-            val transliterations = JPanel(migLayout()).apply {
-                add(createTransliterationPanel(inputTTSButton, srcTransliterationLabel), fill().sizeGroup("half"))
-                add(createTransliterationPanel(translationTTSButton, targetTransliterationLabel), fill().sizeGroup("half").wrap())
-            }
+        val bottomPanel = JPanel(HorizontalLayout(10)).apply {
+            border = emptyBorder(6, 10) + lineAbove()
 
-            add(transliterations, fillX().span(2).wrap())
+            add(spellComponent, HorizontalLayout.LEFT)
+            add(fixLangComponent, HorizontalLayout.LEFT)
+            add(JLabel(" "), HorizontalLayout.LEFT)
+            add(expandDictViewerButton, HorizontalLayout.RIGHT)
+            add(collapseDictViewerButton, HorizontalLayout.RIGHT)
+        }
 
-            val dictViewerPanel = dictViewerCollapsible.panel.apply { border = emptyBorder(6, 10) + lineAbove() }
-            add(dictViewerPanel, fillX().span(2))
+        mRoot.apply {
+            layout = migLayoutVertical()
+            border = PopupBorder.Factory.create(true, true)
+
+            add(topPanel, fillX())
+            add(translationPanel, fill())
+            add(bottomPanel, fillX())
         }
 
         return mRoot
@@ -172,6 +224,8 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
     private fun layoutTopPanel() {
         val left = JPanel(HorizontalLayout(10)).apply {
+            border = emptyBorder(0, leftAndRight = 10)
+
             add(sourceLangComboBox, HorizontalLayout.LEFT)
             add(detectedLanguageLabel, HorizontalLayout.LEFT)
 
@@ -180,6 +234,8 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
 
         val right = JPanel(HorizontalLayout(3)).apply {
+            border = emptyBorder(0, leftAndRight = 10)
+
             add(targetLangComboBox, HorizontalLayout.LEFT)
             add(settingsButton, HorizontalLayout.RIGHT)
             add(Separator(), HorizontalLayout.RIGHT)
@@ -190,34 +246,29 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
         topPanel.apply {
             layout = migLayout()
-            border = emptyBorder(6) + lineBelow()
-            size = JBDimension(700, topPanel.preferredSize.height)
+            border = emptyBorder(topAndBottom = 6, leftAndRight = 0) + lineBelow()
             add(left, fillX().sizeGroup(halfTopPanel))
             add(swapButton)
             add(right, fillX().sizeGroup(halfTopPanel))
         }
+
+        sourceLangComboBox.background = topPanel.background
+        targetLangComboBox.background = topPanel.background
     }
 
-    private fun createToolbar(vararg buttons: JComponent): JPanel {
+    private fun createToolbar(ttsButton: TTSButton, transliterationLabel: JLabel, vararg buttons: JComponent): JPanel {
         return JPanel(HorizontalLayout(10)).apply {
+            add(ttsButton, HorizontalLayout.LEFT)
+            add(transliterationLabel, HorizontalLayout.LEFT)
             buttons.iterator().forEach {
                 add(it, HorizontalLayout.RIGHT)
             }
             border = emptyBorder(6, 10)
-            background = inputTextArea.background
-        }
-    }
-
-    private fun createTransliterationPanel(button: TTSButton, label: JLabel): JPanel {
-        return JPanel(HorizontalLayout(10)).apply {
-            add(button, HorizontalLayout.LEFT)
-            add(label, HorizontalLayout.LEFT)
-            border = emptyBorder(6, 10) + lineAbove()
+            isOpaque = false
         }
     }
 
     private fun createSpellComponent(): SpellComponent = SpellComponent().apply {
-        border = emptyBorder(6)
         spellText.apply {
             font = font.deriveFont(Font.BOLD or Font.ITALIC, spellLabel.font.size.toFloat())
         }
@@ -230,6 +281,27 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         historyButton.setIcons(AllIcons.Vcs.History)
         starButton.setIcons(Icons.GrayStarOff)
     }
+
+    private fun createScrollPane(component: JComponent): JScrollPane =
+            object : JBScrollPane(component) {
+                init {
+                    horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+                    verticalScrollBarPolicy = VERTICAL_SCROLLBAR_AS_NEEDED
+                    border = emptyBorder(0)
+                }
+
+                override fun getMinimumSize(): Dimension {
+                    //avoid scrollbar around minimum size
+                    val componentMinSize = component.minimumSize
+                    return Dimension(componentMinSize.width, componentMinSize.height + 5)
+                }
+            }
+
+    private fun minHeight(textComponent: JTextComponent): Int {
+        val borderInsets = textComponent.border.getBorderInsets(textComponent)
+        return getLineHeight(textComponent) + borderInsets.top + borderInsets.bottom
+    }
+
 
     private class Separator : JComponent() {
         val myColor = JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground()

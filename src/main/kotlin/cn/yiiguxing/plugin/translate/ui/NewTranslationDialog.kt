@@ -76,10 +76,11 @@ class NewTranslationDialog(private val project: Project?,
         setUndecorated(true)
         isModal = false
         window.minimumSize = JBDimension(0, 0)
+        val panel = createCenterPanel()
         initComponents()
         addWindowListeners()
         addMouseListeners()
-        peer.setContentPane(createCenterPanel())
+        peer.setContentPane(panel)
 
         Application.messageBus
                 .connect(this)
@@ -108,8 +109,7 @@ class NewTranslationDialog(private val project: Project?,
         }
         val glassPane = rootPane.glassPane as IdeGlassPane
 
-        //may resize only width, height is adjusted automatically
-        val resizeListener = object : WindowResizeListener(rootPane, JBUI.insets(0, 6, 0, 6), null) {
+        val resizeListener = object : WindowResizeListener(rootPane, JBUI.insets(6), null) {
             var myCursor: Cursor? = null
 
             override fun setCursor(content: Component, cursor: Cursor) {
@@ -125,10 +125,7 @@ class NewTranslationDialog(private val project: Project?,
 
             override fun mouseReleased(event: MouseEvent?) {
                 super.mouseReleased(event)
-                if (windowWidthChanged()) {
-                    invokeLater { fixWindowHeight() }
-                }
-                storeWindowLocation()
+                storeWindowLocationAndSize()
             }
         }
         glassPane.addMouseMotionPreprocessor(resizeListener, this.disposable)
@@ -178,18 +175,6 @@ class NewTranslationDialog(private val project: Project?,
                     onDocumentChange(e)
                 }
             })
-        }
-
-        //resize window on document size change
-        listOf(inputTextArea, translationTextArea).forEach { textArea ->
-            textArea.addListener {
-                val lineCountKey = "lineCount"
-                val lastLineCount = textArea.getClientProperty(lineCountKey)
-                if (lastLineCount != textArea.lineCount) {
-                    textArea.putClientProperty(lineCountKey, textArea.lineCount)
-                    fixWindowHeight()
-                }
-            }
         }
 
         inputTextArea.addListener { e ->
@@ -266,16 +251,31 @@ class NewTranslationDialog(private val project: Project?,
     }
 
     private fun initDictViewer() {
-        dictViewer.setupActions(this::lastTranslation) { text, src, target ->
-            sourceLangComboBox.selected = src
-            targetLangComboBox.selected = target
-            inputTextArea.text = text
+        dictViewer.apply {
+            setupActions(this@NewTranslationDialog::lastTranslation) { text, src, target ->
+                sourceLangComboBox.selected = src
+                targetLangComboBox.selected = target
+                inputTextArea.text = text
+            }
+            onBeforeFoldingExpand { _, _ ->
+                dictViewerPanel.putClientProperty("lastScroll", dictViewerPanel.verticalScrollBar.value)
+            }
+            onFoldingExpanded { _ ->
+                val lastScrollValue = dictViewerPanel.getClientProperty("lastScroll") as Int
+                fixWindowHeight()
+                invokeLater { dictViewerPanel.verticalScrollBar.value = lastScrollValue }
+            }
         }
-        dictViewerCollapsible.isCollapsed = Settings.newTranslationDialogCollapseDictViewer
-        dictViewerCollapsible.setExpandCollapseListener {
+        expandDictViewerButton.setListener({ _, _ ->
+            expandDictViewer()
+            Settings.newTranslationDialogCollapseDictViewer = false
             fixWindowHeight()
-            Settings.newTranslationDialogCollapseDictViewer = dictViewerCollapsible.isCollapsed
-        }
+        }, null)
+        collapseDictViewerButton.setListener({ _, _ ->
+            collapseDictViewer()
+            Settings.newTranslationDialogCollapseDictViewer = true
+            fixWindowHeight()
+        }, null)
     }
 
     private fun updateOnTranslation(translation: Translation?) {
@@ -321,10 +321,12 @@ class NewTranslationDialog(private val project: Project?,
         dictViewer.document.clear()
         if (dictDocument != null) {
             dictViewer.setup(dictDocument)
-            dictViewerCollapsible.panel.isVisible = true
+            if (Settings.newTranslationDialogCollapseDictViewer) collapseDictViewer()
+            else expandDictViewer()
         } else {
-            dictViewerCollapsible.panel.isVisible = false
+            hideDictViewer()
         }
+        fixWindowHeight()
         dictViewer.caretPosition = 0
     }
 
@@ -410,13 +412,14 @@ class NewTranslationDialog(private val project: Project?,
     override fun show() {
         if (!isShowing) {
             super.show()
-            restoreWindowLocation()
+            restoreWindowLocationAndSize()
         }
 
         focusManager.requestFocus(inputTextArea, true)
     }
 
     fun close() {
+        storeWindowLocationAndSize()
         close(CLOSE_EXIT_CODE)
     }
 
@@ -466,37 +469,27 @@ class NewTranslationDialog(private val project: Project?,
     }
 
     private fun fixWindowHeight(width: Int = window.width) {
-        window.preferredSize = null
-
-        window.minimumSize = Dimension(width, 0)
-        window.maximumSize = Dimension(width, Int.MAX_VALUE)
-
-        try {
-            window.setSize(width, window.preferredSize.height)
-        }
-        finally {
-            window.minimumSize = Dimension(0, 0)
-            window.preferredSize = Dimension(0, 0)
-            window.maximumSize = Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
-        }
+        rootPane.preferredSize = null
+        translationPanel.preferredSize = Dimension(Settings.newTranslationDialogWidth, Settings.newTranslationDialogHeight)
+        window.setSize(width, rootPane.preferredSize.height)
     }
 
-    private fun windowWidthChanged(): Boolean {
-        return Settings.newTranslationDialogWidth != window.width
-    }
-
-    private fun storeWindowLocation() {
+    private fun storeWindowLocationAndSize() {
         Settings.newTranslationDialogX = window.location.x
         Settings.newTranslationDialogY = window.location.y
-        Settings.newTranslationDialogWidth = window.width
+        Settings.newTranslationDialogWidth = translationPanel.width
+        Settings.newTranslationDialogHeight = translationPanel.height
+
+        translationPanel.preferredSize = translationPanel.size
     }
 
-    private fun restoreWindowLocation() {
+    private fun restoreWindowLocationAndSize() {
         val savedX = Settings.newTranslationDialogX
         val savedY = Settings.newTranslationDialogY
         if (savedX != null && savedY != null) {
             window.location = Point(savedX, savedY)
         }
+        translationPanel.preferredSize = Dimension(Settings.newTranslationDialogWidth, Settings.newTranslationDialogHeight)
         fixWindowHeight(Settings.newTranslationDialogWidth)
     }
 
@@ -539,8 +532,6 @@ class NewTranslationDialog(private val project: Project?,
 
 
     companion object {
-        val defaultWidth = 600
-
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
 
