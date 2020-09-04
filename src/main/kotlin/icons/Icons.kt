@@ -17,7 +17,7 @@ object Icons {
     val Translate2: Icon = load("/icons/translate2.svg")
 
     @JvmField
-    val NewTranslationDialog: Icon = IconUtil.colorize(Translate, Color.LIGHT_GRAY)
+    val NewTranslationDialog: Icon = load("/icons/translation.svg")
 
     @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")
