@@ -321,6 +321,7 @@ class NewTranslationDialog(private val project: Project?,
         dictViewer.document.clear()
         if (dictDocument != null) {
             dictViewer.setup(dictDocument)
+            dictViewer.size = dictViewer.preferredSize
             if (Settings.newTranslationDialogCollapseDictViewer) collapseDictViewer()
             else expandDictViewer()
         } else {
@@ -488,7 +489,9 @@ class NewTranslationDialog(private val project: Project?,
         if (savedX != null && savedY != null) {
             window.location = Point(savedX, savedY)
         }
-        translationPanel.preferredSize = Dimension(Settings.newTranslationDialogWidth, Settings.newTranslationDialogHeight)
+        val savedSize = Dimension(Settings.newTranslationDialogWidth, Settings.newTranslationDialogHeight)
+        translationPanel.size = savedSize
+        translationPanel.preferredSize = savedSize
         fixWindowHeight(Settings.newTranslationDialogWidth)
     }
 

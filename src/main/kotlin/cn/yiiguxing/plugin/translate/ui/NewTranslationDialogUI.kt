@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.ui.UI.fill
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
 import cn.yiiguxing.plugin.translate.ui.UI.lineAbove
 import cn.yiiguxing.plugin.translate.ui.UI.lineBelow
-import cn.yiiguxing.plugin.translate.ui.UI.lineToRight
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
@@ -27,6 +26,7 @@ import icons.Icons
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
+import java.lang.Integer.min
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
@@ -141,33 +141,32 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override fun expandDictViewer() {
         expandDictViewerButton.isVisible = false
         collapseDictViewerButton.isVisible = true
-
-        mRoot.add(dictViewerPanel, fillX())
-        mRoot.validate()
+        dictViewerPanel.isVisible = true
     }
 
     override fun collapseDictViewer() {
         expandDictViewerButton.isVisible = true
         collapseDictViewerButton.isVisible = false
-
-        mRoot.remove(dictViewerPanel)
-        mRoot.validate()
+        dictViewerPanel.isVisible = false
     }
 
     override fun hideDictViewer() {
         expandDictViewerButton.isVisible = false
         collapseDictViewerButton.isVisible = false
-
-        mRoot.remove(dictViewerPanel)
-        mRoot.validate()
+        dictViewerPanel.isVisible = false
     }
+
+    private fun maxDictViewerHeight() = 20 * getLineHeight(dictViewer)
 
     private fun initDictViewer() {
         dictViewer.apply {
-            border = emptyBorder(6, 10) + lineAbove()
+            border = emptyBorder(6, 10)
             minimumSize = Dimension(0, 0)
         }
-        dictViewerPanel.maximumSize = Dimension(Int.MAX_VALUE, 20 * getLineHeight(dictViewer))
+        dictViewerPanel.apply {
+            maximumSize = Dimension(Int.MAX_VALUE, maxDictViewerHeight())
+            border = lineAbove()
+        }
 
         expandDictViewerButton.apply {
             setIcons(Icons.ArrowDownExpand)
@@ -175,16 +174,17 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             horizontalTextPosition = SwingConstants.LEADING
             foreground = JBUI.CurrentTheme.Label.foreground()
             setPaintUnderline(false)
-            setListener({_, _ -> expandDictViewer() }, null)
+            setListener({ _, _ -> expandDictViewer() }, null)
         }
         collapseDictViewerButton.apply {
             setIcons(Icons.ArrowUpCollapse)
-            setListener({_, _ -> collapseDictViewer() }, null) }
+            setListener({ _, _ -> collapseDictViewer() }, null)
+        }
     }
 
     private fun layoutMainPanel(): JPanel {
 
-        translationPanel = JPanel(migLayout()).apply {
+        val centerPanel = JPanel(migLayout()).apply {
             val leftPanel = JPanel(migLayout()).apply {
                 background = inputTextArea.background
 
@@ -211,14 +211,18 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             add(expandDictViewerButton, HorizontalLayout.RIGHT)
             add(collapseDictViewerButton, HorizontalLayout.RIGHT)
         }
+        translationPanel = JPanel(migLayoutVertical()).apply {
+            add(topPanel, fillX())
+            add(centerPanel, fill())
+            add(bottomPanel, fillX())
+        }
 
         mRoot.apply {
-            layout = migLayoutVertical()
             border = PopupBorder.Factory.create(true, true)
+            layout = BoxLayout(mRoot, BoxLayout.Y_AXIS)
 
-            add(topPanel, fillX())
-            add(translationPanel, fill())
-            add(bottomPanel, fillX())
+            add(translationPanel)
+            add(dictViewerPanel)
         }
 
         return mRoot
@@ -297,6 +301,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
                     val componentMinSize = component.minimumSize
                     return Dimension(componentMinSize.width, componentMinSize.height + 5)
                 }
+
+                override fun getPreferredSize(): Dimension {
+                    val preferred = super.getPreferredSize()
+                    val max = maximumSize
+                    return Dimension(min(preferred.width, max.width), min(preferred.height, max.height))
+                }
+
             }
 
     private fun minHeight(textComponent: JTextComponent): Int {
