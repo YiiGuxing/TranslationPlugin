@@ -404,7 +404,7 @@ class NewTranslationDialog(private val project: Project?,
             targetLangComboBox.apply {
                 val targetSelected = (languagePair?.target ?: selected)
                     .takeIf { target.contains(it) }
-                    ?: Lang.ENGLISH
+                    ?: presenter.getTargetLang(inputTextArea.text)
                 model = LanguageListModel.sorted(target, targetSelected)
             }
         }
