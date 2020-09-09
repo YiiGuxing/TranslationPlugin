@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
+import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
 import com.intellij.icons.AllIcons
@@ -528,7 +529,7 @@ class NewTranslationDialog(private val project: Project?,
         AllIcons.General.GearPlain
     ) {
         override fun actionPerformed(e: AnActionEvent) {
-            //TODO("Not yet implemented")
+            OptionsConfigurable.showSettingsDialog(e.project)
         }
     }
 
