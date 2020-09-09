@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
@@ -283,7 +284,7 @@ class NewTranslationDialog(private val project: Project?,
         updateStarButton(translation)
         updateDetectedLangLabel(translation)
         updateTransliterations(translation)
-        updateDictViewer(translation?.dictDocument)
+        updateDictViewer(translation?.dictDocument, translation?.extraDocument)
         spellComponent.spell = translation?.spell
         fixLangComponent.updateOnTranslation(translation)
         fixWindowHeight()
@@ -318,16 +319,24 @@ class NewTranslationDialog(private val project: Project?,
         targetTransliterationLabel.text = translation?.transliteration
     }
 
-    private fun updateDictViewer(dictDocument: TranslationDocument?) {
+    private fun updateDictViewer(dictDocument: TranslationDocument?, extraDocument: NamedTranslationDocument?) {
         dictViewer.document.clear()
-        if (dictDocument != null) {
-            dictViewer.setup(dictDocument)
-            dictViewer.size = dictViewer.preferredSize
-            if (Settings.newTranslationDialogCollapseDictViewer) collapseDictViewer()
-            else expandDictViewer()
-        } else {
-            hideDictViewer()
+        dictDocument?.let {
+            dictViewer.setup(it)
         }
+        extraDocument?.let {
+            dictViewer.setup(it)
+        }
+        val hasContent = dictDocument != null || extraDocument != null
+
+        if (hasContent && Settings.newTranslationDialogCollapseDictViewer)
+            collapseDictViewer()
+        else if (hasContent)
+            expandDictViewer()
+        else
+            hideDictViewer()
+
+        dictViewer.size = dictViewer.preferredSize
         fixWindowHeight()
         dictViewer.caretPosition = 0
     }
