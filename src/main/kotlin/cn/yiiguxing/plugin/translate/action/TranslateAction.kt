@@ -50,8 +50,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
 
         val currentNewTD = TranslationUIManager.instance(project).currentNewTranslationDialog()
         if (currentNewTD != null) {
-            currentNewTD.inputTextArea.text = text
-            currentNewTD.sourceLangComboBox.selected = Lang.AUTO
+            currentNewTD.translate(text)
             return
         }
 

@@ -119,24 +119,13 @@
 
     <actions>
         <action id="$ShowTranslationDialogAction"
-                icon="Icons.Translate"
+                icon="Icons.NewTranslationDialog"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
                 description="Open translation dialog">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
-        </action>
-        <action id="$ShowInstantTranslationDialogAction"
-                icon="Icons.Translate2"
-                class="cn.yiiguxing.plugin.translate.action.ShowInstantTranslationDialogAction"
-                text="Show Instant Translation Dialog..."
-                description="Open instant translation dialog"/>
-        <action id="$ShowNewTranslationDialogAction"
-                icon="Icons.NewTranslationDialog"
-                class="cn.yiiguxing.plugin.translate.action.ShowNewTranslationDialogAction"
-                text="Show New Translation Dialog..."
-                description="Open new translation dialog">
         </action>
 
         <action id="$ChooseTranslatorAction"
@@ -216,15 +205,12 @@
         <group id="TranslationToolBar" text="Translation Toolbar Actions">
             <separator/>
             <reference ref="$ShowTranslationDialogAction"/>
-            <reference ref="$ShowInstantTranslationDialogAction"/>
-            <reference ref="$ShowNewTranslationDialogAction"/>
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>
-            <reference ref="$ShowInstantTranslationDialogAction"/>
             <reference ref="$InclusiveTranslateAction"/>
             <reference ref="$ExclusiveTranslateAction"/>
         </group>

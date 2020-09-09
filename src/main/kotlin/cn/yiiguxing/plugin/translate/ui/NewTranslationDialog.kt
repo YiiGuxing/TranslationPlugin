@@ -68,6 +68,9 @@ class NewTranslationDialog(private val project: Project?,
     private var lastTranslation: Translation? = null
     private var historyShowing: Boolean = false
 
+    private var ignoreLanguageEvent: Boolean = false
+    private var ignoreInputEvent: Boolean = false
+
     private var _disposed = false
     override val disposed get() = _disposed
 
@@ -161,7 +164,9 @@ class NewTranslationDialog(private val project: Project?,
                     pair.source = sourceLang
                     pair.target = targetLang
                 }
-                requestTranslate()
+                if (!ignoreLanguageEvent) {
+                    requestTranslate()
+                }
             }
         }
         updateLanguages(AppStorage.lastInstantLanguages)
@@ -181,7 +186,9 @@ class NewTranslationDialog(private val project: Project?,
 
         inputTextArea.addListener { e ->
             clearButton.isEnabled = e.document.length > 0
-            requestTranslate()
+            if (!ignoreInputEvent) {
+                requestTranslate()
+            }
         }
         translationTextArea.addListener { e ->
             copyButton.isEnabled = e.document.length > 0
@@ -379,6 +386,24 @@ class NewTranslationDialog(private val project: Project?,
             return
         }
 
+        onTranslationFinished(translation)
+    }
+
+    fun applyTranslation(translation: Translation) {
+        ignoreLanguageEvent = true
+        ignoreInputEvent = true
+        try {
+            inputTextArea.text = translation.original
+            sourceLangComboBox.selected = translation.srcLang
+            targetLangComboBox.selected = translation.targetLang
+        } finally {
+            ignoreLanguageEvent = false
+            ignoreInputEvent = false
+        }
+        onTranslationFinished(translation)
+    }
+
+    private fun onTranslationFinished(translation: Translation) {
         currentRequest = null
         lastTranslation = translation
         swapButton.isEnabled = true
@@ -444,6 +469,58 @@ class NewTranslationDialog(private val project: Project?,
 
         Disposer.dispose(this)
         println("Instant translate dialog disposed.")
+    }
+
+    /**
+     * 翻译指定的[内容][text]
+     */
+    fun translate(text: String) {
+        if (disposed || text.isBlank()) {
+            return
+        }
+
+        val srcLang: Lang = Lang.AUTO
+        val targetLang = targetLangComboBox.selected
+        translateInternal(text, srcLang, targetLang)
+    }
+
+    /**
+     * 以指定的[源语言][src]和[目标语言][target]翻译指定的[内容][text]
+     *
+     * @param text 需要翻译的内容
+     * @param src 源语言, `null`则使用当前选中的语言
+     * @param target 目标语言, `null`则使用当前选中的语言
+     */
+    fun translate(text: String, src: Lang?, target: Lang?) {
+        if (disposed || text.isBlank()) {
+            return
+        }
+
+        lateinit var srcLang: Lang
+        lateinit var targetLang: Lang
+
+        presenter.supportedLanguages.let { (sourceList, targetList) ->
+            srcLang = src?.takeIf { sourceList.contains(it) }
+                    ?: sourceLangComboBox.selected
+                            ?: sourceList.first()
+            targetLang = target?.takeIf { targetList.contains(it) }
+                    ?: targetLangComboBox.selected
+                            ?: presenter.primaryLanguage
+        }
+
+        translateInternal(text, srcLang, targetLang)
+    }
+
+    private fun translateInternal(text: String, srcLang: Lang, targetLang: Lang) {
+        sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
+        targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
+        inputTextArea.text = text
+    }
+
+    private fun LangComboBoxLink.setSelectLangIgnoreEvent(lang: Lang) {
+        ignoreLanguageEvent = true
+        selected = lang
+        ignoreLanguageEvent = false
     }
 
     private fun showHistoryPopup() {

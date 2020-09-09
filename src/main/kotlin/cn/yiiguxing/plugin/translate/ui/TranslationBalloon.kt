@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.isNullOrBlank
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
@@ -50,8 +51,8 @@ class TranslationBalloon(
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
-    private val pinButton = ActionLink(icon = Icons.Pin) {
-        showOnTranslationDialog(text, translationPane.sourceLanguage, translationPane.targetLanguage)
+    private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) {
+        showOnTranslationDialog(text, translationPane.sourceLanguage ?: Lang.AUTO, translationPane.targetLanguage ?: presenter.getTargetLang(text))
     }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
         lastError?.copyToClipboard()
@@ -116,6 +117,7 @@ class TranslationBalloon(
 
         translationContentPane.apply {
             add(pinButton.apply {
+                border = JBEmptyBorder(10, 0, 0, 10)
                 isVisible = false
                 alignmentX = RIGHT_ALIGNMENT
                 alignmentY = TOP_ALIGNMENT
@@ -240,10 +242,17 @@ class TranslationBalloon(
         }
     }
 
-    private fun showOnTranslationDialog(text: String, srcLang: Lang? = null, targetLang: Lang? = null) {
+    private fun showOnTranslationDialog(text: String, srcLang: Lang, targetLang: Lang) {
+        val readyTranslation = translationPane.translation
         hide()
+
+        Settings.pinNewTranslationDialog = true
         val dialog = TranslationUIManager.showDialog(editor.project)
-        if (!text.isNullOrBlank()) {
+
+        if (readyTranslation != null) {
+            dialog.applyTranslation(readyTranslation)
+        }
+        else if (!text.isNullOrBlank()) {
             dialog.translate(text, srcLang, targetLang)
         }
     }
