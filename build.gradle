@@ -24,7 +24,7 @@ version = "${version}${buildNumber ? '-' + buildNumber : ''}"
 intellij {
     version = ideaVersion
     pluginName = 'TranslationPlugin'
-    downloadSources = Boolean.valueOf(sources)
+    downloadSources = Boolean.valueOf(ideaSources)
     sandboxDirectory 'sandbox'
     plugins "java", "org.jetbrains.kotlin", "Pythonid:201.8743.12", "Dart:201.8538.45", "org.jetbrains.plugins.go:201.8538.31.199"
 }
