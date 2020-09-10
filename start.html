@@ -62,11 +62,8 @@
         <div class="column">
             <h2 class="column_title">安装</h2>
             <div>
-                <iframe frameborder="none" width="384px" height="319px"
-                        src="https://plugins.jetbrains.com/embeddable/install/8579"></iframe>
-
-
-                <h3 class="column_item_title" style="margin-top: -240px">使用 IDE 内置插件系统安装：</h3>
+                <div id="embeddable"></div>
+                <h3 class="column_item_title">使用 IDE 内置插件系统安装：</h3>
                 <div class="column_item_info_code">
                     <ul>
                         <li>Preferences(Settings) > Plugins > Marketplace > 搜索并找到"Translation" > InstallPlugin.</li>
@@ -258,5 +255,9 @@
         </div>
     </div>
 </div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
 </body>
 </html>

@@ -7,7 +7,7 @@
     <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <script src="//cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="main-content">
@@ -23,7 +23,7 @@
     <a href="start.html" class="btn" ondragstart="return false;">开始使用</a>
     <a href="support.html" class="btn" ondragstart="return false;">♥ 支持/捐赠 ♥</a>
 
-    <div id="version" class="project-version">&nbsp;</div>
+    <div id="version" class="project-version"></div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
@@ -34,12 +34,9 @@
         });
     </script>
 
-    <div style="padding-left: 189px; margin-top: 2rem">
-        <iframe frameborder="none" width="384px" height="320px"
-                src="https://plugins.jetbrains.com/embeddable/install/8579"></iframe>
-    </div>
+    <div id="embeddable" style="display: flex;justify-content: center"></div>
 
-    <div class="idea" oncontextmenu="return false;" ondragstart="return false;" style="margin-top: -220px">
+    <div class="idea" oncontextmenu="return false;" ondragstart="return false;" style="margin-top: 2.5rem;">
         <img src="images/screenshots.gif">
     </div>
 
@@ -57,5 +54,9 @@
 
     <span class="maintainer">♥ Developed by <a href="https://github.com/YiiGuxing">Yii.Guxing</a></span>
 </div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
 </body>
 </html>
