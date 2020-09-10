@@ -272,7 +272,7 @@ class NewTranslationDialog(
             onBeforeFoldingExpand { _, _ ->
                 dictViewerPanel.putClientProperty("lastScroll", dictViewerPanel.verticalScrollBar.value)
             }
-            onFoldingExpanded { _ ->
+            onFoldingExpanded {
                 val lastScrollValue = dictViewerPanel.getClientProperty("lastScroll") as Int
                 fixWindowHeight()
                 invokeLater { dictViewerPanel.verticalScrollBar.value = lastScrollValue }
@@ -309,7 +309,7 @@ class NewTranslationDialog(
 
         updatePresentation(translation?.favoriteId)
 
-        starButton.isEnabled = translation != null && WordBookService.isInitialized
+        starButton.isEnabled = translation != null && WordBookService.canAddToWordbook(translation.original)
 
         starButton.setListener(StarButtons.listener, translation)
         translation?.observableFavoriteId?.observe(this@NewTranslationDialog) { favoriteId, _ ->

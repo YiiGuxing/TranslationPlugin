@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -14,10 +13,10 @@ import java.lang.ref.WeakReference
 object StarButtons {
 
     fun toolTipText(favoriteId: Long?): String {
-        return if (favoriteId == null) {
-            message("tooltip.addToWordBook")
-        } else {
-            message("tooltip.removeFormWordBook")
+        return when {
+            !WordBookService.isInitialized -> message("tooltip.wordBookNotInitialized")
+            favoriteId == null -> message("tooltip.addToWordBook")
+            else -> message("tooltip.removeFormWordBook")
         }
     }
 
@@ -25,13 +24,13 @@ object StarButtons {
         override fun linkSelected(starLabel: LinkLabel<*>, translation: Translation?) {
             translation ?: return
             starLabel.isEnabled = false
+            if (!WordBookService.canAddToWordbook(translation.original)) {
+                return
+            }
+
             val starLabelRef = WeakReference(starLabel)
 
             executeOnPooledThread {
-                if (!WordBookService.isInitialized) {
-                    return@executeOnPooledThread
-                }
-
                 val favoriteId = translation.favoriteId
                 if (favoriteId == null) {
                     val newFavoriteId = WordBookService.addWord(translation.toWordBookItem())
@@ -47,6 +46,5 @@ object StarButtons {
                 }
             }
         }
-
     }
 }
