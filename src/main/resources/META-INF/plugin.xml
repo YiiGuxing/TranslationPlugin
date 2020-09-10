@@ -119,7 +119,7 @@
 
     <actions>
         <action id="$ShowTranslationDialogAction"
-                icon="Icons.NewTranslationDialog"
+                icon="Icons.Translate"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
                 description="Open translation dialog">

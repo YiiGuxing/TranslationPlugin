@@ -1,11 +1,8 @@
 package icons
 
 import cn.yiiguxing.plugin.translate.ui.icon.SuspendIcon
-import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.IconManager
 import com.intellij.ui.JBColor
-import com.intellij.util.IconUtil
-import java.awt.Color
 import javax.swing.Icon
 
 object Icons {
@@ -38,7 +35,7 @@ object Icons {
     val StarOn: Icon = load("/icons/starOn.svg")
 
     @JvmField
-    val GrayStarOff: Icon = IconLoader.getIcon("/icons/grayStarOff.svg")
+    val GrayStarOff: Icon = load("/icons/grayStarOff.svg")
 
     @JvmField
     val Detail: Icon = load("/icons/detail.svg")
