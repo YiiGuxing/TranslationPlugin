@@ -51,13 +51,15 @@ import javax.swing.JTextArea
 import javax.swing.ListSelectionModel
 import javax.swing.event.DocumentEvent
 
-class NewTranslationDialog(private val project: Project?,
-                           val ui: NewTranslationDialogUI = NewTranslationDialogUiImpl(UIProvider())) :
-        DialogWrapper(project),
-        NewTranslationDialogUI by ui,
-        View,
-        Disposable,
-        SettingsChangeListener {
+class NewTranslationDialog(
+    private val project: Project?,
+    val ui: NewTranslationDialogUI = NewTranslationDialogUiImpl(UIProvider())
+) :
+    DialogWrapper(project),
+    NewTranslationDialogUI by ui,
+    View,
+    Disposable,
+    SettingsChangeListener {
 
     private val presenter: Presenter = TranslationPresenter(this)
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
@@ -89,8 +91,8 @@ class NewTranslationDialog(private val project: Project?,
         peer.setContentPane(panel)
 
         Application.messageBus
-                .connect(this)
-                .subscribe(SettingsChangeListener.TOPIC, this)
+            .connect(this)
+            .subscribe(SettingsChangeListener.TOPIC, this)
     }
 
     override fun createCenterPanel(): JComponent? {
@@ -216,9 +218,9 @@ class NewTranslationDialog(private val project: Project?,
             toolTipText = "Copy Text"
             setListener({ _, _ ->
                 val textToCopy = translationTextArea
-                        .selectedText
-                        .takeUnless { it.isNullOrEmpty() }
-                        ?: translationTextArea.text
+                    .selectedText
+                    .takeUnless { it.isNullOrEmpty() }
+                    ?: translationTextArea.text
                 if (!textToCopy.isNullOrEmpty()) {
                     CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
                 }
@@ -307,7 +309,7 @@ class NewTranslationDialog(private val project: Project?,
 
         updatePresentation(translation?.favoriteId)
 
-        starButton.isEnabled = translation != null
+        starButton.isEnabled = translation != null && WordBookService.isInitialized
 
         starButton.setListener(StarButtons.listener, translation)
         translation?.observableFavoriteId?.observe(this@NewTranslationDialog) { favoriteId, _ ->
@@ -419,8 +421,8 @@ class NewTranslationDialog(private val project: Project?,
             clearTranslation()
         }
         Notifications.showErrorNotification(
-                project, NOTIFICATION_DISPLAY_ID,
-                message("error.title"), errorMessage, throwable
+            project, NOTIFICATION_DISPLAY_ID,
+            message("error.title"), errorMessage, throwable
         )
     }
 
@@ -502,11 +504,11 @@ class NewTranslationDialog(private val project: Project?,
 
         presenter.supportedLanguages.let { (sourceList, targetList) ->
             srcLang = src?.takeIf { sourceList.contains(it) }
-                    ?: sourceLangComboBox.selected
-                            ?: sourceList.first()
+                ?: sourceLangComboBox.selected
+                        ?: sourceList.first()
             targetLang = target?.takeIf { targetList.contains(it) }
-                    ?: targetLangComboBox.selected
-                            ?: presenter.primaryLanguage
+                ?: targetLangComboBox.selected
+                        ?: presenter.primaryLanguage
         }
 
         translateInternal(text, srcLang, targetLang)
@@ -529,31 +531,31 @@ class NewTranslationDialog(private val project: Project?,
         var chosen: String? = null
 
         return JBPopupFactory.getInstance().createPopupChooserBuilder(presenter.histories)
-                .setVisibleRowCount(7)
-                .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-                .setItemSelectedCallback { inputTextArea.text = it }
-                .setItemChosenCallback { chosen = it }
-                .setRenderer(HistoryRenderer({ sourceLangComboBox.selected }, { targetLangComboBox.selected }, presenter))
-                .addListener(object : JBPopupListener {
-                    override fun beforeShown(event: LightweightWindowEvent) {
-                        historyShowing = true
-                        val popup = event.asPopup()
-                        popup.size = Dimension(300, popup.size.height)
-                        val relativePoint = RelativePoint(historyButton, Point(0, -JBUI.scale(3)))
-                        val screenPoint = Point(relativePoint.screenPoint).apply { translate(0, -popup.size.height) }
+            .setVisibleRowCount(7)
+            .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+            .setItemSelectedCallback { inputTextArea.text = it }
+            .setItemChosenCallback { chosen = it }
+            .setRenderer(HistoryRenderer({ sourceLangComboBox.selected }, { targetLangComboBox.selected }, presenter))
+            .addListener(object : JBPopupListener {
+                override fun beforeShown(event: LightweightWindowEvent) {
+                    historyShowing = true
+                    val popup = event.asPopup()
+                    popup.size = Dimension(300, popup.size.height)
+                    val relativePoint = RelativePoint(historyButton, Point(0, -JBUI.scale(3)))
+                    val screenPoint = Point(relativePoint.screenPoint).apply { translate(0, -popup.size.height) }
 
-                        popup.setLocation(screenPoint)
-                    }
+                    popup.setLocation(screenPoint)
+                }
 
-                    override fun onClosed(event: LightweightWindowEvent) {
-                        historyShowing = false
-                        invokeLater {
-                            inputTextArea.text = chosen ?: currentInput
-                        }
+                override fun onClosed(event: LightweightWindowEvent) {
+                    historyShowing = false
+                    invokeLater {
+                        inputTextArea.text = chosen ?: currentInput
                     }
-                })
-                .createPopup()
-                .show(historyButton)
+                }
+            })
+            .createPopup()
+            .show(historyButton)
 
     }
 
@@ -583,13 +585,18 @@ class NewTranslationDialog(private val project: Project?,
         fixWindowHeight(Settings.newTranslationDialogWidth)
     }
 
-    private class UIProvider: NewTranslationDialogUiProvider {
+    private class UIProvider : NewTranslationDialogUiProvider {
         override fun createPinButton(): JComponent = actionButton(MyPinAction())
 
         override fun createSettingsButton(): JComponent = actionButton(MySettingsAction())
 
         private fun actionButton(action: AnAction): ActionButton =
-            ActionButton(action, action.templatePresentation, ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE)
+            ActionButton(
+                action,
+                action.templatePresentation,
+                ActionPlaces.UNKNOWN,
+                ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE
+            )
     }
 
     private class MyPinAction : ToggleAction(

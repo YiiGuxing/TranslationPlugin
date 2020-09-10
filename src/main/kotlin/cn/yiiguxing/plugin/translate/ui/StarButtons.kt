@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -27,6 +28,10 @@ object StarButtons {
             val starLabelRef = WeakReference(starLabel)
 
             executeOnPooledThread {
+                if (!WordBookService.isInitialized) {
+                    return@executeOnPooledThread
+                }
+
                 val favoriteId = translation.favoriteId
                 if (favoriteId == null) {
                     val newFavoriteId = WordBookService.addWord(translation.toWordBookItem())
@@ -41,7 +46,6 @@ object StarButtons {
                     invokeLater { starLabelRef.get()?.isEnabled = true }
                 }
             }
-
         }
 
     }
