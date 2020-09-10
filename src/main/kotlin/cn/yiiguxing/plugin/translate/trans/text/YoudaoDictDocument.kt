@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.util.alphaBlend
 import cn.yiiguxing.plugin.translate.util.text.StyledString
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -57,10 +58,16 @@ class YoudaoDictDocument private constructor(
             if (wordString.style == POS_STYLE) "\t $wordString\t" else wordString.toString()
         }
 
-        if (variantStrings.isNotEmpty() && Settings.showWordForms) {
+        if (variantStrings.isNotEmpty() && showWordForms()) {
             appendString("\n\n")
             appendStrings(variantStrings)
         }
+    }
+
+    @Suppress("SENSELESS_COMPARISON")
+    private fun showWordForms(): Boolean {
+        //Application may be null in ui tests
+        return ApplicationManager.getApplication() == null || Settings.showWordForms
     }
 
     private inline fun StyledDocument.appendStrings(

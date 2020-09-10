@@ -1,8 +1,11 @@
 package icons
 
 import cn.yiiguxing.plugin.translate.ui.icon.SuspendIcon
+import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.IconManager
 import com.intellij.ui.JBColor
+import com.intellij.util.IconUtil
+import java.awt.Color
 import javax.swing.Icon
 
 object Icons {
@@ -12,6 +15,9 @@ object Icons {
 
     @JvmField
     val Translate2: Icon = load("/icons/translate2.svg")
+
+    @JvmField
+    val NewTranslationDialog: Icon = load("/icons/translation.svg")
 
     @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")
@@ -30,6 +36,9 @@ object Icons {
 
     @JvmField
     val StarOn: Icon = load("/icons/starOn.svg")
+
+    @JvmField
+    val GrayStarOff: Icon = IconLoader.getIcon("/icons/grayStarOff.svg")
 
     @JvmField
     val Detail: Icon = load("/icons/detail.svg")
@@ -92,6 +101,12 @@ object Icons {
 
     @JvmField
     val AutoAwesome: Icon = load("/icons/autoAwesome.svg")
+
+    @JvmField
+    val ArrowDownExpand: Icon = load("/icons/arrowDownExpand.svg")
+
+    @JvmField
+    val ArrowUpCollapse: Icon = load("/icons/arrowUpCollapse.svg")
 
     @JvmStatic
     private fun load(path: String): Icon {

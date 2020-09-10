@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import java.util.*
 
 /**
@@ -39,4 +41,27 @@ fun String?.toTagSet(): Set<String> {
         ?.filter { it.isNotEmpty() }
         ?.toSet()
         ?: emptySet()
+}
+
+fun Translation.toWordBookItem(): WordBookItem {
+    val explainsBuilder = StringBuilder()
+    val dictText = dictDocument?.text ?: ""
+
+    if (!translation.isNullOrBlank()) {
+        explainsBuilder.append(translation)
+        if (dictText.isNotEmpty()) {
+            explainsBuilder.append("\n\n")
+        }
+    }
+    explainsBuilder.append(dictText)
+
+    return WordBookItem(
+        null,
+        original.trim(),
+        srcLang,
+        targetLang,
+        srcTransliteration,
+        explainsBuilder.toString(),
+        null
+    )
 }

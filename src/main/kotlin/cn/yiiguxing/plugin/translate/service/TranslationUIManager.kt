@@ -2,9 +2,8 @@
 
 package cn.yiiguxing.plugin.translate.service
 
-import cn.yiiguxing.plugin.translate.ui.InstantTranslationDialog
+import cn.yiiguxing.plugin.translate.ui.NewTranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
-import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
@@ -24,8 +23,7 @@ import com.intellij.util.ui.PositionTracker
 class TranslationUIManager private constructor() : Disposable {
 
     private var balloonRef: Ref<TranslationBalloon> = Ref.create()
-    private var dialogRef: Ref<TranslationDialog> = Ref.create()
-    private var instantTranslationDialogRef: Ref<InstantTranslationDialog> = Ref.create()
+    private var newTranslationDialogRef: Ref<NewTranslationDialog> = Ref.create()
     private var wordOfTheDayDialogRef: Ref<WordOfTheDayDialog> = Ref.create()
 
     /**
@@ -34,14 +32,14 @@ class TranslationUIManager private constructor() : Disposable {
     private fun disposeUI() {
         checkThread()
         balloonRef.get()?.hide()
-        dialogRef.get()?.close()
-        instantTranslationDialogRef.get()?.close()
+        newTranslationDialogRef.get()?.close()
     }
 
     override fun dispose() {
         disposeUI()
     }
 
+    fun currentNewTranslationDialog(): NewTranslationDialog? = newTranslationDialogRef.get()
 
     companion object {
 
@@ -119,20 +117,9 @@ class TranslationUIManager private constructor() : Disposable {
          *
          * @return 对话框实例
          */
-        fun showDialog(project: Project?): TranslationDialog {
-            return showDialog(instance(project).dialogRef) {
-                TranslationDialog(project)
-            }
-        }
-
-        /**
-         * 显示对话框
-         *
-         * @return 对话框实例
-         */
-        fun showInstantTranslationDialog(project: Project?): InstantTranslationDialog {
-            return showDialog(instance(project).instantTranslationDialogRef) {
-                InstantTranslationDialog(project)
+        fun showDialog(project: Project?): NewTranslationDialog {
+            return showDialog(instance(project).newTranslationDialogRef) {
+                NewTranslationDialog(project)
             }
         }
 

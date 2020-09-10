@@ -245,13 +245,13 @@ class InstantTranslationDialog(private val project: Project?) :
                 val srcSelected = (languagePair?.source ?: selected)
                     ?.takeIf { src.contains(it) }
                     ?: src.first()
-                model = LanguageListModel(src, srcSelected)
+                model = LanguageListModel.sorted(src, srcSelected)
             }
             targetLangComboBox.apply {
                 val targetSelected = (languagePair?.target ?: selected)
                     ?.takeIf { target.contains(it) }
                     ?: Lang.ENGLISH
-                model = LanguageListModel(target, targetSelected)
+                model = LanguageListModel.sorted(target, targetSelected)
             }
         }
     }

@@ -1,10 +1,20 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.YoudaoDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.YoudaoWebTranslationDocument
+import cn.yiiguxing.plugin.translate.util.text.text
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.ui.PopupMenuListenerAdapter
 import java.awt.Color
 import java.awt.Cursor
+import java.awt.datatransfer.StringSelection
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.Icon
@@ -232,6 +242,36 @@ class StyledViewer : Viewer() {
     companion object {
         private inline val Element.offsetLength: Int
             get() = endOffset - startOffset
+
+        fun StyledViewer.setupActions(prevTranslation: () -> Translation?, onNewTranslateHandler: ((String, Lang, Lang) -> Unit)?) {
+            addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
+                CopyPasteManager.getInstance().setContents(StringSelection(element.text))
+            }
+            onClick { element, data ->
+                prevTranslation()?.run {
+                    val src: Lang
+                    val target: Lang
+                    when (data) {
+                        GoogleDictDocument.WordType.WORD,
+                        YoudaoDictDocument.WordType.WORD,
+                        YoudaoWebTranslationDocument.WordType.WEB_VALUE -> {
+                            src = targetLang
+                            target = srcLang
+                        }
+                        GoogleDictDocument.WordType.REVERSE,
+                        YoudaoDictDocument.WordType.VARIANT,
+                        YoudaoWebTranslationDocument.WordType.WEB_KEY -> {
+                            src = srcLang
+                            target = targetLang
+                        }
+                        else -> return@onClick
+                    }
+
+                    onNewTranslateHandler?.invoke(element.text, src, target)
+                }
+            }
+        }
+
     }
 
 }

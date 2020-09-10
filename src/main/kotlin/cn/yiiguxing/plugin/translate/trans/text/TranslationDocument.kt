@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.text
 
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
+import cn.yiiguxing.plugin.translate.util.text.appendString
 
 interface TranslationDocument {
 
@@ -15,6 +16,16 @@ interface TranslationDocument {
     }
 }
 
-class NamedTranslationDocument(val name: String, document: TranslationDocument) : TranslationDocument by document
+class NamedTranslationDocument(val name: String, private val document: TranslationDocument) : TranslationDocument by document {
+    //todo: nicer style?
+    fun appendName(viewer: StyledViewer) {
+        viewer.styledDocument.appendString("\n\n$name\n\n")
+    }
 
-fun StyledViewer.setup(document: TranslationDocument) = document.setupTo(this)
+    override fun setupTo(viewer: StyledViewer) {
+        appendName(viewer)
+        document.setupTo(viewer)
+    }
+}
+
+fun StyledViewer.setup(document: TranslationDocument?) = document?.setupTo(this)

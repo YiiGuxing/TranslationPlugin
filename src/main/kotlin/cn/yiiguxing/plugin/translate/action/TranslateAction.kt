@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.BalloonPositionTracker
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.createCaretRangeMarker
@@ -45,6 +46,12 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             starts = intArrayOf(selectionRange.startOffset)
             ends = intArrayOf(selectionRange.endOffset)
             text = editor.document.getText(selectionRange).processBeforeTranslate() ?: return
+        }
+
+        val currentNewTD = TranslationUIManager.instance(project).currentNewTranslationDialog()
+        if (currentNewTD != null) {
+            currentNewTD.translate(text)
+            return
         }
 
         val startLine by lazy { editor.offsetToVisualPosition(selectionRange.startOffset).line }

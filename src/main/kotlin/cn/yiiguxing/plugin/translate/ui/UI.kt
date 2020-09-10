@@ -1,12 +1,20 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.util.Settings
+import com.intellij.openapi.util.IconLoader
+import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.util.IconUtil
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import net.miginfocom.layout.CC
+import net.miginfocom.layout.LC
+import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.Font
+import javax.swing.Icon
 import javax.swing.UIManager
+import javax.swing.border.Border
 import javax.swing.text.html.HTMLEditorKit
 
 /**
@@ -60,4 +68,31 @@ object UI {
     @JvmOverloads
     fun getBordersColor(default: Color? = null): Color? = UIManager.getColor("Borders.color") ?: default
 
+    fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
+        icon = baseIcon
+        disabledIcon = IconLoader.getDisabledIcon(baseIcon)
+        setHoveringIcon(IconUtil.darker(baseIcon, 3))
+    }
+
+    fun migLayout() =
+        MigLayout(LC().fill().gridGap("0!", "0!").insets("0"))
+
+    fun migLayoutVertical() =
+        MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
+
+
+    fun fill(): CC = CC().grow().push()
+
+    fun fillX(): CC = CC().growX().pushX()
+    fun fillY(): CC = CC().growY().pushY()
+
+    fun emptyBorder(topAndBottom: Int, leftAndRight: Int) = JBUI.Borders.empty(topAndBottom, leftAndRight)
+
+    fun emptyBorder(offsets: Int) = JBUI.Borders.empty(offsets)
+
+    fun lineAbove() = JBUI.Borders.customLine(UI.getBordersColor(), 1, 0, 0, 0)
+    fun lineBelow() = JBUI.Borders.customLine(UI.getBordersColor(), 0, 0, 1, 0)
+    fun lineToRight() = JBUI.Borders.customLine(UI.getBordersColor(), 0, 0, 0, 1)
+
+    operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 }
