@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import com.intellij.util.ui.components.BorderLayoutPanel
 import icons.Icons
 import javax.swing.JLabel
@@ -31,6 +32,7 @@ class SpellComponent: BorderLayoutPanel() {
         isVisible = false
         addToLeft(spellLabel)
         addToCenter(spellText)
+        spellLabel.border = emptyBorder(0, leftAndRight = 5)
     }
 
     private var onSpellFixedHandler: ((String) -> Unit)? = null

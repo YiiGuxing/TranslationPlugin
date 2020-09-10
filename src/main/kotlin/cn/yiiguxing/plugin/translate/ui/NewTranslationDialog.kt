@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.popup.JBPopupFactory
@@ -419,7 +420,7 @@ class NewTranslationDialog(private val project: Project?,
         }
         Notifications.showErrorNotification(
                 project, NOTIFICATION_DISPLAY_ID,
-                "Translate Error", errorMessage, throwable
+                message("error.title"), errorMessage, throwable
         )
     }
 
@@ -468,7 +469,7 @@ class NewTranslationDialog(private val project: Project?,
         _disposed = true
 
         Disposer.dispose(this)
-        println("Instant translate dialog disposed.")
+        println("Translation dialog disposed.")
     }
 
     /**
@@ -595,7 +596,7 @@ class NewTranslationDialog(private val project: Project?,
         IdeBundle.messagePointer("action.ToggleAction.text.pin.window"),
         IdeBundle.messagePointer("action.ToggleAction.description.pin.window"),
         AllIcons.General.Pin_tab
-    ) {
+    ), DumbAware {
         override fun isDumbAware(): Boolean {
             return true
         }
@@ -613,7 +614,7 @@ class NewTranslationDialog(private val project: Project?,
         message("settings.title.translate"),
         message("settings.title.translate"),
         AllIcons.General.GearPlain
-    ) {
+    ), DumbAware {
         override fun actionPerformed(e: AnActionEvent) {
             OptionsConfigurable.showSettingsDialog(e.project)
         }
@@ -624,6 +625,6 @@ class NewTranslationDialog(private val project: Project?,
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
 
-        private const val NOTIFICATION_DISPLAY_ID = "Instant Translate Error"
+        private const val NOTIFICATION_DISPLAY_ID = "Translation dialog error"
     }
 }

@@ -230,7 +230,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
     private fun layoutTopPanel() {
         val left = JPanel(HorizontalLayout(10)).apply {
-            border = emptyBorder(0, leftAndRight = 10)
+            border = emptyBorder(0, leftAndRight = 5)
 
             add(sourceLangComboBox, HorizontalLayout.LEFT)
             add(detectedLanguageLabel, HorizontalLayout.LEFT)
@@ -240,7 +240,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
 
         val right = JPanel(HorizontalLayout(3)).apply {
-            border = emptyBorder(0, leftAndRight = 10)
+            border = emptyBorder(0, leftAndRight = 5)
 
             add(targetLangComboBox, HorizontalLayout.LEFT)
             add(settingsButton, HorizontalLayout.RIGHT)

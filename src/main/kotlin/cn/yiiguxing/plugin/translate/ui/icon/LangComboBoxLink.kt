@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.icon
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.LanguageListModel
+import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.JBPopupListener
@@ -31,6 +32,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
     init {
         horizontalTextPosition = SwingConstants.LEADING
         myPaintUnderline = false
+        border = emptyBorder(0, leftAndRight = 5)
     }
 
     override fun getForeground(): Color {
