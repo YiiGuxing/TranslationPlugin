@@ -22,7 +22,7 @@ class SpellComponent: BorderLayoutPanel() {
         SwingConstants.LEADING
     )
 
-    val spellText = ActionLink("是不是Are you OK?") {
+    val spellText = ActionLink("") {
         val handler = onSpellFixedHandler ?: return@ActionLink
         spell?.let { handler(it) }
     }
