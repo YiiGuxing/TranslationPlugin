@@ -289,9 +289,9 @@ Support this project with your organization. Your logo will show up here with a 
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
+| Xyz | | 10 CNY |
 | 邓子迪 | | 10 CNY |
 | GameXG | [github.com/gamexg](https://github.com/gamexg) | 10 CNY |
 | 随风 | [github.com/lzf971107](https://github.com/lzf971107) | 10 CNY |
-| 王兆强 | | 10 CNY |
 
 [更多捐赠者][financial-contributors]
