@@ -5,22 +5,18 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
-import icons.Icons
 import javax.swing.Icon
 
 /**
  * Baidu translator
  */
 object BaiduTranslator : AbstractTranslator() {
-
-    const val TRANSLATOR_ID = "fanyi.baidu"
-
-    private const val TRANSLATOR_NAME = "Baidu Translate"
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
         Lang.CHINESE,
@@ -55,11 +51,11 @@ object BaiduTranslator : AbstractTranslator() {
 
     private val logger: Logger = Logger.getInstance(BaiduTranslator::class.java)
 
-    override val id: String = TRANSLATOR_ID
+    override val id: String = BAIDU.id
 
-    override val name: String = TRANSLATOR_NAME
+    override val name: String = BAIDU.translatorName
 
-    override val icon: Icon = Icons.Baidu
+    override val icon: Icon = BAIDU.icon
 
     override val primaryLanguage: Lang
         get() = Settings.baiduTranslateSettings.primaryLanguage

@@ -1,9 +1,10 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.openapi.application.ApplicationManager
@@ -26,8 +27,8 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 翻译API
      */
-    var translator: String
-            by Delegates.observable(GoogleTranslator.TRANSLATOR_ID) { _, oldValue: String, newValue: String ->
+    var translator: TranslationEngine
+            by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
                 if (oldValue != newValue) {
                     settingsChangePublisher.onTranslatorChanged(this, newValue)
                 }
@@ -148,6 +149,8 @@ class Settings : PersistentStateComponent<Settings> {
     var newTranslationDialogHeight: Int = 250
     var newTranslationDialogCollapseDictViewer = true
 
+    var primaryFontPreviewText = message("settings.font.default.preview.text")
+
     @Transient
     private val settingsChangePublisher: SettingsChangeListener =
         ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
@@ -239,14 +242,14 @@ enum class TTSSource(val displayName: String) {
 }
 
 enum class TargetLanguageSelection(val displayName: String) {
-    DEFAULT(message("default")),
+    DEFAULT(message("settings.item.main.or.english")),
     PRIMARY_LANGUAGE(message("settings.item.primaryLanguage")),
     LAST(message("settings.item.last"))
 }
 
 interface SettingsChangeListener {
 
-    fun onTranslatorChanged(settings: Settings, translatorId: String) {}
+    fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {}
 
     fun onOverrideFontChanged(settings: Settings) {}
 

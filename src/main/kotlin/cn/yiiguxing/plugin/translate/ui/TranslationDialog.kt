@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
@@ -478,7 +479,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         ignoreLanguageEvent = false
     }
 
-    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+    override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
                 val srcSelected = selected.takeIf { src.contains(it) } ?: src.first()

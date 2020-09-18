@@ -2,11 +2,11 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL_FORMAT
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.RequestBuilder
-import icons.Icons
 import java.lang.reflect.Type
 import javax.swing.Icon
 
@@ -14,10 +14,6 @@ import javax.swing.Icon
  * GoogleTranslator
  */
 object GoogleTranslator : AbstractTranslator() {
-
-    const val TRANSLATOR_ID = "translate.google"
-    private const val TRANSLATOR_NAME = "Google Translate"
-
     private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
@@ -27,11 +23,11 @@ object GoogleTranslator : AbstractTranslator() {
         .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
         .create()
 
-    override val id: String = TRANSLATOR_ID
+    override val id: String = GOOGLE.id
 
-    override val name: String = TRANSLATOR_NAME
+    override val name: String = GOOGLE.translatorName
 
-    override val icon: Icon = Icons.Google
+    override val icon: Icon = GOOGLE.icon
 
     override val primaryLanguage: Lang
         get() = settings.primaryLanguage
