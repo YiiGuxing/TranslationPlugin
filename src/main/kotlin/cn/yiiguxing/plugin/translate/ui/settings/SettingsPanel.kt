@@ -149,7 +149,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : NewSet
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.separators != separatorsTextField.text
-                    || settings.ignoreRegExp != ignoreRegExp.text
+                    || settings.ignoreRegex != ignoreRegExp.text
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
                     || settings.primaryFontPreviewText != primaryFontPreview.text
                     || settings.phoneticFontFamily != phoneticFontComboBox.fontName
@@ -196,7 +196,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : NewSet
             translateDocumentation = translateDocumentationCheckBox.isSelected
 
             if (validRegExp) {
-                ignoreRegExp = this@SettingsPanel.ignoreRegExp.text
+                ignoreRegex = this@SettingsPanel.ignoreRegExp.text
             }
         }
     }
@@ -205,7 +205,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : NewSet
     override fun reset() {
         translationEngineComboBox.selected = settings.translator
         primaryLanguageComboBox.selected = settings.translator.primaryLanguage
-        ignoreRegExp.text = settings.ignoreRegExp ?: ""
+        ignoreRegExp.text = settings.ignoreRegex
         separatorsTextField.text = settings.separators
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
