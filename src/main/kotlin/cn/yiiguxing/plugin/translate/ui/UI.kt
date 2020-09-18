@@ -25,7 +25,7 @@ import javax.swing.text.html.HTMLEditorKit
 object UI {
 
     // 使用`get() = ...`以保证获得实时`ScaledFont`
-    val defaultFont: JBFont get() = JBFont.create(Font("Microsoft YaHei", Font.PLAIN, 14))
+    val defaultFont: JBFont get() = JBFont.create(UIUtil.getLabelFont(UIUtil.FontSize.NORMAL))
 
     val errorHTMLKit: HTMLEditorKit
         get() = UIUtil.getHTMLEditorKit().apply {
