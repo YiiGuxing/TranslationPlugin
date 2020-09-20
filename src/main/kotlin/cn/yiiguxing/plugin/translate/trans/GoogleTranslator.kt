@@ -96,11 +96,11 @@ object GoogleTranslator : AbstractTranslator() {
         srcLang: Lang,
         targetLang: Lang,
         result: String,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): BaseTranslation {
         logger.i("Translate result: $result")
 
-        return if (forDocumentation) {
+        return if (isDocumentation) {
             val results = gson.fromJson(result, Array<String>::class.java)
             val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
 

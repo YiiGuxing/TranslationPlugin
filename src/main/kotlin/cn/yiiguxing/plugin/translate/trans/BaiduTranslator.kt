@@ -103,7 +103,7 @@ object BaiduTranslator : AbstractTranslator() {
         srcLang: Lang,
         targetLang: Lang,
         result: String,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): BaseTranslation {
         logger.i("Translate result: $result")
 

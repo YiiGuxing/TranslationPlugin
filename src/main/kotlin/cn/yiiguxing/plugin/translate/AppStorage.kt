@@ -19,7 +19,7 @@ import kotlin.properties.Delegates
 /**
  * 应用数据存储
  */
-@State(name = "AppStorage", storages = [(Storage("yiiguxing.translation.xml"))])
+@State(name = "AppStorage", storages = [(Storage(STORAGE_NAME))])
 class AppStorage : PersistentStateComponent<AppStorage> {
 
     @CollectionBean

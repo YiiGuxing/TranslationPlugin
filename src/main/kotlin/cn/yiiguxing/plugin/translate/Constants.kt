@@ -11,6 +11,8 @@ import java.nio.file.Paths
 private val USER_HOME_PATH = System.getProperty("user.home")
 val TRANSLATION_DIRECTORY: Path = Paths.get(USER_HOME_PATH, ".translation")
 
+const val STORAGE_NAME = "yiiguxing.translation.xml"
+
 const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
 const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
 const val OPEN_COLLECTIVE_URL = "https://opencollective.com/translation-plugin"
@@ -21,7 +23,7 @@ const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"
 const val HTML_DESCRIPTION_DISABLE = "#DISABLE"
 const val HTML_DESC_COPY_TO_CLIPBOARD = "#COPY_TO_CLIPBOARD"
 
-const val GOOGLE_TRANSLATE_HOST = "translate.google.com"
+const val GOOGLE_TRANSLATE_HOST = "translate.googleapis.com"
 const val GOOGLE_TRANSLATE_HOST_CN = "translate.google.cn"
 const val GOOGLE_TRANSLATE_URL_FORMAT = "https://%s/translate_a/single"
 const val GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT = "https://%s/translate_a/t"

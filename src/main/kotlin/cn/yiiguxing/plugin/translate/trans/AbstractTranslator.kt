@@ -38,7 +38,7 @@ abstract class AbstractTranslator : Translator {
         srcLang: Lang,
         targetLang: Lang,
         result: String,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): BaseTranslation
 
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {

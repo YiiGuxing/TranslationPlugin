@@ -20,7 +20,7 @@ import kotlin.properties.Delegates
 /**
  * Settings
  */
-@State(name = "Settings", storages = [(Storage("yiiguxing.translation.xml"))])
+@State(name = "Settings", storages = [(Storage(STORAGE_NAME))])
 class Settings : PersistentStateComponent<Settings> {
 
     /**
