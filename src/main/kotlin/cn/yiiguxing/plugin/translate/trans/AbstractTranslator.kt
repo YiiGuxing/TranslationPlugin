@@ -21,17 +21,17 @@ abstract class AbstractTranslator : Translator {
         text: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): String
 
     protected abstract fun getRequestParams(
         text: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): List<Pair<String, String>>
 
-    protected open fun buildRequest(builder: RequestBuilder, forDocumentation: Boolean) {}
+    protected open fun buildRequest(builder: RequestBuilder, isDocumentation: Boolean) {}
 
     protected abstract fun parserResult(
         original: String,
@@ -55,7 +55,7 @@ abstract class AbstractTranslator : Translator {
         `in`: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): BaseTranslation {
         if (srcLang !in supportedSourceLanguages) {
             throw UnsupportedLanguageException(srcLang, name)
@@ -64,15 +64,15 @@ abstract class AbstractTranslator : Translator {
             throw UnsupportedLanguageException(targetLang, name)
         }
 
-        val url = getRequestUrl(`in`, srcLang, targetLang, forDocumentation)
-        val params = getRequestParams(`in`, srcLang, targetLang, forDocumentation)
+        val url = getRequestUrl(`in`, srcLang, targetLang, isDocumentation)
+        val params = getRequestParams(`in`, srcLang, targetLang, isDocumentation)
         val data = params.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
 
         return HttpRequests.post(url, "application/x-www-form-urlencoded")
-            .also { buildRequest(it, forDocumentation) }
+            .also { buildRequest(it, isDocumentation) }
             .connect {
                 it.write(data)
-                parserResult(`in`, srcLang, targetLang, it.readString(), forDocumentation)
+                parserResult(`in`, srcLang, targetLang, it.readString(), isDocumentation)
             }
     }
 

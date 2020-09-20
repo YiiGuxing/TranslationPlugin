@@ -54,14 +54,14 @@ object YoudaoTranslator : AbstractTranslator() {
         text: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): String = YOUDAO_TRANSLATE_URL
 
     override fun getRequestParams(
         text: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): List<Pair<String, String>> {
         val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId

@@ -73,14 +73,14 @@ object BaiduTranslator : AbstractTranslator() {
         text: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): String = BAIDU_TRANSLATE_URL
 
     override fun getRequestParams(
         text: String,
         srcLang: Lang,
         targetLang: Lang,
-        forDocumentation: Boolean
+        isDocumentation: Boolean
     ): List<Pair<String, String>> {
         val settings = Settings.baiduTranslateSettings
         val appId = settings.appId
