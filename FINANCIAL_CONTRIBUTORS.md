@@ -12,11 +12,13 @@
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
 | Kirill Semenchenko | | 2 USD |
+| Xyz | | 10 CNY |
 | 邓子迪 | | 10 CNY |
 | GameXG | [github.com/gamexg](https://github.com/gamexg) | 10 CNY |
 | 随风 | [github.com/lzf971107](https://github.com/lzf971107) | 10 CNY |
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
+| 洪晓波 | | 9.9 CNY |
 | Chunlife.top |  | 5 CNY |
 | Qiuyukuhe |  | 5 CNY |
 | Oliveryuchang | [github.com/oliveryunchang](https://github.com/oliveryunchang) | 5 CNY |

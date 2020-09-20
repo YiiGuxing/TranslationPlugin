@@ -5,6 +5,12 @@
 
 package cn.yiiguxing.plugin.translate
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
+private val USER_HOME_PATH = System.getProperty("user.home")
+val TRANSLATION_DIRECTORY: Path = Paths.get(USER_HOME_PATH, ".translation")
+
 const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
 const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
 const val OPEN_COLLECTIVE_URL = "https://opencollective.com/translation-plugin"

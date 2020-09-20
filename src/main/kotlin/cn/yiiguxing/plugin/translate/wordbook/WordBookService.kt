@@ -2,6 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.wordbook
 
+import cn.yiiguxing.plugin.translate.TRANSLATION_DIRECTORY
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
@@ -22,7 +23,6 @@ import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -360,9 +360,6 @@ class WordBookService {
 
     companion object {
         private const val NOTIFICATION_DISPLAY_ID = "Wordbook"
-
-        private val USER_HOME_PATH = System.getProperty("user.home")
-        private val TRANSLATION_DIRECTORY = Paths.get(USER_HOME_PATH, ".translation")
 
         private const val DRIVER_FILE_URL =
             "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.28.0/sqlite-jdbc-3.28.0.jar"
