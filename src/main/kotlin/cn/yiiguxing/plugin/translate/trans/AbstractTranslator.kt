@@ -1,8 +1,11 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.CacheService
 import cn.yiiguxing.plugin.translate.util.urlEncode
+import cn.yiiguxing.plugin.translate.util.w
 import com.google.gson.JsonSyntaxException
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus
@@ -64,6 +67,13 @@ abstract class AbstractTranslator : Translator {
             throw UnsupportedLanguageException(targetLang, name)
         }
 
+        val cache = CacheService.getDiskCache(`in`, srcLang, targetLang, id, isDocumentation)
+        if (cache != null) try {
+            return parserResult(`in`, srcLang, targetLang, cache, isDocumentation)
+        } catch (e: Throwable) {
+            LOG.w(e)
+        }
+
         val url = getRequestUrl(`in`, srcLang, targetLang, isDocumentation)
         val params = getRequestParams(`in`, srcLang, targetLang, isDocumentation)
         val data = params.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
@@ -72,7 +82,12 @@ abstract class AbstractTranslator : Translator {
             .also { buildRequest(it, isDocumentation) }
             .connect {
                 it.write(data)
-                parserResult(`in`, srcLang, targetLang, it.readString(), isDocumentation)
+                val result = it.readString()
+                val translation = parserResult(`in`, srcLang, targetLang, result, isDocumentation)
+
+                CacheService.putDiskCache(`in`, srcLang, targetLang, id, isDocumentation, result)
+
+                translation
             }
     }
 
@@ -92,5 +107,9 @@ abstract class AbstractTranslator : Translator {
     }
 
     protected open fun onError(throwable: Throwable): Throwable = throwable
+
+    companion object {
+        private val LOG = Logger.getInstance(AbstractTranslator::class.java)
+    }
 
 }
