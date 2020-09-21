@@ -483,7 +483,7 @@ class NewTranslationDialog(
         }
 
         val srcLang: Lang = Lang.AUTO
-        val targetLang = targetLangComboBox.selected
+        val targetLang = presenter.getTargetLang(text)
         translateInternal(text, srcLang, targetLang)
     }
 
