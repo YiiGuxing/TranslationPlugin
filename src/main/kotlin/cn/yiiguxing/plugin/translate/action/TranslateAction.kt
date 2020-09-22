@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.BalloonPositionTracker
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.createCaretRangeMarker
@@ -48,6 +47,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             text = editor.document.getText(selectionRange).processBeforeTranslate() ?: return
         }
 
+        //this logic is also used in ShowTranslationDialogAction
         val currentNewTD = TranslationUIManager.instance(project).currentNewTranslationDialog()
         if (currentNewTD != null) {
             currentNewTD.translate(text)
