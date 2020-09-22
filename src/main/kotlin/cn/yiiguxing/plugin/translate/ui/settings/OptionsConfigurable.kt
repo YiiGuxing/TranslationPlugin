@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.Disposable
@@ -21,7 +22,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     override fun enableSearch(option: String?): Runnable? = null
 
-    override fun getDisplayName(): String = "Translation"
+    override fun getDisplayName(): String = message("settings.page.name")
 
     override fun getHelpTopic(): String? = null
 

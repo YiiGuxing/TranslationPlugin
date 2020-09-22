@@ -94,8 +94,8 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         }
         configureTranslationEngineLink.setListener({ _, _ ->
             when (translationEngineComboBox.selected) {
-                TranslationEngine.YOUDAO -> AppKeySettingsDialog("Youdao Settings", youdaoAppKeySettingsPanel).show()
-                TranslationEngine.BAIDU -> AppKeySettingsDialog("Baidu Settings", baiduAppKeySettingsPanel).show()
+                TranslationEngine.YOUDAO -> AppKeySettingsDialog(message("settings.youdao.title"), youdaoAppKeySettingsPanel).show()
+                TranslationEngine.BAIDU -> AppKeySettingsDialog(message("settings.baidu.title"), baiduAppKeySettingsPanel).show()
                 else -> throw RuntimeException("Configure link should be available only for Youdao and Baidu engines, was: ${translationEngineComboBox.selected}")
             }
         }, null)

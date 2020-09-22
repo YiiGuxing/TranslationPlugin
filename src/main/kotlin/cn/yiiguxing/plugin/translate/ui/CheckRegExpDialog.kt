@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.message
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
@@ -23,7 +24,7 @@ class CheckRegExpDialog(project: Project, regExp: String, private val ok: (Strin
     private val checkRegExpForm: CheckRegExpForm
 
     init {
-        title = "Check RegExp"
+        title = message("settings.check.regex.title")
         setResizable(false)
 
         regExpPsiFile = PsiFileFactory.getInstance(project).createFileFromText(RegExpLanguage.INSTANCE, regExp)

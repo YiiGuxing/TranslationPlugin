@@ -33,7 +33,7 @@ abstract class SettingsForm {
     protected val wholePanel: JPanel = JPanel()
 
     protected val useTranslateGoogleComCheckBox: JBCheckBox = JBCheckBox(message("settings.google.options.useGoogleCom"))
-    protected val configureTranslationEngineLink: ActionLink = ActionLink("Configure...") {}
+    protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
 
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
         renderer = SimpleListCellRenderer.create { label, value, _ ->
