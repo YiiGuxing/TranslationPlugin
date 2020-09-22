@@ -506,10 +506,10 @@ class NewTranslationDialog(
         presenter.supportedLanguages.let { (sourceList, targetList) ->
             srcLang = src?.takeIf { sourceList.contains(it) }
                 ?: sourceLangComboBox.selected
-                        ?: sourceList.first()
+            // ?: sourceList.first()
             targetLang = target?.takeIf { targetList.contains(it) }
                 ?: targetLangComboBox.selected
-                        ?: presenter.primaryLanguage
+            // ?: presenter.primaryLanguage
         }
 
         translateInternal(text, srcLang, targetLang)

@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.assertIsDispatchThread
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -27,8 +26,8 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import com.intellij.tools.SimpleActionGroup
-import com.intellij.ui.content.ContentManagerAdapter
 import com.intellij.ui.content.ContentManagerEvent
+import com.intellij.ui.content.ContentManagerListener
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.datatransfer.StringSelection
@@ -68,7 +67,7 @@ class WordBookView {
         val content = contentManager.factory.createContent(panel, null, false)
         content.tabName = TAB_NAME_ALL
         contentManager.addContent(content)
-        contentManager.addContentManagerListener(object : ContentManagerAdapter() {
+        contentManager.addContentManagerListener(object : ContentManagerListener {
             override fun selectionChanged(event: ContentManagerEvent) {
                 val words = if (event.content.tabName == TAB_NAME_ALL) {
                     words
@@ -90,7 +89,7 @@ class WordBookView {
             panel.showMessagePane()
         }
 
-        Disposer.register(TranslationUIManager.disposable(project), Disposable {
+        Disposer.register(TranslationUIManager.disposable(project), {
             windows.remove(project)
             wordBookPanels.remove(project)
         })
@@ -127,8 +126,8 @@ class WordBookView {
                     val confirmed = Messages.showOkCancelDialog(
                         message("wordbook.window.confirmation.delete.message", word.word),
                         message("wordbook.window.confirmation.delete.title"),
-                        Messages.OK_BUTTON,
-                        Messages.CANCEL_BUTTON,
+                        Messages.getOkButton(),
+                        Messages.getCancelButton(),
                         null
                     ) == Messages.OK
                     if (confirmed) {

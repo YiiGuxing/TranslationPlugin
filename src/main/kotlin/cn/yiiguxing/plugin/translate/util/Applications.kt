@@ -13,7 +13,7 @@ import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.ide.IdeBundle
 import com.intellij.ide.plugins.IdeaPluginDescriptor
-import com.intellij.ide.plugins.PluginManager
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.notification.Notification
 import com.intellij.notification.Notifications
 import com.intellij.openapi.application.Application
@@ -38,7 +38,7 @@ object Plugin {
     @Suppress("SpellCheckingInspection")
     const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
 
-    val descriptor: IdeaPluginDescriptor = PluginManager.getPlugin(PluginId.getId(PLUGIN_ID))!!
+    val descriptor: IdeaPluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))!!
 
     val version: String by lazy { descriptor.version }
 
