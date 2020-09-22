@@ -18,6 +18,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.wm.RegisterToolWindowTask
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ex.ToolWindowEx
@@ -26,8 +27,6 @@ import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
-import com.intellij.ui.content.ContentManagerAdapter
-import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -44,7 +43,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
     override fun onRunActivity(project: Project) {
         checkUpdate(project)
-        checkUpdateFromGithub(project)
+        // checkUpdateFromGithub(project)
     }
 
     private fun checkUpdate(project: Project) {
@@ -68,6 +67,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         properties.setValue(VERSION_PROPERTY, versionString)
     }
 
+    @Suppress("unused")
     private fun checkUpdateFromGithub(project: Project) {
         if (IdeVersion.isIde2019_3OrNewer) return
 
@@ -167,9 +167,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(versionUrl)
     }
 
-    private class CloseAction(private val project: Project, private val toolWindow: ToolWindow) :
+    private class CloseAction(private val toolWindow: ToolWindow) :
         DumbAwareAction(message("updater.notification.action.close"), null, AllIcons.Actions.Close) {
-        override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose(project)
+        override fun actionPerformed(e: AnActionEvent) = toolWindow.dispose()
     }
 
     data class Version @JvmOverloads constructor(@SerializedName("tag_name") val version: String = "v0.0") {
@@ -227,21 +227,20 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             val toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
             val toolWindow = toolWindowManagerEx.getToolWindow(UPDATE_TOOL_WINDOW_ID)
                 ?: toolWindowManagerEx.registerToolWindow(
-                    UPDATE_TOOL_WINDOW_ID,
-                    true,
-                    ToolWindowAnchor.RIGHT,
-                    project,
-                    true,
-                    false
+                    RegisterToolWindowTask(
+                        id = UPDATE_TOOL_WINDOW_ID,
+                        anchor = ToolWindowAnchor.RIGHT,
+                        icon = AllIcons.Toolwindows.ToolWindowPalette,
+                        canCloseContent = false
+                    )
                 )
 
             toolWindow as ToolWindowEx
-            toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowPalette)
             toolWindow.setAvailable(true, null)
-            toolWindow.setToHideOnEmptyContent(false)
+            toolWindow.setToHideOnEmptyContent(true)
             toolWindow.setTitleActions(
                 OpenInBrowserAction(versionUrl),
-                CloseAction(project, toolWindow)
+                CloseAction(toolWindow)
             )
 
             val contentManager = toolWindow.contentManager
@@ -249,23 +248,13 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 val contentComponent = createContentComponent(version.versionString, versionUrl)
                 val content = ContentFactory.SERVICE.getInstance().createContent(contentComponent, "What's New", false)
                 contentManager.addContent(content)
-                contentManager.addContentManagerListener(object : ContentManagerAdapter() {
-                    override fun contentRemoved(event: ContentManagerEvent) {
-                        contentManager.removeContentManagerListener(this)
-                        toolWindow.dispose(project)
-                    }
-                })
             }
 
             toolWindow.show(null)
         }
 
-        private fun ToolWindow.dispose(project: Project) {
-            val toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
-            toolWindowManagerEx.hideToolWindow(UPDATE_TOOL_WINDOW_ID, false)
-            if (toolWindowManagerEx.getToolWindow(UPDATE_TOOL_WINDOW_ID) != null) {
-                toolWindowManagerEx.unregisterToolWindow(UPDATE_TOOL_WINDOW_ID)
-            }
+        private fun ToolWindow.dispose() {
+            remove()
             Disposer.dispose(contentManager)
         }
 
