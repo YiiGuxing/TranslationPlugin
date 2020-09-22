@@ -12,24 +12,27 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.components.labels.ActionLink
+import com.intellij.util.ui.JBUI
 import javax.swing.Icon
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, private val appKeySettings: AppKeySettings): JPanel() {
-    val appIdField: JBTextField = JBTextField()
-    val appKeyField: JBPasswordField = JBPasswordField()
+class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, private val appKeySettings: AppKeySettings) : JPanel() {
+    private val appIdField: JBTextField = JBTextField()
+    private val appKeyField: JBPasswordField = JBPasswordField()
 
     private val logo: JLabel = JLabel(logoImage)
-    private val getApiKeyLink: ActionLink = ActionLink(message("settings.link.getAppKey"), AllIcons.Ide.Link, object : AnAction() {
-        override fun actionPerformed(e: AnActionEvent) {
-            BrowserUtil.browse(appKeyLink)
-        }
-    })
+    private val getApiKeyLink: ActionLink =
+        ActionLink(message("settings.link.getAppKey"), AllIcons.Ide.Link, object : AnAction() {
+            override fun actionPerformed(e: AnActionEvent) {
+                BrowserUtil.browse(appKeyLink)
+            }
+        })
 
     init {
         layout = migLayout()
 
+        logo.border = JBUI.Borders.empty(0, 0, 10, 0)
         add(logo, wrap().span(2).alignX("50%"))
 
         add(JLabel(message("settings.label.appId")))
@@ -38,6 +41,7 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, private val appKe
         add(JLabel(message("settings.label.appPrivateKey")))
         add(appKeyField, fillX().wrap())
 
+        getApiKeyLink.border = JBUI.Borders.empty(10, 0, 0, 0)
         add(getApiKeyLink, wrap().span(2))
     }
 
