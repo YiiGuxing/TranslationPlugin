@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
@@ -19,7 +20,7 @@ import javax.swing.JComponent
 class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
 
     init {
-        setPopupTitle("Translators")
+        setPopupTitle(message("choose.translator.popup.title"))
         isEnabledInModalContext = true
     }
 
@@ -34,7 +35,7 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
         WindowManagerEx.getInstanceEx()
             .findFrameFor(e.project)
             ?.component
-            ?.let { createActionPopup("Translators", e.dataContext, it).showInCenterOf(it) }
+            ?.let { createActionPopup(message("choose.translator.popup.title"), e.dataContext, it).showInCenterOf(it) }
     }
 
     private fun createActionPopup(

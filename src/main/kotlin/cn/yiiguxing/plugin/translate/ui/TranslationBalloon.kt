@@ -51,7 +51,7 @@ class TranslationBalloon(
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
     private val errorPanel = NonOpaquePanel(FrameLayout())
     private val errorPane = JTextPane()
-    private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
+    private val processPane = ProcessComponent(message("translation.progress.quering"), JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
     private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
@@ -170,7 +170,7 @@ class TranslationBalloon(
         copyErrorLink.apply {
             isVisible = false
             border = JBEmptyBorder(0, 0, 0, 2)
-            toolTipText = "Copy error info to clipboard."
+            toolTipText = message("copy.error.to.clipboard.tooltip")
             alignmentX = RIGHT_ALIGNMENT
             alignmentY = TOP_ALIGNMENT
         }

@@ -146,12 +146,13 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         fun logAndShowWarning(e: Throwable, project: Project?) {
             invokeLater {
-                LOGGER.w(e.message ?: "", e)
+                val exceptionMessage = e.message ?: ""
+                LOGGER.w(exceptionMessage, e)
                 Notifications.showErrorNotification(
                     project,
                     NOTIFICATION_DISPLAY_ID,
-                    "Documentation",
-                    "Failed to translate documentation: ${e.message}",
+                    message("translate.documentation.notificaton.title"),
+                    message("translate.documentation.error", exceptionMessage),
                     e,
                     DisableAutoDocTranslationAction()
                 )

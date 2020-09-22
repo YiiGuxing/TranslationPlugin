@@ -132,7 +132,7 @@ class GoogleTTSPlayer(
     private fun play(indicator: ProgressIndicator) {
         with(indicator) {
             checkCanceled()
-            text = "tts: downloading..."
+            text = message("tts.progress.downloading")
         }
         playlist
             .map { url ->
@@ -173,7 +173,7 @@ class GoogleTTSPlayer(
             checkCanceled()
             fraction = 0.0
             isIndeterminate = false
-            text = "tts: playing..."
+            text = message("tts.progress.playing")
         }
 
         this as DecodedMpegAudioInputStream
