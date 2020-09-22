@@ -208,8 +208,6 @@ class TranslationBalloon(
 
         balloon.hide()
         Toolkit.getDefaultToolkit().removeAWTEventListener(eventListener)
-
-        println("Balloon disposed.")
     }
 
     fun hide() {
