@@ -29,7 +29,7 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
-abstract class NewSettingsForm {
+abstract class SettingsForm {
     protected val wholePanel: JPanel = JPanel()
 
     protected val useTranslateGoogleComCheckBox: JBCheckBox = JBCheckBox(message("settings.google.options.useGoogleCom"))

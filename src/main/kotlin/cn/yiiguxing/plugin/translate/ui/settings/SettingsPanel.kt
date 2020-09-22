@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
-import cn.yiiguxing.plugin.translate.ui.form.NewSettingsForm
+import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.openapi.editor.event.DocumentEvent
@@ -25,7 +25,7 @@ import javax.swing.JComponent
 /**
  * SettingsPanel
  */
-class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : NewSettingsForm(), ConfigurablePanel {
+class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : SettingsForm(), ConfigurablePanel {
 
     private var validRegExp = true
 

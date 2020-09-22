@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
-import cn.yiiguxing.plugin.translate.ui.form.NewSettingsForm
+import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import com.intellij.ide.ui.laf.IntelliJLaf
 import com.intellij.ide.ui.laf.darcula.DarculaLaf
 import com.intellij.openapi.util.IconLoader
@@ -18,7 +18,7 @@ fun main() {
     UIManager.setLookAndFeel(laf)
 
     val frame = JFrame("Settings")
-    val panel = object : NewSettingsForm() {}.createMainPanel()
+    val panel = object : SettingsForm() {}.createMainPanel()
     panel.border = emptyBorder(11, 16)
 
     frame.size = JBDimension(650, 900)
