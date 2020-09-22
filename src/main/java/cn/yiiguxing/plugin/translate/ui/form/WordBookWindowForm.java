@@ -14,7 +14,8 @@ import javax.swing.*;
 public class WordBookWindowForm extends SimpleToolWindowPanel {
     protected JPanel root;
     protected LinkLabel<?> downloadLinkLabel;
-    protected TableView<WordBookItem> tableView;
+
+    private TableView<WordBookItem> tableView;
 
     public WordBookWindowForm() {
         super(true, true);
@@ -22,6 +23,10 @@ public class WordBookWindowForm extends SimpleToolWindowPanel {
     }
 
     private void createUIComponents() {
-        downloadLinkLabel = new LinkLabel("", AllIcons.General.Warning);
+        downloadLinkLabel = new LinkLabel<>("", AllIcons.General.Warning);
+    }
+
+    public TableView<WordBookItem> getTableView() {
+        return tableView;
     }
 }

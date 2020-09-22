@@ -31,6 +31,8 @@ import com.intellij.ui.content.ContentManagerListener
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.datatransfer.StringSelection
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import javax.swing.Icon
 
 /**
@@ -101,6 +103,7 @@ class WordBookView {
     private fun getWordBookPanel(project: Project): WordBookPanel {
         return wordBookPanels.getOrPut(project) {
             WordBookPanel().apply {
+                setupKeyListener()
                 setupMenu(project)
                 onWordDoubleClicked { word -> openWordDetails(project, word) }
                 onDownloadDriver {
@@ -113,6 +116,33 @@ class WordBookView {
         }
     }
 
+    private fun WordBookPanel.setupKeyListener() {
+        tableView.addKeyListener(object : KeyAdapter() {
+            override fun keyPressed(event: KeyEvent) {
+                if (event.keyCode == KeyEvent.VK_DELETE) {
+                    selectedWord?.let { word ->
+                        deleteWord(word)
+                        event.consume()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun deleteWord(word: WordBookItem) {
+        val id = word.id ?: return
+        val confirmed = Messages.showOkCancelDialog(
+            message("wordbook.window.confirmation.delete.message", word.word),
+            message("wordbook.window.confirmation.delete.title"),
+            Messages.getOkButton(),
+            Messages.getCancelButton(),
+            null
+        ) == Messages.OK
+        if (confirmed) {
+            executeOnPooledThread { WordBookService.removeWord(id) }
+        }
+    }
+
     private fun WordBookPanel.setupMenu(project: Project) {
         val panel = this@setupMenu
         popupMenu = JBPopupMenu()
@@ -121,19 +151,7 @@ class WordBookView {
                 CopyPasteManager.getInstance().setContents(StringSelection(word.word))
             }
             .addMenuItem(panel, message("wordbook.window.menu.delete"), AllIcons.Actions.Cancel) { word ->
-                val id = word.id
-                if (id != null) {
-                    val confirmed = Messages.showOkCancelDialog(
-                        message("wordbook.window.confirmation.delete.message", word.word),
-                        message("wordbook.window.confirmation.delete.title"),
-                        Messages.getOkButton(),
-                        Messages.getCancelButton(),
-                        null
-                    ) == Messages.OK
-                    if (confirmed) {
-                        executeOnPooledThread { WordBookService.removeWord(id) }
-                    }
-                }
+                deleteWord(word)
             }
     }
 

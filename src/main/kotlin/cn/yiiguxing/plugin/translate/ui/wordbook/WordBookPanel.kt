@@ -9,6 +9,8 @@ import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import java.awt.CardLayout
 import java.awt.Component
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.*
@@ -113,6 +115,17 @@ class WordBookPanel : WordBookWindowForm() {
         override fun valueOf(item: WordBookItem): String = item.explanation?.replace('\n', ' ') ?: ""
 
         override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
+    }
+
+    private inner class KeyHandler : KeyAdapter() {
+        override fun keyPressed(event: KeyEvent) {
+            if (event.keyCode == KeyEvent.VK_DELETE) {
+                selectedWord?.let {
+
+                }
+                event.consume()
+            }
+        }
     }
 
     private inner class MouseHandler : MouseAdapter() {
