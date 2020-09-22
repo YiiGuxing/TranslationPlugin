@@ -3,21 +3,17 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.sha256
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
-import icons.Icons
 import java.util.*
 import javax.swing.Icon
 
 @Suppress("SpellCheckingInspection")
 object YoudaoTranslator : AbstractTranslator() {
-
-    const val TRANSLATOR_ID = "ai.youdao"
-
-    private const val TRANSLATOR_NAME = "Youdao Translate"
 
     private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedValues() - listOf(
         Lang.CHINESE_TRADITIONAL,
@@ -32,11 +28,11 @@ object YoudaoTranslator : AbstractTranslator() {
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
 
-    override val id: String = TRANSLATOR_ID
+    override val id: String = YOUDAO.id
 
-    override val name: String = TRANSLATOR_NAME
+    override val name: String = YOUDAO.translatorName
 
-    override val icon: Icon = Icons.Youdao
+    override val icon: Icon = YOUDAO.icon
 
     override val defaultLangForLocale: Lang
         get() = when (Locale.getDefault()) {

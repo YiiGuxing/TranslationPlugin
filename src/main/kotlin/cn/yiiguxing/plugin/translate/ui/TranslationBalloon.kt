@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -257,7 +258,7 @@ class TranslationBalloon(
         }
     }
 
-    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+    override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
         hide()
     }
 

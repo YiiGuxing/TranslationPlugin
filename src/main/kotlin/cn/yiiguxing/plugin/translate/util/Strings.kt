@@ -33,8 +33,8 @@ fun String.splitWords(): String {
 
 fun String.filterIgnore(): String {
     return try {
-        Settings.ignoreRegExp
-            ?.takeIf { it.isNotEmpty() }
+        Settings.ignoreRegex
+            .takeIf { it.isNotEmpty() }
             ?.toRegex(RegexOption.MULTILINE)
             ?.let { replace(it, "") }
             ?: this

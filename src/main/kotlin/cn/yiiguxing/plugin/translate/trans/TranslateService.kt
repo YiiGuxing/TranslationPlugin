@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
@@ -32,17 +33,15 @@ class TranslateService private constructor(): Disposable {
             .subscribeWordBookTopic()
     }
 
-    fun setTranslator(translatorId: String) {
-        if (translatorId != translator.id) {
-            translator = when (translatorId) {
-                YoudaoTranslator.TRANSLATOR_ID -> YoudaoTranslator
-                BaiduTranslator.TRANSLATOR_ID -> BaiduTranslator
+    fun setTranslator(newTranslator: TranslationEngine) {
+        if (newTranslator.id != translator.id) {
+            translator = when (newTranslator) {
+                TranslationEngine.YOUDAO -> YoudaoTranslator
+                TranslationEngine.BAIDU -> BaiduTranslator
                 else -> DEFAULT_TRANSLATOR
             }
         }
     }
-
-    fun getTranslators(): List<Translator> = listOf(GoogleTranslator, YoudaoTranslator, BaiduTranslator)
 
     fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         checkThread()
@@ -117,8 +116,8 @@ class TranslateService private constructor(): Disposable {
 
     private fun MessageBusConnection.subscribeSettingsTopic() = apply {
         subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-            override fun onTranslatorChanged(settings: Settings, translatorId: String) {
-                setTranslator(translatorId)
+            override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
+                setTranslator(translationEngine)
             }
         })
     }

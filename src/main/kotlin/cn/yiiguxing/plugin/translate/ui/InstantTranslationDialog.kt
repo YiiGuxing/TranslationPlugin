@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.InstantTranslationDialogForm
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
@@ -234,7 +235,7 @@ class InstantTranslationDialog(private val project: Project?) :
         )
     }
 
-    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+    override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
         updateLanguages()
         requestTranslate(0)
     }

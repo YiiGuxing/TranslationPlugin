@@ -12,6 +12,7 @@ import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
 import com.intellij.icons.AllIcons
@@ -426,7 +427,7 @@ class NewTranslationDialog(
         )
     }
 
-    override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+    override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
         updateLanguages()
         requestTranslate(0)
     }

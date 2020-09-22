@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.action.TranslatorAction
 import cn.yiiguxing.plugin.translate.action.TranslatorActionGroup
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.ide.DataManager
 import com.intellij.openapi.project.Project
@@ -70,7 +71,7 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
 
     private fun MessageBusConnection.subscribeToSettingsChangeEvents() {
         subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-            override fun onTranslatorChanged(settings: Settings, translatorId: String) {
+            override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
                 statusBar?.updateWidget(ID())
             }
         })

@@ -46,7 +46,13 @@ enum class SelectionMode {
     /**
      * 以最大范围取最近的所有词
      */
-    INCLUSIVE
+    INCLUSIVE;
+
+    companion object {
+        fun takeNearestWord(value: Boolean): SelectionMode {
+            return if (value) EXCLUSIVE else INCLUSIVE
+        }
+    }
 }
 
 /**
