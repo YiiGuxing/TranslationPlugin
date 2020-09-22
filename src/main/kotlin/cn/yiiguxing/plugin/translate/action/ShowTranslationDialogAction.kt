@@ -1,23 +1,32 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import com.intellij.openapi.actionSystem.AnAction
+import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.DumbAware
 
 /**
  * 显示翻译对话框动作
  */
-class ShowTranslationDialogAction : AnAction(), DumbAware {
+class ShowTranslationDialogAction : TranslateAction(true) {
 
     init {
         isEnabledInModalContext = true
     }
 
+    override val selectionMode: SelectionMode
+        get() = Settings.autoSelectionMode
+
+
+    //should be always available
+    override fun update(e: AnActionEvent) {}
+
     override fun actionPerformed(e: AnActionEvent) {
         if (!ApplicationManager.getApplication().isHeadlessEnvironment) {
             TranslationUIManager.showDialog(e.project)
         }
+        //TranslateAction uses NewTranslationDialog if it is visible
+        super.actionPerformed(e)
     }
 }
