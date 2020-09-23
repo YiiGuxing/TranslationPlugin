@@ -44,6 +44,7 @@ import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Point
 import java.awt.datatransfer.StringSelection
+import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -160,6 +161,10 @@ class NewTranslationDialog(
         })
     }
 
+    // Close the dialog when the ESC key is pressed
+    override fun createCancelAction(): ActionListener? {
+        return ActionListener { doCancelAction() }
+    }
 
     private fun initLangComboBoxes() {
         fun addListener(comboBox: LangComboBoxLink) {
