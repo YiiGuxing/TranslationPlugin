@@ -176,9 +176,9 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             val settings = settings
             return settings.translator != translationEngineComboBox.selected
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
-                    || appStorage.maxHistorySize != getMaxHistorySize()
-                    || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
+                    || settings.googleTranslateSettings.useTranslateGoogleCom != useTranslateGoogleComCheckBox.isSelected
+                    || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
                     || settings.separators != separatorsTextField.text
                     || settings.ignoreRegex != ignoreRegExp.text
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
@@ -194,6 +194,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
                     || settings.showExplanation != showExplanationCheckBox.isSelected
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
+                    || appStorage.maxHistorySize != getMaxHistorySize()
         }
 
 
@@ -209,11 +210,12 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         with(settings) {
             translator = translationEngineComboBox.selected ?: translator
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
+            targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
+            googleTranslateSettings.useTranslateGoogleCom = useTranslateGoogleComCheckBox.isSelected
             primaryFontFamily = primaryFontComboBox.fontName
             primaryFontPreviewText = primaryFontPreview.text
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
-            targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
             ttsSource = ttsSourceComboBox.selected ?: TTSSource.ORIGINAL
             separators = separatorsTextField.text
             foldOriginal = foldOriginalCheckBox.isSelected
@@ -236,6 +238,8 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
     override fun reset() {
         translationEngineComboBox.selected = settings.translator
         primaryLanguageComboBox.selected = settings.translator.primaryLanguage
+        targetLangSelectionComboBox.selected = settings.targetLanguageSelection
+        useTranslateGoogleComCheckBox.isSelected = settings.googleTranslateSettings.useTranslateGoogleCom
         ignoreRegExp.text = settings.ignoreRegex
         separatorsTextField.text = settings.separators
         foldOriginalCheckBox.isSelected = settings.foldOriginal
@@ -251,10 +255,8 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         primaryFontPreview.previewFont(settings.primaryFontFamily)
         primaryFontPreview.text = settings.primaryFontPreviewText
         phoneticFontPreview.previewFont(settings.phoneticFontFamily)
-
         maxHistoriesSizeComboBox.editor.item = appStorage.maxHistorySize.toString()
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
-        targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation
     }
