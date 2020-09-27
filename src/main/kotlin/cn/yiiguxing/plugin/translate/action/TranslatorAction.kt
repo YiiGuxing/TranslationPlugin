@@ -11,7 +11,7 @@ import com.intellij.openapi.util.Condition
  * TranslatorAction
  */
 class TranslatorAction(private val translator: TranslationEngine) :
-    DumbAwareAction(translator.name, null, translator.icon) {
+    DumbAwareAction(translator.translatorName, null, translator.icon) {
 
     override fun actionPerformed(e: AnActionEvent) {
         Settings.translator = translator

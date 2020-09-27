@@ -164,7 +164,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
     private fun createRegexEditorField(): EditorTextField = EditorTextField(
         "",
         ProjectManager.getInstance().defaultProject,
-        RegExpLanguage.INSTANCE.getAssociatedFileType()
+        RegExpLanguage.INSTANCE.associatedFileType
     )
 
     override val isModified: Boolean
