@@ -13,16 +13,20 @@ import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.ui.PopupBorder
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
+import com.intellij.ui.components.panels.NonOpaquePanel
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil.getLineHeight
 import icons.Icons
+import net.miginfocom.layout.CC
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
@@ -264,14 +268,19 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     }
 
     private fun createToolbar(ttsButton: TTSButton, transliterationLabel: JLabel, vararg buttons: JComponent): JPanel {
-        return JPanel(HorizontalLayout(10)).apply {
-            add(ttsButton, HorizontalLayout.LEFT)
-            add(transliterationLabel, HorizontalLayout.LEFT)
+        return NonOpaquePanel(migLayout()).apply {
+            add(ttsButton)
+
+            add(NonOpaquePanel(VerticalFlowLayout(0, 0)).apply {
+                add(transliterationLabel)
+                minimumSize = Dimension(0, 0)
+            }, fillX().alignY("center").gapLeft("${JBUIScale.scale(5)}px"))
+
             buttons.iterator().forEach {
-                add(it, HorizontalLayout.RIGHT)
+                add(it, CC().gapLeft("${JBUIScale.scale(8)}px"))
             }
+
             border = emptyBorder(6, 10)
-            isOpaque = false
         }
     }
 
