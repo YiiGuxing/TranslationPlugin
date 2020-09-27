@@ -32,7 +32,8 @@ import javax.swing.text.PlainDocument
 abstract class SettingsForm {
     protected val wholePanel: JPanel = JPanel()
 
-    protected val useTranslateGoogleComCheckBox: JBCheckBox = JBCheckBox(message("settings.google.options.useGoogleCom"))
+    protected val useTranslateGoogleComCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.google.options.useGoogleCom"))
     protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
 
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
@@ -52,9 +53,10 @@ abstract class SettingsForm {
         }
     }
 
-    protected val targetLangSelectionComboBox: ComboBox<TargetLanguageSelection> = comboBox<TargetLanguageSelection>().apply {
-        renderer = SimpleListCellRenderer.create("") { it.displayName }
-    }
+    protected val targetLangSelectionComboBox: ComboBox<TargetLanguageSelection> =
+        comboBox<TargetLanguageSelection>().apply {
+            renderer = SimpleListCellRenderer.create("") { it.displayName }
+        }
 
     protected val takeNearestWordCheckBox: JCheckBox = JCheckBox(message("settings.options.take.single.word"))
     protected val keepFormatCheckBox: JBCheckBox = JBCheckBox(message("settings.options.keepFormatting"))
@@ -68,11 +70,11 @@ abstract class SettingsForm {
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
                 val text = getText(0, length)
                 val stringToInsert = str
-                        ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
-                        ?.toSet()
-                        ?.take(10 - length)
-                        ?.joinToString("")
-                        ?: return
+                    ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
+                    ?.toSet()
+                    ?.take(10 - length)
+                    ?.joinToString("")
+                    ?: return
                 if (stringToInsert.isNotEmpty()) {
                     super.insertString(offset, stringToInsert, attr)
                 }
@@ -87,16 +89,18 @@ abstract class SettingsForm {
         "text/plain",
         message("settings.font.default.preview.text")
     )
-    protected val phoneticFontPreview: JLabel = JLabel(phoneticCharacters)
+    protected val phoneticFontPreview: JLabel = JLabel(PHONETIC_CHARACTERS)
     protected val restoreDefaultButton = JButton(message("settings.button.restore.default.fonts"))
 
-    protected val translateDocumentationCheckBox: JBCheckBox = JBCheckBox(message("settings.options.translate.documentation"))
+    protected val translateDocumentationCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.options.translate.documentation"))
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
 
-    protected val ttsSourceComboBox: ComboBox<TTSSource> = ComboBox(CollectionComboBoxModel(TTSSource.values().asList())).apply {
-        renderer = SimpleListCellRenderer.create("") { it.displayName }
-        preferredSize = Dimension(preferredSize.width, JBUI.scale(26))
-    }
+    protected val ttsSourceComboBox: ComboBox<TTSSource> =
+        ComboBox(CollectionComboBoxModel(TTSSource.values().asList())).apply {
+            renderer = SimpleListCellRenderer.create("") { it.displayName }
+            preferredSize = Dimension(preferredSize.width, JBUI.scale(26))
+        }
 
     protected val autoPlayTTSCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoPlayTTS")).apply {
         addItemListener {
@@ -116,7 +120,12 @@ abstract class SettingsForm {
 
     protected val clearHistoriesButton: JButton = JButton(message("settings.clear.history.button"))
 
-    protected val supportLinkLabel: LinkLabel<*> = LinkLabel<Any>(message("support.or.donate"), Icons.Support)
+    protected val cacheSizeLabel: JLabel = JLabel("0KB")
+    protected val clearCacheButton: JButton = JButton(message("settings.cache.button.clear"))
+
+    protected val supportLinkLabel: LinkLabel<*> = LinkLabel<Any>(message("support.or.donate"), Icons.Support).apply {
+        border = JBUI.Borders.empty(20, 0, 0, 0)
+    }
 
     protected fun doLayout() {
         val generalPanel = titledPanel(message("settings.panel.title.general")) {
@@ -199,15 +208,24 @@ abstract class SettingsForm {
             add(showExplanationCheckBox, wrap())
         }
 
-        val otherPanel = titledPanel(message("settings.panel.title.other")) {
-            add(translateDocumentationCheckBox, wrap())
+        val cacheAndHistoryPanel = titledPanel(message("settings.panel.title.cacheAndHistory")) {
+            add(JPanel(migLayout()).apply {
+                add(JLabel(message("settings.cache.label.diskCache")))
+                add(cacheSizeLabel)
+                add(clearCacheButton, wrap())
+            }, wrap().span(2))
             add(JPanel(migLayout()).apply {
                 add(JLabel(message("settings.history.label.maxLength")))
                 add(maxHistoriesSizeComboBox)
                 add(clearHistoriesButton, wrap())
             }, CC().span(2))
-
             setMinWidth(maxHistoriesSizeComboBox)
+
+            cacheSizeLabel.border = JBUI.Borders.empty(0, 2, 0, 10)
+        }
+
+        val otherPanel = titledPanel(message("settings.panel.title.other")) {
+            add(translateDocumentationCheckBox, wrap())
         }
 
         wholePanel.addVertically(
@@ -217,6 +235,7 @@ abstract class SettingsForm {
             translationPopupPanel,
             translateAndReplacePanel,
             wordOfTheDayPanel,
+            cacheAndHistoryPanel,
             otherPanel,
             supportLinkLabel
         )
@@ -228,7 +247,7 @@ abstract class SettingsForm {
     }
 
     private fun fixEngineConfigurationComponent() {
-        when(translationEngineComboBox.selected) {
+        when (translationEngineComboBox.selected) {
             TranslationEngine.GOOGLE -> {
                 useTranslateGoogleComCheckBox.isVisible = true
                 configureTranslationEngineLink.isVisible = false
@@ -242,12 +261,12 @@ abstract class SettingsForm {
     }
 
     companion object {
-        private val phoneticCharacters = "ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw"
+        private const val PHONETIC_CHARACTERS = "ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw"
 
-        private val minElementWidth = 80
+        private const val MIN_ELEMENT_WIDTH = 80
 
         private fun setMinWidth(component: JComponent) = component.apply {
-            minimumSize = Dimension(minElementWidth, height)
+            minimumSize = Dimension(MIN_ELEMENT_WIDTH, height)
         }
 
         private fun createFontComboBox(filterNonLatin: Boolean): FontComboBox =
@@ -256,12 +275,11 @@ abstract class SettingsForm {
         private fun titledPanel(title: String, body: JPanel.() -> Unit): JComponent {
             val innerPanel = JPanel(migLayout())
             innerPanel.body()
-            val outerPanel = JPanel(migLayout()).apply {
+            return JPanel(migLayout()).apply {
                 border = IdeBorderFactory.createTitledBorder(title)
                 add(innerPanel)
                 add(JPanel(), fillX())
             }
-            return outerPanel
         }
 
         private fun JPanel.addVertically(vararg components: JComponent) {

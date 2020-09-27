@@ -10,6 +10,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.createDirectories
 import com.intellij.util.io.delete
 import com.intellij.util.io.readText
+import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributes
@@ -25,7 +26,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     override fun getState(): State = state
 
     override fun loadState(state: State) {
-        this.state.lastTrimTime = state.lastTrimTime;
+        this.state.lastTrimTime = state.lastTrimTime
     }
 
     fun putMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String, translation: Translation) {
@@ -71,6 +72,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
             val cacheKey = getDiskCacheKey(text, srcLang, targetLang, translatorId, isDocumentation)
             CACHE_DIR.createDirectories()
             CACHE_DIR.resolve(cacheKey).writeSafe { it.write(translation.toByteArray()) }
+            println("DEBUG - Puts disk cache: $cacheKey")
             trimDiskCachesIfNeed()
         } catch (e: Exception) {
             LOG.w(e)
@@ -86,7 +88,9 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     ): String? {
         return try {
             val cacheKey = getDiskCacheKey(text, srcLang, targetLang, translatorId, isDocumentation)
-            CACHE_DIR.resolve(cacheKey).takeIf { Files.isRegularFile(it) }?.readText()
+            CACHE_DIR.resolve(cacheKey).takeIf { Files.isRegularFile(it) }?.readText()?.apply {
+                println("DEBUG - Disk cache hit: $cacheKey")
+            }
         } catch (e: Exception) {
             LOG.w(e)
             null
@@ -98,14 +102,12 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         val now = System.currentTimeMillis()
         val duration = now - state.lastTrimTime
         if (duration < 0 || duration > TRIM_INTERVAL) {
-            val preTime = state.lastTrimTime
-            state.lastTrimTime = now;
+            state.lastTrimTime = now
             executeOnPooledThread {
                 try {
                     trimDiskCaches()
                 } catch (e: Exception) {
                     LOG.w(e)
-                    state.lastTrimTime = preTime
                 }
             }
         }
@@ -137,6 +139,23 @@ class CacheService : PersistentStateComponent<CacheService.State> {
             }
 
         LOG.d("Disk cache has been trimmed.")
+    }
+
+    fun getDiskCacheSize(): Long {
+        val names = CACHE_DIR
+            .toFile()
+            .list { _, name -> !name.endsWith(".tmp") }
+            ?: return 0
+
+        return names.asSequence()
+            .map { name ->
+                try {
+                    Files.size(CACHE_DIR.resolve(name))
+                } catch (e: IOException) {
+                    0L
+                }
+            }
+            .sum()
     }
 
     fun evictAllDiskCaches() {

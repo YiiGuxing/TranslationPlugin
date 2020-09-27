@@ -8,7 +8,10 @@ import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
+import cn.yiiguxing.plugin.translate.util.ByteSize
+import cn.yiiguxing.plugin.translate.util.CacheService
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.ProjectManager
@@ -20,6 +23,7 @@ import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import org.intellij.lang.regexp.RegExpLanguage
 import java.awt.event.ItemEvent
+import java.lang.ref.WeakReference
 import javax.swing.JComponent
 
 /**
@@ -50,7 +54,28 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         ignoreRegExp = createRegexEditorField()
         doLayout()
         setListeners()
+        initCache()
         initSupport()
+    }
+
+    private fun initCache() {
+        clearCacheButton.addActionListener {
+            clearCacheButton.isEnabled = false
+            val buttonRef = WeakReference(clearCacheButton)
+            val labelRef = WeakReference(cacheSizeLabel)
+            executeOnPooledThread {
+                CacheService.evictAllDiskCaches()
+                val size = CacheService.getDiskCacheSize()
+                labelRef.get()?.text = ByteSize.format(size)
+                buttonRef.get()?.isEnabled = true
+            }
+        }
+
+        val labelRef = WeakReference(cacheSizeLabel)
+        executeOnPooledThread {
+            val size = CacheService.getDiskCacheSize()
+            labelRef.get()?.text = ByteSize.format(size)
+        }
     }
 
     private fun initSupport() {
@@ -94,8 +119,14 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         }
         configureTranslationEngineLink.setListener({ _, _ ->
             when (translationEngineComboBox.selected) {
-                TranslationEngine.YOUDAO -> AppKeySettingsDialog(message("settings.youdao.title"), youdaoAppKeySettingsPanel).show()
-                TranslationEngine.BAIDU -> AppKeySettingsDialog(message("settings.baidu.title"), baiduAppKeySettingsPanel).show()
+                TranslationEngine.YOUDAO -> AppKeySettingsDialog(
+                    message("settings.youdao.title"),
+                    youdaoAppKeySettingsPanel
+                ).show()
+                TranslationEngine.BAIDU -> AppKeySettingsDialog(
+                    message("settings.baidu.title"),
+                    baiduAppKeySettingsPanel
+                ).show()
                 else -> throw RuntimeException("Configure link should be available only for Youdao and Baidu engines, was: ${translationEngineComboBox.selected}")
             }
         }, null)
