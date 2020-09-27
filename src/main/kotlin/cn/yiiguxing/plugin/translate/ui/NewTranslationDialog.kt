@@ -15,6 +15,7 @@ import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
+import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.icons.AllIcons
 import com.intellij.ide.IdeBundle
 import com.intellij.openapi.Disposable
@@ -341,6 +342,7 @@ class NewTranslationDialog(
             dictViewer.setup(it)
         }
         extraDocument?.let {
+            dictViewer.document.newLine()
             dictViewer.setup(it)
         }
         val hasContent = dictDocument != null || extraDocument != null

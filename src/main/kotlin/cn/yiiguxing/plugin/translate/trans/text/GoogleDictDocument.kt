@@ -2,10 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.text
 
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslation
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
-import cn.yiiguxing.plugin.translate.util.text.appendString
-import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
-import cn.yiiguxing.plugin.translate.util.text.insert
-import cn.yiiguxing.plugin.translate.util.text.rangeSize
+import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
 import java.awt.Color
@@ -154,15 +151,6 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
                     appendDict(dict, index == 0, index == lastIndex)
                 }
             }
-        }
-
-        private fun StyledDocument.setParagraphStyle(
-            offset: Int? = null,
-            len: Int = 0,
-            style: String,
-            replace: Boolean = true
-        ) {
-            setParagraphAttributes(offset ?: length, len, getStyle(style), replace)
         }
 
         private fun StyledDocument.appendDict(dict: Dict, isFirst: Boolean, isLast: Boolean) {

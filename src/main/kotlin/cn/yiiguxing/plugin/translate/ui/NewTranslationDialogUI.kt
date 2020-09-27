@@ -119,6 +119,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             translationTextArea.font = primaryFont
             srcTransliterationLabel.font = phoneticFont
             targetTransliterationLabel.font = phoneticFont
+            dictViewer.font = primaryFont
         }
     }
 
@@ -160,7 +161,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
     private fun initDictViewer() {
         dictViewer.apply {
-            border = emptyBorder(6, 10)
+            border = emptyBorder(10)
             minimumSize = Dimension(0, 0)
         }
         dictViewerPanel.apply {
@@ -289,26 +290,26 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     }
 
     private fun createScrollPane(component: JComponent): JScrollPane =
-            object : JBScrollPane(component) {
-                init {
-                    horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
-                    verticalScrollBarPolicy = VERTICAL_SCROLLBAR_AS_NEEDED
-                    border = emptyBorder(0)
-                }
-
-                override fun getMinimumSize(): Dimension {
-                    //avoid scrollbar around minimum size
-                    val componentMinSize = component.minimumSize
-                    return Dimension(componentMinSize.width, componentMinSize.height + 5)
-                }
-
-                override fun getPreferredSize(): Dimension {
-                    val preferred = super.getPreferredSize()
-                    val max = maximumSize
-                    return Dimension(min(preferred.width, max.width), min(preferred.height, max.height))
-                }
-
+        object : JBScrollPane(component) {
+            init {
+                horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+                verticalScrollBarPolicy = VERTICAL_SCROLLBAR_AS_NEEDED
+                border = emptyBorder(0)
             }
+
+            override fun getMinimumSize(): Dimension {
+                //avoid scrollbar around minimum size
+                val componentMinSize = component.minimumSize
+                return Dimension(componentMinSize.width, componentMinSize.height + 5)
+            }
+
+            override fun getPreferredSize(): Dimension {
+                val preferred = super.getPreferredSize()
+                val max = maximumSize
+                return Dimension(min(preferred.width, max.width), min(preferred.height, max.height))
+            }
+
+        }
 
     private fun minHeight(textComponent: JTextComponent): Int {
         val borderInsets = textComponent.border.getBorderInsets(textComponent)

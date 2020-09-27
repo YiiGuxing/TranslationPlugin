@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.TTSSource.TRANSLATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
@@ -38,7 +37,10 @@ import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.lang.ref.WeakReference
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JTextPane
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
@@ -59,7 +61,6 @@ abstract class TranslationPane<T : JComponent>(
     private val originalTransliterationLabel = JLabel()
     private val transliterationLabel = JLabel()
     private val dictViewer = StyledViewer()
-    private val extraLabel = JLabel()
     private val extraViewer = StyledViewer()
     protected val spellComponent: SpellComponent = SpellComponent()
 
@@ -138,11 +139,8 @@ abstract class TranslationPane<T : JComponent>(
 
         extraComponent = onWrapViewer(extraViewer)
 
-        extraLabel.border = TOP_MARGIN_BORDER
-        onRowCreated(extraLabel)
         onRowCreated(extraComponent)
 
-        add(extraLabel)
         add(extraComponent)
 
         initFont()
@@ -189,7 +187,6 @@ abstract class TranslationPane<T : JComponent>(
             translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             dictViewer.font = primaryFont.biggerOn(1f)
             extraViewer.font = primaryFont
-            extraLabel.font = primaryFont
             originalTransliterationLabel.font = phoneticFont
             transliterationLabel.font = phoneticFont
         }
@@ -206,7 +203,6 @@ abstract class TranslationPane<T : JComponent>(
             Color(0x17, 0x05, 0x91, 0xA0),
             Color(0xFF, 0xC6, 0x6D, 0xA0)
         )
-        extraLabel.foreground = JBColor(0x535F53, 0xA9B7C6)
         fixLanguageLabel.foreground = JBColor(0x666666, 0x909090)
 
         fixLanguageLink.apply {
@@ -236,7 +232,7 @@ abstract class TranslationPane<T : JComponent>(
         dictViewer.setFocusListener(originalViewer, translationViewer, extraViewer)
         extraViewer.setFocusListener(originalViewer, translationViewer, dictViewer)
 
-        dictViewer.setupActions(this::translation , this.onNewTranslateHandler)
+        dictViewer.setupActions(this::translation, this.onNewTranslateHandler)
         dictViewer.onBeforeFoldingExpand { _, _ ->
             onBeforeFoldingExpand()
         }
@@ -245,7 +241,7 @@ abstract class TranslationPane<T : JComponent>(
             onRevalidateHandler?.invoke()
         }
 
-        extraViewer.setupActions(this::translation , this.onNewTranslateHandler)
+        extraViewer.setupActions(this::translation, this.onNewTranslateHandler)
 
         originalTransliterationLabel.setupPopupMenu()
         transliterationLabel.setupPopupMenu()
@@ -396,8 +392,8 @@ abstract class TranslationPane<T : JComponent>(
             toolTipText = transliteration
         }
 
-        updateDictViewer(translation.dictDocument)
-        updateExtraViewer(translation.extraDocument)
+        updateViewer(dictViewer, dictComponent, translation.dictDocument)
+        updateViewer(extraViewer, extraComponent, translation.extraDocument)
     }
 
     private fun updateOriginalViewer(translation: Translation) {
@@ -423,6 +419,7 @@ abstract class TranslationPane<T : JComponent>(
         originalComponent.isVisible = true
     }
 
+    @Suppress("DuplicatedCode")
     private fun Viewer.appendStarButton(translation: Translation) {
         val starIcon = if (translation.favoriteId == null) Icons.StarOff else Icons.StarOn
         val starLabel = LinkLabel<Translation>("", starIcon, { starLabel, trans ->
@@ -520,8 +517,8 @@ abstract class TranslationPane<T : JComponent>(
         transliterationLabel.empty()
         extraViewer.empty()
 
-        extraLabel.isVisible = false
-        updateDictViewer(null)
+        updateViewer(dictViewer, dictComponent, null as TranslationDocument?)
+        updateViewer(extraViewer, extraComponent, null as TranslationDocument?)
     }
 
     private fun updateViewer(viewer: Viewer, wrapper: JComponent, text: String?) {
@@ -531,34 +528,17 @@ abstract class TranslationPane<T : JComponent>(
         }
     }
 
-    private fun updateDictViewer(dictDocument: TranslationDocument?) {
-        dictViewer.document.clear()
+    private fun updateViewer(viewer: StyledViewer, wrapper: JComponent, dictDocument: TranslationDocument?) {
+        viewer.document.clear()
         if (dictDocument != null) {
-            dictViewer.setup(dictDocument)
-            dictViewer.isVisible = true
+            viewer.setup(dictDocument)
+            viewer.isVisible = true
             dictComponent.isVisible = true
         } else {
-            dictViewer.isVisible = false
-            dictComponent.isVisible = false
+            viewer.isVisible = false
+            wrapper.isVisible = false
         }
-        dictViewer.caretPosition = 0
-    }
-
-    private fun updateExtraViewer(extraDocument: NamedTranslationDocument?) {
-        extraViewer.document.clear()
-        if (extraDocument != null) {
-            extraLabel.text = extraDocument.name
-            extraViewer.setup(extraDocument)
-
-            extraLabel.isVisible = true
-            extraViewer.isVisible = true
-            extraComponent.isVisible = true
-        } else {
-            extraLabel.isVisible = false
-            extraViewer.isVisible = false
-            extraComponent.isVisible = false
-        }
-        extraViewer.caretPosition = 0
+        viewer.caretPosition = 0
     }
 
     private fun Viewer.updateText(text: String?) {
@@ -603,6 +583,7 @@ abstract class TranslationPane<T : JComponent>(
             return panel
         }
 
+        @Suppress("unused")
         private fun flow2(left: JComponent, right: JComponent): JComponent {
             return BorderLayoutPanel()
                 .andTransparent()

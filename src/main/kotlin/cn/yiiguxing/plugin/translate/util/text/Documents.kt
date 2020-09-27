@@ -39,6 +39,8 @@ fun Document.replace(offset: Int, length: Int, str: String, attr: AttributeSet? 
  */
 fun Document.appendString(str: String, attr: AttributeSet? = null) = apply { insertString(length, str, attr) }
 
+fun Document.newLine() = appendString("\n")
+
 fun StyledDocument.appendString(str: String, style: String) = apply { appendString(str, getStyle(style)) }
 
 /**
@@ -53,4 +55,13 @@ fun Document.clear() = apply {
  */
 inline fun StyledDocument.getStyleOrAdd(name: String, parent: Style? = null, init: (style: Style) -> Unit = {}): Style {
     return getStyle(name) ?: addStyle(name, parent).also(init)
+}
+
+fun StyledDocument.setParagraphStyle(
+    offset: Int? = null,
+    len: Int = 0,
+    style: String,
+    replace: Boolean = true
+) {
+    setParagraphAttributes(offset ?: length, len, getStyle(style), replace)
 }
