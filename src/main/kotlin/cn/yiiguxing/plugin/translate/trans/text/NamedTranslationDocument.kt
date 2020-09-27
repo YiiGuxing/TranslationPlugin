@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.trans.text
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
-import cn.yiiguxing.plugin.translate.util.text.newLine
 import cn.yiiguxing.plugin.translate.util.text.setParagraphStyle
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
@@ -18,8 +17,7 @@ class NamedTranslationDocument(
     fun appendName(viewer: StyledViewer) {
         viewer.styledDocument.apply {
             setParagraphStyle(style = TITLE_PARAGRAPH_STYLE)
-            appendString(name, TITLE_STYLE)
-            newLine()
+            appendString("$name\n", TITLE_STYLE)
             setParagraphStyle(style = TITLE_END_PARAGRAPH_STYLE)
         }
     }
