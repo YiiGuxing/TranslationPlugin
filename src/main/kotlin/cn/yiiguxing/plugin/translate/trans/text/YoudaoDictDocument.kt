@@ -19,6 +19,7 @@ import java.awt.Color
 import java.util.*
 import javax.swing.JComponent
 import javax.swing.text.*
+import kotlin.collections.HashMap
 
 class YoudaoDictDocument private constructor(
     private val wordStrings: List<CharSequence>,
@@ -127,11 +128,30 @@ class YoudaoDictDocument private constructor(
                 }
 
                 val explanation = explanations[i]
+                val annotationMap = HashMap<String, String>()
                 val matchResult = REGEX_EXPLANATION.find(explanation)
                 val words = if (matchResult != null) {
                     wordStrings += StyledString(matchResult.groups[GROUP_PART_OF_SPEECH]!!.value, POS_STYLE)
                     wordStrings += " "
-                    matchResult.groups[GROUP_WORDS]!!.value.trim()
+
+                    // issue: #581 (https://github.com/YiiGuxing/TranslationPlugin/issues/581)
+                    // 将词条中的注释部分使用占位符`[$index]`代替，以防止注释中有逗号等字符而被拆分。
+                    var index = 0
+                    val sb = StringBuilder()
+                    matchResult
+                        .groups[GROUP_WORDS]!!
+                        .value
+                        .trim()
+                        .blocks(REGEX_WORD_ANNOTATION) { block, isAnnotation ->
+                            if (isAnnotation) {
+                                val annotationPlaceholder = "[${index++}]"
+                                sb.append(annotationPlaceholder)
+                                annotationMap[annotationPlaceholder] = block
+                            } else {
+                                sb.append(block)
+                            }
+                        }
+                    sb.toString()
                 } else explanation.trim()
 
                 words.blocks(REGEX_WORDS_SEPARATOR) { separatorOrWord, isSeparator ->
@@ -144,13 +164,15 @@ class YoudaoDictDocument private constructor(
                     } else {
                         separatorOrWord.trim().blocks(REGEX_WORD_ANNOTATION) { wordOrAnnotation, isAnnotation ->
                             if (isAnnotation) {
-                                wordOrAnnotation.blocks(REGEX_WORD) { annotationString, isWord ->
-                                    wordStrings += if (isWord) {
-                                        StyledString(annotationString, WORD_STYLE, WordType.VARIANT)
-                                    } else {
-                                        annotationString
+                                annotationMap
+                                    .getValue(wordOrAnnotation)
+                                    .blocks(REGEX_WORD) { annotationString, isWord ->
+                                        wordStrings += if (isWord) {
+                                            StyledString(annotationString, WORD_STYLE, WordType.VARIANT)
+                                        } else {
+                                            annotationString
+                                        }
                                     }
-                                }
                             } else {
                                 translations += wordOrAnnotation
                                 wordStrings += StyledString(wordOrAnnotation, WORD_STYLE, WordType.WORD)
