@@ -5,6 +5,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.ui.scale.JBUIScale
 import java.awt.datatransfer.StringSelection
 import javax.swing.JLabel
 import kotlin.math.max
@@ -21,7 +22,7 @@ class TransliterationLabel : JLabel() {
     override fun getToolTipText(): String? {
         if (text.isNullOrEmpty()) return null
         val textWidth = getFontMetrics(font).getStringBounds(text, graphics).width.toInt()
-        return """<html><body width="${max(10, min(textWidth, 300))}">$text</body></html>"""
+        return """<html><body width="${max(10, min(textWidth, JBUIScale.scale(300)))}">$text</body></html>"""
     }
 
     override fun setText(text: String?) {
