@@ -46,6 +46,7 @@ open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_A
         return Viewport(getFadingEdgeColor(), getFadingEdgeSize(), getFadingFlag())
     }
 
+    @Suppress("unused")
     companion object {
         const val FADING_NONE = 0
         const val FADING_START = 1

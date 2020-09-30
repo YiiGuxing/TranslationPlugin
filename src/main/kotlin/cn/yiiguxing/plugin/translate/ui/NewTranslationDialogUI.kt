@@ -102,7 +102,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             JBUI.CurrentTheme.CustomFrameDecorations.paneBackground().alphaBlend(inputTextArea.background, 0.65f)
         }
     }
-    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer, ScrollPane.FADING_ALL)
+    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer)
 
     override val expandDictViewerButton: LinkLabel<Void> = LinkLabel()
     override val collapseDictViewerButton: LinkLabel<Void> = LinkLabel()
@@ -200,13 +200,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             val leftPanel = JPanel(migLayout()).apply {
                 background = inputTextArea.background
 
-                add(createScrollPane(inputTextArea, ScrollPane.FADING_ALL), fill().wrap())
+                add(createScrollPane(inputTextArea), fill().wrap())
                 add(createToolbar(inputTTSButton, srcTransliterationLabel, clearButton, historyButton), fillX())
             }
             val rightPanel = JPanel(migLayout()).apply {
                 background = translationTextArea.background
 
-                add(createScrollPane(translationTextArea, ScrollPane.FADING_ALL), fill().wrap())
+                add(createScrollPane(translationTextArea), fill().wrap())
                 add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), fillX())
             }
 
@@ -305,7 +305,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         starButton.setIcons(Icons.GrayStarOff)
     }
 
-    private fun createScrollPane(component: JComponent, fadingFlag: Int): JScrollPane =
+    private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =
         object : ScrollPane(component) {
             init {
                 border = emptyBorder(0)
@@ -318,7 +318,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             override fun getFadingFlag(): Int = fadingFlag
 
             override fun getMinimumSize(): Dimension {
-                //avoid scrollbar around minimum size
+                // avoid scrollbar around minimum size
                 val componentMinSize = component.minimumSize
                 return Dimension(componentMinSize.width, componentMinSize.height + 5)
             }
