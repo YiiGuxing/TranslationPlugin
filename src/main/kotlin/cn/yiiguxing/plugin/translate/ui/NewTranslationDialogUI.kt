@@ -200,13 +200,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             val leftPanel = JPanel(migLayout()).apply {
                 background = inputTextArea.background
 
-                add(createScrollPane(inputTextArea), fill().wrap())
+                add(createScrollPane(inputTextArea, ScrollPane.FADING_END), fill().wrap())
                 add(createToolbar(inputTTSButton, srcTransliterationLabel, clearButton, historyButton), fillX())
             }
             val rightPanel = JPanel(migLayout()).apply {
                 background = translationTextArea.background
 
-                add(createScrollPane(translationTextArea), fill().wrap())
+                add(createScrollPane(translationTextArea, ScrollPane.FADING_END), fill().wrap())
                 add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), fillX())
             }
 
