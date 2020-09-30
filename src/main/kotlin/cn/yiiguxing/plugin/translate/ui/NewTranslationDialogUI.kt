@@ -97,11 +97,12 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val settingsButton: JComponent = uiProvider.createSettingsButton()
 
     override val dictViewer: StyledViewer = StyledViewer().apply {
+        isOpaque = true
         background = JBColor {
             JBUI.CurrentTheme.CustomFrameDecorations.paneBackground().alphaBlend(inputTextArea.background, 0.65f)
         }
     }
-    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer, ScrollPane.FADING_NONE)
+    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer, ScrollPane.FADING_ALL)
 
     override val expandDictViewerButton: LinkLabel<Void> = LinkLabel()
     override val collapseDictViewerButton: LinkLabel<Void> = LinkLabel()
@@ -199,13 +200,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             val leftPanel = JPanel(migLayout()).apply {
                 background = inputTextArea.background
 
-                add(createScrollPane(inputTextArea, ScrollPane.FADING_END), fill().wrap())
+                add(createScrollPane(inputTextArea, ScrollPane.FADING_ALL), fill().wrap())
                 add(createToolbar(inputTTSButton, srcTransliterationLabel, clearButton, historyButton), fillX())
             }
             val rightPanel = JPanel(migLayout()).apply {
                 background = translationTextArea.background
 
-                add(createScrollPane(translationTextArea, ScrollPane.FADING_END), fill().wrap())
+                add(createScrollPane(translationTextArea, ScrollPane.FADING_ALL), fill().wrap())
                 add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), fillX())
             }
 
