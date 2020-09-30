@@ -7,21 +7,25 @@ import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
 import java.awt.datatransfer.StringSelection
 import javax.swing.JLabel
+import kotlin.math.max
+import kotlin.math.min
 
-class TransliterationLabel(private val maxLength: Int) : JLabel() {
+class TransliterationLabel : JLabel() {
+
     init {
         val copy = JBMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy)
         copy.addActionListener { CopyPasteManager.getInstance().setContents(StringSelection(text)) }
         componentPopupMenu = JBPopupMenu().apply { add(copy) }
     }
 
+    override fun getToolTipText(): String? {
+        if (text.isNullOrEmpty()) return null
+        val textWidth = getFontMetrics(font).getStringBounds(text, graphics).width.toInt()
+        return """<html><body width="${max(10, min(textWidth, 300))}">$text</body></html>"""
+    }
+
     override fun setText(text: String?) {
-        if (text == null) {
-            isVisible = false
-        } else {
-            super.setText(text)
-            isVisible = true
-            toolTipText = text
-        }
+        super.setText(text)
+        isVisible = !text.isNullOrEmpty()
     }
 }

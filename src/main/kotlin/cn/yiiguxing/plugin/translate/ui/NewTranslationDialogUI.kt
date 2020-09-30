@@ -12,10 +12,11 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
+import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
+import com.intellij.ui.JBColor
 import com.intellij.ui.PopupBorder
-import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
@@ -27,6 +28,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil.getLineHeight
 import icons.Icons
 import net.miginfocom.layout.CC
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
@@ -88,14 +90,18 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val starButton: LinkLabel<Translation> = LinkLabel()
     override val historyButton: LinkLabel<Void> = LinkLabel()
     override val detectedLanguageLabel: JLabel = JLabel()
-    override val srcTransliterationLabel: JLabel = TransliterationLabel(20)
-    override val targetTransliterationLabel: JLabel = TransliterationLabel(20)
+    override val srcTransliterationLabel: JLabel = TransliterationLabel()
+    override val targetTransliterationLabel: JLabel = TransliterationLabel()
 
     override val pinButton: JComponent = uiProvider.createPinButton()
     override val settingsButton: JComponent = uiProvider.createSettingsButton()
 
-    override val dictViewer: StyledViewer = StyledViewer()
-    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer)
+    override val dictViewer: StyledViewer = StyledViewer().apply {
+        background = JBColor {
+            JBUI.CurrentTheme.CustomFrameDecorations.paneBackground().alphaBlend(inputTextArea.background, 0.65f)
+        }
+    }
+    override val dictViewerPanel: JScrollPane = createScrollPane(dictViewer, ScrollPane.FADING_NONE)
 
     override val expandDictViewerButton: LinkLabel<Void> = LinkLabel()
     override val collapseDictViewerButton: LinkLabel<Void> = LinkLabel()
@@ -193,13 +199,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             val leftPanel = JPanel(migLayout()).apply {
                 background = inputTextArea.background
 
-                add(createScrollPane(inputTextArea), fill().wrap())
+                add(createScrollPane(inputTextArea, ScrollPane.FADING_END), fill().wrap())
                 add(createToolbar(inputTTSButton, srcTransliterationLabel, clearButton, historyButton), fillX())
             }
             val rightPanel = JPanel(migLayout()).apply {
                 background = translationTextArea.background
 
-                add(createScrollPane(translationTextArea), fill().wrap())
+                add(createScrollPane(translationTextArea, ScrollPane.FADING_END), fill().wrap())
                 add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), fillX())
             }
 
@@ -298,13 +304,17 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         starButton.setIcons(Icons.GrayStarOff)
     }
 
-    private fun createScrollPane(component: JComponent): JScrollPane =
-        object : JBScrollPane(component) {
+    private fun createScrollPane(component: JComponent, fadingFlag: Int): JScrollPane =
+        object : ScrollPane(component) {
             init {
-                horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
-                verticalScrollBarPolicy = VERTICAL_SCROLLBAR_AS_NEEDED
                 border = emptyBorder(0)
             }
+
+            override fun getFadingEdgeColor(): Color = component.background
+
+            override fun getFadingEdgeSize(): Int = 10
+
+            override fun getFadingFlag(): Int = fadingFlag
 
             override fun getMinimumSize(): Dimension {
                 //avoid scrollbar around minimum size

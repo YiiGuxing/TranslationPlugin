@@ -58,8 +58,8 @@ abstract class TranslationPane<T : JComponent>(
 
     private val originalViewer = Viewer()
     private val translationViewer = Viewer()
-    private val originalTransliterationLabel = JLabel()
-    private val transliterationLabel = JLabel()
+    private val originalTransliterationLabel = TransliterationLabel()
+    private val transliterationLabel = TransliterationLabel()
     private val dictViewer = StyledViewer()
     private val extraViewer = StyledViewer()
     protected val spellComponent: SpellComponent = SpellComponent()
@@ -384,12 +384,10 @@ abstract class TranslationPane<T : JComponent>(
         originalTransliterationLabel.apply {
             val srcTransliteration = translation.srcTransliteration
             updateText(srcTransliteration)
-            toolTipText = srcTransliteration
         }
         transliterationLabel.apply {
             val transliteration = translation.transliteration
             updateText(transliteration)
-            toolTipText = transliteration
         }
 
         updateViewer(dictViewer, dictComponent, translation.dictDocument)

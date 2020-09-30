@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBViewport
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBEmptyBorder
-import com.intellij.util.ui.JBUI
 import java.awt.*
 import javax.swing.JViewport
 import javax.swing.UIManager
@@ -29,14 +29,38 @@ open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_A
         super.setHorizontalScrollBarPolicy(policy)
     }
 
-    override fun createViewport(): JViewport {
-        return Viewport(UIManager.getColor("Panel.background"), 20)
+    protected open fun getFadingEdgeColor(): Color = UIManager.getColor("Panel.background")
+
+    protected open fun getFadingEdgeSize(): Int = 20
+
+    /**
+     * Default: [FADING_ALL]
+     *
+     * @see FADING_START
+     * @see FADING_END
+     * @see FADING_ALL
+     */
+    protected open fun getFadingFlag(): Int = FADING_ALL
+
+    final override fun createViewport(): JViewport {
+        return Viewport(getFadingEdgeColor(), getFadingEdgeSize(), getFadingFlag())
     }
 
-    class Viewport(fadingEdgeColor: Color, fadingEdgeSize: Int) : JBViewport() {
+    companion object {
+        const val FADING_NONE = 0
+        const val FADING_START = 1
+        const val FADING_END = 2
+        const val FADING_ALL = FADING_START or FADING_END
+    }
+
+    class Viewport(
+        fadingEdgeColor: Color,
+        fadingEdgeSize: Int,
+        private val fadingFlag: Int = FADING_ALL
+    ) : JBViewport() {
 
         private val transparent = fadingEdgeColor.withAlpha(0f)
-        private val fadingEdgeSize = JBUI.scale(fadingEdgeSize)
+        private val fadingEdgeSize = JBUIScale.scale(fadingEdgeSize)
         private val fadingEdgeStart = GradientPaint(
             0f, 0f, fadingEdgeColor,
             0f, this.fadingEdgeSize.toFloat(), transparent
@@ -58,11 +82,11 @@ open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_A
             with(g as Graphics2D) {
                 val oldPaint = paint
                 val locationY = view.location.y
-                if (locationY < 0) {
+                if (locationY < 0 && (fadingFlag and FADING_START) > 0) {
                     paint = fadingEdgeStart
                     fillRect(0, 0, width, fadingEdgeSize)
                 }
-                if (view.height + locationY > height) {
+                if (view.height + locationY > height && (fadingFlag and FADING_END) > 0) {
                     val translateY = height - fadingEdgeSize
                     paint = fadingEdgeEnd
                     translate(0, translateY)
