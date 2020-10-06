@@ -1,4 +1,11 @@
 <idea-plugin>
+
+    <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
+        <ignoredDocumentationElementsProvider
+                language="PHP"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.PhpIgnoredDocumentationElementsProvider"/>
+    </extensions>
+
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
                 language="PHP" order="first"

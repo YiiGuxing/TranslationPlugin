@@ -1,9 +1,11 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
 import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import com.intellij.codeInsight.documentation.DocumentationComponent
+import com.intellij.lang.Language
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -27,14 +29,14 @@ private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
 
 private val HTML_KIT = HTMLEditorKit()
 
-fun Translator.getTranslatedDocumentation(documentation: String): String {
+fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
     val document = Jsoup.parse(documentation)
     if (document.body().hasAttr(TRANSLATED_ATTR)) {
         return documentation
     }
 
     val translatedDocumentation = if (this is GoogleTranslator) {
-        getTranslatedDocumentation(document)
+        getTranslatedDocumentation(document, language)
     } else {
         getTranslatedDocumentation(document)
     }
@@ -52,7 +54,7 @@ private fun String.fixHtml(): String = replace(
     HTML_HEAD_REPLACEMENT
 )
 
-private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Document {
+private fun GoogleTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
@@ -66,6 +68,9 @@ private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Doc
     preElements.forEachIndexed { index, element ->
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
     }
+
+    val ignoredElementsProvider = language?.let { IgnoredDocumentationElementsProvider.forLanguage(it) }
+    val ignoredElements = ignoredElementsProvider?.ignoreElements(body)
 
     // 翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
     val content = body.html()
@@ -84,6 +89,8 @@ private fun GoogleTranslator.getTranslatedDocumentation(document: Document): Doc
     preElements.forEachIndexed { index, element ->
         body.selectFirst("""${TAG_PRE}[id="$index"]""").replaceWith(element)
     }
+    ignoredElements?.let { ignoredElementsProvider.restoreIgnoredElements(body, it) }
+
     definition?.let { body.prependChild(it) }
 
     return document

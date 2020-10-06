@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.codeInsight.documentation.DocumentationManager
+import com.intellij.lang.Language
 import com.intellij.lang.documentation.DocumentationProviderEx
 import com.intellij.psi.PsiElement
 
@@ -29,7 +30,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
         val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
         val originalDoc = providerFromElement.generateDoc(element, originalElement)
 
-        return translate(originalDoc)
+        return translate(originalDoc, element?.language)
     }
 
     companion object {
@@ -51,7 +52,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
         //to reuse long running translation task
         private var lastTranslation: TranslateDocumentationTask? = null
 
-        private fun translate(text: String?): String? {
+        private fun translate(text: String?, language: Language?): String? {
             if (text.isNullOrEmpty()) return null
 
             val lastTask = lastTranslation
@@ -59,7 +60,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx() {
 
             val task =
                 if (lastTask != null && lastTask.translator.id == translator.id && lastTask.text == text) lastTask
-                else TranslateDocumentationTask(text, translator)
+                else TranslateDocumentationTask(text, language, translator)
 
             lastTranslation = task
 

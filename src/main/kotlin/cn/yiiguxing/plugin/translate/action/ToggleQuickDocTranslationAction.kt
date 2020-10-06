@@ -42,7 +42,7 @@ class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionTo
         val currentText = docComponent.text
 
         if (Settings.translateDocumentation) {
-            TranslateDocumentationTask(currentText).onSuccess { translation ->
+            TranslateDocumentationTask(currentText, docComponent.element?.language).onSuccess { translation ->
                 replaceActiveComponentText(project, currentText, translation)
             }
         } else {
