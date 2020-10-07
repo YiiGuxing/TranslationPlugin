@@ -36,6 +36,8 @@ object YoudaoTranslator : AbstractTranslator() {
 
     override val intervalLimit: Int = YOUDAO.intervalLimit
 
+    override val contentLengthLimit: Int = YOUDAO.contentLengthLimit
+
     override val defaultLangForLocale: Lang
         get() = when (Locale.getDefault()) {
             Locale.CHINA, Locale.CHINESE -> Lang.AUTO

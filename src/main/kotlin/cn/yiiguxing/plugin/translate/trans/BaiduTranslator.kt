@@ -59,6 +59,8 @@ object BaiduTranslator : AbstractTranslator() {
 
     override val intervalLimit: Int = BAIDU.intervalLimit
 
+    override val contentLengthLimit: Int = BAIDU.contentLengthLimit
+
     override val primaryLanguage: Lang
         get() = Settings.baiduTranslateSettings.primaryLanguage
 

@@ -10,12 +10,13 @@ enum class TranslationEngine(
     val id: String,
     val translatorName: String,
     val icon: Icon,
+    val contentLengthLimit: Int = 0,
     val intervalLimit: Int = 500
 ) {
 
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
-    YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao),
-    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 1000);
+    YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
+    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000);
 
     var primaryLanguage: Lang
         get() {

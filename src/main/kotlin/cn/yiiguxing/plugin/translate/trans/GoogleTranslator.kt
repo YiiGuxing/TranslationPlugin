@@ -31,6 +31,8 @@ object GoogleTranslator : AbstractTranslator() {
 
     override val intervalLimit: Int = GOOGLE.intervalLimit
 
+    override val contentLengthLimit: Int = GOOGLE.contentLengthLimit
+
     override val primaryLanguage: Lang
         get() = settings.primaryLanguage
 
