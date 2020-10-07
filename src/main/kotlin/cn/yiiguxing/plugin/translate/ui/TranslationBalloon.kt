@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -52,9 +51,7 @@ class TranslationBalloon(
     private val processPane = ProcessComponent("Querying...", JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
-    private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) {
-        showOnTranslationDialog(text, translationPane.sourceLanguage ?: Lang.AUTO, translationPane.targetLanguage ?: presenter.getTargetLang(text))
-    }
+    private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
     private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
         lastError?.copyToClipboard()
         hide()
@@ -241,19 +238,21 @@ class TranslationBalloon(
         }
     }
 
-    private fun showOnTranslationDialog(text: String, srcLang: Lang, targetLang: Lang) {
-        val readyTranslation = translationPane.translation
+    private fun pin() {
+        val readyTranslation = translationPane.translation ?: return
         hide()
 
         Settings.pinNewTranslationDialog = true
-        val dialog = TranslationUIManager.showDialog(editor.project)
+        TranslationUIManager.showDialog(editor.project)
+            .applyTranslation(readyTranslation)
+    }
 
-        if (readyTranslation != null) {
-            dialog.applyTranslation(readyTranslation)
-        }
-        else if (!text.isNullOrBlank()) {
-            dialog.translate(text, srcLang, targetLang)
-        }
+    private fun showOnTranslationDialog(text: String, srcLang: Lang, targetLang: Lang) {
+        hide()
+
+        Settings.pinNewTranslationDialog = true
+        TranslationUIManager.showDialog(editor.project)
+            .translate(text, srcLang, targetLang)
     }
 
     override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {

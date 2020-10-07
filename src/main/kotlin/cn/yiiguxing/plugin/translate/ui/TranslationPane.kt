@@ -233,7 +233,9 @@ abstract class TranslationPane<T : JComponent>(
         dictViewer.setFocusListener(originalViewer, translationViewer, extraViewer)
         extraViewer.setFocusListener(originalViewer, translationViewer, dictViewer)
 
-        dictViewer.setupActions(this::translation, this.onNewTranslateHandler)
+        dictViewer.setupActions(::translation) { text: String, srcLang: Lang, targetLang: Lang ->
+            onNewTranslateHandler?.invoke(text, srcLang, targetLang)
+        }
         dictViewer.onBeforeFoldingExpand { _, _ ->
             onBeforeFoldingExpand()
         }
@@ -242,7 +244,9 @@ abstract class TranslationPane<T : JComponent>(
             onRevalidateHandler?.invoke()
         }
 
-        extraViewer.setupActions(this::translation, this.onNewTranslateHandler)
+        extraViewer.setupActions(::translation) { text: String, srcLang: Lang, targetLang: Lang ->
+            onNewTranslateHandler?.invoke(text, srcLang, targetLang)
+        }
 
         originalTransliterationLabel.setupPopupMenu()
         transliterationLabel.setupPopupMenu()

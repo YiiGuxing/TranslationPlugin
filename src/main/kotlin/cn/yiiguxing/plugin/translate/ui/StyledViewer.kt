@@ -243,7 +243,7 @@ class StyledViewer : Viewer() {
         private inline val Element.offsetLength: Int
             get() = endOffset - startOffset
 
-        fun StyledViewer.setupActions(prevTranslation: () -> Translation?, onNewTranslateHandler: ((String, Lang, Lang) -> Unit)?) {
+        fun StyledViewer.setupActions(prevTranslation: () -> Translation?, onNewTranslateHandler: ((String, Lang, Lang) -> Unit)) {
             addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
                 CopyPasteManager.getInstance().setContents(StringSelection(element.text))
             }
@@ -267,7 +267,7 @@ class StyledViewer : Viewer() {
                         else -> return@onClick
                     }
 
-                    onNewTranslateHandler?.invoke(element.text, src, target)
+                    onNewTranslateHandler(element.text, src, target)
                 }
             }
         }

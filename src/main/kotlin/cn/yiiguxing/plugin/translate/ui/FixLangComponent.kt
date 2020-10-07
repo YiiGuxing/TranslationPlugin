@@ -35,8 +35,7 @@ class FixLangComponent : JPanel() {
                 actionLink.text = it
                 !it.isNullOrEmpty()
             }
-        }
-        else {
+        } else {
             isVisible = false
         }
     }

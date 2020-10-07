@@ -272,11 +272,7 @@ class NewTranslationDialog(
             }, null)
         }
 
-        historyButton.apply {
-            setListener({ _, _ ->
-                showHistoryPopup()
-            }, null)
-        }
+        historyButton.setListener({ _, _ -> showHistoryPopup() }, null)
 
         updateStarButton(null)
         initSwapButton()
@@ -310,9 +306,7 @@ class NewTranslationDialog(
     private fun initDictViewer() {
         dictViewer.apply {
             setupActions(this@NewTranslationDialog::lastTranslation) { text, src, target ->
-                sourceLangComboBox.selected = src
-                targetLangComboBox.selected = target
-                inputTextArea.text = text
+                translate(text, src, target)
             }
             onBeforeFoldingExpand { _, _ ->
                 dictViewerPanel.putClientProperty("lastScroll", dictViewerPanel.verticalScrollBar.value)
@@ -596,7 +590,7 @@ class NewTranslationDialog(
                 override fun onClosed(event: LightweightWindowEvent) {
                     historyShowing = false
                     invokeLater {
-                        inputTextArea.text = chosen ?: currentInput
+                        translate(chosen ?: currentInput)
                     }
                 }
             })
