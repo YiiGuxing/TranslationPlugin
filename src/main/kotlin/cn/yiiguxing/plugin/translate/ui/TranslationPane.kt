@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
+import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
@@ -289,11 +290,11 @@ abstract class TranslationPane<T : JComponent>(
     private fun JTextPane.setupPopupMenu() {
         componentPopupMenu = JBPopupMenu().apply {
             val copy = JBMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy).apply {
-                disabledIcon = AllIcons.Actions.Copy
+                disabledIcon = AllIcons.Actions.Copy.disabled()
                 addActionListener { copy() }
             }
             val translate = JBMenuItem(message("menu.item.translate"), Icons.Translate).apply {
-                disabledIcon = Icons.Translate
+                disabledIcon = Icons.Translate.disabled()
                 addActionListener {
                     translation?.let { translation ->
                         selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->

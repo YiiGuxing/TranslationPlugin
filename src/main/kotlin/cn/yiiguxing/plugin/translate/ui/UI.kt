@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.util.IconUtil
 import com.intellij.util.ui.JBFont
@@ -12,9 +11,7 @@ import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
 import java.awt.Color
-import java.awt.Font
 import javax.swing.Icon
-import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.border.Border
 import javax.swing.text.html.HTMLEditorKit
@@ -61,6 +58,9 @@ object UI {
     }
 
     data class FontPair(val primary: JBFont, val phonetic: JBFont)
+
+    @JvmStatic
+    fun Icon.disabled(): Icon = IconUtil.colorize(this, JBUI.CurrentTheme.Label.disabledForeground())
 
     @JvmStatic
     @JvmOverloads

@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
+import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
@@ -24,6 +25,8 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.JBMenuItem
+import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.JBPopupListener
 import com.intellij.openapi.ui.popup.LightweightWindowEvent
@@ -32,6 +35,7 @@ import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.IdeGlassPane
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl
 import com.intellij.ui.DocumentAdapter
+import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.WindowMoveListener
 import com.intellij.ui.WindowResizeListener
 import com.intellij.ui.awt.RelativePoint
@@ -52,6 +56,7 @@ import javax.swing.JComponent
 import javax.swing.JTextArea
 import javax.swing.ListSelectionModel
 import javax.swing.event.DocumentEvent
+import javax.swing.event.PopupMenuEvent
 
 class NewTranslationDialog(
     private val project: Project?,
@@ -202,6 +207,40 @@ class NewTranslationDialog(
         translationTextArea.addListener { e ->
             copyButton.isEnabled = e.document.length > 0
         }
+
+        fun JTextArea.setupPopupMenu() {
+            componentPopupMenu = JBPopupMenu().apply {
+                val copy = JBMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy).apply {
+                    disabledIcon = AllIcons.Actions.Copy.disabled()
+                    addActionListener { copy() }
+                }
+                val translate = JBMenuItem(message("menu.item.translate"), Icons.Translate).apply {
+                    disabledIcon = Icons.Translate.disabled()
+                    addActionListener {
+                        selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->
+                            if (this@setupPopupMenu === inputTextArea) {
+                                translate(selectedText, null, null)
+                            } else lastTranslation?.let { translation ->
+                                translate(selectedText, translation.targetLang, translation.srcLang)
+                            }
+                        }
+                    }
+                }
+
+                add(copy)
+                add(translate)
+                addPopupMenuListener(object : PopupMenuListenerAdapter() {
+                    override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                        val hasSelectedText = !selectedText.isNullOrBlank()
+                        copy.isEnabled = hasSelectedText
+                        translate.isEnabled = hasSelectedText
+                    }
+                })
+            }
+        }
+
+        inputTextArea.setupPopupMenu()
+        translationTextArea.setupPopupMenu()
     }
 
     private fun initButtons() {
