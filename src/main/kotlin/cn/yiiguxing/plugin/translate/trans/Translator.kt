@@ -20,6 +20,8 @@ interface Translator {
 
     val supportedTargetLanguages: List<Lang>
 
+    val intervalLimit: Int
+
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation
 
     fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation

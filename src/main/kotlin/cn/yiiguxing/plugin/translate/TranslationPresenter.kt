@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.TargetLanguageSelection.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import java.lang.ref.WeakReference
@@ -15,8 +16,8 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
     private val appStorage = AppStorage.instance
     private var currentRequest: Presenter.Request? = null
 
-    override val translatorId: String
-        get() = translateService.translator.id
+    override val translator: Translator
+        get() = translateService.translator
 
     override val histories: List<String> get() = appStorage.getHistories()
 

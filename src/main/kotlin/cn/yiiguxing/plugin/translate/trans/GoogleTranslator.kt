@@ -29,6 +29,8 @@ object GoogleTranslator : AbstractTranslator() {
 
     override val icon: Icon = GOOGLE.icon
 
+    override val intervalLimit: Int = GOOGLE.intervalLimit
+
     override val primaryLanguage: Lang
         get() = settings.primaryLanguage
 

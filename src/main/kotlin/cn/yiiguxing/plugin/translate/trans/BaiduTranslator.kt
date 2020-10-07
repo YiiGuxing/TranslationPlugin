@@ -57,6 +57,8 @@ object BaiduTranslator : AbstractTranslator() {
 
     override val icon: Icon = BAIDU.icon
 
+    override val intervalLimit: Int = BAIDU.intervalLimit
+
     override val primaryLanguage: Lang
         get() = Settings.baiduTranslateSettings.primaryLanguage
 

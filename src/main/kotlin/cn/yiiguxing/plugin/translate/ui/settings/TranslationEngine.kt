@@ -6,21 +6,27 @@ import cn.yiiguxing.plugin.translate.trans.*
 import icons.Icons
 import javax.swing.Icon
 
-enum class TranslationEngine(val id: String, val translatorName: String, val icon: Icon) {
+enum class TranslationEngine(
+    val id: String,
+    val translatorName: String,
+    val icon: Icon,
+    val intervalLimit: Int = 500
+) {
+
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
     YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao),
-    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu);
+    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 1000);
 
     var primaryLanguage: Lang
         get() {
-            return when(this) {
+            return when (this) {
                 GOOGLE -> Settings.instance.googleTranslateSettings.primaryLanguage
                 YOUDAO -> Settings.instance.youdaoTranslateSettings.primaryLanguage
                 BAIDU -> Settings.instance.baiduTranslateSettings.primaryLanguage
             }
         }
         set(value) {
-            when(this) {
+            when (this) {
                 GOOGLE -> Settings.instance.googleTranslateSettings.primaryLanguage = value
                 YOUDAO -> Settings.instance.youdaoTranslateSettings.primaryLanguage = value
                 BAIDU -> Settings.instance.baiduTranslateSettings.primaryLanguage = value
@@ -29,7 +35,7 @@ enum class TranslationEngine(val id: String, val translatorName: String, val ico
 
     val translator: Translator
         get() {
-            return when(this) {
+            return when (this) {
                 GOOGLE -> GoogleTranslator
                 YOUDAO -> YoudaoTranslator
                 BAIDU -> BaiduTranslator
