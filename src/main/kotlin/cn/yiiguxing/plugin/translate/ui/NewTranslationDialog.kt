@@ -17,7 +17,6 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.icons.AllIcons
-import com.intellij.ide.IdeBundle
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.impl.ActionButton
@@ -252,7 +251,7 @@ class NewTranslationDialog(
 
         clearButton.apply {
             isEnabled = false
-            toolTipText = "Clear Text"
+            toolTipText = message("translation.dialog.clear.text")
             setListener({ _, _ ->
                 inputTextArea.text = ""
                 translationTextArea.text = ""
@@ -260,7 +259,7 @@ class NewTranslationDialog(
         }
         copyButton.apply {
             isEnabled = false
-            toolTipText = "Copy Text"
+            toolTipText = message("translation.dialog.copy.text")
             setListener({ _, _ ->
                 val textToCopy = translationTextArea
                     .selectedText
@@ -272,7 +271,10 @@ class NewTranslationDialog(
             }, null)
         }
 
-        historyButton.setListener({ _, _ -> showHistoryPopup() }, null)
+        historyButton.apply {
+            toolTipText = message("translation.dialog.history")
+            setListener({ _, _ -> showHistoryPopup() }, null)
+        }
 
         updateStarButton(null)
         initSwapButton()
@@ -288,6 +290,7 @@ class NewTranslationDialog(
     }
 
     private fun initSwapButton() = with(swapButton) {
+        toolTipText = message("translation.dialog.swap.languages")
         setListener({ _, _ ->
             val srcLang = lastTranslation?.srcLang ?: sourceLang
             val targetLang = lastTranslation?.targetLang ?: targetLang
@@ -640,8 +643,8 @@ class NewTranslationDialog(
     }
 
     private class MyPinAction : ToggleAction(
-        IdeBundle.messagePointer("action.ToggleAction.text.pin.window"),
-        IdeBundle.messagePointer("action.ToggleAction.description.pin.window"),
+        message("translation.dialog.pin.window"),
+        message("translation.dialog.pin.window"),
         AllIcons.General.Pin_tab
     ), DumbAware {
         override fun isDumbAware(): Boolean {

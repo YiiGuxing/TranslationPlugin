@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.TextToSpeech
 import com.intellij.openapi.Disposable
@@ -26,6 +27,7 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
         disabledIcon = Icons.AudioDisabled
         setHoveringIcon(Icons.AudioPressed)
         myPaintUnderline = false
+        toolTipText = message("tooltip.listen")
         horizontalAlignment = SwingConstants.CENTER
         setListener(this, null)
     }
