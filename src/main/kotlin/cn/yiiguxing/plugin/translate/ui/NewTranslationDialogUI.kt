@@ -76,7 +76,7 @@ interface NewTranslationDialogUI {
 }
 
 class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : NewTranslationDialogUI {
-    private val mRoot: JSplitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+    private val mRoot: JPanel = JPanel()
     override val topPanel: JPanel = JPanel()
     private val bottomPanel: JPanel = JPanel()
     override lateinit var translationPanel: JPanel
@@ -255,9 +255,10 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
         mRoot.apply {
             border = PopupBorder.Factory.create(true, true)
+            layout = BoxLayout(mRoot, BoxLayout.Y_AXIS)
 
-            topComponent=translationPanel
-            bottomComponent=dictViewerPanel
+            add(translationPanel)
+            add(dictViewerPanel)
         }
 
         return mRoot
