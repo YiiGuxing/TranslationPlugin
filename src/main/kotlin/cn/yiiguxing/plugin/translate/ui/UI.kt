@@ -93,9 +93,18 @@ object UI {
 
     fun emptyBorder(offsets: Int) = JBUI.Borders.empty(offsets)
 
-    fun lineAbove() = JBUI.Borders.customLine(getBordersColor(), 1, 0, 0, 0)
-    fun lineBelow() = JBUI.Borders.customLine(getBordersColor(), 0, 0, 1, 0)
-    fun lineToRight() = JBUI.Borders.customLine(getBordersColor(), 0, 0, 0, 1)
+    fun lineAbove(active: Boolean = true): Border {
+        return JBUI.Borders.customLine(JBUI.CurrentTheme.Popup.borderColor(active), 1, 0, 0, 0)
+    }
+
+
+    fun lineBelow(active: Boolean = true): Border {
+        return JBUI.Borders.customLine(JBUI.CurrentTheme.Popup.borderColor(active), 0, 0, 1, 0)
+    }
+
+    fun lineToRight(active: Boolean = true): Border {
+        return JBUI.Borders.customLine(JBUI.CurrentTheme.Popup.borderColor(active), 0, 0, 0, 1)
+    }
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 }

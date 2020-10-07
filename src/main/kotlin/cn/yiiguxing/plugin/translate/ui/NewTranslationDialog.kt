@@ -17,6 +17,7 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.icons.AllIcons
+import com.intellij.ide.actions.runAnything.RunAnythingPopupUI
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.impl.ActionButton
@@ -151,7 +152,12 @@ class NewTranslationDialog(
         window.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
                 window.addWindowFocusListener(object : WindowAdapter() {
+                    override fun windowGainedFocus(e: WindowEvent) {
+                        setActive(true)
+                    }
+
                     override fun windowLostFocus(e: WindowEvent) {
+                        setActive(false)
                         val oppositeWindow = e.oppositeWindow
                         if (oppositeWindow === window || oppositeWindow != null && oppositeWindow.owner === window) {
                             return
