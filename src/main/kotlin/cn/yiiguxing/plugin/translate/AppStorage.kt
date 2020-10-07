@@ -34,6 +34,13 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     var lastReplacementTargetLanguage: Lang? = null
 
+    var pinNewTranslationDialog: Boolean = false
+    var newTranslationDialogX: Int? = null
+    var newTranslationDialogY: Int? = null
+    var newTranslationDialogWidth: Int = 600
+    var newTranslationDialogHeight: Int = 250
+    var newTranslationDialogCollapseDictViewer = true
+
     /**
      * 最大历史记录长度
      */

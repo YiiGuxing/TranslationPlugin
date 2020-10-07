@@ -17,7 +17,6 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.icons.AllIcons
-import com.intellij.ide.actions.runAnything.RunAnythingPopupUI
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.impl.ActionButton
@@ -162,7 +161,7 @@ class NewTranslationDialog(
                         if (oppositeWindow === window || oppositeWindow != null && oppositeWindow.owner === window) {
                             return
                         }
-                        if (!Settings.pinNewTranslationDialog && oppositeWindow != null) {
+                        if (!AppStorage.pinNewTranslationDialog && oppositeWindow != null) {
                             doCancelAction()
                         }
                     }
@@ -328,12 +327,12 @@ class NewTranslationDialog(
         }
         expandDictViewerButton.setListener({ _, _ ->
             expandDictViewer()
-            Settings.newTranslationDialogCollapseDictViewer = false
+            AppStorage.newTranslationDialogCollapseDictViewer = false
             fixWindowHeight()
         }, null)
         collapseDictViewerButton.setListener({ _, _ ->
             collapseDictViewer()
-            Settings.newTranslationDialogCollapseDictViewer = true
+            AppStorage.newTranslationDialogCollapseDictViewer = true
             fixWindowHeight()
         }, null)
     }
@@ -388,7 +387,7 @@ class NewTranslationDialog(
         }
         val hasContent = dictDocument != null || extraDocument != null
 
-        if (hasContent && Settings.newTranslationDialogCollapseDictViewer)
+        if (hasContent && AppStorage.newTranslationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)
             expandDictViewer()
@@ -614,24 +613,24 @@ class NewTranslationDialog(
     }
 
     private fun storeWindowLocationAndSize() {
-        Settings.newTranslationDialogX = window.location.x
-        Settings.newTranslationDialogY = window.location.y
-        Settings.newTranslationDialogWidth = translationPanel.width
-        Settings.newTranslationDialogHeight = translationPanel.height
+        AppStorage.newTranslationDialogX = window.location.x
+        AppStorage.newTranslationDialogY = window.location.y
+        AppStorage.newTranslationDialogWidth = translationPanel.width
+        AppStorage.newTranslationDialogHeight = translationPanel.height
 
         translationPanel.preferredSize = translationPanel.size
     }
 
     private fun restoreWindowLocationAndSize() {
-        val savedX = Settings.newTranslationDialogX
-        val savedY = Settings.newTranslationDialogY
+        val savedX = AppStorage.newTranslationDialogX
+        val savedY = AppStorage.newTranslationDialogY
         if (savedX != null && savedY != null) {
             window.location = Point(savedX, savedY)
         }
-        val savedSize = Dimension(Settings.newTranslationDialogWidth, Settings.newTranslationDialogHeight)
+        val savedSize = Dimension(AppStorage.newTranslationDialogWidth, AppStorage.newTranslationDialogHeight)
         translationPanel.size = savedSize
         translationPanel.preferredSize = savedSize
-        fixWindowHeight(Settings.newTranslationDialogWidth)
+        fixWindowHeight(AppStorage.newTranslationDialogWidth)
     }
 
     private class UIProvider : NewTranslationDialogUiProvider {
@@ -658,11 +657,11 @@ class NewTranslationDialog(
         }
 
         override fun isSelected(e: AnActionEvent): Boolean {
-            return Settings.pinNewTranslationDialog
+            return AppStorage.pinNewTranslationDialog
         }
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
-            Settings.pinNewTranslationDialog = state
+            AppStorage.pinNewTranslationDialog = state
         }
     }
 

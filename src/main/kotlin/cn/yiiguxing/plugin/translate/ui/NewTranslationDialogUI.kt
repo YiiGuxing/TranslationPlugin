@@ -64,7 +64,7 @@ interface NewTranslationDialogUI {
     val expandDictViewerButton: LinkLabel<Void>
     val collapseDictViewerButton: LinkLabel<Void>
 
-    fun createMainPanel(): JPanel
+    fun createMainPanel(): JComponent
 
     fun setActive(active: Boolean)
 
@@ -76,7 +76,7 @@ interface NewTranslationDialogUI {
 }
 
 class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : NewTranslationDialogUI {
-    private val mRoot: JPanel = JPanel()
+    private val mRoot: JSplitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
     override val topPanel: JPanel = JPanel()
     private val bottomPanel: JPanel = JPanel()
     override lateinit var translationPanel: JPanel
@@ -114,7 +114,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val spellComponent: SpellComponent = createSpellComponent()
     override val fixLangComponent: FixLangComponent = FixLangComponent()
 
-    override fun createMainPanel(): JPanel {
+    override fun createMainPanel(): JComponent {
         initTextAreas()
         initDictViewer()
         layoutTopPanel()
@@ -217,7 +217,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
     }
 
-    private fun layoutMainPanel(): JPanel {
+    private fun layoutMainPanel(): JComponent {
 
         val centerPanel = JPanel(migLayout()).apply {
             val leftPanel = JPanel(migLayout()).apply {
@@ -255,10 +255,9 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
         mRoot.apply {
             border = PopupBorder.Factory.create(true, true)
-            layout = BoxLayout(mRoot, BoxLayout.Y_AXIS)
 
-            add(translationPanel)
-            add(dictViewerPanel)
+            topComponent=translationPanel
+            bottomComponent=dictViewerPanel
         }
 
         return mRoot

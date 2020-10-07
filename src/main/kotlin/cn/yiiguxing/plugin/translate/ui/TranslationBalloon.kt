@@ -7,11 +7,11 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -88,7 +88,7 @@ class TranslationBalloon(
         Disposer.register(TranslationUIManager.disposable(project), balloon)
         // 如果使用`Disposer.register(balloon, this)`的话，
         // `TranslationBalloon`在外部以子`Disposable`再次注册时将会使之无效。
-        Disposer.register(balloon, Disposable { Disposer.dispose(this) })
+        Disposer.register(balloon, { Disposer.dispose(this) })
         Disposer.register(this, processPane)
         Disposer.register(this, translationPane)
 
@@ -242,7 +242,7 @@ class TranslationBalloon(
         val readyTranslation = translationPane.translation ?: return
         hide()
 
-        Settings.pinNewTranslationDialog = true
+        AppStorage.pinNewTranslationDialog = true
         TranslationUIManager.showDialog(editor.project)
             .applyTranslation(readyTranslation)
     }
@@ -250,7 +250,7 @@ class TranslationBalloon(
     private fun showOnTranslationDialog(text: String, srcLang: Lang, targetLang: Lang) {
         hide()
 
-        Settings.pinNewTranslationDialog = true
+        AppStorage.pinNewTranslationDialog = true
         TranslationUIManager.showDialog(editor.project)
             .translate(text, srcLang, targetLang)
     }

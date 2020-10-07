@@ -147,14 +147,6 @@ class Settings : PersistentStateComponent<Settings> {
 
     var translateDocumentation: Boolean = false
 
-    var pinNewTranslationDialog: Boolean = false
-
-    var newTranslationDialogX: Int? = null
-    var newTranslationDialogY: Int? = null
-    var newTranslationDialogWidth: Int = 600
-    var newTranslationDialogHeight: Int = 250
-    var newTranslationDialogCollapseDictViewer = true
-
     var primaryFontPreviewText = message("settings.font.default.preview.text")
 
     @Transient
