@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
-import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
@@ -182,7 +181,7 @@ class InstantTranslationDialog(private val project: Project?) :
         addActionListener { onTranslate() }
     }
 
-    private fun requestTranslate(delay: Int = if (presenter.translatorId == BaiduTranslator.id) 1000 else 500) {
+    private fun requestTranslate(delay: Int = presenter.translator.intervalLimit) {
         alarm.apply {
             cancelAllRequests()
             addRequest(translateAction, delay)
