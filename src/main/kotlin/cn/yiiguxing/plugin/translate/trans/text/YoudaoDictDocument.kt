@@ -122,6 +122,7 @@ class YoudaoDictDocument private constructor(
 
             val wordStrings = LinkedList<CharSequence>()
             val translations = ArraySet<String>()
+            val newWordsStringBuilder = StringBuilder()
             for (i in explanations.indices) {
                 if (i > 0) {
                     wordStrings += "\n"
@@ -130,31 +131,28 @@ class YoudaoDictDocument private constructor(
                 val explanation = explanations[i]
                 val annotationMap = HashMap<String, String>()
                 val matchResult = REGEX_EXPLANATION.find(explanation)
-                val words = if (matchResult != null) {
+                val wordsString = if (matchResult != null) {
                     wordStrings += StyledString(matchResult.groups[GROUP_PART_OF_SPEECH]!!.value, POS_STYLE)
                     wordStrings += " "
 
-                    // issue: #581 (https://github.com/YiiGuxing/TranslationPlugin/issues/581)
-                    // 将词条中的注释部分使用占位符`[$index]`代替，以防止注释中有逗号等字符而被拆分。
-                    var index = 0
-                    val sb = StringBuilder()
-                    matchResult
-                        .groups[GROUP_WORDS]!!
-                        .value
-                        .trim()
-                        .blocks(REGEX_WORD_ANNOTATION) { block, isAnnotation ->
-                            if (isAnnotation) {
-                                val annotationPlaceholder = "[${index++}]"
-                                sb.append(annotationPlaceholder)
-                                annotationMap[annotationPlaceholder] = block
-                            } else {
-                                sb.append(block)
-                            }
-                        }
-                    sb.toString()
+                    matchResult.groups[GROUP_WORDS]!!.value.trim()
                 } else explanation.trim()
 
-                words.blocks(REGEX_WORDS_SEPARATOR) { separatorOrWord, isSeparator ->
+                // issue: #581 (https://github.com/YiiGuxing/TranslationPlugin/issues/581)
+                // 将词条中的注释部分使用占位符`[$index]`代替，以防止注释中有逗号等字符而被拆分。
+                var annotationIndex = 0
+                newWordsStringBuilder.setLength(0)
+                wordsString.blocks(REGEX_WORD_ANNOTATION) { block, isAnnotation ->
+                    if (isAnnotation) {
+                        val annotationPlaceholder = "[${annotationIndex++}]"
+                        newWordsStringBuilder.append(annotationPlaceholder)
+                        annotationMap[annotationPlaceholder] = block
+                    } else {
+                        newWordsStringBuilder.append(block)
+                    }
+                }
+
+                newWordsStringBuilder.toString().blocks(REGEX_WORDS_SEPARATOR) { separatorOrWord, isSeparator ->
                     if (isSeparator) {
                         val separator = when (separatorOrWord) {
                             ",", ";" -> "$separatorOrWord "
