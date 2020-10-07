@@ -67,7 +67,7 @@ class YoudaoDictDocument private constructor(
 
     @Suppress("SENSELESS_COMPARISON")
     private fun showWordForms(): Boolean {
-        //Application may be null in ui tests
+        // Application may be null in ui tests
         return ApplicationManager.getApplication() == null || Settings.showWordForms
     }
 
@@ -258,7 +258,7 @@ class YoudaoDictDocument private constructor(
             }
             styledDocument.getStyleOrAdd(VARIANT_STYLE, wordBaseStyle) { style ->
                 StyleConstants.setItalic(style, true)
-                StyledViewer.StyleConstants.setClickable(style, WORD_COLOR, WORD_HOVER_COLOR, WordType.WORD)
+                StyledViewer.StyleConstants.setClickable(style, WORD_COLOR, WORD_HOVER_COLOR, WordType.VARIANT)
             }
             styledDocument.getStyleOrAdd(SEPARATOR_STYLE, defaultStyle) { style ->
                 StyleConstants.setForeground(style, JBColor(0xFF5555, 0x2196F3))
