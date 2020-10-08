@@ -11,6 +11,7 @@ import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
 import java.awt.Color
+import java.awt.image.RGBImageFilter
 import javax.swing.Icon
 import javax.swing.UIManager
 import javax.swing.border.Border
@@ -60,7 +61,15 @@ object UI {
     data class FontPair(val primary: JBFont, val phonetic: JBFont)
 
     @JvmStatic
-    fun Icon.disabled(): Icon = IconUtil.colorize(this, JBUI.CurrentTheme.Label.disabledForeground())
+    fun Icon.disabled(): Icon = IconUtil.filterIcon(this, { DisabledFilter() }, null)
+
+    private class DisabledFilter(color: Color = JBUI.CurrentTheme.Label.disabledForeground()) : RGBImageFilter() {
+        private val rgb = color.rgb
+
+        override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+            return argb and -0x1000000 or (rgb and 0x00ffffff)
+        }
+    }
 
     @JvmStatic
     @JvmOverloads
