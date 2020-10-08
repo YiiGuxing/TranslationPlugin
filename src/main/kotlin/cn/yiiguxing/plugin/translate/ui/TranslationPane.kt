@@ -297,8 +297,8 @@ abstract class TranslationPane<T : JComponent>(
                 disabledIcon = AllIcons.Actions.Copy.disabled()
                 addActionListener { copy() }
             }
-            val translate = JBMenuItem(message("menu.item.translate"), Icons.Translate).apply {
-                disabledIcon = Icons.Translate.disabled()
+            val translate = JBMenuItem(message("menu.item.translate"), Icons.Translation).apply {
+                disabledIcon = Icons.Translation.disabled()
                 addActionListener {
                     translation?.let { translation ->
                         selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->

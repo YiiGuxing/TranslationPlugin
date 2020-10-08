@@ -218,8 +218,8 @@ class NewTranslationDialog(
                     disabledIcon = AllIcons.Actions.Copy.disabled()
                     addActionListener { copy() }
                 }
-                val translate = JBMenuItem(message("menu.item.translate"), Icons.Translate).apply {
-                    disabledIcon = Icons.Translate.disabled()
+                val translate = JBMenuItem(message("menu.item.translate"), Icons.Translation).apply {
+                    disabledIcon = Icons.Translation.disabled()
                     addActionListener {
                         selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->
                             if (this@setupPopupMenu === inputTextArea) {

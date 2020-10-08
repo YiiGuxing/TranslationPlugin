@@ -126,7 +126,7 @@
 
     <actions>
         <action id="$ShowTranslationDialogAction"
-                icon="Icons.Translate"
+                icon="Icons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 text="Show Translation Dialog..."
                 description="Open translation dialog">
@@ -144,7 +144,7 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
         </action>
         <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
-                icon="Icons.Translate"
+                icon="Icons.Translation"
                 text="Translate"
                 description="Translate">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
@@ -177,7 +177,7 @@
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TerminalTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
-                icon="Icons.Translate"
+                icon="Icons.Translation"
                 text="Translate Text in Terminal"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$ShowWordOfTheDayAction"

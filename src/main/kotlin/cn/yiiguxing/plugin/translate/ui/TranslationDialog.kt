@@ -103,7 +103,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
         initFont()
 
         translateButton.apply {
-            icon = Icons.Translate
+            icon = Icons.Translation
             addActionListener { translateInternal(inputComboBox.editor.item.toString()) }
             minimumSize = JBDimension(45, 0)
             maximumSize = JBDimension(45, Int.MAX_VALUE)
