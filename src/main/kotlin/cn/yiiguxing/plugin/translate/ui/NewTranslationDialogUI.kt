@@ -11,7 +11,6 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
-import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout

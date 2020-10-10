@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
-import cn.yiiguxing.plugin.translate.ui.icon.LangComboBoxLink
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
@@ -22,6 +21,7 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.JBMenuItem
@@ -96,9 +96,72 @@ class NewTranslationDialog(
         addMouseListeners()
         peer.setContentPane(panel)
 
+        registerShortcuts()
         Application.messageBus
             .connect(this)
             .subscribe(SettingsChangeListener.TOPIC, this)
+    }
+
+    private fun registerShortcuts() {
+        val rootPane = rootPane
+
+        // Title buttons
+        DumbAwareAction.create { sourceLangComboBox.togglePopup() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("alt S"), rootPane, this
+            )
+        DumbAwareAction.create { targetLangComboBox.togglePopup() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("alt T"), rootPane, this
+            )
+        DumbAwareAction.create { swapButton.takeIf { it.isEnabled }?.doClick() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("alt shift S"), rootPane, this
+            )
+        DumbAwareAction.create { (pinButton as? ActionButton)?.click() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("alt P"), rootPane, this
+            )
+
+        // Toolbar buttons
+        DumbAwareAction.create { inputTTSButton.play() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("alt ENTER", "meta ENTER"), rootPane, this
+            )
+        DumbAwareAction.create { translationTTSButton.play() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("shift ENTER"), rootPane, this
+            )
+        DumbAwareAction.create { starButton.takeIf { it.isEnabled }?.doClick() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("control F", "meta F"), rootPane, this
+            )
+        DumbAwareAction.create { showHistoryPopup() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("control H", "meta H"), rootPane, this
+            )
+        DumbAwareAction.create { clearText() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString(
+                    "control shift BACK_SPACE",
+                    "meta shift BACK_SPACE",
+                    "control shift DELETE",
+                    "meta shift DELETE"
+                ), rootPane, this
+            )
+        DumbAwareAction.create { copyTranslation() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("control shift C", "meta shift C"), rootPane, this
+            )
+
+        DumbAwareAction.create { collapseDictViewerButton.takeIf { it.isVisible }?.doClick() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("control UP", "meta UP"), rootPane, this
+            )
+        DumbAwareAction.create { expandDictViewerButton.takeIf { it.isVisible }?.doClick() }
+            .registerCustomShortcutSet(
+                CustomShortcutSet.fromString("control DOWN", "meta DOWN"), rootPane, this
+            )
     }
 
     override fun createCenterPanel(): JComponent? {
@@ -257,23 +320,12 @@ class NewTranslationDialog(
         clearButton.apply {
             isEnabled = false
             toolTipText = message("translation.dialog.clear.text")
-            setListener({ _, _ ->
-                inputTextArea.text = ""
-                translationTextArea.text = ""
-            }, null)
+            setListener({ _, _ -> clearText() }, null)
         }
         copyButton.apply {
             isEnabled = false
-            toolTipText = message("translation.dialog.copy.text")
-            setListener({ _, _ ->
-                val textToCopy = translationTextArea
-                    .selectedText
-                    .takeUnless { it.isNullOrEmpty() }
-                    ?: translationTextArea.text
-                if (!textToCopy.isNullOrEmpty()) {
-                    CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
-                }
-            }, null)
+            toolTipText = message("translation.dialog.copy.translation")
+            setListener({ _, _ -> copyTranslation() }, null)
         }
 
         historyButton.apply {
@@ -412,6 +464,22 @@ class NewTranslationDialog(
                 presenter.translate(it, sourceLang, targetLang)
             }
         } ?: clearTranslation()
+    }
+
+    private fun clearText() {
+        inputTextArea.text = ""
+        translationTextArea.text = ""
+        clearTranslation()
+    }
+
+    private fun copyTranslation() {
+        val textToCopy = translationTextArea
+            .selectedText
+            .takeUnless { it.isNullOrEmpty() }
+            ?: translationTextArea.text
+        if (!textToCopy.isNullOrEmpty()) {
+            CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
+        }
     }
 
     private fun clearTranslation() {
