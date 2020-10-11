@@ -146,13 +146,25 @@
   - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
   - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
 
-- **Show Instant Translation Dialog**
-
-  显示即时翻译对话框。默认快捷键: (无)
-
 - **Word of the Day**
 
   显示每日单词对话框。默认快捷键: (无)
+
+- **其他**
+
+  翻译对话框中的快捷键：
+  
+  - 显示源语言列表 - <kbd>Alt</kbd> + <kbd>S</kbd>
+  - 显示目标语言列表 - <kbd>Alt</kbd> + <kbd>T</kbd>
+  - 交换语言 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+  - 固定窗口 - <kbd>Alt</kbd> + <kbd>P</kbd>
+  - 播放TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd>
+  - 收藏到单词本 - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd>
+  - 显示历史记录 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd>
+  - 拷贝译文 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> / <kbd>Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+  - 清空输入 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd>
+  - 展开更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd>
+  - 收起更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd>
 
 ## FAQ
 
