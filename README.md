@@ -157,7 +157,7 @@
   - 显示源语言列表 - <kbd>Alt</kbd> + <kbd>S</kbd>
   - 显示目标语言列表 - <kbd>Alt</kbd> + <kbd>T</kbd>
   - 交换语言 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-  - 固定窗口 - <kbd>Alt</kbd> + <kbd>P</kbd>
+  - 切换窗口固定状态 - <kbd>Alt</kbd> + <kbd>P</kbd>
   - 播放TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd>
   - 收藏到单词本 - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd>
   - 显示历史记录 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd>
