@@ -54,7 +54,7 @@ class TranslationUIManager private constructor() : Disposable {
         }
 
         private fun <T> Ref<T>.clearOnDispose(disposable: Disposable) {
-            Disposer.register(disposable, Disposable {
+            Disposer.register(disposable, {
                 checkThread()
                 set(null)
             })
@@ -74,9 +74,9 @@ class TranslationUIManager private constructor() : Disposable {
         fun disposable(project: Project? = null): Disposable = instance(project)
 
         private inline fun <D : DialogWrapper> showDialog(
-                cache: Ref<D>,
-                onBeforeShow: (D) -> Unit = {},
-                dialog: () -> D
+            cache: Ref<D>,
+            onBeforeShow: (D) -> Unit = {},
+            dialog: () -> D
         ): D {
             checkThread()
             return cache.getOrPut {

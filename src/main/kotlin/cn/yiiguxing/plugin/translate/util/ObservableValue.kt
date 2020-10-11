@@ -30,7 +30,7 @@ class ObservableValue<T>(
 
     fun observe(parent: Disposable, listener: (newValue: T, oldValue: T) -> Unit) {
         listeners.add(listener)
-        Disposer.register(parent, Disposable { listeners.remove(listener) })
+        Disposer.register(parent, { listeners.remove(listener) })
     }
 
 }
