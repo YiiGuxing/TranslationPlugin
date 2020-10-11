@@ -33,7 +33,6 @@ import java.awt.Font
 import java.awt.Graphics
 import java.lang.Integer.min
 import javax.swing.*
-import javax.swing.border.Border
 import javax.swing.text.JTextComponent
 
 interface NewTranslationDialogUI {
@@ -125,21 +124,6 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
     override fun setActive(active: Boolean) {
         mRoot.border = PopupBorder.Factory.create(active, true)
-        topPanel.border = createTopPanelBorder(active)
-        bottomPanel.border = createBottomPanelBorder(active)
-        dictViewerPanel.border = createDictViewerPanelBorder(active)
-    }
-
-    private fun createTopPanelBorder(active: Boolean = true): Border {
-        return emptyBorder(topAndBottom = 6, leftAndRight = 0) + lineBelow(active)
-    }
-
-    private fun createDictViewerPanelBorder(active: Boolean = true): Border {
-        return lineAbove(active)
-    }
-
-    private fun createBottomPanelBorder(active: Boolean = true): Border {
-        return emptyBorder(6, 10) + lineAbove(active)
     }
 
     override fun initFonts(pair: UI.FontPair) {
@@ -199,7 +183,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
         dictViewerPanel.apply {
             maximumSize = Dimension(Int.MAX_VALUE, maxDictViewerHeight())
-            border = createDictViewerPanelBorder()
+            border = lineAbove()
         }
 
         expandDictViewerButton.apply {
@@ -238,7 +222,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
         bottomPanel.apply {
             layout = HorizontalLayout(JBUIScale.scale(10))
-            border = createBottomPanelBorder()
+            border = emptyBorder(6, 10) + lineAbove()
 
             add(spellComponent, HorizontalLayout.LEFT)
             add(fixLangComponent, HorizontalLayout.LEFT)
@@ -287,7 +271,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
         topPanel.apply {
             layout = migLayout()
-            border = createTopPanelBorder()
+            border = emptyBorder(topAndBottom = 6, leftAndRight = 0) + lineBelow()
             add(left, fillX().sizeGroup(halfTopPanel))
             add(swapButton)
             add(right, fillX().sizeGroup(halfTopPanel))
