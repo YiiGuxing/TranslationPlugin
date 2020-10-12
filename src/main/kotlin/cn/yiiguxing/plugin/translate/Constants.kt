@@ -21,8 +21,6 @@ const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-transla
 
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"
-const val HTML_DESCRIPTION_DISABLE = "#DISABLE"
-const val HTML_DESC_COPY_TO_CLIPBOARD = "#COPY_TO_CLIPBOARD"
 
 const val GOOGLE_TRANSLATE_HOST = "translate.googleapis.com"
 const val GOOGLE_TRANSLATE_HOST_CN = "translate.google.cn"
