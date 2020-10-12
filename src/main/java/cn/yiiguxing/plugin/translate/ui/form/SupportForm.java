@@ -10,9 +10,10 @@ import javax.swing.*;
 public class SupportForm {
     public JPanel rootPane;
     public LinkLabel<String> starLinkLabel;
-    public LinkLabel<String> prLinkLab;
+    public LinkLabel<String> prLinkLabel;
     public LinkLabel<String> reportLinkLabel;
     public LinkLabel<String> ideaLinkLabel;
     public LinkLabel<String> openCollectiveLinkLabel;
     public LinkLabel<String> donateLinkLabel;
+    public LinkLabel<String> shareLinkLabel;
 }
