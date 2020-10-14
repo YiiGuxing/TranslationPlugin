@@ -33,7 +33,10 @@ import java.awt.Component.TOP_ALIGNMENT
 import java.awt.Toolkit
 import java.awt.event.AWTEventListener
 import java.awt.event.MouseEvent
-import javax.swing.*
+import javax.swing.JComponent
+import javax.swing.JTextPane
+import javax.swing.MenuElement
+import javax.swing.SwingUtilities
 import javax.swing.event.HyperlinkEvent
 
 class TranslationBalloon(
@@ -292,9 +295,10 @@ class TranslationBalloon(
 
         private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(content)
             .setDialogMode(true)
-            .setFillColor(UIManager.getColor("Panel.background"))
-            .setBorderColor(Color.darkGray.toAlpha(75))
+            .setFillColor(JBUI.CurrentTheme.CustomFrameDecorations.paneBackground())
+            .setBorderColor(Color.darkGray.toAlpha(35))
             .setShadow(true)
+            .setAnimationCycle(200)
             .setHideOnClickOutside(true)
             .setHideOnAction(true)
             .setHideOnFrameResize(true)
