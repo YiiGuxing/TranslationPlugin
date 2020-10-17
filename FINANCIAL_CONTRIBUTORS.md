@@ -12,6 +12,7 @@
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
 | Kirill Semenchenko | | 2 USD |
+| Wongwc | [github.com/weihong363](https://github.com/weihong363) | 10 CNY |
 | 于泓楷 | | 10 CNY |
 | Xyz | | 10 CNY |
 | 邓子迪 | | 10 CNY |
