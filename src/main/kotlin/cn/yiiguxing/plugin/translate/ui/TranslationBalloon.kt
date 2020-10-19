@@ -241,7 +241,7 @@ class TranslationBalloon(
         }
     }
 
-    private fun pin() {
+    fun pin() {
         val readyTranslation = translationPane.translation ?: return
         hide()
 

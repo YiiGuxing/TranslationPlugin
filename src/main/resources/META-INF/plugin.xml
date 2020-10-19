@@ -121,7 +121,7 @@
 
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
-        <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.ToggleDocTranslationPromoter"/>
+        <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
     </extensions>
 
     <actions>
@@ -194,6 +194,12 @@
         <action id="ToggleQuickDocTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
                 text="Toggle Quick Documentation Translation"
+                use-shortcut-of="$EditorTranslateAction">
+        </action>
+
+        <action id="PinBalloonAction"
+                class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
+                text="Open as Translation Dialog"
                 use-shortcut-of="$EditorTranslateAction">
         </action>
 

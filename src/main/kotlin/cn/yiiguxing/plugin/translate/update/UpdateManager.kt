@@ -196,7 +196,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 
-        private const val UPDATES_BASE_URL = "http://yiiguxing.github.io/TranslationPlugin/updates"
+        private const val UPDATES_BASE_URL = "https://yiiguxing.gitee.io/translation-plugin/updates"
 
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"

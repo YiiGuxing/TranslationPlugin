@@ -39,6 +39,8 @@ class TranslationUIManager private constructor() : Disposable {
         disposeUI()
     }
 
+    fun currentBalloon(): TranslationBalloon? = balloonRef.get()
+
     fun currentNewTranslationDialog(): NewTranslationDialog? = newTranslationDialogRef.get()
 
     companion object {
