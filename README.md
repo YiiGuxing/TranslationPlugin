@@ -152,19 +152,27 @@
 
 - **其他**
 
-  翻译对话框中的快捷键：
+  - 翻译对话框快捷键：
   
-  - 显示源语言列表 - <kbd>Alt</kbd> + <kbd>S</kbd>
-  - 显示目标语言列表 - <kbd>Alt</kbd> + <kbd>T</kbd>
-  - 交换语言 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-  - 切换窗口固定状态 - <kbd>Alt</kbd> + <kbd>P</kbd>
-  - 播放TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd>
-  - 收藏到单词本 - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd>
-  - 显示历史记录 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd>
-  - 拷贝译文 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
-  - 清空输入 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd>
-  - 展开更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd>
-  - 收起更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd>
+    - 显示源语言列表 - <kbd>Alt</kbd> + <kbd>S</kbd>
+    - 显示目标语言列表 - <kbd>Alt</kbd> + <kbd>T</kbd>
+    - 交换语言 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+    - 切换窗口固定状态 - <kbd>Alt</kbd> + <kbd>P</kbd>
+    - 播放TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd>
+    - 收藏到单词本 - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd>
+    - 显示历史记录 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd>
+    - 拷贝译文 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+    - 清空输入 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd>
+    - 展开更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd>
+    - 收起更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd>
+
+  - 翻译气泡快捷键：
+  
+    - 以对话框打开 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd>
+
+  - 快速文档窗口快捷键：
+  
+    - 开启/关闭自动翻译 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd>
 
 ## FAQ
 
