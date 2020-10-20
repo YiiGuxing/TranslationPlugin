@@ -157,10 +157,6 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
-        <action id="$TranslateDocumentationAction"
-                icon="AllIcons.Toolwindows.Documentation"
-                class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"
-                text="Translate Documentation" description="Translate documentation"/>
         <action id="$InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
                 text="Translate(Inclusive)"/>
@@ -207,7 +203,6 @@
             <separator/>
             <reference ref="$EditorTranslateAction"/>
             <reference ref="$TranslateAndReplaceAction"/>
-            <reference ref="$TranslateDocumentationAction"/>
             <separator/>
 
             <add-to-group group-id="BasicEditorPopupMenu" anchor="first"/>
