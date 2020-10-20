@@ -152,6 +152,7 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
         </action>
         <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+                icon="Icons.TranslationReplace"
                 text="Translate and Replace..." description="Translate and Replace">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
