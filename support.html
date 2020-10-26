@@ -114,8 +114,10 @@
         $patronsTableBody.append($("<tr>" + nameTd + websiteTd + amountTd + "</tr>"))
     }
 
+    var date = new Date()
+    var t = "" + date.getFullYear() + (date.getMonth() + 1) + date.getDate()
     $.ajax({
-        url: "https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/FINANCIAL_CONTRIBUTORS.md",
+        url: "https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/FINANCIAL_CONTRIBUTORS.md?t=" + t,
         type: "GET",
         dataType: "TEXT",
         success: function (data) {
