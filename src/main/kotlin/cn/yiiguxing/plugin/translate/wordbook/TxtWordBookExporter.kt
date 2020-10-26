@@ -10,16 +10,17 @@ class TxtWordBookExporter : WordBookExporter {
     override val extension: String = "txt"
 
     override fun export(words: List<WordBookItem>, outputStream: OutputStream) {
-        val writer = OutputStreamWriter(outputStream, Charsets.UTF_8.name())
-        words.forEach { item ->
-            writer.write(item.word)
-            writer.write(SEPARATOR)
-            item.phonetic?.let { writer.write(it) }
-            writer.write(SEPARATOR)
-            item.explanation?.let { writer.write(it.replace(EXPLANATION_REPLACE_REGEX, " ")) }
-            writer.write(ITEM_SEPARATOR)
+        OutputStreamWriter(outputStream, Charsets.UTF_8).use { writer ->
+            words.forEach { item ->
+                writer.write(item.word)
+                writer.write(SEPARATOR)
+                item.phonetic?.let { writer.write(it) }
+                writer.write(SEPARATOR)
+                item.explanation?.let { writer.write(it.replace(EXPLANATION_REPLACE_REGEX, " ")) }
+                writer.write(ITEM_SEPARATOR)
+            }
+            writer.flush()
         }
-        writer.flush()
     }
 
     companion object {
