@@ -53,6 +53,10 @@ a {
     margin-bottom: 2rem;
 }
 
+.content img {
+    max-width: 100%;
+}
+
 .reference {
     padding: 0.5rem 1rem;
     border-left: 4px solid #dfe2e5;
