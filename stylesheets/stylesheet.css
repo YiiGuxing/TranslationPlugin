@@ -398,6 +398,7 @@ a:hover {
     bottom: 0;
     position: absolute;
     overflow: auto;
+    background-color: white;
 }
 
 .frame_content {
