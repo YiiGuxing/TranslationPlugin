@@ -2,19 +2,19 @@ import org.apache.tools.ant.filters.EscapeUnicode
 
 buildscript {
     repositories {
-        jcenter()
+        maven { url "https://maven.aliyun.com/repository/public" }
         mavenCentral()
     }
 }
 
 plugins {
     // https://github.com/JetBrains/gradle-intellij-plugin
-    id "org.jetbrains.intellij" version "0.6.0"
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id "org.jetbrains.intellij" version "0.5.0"
+    id "org.jetbrains.kotlin.jvm" version "1.4.10"
 }
 
 repositories {
-    jcenter()
+    maven { url "https://maven.aliyun.com/repository/public" }
     mavenCentral()
 }
 
@@ -35,8 +35,10 @@ patchPluginXml {
 }
 
 dependencies {
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly fileTree(dir: 'libs', include: ['clion.jar', 'rider.jar'])
+    implementation fileTree(dir: 'libs', include: ['idea-compat.jar'])
 
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.apache.commons:commons-dbcp2:2.6.0'
