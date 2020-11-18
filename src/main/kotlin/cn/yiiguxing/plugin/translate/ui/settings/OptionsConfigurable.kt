@@ -50,7 +50,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
     }
 
     companion object {
-        fun showSettingsDialog(project: Project?) {
+        fun showSettingsDialog(project: Project? = null) {
             ShowSettingsUtil.getInstance().showSettingsDialog(project, OptionsConfigurable::class.java)
         }
     }

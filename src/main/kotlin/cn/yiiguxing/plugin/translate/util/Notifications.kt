@@ -3,6 +3,8 @@
 package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
+import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
+import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnAction
@@ -73,6 +75,17 @@ object Notifications {
 
     fun showErrorNotification(displayId: String, title: String, message: String, project: Project? = null) {
         showNotification(displayId, title, message, NotificationType.ERROR, project)
+    }
+
+    class UrlOpeningListener(expireNotification: Boolean = true) :
+        NotificationListener.UrlOpeningListener(expireNotification) {
+        override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
+            when (hyperlinkEvent.description) {
+                HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog()
+                HTML_DESCRIPTION_SUPPORT -> SupportDialog.show()
+                else -> super.hyperlinkActivated(notification, hyperlinkEvent)
+            }
+        }
     }
 
 }
