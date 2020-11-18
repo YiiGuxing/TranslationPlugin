@@ -300,7 +300,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
 
     private fun createSpellComponent(): SpellComponent = SpellComponent().apply {
         spellText.apply {
-            font = font.deriveFont(Font.BOLD or Font.ITALIC, spellLabel.font.size.toFloat())
+            font = font.deriveFont(Font.BOLD, spellLabel.font.size.toFloat())
         }
     }
 

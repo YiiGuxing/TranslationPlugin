@@ -182,7 +182,7 @@ abstract class TranslationPane<T : JComponent>(
             fixLanguageLink.font = primaryFont
             spellComponent.apply {
                 spellLabel.font = primaryFont.lessOn(2f)
-                spellText.font = primaryFont.deriveFont(Font.BOLD or Font.ITALIC, spellLabel.font.size.toFloat())
+                spellText.font = primaryFont.deriveFont(Font.BOLD, spellLabel.font.size.toFloat())
             }
             originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
             translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
