@@ -21,6 +21,7 @@ import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.Icons
+import org.jetbrains.concurrency.runAsync
 import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
@@ -43,14 +44,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val version = Version(versionString)
         val lastVersion = Version(lastVersionString)
         val isFeatureVersion = version > lastVersion
-        if (isFeatureVersion && canBrowseWhatsNewHTMLEditor()) {
-            if (IdeVersion.isIde2020_3OrNewer) {
-                invokeLater { browseWhatsNew(project) }
-            } else {
-                DumbService.getInstance(project).smartInvokeLater { browseWhatsNew(project) }
-            }
-        }
-
         showUpdateNotification(project, plugin, version, isFeatureVersion)
         properties.setValue(VERSION_PROPERTY, versionString)
     }
@@ -78,15 +71,22 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             Change notes:<br/>
             ${plugin.changeNotes}
         """.trimIndent()
+
+        val canBrowseWhatsNewHTMLEditor = canBrowseWhatsNewHTMLEditor()
         NotificationGroup(displayId, NotificationDisplayType.STICKY_BALLOON, false)
             .createNotification(title, content, NotificationType.INFORMATION, Notifications.UrlOpeningListener(false))
+            .setImportant(true)
             .addAction(SupportAction())
             .apply {
-                if (isFeatureVersion && !canBrowseWhatsNewHTMLEditor()) {
+                if (isFeatureVersion && !canBrowseWhatsNewHTMLEditor) {
                     addAction(WhatsNewAction(version))
                 }
             }
-            .setImportant(true)
+            .whenExpired {
+                if (isFeatureVersion && canBrowseWhatsNewHTMLEditor) {
+                    browseWhatsNew(project)
+                }
+            }
             .show(project)
     }
 
@@ -135,7 +135,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 htmlContent = htmlContent.replace("<body>", "<body class='dark'>")
             }
 
-            // 删除编码设定，否则显示会乱码，保留码设定是为了方便编辑预览（去除在浏览器预览时会乱码）
+            // 删除编码设定，否则显示会乱码，保留编码设定是为了方便编辑预览（去除在浏览器预览时会乱码）
             return htmlContent.replace("<meta charset=\"UTF-8\">", "")
         }
 
@@ -155,11 +155,21 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         }
 
         fun browseWhatsNew(project: Project?) {
-            val whatsNewUrl = getWhatsNewUrl()
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
-                val html = getWhatsNewHtml()
-                HTMLEditorProviderCompat.openEditor(project, "What's New in Translation", html)
+                fun browse(html: String) {
+                    HTMLEditorProviderCompat.openEditor(project, "What's New in Translation", html)
+                }
+
+                runAsync { getWhatsNewHtml() }
+                    .onSuccess { html ->
+                        if (IdeVersion.isIde2020_3OrNewer) {
+                            invokeLater { browse(html) }
+                        } else {
+                            DumbService.getInstance(project).smartInvokeLater { browse(html) }
+                        }
+                    }
             } else {
+                val whatsNewUrl = getWhatsNewUrl()
                 BrowserUtil.browse(whatsNewUrl)
             }
         }

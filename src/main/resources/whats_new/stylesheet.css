@@ -7,6 +7,10 @@ body {
     background-color: white;
 }
 
+* {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", sans-serif;
+}
+
 body.dark {
     color: #bdbdbd;
     background-color: #27282c;
@@ -86,7 +90,7 @@ kbd {
     border-bottom-color: #bbb;
     border-radius: 3px;
     box-shadow: inset 0 -1px 0 #bbb;
-    margin: 2px 2px 2px;
+    margin: -2px 2px 0;
 }
 
 .dark kbd {
