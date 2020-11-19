@@ -19,8 +19,8 @@ body {
 kbd {
     display: inline-block;
     padding: 3px 5px;
-    font-size: 15px;
-    line-height: 16px;
+    font-size: 1rem;
+    line-height: 1rem;
     color: #555;
     vertical-align: middle;
     background-color: #fcfcfc;
@@ -28,8 +28,7 @@ kbd {
     border-bottom-color: #bbb;
     border-radius: 3px;
     box-shadow: inset 0 -1px 0 #bbb;
-    margin-left: 2px;
-    margin-right: 2px;
+    margin: -2px 2px 0;
 }
 
 .main-content {
