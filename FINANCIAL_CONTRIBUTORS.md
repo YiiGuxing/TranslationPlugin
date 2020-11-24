@@ -2,7 +2,7 @@
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 300 USD |
+| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 350 USD |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
