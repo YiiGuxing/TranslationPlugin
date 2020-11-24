@@ -22,7 +22,8 @@
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
 | 洪晓波 | | 9.9 CNY |
-| Chunlife.top |  | 5 CNY |
+| 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
+| Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
 | Qiuyukuhe |  | 5 CNY |
 | Oliveryuchang | [github.com/oliveryunchang](https://github.com/oliveryunchang) | 5 CNY |
 | Futao | [《喜欢天文》](http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0) | 5 CNY |
