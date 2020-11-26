@@ -17,7 +17,11 @@ import org.jetbrains.concurrency.runAsync
 class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionToIgnore {
 
     override fun update(e: AnActionEvent) {
-        val project = e.project ?: return
+        val project = e.project
+        if (project == null) {
+            e.presentation.isEnabled = false
+            return
+        }
 
         val docComponentExists = QuickDocUtil.getActiveDocComponent(project) != null
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)
@@ -32,9 +36,8 @@ class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionTo
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         Settings.translateDocumentation = state
 
-        val project = e.project!!
-        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)!!
-
+        val project = e.project ?: return
+        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
         toggleTranslation(project, activeDocComponent)
     }
 
