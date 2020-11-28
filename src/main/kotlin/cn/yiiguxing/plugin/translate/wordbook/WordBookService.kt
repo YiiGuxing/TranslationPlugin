@@ -311,6 +311,24 @@ class WordBookService {
     }
 
     /**
+     * Removes words by the specified [ids].
+     */
+    fun removeWords(ids: List<Long>): Boolean {
+        checkIsInitialized()
+        return lock {
+            queryRunner.update("DELETE FROM wordbook WHERE $COLUMN_ID IN (${ids.joinToString()})") > 0
+        }?.also { removed ->
+            if (removed) {
+                invokeOnDispatchThread {
+                    for (id in ids) {
+                        settingsPublisher.onWordRemoved(this@WordBookService, id)
+                    }
+                }
+            }
+        } == true
+    }
+
+    /**
      * Returns the word ID by the specified [word], [source language][sourceLanguage] and [target language][targetLanguage].
      */
     fun getWordId(word: String, sourceLanguage: Lang, targetLanguage: Lang): Long? {

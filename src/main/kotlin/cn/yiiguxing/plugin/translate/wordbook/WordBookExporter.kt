@@ -8,6 +8,8 @@ interface WordBookExporter {
 
     val extension: String
 
+    val availableForImport: Boolean get() = false
+
     fun export(words: List<WordBookItem>, outputStream: OutputStream)
 
 }

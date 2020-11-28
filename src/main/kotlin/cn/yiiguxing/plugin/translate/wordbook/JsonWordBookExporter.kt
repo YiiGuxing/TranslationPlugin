@@ -11,6 +11,8 @@ class JsonWordBookExporter : WordBookExporter {
 
     override val extension: String = "json"
 
+    override val availableForImport: Boolean = true
+
     override fun export(words: List<WordBookItem>, outputStream: OutputStream) {
         OutputStreamWriter(outputStream, Charsets.UTF_8).use { writer ->
             GsonBuilder()
