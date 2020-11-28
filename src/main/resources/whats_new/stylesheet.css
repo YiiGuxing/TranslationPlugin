@@ -90,7 +90,11 @@ kbd {
     border-bottom-color: #bbb;
     border-radius: 3px;
     box-shadow: inset 0 -1px 0 #bbb;
-    margin: -2px 2px 0;
+    margin: 2px 0;
+}
+
+kbd + kbd {
+    margin-right: 5px;
 }
 
 .dark kbd {
