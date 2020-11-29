@@ -7,6 +7,11 @@
     <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <style>
+        img {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
 <header class="frame_head">
@@ -224,7 +229,8 @@
                             <p><b>翻译气泡快捷键：</b></p>
                             <ul>
                                 <li>
-                                    以对话框打开 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+                                    以对话框打开 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
                                 </li>
                             </ul>
                         </li>
@@ -232,7 +238,8 @@
                             <p><b>快速文档窗口快捷键：</b></p>
                             <ul>
                                 <li>
-                                    开启/关闭自动翻译 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+                                    开启/关闭自动翻译 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
                                 </li>
                             </ul>
                         </li>
@@ -252,7 +259,7 @@
                         <li>检查网络环境，确保网络畅通。</li>
                         <li>检查是否是因为使用了代理软件而导致插件无法访问翻译API。</li>
                         <li>检查IDE代理配置，查看是否是因为IDE代理配置导致的问题。</li>
-                        <li>如果使用的是谷歌翻译，检查谷歌翻译配置，查看是否勾选了`<strong>使用translate.google.com</strong>`选项（如果系统语言环境是非中文的话，此选项是默认勾选的），translate.google.com在国内是需要VPN才能访问的。另外，TTS功能使用的也是谷歌翻译的API。
+                        <li>如果使用的是谷歌翻译，请检查谷歌翻译配置。由于一些众所周知的原因，导致谷歌翻译的网络访问不是很稳定。如果无法访问，可以尝试切换`<strong>使用translate.google.com</strong>`选项的勾选状态后再进行翻译。另外，TTS功能使用的也是谷歌翻译的API。
                         </li>
                     </ul>
                 </li>
@@ -286,7 +293,7 @@
                             href="https://github.com/YiiGuxing/TranslationPlugin/issues/365" target="_blank"
                     >Issue 管理公告</a>。在反馈问题时，请记得附上错误信息，其收集如下图所示（错误信息将会被拷贝到剪贴板）：
                     </p>
-                    <img style="float: left" src="images/ctc_balloon.png"><img src="images/ctc_dialog.png">
+                    <img style="float: left" src="images/ctc_balloon.png">
                 </li>
             </ul>
         </div>

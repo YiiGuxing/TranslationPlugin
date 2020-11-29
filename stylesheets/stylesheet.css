@@ -287,22 +287,39 @@ a:hover {
     }
 }
 
-.idea {
-    width: 608px;
-    height: 637px;
-    padding-left: 41px;
-    padding-top: 85px;
+.idea-frame {
+    width: 600px;
+    padding: 0;
     margin: 1rem auto 3rem;
     border: 1px solid #00a0e1;
-    background-image: url("../images/background.png");
+    background-color: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.2);
     -webkit-transition: box-shadow 0.2s, border-color 0.2s;
     transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-.idea:hover {
+.idea-frame:hover {
     border: 1px solid #707070;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.24);
+}
+
+.idea-frame .frame-header {
+    height: 29px;
+    font-size: 14px;
+    line-height: 28px;
+    padding-left: 30px;
+    padding-bottom: 1px;
+    color: #3c3c3c;
+    text-align: start;
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+    background-image: url("../images/frame_header.png");
+}
+
+.idea-frame .frame-footer {
+    height: 21px;
+    background-color: #f2f2f2;
+    background-image: url("../images/frame_footer.png");
 }
 
 .translator-logo {
