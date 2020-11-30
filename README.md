@@ -54,7 +54,7 @@
       </td>
       <td>
         <a href="https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner" target="_blank">
-            <img src="https://alt-images.codestream.com/codestream_logo_translation.png" alt="CodeStream">
+            <img src="https://alt-images.codestream.com/codestream_logo_translation.png" alt="CodeStream" title="CodeStream">
         </a>
       </td>
 </table>
