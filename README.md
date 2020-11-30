@@ -10,7 +10,7 @@
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 <p align="center"><b>Translation plugin for JetBrains IDEs/Android Studio.</b></p>
-<p align="center"><img src="https://yiiguxing.gitee.io/translation-plugin/images/screenshots.gif?v1.0" alt="screenshots"></p>
+<p align="center"><img src="https://yiiguxing.gitee.io/translation-plugin/images/screenshots.gif" alt="screenshots"></p>
 
 ## Features
 
