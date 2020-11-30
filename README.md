@@ -10,7 +10,7 @@
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 <p align="center"><b>Translation plugin for JetBrains IDEs/Android Studio.</b></p>
-<p align="center"><img src="./images/screenshots.gif" alt="screenshots"></p>
+<p align="center"><img src="https://yiiguxing.gitee.io/translation-plugin/images/screenshots.gif?v1.0" alt="screenshots"></p>
 
 ## Features
 
@@ -46,8 +46,18 @@
 
 ## Sponsors
 
-[![JetBrains](./images/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin)
-[![CodeStream](https://alt-images.codestream.com/codestream_logo_translation.png)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner)
+<table style="border-width: 0">
+      <td>
+        <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
+            <img src="https://yiiguxing.gitee.io/translation-plugin/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
+        </a>
+      </td>
+      <td>
+        <a href="https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner" target="_blank">
+            <img src="https://alt-images.codestream.com/codestream_logo_translation.png" alt="CodeStream">
+        </a>
+      </td>
+</table>
 
 ## Installation
 
@@ -231,11 +241,11 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="./images/open-collective.svg" width="171px" alt="OpenCollective">
+            <img src="https://yiiguxing.gitee.io/translation-plugin/images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="./images/alipay.png" alt="Alipay"></td>
-      <td><img src="./images/wechat.png" alt="WechatPlay"></td>
+      <td><img src="https://yiiguxing.gitee.io/translation-plugin/images/alipay.png" alt="Alipay"></td>
+      <td><img src="https://yiiguxing.gitee.io/translation-plugin/images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
   使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
