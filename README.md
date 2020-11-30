@@ -49,7 +49,7 @@
 <table>
       <td>
         <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
-            <img src="https://yiiguxing.gitee.io/translation-plugin/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
         </a>
       </td>
       <td>
@@ -198,7 +198,7 @@
 
    **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
    
-   ![screenshots](./images/settings_font.png)
+   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
 
 3. **无法保存应用密钥怎么办?**
 
@@ -241,11 +241,11 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="https://yiiguxing.gitee.io/translation-plugin/images/open-collective.svg" width="171px" alt="OpenCollective">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="https://yiiguxing.gitee.io/translation-plugin/images/alipay.png" alt="Alipay"></td>
-      <td><img src="https://yiiguxing.gitee.io/translation-plugin/images/wechat.png" alt="WechatPlay"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/images/alipay.png" alt="Alipay"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
   使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
