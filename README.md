@@ -46,7 +46,7 @@
 
 ## Sponsors
 
-<table style="border-width: 0">
+<table>
       <td>
         <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
             <img src="https://yiiguxing.gitee.io/translation-plugin/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
