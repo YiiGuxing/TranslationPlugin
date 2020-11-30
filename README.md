@@ -244,7 +244,7 @@
             <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/images/alipay.png" alt="Alipay"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
       <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
