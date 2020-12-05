@@ -57,6 +57,10 @@ a {
     max-width: 100%;
 }
 
+.content > *:last-child {
+    padding-bottom: 2rem;
+}
+
 .reference {
     padding: 0.5rem 1rem;
     border-left: 4px solid #dfe2e5;
