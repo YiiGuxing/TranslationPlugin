@@ -12,7 +12,7 @@ import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
-import com.intellij.util.ui.UIUtil
+import com.intellij.util.ui.JBUI
 import java.awt.Color
 import java.awt.Point
 import java.util.stream.Collectors
@@ -46,8 +46,8 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
         }
     }
 
-    override fun getForeground(): Color {
-        return UIUtil.getLabelForeground()
+    override fun getTextColor(): Color {
+        return JBUI.CurrentTheme.Label.foreground()
     }
 
     fun onItemChosen(lang: Lang?) {
