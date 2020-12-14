@@ -324,9 +324,9 @@ Support this project with your organization. Your logo will show up here with a 
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
+| Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Hooray | | 10 CNY |
 | 田瀚泽 | | 10 CNY |
-| Wongwc | [github.com/weihong363](https://github.com/weihong363) | 10 CNY |
-| 于泓楷 | | 10 CNY |
 
 [更多捐赠者][financial-contributors]
