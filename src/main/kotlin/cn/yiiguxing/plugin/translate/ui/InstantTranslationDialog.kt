@@ -184,7 +184,7 @@ class InstantTranslationDialog(private val project: Project?) :
     private fun requestTranslate(delay: Int = presenter.translator.intervalLimit) {
         alarm.apply {
             cancelAllRequests()
-            addRequest(translateAction, delay)
+            addRequest(translateAction, maxOf(delay, 500))
         }
     }
 

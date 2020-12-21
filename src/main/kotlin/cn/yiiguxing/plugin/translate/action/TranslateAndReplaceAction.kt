@@ -32,8 +32,10 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.ReadonlyStatusHandler
 import com.intellij.ui.JBColor
+import com.intellij.util.concurrency.EdtScheduledExecutorService
 import java.lang.ref.WeakReference
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.swing.text.JTextComponent
 
 /**
@@ -91,7 +93,13 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                 && primaryLanguage != Lang.ENGLISH
                                 && targetLang == Lang.ENGLISH
                             ) {
-                                translate(primaryLanguage)
+                                val delay = TranslateService.translator.intervalLimit
+                                if (delay <= 0) {
+                                    translate(primaryLanguage)
+                                } else {
+                                    EdtScheduledExecutorService.getInstance()
+                                        .schedule({ translate(primaryLanguage) }, delay.toLong(), TimeUnit.MILLISECONDS)
+                                }
                             } else {
                                 val items = translation
                                     .run {

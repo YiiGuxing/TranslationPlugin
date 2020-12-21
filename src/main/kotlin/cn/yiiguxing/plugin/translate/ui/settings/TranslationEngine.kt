@@ -11,7 +11,7 @@ enum class TranslationEngine(
     val translatorName: String,
     val icon: Icon,
     val contentLengthLimit: Int = 0,
-    val intervalLimit: Int = 500
+    val intervalLimit: Int = 0
 ) {
 
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
