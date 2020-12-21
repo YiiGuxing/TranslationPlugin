@@ -14,7 +14,10 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.*
-import javax.swing.*
+import javax.swing.JComponent
+import javax.swing.JPopupMenu
+import javax.swing.JTable
+import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableCellRenderer
 
@@ -26,6 +29,13 @@ class WordBookPanel : WordBookWindowForm() {
     private val tableModel: ListTableModel<WordBookItem> = ListTableModel(WordColumnInfo, ExplainsColumnInfo)
 
     val selectedWord: WordBookItem? get() = tableView.selectedObject
+
+    val selectedWords: List<WordBookItem> get() = tableView.selectedObjects
+
+    val isMultipleSelection: Boolean
+        get() = tableView.selectionModel.let {
+            it.minSelectionIndex >= 0 && it.maxSelectionIndex >= 0 && it.minSelectionIndex != it.maxSelectionIndex
+        }
 
     var popupMenu: JPopupMenu? = null
 
@@ -44,11 +54,11 @@ class WordBookPanel : WordBookWindowForm() {
         rowSelectionAllowed = true
         setEnableAntialiasing(true)
         setModelAndUpdateColumns(tableModel)
-        selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
 
         val handler = MouseHandler()
         addMouseListener(handler)
         addMouseMotionListener(handler)
+        addKeyListener(KeyHandler())
     }
 
     fun showMessagePane() {
@@ -119,38 +129,14 @@ class WordBookPanel : WordBookWindowForm() {
 
     private inner class KeyHandler : KeyAdapter() {
         override fun keyPressed(event: KeyEvent) {
-            if (event.keyCode == KeyEvent.VK_DELETE) {
-                selectedWord?.let {
-
-                }
+            if (event.keyCode == KeyEvent.VK_ESCAPE) {
+                tableView.clearSelection()
                 event.consume()
             }
         }
     }
 
     private inner class MouseHandler : MouseAdapter() {
-
-        override fun mousePressed(e: MouseEvent) {
-            val p = e.point
-            val table = tableView
-            val row = table.rowAtPoint(p)
-            val column = table.columnAtPoint(p)
-            if (column == -1 || row == -1) {
-                table.clearSelection()
-            }
-        }
-
-        override fun mouseDragged(e: MouseEvent) {
-            val p = e.point
-            val table = tableView
-            val row = table.rowAtPoint(p)
-            val column = table.columnAtPoint(p)
-            if (column == -1 || row == -1) {
-                table.clearSelection()
-            } else if (SwingUtilities.isRightMouseButton(e)) {
-                table.changeSelection(row, column, false, true)
-            }
-        }
 
         override fun mouseReleased(e: MouseEvent) {
             val table = tableView

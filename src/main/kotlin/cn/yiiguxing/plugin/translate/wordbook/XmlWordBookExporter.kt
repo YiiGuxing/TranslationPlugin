@@ -7,6 +7,8 @@ class XmlWordBookExporter : AbsXmlWordBookExporter() {
 
     override val name: String = "XML"
 
+    override val availableForImport: Boolean = true
+
     override fun getOutputElement(words: List<WordBookItem>): Element {
         val wordbook = Element("wordbook")
         for (word in words) {

@@ -1,5 +1,15 @@
 # Change Log
 
+## [v3.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0) (2020-12-05)
+
+- 新的Logo
+- 新的用户界面
+- 添加磁盘缓存支持
+- 在翻译对话框、翻译弹出窗口界面上添加了一些操作快捷键
+- 单词本添加多选操作的支持
+- 快速文档翻译内容长度限制
+- 修复了一些Bug
+
 ## [v2.9.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.2) (2020-08-15)
 
 - 添加快速切换自动文档翻译的快捷键

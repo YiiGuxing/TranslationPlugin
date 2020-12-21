@@ -10,7 +10,7 @@
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 <p align="center"><b>Translation plugin for JetBrains IDEs/Android Studio.</b></p>
-<p align="center"><img src="./images/screenshots.gif" alt="screenshots"></p>
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
 
 ## Features
 
@@ -46,8 +46,18 @@
 
 ## Sponsors
 
-[![JetBrains](./images/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin)
-[![CodeStream](https://alt-images.codestream.com/codestream_logo_translation.png)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner)
+<table>
+      <td>
+        <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
+        </a>
+      </td>
+      <td>
+        <a href="https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner" target="_blank">
+            <img src="https://alt-images.codestream.com/codestream_logo_translation.png" alt="CodeStream" title="CodeStream">
+        </a>
+      </td>
+</table>
 
 ## Installation
 
@@ -188,7 +198,7 @@
 
    **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
    
-   ![screenshots](./images/settings_font.png)
+   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
 
 3. **无法保存应用密钥怎么办?**
 
@@ -202,9 +212,14 @@
 
 ## Change Notes
 
-## [v2.9.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.2) (2020-08-15)
+## [v3.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0) (2020-12-05)
 
-- 添加快速切换自动文档翻译的快捷键
+- 新的Logo
+- 新的用户界面
+- 添加磁盘缓存支持
+- 在翻译对话框、翻译弹出窗口界面上添加了一些操作快捷键
+- 单词本添加多选操作的支持
+- 快速文档翻译内容长度限制
 - 修复了一些Bug
 
 [完整的更新历史记录](./CHANGELOG.md)
@@ -231,11 +246,11 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="./images/open-collective.svg" width="171px" alt="OpenCollective">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="./images/alipay.png" alt="Alipay"></td>
-      <td><img src="./images/wechat.png" alt="WechatPlay"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
+      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
   使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
@@ -309,9 +324,9 @@ Support this project with your organization. Your logo will show up here with a 
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
+| Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
-| Wongwc | [github.com/weihong363](https://github.com/weihong363) | 10 CNY |
-| 于泓楷 | | 10 CNY |
-| Xyz | | 10 CNY |
+| Hooray | | 10 CNY |
+| 田瀚泽 | | 10 CNY |
 
 [更多捐赠者][financial-contributors]
