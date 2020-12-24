@@ -13,6 +13,7 @@ import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
+import cn.yiiguxing.plugin.translate.util.text.newLine
 import cn.yiiguxing.plugin.translate.util.text.replace
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.icons.AllIcons
@@ -395,8 +396,9 @@ abstract class TranslationPane<T : JComponent>(
             updateText(transliteration)
         }
 
-        updateViewer(dictViewer, dictComponent, translation.dictDocument)
-        updateViewer(extraViewer, extraComponent, translation.extraDocument)
+        val dictDocument: TranslationDocument? = translation.dictDocument
+        updateViewer(dictViewer, dictComponent, dictDocument)
+        updateViewer(extraViewer, extraComponent, translation.extraDocument, dictDocument != null)
     }
 
     private fun updateOriginalViewer(translation: Translation) {
@@ -531,12 +533,20 @@ abstract class TranslationPane<T : JComponent>(
         }
     }
 
-    private fun updateViewer(viewer: StyledViewer, wrapper: JComponent, dictDocument: TranslationDocument?) {
+    private fun updateViewer(
+        viewer: StyledViewer,
+        wrapper: JComponent,
+        dictDocument: TranslationDocument?,
+        space: Boolean = false
+    ) {
         viewer.document.clear()
         if (dictDocument != null) {
+            if (space) {
+                viewer.document.newLine()
+            }
             viewer.setup(dictDocument)
             viewer.isVisible = true
-            dictComponent.isVisible = true
+            wrapper.isVisible = true
         } else {
             viewer.isVisible = false
             wrapper.isVisible = false

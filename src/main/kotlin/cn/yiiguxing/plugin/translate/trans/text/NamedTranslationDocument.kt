@@ -14,7 +14,7 @@ class NamedTranslationDocument(
     private val document: TranslationDocument
 ) : TranslationDocument by document {
 
-    fun appendName(viewer: StyledViewer) {
+    private fun appendName(viewer: StyledViewer) {
         viewer.styledDocument.apply {
             setParagraphStyle(style = TITLE_PARAGRAPH_STYLE)
             appendString("$name\n", TITLE_STYLE)
@@ -38,11 +38,9 @@ class NamedTranslationDocument(
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
 
             styledDocument.getStyleOrAdd(TITLE_PARAGRAPH_STYLE, defaultStyle) { style ->
-                StyleConstants.setSpaceAbove(style, JBUIScale.scale(10f))
                 StyleConstants.setSpaceBelow(style, JBUIScale.scale(3f))
             }
             styledDocument.getStyleOrAdd(TITLE_END_PARAGRAPH_STYLE, defaultStyle) { style ->
-                StyleConstants.setSpaceAbove(style, 0f)
                 StyleConstants.setSpaceBelow(style, 0f)
             }
             styledDocument.getStyleOrAdd(TITLE_STYLE, defaultStyle) { style ->

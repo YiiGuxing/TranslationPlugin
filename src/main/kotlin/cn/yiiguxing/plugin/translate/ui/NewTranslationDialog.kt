@@ -164,7 +164,7 @@ class NewTranslationDialog(
             )
     }
 
-    override fun createCenterPanel(): JComponent? {
+    override fun createCenterPanel(): JComponent {
         return createMainPanel()
     }
 
@@ -234,7 +234,7 @@ class NewTranslationDialog(
     }
 
     // Close the dialog when the ESC key is pressed
-    override fun createCancelAction(): ActionListener? {
+    override fun createCancelAction(): ActionListener {
         return ActionListener { doCancelAction() }
     }
 
@@ -434,7 +434,10 @@ class NewTranslationDialog(
             dictViewer.setup(it)
         }
         extraDocument?.let {
-            dictViewer.document.newLine()
+            if (dictDocument != null) {
+                dictViewer.document.newLine()
+                dictViewer.document.newLine()
+            }
             dictViewer.setup(it)
         }
         val hasContent = dictDocument != null || extraDocument != null

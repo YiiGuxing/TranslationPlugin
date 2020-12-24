@@ -358,11 +358,11 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             return Dimension(2 * myHGap + 1, myVGap * 2 + 1)
         }
 
-        override fun getMinimumSize(): Dimension? {
+        override fun getMinimumSize(): Dimension {
             return preferredSize
         }
 
-        override fun getMaximumSize(): Dimension? {
+        override fun getMaximumSize(): Dimension {
             return preferredSize
         }
     }
