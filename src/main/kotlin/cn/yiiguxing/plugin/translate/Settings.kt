@@ -12,7 +12,6 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.util.text.StringUtil.isNotEmpty
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
@@ -81,13 +80,8 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 翻译时需要忽略的内容
      */
-    @Deprecated("Use newIgnoreRegex")
-    var ignoreRegExp: String? = null
+    var ignoreRegex: String = "[\\*/#\$]"
 
-    // introduce old field to update default
-    // normally it would be enough to replace a default value, but it empty string is always stored instead of default null
-    // and it is not updated automatically
-    var ignoreRegex: String = ignoreRegExp.takeIf { isNotEmpty(it) } ?: "[\\*/#\$]"
     /**
      * 分隔符
      */
