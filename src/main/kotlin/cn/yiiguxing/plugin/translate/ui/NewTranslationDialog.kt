@@ -83,8 +83,8 @@ class NewTranslationDialog(
     private var _disposed = false
     override val disposed get() = _disposed
 
-    private inline val sourceLang: Lang get() = sourceLangComboBox.selected
-    private inline val targetLang: Lang get() = targetLangComboBox.selected
+    private inline val sourceLang: Lang get() = sourceLangComboBox.selected!!
+    private inline val targetLang: Lang get() = targetLangComboBox.selected!!
 
     init {
         setUndecorated(true)
@@ -250,8 +250,8 @@ class NewTranslationDialog(
                 }
             }
         }
-        updateLanguages(AppStorage.lastInstantLanguages)
 
+        updateLanguages()
         addListener(sourceLangComboBox)
         addListener(targetLangComboBox)
     }
@@ -553,14 +553,12 @@ class NewTranslationDialog(
     private fun updateLanguages(languagePair: LanguagePair? = null) {
         presenter.supportedLanguages.let { (src, target) ->
             sourceLangComboBox.apply {
-                val srcSelected = (languagePair?.source ?: selected)
-                    .takeIf { src.contains(it) }
-                    ?: src.first()
+                val srcSelected = (languagePair?.source ?: selected ?: Lang.AUTO).takeIf { src.contains(it) }
                 model = LanguageListModel.sorted(src, srcSelected)
             }
             targetLangComboBox.apply {
                 val targetSelected = (languagePair?.target ?: selected)
-                    .takeIf { target.contains(it) }
+                    ?.takeIf { target.contains(it) }
                     ?: presenter.getTargetLang(inputTextArea.text)
                 model = LanguageListModel.sorted(target, targetSelected)
             }
@@ -622,12 +620,9 @@ class NewTranslationDialog(
         lateinit var targetLang: Lang
 
         presenter.supportedLanguages.let { (sourceList, targetList) ->
-            srcLang = src?.takeIf { sourceList.contains(it) }
-                ?: sourceLangComboBox.selected
-            // ?: sourceList.first()
-            targetLang = target?.takeIf { targetList.contains(it) }
-                ?: targetLangComboBox.selected
-            // ?: presenter.primaryLanguage
+            srcLang = src?.takeIf { sourceList.contains(it) } ?: sourceLangComboBox.selected ?: sourceList.first()
+            targetLang =
+                target?.takeIf { targetList.contains(it) } ?: targetLangComboBox.selected ?: presenter.primaryLanguage
         }
 
         translateInternal(text, srcLang, targetLang)

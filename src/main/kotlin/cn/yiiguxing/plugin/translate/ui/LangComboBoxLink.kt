@@ -66,7 +66,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
             .collect(Collectors.toList())
     }
 
-    inline var selected: Lang
+    inline var selected: Lang?
         get() = linkData
         set(value) {
             onItemChosen(value)
