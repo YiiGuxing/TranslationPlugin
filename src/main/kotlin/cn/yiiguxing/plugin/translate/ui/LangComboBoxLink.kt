@@ -32,7 +32,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
             onItemChosen(value.selected)
         }
 
-    private val listeners: MutableList<(Lang?) -> Unit> = arrayListOf()
+    private val listeners: MutableList<(Lang?, Boolean) -> Unit> = arrayListOf()
 
     init {
         horizontalTextPosition = SwingConstants.LEADING
@@ -50,13 +50,13 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
         return JBUI.CurrentTheme.Label.foreground()
     }
 
-    fun onItemChosen(lang: Lang?) {
+    fun onItemChosen(lang: Lang?, fromUser: Boolean = false) {
         setListener(LangComboBoxLinkListener, lang)
         text = lang?.langName ?: "No language"
-        listeners.forEach { it(lang) }
+        listeners.forEach { it(lang, fromUser) }
     }
 
-    fun addItemListener(listener: (Lang?) -> Unit) {
+    fun addItemListener(listener: (Lang?, Boolean) -> Unit) {
         listeners.add(listener)
     }
 
@@ -84,7 +84,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
                 .createPopupChooserBuilder(langLink.languages())
                 .setVisibleRowCount(8)
                 .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-                .setItemChosenCallback { langLink.onItemChosen(it) }
+                .setItemChosenCallback { langLink.onItemChosen(it, true) }
                 .setRenderer(SimpleListCellRenderer.create { label, value: Lang, _ ->
                     label.text = value.langName
                     label.border = langLink.border

@@ -80,6 +80,9 @@ class NewTranslationDialog(
     private var ignoreLanguageEvent: Boolean = false
     private var ignoreInputEvent: Boolean = false
 
+    // The value is true if user selected the target language
+    private var unequivocalTargetLang: Boolean = false
+
     private var _disposed = false
     override val disposed get() = _disposed
 
@@ -240,7 +243,11 @@ class NewTranslationDialog(
 
     private fun initLangComboBoxes() {
         fun addListener(comboBox: LangComboBoxLink) {
-            comboBox.addItemListener {
+            comboBox.addItemListener { lang, fromUser ->
+                if (comboBox === targetLangComboBox && fromUser) {
+                    unequivocalTargetLang = lang != Lang.AUTO
+                }
+
                 AppStorage.lastInstantLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
@@ -268,6 +275,9 @@ class NewTranslationDialog(
         inputTextArea.addListener { e ->
             clearButton.isEnabled = e.document.length > 0
             if (!ignoreInputEvent) {
+                if (!unequivocalTargetLang && sourceLang == Lang.AUTO) {
+                    targetLangComboBox.setSelectLangIgnoreEvent(presenter.getTargetLang(inputTextArea.text))
+                }
                 requestTranslate()
             }
         }
