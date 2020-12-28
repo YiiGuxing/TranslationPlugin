@@ -29,6 +29,7 @@ import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.JBPopupListener
 import com.intellij.openapi.ui.popup.LightweightWindowEvent
+import com.intellij.openapi.ui.popup.util.PopupUtil
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.IdeGlassPane
@@ -42,15 +43,9 @@ import com.intellij.util.Alarm
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import icons.Icons
-import java.awt.Component
-import java.awt.Cursor
-import java.awt.Dimension
-import java.awt.Point
+import java.awt.*
 import java.awt.datatransfer.StringSelection
-import java.awt.event.ActionListener
-import java.awt.event.MouseEvent
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.event.*
 import javax.swing.JComponent
 import javax.swing.JTextArea
 import javax.swing.ListSelectionModel
@@ -86,6 +81,8 @@ class NewTranslationDialog(
     private inline val sourceLang: Lang get() = sourceLangComboBox.selected!!
     private inline val targetLang: Lang get() = targetLangComboBox.selected!!
 
+    private lateinit var escListener: AWTEventListener
+
     init {
         setUndecorated(true)
         isModal = false
@@ -97,9 +94,24 @@ class NewTranslationDialog(
         peer.setContentPane(panel)
 
         registerShortcuts()
+        registerESCListener()
         Application.messageBus
             .connect(this)
             .subscribe(SettingsChangeListener.TOPIC, this)
+    }
+
+    private fun registerESCListener() {
+        val win = window
+        escListener = AWTEventListener { event ->
+            if (event is KeyEvent &&
+                event.keyCode == KeyEvent.VK_ESCAPE &&
+                !PopupUtil.handleEscKeyEvent() &&
+                !win.isFocused // close the displayed popup window first
+            ) {
+                doCancelAction()
+            }
+        }
+        Toolkit.getDefaultToolkit().addAWTEventListener(escListener, AWTEvent.KEY_EVENT_MASK)
     }
 
     private fun registerShortcuts() {
@@ -601,6 +613,7 @@ class NewTranslationDialog(
         super.dispose()
         _disposed = true
 
+        Toolkit.getDefaultToolkit().removeAWTEventListener(escListener)
         Disposer.dispose(this)
         println("Translation dialog disposed.")
     }
