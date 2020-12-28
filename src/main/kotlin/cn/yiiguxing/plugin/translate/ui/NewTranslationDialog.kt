@@ -80,9 +80,6 @@ class NewTranslationDialog(
     private var ignoreLanguageEvent: Boolean = false
     private var ignoreInputEvent: Boolean = false
 
-    // The value is true if user selected the target language
-    private var unequivocalTargetLang: Boolean = false
-
     private var _disposed = false
     override val disposed get() = _disposed
 
@@ -243,11 +240,7 @@ class NewTranslationDialog(
 
     private fun initLangComboBoxes() {
         fun addListener(comboBox: LangComboBoxLink) {
-            comboBox.addItemListener { lang, fromUser ->
-                if (comboBox === targetLangComboBox && fromUser) {
-                    unequivocalTargetLang = lang != Lang.AUTO
-                }
-
+            comboBox.addItemListener { _, _, _ ->
                 AppStorage.lastInstantLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
@@ -275,7 +268,7 @@ class NewTranslationDialog(
         inputTextArea.addListener { e ->
             clearButton.isEnabled = e.document.length > 0
             if (!ignoreInputEvent) {
-                if (!unequivocalTargetLang && sourceLang == Lang.AUTO) {
+                if (sourceLang == Lang.AUTO) {
                     targetLangComboBox.setSelectLangIgnoreEvent(presenter.getTargetLang(inputTextArea.text))
                 }
                 requestTranslate()
@@ -518,7 +511,17 @@ class NewTranslationDialog(
             return
         }
 
-        onTranslationFinished(translation)
+        // forcibly modify the target language
+        if (
+            translation.srcLang != Lang.AUTO &&
+            translation.targetLang != Lang.AUTO &&
+            translation.srcLang == translation.targetLang
+        ) {
+            val newTargetLang = if (translation.targetLang == Lang.ENGLISH) presenter.primaryLanguage else Lang.ENGLISH
+            targetLangComboBox.selected = newTargetLang
+        } else {
+            onTranslationFinished(translation)
+        }
     }
 
     fun applyTranslation(translation: Translation) {
@@ -526,7 +529,8 @@ class NewTranslationDialog(
         ignoreInputEvent = true
         try {
             inputTextArea.text = translation.original
-            sourceLangComboBox.selected = translation.srcLang
+            sourceLangComboBox.selected =
+                Lang.AUTO.takeIf { presenter.supportedLanguages.source.contains(it) } ?: translation.srcLang
             targetLangComboBox.selected = translation.targetLang
         } finally {
             ignoreLanguageEvent = false

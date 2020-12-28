@@ -34,7 +34,7 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
     override fun getTargetLang(text: String): Lang {
         return when (settings.targetLanguageSelection) {
-            DEFAULT -> if (text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
+            DEFAULT -> if (text.isEmpty() || text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
             PRIMARY_LANGUAGE -> primaryLanguage
             LAST -> appStorage.lastLanguages.target.takeIf {
                 translateService.translator.supportedTargetLanguages.contains(it)

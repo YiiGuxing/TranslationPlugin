@@ -32,7 +32,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
             onItemChosen(value.selected)
         }
 
-    private val listeners: MutableList<(Lang?, Boolean) -> Unit> = arrayListOf()
+    private val listeners: MutableList<(Lang?, Lang?, Boolean) -> Unit> = arrayListOf()
 
     init {
         horizontalTextPosition = SwingConstants.LEADING
@@ -51,12 +51,13 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
     }
 
     fun onItemChosen(lang: Lang?, fromUser: Boolean = false) {
+        val oldLang = selected
         setListener(LangComboBoxLinkListener, lang)
         text = lang?.langName ?: "No language"
-        listeners.forEach { it(lang, fromUser) }
+        listeners.forEach { it(lang, oldLang, fromUser) }
     }
 
-    fun addItemListener(listener: (Lang?, Boolean) -> Unit) {
+    fun addItemListener(listener: (Lang?, Lang?, Boolean) -> Unit) {
         listeners.add(listener)
     }
 
