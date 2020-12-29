@@ -102,6 +102,9 @@ object Icons {
     @JvmField
     val ArrowUpCollapse: Icon = load("/icons/arrowUpCollapse.svg")
 
+    @JvmField
+    val Lightning: Icon = load("/icons/lightning.svg")
+
     @JvmStatic
     private fun load(path: String): Icon {
         return IconManager.getInstance().getIcon(path, Icons::class.java)

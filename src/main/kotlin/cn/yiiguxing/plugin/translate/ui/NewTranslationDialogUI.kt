@@ -50,6 +50,7 @@ interface NewTranslationDialogUI {
     val starButton: LinkLabel<Translation>
     val historyButton: LinkLabel<Void>
     val detectedLanguageLabel: JLabel
+    val lightningLabel: JLabel
     val srcTransliterationLabel: JLabel
     val targetTransliterationLabel: JLabel
     val pinButton: JComponent
@@ -92,6 +93,10 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val starButton: LinkLabel<Translation> = LinkLabel()
     override val historyButton: LinkLabel<Void> = LinkLabel()
     override val detectedLanguageLabel: JLabel = JLabel()
+    override val lightningLabel: JLabel = JLabel().apply {
+        isOpaque = false
+        icon = Icons.Lightning
+    }
     override val srcTransliterationLabel: JLabel = TransliterationLabel()
     override val targetTransliterationLabel: JLabel = TransliterationLabel()
 
@@ -262,6 +267,7 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             border = emptyBorder(0, leftAndRight = 5)
 
             add(targetLangComboBox, HorizontalLayout.LEFT)
+            add(lightningLabel, HorizontalLayout.LEFT)
             add(settingsButton, HorizontalLayout.RIGHT)
             add(Separator(), HorizontalLayout.RIGHT)
             add(pinButton, HorizontalLayout.RIGHT)

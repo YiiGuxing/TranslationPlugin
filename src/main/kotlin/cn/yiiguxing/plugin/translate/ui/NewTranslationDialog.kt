@@ -51,6 +51,7 @@ import javax.swing.JTextArea
 import javax.swing.ListSelectionModel
 import javax.swing.event.DocumentEvent
 import javax.swing.event.PopupMenuEvent
+import kotlin.properties.Delegates
 
 class NewTranslationDialog(
     private val project: Project?,
@@ -76,7 +77,9 @@ class NewTranslationDialog(
     private var ignoreInputEvent: Boolean = false
 
     // If user selects a specific target language, the value is true
-    private var unequivocalTargetLang: Boolean = false
+    private var unequivocalTargetLang: Boolean by Delegates.observable(false) { _, _, value: Boolean ->
+        lightningLabel.isVisible = !value
+    }
 
     private var _disposed = false
     override val disposed get() = _disposed
@@ -637,6 +640,7 @@ class NewTranslationDialog(
 
         val srcLang: Lang = Lang.AUTO
         val targetLang = presenter.getTargetLang(text)
+        unequivocalTargetLang = false
         translateInternal(text, srcLang, targetLang)
     }
 
