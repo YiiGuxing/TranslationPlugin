@@ -21,12 +21,20 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
     override val histories: List<String> get() = appStorage.getHistories()
 
-    override val primaryLanguage: Lang get() = translateService.translator.primaryLanguage
+    override val primaryLanguage: Lang get() = translator.primaryLanguage
 
     override val supportedLanguages: SupportedLanguages
-        get() = with(translateService.translator) {
+        get() = with(translator) {
             SupportedLanguages(supportedSourceLanguages, supportedTargetLanguages)
         }
+
+    override fun isSupportedSourceLanguage(sourceLanguage: Lang): Boolean {
+        return translator.supportedSourceLanguages.contains(sourceLanguage)
+    }
+
+    override fun isSupportedTargetLanguage(targetLanguage: Lang): Boolean {
+        return translator.supportedTargetLanguages.contains(targetLanguage)
+    }
 
     override fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         return translateService.getCache(text, srcLang, targetLang)
@@ -34,11 +42,10 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
     override fun getTargetLang(text: String): Lang {
         return when (settings.targetLanguageSelection) {
-            DEFAULT -> if (text.isEmpty() || text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
+            DEFAULT -> Lang.AUTO.takeIf { isSupportedTargetLanguage(it) }
+                ?: if (text.isEmpty() || text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
             PRIMARY_LANGUAGE -> primaryLanguage
-            LAST -> appStorage.lastLanguages.target.takeIf {
-                translateService.translator.supportedTargetLanguages.contains(it)
-            } ?: primaryLanguage
+            LAST -> appStorage.lastLanguages.target.takeIf { isSupportedTargetLanguage(it) } ?: primaryLanguage
         }
     }
 

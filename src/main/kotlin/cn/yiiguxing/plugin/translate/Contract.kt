@@ -30,6 +30,16 @@ interface Presenter {
     val supportedLanguages: SupportedLanguages
 
     /**
+     * 检测指定的源语言是否被支持
+     */
+    fun isSupportedSourceLanguage(sourceLanguage: Lang): Boolean
+
+    /**
+     * 检测指定的目标语言是否被支持
+     */
+    fun isSupportedTargetLanguage(targetLanguage: Lang): Boolean
+
+    /**
      * @return 缓存
      */
     fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation?
