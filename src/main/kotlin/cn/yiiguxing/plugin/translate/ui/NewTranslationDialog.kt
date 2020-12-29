@@ -383,6 +383,7 @@ class NewTranslationDialog(
                 ignoreLanguageEvent = false
 
                 lastTranslation?.translation?.let { inputTextArea.text = it }
+                detectedLanguageLabel.isVisible = false
             }
         }, null)
     }
@@ -668,6 +669,7 @@ class NewTranslationDialog(
         sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
         targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
         inputTextArea.text = text
+        detectedLanguageLabel.isVisible = false
     }
 
     private fun LangComboBoxLink.setSelectLangIgnoreEvent(lang: Lang) {
