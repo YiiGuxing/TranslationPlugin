@@ -77,8 +77,8 @@ class NewTranslationDialog(
     private var ignoreInputEvent: Boolean = false
 
     // If user selects a specific target language, the value is true
-    private var unequivocalTargetLang: Boolean by Delegates.observable(false) { _, _, value: Boolean ->
-        lightningLabel.isVisible = !value
+    private var unequivocalTargetLang: Boolean by Delegates.observable(false) { _, _, _ ->
+        updateLightningLabel()
     }
 
     private var _disposed = false
@@ -259,6 +259,9 @@ class NewTranslationDialog(
     private fun initLangComboBoxes() {
         fun addListener(comboBox: LangComboBoxLink) {
             comboBox.addItemListener { _, _, fromUser ->
+                if (comboBox === sourceLangComboBox) {
+                    updateLightningLabel()
+                }
                 if (fromUser && comboBox === targetLangComboBox) {
                     unequivocalTargetLang = true
                 }
@@ -449,6 +452,10 @@ class NewTranslationDialog(
 
         detectedLanguageLabel.text = detected
         detectedLanguageLabel.isVisible = detected != null
+    }
+
+    private fun updateLightningLabel() {
+        lightningLabel.isVisible = sourceLang == Lang.AUTO && !unequivocalTargetLang
     }
 
     private fun updateTransliterations(translation: Translation?) {
