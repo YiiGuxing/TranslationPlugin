@@ -11,7 +11,6 @@ import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationAction
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.diagnostic.Logger
@@ -49,7 +48,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             .forLanguage(element.language)
             .getDocumentationOwner(element)
             ?: return
-        val provider = docCommentOwner.documentationProvider ?: return
+        val provider = docCommentOwner.documentationProvider
 
         executeOnPooledThread {
             val documentationComponentRef = Ref<DocumentationComponent>()
@@ -64,7 +63,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     val e = editorRef.get()?.takeUnless { it.isDisposed } ?: return@invokeAndWait
                     val documentationComponent = showPopup(e, docCommentOwner.title)
                     documentationComponentRef.set(documentationComponent)
-                    Disposer.register(documentationComponent, Disposable { documentationComponentRef.set(null) })
+                    Disposer.register(documentationComponent, { documentationComponentRef.set(null) })
                 }
 
                 if (documentationComponentRef.isNull) {
@@ -166,7 +165,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             }
         }
 
-        private val PsiElement.documentationProvider: DocumentationProvider?
+        private val PsiElement.documentationProvider: DocumentationProvider
             get() = DocumentationManager.getProviderFromElement(this)
 
         private val PsiElement.title: String?

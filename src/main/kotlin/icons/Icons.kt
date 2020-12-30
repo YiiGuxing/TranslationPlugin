@@ -105,6 +105,9 @@ object Icons {
     @JvmField
     val Lightning: Icon = load("/icons/lightning.svg")
 
+    @JvmField
+    val Documentation: Icon = load("/icons/documentation.svg")
+
     @JvmStatic
     private fun load(path: String): Icon {
         return IconManager.getInstance().getIcon(path, Icons::class.java)
