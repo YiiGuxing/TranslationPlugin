@@ -560,6 +560,7 @@ class NewTranslationDialog(
             ignoreLanguageEvent = false
             ignoreInputEvent = false
         }
+        unequivocalTargetLang = true
         onTranslationFinished(translation)
     }
 
