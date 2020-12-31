@@ -14,6 +14,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 江涛 Jason | [blog.csdn.net/evane1890](https://blog.csdn.net/evane1890) | 10 CNY |
 | Hooray | | 10 CNY |
 | 田瀚泽 | | 10 CNY |
 | Wongwc | [github.com/weihong363](https://github.com/weihong363) | 10 CNY |
@@ -25,6 +26,7 @@
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
 | 洪晓波 | | 9.9 CNY |
+| 寤寐 | | 5CNY |
 | 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
 | Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
 | Qiuyukuhe |  | 5 CNY |
