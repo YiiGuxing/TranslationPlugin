@@ -212,15 +212,12 @@
 
 ## Change Notes
 
-## [v3.0](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0) (2020-12-05)
+## [v3.0.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.1) (2020-12-31)
 
-- 新的Logo
-- 新的用户界面
-- 添加磁盘缓存支持
-- 在翻译对话框、翻译弹出窗口界面上添加了一些操作快捷键
-- 单词本添加多选操作的支持
-- 快速文档翻译内容长度限制
-- 修复了一些Bug
+- 恢复了右键文档翻译功能
+- 按ESC键时关闭翻译窗口
+- 优化了目标语言的选择逻辑
+- 修复了翻译窗口导致CPU高占用率的问题
 
 [完整的更新历史记录](./CHANGELOG.md)
 

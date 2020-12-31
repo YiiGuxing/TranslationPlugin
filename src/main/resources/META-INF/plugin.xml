@@ -5,7 +5,7 @@
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
-      <p><b>A translation plugin.</b></p>
+      <p><b>Translation plugin for IntelliJ based IDEs.</b></p>
       <br/>
       <p>
       <b>
@@ -47,13 +47,10 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>新的Logo</li>
-        <li>新的用户界面</li>
-        <li>添加磁盘缓存支持</li>
-        <li>在翻译对话框、翻译弹出窗口界面上添加了一些操作快捷键</li>
-        <li>单词本添加多选操作的支持</li>
-        <li>快速文档翻译内容长度限制</li>
-        <li>修复了一些Bug</li>
+        <li>恢复了右键文档翻译功能</li>
+        <li>按ESC键时关闭翻译窗口</li>
+        <li>优化了目标语言的选择逻辑</li>
+        <li>修复了翻译窗口导致CPU高占用率的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
