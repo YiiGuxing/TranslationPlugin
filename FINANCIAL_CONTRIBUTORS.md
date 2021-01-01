@@ -14,6 +14,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Wxdongg99 | | 10 CNY |
 | 江涛 Jason | [blog.csdn.net/evane1890](https://blog.csdn.net/evane1890) | 10 CNY |
 | Hooray | | 10 CNY |
 | 田瀚泽 | | 10 CNY |
