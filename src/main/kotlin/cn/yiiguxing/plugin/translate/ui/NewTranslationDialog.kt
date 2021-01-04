@@ -740,13 +740,31 @@ class NewTranslationDialog(
     private fun restoreWindowLocationAndSize() {
         val savedX = AppStorage.newTranslationDialogX
         val savedY = AppStorage.newTranslationDialogY
+        val savedWidth = AppStorage.newTranslationDialogWidth
+        val savedHeight = AppStorage.newTranslationDialogHeight
         if (savedX != null && savedY != null) {
-            window.location = Point(savedX, savedY)
+            val intersectWithScreen = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .screenDevices
+                .any { gd ->
+                    gd.defaultConfiguration.bounds.intersects(
+                        savedX.toDouble(),
+                        savedY.toDouble(),
+                        savedWidth.toDouble(),
+                        savedHeight.toDouble()
+                    )
+                }
+            if (intersectWithScreen) {
+                window.location = Point(savedX, savedY)
+            } else {
+                AppStorage.newTranslationDialogX = null
+                AppStorage.newTranslationDialogY = null
+            }
         }
-        val savedSize = Dimension(AppStorage.newTranslationDialogWidth, AppStorage.newTranslationDialogHeight)
+        val savedSize = Dimension(savedWidth, savedHeight)
         translationPanel.size = savedSize
         translationPanel.preferredSize = savedSize
-        fixWindowHeight(AppStorage.newTranslationDialogWidth)
+        fixWindowHeight(savedWidth)
     }
 
     private class UIProvider : NewTranslationDialogUiProvider {
