@@ -22,12 +22,11 @@ object StarButtons {
     }
 
     val listener: LinkListener<Translation> = object : LinkListener<Translation> {
-        override fun linkSelected(starLabel: LinkLabel<*>, translation: Translation?) {
+        override fun linkSelected(starLabel: LinkLabel<Translation>, translation: Translation?) {
             if (!WordBookService.isInitialized) {
                 WordBookToolWindowFactory.requireWordBook()
                 return
             }
-
             starLabel.isEnabled = false
             translation ?: return
             if (!WordBookService.canAddToWordbook(translation.original)) {

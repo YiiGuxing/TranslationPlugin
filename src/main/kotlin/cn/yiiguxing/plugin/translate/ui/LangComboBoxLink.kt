@@ -74,7 +74,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
         }
 
     private object LangComboBoxLinkListener : LinkListener<Lang> {
-        override fun linkSelected(source: LinkLabel<*>, lang: Lang) {
+        override fun linkSelected(source: LinkLabel<Lang>, lang: Lang) {
             val langLink = source as LangComboBoxLink
             if (langLink.isPopupShowing) {
                 return
