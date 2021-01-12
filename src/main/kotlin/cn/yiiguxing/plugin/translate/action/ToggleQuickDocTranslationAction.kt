@@ -13,13 +13,12 @@ import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import icons.Icons
 import org.jetbrains.concurrency.runAsync
 
-class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionToIgnore {
-
-    init {
-        templatePresentation.text = message("action.ToggleQuickDocTranslationAction.text")
-    }
+open class ToggleQuickDocTranslationAction :
+    ToggleAction({ message("settings.options.translate.documentation") } , Icons.Translation),
+    HintManagerImpl.ActionToIgnore {
 
     override fun update(e: AnActionEvent) {
         val project = e.project
@@ -82,6 +81,26 @@ class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionTo
                 component?.replaceText(newText, component.element)
             }
         }
+    }
+
+}
+
+private class ToggleQuickDocTranslationActionWithShortcut : ToggleQuickDocTranslationAction() {
+    override fun update(e: AnActionEvent) {
+        val project = e.project
+        if (project == null) {
+            e.presentation.isEnabled = false
+            return
+        }
+
+        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)
+        val docComponentExists = activeDocComponent != null
+        val hasSelection = TranslateQuickDocSelectionAction.quickDocHasSelection(e)
+
+        val toolWindowIsActiveIfShown =
+            ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)?.isActive ?: true
+
+        e.presentation.isEnabled = docComponentExists && !hasSelection && toolWindowIsActiveIfShown
     }
 
 }

@@ -125,6 +125,7 @@
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
+        <documentationActionProvider implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
     </extensions>
 
     <actions>
@@ -162,7 +163,7 @@
         <action id="$ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
         <action id="$TranslateQuickDocAction"
-                class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
+                class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TranslateTextComponent"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
@@ -180,8 +181,8 @@
             <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
         </action>
 
-        <action id="ToggleQuickDocTranslationAction"
-                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
+        <action id="ToggleQuickDocTranslationActionWithShortcut"
+                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationActionWithShortcut"
                 use-shortcut-of="$EditorTranslateAction">
         </action>
 

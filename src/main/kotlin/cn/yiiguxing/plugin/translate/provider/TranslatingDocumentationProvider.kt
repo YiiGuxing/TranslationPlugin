@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.documentation.TranslatedDocComments
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.codeInsight.documentation.DocumentationManager
@@ -10,6 +11,7 @@ import com.intellij.lang.documentation.DocumentationProviderEx
 import com.intellij.lang.documentation.ExternalDocumentationProvider
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
+import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 
 /**
@@ -30,6 +32,19 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             val originalDoc = providerFromElement.generateDoc(element, originalElement)
             translate(originalDoc, element?.language)
         }
+    }
+
+    @Suppress("UnstableApiUsage")
+    override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
+        if (!TranslatedDocComments.isTranslated(docComment))
+            return null
+
+        val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
+        val originalDoc = nullIfRecursive {
+            providerFromElement.generateRenderedDoc(docComment)
+        }
+
+        return translate(originalDoc, docComment.language)
     }
 
     override fun fetchExternalDocumentation(
