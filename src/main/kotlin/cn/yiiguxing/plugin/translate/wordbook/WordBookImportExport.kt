@@ -76,7 +76,7 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
             ),
             project
         )
-        .save(null, "wordbook.$extension") ?: return
+        .save("wordbook.$extension") ?: return
 
     val targetFile = targetFileWrapper.getVirtualFile(true)
 
