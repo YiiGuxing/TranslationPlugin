@@ -132,7 +132,7 @@ fun importWordBook(project: Project?) {
         return
     }
 
-    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Importing Word Book...", true) {
+    ProgressManager.getInstance().run(object : Task.Backgroundable(project, message("word.book.progress.importing"), true) {
         override fun run(indicator: ProgressIndicator) {
             selectFile.inputStream.use { importer.import(it, indicator) }
         }

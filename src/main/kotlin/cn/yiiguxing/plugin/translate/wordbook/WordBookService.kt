@@ -90,7 +90,7 @@ class WordBookService {
         }
 
         ProgressManager.getInstance()
-            .run(object : Task.Backgroundable(null, "Downloading Word Book Driver...", true) {
+            .run(object : Task.Backgroundable(null, message("word.book.progress.downloding.driver"), true) {
                 override fun run(indicator: ProgressIndicator) = downloadDriverAndInitializeService(indicator)
                 override fun onFinished() = isDownloading.set(false)
             })
@@ -100,7 +100,7 @@ class WordBookService {
 
     private fun downloadDriverAndInitializeService(indicator: ProgressIndicator) {
         indicator.isIndeterminate = true
-        indicator.text = "Downloading..."
+        indicator.text = message("word.book.progress.downloading")
 
         try {
             AppExecutorUtil.getAppExecutorService().submit {
@@ -111,7 +111,7 @@ class WordBookService {
             throw e.cause?.takeIf { it is ProcessCanceledException } ?: e
         }
 
-        indicator.text = "Initializing Service..."
+        indicator.text = message("word.book.progress.initializing.service")
         findDriverClassLoader()?.let { initialize(it) }
     }
 

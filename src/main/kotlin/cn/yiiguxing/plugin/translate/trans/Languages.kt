@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.trans
 import com.intellij.AbstractBundle
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
+import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
 

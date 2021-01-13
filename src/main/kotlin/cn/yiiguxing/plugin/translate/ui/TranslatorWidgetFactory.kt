@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.message
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.StatusBar
@@ -12,7 +13,7 @@ class TranslatorWidgetFactory : StatusBarWidgetFactory {
     }
 
     override fun getDisplayName(): String {
-        return "Translator"
+        return message("choose.translator.widget.name")
     }
 
     override fun disposeWidget(widget: StatusBarWidget) {
