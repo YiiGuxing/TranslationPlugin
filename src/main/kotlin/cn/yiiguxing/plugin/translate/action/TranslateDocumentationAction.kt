@@ -151,7 +151,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 Notifications.showErrorNotification(
                     project,
                     NOTIFICATION_DISPLAY_ID,
-                    message("translate.documentation.notificaton.title"),
+                    message("translate.documentation.notification.title"),
                     message("translate.documentation.error", exceptionMessage),
                     e,
                     DisableAutoDocTranslationAction()

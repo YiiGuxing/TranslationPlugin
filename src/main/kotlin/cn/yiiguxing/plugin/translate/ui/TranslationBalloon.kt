@@ -51,7 +51,7 @@ class TranslationBalloon(
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
     private val errorPanel = NonOpaquePanel(FrameLayout())
     private val errorPane = JTextPane()
-    private val processPane = ProcessComponent(message("translation.progress.quering"), JBUI.insets(INSETS))
+    private val processPane = ProcessComponent(message("translation.progress.querying"), JBUI.insets(INSETS))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
     private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
