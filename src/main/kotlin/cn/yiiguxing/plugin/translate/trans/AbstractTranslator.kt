@@ -51,7 +51,12 @@ abstract class AbstractTranslator : Translator {
         is SocketTimeoutException -> message("error.network.timeout")
         is JsonSyntaxException -> message("error.parse")
         is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
-        else -> message("error.unknown")
+        else -> when (
+            throwable.message?.let { HTTP_STATUS_EXCEPTION_REGEX.matchEntire(it) }?.let { it.groupValues[1].toInt() }
+        ) {
+            429 -> message("error.too.many.requests")
+            else -> message("error.unknown")
+        }
     }
 
     protected open fun doTranslate(
@@ -109,6 +114,8 @@ abstract class AbstractTranslator : Translator {
     protected open fun onError(throwable: Throwable): Throwable = throwable
 
     companion object {
+        private val HTTP_STATUS_EXCEPTION_REGEX = Regex("^Server returned HTTP response code: (\\d{3}) .+$")
+
         private val LOG = Logger.getInstance(AbstractTranslator::class.java)
     }
 
