@@ -136,7 +136,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                 Notifications.showErrorNotification(
                                     editor.project,
                                     NOTIFICATION_DISPLAY_ID,
-                                    "Translate and Replace", message, throwable
+                                    message("translate.and.replace.notification.title"), message, throwable
                                 )
                             }
                         }
