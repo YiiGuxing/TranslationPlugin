@@ -30,8 +30,6 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     val lastLanguages: LanguagePair = LanguagePair()
 
-    val lastInstantLanguages: LanguagePair = LanguagePair()
-
     var lastReplacementTargetLanguage: Lang? = null
 
     var pinNewTranslationDialog: Boolean = false

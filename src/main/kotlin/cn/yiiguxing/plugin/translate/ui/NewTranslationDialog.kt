@@ -266,7 +266,7 @@ class NewTranslationDialog(
                     unequivocalTargetLang = true
                 }
 
-                AppStorage.lastInstantLanguages.let { pair ->
+                AppStorage.lastLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
                 }
