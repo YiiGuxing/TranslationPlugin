@@ -323,7 +323,7 @@ Support this project with your organization. Your logo will show up here with a 
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 王茂 | | 10 CNY |
 | Wxdongg99 | | 10 CNY |
-| 江涛 Jason | [blog.csdn.net/evane1890](https://blog.csdn.net/evane1890) | 10 CNY |
 
 [更多捐赠者][financial-contributors]
