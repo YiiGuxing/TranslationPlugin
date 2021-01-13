@@ -2,10 +2,14 @@ package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.Language
 import com.intellij.lang.documentation.DocumentationProviderEx
+import com.intellij.lang.documentation.ExternalDocumentationProvider
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Computable
 import com.intellij.psi.PsiElement
 
 /**
@@ -15,22 +19,50 @@ import com.intellij.psi.PsiElement
  *
  * in the extension declaration.
  */
-class TranslatingDocumentationProvider : DocumentationProviderEx() {
+class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
         if (!Settings.instance.translateDocumentation)
             return null
 
         return nullIfRecursive {
-            translateOriginalDoc(element, originalElement)
+            val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
+            val originalDoc = providerFromElement.generateDoc(element, originalElement)
+            translate(originalDoc, element?.language)
         }
     }
 
-    private fun translateOriginalDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
-        val originalDoc = providerFromElement.generateDoc(element, originalElement)
+    override fun fetchExternalDocumentation(
+        project: Project?,
+        element: PsiElement?,
+        docUrls: MutableList<String>
+    ): String? {
 
-        return translate(originalDoc, element?.language)
+        if (!Settings.instance.translateDocumentation)
+            return null
+
+        return nullIfRecursive {
+            val providerFromElement = Application.runReadAction(Computable {
+                DocumentationManager.getProviderFromElement(element, null)
+            })
+            val originalDoc = when(providerFromElement) {
+                is ExternalDocumentationProvider -> providerFromElement.fetchExternalDocumentation(project, element, docUrls)
+                else -> null
+            }
+
+            translate(originalDoc, element?.language)
+        }
+    }
+
+    override fun canPromptToConfigureDocumentation(element: PsiElement?): Boolean {
+        return false
+    }
+
+    override fun promptToConfigureDocumentation(element: PsiElement?) {}
+
+    //this method is deprecated and not used by the platform
+    override fun hasDocumentationFor(element: PsiElement?, originalElement: PsiElement?): Boolean {
+        return false
     }
 
     companion object {
