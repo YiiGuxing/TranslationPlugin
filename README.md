@@ -1,5 +1,5 @@
 
-# TranslationPlugin
+# [![TranslationPlugin](./pluginIcon.svg)](https://github.com/YiiGuxing/TranslationPlugin) TranslationPlugin
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
