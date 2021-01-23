@@ -179,6 +179,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.googleTranslateSettings.useTranslateGoogleCom != useTranslateGoogleComCheckBox.isSelected
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
+                    || settings.takeWordWhenDialogOpens != takeWordCheckBox.isSelected
                     || settings.separators != separatorsTextField.text
                     || settings.ignoreRegex != ignoreRegExp.text
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
@@ -227,6 +228,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
             showExplanation = showExplanationCheckBox.isSelected
             translateDocumentation = translateDocumentationCheckBox.isSelected
+            takeWordWhenDialogOpens = takeWordCheckBox.isSelected
 
             if (validRegExp) {
                 ignoreRegex = this@SettingsPanel.ignoreRegExp.text
@@ -259,6 +261,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation
+        takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
     }
 
     companion object {

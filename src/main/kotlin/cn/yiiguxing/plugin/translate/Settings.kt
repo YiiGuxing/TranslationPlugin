@@ -135,6 +135,11 @@ class Settings : PersistentStateComponent<Settings> {
     var autoSelectionMode: SelectionMode = SelectionMode.INCLUSIVE
 
     /**
+     * 打开翻译对话框时取词翻译
+     */
+    var takeWordWhenDialogOpens: Boolean = false
+
+    /**
      * 目标语言选择
      */
     var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT

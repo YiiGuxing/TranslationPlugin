@@ -58,6 +58,8 @@ abstract class SettingsForm {
             renderer = SimpleListCellRenderer.create("") { it.displayName }
         }
 
+    protected val takeWordCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.options.take.word.when.translation.dialog.opens"))
     protected val takeNearestWordCheckBox: JCheckBox = JCheckBox(message("settings.options.take.single.word"))
     protected val keepFormatCheckBox: JBCheckBox = JBCheckBox(message("settings.options.keepFormatting"))
 
@@ -147,8 +149,9 @@ abstract class SettingsForm {
             add(targetLangSelectionComboBox, wrap().sizeGroupX(comboboxGroup))
         }
         val textSelectionPanel = titledPanel(message("settings.panel.title.text.selection")) {
-            add(takeNearestWordCheckBox, wrap().span(4))
             add(keepFormatCheckBox, wrap().span(4))
+            add(takeNearestWordCheckBox, wrap().span(4))
+            add(takeWordCheckBox, wrap().span(4))
 
             add(JLabel(message("settings.label.ignore")))
 
