@@ -29,6 +29,7 @@
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
 | 洪晓波 | | 9.9 CNY |
+| 干巴爹 | | 8CNY |
 | 寤寐 | | 5CNY |
 | 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
 | Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
