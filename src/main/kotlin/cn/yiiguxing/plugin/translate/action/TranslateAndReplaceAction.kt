@@ -344,7 +344,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             val pascalBuilder = StringBuilder()
 
             val lowerWithSeparatorBuilders = Settings.separators.map { it to StringBuilder() }
-            val lowerWithSeparator = Settings.separators.map { it to LinkedHashSet<String>() }.toMap()
+            val withSeparator = Settings.separators.map { it to LinkedHashSet<String>() }.toMap()
 
             for (item in items) {
                 original.add(item)
@@ -366,7 +366,10 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 camel.add(camelBuilder.toString())
                 pascal.add(pascalBuilder.toString())
                 for ((separator, builder) in lowerWithSeparatorBuilders) {
-                    lowerWithSeparator.getValue(separator).add(builder.toString())
+                    withSeparator.getValue(separator).apply {
+                        add(builder.toString())
+                        add(builder.toString().toUpperCase())
+                    }
                 }
             }
 
@@ -374,7 +377,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 .apply {
                     addAll(camel)
                     addAll(pascal)
-                    for ((_, elements) in lowerWithSeparator) {
+                    for ((_, elements) in withSeparator) {
                         addAll(elements)
                     }
                     addAll(original)
