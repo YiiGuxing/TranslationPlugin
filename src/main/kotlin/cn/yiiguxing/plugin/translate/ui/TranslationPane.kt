@@ -318,21 +318,29 @@ abstract class TranslationPane<T : JComponent>(
                     }
                 }
             }
+            val copyAll = JBMenuItem(message("menu.item.copy.all"), AllIcons.Actions.Copy).apply {
+                disabledIcon = AllIcons.Actions.Copy.disabled()
+                addActionListener {
+                    CopyPasteManager.getInstance().setContents(StringSelection(this@setupPopupMenu.text))
+                }
+            }
 
-            add(copy)
             add(translate)
+            add(copy)
+            add(copyAll)
             addPopupMenuListener(object : PopupMenuListenerAdapter() {
                 override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
                     val hasSelectedText = !selectedText.isNullOrBlank()
                     copy.isEnabled = hasSelectedText
                     translate.isEnabled = hasSelectedText
+                    copyAll.isEnabled = !this@setupPopupMenu.text.isNullOrBlank()
                 }
             })
         }
     }
 
     private fun JLabel.setupPopupMenu() {
-        val copy = JBMenuItem("Copy", AllIcons.Actions.Copy)
+        val copy = JBMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy)
         copy.addActionListener { CopyPasteManager.getInstance().setContents(StringSelection(text)) }
         componentPopupMenu = JBPopupMenu().apply { add(copy) }
     }
