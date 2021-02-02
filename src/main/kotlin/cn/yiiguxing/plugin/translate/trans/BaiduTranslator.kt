@@ -130,7 +130,7 @@ object BaiduTranslator : AbstractTranslator() {
             54000 -> message("error.missingParameter")
             54001 -> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
             54003, 54005 -> message("error.access.limited")
-            54004 -> message("error.account.arrears")
+            54004 -> message("error.account.has.run.out.of.balance")
             58000 -> message("error.access.ip")
             58001 -> message("error.language.unsupported")
             58002 -> "服务当前已关闭，请前往管理控制台开启服务"
