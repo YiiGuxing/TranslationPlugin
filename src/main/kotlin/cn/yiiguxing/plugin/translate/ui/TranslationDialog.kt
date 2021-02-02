@@ -41,7 +41,7 @@ import javax.swing.text.JTextComponent
 class TranslationDialog(private val project: Project?) : TranslationDialogForm(project), View, HistoriesChangedListener,
     SettingsChangeListener {
 
-    private val processPane = ProcessComponent("Querying...")
+    private val processPane = ProcessComponent()
     private val translationPane = DialogTranslationPane(project, Settings)
     private val translationPanel = ScrollPane(translationPane)
     private val closeButton =

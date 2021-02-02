@@ -51,7 +51,7 @@ class TranslationBalloon(
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
     private val errorPanel = NonOpaquePanel(FrameLayout())
     private val errorPane = JTextPane()
-    private val processPane = ProcessComponent(message("translation.progress.querying"), JBUI.insets(INSETS))
+    private val processPane = ProcessComponent(JBUI.insets(INSETS, INSETS * 2))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
     private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
@@ -218,6 +218,11 @@ class TranslationBalloon(
 
     fun show(tracker: PositionTracker<Balloon>, position: Balloon.Position) {
         check(!disposed) { "Balloon has been disposed." }
+
+        if (!presenter.translator.checkConfiguration()) {
+            hide()
+            return
+        }
 
         if (!isShowing) {
             isShowing = true
