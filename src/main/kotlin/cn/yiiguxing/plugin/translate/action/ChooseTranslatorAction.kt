@@ -22,6 +22,8 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
     init {
         setPopupTitle(message("choose.translator.popup.title"))
         isEnabledInModalContext = true
+        templatePresentation.text = message("action.ChooseTranslatorAction.text")
+        templatePresentation.description = message("action.ChooseTranslatorAction.description")
     }
 
     override fun update(e: AnActionEvent) {

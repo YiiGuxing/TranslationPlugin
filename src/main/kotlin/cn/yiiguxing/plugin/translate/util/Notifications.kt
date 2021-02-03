@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import com.intellij.notification.*
