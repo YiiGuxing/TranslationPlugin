@@ -44,7 +44,7 @@ object Notifications {
     private class CopyToClipboardAction(
         val message: String,
         val throwable: Throwable
-    ) : NotificationAction("Copy to Clipboard") {
+    ) : NotificationAction(message("copy.to.clipboard.action.name")) {
 
         override fun actionPerformed(e: AnActionEvent, notification: Notification) {
             throwable.copyToClipboard(message)
