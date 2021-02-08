@@ -11,7 +11,7 @@
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
-| Adam Gąsowski | [github.com/gander](https://github.com/gander) | 2 USD |
+| Adam Gąsowski | [github.com/gander](https://github.com/gander) | 4 USD |
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
