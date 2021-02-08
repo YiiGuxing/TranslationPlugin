@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.util.SelectionMode
 class ExclusiveTranslateAction : TranslateAction(false) {
 
     init {
+        templatePresentation.text = message("action.ExclusiveTranslateAction.text")
         templatePresentation.description = message("action.description.exclusive")
     }
 

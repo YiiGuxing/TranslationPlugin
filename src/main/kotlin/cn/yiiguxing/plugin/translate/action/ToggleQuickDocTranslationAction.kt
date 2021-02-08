@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -15,6 +16,10 @@ import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.concurrency.runAsync
 
 class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionToIgnore {
+
+    init {
+        templatePresentation.text = message("action.ToggleQuickDocTranslationAction.text")
+    }
 
     override fun update(e: AnActionEvent) {
         val project = e.project

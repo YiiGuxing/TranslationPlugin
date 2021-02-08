@@ -129,80 +129,63 @@
     <actions>
         <action id="$ShowTranslationDialogAction"
                 icon="Icons.Translation"
-                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
-                text="Show Translation Dialog..."
-                description="Open translation dialog">
+                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
 
         <action id="$ChooseTranslatorAction"
-                class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction"
-                text="Choose Translator"
-                description="Choose translator">
+                class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
         </action>
         <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
-                icon="Icons.Translation"
-                text="Translate"
-                description="Translate">
+                icon="Icons.Translation">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
         </action>
         <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
-                icon="Icons.TranslationReplace"
-                text="Translate and Replace..." description="Translate and Replace">
+                icon="Icons.TranslationReplace">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
         <action id="$TranslateDocumentationAction"
                 icon="Icons.Documentation"
-                class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"
-                text="Translate Documentation" description="Translate documentation"/>
+                class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"/>
         <action id="$InclusiveTranslateAction"
-                class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"
-                text="Translate(Inclusive)"/>
+                class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"/>
         <action id="$ExclusiveTranslateAction"
-                class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"
-                text="Translate(Exclusive)"/>
+                class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
         <action id="$TranslateQuickDocAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocAction"
-                text="Translate Quick Document"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TranslateTextComponent"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
-                text="Translate Text Component"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TerminalTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
                 icon="Icons.Translation"
-                text="Translate Text in Terminal"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"
-                class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"
-                text="Word of the Day"/>
+                class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"/>
 
         <action id="$WhatsNewInTranslationAction"
-                text="What's New in Translation"
                 class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
             <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
         </action>
 
         <action id="ToggleQuickDocTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
-                text="Toggle Quick Documentation Translation"
                 use-shortcut-of="$EditorTranslateAction">
         </action>
 
         <action id="PinBalloonAction"
                 class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
-                text="Open as Translation Dialog"
                 use-shortcut-of="$EditorTranslateAction">
         </action>
 

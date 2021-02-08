@@ -31,6 +31,11 @@ import java.lang.ref.WeakReference
 
 class TranslateDocumentationAction : PsiElementTranslateAction() {
 
+    init {
+        templatePresentation.text = message("action.TranslateDocumentationAction.text")
+        templatePresentation.description = message("action.TranslateDocumentationAction.description")
+    }
+
     override fun pickPsiElement(editor: Editor, psiFile: PsiFile, dataContext: DataContext): PsiElement? {
         return DocumentationElementProvider
             .forLanguage(psiFile.language)

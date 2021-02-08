@@ -45,6 +45,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     init {
         isEnabledInModalContext = true
+        templatePresentation.text = message("action.TranslateAndReplaceAction.text")
+        templatePresentation.description = message("action.TranslateAndReplaceAction.description")
     }
 
     override val selectionMode: SelectionMode

@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.util.SelectionMode
 class InclusiveTranslateAction : TranslateAction(false) {
 
     init {
+        templatePresentation.text = message("action.InclusiveTranslateAction.text")
         templatePresentation.description = message("action.description.inclusive")
     }
 
