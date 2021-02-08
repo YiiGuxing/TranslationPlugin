@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -13,6 +14,8 @@ class ShowTranslationDialogAction : TranslateAction(true) {
 
     init {
         isEnabledInModalContext = true
+        templatePresentation.text = message("action.ShowTranslationDialogAction.text")
+        templatePresentation.description = message("action.ShowTranslationDialogAction.description")
     }
 
     override val selectionMode: SelectionMode

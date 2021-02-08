@@ -20,6 +20,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()), HintM
 
     init {
         isEnabledInModalContext = true
+        templatePresentation.text = message("action.TranslateTextComponent.text")
         templatePresentation.description = message("action.description.textComponent")
     }
 

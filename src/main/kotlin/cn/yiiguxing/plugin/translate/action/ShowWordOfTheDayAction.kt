@@ -21,6 +21,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 class ShowWordOfTheDayAction : AnAction(), DumbAware {
 
     init {
+        templatePresentation.text = message("action.ShowWordOfTheDayAction.text")
         templatePresentation.description = message("word.of.the.day.title")
     }
 

@@ -17,6 +17,7 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
 
     init {
         isEnabledInModalContext = true
+        templatePresentation.text = message("action.TranslateQuickDocAction.text")
         templatePresentation.description = message("action.description.quickDoc")
     }
 
