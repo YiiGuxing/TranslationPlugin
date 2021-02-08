@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.util.Settings
 class EditorTranslateAction : TranslateAction(true) {
 
     init {
+        isEnabledInModalContext = true
         templatePresentation.text = message("action.EditorTranslateAction.text")
         templatePresentation.description = message("action.EditorTranslateAction.description")
     }

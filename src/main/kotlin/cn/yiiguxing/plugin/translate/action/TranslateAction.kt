@@ -5,13 +5,10 @@ import cn.yiiguxing.plugin.translate.ui.BalloonPositionTracker
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.createCaretRangeMarker
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
-import com.intellij.codeInsight.highlighting.HighlightManager
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.markup.EffectType
-import com.intellij.openapi.editor.markup.RangeHighlighter
-import com.intellij.openapi.editor.markup.TextAttributes
+import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
@@ -30,7 +27,8 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
         get() = SelectionMode.INCLUSIVE
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
-        val project = editor.project ?: return
+        val project = editor.project ?: CommonDataKeys.PROJECT.getData(event.dataContext)
+        val markupModel = editor.markupModel
         val selectionModel = editor.selectionModel
         val isColumnSelectionMode = editor.caretModel.caretCount > 1
 
@@ -62,27 +60,29 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
             MULTILINE_HIGHLIGHT_ATTRIBUTES
         }
 
-        val highlightManager = HighlightManager.getInstance(project)
-        val highlighters = ArrayList<RangeHighlighter>()
+        val highlighters = ArrayList<RangeHighlighter>(starts.size)
         for (i in starts.indices) {
-            highlightManager.addRangeHighlight(editor, starts[i], ends[i], highlightAttributes, true, highlighters)
+            highlighters += markupModel.addRangeHighlighter(
+                starts[i],
+                ends[i],
+                HighlighterLayer.SELECTION - 1,
+                highlightAttributes,
+                HighlighterTargetArea.EXACT_RANGE
+            )
         }
 
-        val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
-        val tracker = BalloonPositionTracker(editor, caretRangeMarker)
-        val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
+        try {
+            val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
+            val tracker = BalloonPositionTracker(editor, caretRangeMarker)
+            val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
 
-        if (highlighters.isNotEmpty()) {
-            val disposable = Disposable {
-                for (highlighter in highlighters) {
-                    highlightManager.removeSegmentHighlighter(editor, highlighter)
-                }
-            }
             if (balloon.disposed) {
-                disposable.dispose()
+                markupModel.removeHighlighters(highlighters)
             } else {
-                Disposer.register(balloon, disposable)
+                Disposer.register(balloon) { markupModel.removeHighlighters(highlighters) }
             }
+        } catch (thr: Throwable) {
+            markupModel.removeHighlighters(highlighters)
         }
     }
 
@@ -97,6 +97,13 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
         val MULTILINE_HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
             effectType = EffectType.BOXED
             effectColor = EFFECT_COLOR
+        }
+
+        private fun MarkupModel.removeHighlighters(highlighters: Collection<RangeHighlighter>) {
+            for (highlighter in highlighters) {
+                removeHighlighter(highlighter)
+                highlighter.dispose()
+            }
         }
     }
 }
