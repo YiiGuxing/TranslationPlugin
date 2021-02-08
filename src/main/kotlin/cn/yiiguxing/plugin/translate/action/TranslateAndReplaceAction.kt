@@ -27,6 +27,7 @@ import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
@@ -77,7 +78,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     }
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
-        if (!editor.isWritable) {
+        val project = editor.project ?: CommonDataKeys.PROJECT.getData(event.dataContext)
+        val document = editor.document
+        val isWritable =
+            project?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) } ?: document.isWritable
+        if (!isWritable) {
             return
         }
         if (!TranslateService.translator.checkConfiguration()) {
@@ -106,23 +111,22 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                         .schedule({ translate(primaryLanguage) }, delay.toLong(), TimeUnit.MILLISECONDS)
                                 }
                             } else {
-                                val items = translation
-                                    .run {
-                                        (dictDocument?.translations?.toMutableSet() ?: mutableSetOf())
-                                            .apply { this@run.translation?.let { add(it) } }
-                                    }
+                                val translationSet =
+                                    translation.dictDocument?.translations?.toMutableSet() ?: mutableSetOf()
+                                translation.translation?.let { translationSet.add(it) }
+                                val items = translationSet
                                     .asSequence()
                                     .filter { it.isNotEmpty() }
                                     .map { it.fixWhitespace() }
                                     .toList()
-
                                 val elementsToReplace = createReplaceElements(language, items, translation.targetLang)
+
                                 editorRef.get()?.let { e ->
                                     invokeLater {
                                         if (e is TextComponentEditor) {
                                             e.showListPopup(selectionRange, text, elementsToReplace)
-                                        } else {
-                                            e.showLookup(selectionRange, text, elementsToReplace)
+                                        } else if (project != null) {
+                                            e.showLookup(project, selectionRange, text, elementsToReplace)
                                         }
                                     }
                                 }
@@ -134,8 +138,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                 invokeLater {
                                     if (editor is TextComponentEditor) {
                                         editor.showListPopup(selectionRange, text, emptyList())
-                                    } else {
-                                        editor.showLookup(selectionRange, text, emptyList())
+                                    } else if (project != null) {
+                                        editor.showLookup(project, selectionRange, text, emptyList())
                                     }
                                 }
                                 Notifications.showErrorNotification(
@@ -175,9 +179,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             effectType = EffectType.BOXED
             effectColor = JBColor(0xFF0000, 0xFF0000)
         }
-
-        val Editor.isWritable: Boolean
-            get() = project?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) } ?: false
 
         fun String.fixWhitespace() = replace(GT_WHITESPACE_CHARACTER, WHITESPACE_CHARACTER)
 
@@ -255,12 +256,16 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             return true
         }
 
-        fun Editor.showLookup(selectionRange: TextRange, targetText: String, elementsToReplace: List<String>) {
+        fun Editor.showLookup(
+            project: Project,
+            selectionRange: TextRange,
+            targetText: String,
+            elementsToReplace: List<String>
+        ) {
             if (!beforeShowPopup(selectionRange, targetText, elementsToReplace)) {
                 return
             }
 
-            val project = project ?: return
             val lookupElements = elementsToReplace.map(LookupElementBuilder::create).toTypedArray()
             val lookup = LookupManager.getInstance(project).showLookup(this, *lookupElements) ?: return
             val highlightManager = HighlightManager.getInstance(project)
