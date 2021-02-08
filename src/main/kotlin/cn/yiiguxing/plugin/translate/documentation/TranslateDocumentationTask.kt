@@ -38,7 +38,7 @@ class TranslateDocumentationTask(
             } catch (t: TimeoutException) {
                 //ignore
             } catch (e: Throwable) {
-                TranslateDocumentationAction.logAndShowWarning(e, null)
+                TranslateDocumentationAction.showWarning(e, null)
                 return null
             }
         }

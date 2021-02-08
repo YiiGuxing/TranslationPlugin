@@ -91,7 +91,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     }
                 }
             } catch (e: Throwable) {
-                logAndShowWarning(e, project)
+                showWarning(e, project)
                 invokeLater {
                     documentationComponentRef.get()?.hint?.cancel()
                 }
@@ -149,10 +149,9 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         private val LOGGER: Logger = Logger.getInstance(TranslateDocumentationAction::class.java)
 
-        fun logAndShowWarning(e: Throwable, project: Project?) {
+        fun showWarning(e: Throwable, project: Project?) {
             invokeLater {
                 val exceptionMessage = e.message ?: ""
-                LOGGER.w(exceptionMessage, e)
                 Notifications.showErrorNotification(
                     project,
                     NOTIFICATION_DISPLAY_ID,
