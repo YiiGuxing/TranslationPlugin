@@ -17,7 +17,7 @@ import javax.swing.Icon
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, private val appKeySettings: AppKeySettings) : JPanel() {
+class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySettings: AppKeySettings) : JPanel() {
     private val appIdField: JBTextField = JBTextField()
     private val appKeyField: JBPasswordField = JBPasswordField()
 

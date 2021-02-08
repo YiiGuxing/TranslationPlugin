@@ -3,7 +3,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
+import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -69,6 +69,14 @@ object BaiduTranslator : AbstractTranslator() {
         .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
+    override fun checkConfiguration(): Boolean {
+        if (Settings.baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+            return BAIDU.showConfigurationDialog()
+        }
+
+        return true
+    }
+
     override fun getRequestUrl(
         text: String,
         srcLang: Lang,
@@ -118,9 +126,9 @@ object BaiduTranslator : AbstractTranslator() {
         is TranslateResultException -> when (throwable.code) {
             52001 -> message("error.request.timeout")
             52002 -> message("error.systemError")
-            52003 -> message("error.invalidAccount", HTML_DESCRIPTION_SETTINGS)
+            52003 -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
             54000 -> message("error.missingParameter")
-            54001 -> message("error.invalidSignature", HTML_DESCRIPTION_SETTINGS)
+            54001 -> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
             54003, 54005 -> message("error.access.limited")
             54004 -> message("error.account.arrears")
             58000 -> message("error.access.ip")

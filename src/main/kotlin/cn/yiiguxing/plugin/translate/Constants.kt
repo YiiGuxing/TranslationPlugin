@@ -20,6 +20,7 @@ const val SUPPORT_PATRONS_URL = "http://yiiguxing.github.io/TranslationPlugin/su
 const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-translation"
 
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
+const val HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION = "#TRANSLATOR_CONFIGURATION"
 const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"
 
 const val GOOGLE_TRANSLATE_HOST = "translate.googleapis.com"

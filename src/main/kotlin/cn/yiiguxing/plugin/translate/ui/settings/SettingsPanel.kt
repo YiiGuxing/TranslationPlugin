@@ -4,8 +4,6 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
-import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
-import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.ByteSize
@@ -15,7 +13,6 @@ import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.ProjectManager
-import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.EditorTextField
 import com.intellij.ui.FontComboBox
@@ -34,18 +31,6 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
     private var validRegExp = true
 
     override val component: JComponent = wholePanel
-
-    private val youdaoAppKeySettingsPanel = AppKeySettingsPanel(
-        IconLoader.getIcon("/image/youdao_translate_logo.png"),
-        YOUDAO_AI_URL,
-        settings.youdaoTranslateSettings
-    )
-
-    private val baiduAppKeySettingsPanel = AppKeySettingsPanel(
-        IconLoader.getIcon("/image/baidu_translate_logo.png"),
-        BAIDU_FANYI_URL,
-        settings.baiduTranslateSettings
-    )
 
     init {
         primaryFontComboBox.fixFontComboBoxSize()
@@ -118,17 +103,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             }.show()
         }
         configureTranslationEngineLink.setListener({ _, _ ->
-            when (translationEngineComboBox.selected) {
-                TranslationEngine.YOUDAO -> AppKeySettingsDialog(
-                    message("settings.youdao.title"),
-                    youdaoAppKeySettingsPanel
-                ).show()
-                TranslationEngine.BAIDU -> AppKeySettingsDialog(
-                    message("settings.baidu.title"),
-                    baiduAppKeySettingsPanel
-                ).show()
-                else -> throw RuntimeException("Configure link should be available only for Youdao and Baidu engines, was: ${translationEngineComboBox.selected}")
-            }
+            translationEngineComboBox.selected?.showConfigurationDialog()
         }, null)
 
         val background = ignoreRegExp.background

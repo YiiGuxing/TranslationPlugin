@@ -11,6 +11,10 @@ class AppKeySettingsDialog(title: String, private val appKeySettingsPanel: AppKe
         init()
     }
 
+    override fun isOK(): Boolean {
+        return appKeySettingsPanel.appKeySettings.let { it.appId.isNotEmpty() && it.getAppKey().isNotEmpty() }
+    }
+
     override fun createCenterPanel(): JComponent = appKeySettingsPanel
 
     override fun doOKAction() {

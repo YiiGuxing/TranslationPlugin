@@ -1,8 +1,13 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
+import cn.yiiguxing.plugin.translate.BAIDU_FANYI_URL
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.YOUDAO_AI_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
+import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
+import com.intellij.openapi.util.IconLoader
 import icons.Icons
 import javax.swing.Icon
 
@@ -44,5 +49,27 @@ enum class TranslationEngine(
         }
 
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
+
+    fun showConfigurationDialog(): Boolean {
+        return when (this) {
+            YOUDAO -> AppKeySettingsDialog(
+                message("settings.youdao.title"),
+                AppKeySettingsPanel(
+                    IconLoader.getIcon("/image/youdao_translate_logo.png"),
+                    YOUDAO_AI_URL,
+                    Settings.instance.youdaoTranslateSettings
+                )
+            ).showAndGet()
+            BAIDU -> AppKeySettingsDialog(
+                message("settings.baidu.title"),
+                AppKeySettingsPanel(
+                    IconLoader.getIcon("/image/baidu_translate_logo.png"),
+                    BAIDU_FANYI_URL,
+                    Settings.instance.baiduTranslateSettings
+                )
+            ).showAndGet()
+            else -> true
+        }
+    }
 
 }

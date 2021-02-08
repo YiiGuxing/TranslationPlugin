@@ -80,6 +80,9 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         if (!editor.isWritable) {
             return
         }
+        if (!TranslateService.translator.checkConfiguration()) {
+            return
+        }
 
         val language = event.getData(LangDataKeys.LANGUAGE)
         val editorRef = WeakReference(editor)

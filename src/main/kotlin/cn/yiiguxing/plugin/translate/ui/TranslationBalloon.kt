@@ -162,6 +162,9 @@ class TranslationBalloon(
                     if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
                         this@TranslationBalloon.hide()
                         OptionsConfigurable.showSettingsDialog(project)
+                    } else if (HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION == hyperlinkEvent.description) {
+                        this@TranslationBalloon.hide()
+                        presenter.translator.checkConfiguration()
                     }
                 }
             })

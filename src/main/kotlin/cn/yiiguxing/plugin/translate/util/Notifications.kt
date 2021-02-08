@@ -4,6 +4,7 @@ package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
+import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
@@ -33,6 +34,7 @@ object Notifications {
                         notification.expire()
                         when (event.description) {
                             HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(project)
+                            HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION -> TranslateService.translator.checkConfiguration()
                         }
                     }
                 })
@@ -84,6 +86,7 @@ object Notifications {
             when (hyperlinkEvent.description) {
                 HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog()
                 HTML_DESCRIPTION_SUPPORT -> SupportDialog.show()
+                HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION -> TranslateService.translator.checkConfiguration()
                 else -> super.hyperlinkActivated(notification, hyperlinkEvent)
             }
         }
