@@ -128,7 +128,7 @@ object YoudaoTranslator : AbstractTranslator() {
             301 -> message("error.youdao.dictionary")
             302 -> message("error.youdao.translation")
             303 -> message("error.youdao.serverError")
-            401 -> message("error.account.arrears")
+            401 -> message("error.account.has.run.out.of.balance")
             else -> message("error.unknown") + "[${throwable.code}]"
         }
         else -> super.createErrorMessage(throwable)
