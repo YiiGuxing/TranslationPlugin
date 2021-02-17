@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
@@ -302,19 +303,24 @@ class TranslationBalloon(
         private const val CARD_TRANSLATION = "translation"
 
         private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(content)
-            .setDialogMode(true)
-            .setFillColor(JBUI.CurrentTheme.CustomFrameDecorations.paneBackground())
-            .setBorderColor(Color.darkGray.toAlpha(35))
             .setShadow(true)
-            .setAnimationCycle(200)
-            .setHideOnClickOutside(true)
+            .setDialogMode(true)
+            .setRequestFocus(true)
             .setHideOnAction(true)
-            .setHideOnFrameResize(true)
             .setHideOnCloseClick(true)
-            .setHideOnKeyOutside(true)
+            .setHideOnKeyOutside(false)
+            .setHideOnFrameResize(true)
+            .setHideOnClickOutside(true)
             .setBlockClicksThroughBalloon(true)
             .setCloseButtonEnabled(false)
+            .setAnimationCycle(200)
+            .setBorderColor(Color.darkGray.toAlpha(35))
+            .setFillColor(JBUI.CurrentTheme.CustomFrameDecorations.paneBackground())
             .createBalloon()
+            .apply {
+                this as BalloonImpl
+                setHideListener { hide() }
+            }
 
         private fun getMaxWidth(project: Project?): Int {
             val maxWidth = (WindowManager.getInstance().getFrame(project)?.width ?: 0) * 0.45

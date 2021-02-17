@@ -4,10 +4,8 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.ComboBox
 import com.intellij.util.ui.JBUI
 import java.awt.Dimension
-import java.awt.event.ItemEvent
 import javax.swing.JComponent
 import javax.swing.JScrollPane
 
@@ -15,7 +13,7 @@ class BalloonTranslationPane(
     project: Project?,
     settings: Settings,
     private val maxWidth: Int
-) : TranslationPane<ComboBox<Lang>>(project, settings) {
+) : TranslationPane<LangComboBoxLink>(project, settings) {
 
     private lateinit var dictViewerScrollWrapper: JScrollPane
     private var lastScrollValue: Int = 0
@@ -34,35 +32,28 @@ class BalloonTranslationPane(
         onFixLanguage { sourceLangComponent.selected = it }
     }
 
-    private fun ComboBox<Lang>.swap(old: Any?, new: Any?) {
-        if (new == selectedItem && old != Lang.AUTO && new != Lang.AUTO) {
+    private fun LangComboBoxLink.swap(old: Lang?, new: Lang?) {
+        if (new == selected && old != Lang.AUTO && new != Lang.AUTO) {
             ignoreEvent = true
-            selectedItem = old
+            selected = old
             ignoreEvent = false
         }
     }
 
-    override fun onCreateLanguageComponent(): ComboBox<Lang> = ComboBox<Lang>().apply {
+    override fun onCreateLanguageComponent(): LangComboBoxLink = LangComboBoxLink().apply {
         isOpaque = false
-        ui = LangComboBoxUI(this)
 
-        var old: Any? = null
-        addItemListener {
-            when (it.stateChange) {
-                ItemEvent.DESELECTED -> old = it.item
-                ItemEvent.SELECTED -> {
-                    if (!ignoreEvent) {
-                        when (it.source) {
-                            sourceLangComponent -> targetLangComponent.swap(old, it.item)
-                            targetLangComponent -> sourceLangComponent.swap(old, it.item)
-                        }
+        addItemListener { newLang, oldLang, _ ->
+            if (!ignoreEvent) {
+                when (this) {
+                    sourceLangComponent -> targetLangComponent.swap(oldLang, newLang)
+                    targetLangComponent -> sourceLangComponent.swap(oldLang, newLang)
+                }
 
-                        val src = sourceLangComponent.selected
-                        val target = targetLangComponent.selected
-                        if (src != null && target != null) {
-                            onLanguageChangedHandler?.invoke(src, target)
-                        }
-                    }
+                val src = sourceLangComponent.selected
+                val target = targetLangComponent.selected
+                if (src != null && target != null) {
+                    onLanguageChangedHandler?.invoke(src, target)
                 }
             }
         }
@@ -118,7 +109,7 @@ class BalloonTranslationPane(
         return preferredSize
     }
 
-    override fun ComboBox<Lang>.updateLanguage(lang: Lang?) {
+    override fun LangComboBoxLink.updateLanguage(lang: Lang?) {
         ignoreEvent = true
         selected = lang
         ignoreEvent = false
@@ -139,7 +130,7 @@ class BalloonTranslationPane(
         const val MAX_VIEWER_SMALL = 200
         const val MAX_VIEWER_HEIGHT = 250
 
-        private fun ComboBox<Lang>.setLanguages(languages: List<Lang>) {
+        private fun LangComboBoxLink.setLanguages(languages: List<Lang>) {
             model = LanguageListModel.sorted(languages, selected)
         }
     }

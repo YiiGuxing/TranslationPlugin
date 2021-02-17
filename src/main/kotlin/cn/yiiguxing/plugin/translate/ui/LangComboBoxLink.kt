@@ -57,7 +57,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
         listeners.forEach { it(lang, oldLang, fromUser) }
     }
 
-    fun addItemListener(listener: (Lang?, Lang?, Boolean) -> Unit) {
+    fun addItemListener(listener: (newLang: Lang?, oldLang: Lang?, fromUser: Boolean) -> Unit) {
         listeners.add(listener)
     }
 
