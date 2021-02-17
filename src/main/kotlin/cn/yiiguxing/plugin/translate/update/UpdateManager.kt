@@ -123,12 +123,12 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 name.append("_", locale.country)
             }
 
-            val loader = UpdateManager::class.java.classLoader
+            val loader = UpdateManager::class.java
             var htmlContent = with(loader) {
-                getResource("/whats_new/${name}.html")
-                    ?: getResource("/whats_new/default.html")
+                getResource("whats_new/${name}.html")
+                    ?: getResource("whats_new/default.html")
             }.readText()
-            val stylesheet = loader.getResource("/whats_new/stylesheet.css")!!.readText()
+            val stylesheet = loader.getResource("whats_new/stylesheet.css")!!.readText()
             htmlContent = htmlContent.replace("<style></style>", "<style>${stylesheet}</style>")
 
             if (UIUtil.isUnderDarcula()) {
@@ -155,6 +155,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         }
 
         fun browseWhatsNew(project: Project?) {
+            println(getWhatsNewHtml())
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
                 fun browse(html: String) {
                     HTMLEditorProviderCompat.openEditor(project, "What's New in Translation", html)
