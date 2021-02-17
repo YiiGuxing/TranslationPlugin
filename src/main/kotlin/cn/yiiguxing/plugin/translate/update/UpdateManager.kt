@@ -155,7 +155,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         }
 
         fun browseWhatsNew(project: Project?) {
-            println(getWhatsNewHtml())
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
                 fun browse(html: String) {
                     HTMLEditorProviderCompat.openEditor(project, "What's New in Translation", html)
