@@ -119,7 +119,7 @@ class TranslationBalloon(
 
         translationContentPane.apply {
             add(pinButton.apply {
-                border = JBEmptyBorder(10, 0, 0, 10)
+                border = JBEmptyBorder(5, 0, 0, 0)
                 isVisible = false
                 alignmentX = RIGHT_ALIGNMENT
                 alignmentY = TOP_ALIGNMENT
