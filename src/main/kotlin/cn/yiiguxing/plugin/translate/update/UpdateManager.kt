@@ -95,7 +95,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     }
 
     private class WhatsNewAction(version: Version) :
-        DumbAwareAction("What's New in ${version.versionString}", null, null) {
+        DumbAwareAction(message("action.WhatsNewInTranslationAction.text", version.versionString), null, null) {
         override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getWhatsNewUrl())
     }
 
@@ -157,7 +157,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         fun browseWhatsNew(project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
                 fun browse(html: String) {
-                    HTMLEditorProviderCompat.openEditor(project, "What's New in Translation", html)
+                    HTMLEditorProviderCompat.openEditor(project, message("action.WhatsNewInTranslationAction.text", "Translation"), html)
                 }
 
                 runAsync { getWhatsNewHtml() }

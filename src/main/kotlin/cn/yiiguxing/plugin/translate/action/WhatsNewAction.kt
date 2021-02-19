@@ -8,7 +8,7 @@ import com.intellij.openapi.project.DumbAwareAction
 
 class WhatsNewAction : DumbAwareAction() {
     init {
-        templatePresentation.text = message("action.WhatsNewInTranslationAction.text")
+        templatePresentation.text = message("action.WhatsNewInTranslationAction.text", "Translation")
     }
 
     override fun actionPerformed(e: AnActionEvent) {
