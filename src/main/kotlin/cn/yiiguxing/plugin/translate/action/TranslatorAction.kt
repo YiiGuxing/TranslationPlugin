@@ -13,12 +13,16 @@ import com.intellij.openapi.util.Condition
 class TranslatorAction(private val translator: TranslationEngine) :
     DumbAwareAction(translator.translatorName, null, translator.icon) {
 
+    fun isAvailable(): Boolean = translator.isConfigured() || Settings.translator == translator
+
     override fun actionPerformed(e: AnActionEvent) {
         Settings.translator = translator
     }
 
     companion object {
-        val ACTIONS: List<TranslatorAction> = TranslationEngine.values().toList().map { TranslatorAction(it) }
+        private val ACTIONS: List<TranslatorAction> = TranslationEngine.values().toList().map { TranslatorAction(it) }
+
+        fun availableActions(): List<TranslatorAction> = ACTIONS.filter { it.isAvailable() }
 
         val PRESELECT_CONDITION: Condition<AnAction> = Condition { action ->
             (action as? TranslatorAction)?.translator == Settings.translator

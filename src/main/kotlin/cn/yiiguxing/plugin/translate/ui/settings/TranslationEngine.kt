@@ -1,12 +1,13 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
+import cn.yiiguxing.plugin.translate.AppKeySettings
 import cn.yiiguxing.plugin.translate.BAIDU_FANYI_URL
-import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.YOUDAO_AI_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
+import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.util.IconLoader
 import icons.Icons
 import javax.swing.Icon
@@ -26,16 +27,16 @@ enum class TranslationEngine(
     var primaryLanguage: Lang
         get() {
             return when (this) {
-                GOOGLE -> Settings.instance.googleTranslateSettings.primaryLanguage
-                YOUDAO -> Settings.instance.youdaoTranslateSettings.primaryLanguage
-                BAIDU -> Settings.instance.baiduTranslateSettings.primaryLanguage
+                GOOGLE -> Settings.googleTranslateSettings.primaryLanguage
+                YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage
+                BAIDU -> Settings.baiduTranslateSettings.primaryLanguage
             }
         }
         set(value) {
             when (this) {
-                GOOGLE -> Settings.instance.googleTranslateSettings.primaryLanguage = value
-                YOUDAO -> Settings.instance.youdaoTranslateSettings.primaryLanguage = value
-                BAIDU -> Settings.instance.baiduTranslateSettings.primaryLanguage = value
+                GOOGLE -> Settings.googleTranslateSettings.primaryLanguage = value
+                YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage = value
+                BAIDU -> Settings.baiduTranslateSettings.primaryLanguage = value
             }
         }
 
@@ -50,6 +51,17 @@ enum class TranslationEngine(
 
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
 
+    fun isConfigured(): Boolean {
+        return when (this) {
+            GOOGLE -> true
+            YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
+            BAIDU -> isConfigured(Settings.baiduTranslateSettings)
+        }
+    }
+
+    private fun isConfigured(settings: AppKeySettings) =
+        settings.appId.isNotEmpty() && settings.getAppKey().isNotEmpty()
+
     fun showConfigurationDialog(): Boolean {
         return when (this) {
             YOUDAO -> AppKeySettingsDialog(
@@ -57,7 +69,7 @@ enum class TranslationEngine(
                 AppKeySettingsPanel(
                     IconLoader.getIcon("/image/youdao_translate_logo.png"),
                     YOUDAO_AI_URL,
-                    Settings.instance.youdaoTranslateSettings
+                    Settings.youdaoTranslateSettings
                 )
             ).showAndGet()
             BAIDU -> AppKeySettingsDialog(
@@ -65,7 +77,7 @@ enum class TranslationEngine(
                 AppKeySettingsPanel(
                     IconLoader.getIcon("/image/baidu_translate_logo.png"),
                     BAIDU_FANYI_URL,
-                    Settings.instance.baiduTranslateSettings
+                    Settings.baiduTranslateSettings
                 )
             ).showAndGet()
             else -> true

@@ -9,8 +9,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
  */
 class TranslatorActionGroup : ActionGroup() {
 
-    private val translatorActions: Array<AnAction> = TranslatorAction.ACTIONS.toTypedArray()
-
-    override fun getChildren(e: AnActionEvent?): Array<AnAction> = translatorActions
-
+    override fun getChildren(e: AnActionEvent?): Array<AnAction> =
+        TranslatorAction.availableActions().toTypedArray()
 }

@@ -12,6 +12,7 @@ import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
+import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.EditorTextField
@@ -150,6 +151,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
 
             val settings = settings
             return settings.translator != translationEngineComboBox.selected
+                    || !settings.translator.isConfigured()
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.googleTranslateSettings.useTranslateGoogleCom != useTranslateGoogleComCheckBox.isSelected
@@ -184,7 +186,11 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
 
         @Suppress("Duplicates")
         with(settings) {
-            translator = translationEngineComboBox.selected ?: translator
+            val selectedTranslator = translationEngineComboBox.selected ?: translator
+            if (!selectedTranslator.isConfigured()) {
+                throw ConfigurationException(message("settings.translator.requires.configuration", selectedTranslator.translatorName))
+            }
+            translator = selectedTranslator
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
             googleTranslateSettings.useTranslateGoogleCom = useTranslateGoogleComCheckBox.isSelected
