@@ -148,10 +148,6 @@ class Settings : PersistentStateComponent<Settings> {
 
     var primaryFontPreviewText = message("settings.font.default.preview.text")
 
-    @Transient
-    private val settingsChangePublisher: SettingsChangeListener =
-        ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
-
     override fun getState(): Settings = this
 
     override fun loadState(state: Settings) {
@@ -179,6 +175,9 @@ private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
 private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 
+private val settingsChangePublisher: SettingsChangeListener =
+    ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
+
 /**
  * 谷歌翻译选项
  *
@@ -194,10 +193,15 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default, var
 @Tag("app-key")
 abstract class AppKeySettings(
     var primaryLanguage: Lang,
-    var appId: String = "",
     securityName: String,
     securityKey: String
 ) {
+    var appId: String by Delegates.observable("") { _, oldValue: String, newValue: String ->
+        if (oldValue != newValue) {
+            settingsChangePublisher.onTranslatorConfigurationChanged()
+        }
+    }
+
     private var _appKey: String? by PasswordSafeDelegate(securityName, securityKey)
         @Transient get
         @Transient set
@@ -210,6 +214,7 @@ abstract class AppKeySettings(
     @Transient
     fun setAppKey(value: String?) {
         _appKey = if (value.isNullOrBlank()) null else value
+        settingsChangePublisher.onTranslatorConfigurationChanged()
     }
 }
 
@@ -247,6 +252,8 @@ enum class TargetLanguageSelection(val displayName: String) {
 interface SettingsChangeListener {
 
     fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {}
+
+    fun onTranslatorConfigurationChanged() {}
 
     fun onOverrideFontChanged(settings: Settings) {}
 
