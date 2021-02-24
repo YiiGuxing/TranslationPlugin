@@ -94,8 +94,6 @@ abstract class SettingsForm {
     protected val phoneticFontPreview: JLabel = JLabel(PHONETIC_CHARACTERS)
     protected val restoreDefaultButton = JButton(message("settings.button.restore.default.fonts"))
 
-    protected val translateDocumentationCheckBox: JBCheckBox =
-        JBCheckBox(message("settings.options.translate.documentation"))
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
 
     protected val ttsSourceComboBox: ComboBox<TTSSource> =
@@ -124,6 +122,12 @@ abstract class SettingsForm {
 
     protected val cacheSizeLabel: JLabel = JLabel("0KB")
     protected val clearCacheButton: JButton = JButton(message("settings.cache.button.clear"))
+
+    protected val translateDocumentationCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.options.translate.documentation"))
+
+    protected val showActionsInContextMenuOnlyWithSelectionCheckbox: JBCheckBox =
+        JBCheckBox(message("settings.options.show.actions.only.with.selection"))
 
     protected val supportLinkLabel: LinkLabel<*> = LinkLabel<Any>(message("support.or.donate"), Icons.Support).apply {
         border = JBUI.Borders.empty(20, 0, 0, 0)
@@ -229,6 +233,7 @@ abstract class SettingsForm {
 
         val otherPanel = titledPanel(message("settings.panel.title.other")) {
             add(translateDocumentationCheckBox, wrap())
+            add(showActionsInContextMenuOnlyWithSelectionCheckbox, wrap())
         }
 
         wholePanel.addVertically(

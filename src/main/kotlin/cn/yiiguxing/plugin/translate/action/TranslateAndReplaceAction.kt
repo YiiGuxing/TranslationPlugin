@@ -74,7 +74,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         if (selectionModel.hasSelection()) {
             return selectionModel.selectedText?.any(JAVA_IDENTIFIER_PART_CONDITION) ?: false
         }
-        return super.onUpdate(e)
+        return mayTranslateWithNoSelection(e) && super.onUpdate(e)
     }
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
