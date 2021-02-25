@@ -146,6 +146,8 @@ class Settings : PersistentStateComponent<Settings> {
 
     var translateDocumentation: Boolean = false
 
+    var showActionsInContextMenuOnlyWithSelection: Boolean = true
+
     var primaryFontPreviewText = message("settings.font.default.preview.text")
 
     override fun getState(): Settings = this

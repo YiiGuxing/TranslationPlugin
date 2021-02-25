@@ -172,6 +172,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
                     || settings.showExplanation != showExplanationCheckBox.isSelected
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
+                    || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
                     || appStorage.maxHistorySize != getMaxHistorySize()
         }
 
@@ -209,6 +210,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
             showExplanation = showExplanationCheckBox.isSelected
             translateDocumentation = translateDocumentationCheckBox.isSelected
+            showActionsInContextMenuOnlyWithSelection = showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
             takeWordWhenDialogOpens = takeWordCheckBox.isSelected
 
             if (validRegExp) {
@@ -242,6 +244,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation
+        showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected = settings.showActionsInContextMenuOnlyWithSelection
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
     }
 
