@@ -23,13 +23,18 @@
     <a href="start.html" class="btn" ondragstart="return false;">开始使用</a>
     <a href="support.html" class="btn" ondragstart="return false;">♥ 支持/捐赠 ♥</a>
 
-    <div id="version" class="project-version"></div>
+    <!--Current version prefix extracted from script to be translatable -->
+    <div id="currentVersion" class="project-version"> 当前版本：</div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
             if (version) {
-                $("#version").html("当前版本：<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
-                    " target='_blank'>" + version + "</a>");
+                $("#currentVersion").html(function (index, prefix) {
+                    return prefix + "<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
+                    " target='_blank'>" + version + "</a>"
+                })
+            } else {
+                document.getElementById("version").style.visibility="hidden";
             }
         });
     </script>
