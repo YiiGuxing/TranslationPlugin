@@ -17,7 +17,7 @@ import com.intellij.util.messages.MessageBusConnection
 /**
  * TranslateService
  */
-class TranslateService private constructor(): Disposable {
+class TranslateService private constructor() : Disposable {
 
     @Volatile
     var translator: Translator = DEFAULT_TRANSLATOR
@@ -67,7 +67,7 @@ class TranslateService private constructor(): Disposable {
                 with(translator) {
                     translate(text, srcLang, targetLang).let { translation ->
                         translation.favoriteId = WordBookService.instance
-                            .takeIf { it.canAddToWordbook(text) }
+                            .takeIf { it.isInitialized && it.canAddToWordbook(text) }
                             // 这里的`sourceLanguage`参数不能直接使用`srcLang`，因为`srcLang`的值可能为`Lang.AUTO`
                             ?.getWordId(text, translation.srcLang, translation.targetLang)
                         CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)

@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory
 import cn.yiiguxing.plugin.translate.wordbook.toWordBookItem
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
@@ -22,8 +23,13 @@ object StarButtons {
 
     val listener: LinkListener<Translation> = object : LinkListener<Translation> {
         override fun linkSelected(starLabel: LinkLabel<*>, translation: Translation?) {
-            translation ?: return
+            if (!WordBookService.isInitialized) {
+                WordBookToolWindowFactory.requireWordBook()
+                return
+            }
+
             starLabel.isEnabled = false
+            translation ?: return
             if (!WordBookService.canAddToWordbook(translation.original)) {
                 return
             }

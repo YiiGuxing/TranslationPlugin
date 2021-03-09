@@ -440,8 +440,8 @@ class NewTranslationDialog(
         updatePresentation(translation?.favoriteId)
 
         starButton.isEnabled = translation != null && WordBookService.canAddToWordbook(translation.original)
-
         starButton.setListener(StarButtons.listener, translation)
+
         translation?.observableFavoriteId?.observe(this@NewTranslationDialog) { favoriteId, _ ->
             updatePresentation(favoriteId)
         }

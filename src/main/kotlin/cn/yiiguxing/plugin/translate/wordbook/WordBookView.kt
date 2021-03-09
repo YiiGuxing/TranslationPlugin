@@ -387,11 +387,19 @@ class WordBookView {
     }
 
     private inner class ImportAction : WordBookAction(message("wordbook.window.action.import")) {
+        override fun update(e: AnActionEvent) {
+            e.presentation.isEnabled = WordBookService.isInitialized
+        }
+
         override fun doAction(e: AnActionEvent) = importWordBook(e.project)
     }
 
     private inner class ExportAction(private val exporter: WordBookExporter) :
         WordBookAction("${exporter.name}${if (exporter.availableForImport) message("wordbook.window.export.tip") else ""}") {
+        override fun update(e: AnActionEvent) {
+            e.presentation.isEnabled = WordBookService.isInitialized
+        }
+
         override fun doAction(e: AnActionEvent) = exporter.export(e.project, words)
     }
 

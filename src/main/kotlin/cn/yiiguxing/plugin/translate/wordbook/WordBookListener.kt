@@ -28,6 +28,6 @@ interface WordBookListener {
     fun onWordRemoved(service: WordBookService, id: Long) {}
 
     companion object {
-        val TOPIC: Topic<WordBookListener> = Topic.create("WordBookChanged", WordBookListener::class.java)
+        val TOPIC: Topic<WordBookListener> = Topic.create("WordBookListener", WordBookListener::class.java)
     }
 }

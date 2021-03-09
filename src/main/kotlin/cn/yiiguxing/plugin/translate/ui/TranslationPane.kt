@@ -38,7 +38,6 @@ import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import java.lang.ref.WeakReference
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -435,25 +434,7 @@ abstract class TranslationPane<T : JComponent>(
     @Suppress("DuplicatedCode")
     private fun Viewer.appendStarButton(translation: Translation) {
         val starIcon = if (translation.favoriteId == null) Icons.StarOff else Icons.StarOn
-        val starLabel = LinkLabel<Translation>("", starIcon, { starLabel, trans ->
-            starLabel.isEnabled = false
-            val starLabelRef = WeakReference(starLabel)
-            executeOnPooledThread {
-                val favoriteId = trans.favoriteId
-                if (favoriteId == null) {
-                    val newFavoriteId = WordBookService.addWord(trans.toWordBookItem())
-                    invokeLater {
-                        if (trans.favoriteId == null) {
-                            trans.favoriteId = newFavoriteId
-                        }
-                        starLabelRef.get()?.isEnabled = true
-                    }
-                } else {
-                    WordBookService.removeWord(favoriteId)
-                    invokeLater { starLabelRef.get()?.isEnabled = true }
-                }
-            }
-        }, translation)
+        val starLabel = LinkLabel("", starIcon, StarButtons.listener, translation)
         starLabel.alignmentY = 0.9f
         starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
         translation.observableFavoriteId.observe(this@TranslationPane) { favoriteId, _ ->

@@ -41,7 +41,7 @@ class WordBookService {
 
     private val lockFile: RandomAccessFile
     private lateinit var queryRunner: QueryRunner
-    private val settingsPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
+    private val wordBookPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
 
     init {
         if (!Files.exists(TRANSLATION_DIRECTORY)) {
@@ -177,7 +177,7 @@ class WordBookService {
                 """.trimIndent()
             queryRunner.update(createIndexSQL)
             isInitialized = true
-            invokeOnDispatchThread { settingsPublisher.onInitialized(this@WordBookService) }
+            invokeOnDispatchThread { wordBookPublisher.onInitialized(this@WordBookService) }
         }
     }
 
@@ -201,7 +201,7 @@ class WordBookService {
      * Test if the specified [word] can be added to the wordbook
      */
     fun canAddToWordbook(word: String?): Boolean {
-        return isInitialized && word != null && word.isNotBlank() && word.length <= 60 && '\n' !in word
+        return word != null && word.isNotBlank() && word.length <= 60 && '\n' !in word
     }
 
     private fun checkIsInitialized() = check(isInitialized) { "Word book not initialized" }
@@ -238,7 +238,7 @@ class WordBookService {
                 )?.also {
                     item.id = it
                     invokeOnDispatchThread {
-                        settingsPublisher.onWordAdded(this@WordBookService, item)
+                        wordBookPublisher.onWordAdded(this@WordBookService, item)
                     }
                 }
             } catch (e: SQLException) {
@@ -276,7 +276,7 @@ class WordBookService {
         } == true
         if (updated) {
             invokeOnDispatchThread {
-                settingsPublisher.onWordUpdated(this@WordBookService, word)
+                wordBookPublisher.onWordUpdated(this@WordBookService, word)
             }
         }
 
@@ -304,7 +304,7 @@ class WordBookService {
         }?.also { removed ->
             if (removed) {
                 invokeOnDispatchThread {
-                    settingsPublisher.onWordRemoved(this@WordBookService, id)
+                    wordBookPublisher.onWordRemoved(this@WordBookService, id)
                 }
             }
         } == true
@@ -321,7 +321,7 @@ class WordBookService {
             if (removed) {
                 invokeOnDispatchThread {
                     for (id in ids) {
-                        settingsPublisher.onWordRemoved(this@WordBookService, id)
+                        wordBookPublisher.onWordRemoved(this@WordBookService, id)
                     }
                 }
             }
@@ -364,6 +364,20 @@ class WordBookService {
         }
     }
 
+    fun hasAnyWords(): Boolean {
+        checkIsInitialized()
+        return try {
+            queryRunner.query("SELECT COUNT(*) FROM wordbook", BooleanHandler)
+        } catch (e: SQLException) {
+            LOGGER.e(e.message ?: "", e)
+            false
+        }
+    }
+
+
+    private object BooleanHandler : ResultSetHandler<Boolean> {
+        override fun handle(rs: ResultSet): Boolean = rs.takeIf { it.next() }?.getBoolean(1) ?: false
+    }
 
     private object WordIdHandler : ResultSetHandler<Long?> {
         override fun handle(rs: ResultSet): Long? = rs.takeIf { it.next() }?.getLong(1)

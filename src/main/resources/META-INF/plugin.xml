@@ -119,6 +119,7 @@
                     icon="Icons.Wordbook"
                     anchor="right"
                     secondary="true"
+                    doNotActivateOnStart="true"
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
 
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>

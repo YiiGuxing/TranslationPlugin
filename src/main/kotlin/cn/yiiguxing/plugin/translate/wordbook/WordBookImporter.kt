@@ -38,7 +38,9 @@ interface WordBookImporter {
 
             val isSuccessful = words[i].let { word ->
                 try {
-                    service.canAddToWordbook(word.word) && service.addWord(words[i], notifyOnFailed = false) != null
+                    service.isInitialized
+                            && service.canAddToWordbook(word.word)
+                            && service.addWord(words[i], notifyOnFailed = false) != null
                 } catch (e: Throwable) {
                     LOG.w("Failed to import word", e)
                     false
