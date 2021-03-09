@@ -31,8 +31,7 @@ class GoogleTranslateSettingsPanel(
     }
 
     override val isModified: Boolean
-        get() = primaryLanguage.selectedItem != settings.primaryLanguage ||
-                useTranslateGoogleComCheckBox.isSelected != settings.useTranslateGoogleCom
+        get() = primaryLanguage.selectedItem != settings.primaryLanguage
 
     override fun reset() {
         settings.primaryLanguage.let {
@@ -40,13 +39,11 @@ class GoogleTranslateSettingsPanel(
                 primaryLanguage.selectedItem = it
             }
         }
-        useTranslateGoogleComCheckBox.isSelected = settings.useTranslateGoogleCom
     }
 
     override fun apply() {
         primaryLanguage.selected?.let {
             settings.primaryLanguage = it
         }
-        settings.useTranslateGoogleCom = useTranslateGoogleComCheckBox.isSelected
     }
 }

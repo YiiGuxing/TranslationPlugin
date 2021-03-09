@@ -186,7 +186,7 @@ private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
  * @property primaryLanguage 主要语言
  */
 @Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default, var useTranslateGoogleCom: Boolean = false)
+data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default)
 
 /**
  * @property primaryLanguage    主要语言
