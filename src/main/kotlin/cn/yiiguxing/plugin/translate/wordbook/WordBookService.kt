@@ -12,6 +12,7 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
+import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.concurrency.AppExecutorUtil
 import com.intellij.util.io.HttpRequests
 import org.apache.commons.dbcp2.BasicDataSource
@@ -65,7 +66,7 @@ class WordBookService {
 
     private fun findDriverClassLoader(): ClassLoader? {
         val defaultClassLoader: ClassLoader? = javaClass.classLoader
-        if (defaultClassLoader?.canDriveService == true) {
+        if (defaultClassLoader?.canDriveService() == true) {
             return defaultClassLoader
         }
 
@@ -75,7 +76,7 @@ class WordBookService {
             }
 
             val urlClassLoader = URLClassLoader(arrayOf(DRIVER_JAR.toUri().toURL()), defaultClassLoader)
-            return@lock if (urlClassLoader.canDriveService) {
+            return@lock if (urlClassLoader.canDriveService(false)) {
                 urlClassLoader
             } else {
                 Files.delete(DRIVER_JAR)
@@ -379,9 +380,11 @@ class WordBookService {
     companion object {
         private const val NOTIFICATION_DISPLAY_ID = "Wordbook"
 
+        private const val DRIVER_VERSION = "3.34.0"
+
         private const val DRIVER_FILE_URL =
-            "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.28.0/sqlite-jdbc-3.28.0.jar"
-        private const val DRIVER_FILE_NAME = "driver.jar"
+            "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
+        private const val DRIVER_FILE_NAME = "driver-v$DRIVER_VERSION.jar"
         private val DRIVER_JAR = TRANSLATION_DIRECTORY.resolve(DRIVER_FILE_NAME)
 
         private const val DATABASE_DRIVER = "org.sqlite.JDBC"
@@ -401,13 +404,19 @@ class WordBookService {
         val instance: WordBookService
             get() = ServiceManager.getService(WordBookService::class.java)
 
-        private val ClassLoader.canDriveService: Boolean
-            get() = try {
+        private fun ClassLoader.canDriveService(default: Boolean = true): Boolean {
+            // 内置的SQLite驱动不支持Mac M1
+            if (default && SystemInfo.isMac && /* Mac M1 */ SystemInfo.OS_ARCH.equals("aarch64", ignoreCase = true)) {
+                return false
+            }
+
+            return try {
                 Class.forName(DATABASE_DRIVER, false, this)
                 true
             } catch (e: Throwable) {
                 false
             }
+        }
 
         private fun ResultSet.toWordBookItem(): WordBookItem {
             return WordBookItem(
