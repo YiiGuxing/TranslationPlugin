@@ -12,6 +12,7 @@
 | Adam Gąsowski | [github.com/gander](https://github.com/gander) | 6 USD |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
+| Zyc | | 15 CNY |
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
