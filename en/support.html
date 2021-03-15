@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Support and Donation - TranslationPlugin</title>
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="IntelliJ-based IDEs/Android Studio Translation Plugin, supports multilingual translation, document translation, text-to-speech services...">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?v1.0" media="screen">
+    <script src="//cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html">Get Started</a>
+    <a href="updates.html">Update</a>
+    <a href="support.html" class="selected">Support and Donate</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="images/github.svg" alt="GitHub"></a>
+</header>
+<div class="frame_wrapper">
+    <div class="frame_content support">
+        <div class="column">
+            <h3 class="column_item_title" style="margin-top: 2rem;">You can contribute and support this project by doing any of the following:</h3>
+            <ul class="column_tip">
+                <li><a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">Star the project on GitHub</a></li>
+                <li>
+                    <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose" target="_blank">Give feedback</a>
+                </li>
+                <li>
+                    <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
+                       target="_blank">Contribute your ideas/suggestions</a>
+                </li>
+                <li><a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">Commit PR</a></li>
+                <li>Share the plugin with your friends/colleagues</li>
+                <li>
+                    If you like the plugin, please consider making a donation to keep the plugin active:
+                    <table style="margin-top: 1rem;">
+                        <thead>
+                        <tr>
+                            <th>Open Collective</th>
+                            <th>Alipay</th>
+                            <th>WeChat Pay</th>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <td>
+                                <a href="https://opencollective.com/translation-plugin" target="_blank">
+                                    <img src="./images/open-collective.svg" width="171px" alt=1>
+                                </a>
+                            </td>
+                            <td><img src="./images/alipay.png" width="240px" alt=1></td>
+                            <td><img src="./images/wechat.png" width="240px" alt=1></td>
+                        </tr>
+                    </table>
+                    <div class="support-patrons-note"><b>Note:</b> After using Alipay/WeChat to pay for your donation, please provide your name/nickname and website by leaving a message or via email in the following format:<br/><span
+                            class="support-patrons">Name/Nickname [&lt;website>][: message]</span> (website and message are optional. Example:<span
+                            class="support-patrons"> Yii.Guxing &lt;github.com/YiiGuxing>: Let's go!</span>）<br/>
+                        If you choose to send an email, please also provide the following information:<br/>
+                        <div class="support-patrons" style="max-width: 450px">
+                            Donation amount:<br/>
+                            Payment platform: Alipay/WeChat Pay<br/>
+                            Alipay username / WeChat username / payment number (last 5 digits):
+                        </div>
+                        Email address:<a href="mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A"> yii.guxing@gmail.com</a>
+                        (click to send email)<br/>
+                        The name, website and total donation amount you provide will be added to the <a href="#patrons"><b>donor list</b></a>.
+                    </div>
+                </li>
+            </ul>
+            <h3 class="column_item_title">Thank you for your support!</h3>
+        </div>
+        <div id="patrons" class="column">
+            <div class="title">Donor</div>
+            <table>
+                <tbody id="patronsTableBody">
+                <tr>
+                    <th class="donator">Name</th>
+                    <th class="website">Website</th>
+                    <th class="amount">Total donation amount</th>
+                </tr>
+                </tbody>
+            </table>
+            <div id="placeholder" class="patrons-placeholder">Loading…</div>
+        </div>
+    </div>
+</div>
+<script>
+    function processPatronsList(patronsList) {
+        var regx = /^\|\s*(.+?)\s*\|\s*(\[\s*(.+?)\s*]\(\s*(.+?)\s*\))?\s*\|\s*(.+?)\s*\|$/;
+        for (var i = 0; i < patronsList.length; i++) {
+            var patronsLine = patronsList[i];
+            if (patronsLine) {
+                var parsedPatron = regx.exec(patronsLine);
+                var name = parsedPatron[1];
+                var websiteName = parsedPatron[3];
+                var websiteUrl = parsedPatron[4];
+                var website = null;
+                if (websiteName && websiteUrl) {
+                    website = {name: websiteName, url: websiteUrl};
+                }
+                var amount = parsedPatron[5];
+                if (name && amount) {
+                    appendPatron(name, website, amount);
+                }
+            }
+        }
+    }
+
+    var $patronsTableBody = $("#patronsTableBody");
+
+    function appendPatron(name, website, amount) {
+        var nameTd = "<td>" + name + "</td>";
+        var websiteTd = "<td>" + (website ? "<a href='" + website.url + "' target='_blank'>" + website.name + "</a>" : "") + "</td>";
+        var amountTd = "<td>" + amount + "</td>";
+        $patronsTableBody.append($("<tr>" + nameTd + websiteTd + amountTd + "</tr>"))
+    }
+
+    var date = new Date()
+    var t = "" + date.getFullYear() + (date.getMonth() + 1) + date.getDate()
+    $.ajax({
+        url: "https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/FINANCIAL_CONTRIBUTORS.md?t=" + t,
+        type: "GET",
+        dataType: "TEXT",
+        success: function (data) {
+            processPatronsList(data.split(/\s*\n+\s*/).slice(3));
+            $("#placeholder").hide();
+        },
+        error: function () {
+            $("#placeholder").text("加载失败！")
+        }
+    });
+</script>
+</body>
+</html>

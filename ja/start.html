@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>はじめに - TranslationPlugin</title>
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="IntelliJベースのIDE/Android Studio翻訳プラグインは、多言語翻訳、ドキュメントの翻訳、音声読み上げをサポートしています。">
+    <meta name="keywords" content="IDEA プラグイン、IDEA 翻訳プラグイン、プラグイン">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?v1.0" media="screen">
+    <style>
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html" class="selected">はじめに</a>
+    <a href="updates.html">更新</a>
+    <a href="support.html">サポートと寄付</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="images/github.svg" alt="GitHub"></a>
+</header>
+
+<div class="frame_wrapper">
+    <div class="frame_content">
+        <div class="column">
+            <h2 class="column_title">特徴</h2>
+            <ul class="column_tip">
+                <li>マルチ翻訳エンジン
+                    <ul>
+                        <li>Google翻訳</li>
+                        <li>有道翻訳</li>
+                        <li>Baidu翻訳</li>
+                    </ul>
+                </li>
+                <li>多言語翻訳</li>
+                <li>ドキュメントの翻訳</li>
+                <li>音声読み上げ</li>
+                <li>単語の自動選択</li>
+                <li>単語の自動分割</li>
+                <li>単語帳</li>
+            </ul>
+            <div class="column_tip">
+                サポートされている <a href="https://www.jetbrains.com" target="_blank">JetBrains IDE</a> 製品：
+                <ul class="column_tip">
+                    <li>Android Studio</li>
+                    <li>AppCode</li>
+                    <li>CLion</li>
+                    <li>DataGrip</li>
+                    <li>GoLand</li>
+                    <li>IntelliJ IDEA Ultimate</li>
+                    <li>IntelliJ IDEA Community</li>
+                    <li>IntelliJ IDEA Educational</li>
+                    <li>MPS</li>
+                    <li>PhpStorm</li>
+                    <li>PyCharm Professional</li>
+                    <li>PyCharm Community</li>
+                    <li>PyCharm Educational</li>
+                    <li>Rider</li>
+                    <li>RubyMine</li>
+                    <li>WebStorm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="column_title">インストール</h2>
+            <div>
+                <div id="embeddable"></div>
+                <h3 class="column_item_title">IDE組み込みプラグインシステムを使用してインストールします。</h3>
+                <div class="column_item_info_code">
+                    <ul>
+                        <li>環境設定（設定） > プラグイン > Marketplace > 「Translation」を検索 > プラグインをインストールします。</li>
+                    </ul>
+                </div>
+                <h3 class="column_item_title">手動インストール：</h3>
+                <div class="column_item_info_code">
+                    <ul>
+                        <li><a href="https://github.com/YiiGuxing/TranslationPlugin/releases"
+                                 target="_blank">Github </a>
+                            または
+                            <a href="https://plugins.jetbrains.com/plugin/8579" target="_blank">JetBrainsプラグインセンター</a>にアクセスして、最新のプラグインパッケージをダウンロードします
+                        </li>
+                        <li>環境設定（設定） > プラグイン > ⚙ > ディスクからプラグインをインストール... > プラグインパッケージを選択してインストール（解凍不要）</li>
+                    </ul>
+                </div>
+                <p class="column_tip">インストール後にIDEを再起動します。</p>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="column_title">使用</h2>
+            <h3 class="column_item_title">1. 有道クラウド翻訳サービスの申し込み（オプション）</h3>
+            <div class="column_tip">
+                <ul>
+                    <li><a href="http://ai.youdao.com"
+                             target="_blank">有道クラウド</a>アカウントに登録し、<strong>アプリケーションID</strong>および<strong>キー</strong>を取得します</li>
+                    <li><strong>アプリケーション ID</strong>および<strong>キー</strong>をバインドする：環境設定（設定） > その他の設定 > 翻訳 > 有道翻訳
+                    </li>
+                </ul>
+
+                <div style="color: red">注：アプリケーションキーが漏洩しないようにご注意ください。アカウントのサブスクリプションがない場合、使用できません。</div>
+            </div>
+
+            <h3 class="column_item_title">2. Baidu 翻訳サービスのお申し込み（オプション）</h3>
+            <div class="column_tip">
+                <ul>
+                    <li><a href="http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer" target="_blank">Baidu 翻訳オープンプラットフォーム</a>アカウントに登録し、<strong>アプリケーションID</strong>および<strong>キー</strong>をを取得します
+                    </li>
+                    <li><strong>アプリケーションID</strong>および<strong>キー</strong>をバインドする：環境設定（設定） > その他の設定 > 翻訳 > Baidu翻訳
+                    </li>
+                </ul>
+
+                <div style="color: red">注：アプリケーションキーが漏洩しないようにご注意ください。アカウントのサブスクリプションがない場合、使用できません。</div>
+            </div>
+
+            <h3 class="column_item_title">3. 翻訳の開始</h3>
+            <p class="column_tip">テキストを選択するか、マウスをテキストに向けて、マウスの右ボタンをクリックして、翻訳します</p>
+            <p class="column_tip">または、ショートカットキーを使用して翻訳します。詳細については、「<a href="#actions">アクション</a>」を参照してください。</p>
+
+            <h3 class="column_item_title">4. 翻訳と置き換え</h3>
+            <p class="column_tip">ターゲット言語を翻訳して置き換えます。翻訳先言語が英語の場合、<strong>アストラ式の翻訳結果</strong>、<strong>単語区切り付きの翻訳結果</strong>（複数の単語を含む場合、単語の区切り符号はプラグインの設定画面で設定可能：翻訳設定 > 区切り記号）、そして<strong>元の翻訳結果</strong>をそれぞれ出力します。</p>
+            <p class="column_tip">使用法：テキストを選択するか、マウスがテキストを向けて > マウスの右ボタンをクリック > 翻訳と置換...（または、ショートカットキーを使用して翻訳します。詳細については、「 <a href="#actions">アクション</a>」を参照してください）。
+            </p>
+
+            <h3 class="column_item_title">5. 翻訳エンジンの切り替え</h3>
+            <p class="column_tip">ステータスバーの翻訳エンジンステータスアイコンをクリックするか、ショートカットキーの <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd>
+                +
+                <kbd>Meta</kbd> + <kbd>Y</kbd>）を使用して、翻訳エンジン（Google翻訳、有道翻訳、Baidu翻訳）をすばやく切り替えることができます。
+アクション</p>
+        </div>
+
+        <div class="column">
+            <h2 id="actions" class="column_title">アクション</h2>
+
+            <ul>
+                <li>
+                    <h4 class="column_item_title">翻訳ダイアログを表示...</h4>
+                    <p>翻訳ダイアログを開きます。デフォルトでは、ツールバーに表示されます。デフォルトのショートカットキー：</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></li>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">翻訳</h4>
+                    <p>単語を取得して翻訳します。すでにテキストが選択されている場合には、まず選択されたテキストから単語を取得します。選択されているテキストがない場合は、デフォルトでテキストの最大範囲から自動的に単語を取得します。（単語の取得モードはSettingsで設定可能です）デフォルトはエディタの右クリックメニューに表示され、デフォルトのショートカットキーは次のとおりです。</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">翻訳（すべて）</h4>
+                    <p>単語を取得して翻訳します。テキストの最大範囲から自動的にすべての単語を取得します。手動で選択されたテキストを無視します。デフォルトのショートカットキー：（なし）</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">翻訳（単独）</h4>
+                    <p>単語を取得して翻訳します。最も近い単語を自動的に取得します。手動で選択されたテキストを無視します。デフォルトのショートカットキー：（なし）</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">翻訳と置換...</h4>
+                    <p>翻訳して置き換えます。単語を取得すると同時に<b>翻訳</b>を行います。デフォルトはエディタの右クリックメニューに表示されます。デフォルトのショートカットキー：</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd></li>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">ドキュメントの翻訳</h4>
+                    <p>ドキュメントのコメントを翻訳します。デフォルトでエディタの右クリックメニューに表示され、カーソルがドキュメントのコメント部分にある場合に使用できます。デフォルトのショートカットキー：（なし）</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">クイックドキュメント翻訳に切り替える</h4>
+                    <p>クイックドキュメント中のテキスト表示を翻訳文と原文に切り替えます。クイックドキュメントのポップアップまたはドキュメントツールのウィンドウを選択している場合に使用できます。デフォルトのショートカットキー（翻訳と同じ）：</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">テキストコンポーネントの翻訳</h4>
+                    <p>テキストコンポーネント（クイックドキュメント、メッセージバブル、入力フィールドなど）で選択されたテキストを翻訳します。単語の自動取得をサポートしません。デフォルトのショートカットキー：</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">翻訳エンジンの選択</h4>
+                    <p>翻訳エンジンを素早く切り替えます。デフォルトのショートカットキー：</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">リアルタイム翻訳ダイアログを表示</h4>
+                    <p>リアルタイム翻訳ダイアログを表示します。デフォルトのショートカットキー：（なし）</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">毎日の一語</h4>
+                    <p>[毎日の一語] ダイアログを表示します。デフォルトのショートカットキー：（なし）</p>
+                </li>
+                <li>
+                    <h4 id="other-actions" class="column_item_title">その他</h4>
+                    <ul>
+                        <li>
+                            <p><b>翻訳ダイアログのショートカット：</b></p>
+                            <ul>
+                                <li>ソース言語の一覧を表示 - <kbd>Alt</kbd> + <kbd>S</kbd></li>
+                                <li>ターゲット言語の一覧を表示 - <kbd>Alt</kbd> + <kbd>T</kbd></li>
+                                <li>言語を変更 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                                <li>ウィンドウの固定状態を切り替える - <kbd>Alt</kbd> + <kbd>P</kbd></li>
+                                <li>TTS を再生 - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd></li>
+                                <li>単語帳にお気に入り - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd></li>
+                                <li>履歴の表示 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd></li>
+                                <li>翻訳のコピー - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
+                                <li>入力を空にする - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd></li>
+                                <li>さらに多くの翻訳を表示 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd></li>
+                                <li>さらに多くの翻訳を非表示 - <kbd>Ctrl/Meta</kbd> + <kbd>Up</kbd></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><b>翻訳バブルのショートカットキー：</b></p>
+                            <ul>
+                                <li>
+                                    ダイアログで開く - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><b>クイックドキュメントウィンドウのショートカットキー：</b></p>
+                            <ul>
+                                <li>
+                                    自動翻訳のオン/オフ - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h2 id="faq" class="column_title">よくある質問</h2>
+
+            <ul>
+                <li>
+                    <h4 id="faq-ne" class="column_item_title">ネットワークエラーやネットワーク接続のタイムアウトが発生した場合はどうすればいいですか？</h4>
+                    <p>回答：</p>
+                    <ul>
+                        <li>ネットワーク環境を確認して、ネットワークが開いていることを確認します。</li>
+                        <li>プロキシソフトウェアを使用してプラグインが翻訳APIにアクセスできないかどうかを確認します。</li>
+                        <li>IDEプロキシの設定に問題があるかどうかを確認します。</li>
+                        <li>Google翻訳を使用している場合は、Google翻訳の設定を確認してください。よく知られている原因で、Google翻訳へのWebアクセスがあまり安定していないことがあります。アクセスできない場合は、翻訳する前に「<strong>translate.google.comを使用</strong>」オプションのチェックボックスの状態を切り替えてみてください。また、TTS機能はGoogle翻訳のAPIを使用します。
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 id="faq-gc" class="column_item_title">翻訳された内容が文字化けしている場合はどうすればいいですか？</h4>
+                    <p>回答：文字化けは通常、フォントに対応する文字がないことが原因です。プラグインの設定ページでフォントを変更して文字化けの問題を解決できます（次の図を参照）。</p>
+                    <img src="images/settings_font.png">
+                </li>
+                <li>
+                    <h4 id="faq-os" class="column_item_title">アプリケーションキーを保存できない場合はどうすればいいですか？</h4>
+                    <p>回答：パスワードの保存方法をIn KeePass方式に変更してみてください。（外観と動作の設定 > システム設定 > パスワード）原因と詳細：</p>
+                    <ul>
+                        <li>MacOSの場合は、
+                            <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/81" target="_blank">#81</a>
+                        </li>
+                        <li>Linuxの場合は、
+                            <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/115" target="_blank">#115</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 id="faq-km2" class="column_item_title">ショートカットキーが使用できない場合はどうすればいいですか？</h4>
+                    <p>回答：ショートカットキーは他のプラグインまたは外部アプリケーションによって使用されている場合、動作しません。該当する操作のために新しいショートカットキーをリセットできます。</p>
+                </li>
+                <li>
+                    <h4 id="faq-fb" class="column_item_title">問題は、どのように、どこでフィードバックすればいいですか？</h4>
+                    <p>回答：プラグインに問題がある場合、またはプラグインに関するコメントや提案がある場合は、ここをクリックして、<a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank"
+                    >フィードバック</a>できます。質問をフィードバックする前に、「<a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues/365" target="_blank"
+                    >問題管理のお知らせ</a>」を参照してください。問題をフィードバックするときは、次に示すように収集されたエラーメッセージを忘れずに記載してください（エラーメッセージはクリップボードにコピーされます）。
+                    </p>
+                    <img style="float: left" src="images/ctc_balloon.png">
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
+</body>
+</html>

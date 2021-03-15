@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update - TranslationPlugin</title>
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="IntelliJ-based IDEs/Android Studio Translation Plugin, supports multilingual translation, document translation, text-to-speech services...">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?v1.0" media="screen">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html">Get Started</a>
+    <a href="updates.html" class="selected">Update</a>
+    <a href="support.html">Support and Donate</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="images/github.svg" alt="GitHub"></a>
+</header>
+
+<div class="frame_wrapper updates">
+    <div class="version-list">
+        <div class="version-title">Version</div>
+        <ul id="version-list"></ul>
+    </div>
+    <div class="version-content">
+        <iframe id="content-frame" width="0" height="0"></iframe>
+    </div>
+</div>
+<script>
+    var versionList = ['2.4', '2.5', '2.6', '2.7', '2.8', '2.9', '3.0'];
+    var matchedSearch = window.location.search.match(/([?&])v=(.*?)(&|$)/);
+    var selectedVersion = matchedSearch && matchedSearch[2];
+    if (!selectedVersion || !versionList.includes(selectedVersion)) {
+        selectedVersion = versionList[versionList.length - 1];
+    }
+
+    var versionContainer = $("#version-list");
+    for (var i = 0; i < versionList.length; i++) {
+        var v = versionList[i];
+        var classStr = selectedVersion === v ? 'class="selected"' : "";
+        versionContainer.append('<li><a ' + classStr + ' href="updates.html?v=' + v + '">v' + v + '</a></li>');
+    }
+
+    $("#content-frame").attr('src', 'updates/v' + selectedVersion.replace('.', '_') + '.html');
+
+    function updateSize() {
+        var content = document.querySelector(".version-content");
+        var contentFrame = document.getElementById("content-frame");
+        contentFrame.width = content.clientWidth;
+        contentFrame.height = content.clientHeight;
+    }
+
+    updateSize();
+    window.onresize = function () {
+        updateSize();
+    }
+</script>
+</body>
+</html>
