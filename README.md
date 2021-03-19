@@ -212,12 +212,12 @@
 
 ## Change Notes
 
-## [v3.0.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.1) (2020-12-31)
+## [v3.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.2) (2021-03-19)
 
-- 恢复了右键文档翻译功能
-- 按ESC键时关闭翻译窗口
-- 优化了目标语言的选择逻辑
-- 修复了翻译窗口导致CPU高占用率的问题
+- 修复了谷歌文档翻译解析错误的问题
+- 修复了MacOS(M1)中单词本驱动的一个错误
+- 修复了Android Studio中点击有道、百度翻译账号申请链接时崩溃的问题
+- 其他一些BUG的修复
 
 [完整的更新历史记录](./CHANGELOG.md)
 

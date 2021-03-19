@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.2) (2021-03-19)
+
+- 修复了谷歌文档翻译解析错误的问题
+- 修复了MacOS(M1)中单词本驱动的一个错误
+- 修复了Android Studio中点击有道、百度翻译账号申请链接时崩溃的问题
+- 其他一些BUG的修复
+
 ## [v3.0.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.1) (2020-12-31)
 
 - 恢复了右键文档翻译功能
