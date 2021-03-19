@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Version 3.0</title>
+    <base target="_blank">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/stylesheet.css?v1.0" media="screen">
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/updates.css?v1.1" media="screen">
+</head>
+<body>
+<h1>Version 3.0 (2020-12-05)</h1>
+<hr/>
+<div class="content">
+    <p>Welcome to <b>Translation v3.0</b>, which includes the following major updates：</p>
+    <ul>
+        <li><b>New plugin logo</b> - <i>the plugin logo has been redesigned</i></li>
+        <li><b>New user interface</b> - <i>a brand new translation dialog and Settings page UI</i></li>
+        <li><b>More keyboard shortcuts </b> - <i>still using a mouse? No need for that!</i></li>
+        <li><b>Disk cache</b> - <i>now supports the disk cache</i></li>
+    </ul>
+    <div class="reference">If you would like to read these Release Notes, please click <a href="../updates.html">here</a>.</div>
+
+    <h2>Logo</h2>
+    <p>We've designed a new logo for the plugin：</p>
+    <p><img src="../../images/pluginIcon.svg" width="128" height="128" alt="Logo"></p>
+
+    <h2>Translation</h2>
+    <h3>Translation dialog</h3>
+    <p>The user interface of the translation dialog has been redesigned to make the translation dialog more concise and easy to use.</p>
+    <p><img src="../updates/img/v3_0/new_ui.png" alt="The new UI"></p>
+
+    <h3>Keyboard shortcuts</h3>
+    <p>We've added a lot of useful shortcuts to the interfaces of the translation dialog, translation popups, etc. You can now use the keyboard for most actions：</p>
+    <ul>
+        <li>
+            <p>Translate dialog shortcuts：</p>
+            <ul>
+                <li>Display the list of source languages - <kbd>Alt</kbd> + <kbd>S</kbd></li>
+                <li>Display the list of target languages - <kbd>Alt</kbd> + <kbd>T</kbd></li>
+                <li>Switch between languages - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                <li>Pin/unpin a window - <kbd>Alt</kbd> + <kbd>P</kbd></li>
+                <li>Play TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd></li>
+                <li>Save to Glossary - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd></li>
+                <li>Show history - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd></li>
+                <li>Copy translation - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
+                <li>Clear input - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd></li>
+                <li>Expand more translations - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd></li>
+                <li>Hide more translations - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd></li>
+            </ul>
+        </li>
+        <li>
+            <p>Translate bubble shortcuts：</p>
+            <ul>
+                <li>
+                    Open dialog - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Quick Documentation window shortcuts：</p>
+            <ul>
+                <li>
+                    Enable/disable automatic translation - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>Quick Documentation translation</h3>
+    <p>For documents with content lengths that exceed translation limits, translations are skipped. The following hint will appear：</p>
+    <p><img src="../../updates/img/v3_0/quick_doc.png" alt="Quick Documentation"></p>
+
+    <h3>The disk cache</h3>
+    <p>The translations will now be cached to disk. The next time the same translation is needed, it will be read directly from the cache.Of course, you can clear the cache in the Settings page：</p>
+    <p><img src="../updates/img/v3_0/cache.png" alt="The hard disk cache"></p>
+
+    <h2>Settings page</h2>
+    <p>We've redesigned the user interface for the Settings page, which is now more in line with IDEA's UI style. In addition, the Settings page has now been moved to the <b>Settings > Tools</b> group. Oh, but don't worry about not being able to find it. You can quickly enter the Settings page from an easily accessible location in the translation dialog.</p>
+    <p><img src="../updates/img/v3_0/settings.png" alt="Settings"></p>
+
+    <h2>Acknowledgement</h2>
+    <p>Thank you very much to the following people who have contributed to this version：</p>
+    <ul>
+        <li>
+            <a href="https://github.com/niktrop">Nikolay Tropin (@niktrop)</a>
+            <ul>
+                <li>New Translation Dialog <a href="https://github.com/YiiGuxing/TranslationPlugin/pull/568">PR #568</a></li>
+                <li>Reimplementing the Settings <a href="https://github.com/YiiGuxing/TranslationPlugin/pull/576">PR #576</a></li>
+            </ul>
+        </li>
+        <li><a href="https://www.jetbrains.com">Unknown Designer (@JetBrains)</a>: Desigining the new logo for the plugin <a href="https://github.com/YiiGuxing/TranslationPlugin/pull/602">PR #602</a></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>バージョン3.0</title>
+    <base target="_blank">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/stylesheet.css?v1.0" media="screen">
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/updates.css?v1.1" media="screen">
+</head>
+<body>
+<h1>バージョン3.0（2020/12/05）</h1>
+<hr/>
+<div class="content">
+    <p><b>Translation v3.0</b>へようこそ。このバージョンには、次の主要なアップデートが含まれています。</p>
+    <ul>
+        <li><b>新しいプラグインロゴ</b> - <i>プラグインロゴの新しいデザイン</i></li>
+        <li><b>新しいユーザー インターフェイス</b> - <i>完全に新しくデザインされた翻訳ダイアログと設定画面のUI</i></li>
+        <li><b>さらに多くのキーボードショートカット -</b> - <i>マウス？それは何？</i></li>
+        <li><b>ディスクキャッシュ</b> - <i>ディスクキャッシュのサポート</i></li>
+    </ul>
+    <div class="reference">このリリース ノートをオンラインで読みたい場合は、<a href="../updates.html">こちら</a>をご覧ください。</div>
+
+    <h2>ロゴ</h2>
+    <p>プラグインのために新しいロゴを設計しました。</p>
+    <p><img src="../../images/pluginIcon.svg" width="128" height="128" alt="ロゴ"></p>
+
+    <h2>翻訳</h2>
+    <h3>翻訳ダイアログ</h3>
+    <p>翻訳ダイアログのユーザーインターフェイスが再設計され、よりシンプルで使いやすくなりました。</p>
+    <p><img src="../updates/img/v3_0/new_ui.png" alt="新しいUI"></p>
+
+    <h3>キーボードショートカット</h3>
+    <p>翻訳ダイアログ、翻訳ポップアップなどのインターフェイスに便利なショートカットキーを多数追加し、キーボードを使用してほとんどの操作を実行できるようになりました。</p>
+    <ul>
+        <li>
+            <p>翻訳ダイアログのショートカット：</p>
+            <ul>
+                <li>ソース言語の一覧を表示 - <kbd>Alt</kbd> + <kbd>S</kbd></li>
+                <li>ターゲット言語の一覧を表示 - <kbd>Alt</kbd> + <kbd>T</kbd></li>
+                <li>言語を変更 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                <li>ウィンドウの固定状態を切り替える - <kbd>Alt</kbd> + <kbd>P</kbd></li>
+                <li>TTS を再生 - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd></li>
+                <li>単語帳にお気に入り - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd></li>
+                <li>履歴の表示 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd></li>
+                <li>翻訳のコピー - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
+                <li>入力を空にする - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd></li>
+                <li>さらに多くの翻訳を表示 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd></li>
+                <li>さらに多くの翻訳を非表示 - <kbd>Ctrl/Meta</kbd> + <kbd>Up</kbd></li>
+            </ul>
+        </li>
+        <li>
+            <p>翻訳バブルのショートカットキー：</p>
+            <ul>
+                <li>
+                    ダイアログで開く - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>クイックドキュメントウィンドウのショートカットキー：</p>
+            <ul>
+                <li>
+                    自動翻訳のオン/オフ - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>クイックドキュメント翻訳</h3>
+    <p>ドキュメントの長さが翻訳の制限を超えている場合、翻訳がキャンセルされ、メッセージが表示されます：</p>
+    <p><img src="../../updates/img/v3_0/quick_doc.png" alt="クイックドキュメント"></p>
+
+    <h3>ディスクキャッシュ</h3>
+    <p>翻訳結果をハードディスクにキャッシュするようになりました。同じ翻訳があった場合、キャッシュから読み込んで表示します。もちろん、設定ページでキャッシュをクリーンアップすることもできます：</p>
+    <p><img src="../updates/img/v3_0/cache.png" alt="ハード ディスクキャッシュ"></p>
+
+    <h2>設定ページ</h2>
+    <p>設定画面のユーザーインターフェースを新たに見直し、IDEAに一致するUIスタイルになりました。また、設定ページが<b>設定ツール > ツール</b>のサブグループに移動されました。 設定画面が見つからないことで心配する必要はありません。翻訳ダイアログの目立つ箇所に設定画面へのアクセスを配置しました。ここから設定画面を素早く開けます。</p>
+    <p><img src="../updates/img/v3_0/settings.png" alt="設定"></p>
+
+    <h2>謝意</h2>
+    <p>本バージョンに対して多大な貢献をしてくれた下記の人々に感謝致します。</p>
+    <ul>
+        <li>
+            <a href="https://github.com/niktrop">Nikolay Tropin (@niktrop)</a>
+            <ul>
+                <li>新しい翻訳ダイアログ <a href="https://github.com/YiiGuxing/TranslationPlugin/pull/568">PR #568</a></li>
+                <li>設定の再実装 <a href="https://github.com/YiiGuxing/TranslationPlugin/pull/576">PR #576</a></li>
+            </ul>
+        </li>
+        <li><a href="https://www.jetbrains.com">不明なデザイナー (@JetBrains)</a>: プラグインの新しいロゴ<a href="https://github.com/YiiGuxing/TranslationPlugin/pull/602">PR #602</a></li>
+    </ul>
+</div>
+</body>
+</html>

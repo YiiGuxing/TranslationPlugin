@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>버전 2.6</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/updates.css?v1.1" media="screen">
+</head>
+<body>
+<h1>버전 2.6(2019-12-05)</h1>
+<hr/>
+<div class="content">
+    <p><b>Translation v2.6</b>을 사용해주셔서 감사합니다. 해당 버전에는 다음과 같은 주요 업데이트가 포함되어 있습니다:</p>
+    <ul>
+        <li><b>문서 주석 번역</b> - <i>원클릭으로 문서 주석 번역 가능</i></li>
+        <li><b>YOUDAO 번역에서 지원하는 언어</b> - <i>다양한 새로운 언어 지원</i></li>
+        <li><b>글꼴 미리보기</b> - <i>실제 텍스트 적용 상황을 표시</i></li>
+    </ul>
+    <div class="reference"><a href="../updates.html" target="_blank">이곳</a>에서 해당 릴리스 노트를 확인하실 수 있습니다.</div>
+
+    <h2>번역</h2>
+    <h3>문서 주석 번역</h3>
+    <p>이제 코드에 있는 문서 주석에 대해 원클릭으로 번역을 할 수 있으며, 더 이상 텍스트를 수동으로 선택한 다음 번역할 필요가 없습니다. 또한 문서 주석의 일부 요소(문서 특수 기호, HTML 요소 등)에 의한 간섭 역시 걱정하지 않아도 됩니다.</p>
+    <p><b>참고:</b> 이 기능을 사용할 때는 최상의 번역 결과를 위해 Google 번역을 사용하고 IDE를 최신 버전으로 업그레이드하는 것이 좋습니다.</p>
+    <p>번역할 문서:</p>
+    <img src="../../updates/img/v2_6/doc_code.png" alt="번역할 문서">
+    <p>Google 번역 결과:</p>
+    <img src="../../updates/img/v2_6/doc_google.gif" alt="Google 번역 결과">
+    <p>YOUDAO 번역 결과:</p>
+    <img src="../../updates/img/v2_6/doc_youdao.png" alt="YOUDAO 번역 결과">
+    <p>BAIDU 번역 결과:</p>
+    <img src="../../updates/img/v2_6/doc_baidu.png" alt="BAIDU 번역 결과">
+
+    <h3>YOUDAO 번역에서 지원하는 언어</h3>
+    <p>YOUDAO 번역에서 지원하는 언어 목록을 업데이트했으며, 이 언어 목록에는 100개 이상의 언어가 포함되어 있습니다.</p>
+    <img src="../../updates/img/v2_6/languages.gif" alt="YOUDAO 번역에서 지원하는 언어">
+
+    <h2>옵션</h2>
+    <h3>글꼴 미리보기</h3>
+    <p>실제 텍스트 적용 상황을 보여주기 위해 옵션 패널에서의 글꼴 미리보기를 최적화했습니다.이전에는 IDE 기본 글꼴로 인해 미리보기 텍스트에서 선택한 글꼴이 제대로 적용되지 않고 일부만 적용되어 미리보기와 플러그인 UI에 표시된 글꼴이 일치하지 않았었습니다.</p>
+    <img src="../../updates/img/v2_6/font.gif" alt="글꼴 미리보기">
+
+    <h2>중요 수정 사항</h2>
+    <ul>
+        <li><a href="https://github.com/YiiGuxing/TranslationPlugin/issues/402" target="_blank">#402</a>: BAIDU 번역 엔진을 사용하였을때, 줄 바꿈이 있는 번역의 경우에는 온전하게 표시되지 않고 첫 번째 줄만 번역되는 문제</li>
+    </ul>
+</div>
+</body>
+</html>

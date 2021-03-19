@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Started - TranslationPlugin</title>
+    <link rel="icon" href="../favicon.ico">
+    <meta name="description" content="IntelliJ based IDEs/Android Studio Translation Plugin, supports multilingual translation, document translation, text-to-speech services...">
+    <meta name="keywords" content="IDEA Plugin, IDEA Translation Plugin, Plugin">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.0" media="screen">
+    <style>
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html" class="selected">Get Started</a>
+    <a href="updates.html">Update</a>
+    <a href="support.html">Support and Donate</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="../images/github.svg" alt="GitHub"></a>
+    <div class="language_links">
+        <a href="../start.html">中文</a>
+        <a href="../ja/start.html">日本語</a>
+        <a href="../ko/start.html">한국어</a>
+    </div>
+</header>
+
+<div class="frame_wrapper">
+    <div class="frame_content">
+        <div class="column">
+            <h2 class="column_title">Features</h2>
+            <ul class="column_tip">
+                <li>Multiple Translation Engines
+                    <ul>
+                        <li>Google Translate</li>
+                        <li>Youdao Translation</li>
+                        <li>Baidu Translation</li>
+                    </ul>
+                </li>
+                <li>Multilingual translation</li>
+                <li>Document translation</li>
+                <li>Text-to-speech</li>
+                <li>Automatic word selection</li>
+                <li>Automatic word breaks</li>
+                <li>Glossary</li>
+            </ul>
+            <div class="column_tip">
+                Supported <a href="https://www.jetbrains.com" target="_blank">JetBrains IDE</a> products：
+                <ul class="column_tip">
+                    <li>Android Studio</li>
+                    <li>AppCode</li>
+                    <li>CLion</li>
+                    <li>DataGrip</li>
+                    <li>GoLand</li>
+                    <li>IntelliJ IDEA Ultimate</li>
+                    <li>IntelliJ IDEA Community</li>
+                    <li>IntelliJ IDEA Educational</li>
+                    <li>MPS</li>
+                    <li>PhpStorm</li>
+                    <li>PyCharm Professional</li>
+                    <li>PyCharm Community</li>
+                    <li>PyCharm Educational</li>
+                    <li>Rider</li>
+                    <li>RubyMine</li>
+                    <li>WebStorm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="column_title">Installation</h2>
+            <div>
+                <div id="embeddable"></div>
+                <h3 class="column_item_title">Installing from the plugin repository within the IDE：</h3>
+                <div class="column_item_info_code">
+                    <ul>
+                        <li>Preferences (Settings) > Plugin > Marketplace > Search and find "Translation" > Install Plugin.</li>
+                    </ul>
+                </div>
+                <h3 class="column_item_title">Installing manually：</h3>
+                <div class="column_item_info_code">
+                    <ul>
+                        <li>Download the latest
+                            plugin package
+                            on <a href="https://github.com/YiiGuxing/TranslationPlugin/releases"
+                                 target="_blank">GitHub</a> or in the <a href="https://plugins.jetbrains.com/plugin/8579" target="_blank">JetBrains Plugin Repository</a>
+                        </li>
+                        <li>Preferences (Settings) > Plugins > ⚙ > Install plugins from disk... > Select the plugin package and install (no need to decompress)</li>
+                    </ul>
+                </div>
+                <p class="column_tip">Restart the IDE after installation.</p>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="column_title">Using the plugin</h2>
+            <h3 class="column_item_title">1. Sign up for the Youdao Cloud Translation Service (optional)</h3>
+            <div class="column_tip">
+                <ul>
+                    <li>Sign up for a <a href="http://ai.youdao.com"
+                             target="_blank">Youdao Cloud</a> account to obtain an <strong>application ID</strong> and <strong>key</strong></li>
+                    <li>Binding <strong>the application ID</strong> and <strong>key</strong>：Preferences (Settings) > [Other Settings] > Translation > Youdao Translation
+                    </li>
+                </ul>
+
+                <div style="color: red">Note: Please protect your application key to prevent any security breaches.If your account has any outstanding debts, you will not be able to use it for these services.</div>
+            </div>
+
+            <h3 class="column_item_title">2. Sign up for the Baidu Translation Service (optional)</h3>
+            <div class="column_tip">
+                <ul>
+                    <li>Sign up for a <a href="http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer" target="_blank">Baidu Translation Open Platform</a> account to obtain an <strong>application ID</strong> and <strong>key</strong>
+                    </li>
+                    <li>Binding <strong>the application ID</strong> and <strong>key</strong>：Preferences (Settings) > [Other Settings] > Translation > Baidu Translation
+                    </li>
+                </ul>
+
+                <div style="color: red">Note: Please protect your application key to prevent any security breaches. If your account has any outstanding debts, you will not be able to use it for these services.</div>
+            </div>
+
+            <h3 class="column_item_title">3. Begin translating</h3>
+            <p class="column_tip">Select text or hover the mouse over the text > Right-click  > Translation</p>
+            <p class="column_tip">Or use shortcuts for translation, as detailed in <a href="#actions">Actions</a>.</p>
+
+            <h3 class="column_item_title">4. Translate and replace</h3>
+            <p class="column_tip">Translate the target text and replace it. If the target language is English, the output has several formats: <strong>in camel case</strong>, <strong>with a word separator</strong> (when the output contains multiple words, the separator can be configured in the plugin configuration page: Translation Settings > 
+                Separator) and <strong>in the original format</strong>.</p>
+            <p class="column_tip">Instructions: Select text or hover the mouse over the text > Right-click > Translate and replace... (Or use shortcuts for translation, as detailed in <a href="#actions">Actions</a>).
+            </p>
+
+            <h3 class="column_item_title">5. Switch translation engines</h3>
+            <p class="column_tip">Click the translation engine icon in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> (Mac OS: <kbd>Control</kbd>
+                +
+                <kbd>Meta</kbd> + <kbd>Y</kbd>) to quickly switch between translation engines. Currently, Google Translate, Youdao Translate and Baidu Translate are supported.</p>
+        </div>
+
+        <div class="column">
+            <h2 id="actions" class="column_title">Actions</h2>
+
+            <ul>
+                <li>
+                    <h4 class="column_item_title">Show translation dialog...</h4>
+                    <p>Open the translation dialog, which appears by default on the toolbar. Default shortcut:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Translation</h4>
+                    <p>Extract words and translate them. If you have already selected a text, extract the words from the portion of the text you'd like translate. Otherwise, words are extracted automatically from the maximum range (this extraction can be configured in Settings).This action is displayed by default in the editor's right-click context menu. Default shortcut:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Translation (inclusive)</h4>
+                    <p>Extract words and translate them. Automatically extract and translate all words from a specific range, ignoring manually selected text.Default shortcut: (None)</p>
+                    <img src="../images/translate_inclusive.png">
+                </li>
+                <li>
+                    <h4 class="column_item_title">Translation (exclusive)</h4>
+                    <p>Extract words and translate them. Automatically extract the nearest single word, ignoring manually selected text.Default shortcut: (None)</p>
+                    <img src="../images/translate_exclusive.png">
+                </li>
+                <li>
+                    <h4 class="column_item_title">Translate and replace...</h4>
+                    <p>Translate and replace.The word extraction method works the same as when <b>translating</b>.This option is displayed by default in the editor's context menu (which you can access by right-clicking).Default shortcut:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Translate documentation</h4>
+                    <p>Translate the contents of document comments.This option is displayed by default in the editor's context menu (right-click to access) and is available when the cursor is in the document's comment block.Default shortcut: (None)</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Toggle between Quick Documentation translations</h4>
+                    <p>Toggle between the original and translated texts in Quick Documentation.This option is available when the focus is on the Quick Documentation pop-up window or the documentation tool window.Default shortcut (same as translation shortcut):</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Translate the text component</h4>
+                    <p>Translate selected text in some text components (e.g. Quick Docs, popup hints, input boxes……). This does not support automatic word extraction. Default shortcut:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Select a translator</h4>
+                    <p>Quickly toggle between translation engines. Default shortcut:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                        <li>macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">Display an instant translation dialog box</h4>
+                    <p>Display a dialog box for instant translation. Default shortcut: (None)</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">One word a day</h4>
+                    <p>Display the 'Daily Word' dialog box.Default shortcut: (None)</p>
+                </li>
+                <li>
+                    <h4 id="other-actions" class="column_item_title">Other</h4>
+                    <ul>
+                        <li>
+                            <p><b>Translation dialog shortcuts:</b></p>
+                            <ul>
+                                <li>Display the list of source languages - <kbd>Alt</kbd> + <kbd>S</kbd></li>
+                                <li>Display the list of target languages - <kbd>Alt</kbd> + <kbd>T</kbd></li>
+                                <li>Switch between languages - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                                <li>Pin/unpin a window - <kbd>Alt</kbd> + <kbd>P</kbd></li>
+                                <li>Play TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd></li>
+                                <li>Save to Glossary - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd></li>
+                                <li>Show history - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd></li>
+                                <li>Copy translation - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
+                                <li>Clear input - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd></li>
+                                <li>Expand more translations - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd></li>
+                                <li>Hide more translations - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><b>Translation balloon shortcuts:</b></p>
+                            <ul>
+                                <li>
+                                    Open dialog - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><b>Quick Documentation window shortcuts：</b></p>
+                            <ul>
+                                <li>
+                                    Enable/disable automatic translation - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h2 id="faq" class="column_title">FAQ</h2>
+
+            <ul>
+                <li>
+                    <h4 id="faq-ne" class="column_item_title">What should I do if there is a network error or the network connection times out?</h4>
+                    <p>A:</p>
+                    <ul>
+                        <li>Check the network environment and make sure the network is running smoothly.</li>
+                        <li>Check whether a proxy is preventing the plugin from accessing the translation API.</li>
+                        <li>Check the IDE proxy configuration to see if that is the cause of the problem.</li>
+                        <li>If you are using Google Translate, please check the Google Translate configuration.Network access to Google Translate is not very stable due to obvious reasons.If it is not accessible, try to switch the `<strong>use translate.google.com</strong>` option and then translate. Keep in mind that the TTS feature also uses the Google Translate API.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 id="faq-gc" class="column_item_title">What should I do if the translated content appears garbled?</h4>
+                    <p>A： Garbled code generally appears when there are a lack of corresponding characters in the font. You can go to the Settings page of the plugin to modify the font in order to fix the garbled code (as shown below).</p>
+                    <img src="images/settings_font.png">
+                </li>
+                <li>
+                    <h4 id="faq-os" class="column_item_title">What if I can't save the application key?</h4>
+                    <p>A: You can try changing the way passwords are saved to In KeePass (Settings > Appearance & Behavior > System
+                        Settings > Passwords). For more details：</p>
+                    <ul>
+                        <li>For macOS，please refer to
+                            <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/81" target="_blank">#81</a>
+                        </li>
+                        <li>For Linux，please refer to
+                            <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/115" target="_blank">#115</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 id="faq-km2" class="column_item_title">What if the shortcuts don't work?</h4>
+                    <p>A: The shortcut keys are most likely not working because they are being used in other plugins or external applications. You can reset shortcut keys for the corresponding operations.</p>
+                </li>
+                <li>
+                    <h4 id="faq-fb" class="column_item_title">How and where can I give feedback on an issue?</h4>
+                    <p>A： If you find any problems with the plugin, or have any comments or suggestions about the plugin, you can <a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank"
+                    >click here</a> to give feedback.Please read the <a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues/365" target="_blank"
+                    >Issue Management Announcements</a> before giving feedback on an issue.When giving feedback on an issue, please remember to include the error message, which can be obtained as shown below (the error message will be copied to the clipboard):
+                    </p>
+                    <img style="float: left" src="../images/ctc_balloon.png">
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
+</body>
+</html>

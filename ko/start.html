@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>TranslationPlugin - 시작하기</title>
+    <link rel="icon" href="../favicon.ico">
+    <meta name="description" content="IntelliJ 기반 IDE/Android Studio 번역 플러그인, 다국어 번역, 문서 번역, 음성 읽기 지원...">
+    <meta name="keywords" content="IDEA 플러그인, IDEA 번역 플러그인, 플러그인">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.0" media="screen">
+    <style>
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html" class="selected">시작하기</a>
+    <a href="updates.html">업데이트</a>
+    <a href="support.html">지원 및 기부</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="../images/github.svg" alt="GitHub"></a>
+    <div class="language_links">
+        <a href="../start.html">中文</a>
+        <a href="../en/start.html">English</a>
+        <a href="../ja/start.html">日本語</a>
+    </div>
+</header>
+
+<div class="frame_wrapper">
+    <div class="frame_content">
+        <div class="column">
+            <h2 class="column_title">특성</h2>
+            <ul class="column_tip">
+                <li>여러 번역 엔진
+                    <ul>
+                        <li>Google 번역</li>
+                        <li>YOUDAO 번역</li>
+                        <li>BAIDU 번역</li>
+                    </ul>
+                </li>
+                <li>다국어 번역</li>
+                <li>문서 번역</li>
+                <li>음성 읽기</li>
+                <li>자동 단어 선택</li>
+                <li>자동 단어 분할</li>
+                <li>단어장</li>
+            </ul>
+            <div class="column_tip">
+                지원하는 <a href="https://www.jetbrains.com" target="_blank">JetBrains IDE</a> 제품:
+                <ul class="column_tip">
+                    <li>Android Studio</li>
+                    <li>AppCode</li>
+                    <li>CLion</li>
+                    <li>DataGrip</li>
+                    <li>GoLand</li>
+                    <li>IntelliJ IDEA Ultimate</li>
+                    <li>IntelliJ IDEA Community</li>
+                    <li>IntelliJ IDEA Educational</li>
+                    <li>MPS</li>
+                    <li>PhpStorm</li>
+                    <li>PyCharm Professional</li>
+                    <li>PyCharm Community</li>
+                    <li>PyCharm Educational</li>
+                    <li>Rider</li>
+                    <li>RubyMine</li>
+                    <li>WebStorm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="column_title">설치</h2>
+            <div>
+                <div id="embeddable"></div>
+                <h3 class="column_item_title">IDE 내의 플러그인 저장소에서 바로 다운로드하여 설치:</h3>
+                <div class="column_item_info_code">
+                    <ul>
+                        <li>환경 설정(설정) > 플러그인 > Marketplace > "Translation" 검색 > 플러그인 설치</li>
+                    </ul>
+                </div>
+                <h3 class="column_item_title">수동 설치:</h3>
+                <div class="column_item_info_code">
+                    <ul>
+                        <li><a href="https://github.com/YiiGuxing/TranslationPlugin/releases"
+                                 target="_blank">Github</a>
+                            또는
+                            <a href="https://plugins.jetbrains.com/plugin/8579" target="_blank">JetBrains Marketplace</a>에서 최신 플러그인 패키지 다운로드
+                        </li>
+                        <li>환경 설정(설정) > 플러그인 > ⚙ > 디스크에서 플러그인 설치... > 패키지 선택 및 설치(압축 해제 필요 없음)</li>
+                    </ul>
+                </div>
+                <p class="column_tip">설치 후 IDE를 다시 시작합니다.</p>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="column_title">사용</h2>
+            <h3 class="column_item_title">1. YOUDAO ZHIYUN 번역 서비스 가입(선택 사항)</h3>
+            <div class="column_tip">
+                <ul>
+                    <li><a href="http://ai.youdao.com"
+                             target="_blank">YOUDAO ZHIYUN</a> 계정에 가입하여 <strong>앱 ID</strong> 및 <strong>키</strong>를 받으세요.</li>
+                    <li><strong>앱 ID</strong> 와 <strong>키</strong> 바인딩: 환경 설정(설정) > [기타 설정] > 번역 > YOUDAO 번역
+                    </li>
+                </ul>
+
+                <div style="color: red">참고: 앱 키가 유출되지 않도록 안전하게 보관하세요.계정 요금이 연체된 경우 사용할 수 없습니다.</div>
+            </div>
+
+            <h3 class="column_item_title">2. BAIDU 번역 서비스 신청(선택 사항)</h3>
+            <div class="column_tip">
+                <ul>
+                    <li><a href="http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer" target="_blank">BAIDU 번역 오픈 플랫폼</a> 계정에 가입하고 <strong>앱 ID</strong> 및 <strong>키</strong>를 받으세요.
+                    </li>
+                    <li><strong>앱 ID</strong> 와 <strong>키</strong> 바인딩: 환경 설정(설정) > [기타 설정] > 번역 > BAIDU 번역
+                    </li>
+                </ul>
+
+                <div style="color: red">참고: 앱 키가 유출되지 않도록 안전하게 보관하세요.계정 요금이 연체된 경우 사용할 수 없습니다.</div>
+            </div>
+
+            <h3 class="column_item_title">3. 번역 시작</h3>
+            <p class="column_tip">텍스트를 선택하거나 마우스로 텍스트를 가리킴 > 마우스 오른쪽 버튼 클릭 > 번역</p>
+            <p class="column_tip">또는 단축키를 사용하여 번역, 자세한 내용은 <a href="#actions">액션</a> 참고</p>
+
+            <h3 class="column_item_title">4. 번역 및 바꾸기</h3>
+            <p class="column_tip">대상 텍스트를 번역하고 바꿉니다.번역 대상 언어가 영어인 경우, 출력 결과의 형식은 다음과 같습니다.  <strong>낙타 표기법</strong>, <strong>단어 구분 기호 포함</strong>(출력 결과에 여러 단어가 포함된 경우 플러그인 설정 페이지에서 구분 기호 설정 가능: 번역 설정
+                > 구분 기호) 및 <strong>원래 형식</strong>.</p>
+            <p class="column_tip">사용법: 텍스트 선택 또는 마우스로 텍스트 가리킴 > 마우스 오른쪽 클릭 > 번역 및 바꾸기... (또는 단축키를 사용하여 번역, 자세한 내용은 <a href="#actions">액션</a> 참고)
+            </p>
+
+            <h3 class="column_item_title">5. 번역 엔진 전환</h3>
+            <p class="column_tip">상태 표시줄의 번역 엔진 상태 아이콘을 클릭하거나 단축키 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>(Mac OS: <kbd>Control</kbd>
+                +
+                <kbd>Meta</kbd> + <kbd>Y</kbd>)를 사용하여 번역 엔진을 빠르게 전환할 수 있으며, 현재는 Google 번역, YOUDAO 번역 및 BAIDU 번역을 지원합니다.</p>
+        </div>
+
+        <div class="column">
+            <h2 id="actions" class="column_title">액션</h2>
+
+            <ul>
+                <li>
+                    <h4 class="column_item_title">번역 대화상자 표시...</h4>
+                    <p>번역 대화상자를 엽니다.기본적으로 도구 모음에 표시됩니다.디폴트 단축키:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">번역</h4>
+                    <p>단어를 가져오고 번역합니다.선택한 텍스트가 있는 경우 해당 텍스트에서 우선하여 단어를 가져오며, 그렇지 않을 경우 기본적으로 최대 범위에서 자동으로 단어를 가져옵니다(해당 단어 가져오기 모드는 Settings에서 설정 가능).이 액션은 기본적으로 에디터에서 마우스 오른쪽을 클릭하여 나타나는 컨텍스트 메뉴에 표시됩니다. 디폴트 단축키:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">번역(포괄적)</h4>
+                    <p>단어를 가져와서 번역합니다.가장 가까운 모든 단어를 최대 범위로 자동으로 가져오며, 수동 선택한 텍스트는 무시합니다.디폴트 단축키: (없음)</p>
+                    <img src="../images/translate_inclusive.png">
+                </li>
+                <li>
+                    <h4 class="column_item_title">번역(배타적)</h4>
+                    <p>단어를 가져와서 번역합니다.가장 가까운 개별 단어를 자동으로 가져오며, 수동으로 선택한 텍스트는 무시합니다.디폴트 단축키: (없음)</p>
+                    <img src="../images/translate_exclusive.png">
+                </li>
+                <li>
+                    <h4 class="column_item_title">번역 및 바꾸기...</h4>
+                    <p>번역 및 바꾸기.단어를 가져오는 방법은 <b>번역</b>할 때와 동일하게 작동합니다.이 옵션은 기본적으로 에디터에서 마우스 오른쪽을 클릭하여 나타나는 컨텍스트 메뉴에 표시됩니다.디폴트 단축키:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">문서 번역</h4>
+                    <p>문서 주석의 내용을 번역합니다.이 옵션은 기본적으로 에디터의 컨텍스트 메뉴에 표시되며(마우스 오른쪽 클릭으로 엑세스), 커서가 문서 주석 블록 안에 있는 경우 사용할 수 있습니다.디폴트 단축키: (없음)</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">빠른 문서 번역 간 전환</h4>
+                    <p>빠른 문서에서 문서 내용을 번역 내용과 원본 텍스트 간에 전환합니다.이 옵션은 빠른 문서 팝업 창 또는 문서 도구 창에 초점이 맞춰져 있을 때 사용할 수 있습니다.디폴트 단축키(번역 단축키와 동일):</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">번역 텍스트 구성 요소</h4>
+                    <p>텍스트 구성 요소(빠른 문서, 알림 말풍선, 입력창...) 중 선택한 텍스트를 번역하며, 자동으로 단어를 가져오기는 지원하지 않습니다.디폴트 단축키:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">번역기 선택</h4>
+                    <p>번역 엔진을 빠르게 전환할 수 있습니다.디폴트 단축키:</p>
+                    <ul>
+                        <li>Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                        <li>Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd></li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 class="column_item_title">인스턴트 번역 대화상자 표시</h4>
+                    <p>인스턴트 번역 대화상자를 표시합니다.디폴트 단축키: (없음)</p>
+                </li>
+                <li>
+                    <h4 class="column_item_title">오늘의 단어</h4>
+                    <p>오늘의 단어 대화상자를 표시합니다.디폴트 단축키: (없음)</p>
+                </li>
+                <li>
+                    <h4 id="other-actions" class="column_item_title">기타</h4>
+                    <ul>
+                        <li>
+                            <p><b>번역 대화 상자 단축키:</b></p>
+                            <ul>
+                                <li>소스 언어 목록 표시 - <kbd>Alt</kbd> + <kbd>S</kbd></li>
+                                <li>대상 언어 목록 표시 - <kbd>Alt</kbd> + <kbd>T</kbd></li>
+                                <li>언어 전환 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></li>
+                                <li>창을 고정/고정 해제 - <kbd>Alt</kbd> + <kbd>P</kbd></li>
+                                <li>TTS 재생 - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd></li>
+                                <li>단어장에 저장 - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd></li>
+                                <li>기록 표시 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd></li>
+                                <li>번역 복사 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
+                                <li>입력 내용 지우기 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd></li>
+                                <li>더 많은 번역 펼치기 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd></li>
+                                <li>더 많은 번역 접기 - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><b>번역 말풍선 단축키:</b></p>
+                            <ul>
+                                <li>
+                                    대화상자로 열기 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><b>빠른 문서 창 단축키:</b></p>
+                            <ul>
+                                <li>
+                                    자동 번역 켜기/끄기 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> +
+                                    <kbd>Meta</kbd> + <kbd>U</kbd>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h2 id="faq" class="column_title">자주 묻는 질문</h2>
+
+            <ul>
+                <li>
+                    <h4 id="faq-ne" class="column_item_title">네트워크 오류 또는 네트워크 연결 시간이 초과되면 어떻게 해야 하나요?</h4>
+                    <p>답변:</p>
+                    <ul>
+                        <li>네트워크 연결이 원활한지 네트워크 환경을 확인하세요.</li>
+                        <li>프록시가 플러그인이 번역 API에 액세스하는 것을 차단하고 있는지 확인하세요.</li>
+                        <li>IDE 프록시 구성을 확인하여 IDE 프록시 구성으로 인해 문제가 발생했는지 확인하세요.</li>
+                        <li>Google 번역을 사용하는 경우 Google 번역 설정을 확인하세요.일부 지역에서는 Google 번역의 웹 액세스가 안정적이지 않습니다.액세스할 수 없는 경우 `<strong>translate.google.com 사용</strong>` 옵션의 체크 상태를 변경한 후 다시 번역을 진행해보세요.TTS 기능 또한 Google 번역의 API를 사용합니다.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 id="faq-gc" class="column_item_title">번역 내용에 깨진 글자가 나타나면 어떻게 하나요?</h4>
+                    <p>답변: 깨진 글자는 일반적으로 글꼴에 해당 문자가 없기 때문에 발생하는 문제이며, 플러그인의 설정 페이지에서 글꼴을 수정하여 깨진 글자 문제를 해결할 수 있습니다(아래 그림 참조).</p>
+                    <img src="images/settings_font.png">
+                </li>
+                <li>
+                    <h4 id="faq-os" class="column_item_title">앱 키를 저장할 수 없는 경우 어떻게 해야 하나요?</h4>
+                    <p>답변: 암호 저장 방법을 In KeePass 방법으로 변경해 보세요 (설정 > 모양 및 동작 > 시스템
+                        설정> 비밀번호). 원인 및 세부 정보는 다음과 같습니다:</p>
+                    <ul>
+                        <li>MacOS의 경우,
+                            <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/81" target="_blank">#81</a>을 참조하세요.
+                        </li>
+                        <li>Linux의 경우,
+                            <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/115" target="_blank">#115</a>를 참조하세요.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h4 id="faq-km2" class="column_item_title">단축키를 사용할 수 없는 경우 어떻게 해야 하나요?</h4>
+                    <p>답변: 다른 플러그인이나 외부 응용 프로그램에 의해 해당 단축키가 사용 중인 경우에는 사용할 수 없으며, 이때는 해당 작업에 대해 새로운 단축키를 설정하면 됩니다.</p>
+                </li>
+                <li>
+                    <h4 id="faq-fb" class="column_item_title">문제가 있는 경우 어디서 어떻게 피드백을 남길 수 있나요?</h4>
+                    <p>답변: 플러그인에 대한 문제를 발견했거나 플러그인에 대해 의견 또는 건의가 있으실 경우, <a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank"
+                    >이곳을 클릭하여</a> 피드백을 남길 수 있습니다.문제에 대한 피드백을 남기기 전에 <a
+                            href="https://github.com/YiiGuxing/TranslationPlugin/issues/365" target="_blank"
+                    >Issue 관리 공지 사항</a>을 먼저 읽어주세요.문제에 대한 피드백을 제출하실 때, 다음 그림과 같이 수집한 오류 정보를 첨부해주세요(오류 메시지가 클립보드에 복사됩니다):
+                    </p>
+                    <img style="float: left" src="../images/ctc_balloon.png">
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
+</body>
+</html>
