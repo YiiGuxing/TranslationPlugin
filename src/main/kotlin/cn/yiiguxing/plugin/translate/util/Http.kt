@@ -8,7 +8,7 @@ import com.intellij.util.io.RequestBuilder
 private const val GOOGLE_REFERER = "https://translate.google.com/"
 private const val GOOGLE_REFERER_CN = "https://translate.google.cn/"
 
-private const val CHROME_VERSION = "77.0.3865.75"
+private const val CHROME_VERSION = "89.0.4389.90"
 
 private val USER_AGENT = getUserAgent()
 
