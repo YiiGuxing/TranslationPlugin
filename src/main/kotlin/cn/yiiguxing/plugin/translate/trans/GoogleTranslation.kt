@@ -43,7 +43,7 @@ data class GoogleTranslation(
 }
 
 sealed class GSentence
-data class GTransSentence(val orig: String, val trans: String, val backend: Int) : GSentence()
+data class GTransSentence(val trans: String) : GSentence()
 data class GTranslitSentence(
     @SerializedName("src_translit") val srcTranslit: String?,
     @SerializedName("translit") val translit: String?
@@ -77,3 +77,20 @@ data class GAlternative(
 
 // For dt=qca
 data class GSpell(@SerializedName("spell_res") val spell: String)
+
+data class GHtmlTranslation(val results: List<GHtmlTranslationResult>)
+
+data class GHtmlTranslationResult(val src: Lang, val sentences: List<GSentence>)
+
+fun GHtmlTranslation.toTranslation(srcLang: Lang, targetLang: Lang): BaseTranslation {
+    val htmlTranslationResult = results.first()
+    val sLang = if (srcLang == Lang.AUTO) htmlTranslationResult.src else srcLang
+
+    val translation = htmlTranslationResult
+        .sentences
+        .asSequence()
+        .mapNotNull { (it as? GTransSentence)?.trans }
+        .joinToString("")
+
+    return BaseTranslation(sLang, targetLang, translation)
+}
