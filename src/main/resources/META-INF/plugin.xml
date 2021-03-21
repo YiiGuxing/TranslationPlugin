@@ -47,8 +47,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>添加快速切换自动文档翻译的快捷键</li>
-        <li>修复了一些Bug</li>
+        <li>修复了谷歌文档翻译解析错误的问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
