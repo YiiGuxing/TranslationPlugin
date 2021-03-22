@@ -70,13 +70,13 @@ object GoogleTranslator : AbstractTranslator() {
             urlBuilder
                 .addQueryParameter("client", "gtx")
                 .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm", "qca")
+                .addQueryParameter("dj", "1")
                 .addQueryParameter("ie", "UTF-8")
                 .addQueryParameter("oe", "UTF-8")
                 .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
         }
 
         return urlBuilder
-            .addQueryParameter("dj", "1")
             .addQueryParameter("tk", text.tk())
             .build()
             .also { logger.i("Translate url: $it") }
@@ -101,8 +101,10 @@ object GoogleTranslator : AbstractTranslator() {
         logger.i("Translate result: $result")
 
         return if (isDocumentation) {
-            val htmlTranslation = gson.fromJson(result, GHtmlTranslation::class.java)
-            htmlTranslation.toTranslation(srcLang, targetLang)
+            val results = gson.fromJson(result, Array<String>::class.java)
+            val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
+
+            BaseTranslation(sLang, targetLang, results[0])
         } else {
             gson.fromJson(result, GoogleTranslation::class.java).apply {
                 this.original = original
