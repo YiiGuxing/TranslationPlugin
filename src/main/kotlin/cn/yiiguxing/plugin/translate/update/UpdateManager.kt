@@ -5,7 +5,10 @@ import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.IdeVersion
+import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.Plugin
+import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
@@ -19,9 +22,7 @@ import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
-import com.intellij.util.ui.UIUtil
 import icons.Icons
-import org.jetbrains.concurrency.runAsync
 import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
@@ -96,7 +97,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
     private class WhatsNewAction(version: Version) :
         DumbAwareAction("What's New in ${version.versionString}", null, null) {
-        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getWhatsNewUrl())
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getWhatsNewUrl(true))
     }
 
 
@@ -105,8 +106,8 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 
-        private const val GITEE_UPDATES_BASE_URL = "https://yiiguxing.gitee.io/translation-plugin/updates"
-        private const val GITHUB_UPDATES_BASE_URL = "https://yiiguxing.github.io/TranslationPlugin/updates"
+        private const val BASE_URL_GITEE = "https://yiiguxing.gitee.io/translation-plugin"
+        private const val BASE_URL_GITHUB = "https://yiiguxing.github.io/TranslationPlugin"
 
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"
@@ -117,37 +118,31 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             return (color.rgb and 0xffffff).toString(16)
         }
 
-        private fun getWhatsNewHtml(locale: Locale = Locale.getDefault()): String {
-            val name = StringBuilder(locale.language)
-            if (locale.country.isNotEmpty()) {
-                name.append("_", locale.country)
-            }
-
-            val loader = UpdateManager::class.java
-            var htmlContent = with(loader) {
-                getResource("whats_new/${name}.html")
-                    ?: getResource("whats_new/default.html")
-            }.readText()
-            val stylesheet = loader.getResource("whats_new/stylesheet.css")!!.readText()
-            htmlContent = htmlContent.replace("<style></style>", "<style>${stylesheet}</style>")
-
-            if (UIUtil.isUnderDarcula()) {
-                htmlContent = htmlContent.replace("<body>", "<body class='dark'>")
-            }
-
-            // 删除编码设定，否则显示会乱码，保留编码设定是为了方便编辑预览（去除在浏览器预览时会乱码）
-            return htmlContent.replace("<meta charset=\"UTF-8\">", "")
-        }
-
-        fun getWhatsNewUrl(locale: Locale = Locale.getDefault()): String {
+        fun getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
             val version = Version(Plugin.descriptor.version)
             val baseUrl = when (locale) {
+                Locale.CHINA,
                 Locale.CHINESE,
-                Locale.SIMPLIFIED_CHINESE -> GITEE_UPDATES_BASE_URL
-                else -> GITHUB_UPDATES_BASE_URL
+                Locale.SIMPLIFIED_CHINESE -> BASE_URL_GITEE
+                else -> BASE_URL_GITHUB
+            }
+            val langPath = when (locale) {
+                Locale.CHINA,
+                Locale.CHINESE,
+                Locale.SIMPLIFIED_CHINESE -> ""
+                Locale.JAPAN,
+                Locale.JAPANESE,
+                Locale.KOREA,
+                Locale.KOREAN -> "/${locale.language}"
+                else -> "/en"
             }
 
-            return "$baseUrl.html?v=${version.versionString}"
+            val v = version.versionString
+            return if (frame) {
+                "$baseUrl$langPath/updates.html?v=$v"
+            } else {
+                "$baseUrl$langPath/updates/v${v.replace('.', '_')}.html"
+            }
         }
 
         fun canBrowseWhatsNewHTMLEditor(): Boolean {
@@ -155,23 +150,27 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         }
 
         fun browseWhatsNew(project: Project?) {
-            println(getWhatsNewHtml())
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
-                fun browse(html: String) {
-                    HTMLEditorProviderCompat.openEditor(project, "What's New in Translation", html)
+                fun browse() {
+                    val whatsNewUrl = getWhatsNewUrl()
+                    HTMLEditorProviderCompat.openEditor(
+                        project,
+                        "What's New in Translation",
+                        whatsNewUrl,
+                        """<div style="text-align: center;padding-top: 3rem">
+                            |<div style="padding-top: 1rem">Failed to load!</div>
+                            |<div><a href="$whatsNewUrl" target="_blank" style="font-size: 2rem">Open in browser</a></div>
+                            |</div>""".trimMargin()
+                    )
                 }
 
-                runAsync { getWhatsNewHtml() }
-                    .onSuccess { html ->
-                        if (IdeVersion.isIde2020_3OrNewer) {
-                            invokeLater { browse(html) }
-                        } else {
-                            DumbService.getInstance(project).smartInvokeLater { browse(html) }
-                        }
-                    }
+                if (IdeVersion.isIde2020_3OrNewer) {
+                    browse()
+                } else {
+                    DumbService.getInstance(project).smartInvokeLater { browse() }
+                }
             } else {
-                val whatsNewUrl = getWhatsNewUrl()
-                BrowserUtil.browse(whatsNewUrl)
+                BrowserUtil.browse(getWhatsNewUrl(true))
             }
         }
     }
