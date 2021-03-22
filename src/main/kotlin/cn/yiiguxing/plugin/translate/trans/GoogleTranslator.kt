@@ -127,7 +127,7 @@ object GoogleTranslator : AbstractTranslator() {
         override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext): GSentence {
             val jsonObject = jsonElement.asJsonObject
             return when {
-                jsonObject.has("orig") && jsonObject.has("trans") -> {
+                jsonObject.has("trans") -> {
                     context.deserialize<GTransSentence>(jsonElement, GTransSentence::class.java)
                 }
                 jsonObject.has("translit") || jsonObject.has("src_translit") -> {
