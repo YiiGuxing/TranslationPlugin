@@ -47,10 +47,8 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
+        <li>使用在线发行说明</li>
         <li>修复了谷歌文档翻译解析错误的问题</li>
-        <li>修复了MacOS(M1)中单词本驱动的一个错误</li>
-        <li>修复了Android Studio中点击有道、百度翻译账号申请链接时崩溃的问题</li>
-        <li>其他一些BUG的修复</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
