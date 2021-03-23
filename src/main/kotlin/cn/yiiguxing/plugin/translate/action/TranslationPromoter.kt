@@ -11,6 +11,7 @@ class TranslationPromoter : ActionPromoter {
         val comparator = Comparator.comparingInt { action: AnAction ->
             when (action) {
                 is PinBalloonAction,
+                is EditorTranslateAction,
                 is ToggleQuickDocTranslationAction -> 0
                 else -> 1
             }
