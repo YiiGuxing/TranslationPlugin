@@ -212,12 +212,10 @@
 
 ## Change Notes
 
-## [v3.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.2) (2021-03-19)
+## [v3.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.3) (2021-03-24)
 
+- 使用在线发行说明
 - 修复了谷歌文档翻译解析错误的问题
-- 修复了MacOS(M1)中单词本驱动的一个错误
-- 修复了Android Studio中点击有道、百度翻译账号申请链接时崩溃的问题
-- 其他一些BUG的修复
 
 [完整的更新历史记录](./CHANGELOG.md)
 

@@ -1,5 +1,10 @@
 # Change Log
 
+## [v3.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.3) (2021-03-24)
+
+- 使用在线发行说明
+- 修复了谷歌文档翻译解析错误的问题
+
 ## [v3.0.2](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.2) (2021-03-19)
 
 - 修复了谷歌文档翻译解析错误的问题
