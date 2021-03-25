@@ -18,6 +18,10 @@ body {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", sans-serif;
 }
 
+body.editor {
+    position: relative;
+}
+
 body.dark {
     color: #bdbdbd;
     background-color: #27282c;
@@ -76,6 +80,16 @@ a {
 
 .content > *:last-child {
     padding-bottom: 2rem;
+}
+
+.editor .content {
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    padding: 0 2rem;
+    max-width: 950px;
+    position: absolute;
 }
 
 .reference {
