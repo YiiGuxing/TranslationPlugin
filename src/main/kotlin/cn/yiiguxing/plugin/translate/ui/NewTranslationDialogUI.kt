@@ -11,6 +11,7 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
+import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
@@ -63,6 +64,8 @@ interface NewTranslationDialogUI {
     val expandDictViewerButton: LinkLabel<Void>
     val collapseDictViewerButton: LinkLabel<Void>
 
+    val scrollSynchronizer: ScrollSynchronizer
+
     fun createMainPanel(): JComponent
 
     fun setActive(active: Boolean)
@@ -85,6 +88,14 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val swapButton: LinkLabel<Void> = LinkLabel()
     override val inputTextArea: JTextArea = JBTextArea(1, 1)
     override val translationTextArea: JTextArea = JBTextArea(1, 1)
+
+    private val inputTextAreaWrapper = createScrollPane(inputTextArea, ScrollPane.FADING_END)
+    private val translationTextAreaWrapper = createScrollPane(translationTextArea, ScrollPane.FADING_END)
+
+    override val scrollSynchronizer: ScrollSynchronizer = ScrollSynchronizer.syncScroll(
+        inputTextAreaWrapper.verticalScrollBar,
+        translationTextAreaWrapper.verticalScrollBar
+    )
 
     override val inputTTSButton: TTSButton = TTSButton()
     override val translationTTSButton: TTSButton = TTSButton()
@@ -211,13 +222,13 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
             val leftPanel = JPanel(migLayout()).apply {
                 background = inputTextArea.background
 
-                add(createScrollPane(inputTextArea, ScrollPane.FADING_END), fill().wrap())
+                add(inputTextAreaWrapper, fill().wrap())
                 add(createToolbar(inputTTSButton, srcTransliterationLabel, clearButton, historyButton), fillX())
             }
             val rightPanel = JPanel(migLayout()).apply {
                 background = translationTextArea.background
 
-                add(createScrollPane(translationTextArea, ScrollPane.FADING_END), fill().wrap())
+                add(translationTextAreaWrapper, fill().wrap())
                 add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), fillX())
             }
 
