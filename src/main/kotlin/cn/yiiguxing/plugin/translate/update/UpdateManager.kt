@@ -22,6 +22,7 @@ import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import icons.Icons
 import java.awt.Color
 import java.util.*
@@ -141,7 +142,8 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             return if (frame) {
                 "$baseUrl$langPath/updates.html?v=$v"
             } else {
-                "$baseUrl$langPath/updates/v${v.replace('.', '_')}.html"
+                val isDark = UIUtil.isUnderDarcula()
+                "$baseUrl$langPath/updates/v${v.replace('.', '_')}.html?editor=true&dark=$isDark"
             }
         }
 
