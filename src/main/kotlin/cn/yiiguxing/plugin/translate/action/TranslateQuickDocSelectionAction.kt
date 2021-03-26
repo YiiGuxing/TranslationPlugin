@@ -33,7 +33,6 @@ class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.
                 ?.processBeforeTranslate()
                 ?.let {
                     e.project.let { project ->
-                        project?.hideDocInfoHint()
                         TranslationUIManager.showDialog(project).translate(it)
                     }
                 }
@@ -42,9 +41,5 @@ class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.
     companion object {
         fun quickDocHasSelection(e: AnActionEvent): Boolean =
             !e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT).isNullOrBlank()
-
-        private fun Project.hideDocInfoHint() {
-            DocumentationManager.getInstance(this).docInfoHint?.cancel()
-        }
     }
 }
