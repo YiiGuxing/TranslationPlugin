@@ -10,9 +10,11 @@ import com.intellij.codeInsight.documentation.QuickDocUtil
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ToggleAction
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
 import org.jetbrains.concurrency.runAsync
 
@@ -56,17 +58,18 @@ open class ToggleQuickDocTranslationAction :
             val element = docComponent.element ?: return
             val originalElement = DocumentationManager.getOriginalElement(element)
 
-            runAsync {
-                QuickDocUtil.runInReadActionWithWriteActionPriorityWithRetries({
-                    if (element.isValid && originalElement?.isValid != false) {
-                        val originalText = DocumentationManager.getInstance(project)
-                            .generateDocumentation(element, originalElement, false)
+            val now = System.currentTimeMillis()
+            val replaceComponentAction = ReadAction.nonBlocking {
+                if (element.isValid && originalElement?.isValid != false) {
+                    val originalText = DocumentationManager.getInstance(project)
+                        .generateDocumentation(element, originalElement, false)
 
-                        replaceActiveComponentText(project, currentText, originalText)
-                    }
-                }, 5000, 100)
+                    replaceActiveComponentText(project, currentText, originalText)
+                }
             }
-
+            replaceComponentAction
+                .expireWhen{ System.currentTimeMillis() - now > 5000 }
+                .submit(AppExecutorUtil.getAppExecutorService())
         }
     }
 
