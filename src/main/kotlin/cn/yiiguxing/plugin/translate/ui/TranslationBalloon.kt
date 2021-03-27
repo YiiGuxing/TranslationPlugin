@@ -232,6 +232,7 @@ class TranslationBalloon(
             isShowing = true
 
             editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+            Disposer.register(this, tracker)
             balloon.show(tracker, position)
 
             val targetLang = presenter.getTargetLang(text)

@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.RangeMarker
 import com.intellij.openapi.ui.popup.Balloon
@@ -21,7 +20,7 @@ class BalloonPositionTracker(
     private var lastLocation: RelativePoint? = null
 
     init {
-        Disposer.register(this, Disposable {
+        Disposer.register(this, {
             lastLocation = null
             caretRangeMarker.dispose()
         })
@@ -42,7 +41,7 @@ class BalloonPositionTracker(
 }
 
 private fun Editor.getBalloonLocation(caretRangeMarker: RangeMarker): Point? {
-    if (!caretRangeMarker.isValid) {
+    if (isDisposed || !caretRangeMarker.isValid) {
         return null
     }
 
