@@ -214,7 +214,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
     private fun ComboBox<Lang>.init(languages: List<Lang>) {
         andTransparent()
         foreground = JBColor(0x555555, 0xACACAC)
-        ui = LangComboBoxUI(this, SwingConstants.CENTER)
+        setUI(LangComboBoxUI(this, SwingConstants.CENTER))
         model = LanguageListModel.sorted(languages)
 
         fun ComboBox<Lang>.swap(old: Any?, new: Any?) {

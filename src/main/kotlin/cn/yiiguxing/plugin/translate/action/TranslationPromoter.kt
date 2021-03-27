@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import java.util.*
 
 class TranslationPromoter : ActionPromoter {
-    override fun promote(actions: MutableList<AnAction>, context: DataContext?): MutableList<AnAction> {
+    override fun promote(actions: MutableList<AnAction>, context: DataContext): MutableList<AnAction> {
         val newList: MutableList<AnAction> = ArrayList(actions)
         val comparator = Comparator.comparingInt { action: AnAction ->
             when (action) {

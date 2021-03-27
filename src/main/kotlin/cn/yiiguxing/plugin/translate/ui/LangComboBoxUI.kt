@@ -6,7 +6,6 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.util.ui.JBInsets
 import com.intellij.util.ui.JBUI
-import sun.swing.DefaultLookup
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Graphics
@@ -78,7 +77,7 @@ class LangComboBoxUI(
             val foregroundColor = if (isEnabled) {
                 foreground
             } else {
-                DefaultLookup.getColor(this, this@LangComboBoxUI, "ComboBox.disabledForeground")
+                UIManager.getColor("ComboBox.disabledForeground")
             }
 
             label.foreground = foregroundColor
