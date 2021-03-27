@@ -125,7 +125,12 @@
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
-        <documentationActionProvider implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
+        <documentationActionProvider
+                implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
+
+        <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
+        <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
+        <notificationGroup id="Translation Plugin Updates" displayType="STICKY_BALLOON" isLogByDefault="false"/>
     </extensions>
 
     <actions>

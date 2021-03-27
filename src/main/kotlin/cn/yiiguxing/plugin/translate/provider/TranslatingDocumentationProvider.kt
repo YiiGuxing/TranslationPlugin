@@ -50,9 +50,9 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
     override fun fetchExternalDocumentation(
         project: Project?,
         element: PsiElement?,
-        docUrls: MutableList<String>
+        docUrls: MutableList<String>?,
+        onHover: Boolean
     ): String? {
-
         if (!Settings.instance.translateDocumentation)
             return null
 
@@ -60,8 +60,13 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             val providerFromElement = Application.runReadAction(Computable {
                 DocumentationManager.getProviderFromElement(element, null)
             })
-            val originalDoc = when(providerFromElement) {
-                is ExternalDocumentationProvider -> providerFromElement.fetchExternalDocumentation(project, element, docUrls)
+            val originalDoc = when (providerFromElement) {
+                is ExternalDocumentationProvider -> providerFromElement.fetchExternalDocumentation(
+                    project,
+                    element,
+                    docUrls,
+                    onHover
+                )
                 else -> null
             }
 

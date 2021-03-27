@@ -585,10 +585,7 @@ class NewTranslationDialog(
         if (currentRequest == request) {
             clearTranslation()
         }
-        Notifications.showErrorNotification(
-            project, NOTIFICATION_DISPLAY_ID,
-            message("error.title"), errorMessage, throwable
-        )
+        Notifications.showErrorNotification(project, message("error.title"), errorMessage, throwable)
     }
 
     override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
@@ -813,7 +810,5 @@ class NewTranslationDialog(
     companion object {
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
-
-        private const val NOTIFICATION_DISPLAY_ID = "Translation dialog error"
     }
 }

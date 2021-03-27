@@ -248,7 +248,6 @@ class WordBookService {
                     if (notifyOnFailed) {
                         Notifications.showErrorNotification(
                             null,
-                            NOTIFICATION_DISPLAY_ID,
                             message("wordbook.notification.title"),
                             message("wordbook.notification.content.addFailed"),
                             e
@@ -392,8 +391,6 @@ class WordBookService {
 
 
     companion object {
-        private const val NOTIFICATION_DISPLAY_ID = "Wordbook"
-
         private const val DRIVER_VERSION = "3.34.0"
 
         private const val DRIVER_FILE_URL =

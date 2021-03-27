@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
-import com.intellij.openapi.util.IconLoader
 import icons.Icons
 import javax.swing.Icon
 
@@ -67,7 +66,7 @@ enum class TranslationEngine(
             YOUDAO -> AppKeySettingsDialog(
                 message("settings.youdao.title"),
                 AppKeySettingsPanel(
-                    IconLoader.getIcon("/image/youdao_translate_logo.png"),
+                    Icons.load("/image/youdao_translate_logo.png"),
                     YOUDAO_AI_URL,
                     Settings.youdaoTranslateSettings
                 )
@@ -75,7 +74,7 @@ enum class TranslationEngine(
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
                 AppKeySettingsPanel(
-                    IconLoader.getIcon("/image/baidu_translate_logo.png"),
+                    Icons.load("/image/baidu_translate_logo.png"),
                     BAIDU_FANYI_URL,
                     Settings.baiduTranslateSettings
                 )

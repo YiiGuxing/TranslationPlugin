@@ -59,8 +59,7 @@ val WORD_BOOK_IMPORTERS: Map<String, WordBookImporter> = mapOf(
 )
 
 
-private const val EXPORT_NOTIFICATIONS_ID = "Word Book Export"
-private const val IMPORT_NOTIFICATIONS_ID = "Word Book Import"
+private const val NOTIFICATION_GROUP_ID = "Word Book Import/Export"
 
 private val LOG = Logger.getInstance("#WordBookImportExport")
 
@@ -91,8 +90,8 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
             }
         } catch (e: Throwable) {
             Notifications.showErrorNotification(
+                NOTIFICATION_GROUP_ID,
                 project,
-                EXPORT_NOTIFICATIONS_ID,
                 title,
                 message("wordbook.window.export.notification.failed", e.message ?: ""),
                 e
@@ -101,17 +100,17 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
         }
 
         Notifications.showInfoNotification(
-            EXPORT_NOTIFICATIONS_ID,
             title,
             message("wordbook.window.export.notification.exported.message", targetFile.presentableUrl),
-            project
+            project,
+            NOTIFICATION_GROUP_ID
         )
     } else {
         Notifications.showErrorNotification(
-            EXPORT_NOTIFICATIONS_ID,
             title,
             message("wordbook.window.export.notification.cannot.write.message"),
-            project
+            project,
+            NOTIFICATION_GROUP_ID
         )
     }
 }
@@ -124,38 +123,39 @@ fun importWordBook(project: Project?) {
     if (importer == null) {
         LOG.e("Word book import: file extension=${selectFile.extension}")
         Notifications.showErrorNotification(
-            IMPORT_NOTIFICATIONS_ID,
             title,
             message("wordbook.window.import.notification.cannot.import"),
-            project
+            project,
+            NOTIFICATION_GROUP_ID
         )
         return
     }
 
-    ProgressManager.getInstance().run(object : Task.Backgroundable(project, message("word.book.progress.importing"), true) {
-        override fun run(indicator: ProgressIndicator) {
-            selectFile.inputStream.use { importer.import(it, indicator) }
-        }
+    ProgressManager.getInstance()
+        .run(object : Task.Backgroundable(project, message("word.book.progress.importing"), true) {
+            override fun run(indicator: ProgressIndicator) {
+                selectFile.inputStream.use { importer.import(it, indicator) }
+            }
 
-        override fun onSuccess() {
-            Notifications.showInfoNotification(
-                IMPORT_NOTIFICATIONS_ID,
-                title,
-                message("wordbook.window.import.notification.imported.message"),
-                project
-            )
-        }
+            override fun onSuccess() {
+                Notifications.showInfoNotification(
+                    title,
+                    message("wordbook.window.import.notification.imported.message"),
+                    project,
+                    NOTIFICATION_GROUP_ID
+                )
+            }
 
-        override fun onThrowable(error: Throwable) {
-            LOG.w("Word book import", error)
-            Notifications.showErrorNotification(
-                IMPORT_NOTIFICATIONS_ID,
-                title,
-                message("wordbook.window.import.notification.cannot.import"),
-                project
-            )
-        }
-    })
+            override fun onThrowable(error: Throwable) {
+                LOG.w("Word book import", error)
+                Notifications.showErrorNotification(
+                    title,
+                    message("wordbook.window.import.notification.cannot.import"),
+                    project,
+                    NOTIFICATION_GROUP_ID
+                )
+            }
+        })
 }
 
 private fun VirtualFile.isValidExtension(): Boolean {

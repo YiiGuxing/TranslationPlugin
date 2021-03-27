@@ -1,10 +1,14 @@
 package cn.yiiguxing.plugin.translate.activity
 
+import cn.yiiguxing.plugin.translate.UPDATE_NOTIFICATION_GROUP_ID
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.ide.util.PropertiesComponent
-import com.intellij.notification.*
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationAction
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -33,7 +37,8 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
             "yii.guxing.translate.IdeaVersionUpgradeNotice.${IdeVersion.buildNumber}.disable"
 
         private fun showNotification(project: Project) {
-            NotificationGroup(DISPLAY_ID, NotificationDisplayType.BALLOON, false)
+            NotificationGroupManager.getInstance()
+                .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
                 .createNotification(
                     message("notification.idea.version.title"),
                     message("notification.idea.version"),

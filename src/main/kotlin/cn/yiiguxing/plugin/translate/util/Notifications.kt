@@ -2,10 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SETTINGS
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
-import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import com.intellij.notification.*
@@ -18,13 +15,24 @@ object Notifications {
 
     fun showErrorNotification(
         project: Project?,
-        displayId: String,
         title: String,
         message: String,
         throwable: Throwable,
         vararg actions: AnAction
     ) {
-        NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
+        showErrorNotification(DEFAULT_NOTIFICATION_GROUP_ID, project, title, message, throwable, * actions)
+    }
+
+    fun showErrorNotification(
+        groupId: String,
+        project: Project?,
+        title: String,
+        message: String,
+        throwable: Throwable,
+        vararg actions: AnAction
+    ) {
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup(groupId)
             .createNotification(
                 title,
                 message,
@@ -57,27 +65,43 @@ object Notifications {
     }
 
     fun showNotification(
-        displayId: String,
         title: String,
         message: String,
         type: NotificationType,
-        project: Project? = null
+        project: Project? = null,
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
     ) {
-        NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup(groupId)
             .createNotification(title, message, type, null)
             .show(project)
     }
 
-    fun showInfoNotification(displayId: String, title: String, message: String, project: Project? = null) {
-        showNotification(displayId, title, message, NotificationType.INFORMATION, project)
+    fun showInfoNotification(
+        title: String,
+        message: String,
+        project: Project? = null,
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
+    ) {
+        showNotification(title, message, NotificationType.INFORMATION, project, groupId)
     }
 
-    fun showWarningNotification(displayId: String, title: String, message: String, project: Project? = null) {
-        showNotification(displayId, title, message, NotificationType.WARNING, project)
+    fun showWarningNotification(
+        title: String,
+        message: String,
+        project: Project? = null,
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
+    ) {
+        showNotification(title, message, NotificationType.WARNING, project, groupId)
     }
 
-    fun showErrorNotification(displayId: String, title: String, message: String, project: Project? = null) {
-        showNotification(displayId, title, message, NotificationType.ERROR, project)
+    fun showErrorNotification(
+        title: String,
+        message: String,
+        project: Project? = null,
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
+    ) {
+        showNotification(title, message, NotificationType.ERROR, project, groupId)
     }
 
     class UrlOpeningListener(expireNotification: Boolean = true) :

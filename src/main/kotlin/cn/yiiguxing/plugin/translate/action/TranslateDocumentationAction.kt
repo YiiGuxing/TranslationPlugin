@@ -13,7 +13,6 @@ import com.intellij.notification.Notification
 import com.intellij.notification.NotificationAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
@@ -140,21 +139,16 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
 
     companion object {
-        private const val NOTIFICATION_DISPLAY_ID = "Document Translation"
-
         private const val DOCUMENTATION_POPUP_SIZE = "documentation.popup.size"
 
         private const val MIN_HEIGHT = 50
         private val MAX_DEFAULT = JBDimension(500, 350)
-
-        private val LOGGER: Logger = Logger.getInstance(TranslateDocumentationAction::class.java)
 
         fun showWarning(e: Throwable, project: Project?) {
             invokeLater {
                 val exceptionMessage = e.message ?: ""
                 Notifications.showErrorNotification(
                     project,
-                    NOTIFICATION_DISPLAY_ID,
                     message("translate.documentation.notification.title"),
                     message("translate.documentation.error", exceptionMessage),
                     e,
@@ -178,6 +172,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 if (IdeVersion.isIde2018OrNewer) return null
 
                 val title = SymbolPresentationUtil.getSymbolPresentableText(this)
+                @Suppress("InvalidBundleOrProperty")
                 return CodeInsightBundle.message("javadoc.info.title", title ?: text)
             }
 

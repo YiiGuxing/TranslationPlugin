@@ -2,23 +2,22 @@ package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.compat.HTMLEditorProviderCompat
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
+import cn.yiiguxing.plugin.translate.UPDATE_NOTIFICATION_GROUP_ID
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.Plugin
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
-import com.intellij.notification.NotificationDisplayType
-import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
@@ -56,7 +55,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         version: Version,
         isFeatureVersion: Boolean
     ) {
-        val displayId = "${plugin.name} Plugin Update"
         val title = message("plugin.name.updated.to.version.notification.title", plugin.name, version.version)
         val color = getBorderColor()
         val partStyle = "margin: ${JBUI.scale(8)}px 0;"
@@ -75,7 +73,8 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         """.trimIndent()
 
         val canBrowseWhatsNewHTMLEditor = canBrowseWhatsNewHTMLEditor()
-        NotificationGroup(displayId, NotificationDisplayType.STICKY_BALLOON, false)
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
             .createNotification(title, content, NotificationType.INFORMATION, Notifications.UrlOpeningListener(false))
             .setImportant(true)
             .addAction(SupportAction())
@@ -153,7 +152,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         fun browseWhatsNew(project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
-                fun browse() {
+                invokeLater {
                     val whatsNewUrl = getWhatsNewUrl()
                     HTMLEditorProviderCompat.openEditor(
                         project,
@@ -164,12 +163,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                             |<div><a href="$whatsNewUrl" target="_blank" style="font-size: 2rem">Open in browser</a></div>
                             |</div>""".trimMargin()
                     )
-                }
-
-                if (IdeVersion.isIde2020_3OrNewer) {
-                    browse()
-                } else {
-                    DumbService.getInstance(project).smartInvokeLater { browse() }
                 }
             } else {
                 BrowserUtil.browse(getWhatsNewUrl(true))

@@ -109,7 +109,7 @@ object Icons {
     val Documentation: Icon = load("/icons/documentation.svg")
 
     @JvmStatic
-    private fun load(path: String): Icon {
+    fun load(path: String): Icon {
         return IconManager.getInstance().getIcon(path, Icons::class.java)
     }
 }

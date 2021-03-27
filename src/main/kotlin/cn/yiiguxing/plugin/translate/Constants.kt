@@ -11,6 +11,9 @@ import java.nio.file.Paths
 private val USER_HOME_PATH = System.getProperty("user.home")
 val TRANSLATION_DIRECTORY: Path = Paths.get(USER_HOME_PATH, ".translation")
 
+const val DEFAULT_NOTIFICATION_GROUP_ID = "Translation Plugin"
+const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin Updates"
+
 const val STORAGE_NAME = "yiiguxing.translation.xml"
 
 const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"

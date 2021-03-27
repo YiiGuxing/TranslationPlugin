@@ -29,7 +29,6 @@ private fun `fun`(a: Long, b: String): Long {
 object TKK {
     private const val MIM = 60 * 60 * 1000
     private const val ELEMENT_URL_FORMAT = "https://%s/translate_a/element.js"
-    private const val NOTIFICATION_DISPLAY_ID = "TKK Update Failed"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
@@ -75,11 +74,7 @@ object TKK {
                 value1 to value2
             } else {
                 logger.w("TKK update failed: TKK not found.")
-                Notifications.showWarningNotification(
-                    NOTIFICATION_DISPLAY_ID,
-                    "TKK",
-                    "TKK update failed: TKK not found."
-                )
+                Notifications.showWarningNotification("TKK", "TKK update failed: TKK not found.")
 
                 null
             }
@@ -89,7 +84,6 @@ object TKK {
             logger.w("TKK update failed", error)
             Notifications.showErrorNotification(
                 null,
-                NOTIFICATION_DISPLAY_ID,
                 "TKK",
                 message("notification.ttk.update.failed"),
                 error
