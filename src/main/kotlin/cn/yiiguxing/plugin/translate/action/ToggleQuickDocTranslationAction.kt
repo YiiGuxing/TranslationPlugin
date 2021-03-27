@@ -18,10 +18,11 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
 
 open class ToggleQuickDocTranslationAction :
-    ToggleAction({ message("settings.options.translate.documentation") } , Icons.Translation),
+    ToggleAction({ message("settings.options.translate.documentation") }, Icons.Translation),
     HintManagerImpl.ActionToIgnore {
 
     override fun update(e: AnActionEvent) {
+        super.update(e)
         val project = e.project
         if (project == null) {
             e.presentation.isEnabled = false
@@ -67,7 +68,7 @@ open class ToggleQuickDocTranslationAction :
                 }
             }
             replaceComponentAction
-                .expireWhen{ System.currentTimeMillis() - now > 5000 }
+                .expireWhen { System.currentTimeMillis() - now > 5000 }
                 .submit(AppExecutorUtil.getAppExecutorService())
         }
     }
