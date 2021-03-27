@@ -14,7 +14,6 @@ import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidgetFactory
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager
-import org.jetbrains.kotlin.idea.debugger.readAction
 
 class TranslatorWidgetFactory : StatusBarWidgetFactory {
     init {
@@ -61,11 +60,14 @@ class TranslatorWidgetFactory : StatusBarWidgetFactory {
     }
 
     private fun updateWidgetsInAllProjects() {
-        readAction {
-            val projects = ProjectManager.getInstance().openProjects
-            projects.forEach {
-                it.getService(StatusBarWidgetsManager::class.java)
-                    .updateWidget(this@TranslatorWidgetFactory)
+        // To fix the Settings service cycle initialization problem
+        Application.invokeLater {
+            Application.runReadAction {
+                val projects = ProjectManager.getInstance().openProjects
+                projects.forEach {
+                    it.getService(StatusBarWidgetsManager::class.java)
+                        .updateWidget(this@TranslatorWidgetFactory)
+                }
             }
         }
     }
