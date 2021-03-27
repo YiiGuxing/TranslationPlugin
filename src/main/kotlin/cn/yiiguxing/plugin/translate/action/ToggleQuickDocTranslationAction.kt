@@ -15,8 +15,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.concurrency.AppExecutorUtil
-import icons.Icons
-import org.jetbrains.concurrency.runAsync
 
 class ToggleQuickDocTranslationAction : ToggleAction(), HintManagerImpl.ActionToIgnore {
 
