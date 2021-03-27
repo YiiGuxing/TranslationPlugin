@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
+import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
@@ -13,17 +14,18 @@ import com.intellij.openapi.project.Project
 /**
  * TranslateQuickDocAction
  */
-class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToIgnore {
+class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.ActionToIgnore {
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = message("action.TranslateQuickDocAction.text")
+        templatePresentation.text = message("translate")
         templatePresentation.description = message("action.description.quickDoc")
     }
 
     override fun update(e: AnActionEvent) {
-        val selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
-        e.presentation.isEnabled = !selected.isNullOrBlank()
+        //don't show in toolbar, invoke via context menu or with keyboard shortcut
+        //to not clash with "Translate documentation" toggle
+        e.presentation.isEnabledAndVisible = quickDocHasSelection(e) && !e.isFromActionToolbar
     }
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -31,15 +33,13 @@ class TranslateQuickDocAction : AnAction(), DumbAware, HintManagerImpl.ActionToI
                 ?.processBeforeTranslate()
                 ?.let {
                     e.project.let { project ->
-                        project?.hideDocInfoHint()
                         TranslationUIManager.showDialog(project).translate(it)
                     }
                 }
     }
 
-    private companion object {
-        fun Project.hideDocInfoHint() {
-            DocumentationManager.getInstance(this).docInfoHint?.cancel()
-        }
+    companion object {
+        fun quickDocHasSelection(e: AnActionEvent): Boolean =
+            !e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT).isNullOrBlank()
     }
 }
