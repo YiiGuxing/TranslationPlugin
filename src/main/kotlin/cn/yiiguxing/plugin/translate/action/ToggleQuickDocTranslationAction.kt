@@ -16,7 +16,6 @@ import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
-import org.jetbrains.concurrency.runAsync
 
 open class ToggleQuickDocTranslationAction :
     ToggleAction({ message("settings.options.translate.documentation") } , Icons.Translation),
