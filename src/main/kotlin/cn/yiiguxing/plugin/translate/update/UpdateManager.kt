@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.Plugin
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.show
+import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
@@ -85,6 +86,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                     addAction(WhatsNewAction(version))
                 }
             }
+            .addAction(GetStartedAction())
             .whenExpired {
                 if (isFeatureVersion && canBrowseWhatsNewHTMLEditor) {
                     browseWhatsNew(project)
@@ -98,8 +100,17 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     }
 
     private class WhatsNewAction(version: Version) :
-        DumbAwareAction(message("action.WhatsNewInTranslationAction.text", version.versionString), null, null) {
+        DumbAwareAction(
+            message("action.WhatsNewInTranslationAction.text", version.versionString),
+            null,
+            AllIcons.General.Web
+        ) {
         override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getWhatsNewUrl(true))
+    }
+
+    private class GetStartedAction :
+        DumbAwareAction(message("action.GetStartedAction.text"), null, AllIcons.General.Web) {
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getStartedUrl())
     }
 
 
@@ -120,8 +131,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             return (color.rgb and 0xffffff).toString(16)
         }
 
-        fun getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
-            val version = Version(Plugin.descriptor.version)
+        private fun baseUrl(locale: Locale): String {
             val baseUrl = when (locale) {
                 Locale.CHINA,
                 Locale.CHINESE,
@@ -139,12 +149,22 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 else -> "/en"
             }
 
+            return "$baseUrl$langPath"
+        }
+
+        fun getStartedUrl(locale: Locale = Locale.getDefault()): String {
+            return "${baseUrl(locale)}/start.html"
+        }
+
+        fun getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
+            val baseUrl = baseUrl(locale)
+            val version = Version(Plugin.descriptor.version)
             val v = version.versionString
             return if (frame) {
-                "$baseUrl$langPath/updates.html?v=$v"
+                "$baseUrl/updates.html?v=$v"
             } else {
                 val isDark = UIUtil.isUnderDarcula()
-                "$baseUrl$langPath/updates/v${v.replace('.', '_')}.html?editor=true&dark=$isDark"
+                "$baseUrl/updates/v${v.replace('.', '_')}.html?editor=true&dark=$isDark"
             }
         }
 
