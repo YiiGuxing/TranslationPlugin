@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -20,7 +21,7 @@ class TranslateTextComponentAction : TextComponentEditorAction(Handler()), HintM
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = message("action.TranslateTextComponent.text")
+        templatePresentation.text = adaptedMessage("action.TranslateTextComponent.text")
         templatePresentation.description = message("action.description.textComponent")
     }
 

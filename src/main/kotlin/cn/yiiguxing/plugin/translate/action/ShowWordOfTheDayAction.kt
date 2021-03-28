@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Application
@@ -21,7 +22,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 class ShowWordOfTheDayAction : AnAction(), DumbAware {
 
     init {
-        templatePresentation.text = message("action.ShowWordOfTheDayAction.text")
+        templatePresentation.text = adaptedMessage("action.ShowWordOfTheDayAction.text")
         templatePresentation.description = message("word.of.the.day.title")
     }
 

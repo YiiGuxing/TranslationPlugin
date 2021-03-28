@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.getTranslatedDocumentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider
@@ -31,7 +32,7 @@ import java.lang.ref.WeakReference
 class TranslateDocumentationAction : PsiElementTranslateAction() {
 
     init {
-        templatePresentation.text = message("action.TranslateDocumentationAction.text")
+        templatePresentation.text = adaptedMessage("action.TranslateDocumentationAction.text")
         templatePresentation.description = message("action.TranslateDocumentationAction.description")
     }
 

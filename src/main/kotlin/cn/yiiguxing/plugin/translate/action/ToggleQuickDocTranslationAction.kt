@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -18,7 +18,7 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
 
 open class ToggleQuickDocTranslationAction :
-    ToggleAction({ message("settings.options.translate.documentation") }, Icons.Translation),
+    ToggleAction({ adaptedMessage("settings.options.translate.documentation") }, Icons.Translation),
     HintManagerImpl.ActionToIgnore {
 
     override fun update(e: AnActionEvent) {

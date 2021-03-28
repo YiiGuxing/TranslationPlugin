@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.*
@@ -20,7 +21,7 @@ import javax.swing.JComponent
 class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
 
     init {
-        setPopupTitle(message("choose.translator.popup.title"))
+        setPopupTitle(adaptedMessage("choose.translator.popup.title"))
         isEnabledInModalContext = true
         templatePresentation.text = message("action.ChooseTranslatorAction.text")
         templatePresentation.description = message("action.ChooseTranslatorAction.description")

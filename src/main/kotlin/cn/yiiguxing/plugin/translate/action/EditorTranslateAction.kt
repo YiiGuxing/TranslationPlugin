@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -11,7 +12,7 @@ class EditorTranslateAction : TranslateAction(true) {
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = message("action.EditorTranslateAction.text")
+        templatePresentation.text = adaptedMessage("action.EditorTranslateAction.text")
         templatePresentation.description = message("action.EditorTranslateAction.description")
     }
 

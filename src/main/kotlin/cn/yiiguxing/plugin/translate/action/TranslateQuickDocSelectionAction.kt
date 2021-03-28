@@ -1,15 +1,14 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
-import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
-import com.intellij.openapi.project.Project
 
 /**
  * TranslateQuickDocAction
@@ -18,7 +17,7 @@ class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = message("translate")
+        templatePresentation.text = adaptedMessage("translate")
         templatePresentation.description = message("action.description.quickDoc")
     }
 

@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.compat.HTMLEditorProviderCompat
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.UPDATE_NOTIFICATION_GROUP_ID
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.Notifications
@@ -156,7 +157,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                     val whatsNewUrl = getWhatsNewUrl()
                     HTMLEditorProviderCompat.openEditor(
                         project,
-                        message("action.WhatsNewInTranslationAction.text", "Translation"),
+                        adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
                         whatsNewUrl,
                         """<div style="text-align: center;padding-top: 3rem">
                             |<div style="padding-top: 1rem">Failed to load!</div>
