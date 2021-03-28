@@ -61,6 +61,10 @@
 
 ## Installation
 
+<a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/button-install.png" alt="Get from Marketplace" title="Get from Marketplace">
+</a>
+
 - **使用 IDE 内置插件系统安装:**
   - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>搜索并找到<b>"Translation"</b></kbd> > <kbd>Install</kbd>
 
