@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.update
 
-import cn.yiiguxing.plugin.compat.HTMLEditorProviderCompat
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.UPDATE_NOTIFICATION_GROUP_ID
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
@@ -17,10 +16,12 @@ import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.fileEditor.impl.HTMLEditorProvider
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
+import com.intellij.ui.jcef.JBCefApp
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.Icons
@@ -148,14 +149,14 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         }
 
         fun canBrowseWhatsNewHTMLEditor(): Boolean {
-            return HTMLEditorProviderCompat.isSupported
+            return JBCefApp.isSupported()
         }
 
         fun browseWhatsNew(project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
                 invokeLater {
                     val whatsNewUrl = getWhatsNewUrl()
-                    HTMLEditorProviderCompat.openEditor(
+                    HTMLEditorProvider.openEditor(
                         project,
                         adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
                         whatsNewUrl,

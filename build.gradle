@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     // https://github.com/JetBrains/gradle-intellij-plugin
-    id "org.jetbrains.intellij" version "0.6.4"
+    id "org.jetbrains.intellij" version "0.7.2"
     id "org.jetbrains.kotlin.jvm" version "1.4.10"
 }
 
@@ -38,7 +38,6 @@ dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     compileOnly fileTree(dir: 'libs', include: ['clion.jar', 'rider.jar'])
-    implementation fileTree(dir: 'libs', include: ['idea-compat.jar'])
 
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.apache.commons:commons-dbcp2:2.6.0'
