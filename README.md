@@ -326,6 +326,6 @@ Support this project with your organization. Your logo will show up here with a 
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
-| Evan | | 10 CNY |
+| Shark | | 10 CNY |
 
 [更多捐赠者][financial-contributors]
