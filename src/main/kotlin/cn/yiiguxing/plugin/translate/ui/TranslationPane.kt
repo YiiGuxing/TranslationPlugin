@@ -16,7 +16,6 @@ import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.newLine
 import cn.yiiguxing.plugin.translate.util.text.replace
-import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
@@ -61,7 +60,7 @@ abstract class TranslationPane<T : JComponent>(
     private val transliterationLabel = TransliterationLabel()
     private val dictViewer = StyledViewer()
     private val extraViewer = StyledViewer()
-    protected val spellComponent: SpellComponent = SpellComponent()
+    private val spellComponent: SpellComponent = SpellComponent()
 
     private lateinit var sourceLangRowComponent: JComponent
     private lateinit var fixLanguageComponent: JComponent
@@ -611,29 +610,6 @@ abstract class TranslationPane<T : JComponent>(
             } else {
                 message("tooltip.removeFormWordBook")
             }
-        }
-
-        private fun Translation.toWordBookItem(): WordBookItem {
-            val explainsBuilder = StringBuilder()
-            val dictText = dictDocument?.text ?: ""
-
-            if (!translation.isNullOrBlank()) {
-                explainsBuilder.append(translation)
-                if (dictText.isNotEmpty()) {
-                    explainsBuilder.append("\n\n")
-                }
-            }
-            explainsBuilder.append(dictText)
-
-            return WordBookItem(
-                null,
-                original.trim(),
-                srcLang,
-                targetLang,
-                srcTransliteration,
-                explainsBuilder.toString(),
-                null
-            )
         }
     }
 }
