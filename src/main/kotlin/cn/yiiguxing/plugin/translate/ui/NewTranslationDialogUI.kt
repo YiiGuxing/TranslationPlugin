@@ -87,7 +87,10 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
     override val targetLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val swapButton: LinkLabel<Void> = LinkLabel()
     override val inputTextArea: JTextArea = JBTextArea(1, 1)
-    override val translationTextArea: JTextArea = JBTextArea(1, 1)
+    override val translationTextArea: JTextArea = JBTextArea(1, 1).apply {
+        isEditable = false
+        background = topPanel.background
+    }
 
     private val inputTextAreaWrapper = createScrollPane(inputTextArea, ScrollPane.FADING_END)
     private val translationTextAreaWrapper = createScrollPane(translationTextArea, ScrollPane.FADING_END)
@@ -167,9 +170,6 @@ class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : N
         }
         init(inputTextArea)
         init(translationTextArea)
-
-        translationTextArea.isEditable = false
-        translationTextArea.background = topPanel.background
     }
 
     override fun expandDictViewer() {
