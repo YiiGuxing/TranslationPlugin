@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.setup
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
+import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
@@ -38,10 +39,7 @@ import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JTextPane
+import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
@@ -116,6 +114,13 @@ abstract class TranslationPane<T : JComponent>(
         targetRowComponent = flow(transTTSLink, targetLangComponent)
         originalComponent = onWrapViewer(originalViewer)
         translationComponent = onWrapViewer(translationViewer)
+
+        if (originalComponent is JScrollPane && translationComponent is JScrollPane) {
+            ScrollSynchronizer.syncScroll(
+                (originalComponent as JScrollPane).verticalScrollBar,
+                (translationComponent as JScrollPane).verticalScrollBar
+            )
+        }
 
         onRowCreated(sourceLangRowComponent)
         onRowCreated(originalComponent)
