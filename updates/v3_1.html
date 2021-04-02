@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3.1 版本</title>
+    <base target="_blank">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.0" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/updates.css?v1.2" media="screen">
+    <script src="../scripts/theme.js"></script>
+</head>
+<body>
+<div class="content">
+    <h1>3.1 版本 (2020-04-10)</h1>
+    <hr/>
+    <p>欢迎使用<b>Translation v3.1</b>，此版本中包含了以下主要更新：</p>
+    <ul>
+        <li><b>文档翻译操作</b> - <i>文档上下文菜单加入了文档翻译操作</i></li>
+        <li><b>UI滚动同步</b> - <i>原文与译文区域滚动同步</i></li>
+        <li><b>用户体验调整</b> - <i>调整了插件的一些默认行为</i></li>
+    </ul>
+    <div class="reference">如果您想在线阅读此发行说明，请访问<a href="../updates.html">这里</a>。</div>
+
+
+    <h2>翻译</h2>
+    <h3>文档翻译</h3>
+    <p>快速文档和编辑器内嵌文档的上下文菜单加入了文档翻译操作：</p>
+    <p><img src="img/v3_1/quick_doc.gif" alt="快速文档"></p>
+    <p><img src="img/v3_1/rendered_doc.gif" alt="编辑器内嵌文档"></p>
+
+    <h2>综合</h2>
+    <h3>UI滚动同步</h3>
+    <p>原文与译文的文本区域实现滚动同步。</p>
+    <p><img src="img/v3_1/scroll.gif" alt="滚动同步"></p>
+
+    <h3>用户体验调整</h3>
+    <p>我们始终尝试在功能的可发现性与简洁的UI之间寻找一个平衡点，这通常意味着一个功能在不太可能使用到它的时候，将不在上下文中显示相关的UI元素。因此，我们在这方面做了一些调整。</p>
+    <ul>
+        <li>
+            右键菜单
+            <p>翻译操作总是显示在右键菜单的顶部，如果我们在查找其他操作时，它们会分散我们的注意力。</p>
+            <p><img src="img/v3_1/context_menu.png" alt="右键菜单"></p>
+            <p>因此，我们稍微调整了一下——仅当文本被选中时，右键菜单才会显示翻译操作。（如果使用快捷方式调用动作时，自动选择仍将起作用，无需选中文本）</p>
+            <p>当然，如果您不习惯这样的操作，您可以在设置页面修改这一行为。</p>
+            <p><img src="img/v3_1/context_menu_option.png" alt="右键菜单"></p>
+            <p>所以，如果您突然发现右键菜单的翻译操作不消失了，请无需担心。</p>
+        </li>
+        <li>
+            翻译引擎小部件
+            <p>仅在多个翻译引擎可用时，翻译引擎小部件才会显示。</p>
+        </li>
+        <li>
+            单词本工具窗口
+            <p>单词本不可用或者单词本内没有单词时，单词本工具窗口将会被隐藏。</p>
+        </li>
+    </ul>
+
+
+    <h2>鸣谢</h2>
+    <p>非常感谢以下对此版本做出贡献的人员：</p>
+    <ul>
+        <li><a href="https://github.com/niktrop">Nikolay Tropin (@niktrop)</a></li>
+        <li><a href="https://www.jetbrains.com">翻译人员 (@JetBrains)</a></li>
+    </ul>
+</div>
+</body>
+</html>
