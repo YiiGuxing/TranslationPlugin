@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.adaptedMessage
 import com.intellij.codeInsight.documentation.render.DocRenderPassFactory
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ToggleAction
@@ -12,9 +12,10 @@ import com.intellij.psi.PsiDocCommentBase
 import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
 
-internal class TranslateRenderedDocAction(val editor: Editor,
-                                          val docComment: PsiDocCommentBase
-) : ToggleAction({message("translate")}, Icons.Translation) {
+internal class TranslateRenderedDocAction(
+    val editor: Editor,
+    val docComment: PsiDocCommentBase
+) : ToggleAction({ adaptedMessage("translate") }, Icons.Translation) {
 
     override fun isSelected(event: AnActionEvent): Boolean {
         return TranslatedDocComments.isTranslated(docComment)
