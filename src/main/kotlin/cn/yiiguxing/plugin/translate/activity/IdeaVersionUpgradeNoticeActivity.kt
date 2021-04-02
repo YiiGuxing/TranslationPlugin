@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.activity
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.IdeVersion
+import cn.yiiguxing.plugin.translate.util.Plugin
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
@@ -9,11 +10,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 
-@Suppress("unused")
 class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
 
     override fun onBeforeRunActivity(project: Project): Boolean {
-        return !(IdeVersion.isIde2019_3OrNewer || PropertiesComponent.getInstance()
+        return !(IdeVersion.isAndroidStudio || IdeVersion.isIde2020_3OrNewer || PropertiesComponent.getInstance()
             .getBoolean(DO_NOT_NOTIFY_AGAIN_PROPERTY, false))
     }
 
@@ -35,7 +35,7 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
         private fun showNotification(project: Project) {
             NotificationGroup(DISPLAY_ID, NotificationDisplayType.BALLOON, false)
                 .createNotification(
-                    message("notification.idea.version.title"),
+                    message("notification.idea.version.title", Plugin.descriptor.name),
                     message("notification.idea.version"),
                     NotificationType.WARNING,
                     null

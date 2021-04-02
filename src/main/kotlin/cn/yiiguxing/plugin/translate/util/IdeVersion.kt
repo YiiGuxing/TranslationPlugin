@@ -17,6 +17,8 @@ enum class IdeVersion(val buildNumber: Int) {
         @Suppress("MemberVisibilityCanBePrivate")
         val BUILD_NUMBER = buildNumber.baselineVersion
 
+        val isAndroidStudio: Boolean = buildNumber.productCode == "AI"
+
         val isIde2018OrNewer: Boolean = BUILD_NUMBER >= IDE2018_1.buildNumber
 
         val isIde2019OrNewer: Boolean = BUILD_NUMBER >= IDE2019_1.buildNumber
