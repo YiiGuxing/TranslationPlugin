@@ -339,19 +339,37 @@ a:hover {
     margin-bottom: 2rem;
 }
 
-.maintainer {
+.developer {
+    margin: 5rem 0 0.5rem;
+    font-style: italic;
     color: #DEF3F5;
     font-size: 0.9rem;
+    text-decoration: underline;
 }
 
-.maintainer a {
+.developer-item {
+    color: white;
+    font-style: italic;
     font-size: 1rem;
+}
+
+.developer-item:before {
+    font-size: 1.2rem;
+    content: "☙ ";
+}
+
+.developer-item:after {
+    font-size: 1.2rem;
+    content: " ❧";
+}
+
+.developer-item a {
     color: white;
     font-weight: bold;
     text-decoration: none;
 }
 
-.maintainer a:hover {
+.developer-item a:hover {
     color: #007be1;
 }
 
