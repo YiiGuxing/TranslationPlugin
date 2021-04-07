@@ -73,7 +73,7 @@
         <div class="column">
             <h2 class="column_title">Installation</h2>
             <div>
-                <iframe frameborder="none" width="320px" height="56px" src="https://plugins.jetbrains.com/embeddable/install/8579"></iframe>
+                <div id="embeddable"></div>
                 <h3 class="column_item_title">Installing from the plugin repository within the IDE：</h3>
                 <div class="column_item_info_code">
                     <ul>
@@ -125,7 +125,7 @@
             <p class="column_tip">Or use shortcuts for translation, as detailed in <a href="#actions">Actions</a>.</p>
 
             <h3 class="column_item_title">4. Translate and replace</h3>
-            <p class="column_tip">Translate the target text and replace it. If the target language is English, the output has several formats: <strong>in camel case</strong>, <strong>with a word separator</strong> (when the output contains multiple words, the separator can be configured in the plugin configuration page: Translation Settings >
+            <p class="column_tip">Translate the target text and replace it. If the target language is English, the output has several formats: <strong>in camel case</strong>, <strong>with a word separator</strong> (when the output contains multiple words, the separator can be configured in the plugin configuration page: Translation Settings > 
                 Separator) and <strong>in the original format</strong>.</p>
             <p class="column_tip">Instructions: Select text or hover the mouse over the text > Right-click > Translate and replace... (Or use shortcuts for translation, as detailed in <a href="#actions">Actions</a>).
             </p>
@@ -303,5 +303,9 @@
         </div>
     </div>
 </div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
 </body>
 </html>

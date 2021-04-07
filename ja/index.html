@@ -22,7 +22,7 @@
     </div>
     <div class="index_language_links">
         <a class="index_language_link" href="../en/index.html">English</a>
-        <a class="index_language_link" href="../index.html">中文</a>
+        <a class="index_language_link" href="../ja/index.html">日本語</a>
         <a class="index_language_link" href="../ko/index.html">한국어</a>
     </div>
     <a href="https://github.com/YiiGuxing/TranslationPlugin" class="btn" ondragstart="return false;">GitHub</a>
@@ -30,26 +30,22 @@
     <a href="support.html" class="btn" ondragstart="return false;">♥ サポート/寄付 ♥</a>
 
     <!--Current version prefix extracted from script to be translatable -->
-    <div id="currentVersion" class="project-version">現在のバージョン</div>
+    <div id="currentVersion" class="project-version"> 現在のバージョン</div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
             if (version) {
                 $("#currentVersion").html(function (index, prefix) {
                     return prefix + "<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
-                        " target='_blank'>" + version + "</a>"
+                    " target='_blank'>" + version + "</a>"
                 })
             } else {
-                document.getElementById("version").style.visibility = "hidden";
+                document.getElementById("version").style.visibility="hidden";
             }
         });
     </script>
 
-    <div id="embeddable" style="display: flex;justify-content: center">
-        <iframe frameborder="none" width="395px" height="56px"
-                src="https://plugins.jetbrains.com/embeddable/install/8579"
-                style="padding-top: 4px;padding-left: 75px;border-radius: 28px;background-color: #ffffff;box-shadow: 0 0 8px rgba(0, 0, 0, 0.2)"></iframe>
-    </div>
+    <div id="embeddable" style="display: flex;justify-content: center"></div>
 
     <div class="idea-frame" oncontextmenu="return false;" ondragstart="return false;" style="margin-top: 2.5rem;">
         <div class="frame-header">TranslationPlugin</div>
@@ -72,5 +68,9 @@
 
     <span class="maintainer">♥ <a href="https://github.com/YiiGuxing">Yii.Guxing</a>により開発</span>
 </div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
 </body>
 </html>
