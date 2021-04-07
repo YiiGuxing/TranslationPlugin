@@ -30,7 +30,7 @@
     <a href="support.html" class="btn" ondragstart="return false;">♥ サポート/寄付 ♥</a>
 
     <!--Current version prefix extracted from script to be translatable -->
-    <div id="currentVersion" class="project-version"> 現在のバージョン</div>
+    <div id="currentVersion" class="project-version">現在のバージョン: </div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
