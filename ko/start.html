@@ -73,7 +73,7 @@
         <div class="column">
             <h2 class="column_title">설치</h2>
             <div>
-                <iframe frameborder="none" width="320px" height="56px" src="https://plugins.jetbrains.com/embeddable/install/8579"></iframe>
+                <div id="embeddable"></div>
                 <h3 class="column_item_title">IDE 내의 플러그인 저장소에서 바로 다운로드하여 설치:</h3>
                 <div class="column_item_info_code">
                     <ul>
@@ -303,5 +303,9 @@
         </div>
     </div>
 </div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
 </body>
 </html>

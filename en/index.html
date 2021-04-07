@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <title>TranslationPlugin by Yii.Guxing</title>
     <link rel="icon" href="../favicon.ico">
-    <meta name="description"
-          content="IntelliJ based IDEs/Android Studio Translation Plugin, supports multilingual translation, document translation, text-to-speech services...">
+    <meta name="description" content="IntelliJ based IDEs/Android Studio Translation Plugin, supports multilingual translation, document translation, text-to-speech services...">
     <meta name="keywords" content="IDEA Plugin, IDEA Translation Plugin, Plugin">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.0" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.1" media="screen">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="main-background">
 <div class="main-content">
     <h1 class="project-name">TranslationPlugin</h1>
-    <h2 class="project-tagline">IntelliJ based IDEs/Android Studio Translation Plugin, supports multilingual
-        translation, document translation, text-to-speech services...</h2>
+    <h2 class="project-tagline">IntelliJ based IDEs/Android Studio Translation Plugin, supports multilingual translation, document translation, text-to-speech services...</h2>
     <div class="index_starWrap">
         <div class="index_star">
             <a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
@@ -39,19 +37,15 @@
             if (version) {
                 $("#currentVersion").html(function (index, prefix) {
                     return prefix + "<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
-                        " target='_blank'>" + version + "</a>"
+                    " target='_blank'>" + version + "</a>"
                 })
             } else {
-                document.getElementById("version").style.visibility = "hidden";
+                document.getElementById("version").style.visibility="hidden";
             }
         });
     </script>
 
-    <div id="embeddable" style="display: flex;justify-content: center">
-        <iframe frameborder="none" width="395px" height="56px"
-                src="https://plugins.jetbrains.com/embeddable/install/8579"
-                style="padding-top: 4px;padding-left: 75px;border-radius: 28px;background-color: #ffffff;box-shadow: 0 0 8px rgba(0, 0, 0, 0.2)"></iframe>
-    </div>
+    <div id="embeddable" style="display: flex;justify-content: center"></div>
 
     <div class="idea-frame" oncontextmenu="return false;" ondragstart="return false;" style="margin-top: 2.5rem;">
         <div class="frame-header">TranslationPlugin</div>
@@ -72,7 +66,12 @@
         </a>
     </div>
 
-    <span class="maintainer">♥ Developed by <a href="https://github.com/YiiGuxing">Yii.Guxing</a></span>
+    <div class="developer">DEVELOPER</div>
+    <div class="developer-item"><a href="https://github.com/YiiGuxing">Yii.Guxing</a></div>
 </div>
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+</script>
 </body>
 </html>
