@@ -9,7 +9,7 @@
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| Adam Gąsowski | [github.com/gander](https://github.com/gander) | 6 USD |
+| Adam Gąsowski | [github.com/gander](https://github.com/gander) | 8 USD |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
 | Zyc | | 15 CNY |
