@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.1) (2021-04-13)
+
+- 文档上下文菜单添加了文档翻译操作（IDE 2020.3+）
+- 原文与译文文本区域滚动同步
+- 用户体验优化调整
+- 修复了一些问题
+
 ## [v3.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.3) (2021-03-24)
 
 - 使用在线发行说明
