@@ -35,6 +35,7 @@
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
 | 洪晓波 | | 9.9 CNY |
+| 甯 | | 8CNY |
 | 干巴爹 | | 8CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66CNY |
 | 刘小明 | | 6.66CNY |
