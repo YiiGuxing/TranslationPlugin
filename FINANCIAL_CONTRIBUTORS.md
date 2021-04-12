@@ -16,6 +16,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 许宁/Mr.X | | 10 CNY |
 | 凉云 | [nzxy.kim](nzxy.kim) | 10 CNY |
 | Shark | | 10 CNY |
 | Evan | | 10 CNY |
