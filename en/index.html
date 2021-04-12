@@ -30,7 +30,7 @@
     <a href="support.html" class="btn" ondragstart="return false;">♥ Support/Donate ♥</a>
 
     <!--Current version prefix extracted from script to be translatable -->
-    <div id="currentVersion" class="project-version">Current version: </div>
+    <div id="currentVersion" class="project-version">Current version:</div>
     <script>
         $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
             var version = data ? data["tag_name"] : null;
@@ -62,11 +62,11 @@
     <div class="translator-logo">
         <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
             <img src="../images/jetbrains.svg" width="150" height="163" alt="JetBrains"
-                 title="Development is supported by JetBrains">
+                 title="Development supported by JetBrains">
         </a>
     </div>
 
-    <div class="developer">DEVELOPER</div>
+    <div class="developer" style="text-decoration: none">Developer</div>
     <div class="developer-item"><a href="https://github.com/YiiGuxing">Yii.Guxing</a></div>
 </div>
 <script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
