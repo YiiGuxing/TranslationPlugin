@@ -47,10 +47,9 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>恢复了右键文档翻译功能</li>
-        <li>按ESC键时关闭翻译窗口</li>
-        <li>优化了目标语言的选择逻辑</li>
-        <li>修复了翻译窗口导致CPU高占用率的问题</li>
+        <li>原文与译文文本区域滚动同步</li>
+        <li>用户体验优化调整</li>
+        <li>修复了一些问题</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
