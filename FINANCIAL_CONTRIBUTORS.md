@@ -47,4 +47,5 @@
 | Futao | [《喜欢天文》](http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0) | 5 CNY |
 | Afa | | 5 CNY |
 | 李振宇 | | 2 CNY |
+| 堂主 | | 1 CNY |
 | 憨鸠仔 | | 0.01 CNY |
