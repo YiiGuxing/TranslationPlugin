@@ -57,8 +57,8 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             return null
 
         return nullIfRecursive {
-            val providerFromElement = Application.runReadAction(Computable {
-                DocumentationManager.getProviderFromElement(element, null)
+            val (language, providerFromElement) = Application.runReadAction(Computable {
+                element?.language to DocumentationManager.getProviderFromElement(element, null)
             })
             val originalDoc = when (providerFromElement) {
                 is ExternalDocumentationProvider -> providerFromElement.fetchExternalDocumentation(
@@ -70,7 +70,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
                 else -> null
             }
 
-            translate(originalDoc, element?.language)
+            translate(originalDoc, language)
         }
     }
 
