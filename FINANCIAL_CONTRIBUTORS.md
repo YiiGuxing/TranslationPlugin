@@ -35,6 +35,7 @@
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
 | 洪晓波 | | 9.9 CNY |
+| 甯 | | 8CNY |
 | 干巴爹 | | 8CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66CNY |
 | 刘小明 | | 6.66CNY |
@@ -46,4 +47,5 @@
 | Futao | [《喜欢天文》](http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0) | 5 CNY |
 | Afa | | 5 CNY |
 | 李振宇 | | 2 CNY |
+| 堂主 | | 1 CNY |
 | 憨鸠仔 | | 0.01 CNY |
