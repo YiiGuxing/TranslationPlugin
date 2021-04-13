@@ -3,6 +3,7 @@
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
 | CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 550 USD |
+| Takahisa Ishida | | 20 USD |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
@@ -12,10 +13,12 @@
 | Adam Gąsowski | [github.com/gander](https://github.com/gander) | 8 USD |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
+| AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| MrSTOP | [github.com/MrSTOP](https://github.com/MrSTOP) | 10 CNY |
 | 许宁/Mr.X | | 10 CNY |
 | 凉云 | [nzxy.kim](nzxy.kim) | 10 CNY |
 | Shark | | 10 CNY |
