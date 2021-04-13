@@ -175,6 +175,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         fun browseWhatsNew(project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
                 invokeLater {
+                    if (project.isDisposed) {
+                        return@invokeLater
+                    }
                     val whatsNewUrl = getWhatsNewUrl()
                     HTMLEditorProvider.openEditor(
                         project,
