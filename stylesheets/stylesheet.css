@@ -344,7 +344,10 @@ a:hover {
     font-style: italic;
     color: #DEF3F5;
     font-size: 0.9rem;
-    text-decoration: underline;
+}
+
+.developer span {
+    border-bottom: #DEF3F5 1px solid;
 }
 
 .developer-item {
