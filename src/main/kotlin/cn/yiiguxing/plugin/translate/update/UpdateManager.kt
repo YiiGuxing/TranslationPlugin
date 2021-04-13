@@ -178,14 +178,13 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                     if (project.isDisposed) {
                         return@invokeLater
                     }
-                    val whatsNewUrl = getWhatsNewUrl()
                     HTMLEditorProvider.openEditor(
                         project,
                         adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
-                        whatsNewUrl,
+                        getWhatsNewUrl(),
                         """<div style="text-align: center;padding-top: 3rem">
-                            |<div style="padding-top: 1rem">Failed to load!</div>
-                            |<div><a href="$whatsNewUrl" target="_blank" style="font-size: 2rem">Open in browser</a></div>
+                            |<div style="padding-top: 1rem; margin-bottom: 0.8rem;">Failed to load!</div>
+                            |<div><a href="${getWhatsNewUrl(true)}" target="_blank" style="font-size: 2rem">Open in browser</a></div>
                             |</div>""".trimMargin()
                     )
                 }
