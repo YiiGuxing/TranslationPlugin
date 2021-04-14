@@ -54,6 +54,9 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
         val oldLang = selected
         setListener(LangComboBoxLinkListener, lang)
         text = lang?.langName ?: "No language"
+        if (lang != oldLang) {
+            model.selected = lang
+        }
         listeners.forEach { it(lang, oldLang, fromUser) }
     }
 
@@ -102,7 +105,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
                 })
                 .createPopup()
                 .also { popup ->
-                    Disposer.register(popup, { langLink.currentPopup = null })
+                    Disposer.register(popup) { langLink.currentPopup = null }
                     popup.show(source)
                     langLink.currentPopup = popup
                 }
