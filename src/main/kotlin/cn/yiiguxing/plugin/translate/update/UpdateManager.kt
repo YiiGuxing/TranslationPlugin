@@ -136,17 +136,15 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                 Locale.CHINA,
                 Locale.CHINESE,
                 Locale.SIMPLIFIED_CHINESE -> BASE_URL_GITEE
-                else -> BASE_URL_GITHUB
+                else ->
+                    if (locale.country == Locale.CHINA.country) BASE_URL_GITEE
+                    else BASE_URL_GITHUB
             }
-            val langPath = when (locale) {
-                Locale.CHINA,
-                Locale.CHINESE,
-                Locale.SIMPLIFIED_CHINESE -> ""
-                Locale.JAPAN,
-                Locale.JAPANESE,
-                Locale.KOREA,
-                Locale.KOREAN -> "/${locale.language}"
-                else -> "/en"
+            val langPath = when (locale.language) {
+                Locale.CHINESE.language  -> ""
+                Locale.JAPANESE.language -> "/ja"
+                Locale.KOREAN.language   -> "/ko"
+                else                     -> "/en"
             }
 
             return "$baseUrl$langPath"
