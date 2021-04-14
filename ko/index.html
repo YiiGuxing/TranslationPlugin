@@ -7,7 +7,7 @@
     <meta name="description" content="IntelliJ 기반 IDE/Android Studio 번역 플러그인, 다국어 번역, 문서 번역, 음성 읽기 지원...">
     <meta name="keywords" content="IDEA 플러그인, IDEA 번역 플러그인, 플러그인">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.2" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.3" media="screen">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="main-background">
@@ -29,21 +29,17 @@
     <a href="start.html" class="btn" ondragstart="return false;">시작하기</a>
     <a href="support.html" class="btn" ondragstart="return false;">♥ 지원/기부 ♥</a>
 
-    <!--Current version prefix extracted from script to be translatable -->
-    <div id="currentVersion" class="project-version">현재 버전：</div>
-    <script>
-        $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
-            var version = data ? data["tag_name"] : null;
-            if (version) {
-                $("#currentVersion").html(function (index, prefix) {
-                    return prefix + "<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
-                    " target='_blank'>" + version + "</a>"
-                })
-            } else {
-                document.getElementById("version").style.visibility="hidden";
-            }
-        });
-    </script>
+    <div class="project-version">
+        <a href="https://github.com/YiiGuxing/TranslationPlugin/releases/latest" target="_blank">
+            <img alt="최신 버전" src="https://img.shields.io/github/v/release/YiiGuxing/TranslationPlugin.svg?style=flat-square&color=007AC1&label=%EC%B5%9C%EC%8B%A0%20%EB%B2%84%EC%A0%84">
+        </a>
+        <a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+            <img alt="즐겨 찾기" src="https://img.shields.io/github/stars/YiiGuxing/TranslationPlugin?logo=github&style=flat-square&color=009688&label=%EC%A6%90%EA%B2%A8%20%EC%B0%BE%EA%B8%B0">
+        </a>
+        <a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
+            <img alt="다운로드 수" src="https://img.shields.io/jetbrains/plugin/d/8579?logo=jetbrains&style=flat-square&label=%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%20%EC%88%98">
+        </a>
+    </div>
 
     <div id="embeddable" style="display: flex;justify-content: center"></div>
 

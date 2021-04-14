@@ -7,7 +7,7 @@
     <meta name="description" content="IntelliJ based IDEs/Android Studio 翻译插件，支持多语言互译、文档翻译、语音朗读...">
     <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?v1.2" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?v1.3" media="screen">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="main-background">
@@ -29,21 +29,17 @@
     <a href="start.html" class="btn" ondragstart="return false;">开始使用</a>
     <a href="support.html" class="btn" ondragstart="return false;">♥ 支持/捐赠 ♥</a>
 
-    <!--Current version prefix extracted from script to be translatable -->
-    <div id="currentVersion" class="project-version">当前版本：</div>
-    <script>
-        $.getJSON("https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest", function (data) {
-            var version = data ? data["tag_name"] : null;
-            if (version) {
-                $("#currentVersion").html(function (index, prefix) {
-                    return prefix + "<a href='https://github.com/YiiGuxing/TranslationPlugin/releases/latest'" +
-                    " target='_blank'>" + version + "</a>"
-                })
-            } else {
-                document.getElementById("version").style.visibility="hidden";
-            }
-        });
-    </script>
+    <div class="project-version">
+        <a href="https://github.com/YiiGuxing/TranslationPlugin/releases/latest" target="_blank">
+            <img alt="最新版本" src="https://img.shields.io/github/v/release/YiiGuxing/TranslationPlugin.svg?style=flat-square&color=007AC1&label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC">
+        </a>
+        <a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+            <img alt="收藏" src="https://img.shields.io/github/stars/YiiGuxing/TranslationPlugin?logo=github&style=flat-square&color=009688&label=%E6%94%B6%E8%97%8F">
+        </a>
+        <a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
+            <img alt="下载" src="https://img.shields.io/jetbrains/plugin/d/8579?logo=jetbrains&style=flat-square&label=%E4%B8%8B%E8%BD%BD">
+        </a>
+    </div>
 
     <div id="embeddable" style="display: flex;justify-content: center"></div>
 
