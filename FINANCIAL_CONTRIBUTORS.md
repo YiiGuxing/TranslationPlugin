@@ -7,6 +7,8 @@
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| Songc | [www.zdone.com](https://www.zdone.com) | 50 CNY |
+| Wangyangisgood | | 50 CNY |
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
@@ -18,6 +20,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Json159 | [blog.csdn.net/Json159](https://blog.csdn.net/Json159) | 10 CNY |
 | MrSTOP | [github.com/MrSTOP](https://github.com/MrSTOP) | 10 CNY |
 | 许宁/Mr.X | | 10 CNY |
 | 凉云 | [nzxy.kim](nzxy.kim) | 10 CNY |
