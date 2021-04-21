@@ -322,12 +322,12 @@ Support this project with your organization. Your logo will show up here with a 
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| Songc | [www.zdone.com](https://www.zdone.com) | 50 CNY |
+| Wangyangisgood | | 50 CNY |
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
-| Devwei095 | | 10.24 CNY |
-| Ncayu618 | | 10.24 CNY |
 
 [更多捐赠者][financial-contributors]
