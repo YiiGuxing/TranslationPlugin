@@ -15,7 +15,6 @@
  */
 package cn.yiiguxing.plugin.translate.ui.balloon;
 
-import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -23,6 +22,7 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -47,21 +47,21 @@ public class BalloonPopupBuilder implements BalloonBuilder {
 
     private final JComponent myContent;
 
-    private Color myBorder = IdeTooltipManager.getInstance().getBorderColor(true);
+    private Color myBorder = JBColor.namedColor("ToolTip.borderColor", new JBColor(0xadadad, 0x636569));
     @Nullable
-    private Insets myBorderInsets = null;
+    private Insets myBorderInsets;
     private Color myFill = MessageType.INFO.getPopupBackground();
     private boolean myHideOnMouseOutside = true;
     private boolean myHideOnKeyOutside = true;
     private long myFadeoutTime = -1;
     private boolean myShowCallout = true;
-    private boolean myCloseButtonEnabled = false;
+    private boolean myCloseButtonEnabled;
     private boolean myHideOnFrameResize = true;
-    private boolean myHideOnLinkClick = false;
+    private boolean myHideOnLinkClick;
 
     private ActionListener myClickHandler;
     private boolean myCloseOnClick;
-    private int myAnimationCycle = 200;
+    private int myAnimationCycle = 500;
 
     private int myCalloutShift;
     private int myPositionChangeXShift;
@@ -71,15 +71,15 @@ public class BalloonPopupBuilder implements BalloonBuilder {
     private boolean myDialogMode;
     private String myTitle;
     private Insets myContentInsets = JBUI.insets(2);
-    private boolean myShadow = UIUtil.isUnderDarcula();
-    private boolean mySmallVariant = false;
-
+    private boolean myShadow = true;
+    private boolean mySmallVariant;
     private Balloon.Layer myLayer;
-    private boolean myBlockClicks = false;
-    private boolean myRequestFocus = false;
+    private boolean myBlockClicks;
+    private boolean myRequestFocus;
 
     private Dimension myPointerSize;
     private int myCornerToPointerDistance = -1;
+
 
     public BalloonPopupBuilder(@NotNull final JComponent content) {
         this(DEFAULT_STORAGE, content);

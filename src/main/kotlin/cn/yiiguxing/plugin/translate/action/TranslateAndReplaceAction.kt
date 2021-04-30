@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.codeInsight.lookup.LookupEvent
 import com.intellij.codeInsight.lookup.LookupListener
@@ -22,9 +21,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
-import com.intellij.openapi.editor.markup.EffectType
-import com.intellij.openapi.editor.markup.RangeHighlighter
-import com.intellij.openapi.editor.markup.TextAttributes
+import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
@@ -36,7 +33,6 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler
 import com.intellij.ui.JBColor
 import com.intellij.util.concurrency.EdtScheduledExecutorService
 import java.lang.ref.WeakReference
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.swing.text.JTextComponent
 
@@ -266,19 +262,19 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 return
             }
 
+            val markupModel = markupModel
             val lookupElements = elementsToReplace.map(LookupElementBuilder::create).toTypedArray()
             val lookup = LookupManager.getInstance(project).showLookup(this, *lookupElements) ?: return
-            val highlightManager = HighlightManager.getInstance(project)
-            val highlighters = highlightManager.addHighlight(this, selectionRange)
+            val highlighter = markupModel.addHighlight(selectionRange)
 
             lookup.addLookupListener(object : LookupListener {
                 override fun itemSelected(event: LookupEvent) {
-                    highlightManager.removeSegmentHighlighters(this@showLookup, highlighters)
+                    markupModel.removeHighlighter(highlighter)
                 }
 
                 override fun lookupCanceled(event: LookupEvent) {
                     selectionModel.removeSelection()
-                    highlightManager.removeSegmentHighlighters(this@showLookup, highlighters)
+                    markupModel.removeHighlighter(highlighter)
                 }
             })
         }
@@ -299,28 +295,17 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }
         }
 
-        fun HighlightManager.addHighlight(
-            editor: Editor,
-            selectionRange: TextRange
-        ): List<RangeHighlighter> = ArrayList<RangeHighlighter>().apply {
-            addOccurrenceHighlight(
-                editor,
+        fun MarkupModel.addHighlight(selectionRange: TextRange): RangeHighlighter {
+            return addRangeHighlighter(
                 selectionRange.startOffset,
                 selectionRange.endOffset,
+                HighlighterLayer.SELECTION - 1,
                 HIGHLIGHT_ATTRIBUTES,
-                0,
-                this,
-                null
-            )
-
-            for (highlighter in this) {
-                highlighter.isGreedyToLeft = true
-                highlighter.isGreedyToRight = true
+                HighlighterTargetArea.EXACT_RANGE
+            ).apply {
+                isGreedyToLeft = true
+                isGreedyToRight = true
             }
-        }
-
-        fun HighlightManager.removeSegmentHighlighters(editor: Editor, highlighters: List<RangeHighlighter>) {
-            highlighters.forEach { removeSegmentHighlighter(editor, it) }
         }
 
         fun TextComponentEditor.showListPopup(selectionRange: TextRange, targetText: String, elements: List<String>) {

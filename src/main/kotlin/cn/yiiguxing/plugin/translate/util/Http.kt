@@ -8,7 +8,7 @@ import com.intellij.util.io.RequestBuilder
 private const val GOOGLE_REFERER = "https://translate.google.com/"
 private const val GOOGLE_REFERER_CN = "https://translate.google.cn/"
 
-private const val CHROME_VERSION = "89.0.4389.90"
+private const val CHROME_VERSION = "90.0.4430.85"
 
 private val USER_AGENT = getUserAgent()
 
@@ -22,10 +22,12 @@ val googleHost: String
 
 @Suppress("SpellCheckingInspection")
 private fun getUserAgent(): String {
+    val arch = System.getProperty("os.arch")
+    val is64Bit = arch != null && "64" in arch
     val systemInformation =
         when {
             SystemInfo.isWindows -> {
-                "Windows NT ${SystemInfo.OS_VERSION}${if (SystemInfo.is64Bit) "; Win64; x64" else ""}"
+                "Windows NT ${SystemInfo.OS_VERSION}${if (is64Bit) "; Win64; x64" else ""}"
             }
             SystemInfo.isMac -> {
                 val parts = SystemInfo.OS_VERSION.split('.').toMutableList()
@@ -34,7 +36,7 @@ private fun getUserAgent(): String {
                 }
                 "Macintosh; Intel Mac OS X ${parts.joinToString("_")}"
             }
-            else -> "X11; Linux x86${if (SystemInfo.is64Bit) "_64" else ""}"
+            else -> "X11; Linux x86${if (is64Bit) "_64" else ""}"
         }
 
     return "Mozilla/5.0 ($systemInformation) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/$CHROME_VERSION Safari/537.36"
