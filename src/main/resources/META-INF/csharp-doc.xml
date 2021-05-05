@@ -1,9 +1,9 @@
 <idea-plugin>
-    <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <docElementProvider
-                language="C#"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.CSharpDocumentationElementProvider"/>
-    </extensions>
+<!--    <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">-->
+<!--        <docElementProvider-->
+<!--                language="C#"-->
+<!--                implementationClass="cn.yiiguxing.plugin.translate.provider.CSharpDocumentationElementProvider"/>-->
+<!--    </extensions>-->
 
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
