@@ -87,6 +87,6 @@ fun Editor.getSelectionFromCurrentCaret(
     return when {
         ranges.isEmpty() -> null
         isExclusive -> ranges[0]
-        else -> ranges.maxWith(TextRangeComparator)
+        else -> ranges.maxWithOrNull(TextRangeComparator)
     }
 }

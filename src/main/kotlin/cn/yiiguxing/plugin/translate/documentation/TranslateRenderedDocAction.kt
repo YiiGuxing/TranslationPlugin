@@ -16,7 +16,7 @@ import icons.Icons
 
 internal class TranslateRenderedDocAction(
     val editor: Editor,
-    val docComment: PsiDocCommentBase
+    private val docComment: PsiDocCommentBase
 ) : ToggleAction({ adaptedMessage("translate") }, Icons.Translation) {
 
     override fun isSelected(event: AnActionEvent): Boolean {
@@ -46,6 +46,7 @@ internal class TranslateRenderedDocAction(
      * Using [EditorSettingsExternalizable.setDocCommentRenderingEnabled] works in 2020.3, but in 2021.1 it updates some listeners and
      * requires UI thread as well. The only way I see to fix it now is via reflection.
      */
+    @Suppress("KDocUnresolvedReference")
     private fun <T> withDocRenderingEnabled(computation: () -> T): T {
         val key = docRenderEnabledKey() ?: return computation.invoke()
         val existing = editor.getUserData(key)
@@ -58,15 +59,15 @@ internal class TranslateRenderedDocAction(
     }
 
     private fun docRenderEnabledKey(): Key<Boolean>? {
-        try {
+        return try {
             val docRenderManagerClass = DocRenderManager::class.java
             val field = docRenderManagerClass.getDeclaredField("DOC_RENDER_ENABLED")
             field.isAccessible = true
-            val key = field.get(null) as Key<Boolean>
+            val key = field.get(null) as? Key<Boolean>
             field.isAccessible = false
-            return key
+            key
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 }

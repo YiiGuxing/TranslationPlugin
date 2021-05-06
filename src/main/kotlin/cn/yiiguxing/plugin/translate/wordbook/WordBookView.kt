@@ -63,7 +63,7 @@ class WordBookView {
                     add(ExportActionGroup())
                 }
                 setAdditionalGearActions(gearActions)
-                setTitleActions(RefreshAction(), ShowWordOfTheDayAction())
+                setTitleActions(listOf(RefreshAction(), ShowWordOfTheDayAction()))
             }
         }
 
@@ -93,10 +93,10 @@ class WordBookView {
             panel.showMessagePane()
         }
 
-        Disposer.register(TranslationUIManager.disposable(project), {
+        Disposer.register(TranslationUIManager.disposable(project)) {
             windows.remove(project)
             wordBookPanels.remove(project)
-        })
+        }
 
         subscribeWordBookTopic()
         isInitialized = true

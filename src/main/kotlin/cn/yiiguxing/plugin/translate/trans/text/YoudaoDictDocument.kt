@@ -19,7 +19,6 @@ import java.awt.Color
 import java.util.*
 import javax.swing.JComponent
 import javax.swing.text.*
-import kotlin.collections.HashMap
 
 class YoudaoDictDocument private constructor(
     private val wordStrings: List<CharSequence>,
@@ -44,7 +43,7 @@ class YoudaoDictDocument private constructor(
         val tabWidth = wordStrings.asSequence()
             .filter { it is StyledString && it.style == POS_STYLE }
             .map { metrics.stringWidth(" $it") }
-            .max()
+            .maxOrNull()
             ?: return
 
         val attrs = SimpleAttributeSet()
