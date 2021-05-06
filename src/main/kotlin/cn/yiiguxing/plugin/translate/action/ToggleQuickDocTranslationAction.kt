@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -11,6 +12,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.editor.EditorMouseHoverPopupManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
@@ -29,10 +31,14 @@ open class ToggleQuickDocTranslationAction :
             return
         }
 
-        val docComponentExists = QuickDocUtil.getActiveDocComponent(project) != null
+        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)
+        val editorMouseHoverPopupManager = EditorMouseHoverPopupManager.getInstance()
+        val rdMouseHoverDocComponent = editorMouseHoverPopupManager.documentationComponent
+            .takeIf { IdeVersion.buildNumber.productCode == "RD" }
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)
 
-        e.presentation.isEnabled = docComponentExists && (toolWindow == null || toolWindow.isActive)
+        e.presentation.isVisible = e.presentation.isVisible && rdMouseHoverDocComponent == null
+        e.presentation.isEnabled = activeDocComponent != null && (toolWindow == null || toolWindow.isActive)
     }
 
     override fun isSelected(e: AnActionEvent): Boolean {
@@ -63,8 +69,9 @@ open class ToggleQuickDocTranslationAction :
                 if (element.isValid && originalElement?.isValid != false) {
                     val originalText = DocumentationManager.getInstance(project)
                         .generateDocumentation(element, originalElement, false)
-
-                    replaceActiveComponentText(project, currentText, originalText)
+                    if (originalText != null) {
+                        replaceActiveComponentText(project, currentText, originalText)
+                    }
                 }
             }
             replaceComponentAction
