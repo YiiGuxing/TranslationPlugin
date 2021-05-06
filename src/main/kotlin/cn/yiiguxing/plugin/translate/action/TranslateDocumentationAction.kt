@@ -4,9 +4,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.getTranslatedDocumentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider
-import cn.yiiguxing.plugin.translate.ui.setContent
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.codeInsight.CodeInsightBundle
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProvider
@@ -23,7 +21,6 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.presentation.java.SymbolPresentationUtil
 import com.intellij.ui.popup.AbstractPopup
 import com.intellij.util.ui.JBDimension
 import java.awt.Dimension
@@ -55,39 +52,34 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             ?: return
         val provider = docCommentOwner.documentationProvider
 
+        val documentationComponentRef = showPopup(editor, element, provider)
+
         executeOnPooledThread {
-            val documentationComponentRef = Ref<DocumentationComponent>()
             try {
                 val doc = Application.runReadAction(Computable {
                     if (element.isValid && docCommentOwner.isValid) {
                         provider.generateDoc(docCommentOwner, element)
                     } else null
-                }) ?: return@executeOnPooledThread
+                })
 
-                Application.invokeAndWait {
-                    val e = editorRef.get()?.takeUnless { it.isDisposed } ?: return@invokeAndWait
-                    val documentationComponent = showPopup(e, docCommentOwner.title)
-                    documentationComponentRef.set(documentationComponent)
-                    Disposer.register(documentationComponent, { documentationComponentRef.set(null) })
-                }
-
-                if (documentationComponentRef.isNull) {
+                if (doc == null) {
+                    invokeLater { documentationComponentRef.get()?.hint?.cancel() }
                     return@executeOnPooledThread
                 }
 
                 val translatedDocumentation =
                     TranslateService.translator.getTranslatedDocumentation(doc, element.language)
                 invokeLater {
-                    val documentationComponent = documentationComponentRef.get() ?: return@invokeLater
+                    val docComponent = documentationComponentRef.get() ?: return@invokeLater
                     val e = editorRef.get()?.takeUnless { it.isDisposed }
                     if (element.isValid && e != null) {
-                        documentationComponent.setContent(translatedDocumentation, element)
-                        (documentationComponent.hint as? AbstractPopup)?.apply {
+                        docComponent.replaceText(translatedDocumentation, element)
+                        (docComponent.hint as? AbstractPopup)?.apply {
                             showInEditor(e)
                             updateSize(project)
                         }
                     } else {
-                        documentationComponent.hint?.cancel()
+                        docComponent.hint?.cancel()
                     }
                 }
             } catch (e: Throwable) {
@@ -99,14 +91,18 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
         }
     }
 
-    private fun showPopup(editor: Editor, title: String?): DocumentationComponent {
+    private fun showPopup(
+        editor: Editor,
+        element: PsiElement?,
+        provider: DocumentationProvider
+    ): Ref<DocumentationComponent> {
         val project = editor.project!!
         val component = DocumentationComponent(DocumentationManager.getInstance(project))
         val popupFactory = JBPopupFactory.getInstance()
         val hint = popupFactory
             .createComponentPopupBuilder(component, component)
             .setProject(project)
-            .setTitle(title)
+            .setTitle(null)
             .setResizable(true)
             .setMovable(true)
             .setFocusable(true)
@@ -131,11 +127,15 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         component.hint = hint
 
-        component.setContent(message("documentation.loading"))
+        component.setText(message("documentation.loading"), element, provider)
+
+        val documentationComponentRef = Ref<DocumentationComponent>(component)
+        Disposer.register(component) { documentationComponentRef.set(null) }
+
         hint.showInEditor(editor)
         hint.updateSize(project, false)
 
-        return component
+        return documentationComponentRef
     }
 
 
@@ -167,15 +167,6 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         private val PsiElement.documentationProvider: DocumentationProvider
             get() = DocumentationManager.getProviderFromElement(this)
-
-        private val PsiElement.title: String?
-            get() {
-                if (IdeVersion.isIde2018OrNewer) return null
-
-                val title = SymbolPresentationUtil.getSymbolPresentableText(this)
-                @Suppress("InvalidBundleOrProperty")
-                return CodeInsightBundle.message("javadoc.info.title", title ?: text)
-            }
 
         private fun AbstractPopup.showInEditor(editor: Editor) {
             if (isDisposed) {
