@@ -9,7 +9,7 @@
       <br/>
       <p>
       <b>
-      <a href="https://plugins.jetbrains.com/plugin/8579-translation">Website</a> |
+      <a href="https://yiiguxing.gitee.io/translation-plugin/index.html">Website</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a> |
       <a href="https://yiiguxing.gitee.io/translation-plugin/start.html">Doc</a> |
@@ -47,10 +47,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>文档上下文菜单添加了文档翻译操作</li>
-        <li>原文与译文文本区域滚动同步</li>
-        <li>用户体验优化调整</li>
-        <li>修复了一些问题</li>
+        <li>修复了一些错误</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>

@@ -216,12 +216,9 @@
 
 ## Change Notes
 
-## [v3.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.1) (2021-04-13)
+## [v3.1.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.1.1) (2021-05-07)
 
-- 文档上下文菜单添加了文档翻译操作（IDE 2020.3+）
-- 原文与译文文本区域滚动同步
-- 用户体验优化调整
-- 修复了一些问题
+- 修复了一些错误
 
 [完整的更新历史记录](./CHANGELOG.md)
 
