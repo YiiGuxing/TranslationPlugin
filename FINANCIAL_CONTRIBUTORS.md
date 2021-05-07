@@ -46,6 +46,7 @@
 | 干巴爹 | | 8CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66CNY |
 | 刘小明 | | 6.66CNY |
+| 张英奇 | | 6CNY |
 | 寤寐 | | 5CNY |
 | 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
 | Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
