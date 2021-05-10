@@ -15,6 +15,8 @@
 | Adam Gąsowski | [github.com/gander](https://github.com/gander) | 8 USD |
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
+| 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
 | Kirill Semenchenko | | 2 USD |
