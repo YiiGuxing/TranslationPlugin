@@ -20,6 +20,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 王勇 | [github.com/AdTomato](https://github.com/AdTomato) | 10 CNY |
 | Json159 | [blog.csdn.net/Json159](https://blog.csdn.net/Json159) | 10 CNY |
 | MrSTOP | [github.com/MrSTOP](https://github.com/MrSTOP) | 10 CNY |
 | 许宁/Mr.X | | 10 CNY |
