@@ -324,7 +324,7 @@ Support this project with your organization. Your logo will show up here with a 
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
-| Zyc | | 15 CNY |
+| 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
 
 [更多捐赠者][financial-contributors]
