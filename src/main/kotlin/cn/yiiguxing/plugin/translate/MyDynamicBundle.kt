@@ -10,15 +10,6 @@ open class MyDynamicBundle(private val pathToBundle: String) : AbstractBundle(pa
 
     private val adaptedControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES)
 
-    private val dynamicLocale: Locale? by lazy {
-        try {
-            DynamicBundle.getLocale()
-        } catch (e: NoSuchMethodError) {
-            LOGGER.debug("NoSuchMethodError: DynamicBundle.getLocale()")
-            null
-        }
-    }
-
     private val adaptedBundle: AbstractBundle? by lazy {
         val dynamicLocale = dynamicLocale ?: return@lazy null
         if (dynamicLocale.toLanguageTag() == Locale.ENGLISH.toLanguageTag()) {
@@ -50,6 +41,16 @@ open class MyDynamicBundle(private val pathToBundle: String) : AbstractBundle(pa
 
     companion object {
         private val LOGGER = Logger.getInstance(MyDynamicBundle::class.java)
+
+        val dynamicLocale: Locale? by lazy {
+            try {
+                DynamicBundle.getLocale()
+            } catch (e: NoSuchMethodError) {
+                LOGGER.debug("NoSuchMethodError: DynamicBundle.getLocale()")
+                null
+            }
+        }
+
     }
 
 }

@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.MyDynamicBundle
+import com.intellij.DynamicBundle
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
@@ -358,17 +359,22 @@ enum class Lang(
     companion object {
         private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
 
-        val default: Lang = when (Locale.getDefault().language) {
-            Locale.CHINESE.language -> when (Locale.getDefault().country) {
-                "HK", "TW" -> CHINESE_TRADITIONAL
-                else -> CHINESE
-            }
+        val default: Lang
+            get() {
+                val dynamicBundleLanguage = (MyDynamicBundle.dynamicLocale ?: Locale.ENGLISH).language
+                val localeLanguage =
+                    if (dynamicBundleLanguage != Locale.ENGLISH.language) dynamicBundleLanguage
+                    else Locale.getDefault().language
 
-            else -> {
-                val language = Locale.getDefault().language
-                values().find { it.code.equals(language, ignoreCase = true) } ?: ENGLISH
+                return when (localeLanguage) {
+                    Locale.CHINESE.language -> when (Locale.getDefault().country) {
+                        "HK", "TW" -> CHINESE_TRADITIONAL
+                        else -> CHINESE
+                    }
+
+                    else -> values().find { it.code.equals(localeLanguage, ignoreCase = true) } ?: ENGLISH
+                }
             }
-        }
 
         fun sortedValues(): List<Lang> = when (Locale.getDefault()) {
             Locale.CHINESE,
