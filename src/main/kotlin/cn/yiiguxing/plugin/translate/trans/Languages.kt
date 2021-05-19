@@ -27,17 +27,26 @@ enum class Lang(
     langNameKey: String,
     val code: String,
     youdaoCode: String? = null,
-    baiduCode: String? = null
+    baiduCode: String? = null,
+    tencentCode: String? = null,
+    tencentErrorCode: String? = null
 ) {
 
     /** 自动检测 */
     AUTO("auto", "auto"),
 
     /** 中文 */
-    CHINESE("chinese", "zh-CN", "zh-CHS", "zh"),
+    CHINESE(
+        "chinese",
+        "zh-CN",
+        youdaoCode = "zh-CHS",
+        baiduCode = "zh",
+        tencentCode = "zh",
+        tencentErrorCode = "zh-CN"
+    ),
 
     /** 英语 */
-    ENGLISH("english", "en"),
+    ENGLISH("english", "en", tencentErrorCode = "en-US"),
 
     /** 中文(繁体) */
     CHINESE_TRADITIONAL("chinese.traditional", "zh-TW", baiduCode = "cht"),
@@ -46,7 +55,7 @@ enum class Lang(
     CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL", baiduCode = "wyw"),
 
     /** 粤语 */
-    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", "yue", baiduCode = "yue"),
+    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", youdaoCode = "yue", baiduCode = "yue"),
 
     /** 阿尔巴尼亚语 */
     ALBANIAN("albanian", "sq"),
@@ -304,7 +313,7 @@ enum class Lang(
     SPANISH("spanish", "es", baiduCode = "spa"),
 
     /** 希伯来语 */
-    HEBREW("hebrew", "iw", "he"),
+    HEBREW("hebrew", "iw", youdaoCode = "he"),
 
     /** 希腊语 */
     GREEK("greek", "el"),
@@ -354,6 +363,9 @@ enum class Lang(
     val langName: String = LanguageBundle.getMessage(langNameKey)
     val youdaoCode: String = youdaoCode ?: code
     val baiduCode: String = baiduCode ?: code
+    val tencentCode: String = tencentCode ?: code
+    // 如果腾讯云API没有对应错误，则使用en-US错误
+    val tencentErrorCode: String = tencentErrorCode ?: "en-US"
 
     companion object {
         private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
