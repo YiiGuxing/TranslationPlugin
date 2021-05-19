@@ -361,7 +361,7 @@ enum class Lang(
 
         val default: Lang
             get() {
-                val dynamicBundleLanguage = DynamicBundle.getLocale().language
+                val dynamicBundleLanguage = (MyDynamicBundle.dynamicLocale ?: Locale.ENGLISH).language
                 val localeLanguage =
                     if (dynamicBundleLanguage != Locale.ENGLISH.language) dynamicBundleLanguage
                     else Locale.getDefault().language
