@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.TENCENT_TRANSLATE_URL
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.TENCENT
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
@@ -112,8 +114,8 @@ object TencentTranslator : AbstractTranslator() {
 
         val postData = ArrayList<Pair<String, String>>().apply {
             add("Action" to "TextTranslate")
-            // 使用和目标语言一致的错误信息。
-            add("Language" to targetLang.tencentErrorCode)
+            // 这里如果腾讯适配是最好的
+            add("Language" to "en-US")
             add("Timestamp" to curTimestamp)
             add("Region" to "ap-shanghai")
             add("Nonce" to (Random().nextInt(Int.MAX_VALUE).toString()))
@@ -151,7 +153,24 @@ object TencentTranslator : AbstractTranslator() {
     }
 
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TencentTranslateResultException -> throwable.error.message
+        is TencentTranslateResultException -> when (throwable.error.code) {
+            "AuthFailure.SignatureExpire" -> "签名过期，请检查系统时间"
+            "InternalError",
+            "InternalError.ErrorUnknown" -> message("error.systemError")
+            "AuthFailure.InvalidSecretId" -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
+            "InvalidParameter" -> message("error.missingParameter")
+            "AuthFailure.SignatureFailure",
+            "AuthFailure.SecretIdNotFound"-> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
+            "RequestLimitExceeded" -> message("error.access.limited")
+            "ResourceInsufficient",
+            "FailedOperation.NoFreeAmount",
+            "FailedOperation.ServiceIsolate" -> message("error.account.has.run.out.of.balance")
+            "UnsupportedOperation.UnsupportedLanguage",
+            "UnsupportedOperation.UnsupportedSourceLanguage" -> message("error.language.unsupported")
+            "FailedOperation.UserNotRegistered" -> "服务当前已关闭，请前往管理控制台开启服务"
+            "UnsupportedOperation.TextTooLong" -> "文本过长"
+            else -> message("error.unknown") + "[${throwable.error.message}]"
+        }
         else -> super.createErrorMessage(throwable)
     }
 }

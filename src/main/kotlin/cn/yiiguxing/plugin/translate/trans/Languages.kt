@@ -28,8 +28,7 @@ enum class Lang(
     val code: String,
     youdaoCode: String? = null,
     baiduCode: String? = null,
-    tencentCode: String? = null,
-    tencentErrorCode: String? = null
+    tencentCode: String? = null
 ) {
 
     /** 自动检测 */
@@ -42,11 +41,10 @@ enum class Lang(
         youdaoCode = "zh-CHS",
         baiduCode = "zh",
         tencentCode = "zh",
-        tencentErrorCode = "zh-CN"
     ),
 
     /** 英语 */
-    ENGLISH("english", "en", tencentErrorCode = "en-US"),
+    ENGLISH("english", "en"),
 
     /** 中文(繁体) */
     CHINESE_TRADITIONAL("chinese.traditional", "zh-TW", baiduCode = "cht"),
@@ -364,8 +362,6 @@ enum class Lang(
     val youdaoCode: String = youdaoCode ?: code
     val baiduCode: String = baiduCode ?: code
     val tencentCode: String = tencentCode ?: code
-    // 如果腾讯云API没有对应错误，则使用en-US错误
-    val tencentErrorCode: String = tencentErrorCode ?: "en-US"
 
     companion object {
         private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
