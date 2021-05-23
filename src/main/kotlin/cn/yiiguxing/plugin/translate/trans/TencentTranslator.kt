@@ -155,19 +155,19 @@ object TencentTranslator : AbstractTranslator() {
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is TencentTranslateResultException -> when (throwable.error.code) {
             "AuthFailure.SignatureExpire" -> "签名过期，请检查系统时间"
+            "AuthFailure.InvalidSecretId",
+            "AuthFailure.SecretIdNotFound" -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
+            "AuthFailure.SignatureFailure"-> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
             "InternalError",
             "InternalError.ErrorUnknown" -> message("error.systemError")
-            "AuthFailure.InvalidSecretId" -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
             "InvalidParameter" -> message("error.missingParameter")
-            "AuthFailure.SignatureFailure",
-            "AuthFailure.SecretIdNotFound"-> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
             "RequestLimitExceeded" -> message("error.access.limited")
             "ResourceInsufficient",
             "FailedOperation.NoFreeAmount",
             "FailedOperation.ServiceIsolate" -> message("error.account.has.run.out.of.balance")
+            "FailedOperation.UserNotRegistered" -> "服务当前已关闭，请前往管理控制台开启服务"
             "UnsupportedOperation.UnsupportedLanguage",
             "UnsupportedOperation.UnsupportedSourceLanguage" -> message("error.language.unsupported")
-            "FailedOperation.UserNotRegistered" -> "服务当前已关闭，请前往管理控制台开启服务"
             "UnsupportedOperation.TextTooLong" -> "文本过长"
             else -> message("error.unknown") + "[${throwable.error.message}]"
         }
