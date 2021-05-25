@@ -2,7 +2,7 @@
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 600 USD |
+| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 650 USD |
 | Takahisa Ishida | | 20 USD |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
