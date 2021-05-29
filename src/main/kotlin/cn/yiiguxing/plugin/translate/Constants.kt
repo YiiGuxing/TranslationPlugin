@@ -39,4 +39,4 @@ const val BAIDU_TRANSLATE_URL = "http://api.fanyi.baidu.com/api/trans/vip/transl
 const val BAIDU_FANYI_URL = "http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer"
 
 const val TENCENT_TRANSLATE_URL = "https://tmt.tencentcloudapi.com "
-const val TENCENT_TMT_URL = "https://console.cloud.tencent.com/tmt"
+const val TENCENT_CAPI_URL = "https://console.cloud.tencent.com/cam/capi"

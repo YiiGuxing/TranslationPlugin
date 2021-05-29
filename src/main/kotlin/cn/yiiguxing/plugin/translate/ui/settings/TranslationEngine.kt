@@ -85,7 +85,7 @@ enum class TranslationEngine(
                 message("settings.tencent.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/tencent_translate_logo.png"),
-                    TENCENT_TMT_URL,
+                    TENCENT_CAPI_URL,
                     Settings.tencentTranslateSettings
                 )
             ).showAndGet()
