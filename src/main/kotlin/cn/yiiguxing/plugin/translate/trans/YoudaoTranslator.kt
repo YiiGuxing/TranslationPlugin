@@ -113,7 +113,7 @@ object YoudaoTranslator : AbstractTranslator() {
         is TranslateResultException -> when (throwable.code) {
             101 -> message("error.missingParameter")
             102 -> message("error.language.unsupported")
-            103 -> message("error.youdao.textTooLong")
+            103 -> message("error.text.too.long")
             104 -> message("error.youdao.unsupported.api")
             105 -> message("error.youdao.unsupported.signature")
             106 -> message("error.youdao.unsupported.response")

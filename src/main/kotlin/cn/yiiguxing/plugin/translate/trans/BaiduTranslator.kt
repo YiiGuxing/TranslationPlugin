@@ -133,8 +133,8 @@ object BaiduTranslator : AbstractTranslator() {
             54004 -> message("error.account.has.run.out.of.balance")
             58000 -> message("error.access.ip")
             58001 -> message("error.language.unsupported")
-            58002 -> "服务当前已关闭，请前往管理控制台开启服务"
-            90107 -> "认证未通过或未生效"
+            58002 -> message("error.service.is.down")
+            90107 -> message("error.unauthorized")
             else -> message("error.unknown") + "[${throwable.code}]"
         }
         else -> super.createErrorMessage(throwable)

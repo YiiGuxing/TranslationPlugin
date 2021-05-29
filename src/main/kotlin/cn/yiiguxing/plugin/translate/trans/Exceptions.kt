@@ -27,7 +27,7 @@ class TranslateResultException(val code: Int, translatorName: String) :
     TranslateException("Translate failed: $code", translatorName)
 
 class TencentTranslateResultException(val error: TencentError, translatorName: String) :
-    TranslateException("Translate failed: ${error.message}", translatorName)
+    TranslateException("Translate failed: [${error.code}]${error.message}", translatorName)
 
 class NetworkException(host: String, cause: IOException) : IOException("${cause.message}. host=$host", cause) {
     companion object {
