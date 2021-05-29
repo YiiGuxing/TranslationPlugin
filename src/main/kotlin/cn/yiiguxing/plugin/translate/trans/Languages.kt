@@ -395,5 +395,9 @@ enum class Lang(
         fun valueOfBaiduCode(code: String): Lang = values()
             .find { it.baiduCode.equals(code, ignoreCase = true) }
             ?: throw IllegalArgumentException("Unknown language code:$code")
+
+        fun valueOfTencentCode(code: String): Lang = values()
+            .find { it.tencentCode.equals(code, ignoreCase = true) }
+            ?: throw IllegalArgumentException("Unknown language code:$code")
     }
 }

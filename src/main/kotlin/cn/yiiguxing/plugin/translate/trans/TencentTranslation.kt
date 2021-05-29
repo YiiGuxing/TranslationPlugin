@@ -4,38 +4,39 @@ import com.google.gson.annotations.SerializedName
 
 @Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 data class TencentTranslation(
-    @SerializedName("Response")
-    var response: Response = Response(),
-
     @SerializedName("query")
-    var query: String? = null
+    var query: String = "",
+    @SerializedName("Response")
+    val response: TencentTranslationResponse
 ) : TranslationAdapter {
     val isSuccessful get() = response.error == null
 
     override fun toTranslation(): Translation {
         check(isSuccessful) { "Cannot convert to Translation: errorCode=${response.error?.code}" }
-        check(response.srcLanguage != null) { "Cannot convert to Translation: srcLanguage=null" }
-        check(response.targetLanguage != null) { "Cannot convert to Translation: targetLanguage=null" }
-        check(response.translation != null) { "Cannot convert to Translation: trans=null" }
+        check(response.srcLanguage != null) { "Cannot convert to Translation: response.srcLanguage=null" }
+        check(response.targetLanguage != null) { "Cannot convert to Translation: response.targetLanguage=null" }
+        check(response.translation != null) { "Cannot convert to Translation: response.translation=null" }
 
-        val srcLang = Lang.valueOfBaiduCode(response.srcLanguage!!)
-        val transLang = Lang.valueOfBaiduCode(response.targetLanguage!!)
+        val srcLang = Lang.valueOfTencentCode(response.srcLanguage)
+        val transLang = Lang.valueOfTencentCode(response.targetLanguage)
 
-        return Translation(query!!, response.translation.toString(), srcLang, transLang, listOf(srcLang))
+        return Translation(query, response.translation, srcLang, transLang, listOf(srcLang))
     }
 }
 
-data class Response(
+data class TencentTranslationResponse(
     @SerializedName("RequestId")
-    val requestId: String = "",
+    val requestId: String,
 
     @SerializedName("Error")
     val error: TencentError? = null,
 
     @SerializedName("Source")
     val srcLanguage: String? = null,
+
     @SerializedName("Target")
     val targetLanguage: String? = null,
+
     @SerializedName("TargetText")
     val translation: String? = null
 )

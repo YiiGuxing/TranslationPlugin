@@ -147,7 +147,7 @@ object TencentTranslator : AbstractTranslator() {
             query = original
             if (!isSuccessful) {
                 logger.w(response.error!!.message)
-                throw TencentTranslateResultException(response.error!!, name)
+                throw TencentTranslateResultException(response.error, name)
             }
         }.toTranslation()
     }
