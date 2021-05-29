@@ -91,6 +91,10 @@ object Icons {
     val Baidu: Icon = load("/icons/baidu.svg")
 
     @JvmField
+    @Suppress("SpellCheckingInspection")
+    val Tencent: Icon = load("/icons/tencent.svg")
+
+    @JvmField
     val Support: Icon = load("/icons/support.svg")
 
     @JvmField
