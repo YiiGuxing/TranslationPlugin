@@ -16,7 +16,6 @@ import javax.swing.Icon
 import javax.xml.bind.DatatypeConverter
 
 
-@Suppress("SpellCheckingInspection")
 object TencentTranslator : AbstractTranslator() {
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
@@ -93,7 +92,7 @@ object TencentTranslator : AbstractTranslator() {
         isDocumentation: Boolean
     ): String = TENCENT_TRANSLATE_URL
 
-    fun sign(s: String, key: String, method: String?): String {
+    private fun sign(s: String, key: String, method: String = "HmacSHA1"): String {
         val mac: Mac = Mac.getInstance(method)
         val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
         mac.init(secretKeySpec)
@@ -110,7 +109,7 @@ object TencentTranslator : AbstractTranslator() {
         val settings = Settings.tencentTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
-        val curTimestamp = (Calendar.getInstance().timeInMillis / 1000).toInt().toString()
+        val curTimestamp = (System.currentTimeMillis() / 1000).toInt().toString()
 
         val postData = ArrayList<Pair<String, String>>().apply {
             add("Action" to "TextTranslate")
@@ -127,9 +126,10 @@ object TencentTranslator : AbstractTranslator() {
             add("SourceText" to text)
         }.sortedBy { pair -> pair.first }.toMutableList()
 
+        @Suppress("SpellCheckingInspection")
         val dataToSign = "POSTtmt.tencentcloudapi.com/?" +
                 postData.joinToString("&") { (key, value) -> "$key=${value}" }
-        postData.add("Signature" to sign(dataToSign, privateKey, "HmacSHA1"))
+        postData.add("Signature" to sign(dataToSign, privateKey))
         return postData
     }
 
