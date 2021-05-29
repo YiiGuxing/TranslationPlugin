@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.AppKeySettings
-import cn.yiiguxing.plugin.translate.BAIDU_FANYI_URL
-import cn.yiiguxing.plugin.translate.YOUDAO_AI_URL
-import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
@@ -21,7 +18,8 @@ enum class TranslationEngine(
 
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
     YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000);
+    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000),
+    TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.Tencent, 2000, 400);
 
     var primaryLanguage: Lang
         get() {
@@ -29,6 +27,7 @@ enum class TranslationEngine(
                 GOOGLE -> Settings.googleTranslateSettings.primaryLanguage
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage
+                TENCENT -> Settings.tencentTranslateSettings.primaryLanguage
             }
         }
         set(value) {
@@ -36,6 +35,7 @@ enum class TranslationEngine(
                 GOOGLE -> Settings.googleTranslateSettings.primaryLanguage = value
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage = value
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage = value
+                TENCENT -> Settings.tencentTranslateSettings.primaryLanguage = value
             }
         }
 
@@ -45,6 +45,7 @@ enum class TranslationEngine(
                 GOOGLE -> GoogleTranslator
                 YOUDAO -> YoudaoTranslator
                 BAIDU -> BaiduTranslator
+                TENCENT -> TencentTranslator
             }
         }
 
@@ -55,6 +56,7 @@ enum class TranslationEngine(
             GOOGLE -> true
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
+            TENCENT -> isConfigured(Settings.tencentTranslateSettings)
         }
     }
 
@@ -77,6 +79,14 @@ enum class TranslationEngine(
                     Icons.load("/image/baidu_translate_logo.png"),
                     BAIDU_FANYI_URL,
                     Settings.baiduTranslateSettings
+                )
+            ).showAndGet()
+            TENCENT -> AppKeySettingsDialog(
+                message("settings.tencent.title"),
+                AppKeySettingsPanel(
+                    Icons.load("/image/tencent_translate_logo.png"),
+                    TENCENT_CAPI_URL,
+                    Settings.tencentTranslateSettings
                 )
             ).showAndGet()
             else -> true

@@ -26,6 +26,9 @@ class UnsupportedLanguageException(val lang: Lang, translatorName: String) :
 class TranslateResultException(val code: Int, translatorName: String) :
     TranslateException("Translate failed: $code", translatorName)
 
+class TencentTranslateResultException(val error: TencentError, translatorName: String) :
+    TranslateException("Translate failed: [${error.code}]${error.message}", translatorName)
+
 class NetworkException(host: String, cause: IOException) : IOException("${cause.message}. host=$host", cause) {
     companion object {
         fun wrapIfIsNetworkException(throwable: Throwable, host: String): Throwable {
