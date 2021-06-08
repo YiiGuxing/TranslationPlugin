@@ -6,7 +6,7 @@
 | Takahisa Ishida | | 20 USD |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
-| LeeWyatt | | 66.6 CNY |
+| LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | Songc | [www.zdone.com](https://www.zdone.com) | 50 CNY |
 | Wangyangisgood | | 50 CNY |
