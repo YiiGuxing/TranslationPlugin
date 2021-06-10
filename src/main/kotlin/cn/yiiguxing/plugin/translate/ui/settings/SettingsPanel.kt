@@ -23,6 +23,7 @@ import org.intellij.lang.regexp.RegExpLanguage
 import java.awt.event.ItemEvent
 import java.lang.ref.WeakReference
 import javax.swing.JComponent
+import kotlin.math.max
 
 /**
  * SettingsPanel
@@ -132,11 +133,6 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         font = if (primary.isNullOrBlank()) UI.defaultFont else JBUI.Fonts.create(primary, 14)
     }
 
-    private fun getMaxHistorySize(): Int {
-        val size = maxHistoriesSizeComboBox.editor.item
-        return (size as? String)?.toIntOrNull() ?: -1
-    }
-
     private fun createRegexEditorField(): EditorTextField = EditorTextField(
         "",
         ProjectManager.getInstance().defaultProject,
@@ -173,23 +169,24 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || settings.showExplanation != showExplanationCheckBox.isSelected
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
                     || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
-                    || appStorage.maxHistorySize != getMaxHistorySize()
+                    || appStorage.maxHistorySize != maxHistoriesSizeComboBox.item
         }
 
 
     override fun apply() {
 
-        getMaxHistorySize().let {
-            if (it >= 0) {
-                appStorage.maxHistorySize = it
-            }
-        }
+        appStorage.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
 
         @Suppress("Duplicates")
         with(settings) {
             val selectedTranslator = translationEngineComboBox.selected ?: translator
             if (!selectedTranslator.isConfigured()) {
-                throw ConfigurationException(message("settings.translator.requires.configuration", selectedTranslator.translatorName))
+                throw ConfigurationException(
+                    message(
+                        "settings.translator.requires.configuration",
+                        selectedTranslator.translatorName
+                    )
+                )
             }
             translator = selectedTranslator
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
@@ -240,11 +237,12 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         primaryFontPreview.previewFont(settings.primaryFontFamily)
         primaryFontPreview.text = settings.primaryFontPreviewText
         phoneticFontPreview.previewFont(settings.phoneticFontFamily)
-        maxHistoriesSizeComboBox.editor.item = appStorage.maxHistorySize.toString()
+        maxHistoriesSizeComboBox.item = appStorage.maxHistorySize
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation
-        showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected = settings.showActionsInContextMenuOnlyWithSelection
+        showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected =
+            settings.showActionsInContextMenuOnlyWithSelection
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
     }
 
