@@ -42,7 +42,9 @@ object Notifications {
                         notification.expire()
                         when (event.description) {
                             HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(project)
-                            HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION -> TranslateService.translator.checkConfiguration()
+                            HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION -> TranslateService.translator.checkConfiguration(
+                                true
+                            )
                         }
                     }
                 })
@@ -110,7 +112,7 @@ object Notifications {
             when (hyperlinkEvent.description) {
                 HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog()
                 HTML_DESCRIPTION_SUPPORT -> SupportDialog.show()
-                HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION -> TranslateService.translator.checkConfiguration()
+                HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION -> TranslateService.translator.checkConfiguration(true)
                 else -> super.hyperlinkActivated(notification, hyperlinkEvent)
             }
         }

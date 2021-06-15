@@ -77,8 +77,8 @@ object TencentTranslator : AbstractTranslator() {
         .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
 
-    override fun checkConfiguration(): Boolean {
-        if (Settings.tencentTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+    override fun checkConfiguration(force: Boolean): Boolean {
+        if (force || Settings.tencentTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return TENCENT.showConfigurationDialog()
         }
 

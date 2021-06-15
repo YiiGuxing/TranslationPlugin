@@ -69,8 +69,8 @@ object BaiduTranslator : AbstractTranslator() {
         .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
-    override fun checkConfiguration(): Boolean {
-        if (Settings.baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+    override fun checkConfiguration(force: Boolean): Boolean {
+        if (force || Settings.baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return BAIDU.showConfigurationDialog()
         }
 

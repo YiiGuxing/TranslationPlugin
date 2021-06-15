@@ -24,7 +24,7 @@ interface Translator {
 
     val contentLengthLimit: Int
 
-    fun checkConfiguration(): Boolean = true
+    fun checkConfiguration(force: Boolean = false): Boolean = true
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation
 

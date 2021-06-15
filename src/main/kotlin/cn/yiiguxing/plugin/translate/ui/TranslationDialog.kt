@@ -280,7 +280,7 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
                     OptionsConfigurable.showSettingsDialog(project)
                 } else if (HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION == hyperlinkEvent.description) {
                     close()
-                    presenter.translator.checkConfiguration()
+                    presenter.translator.checkConfiguration(true)
                 }
             }
         })

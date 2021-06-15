@@ -50,8 +50,8 @@ object YoudaoTranslator : AbstractTranslator() {
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
-    override fun checkConfiguration(): Boolean {
-        if (Settings.youdaoTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+    override fun checkConfiguration(force: Boolean): Boolean {
+        if (force || Settings.youdaoTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return YOUDAO.showConfigurationDialog()
         }
 
