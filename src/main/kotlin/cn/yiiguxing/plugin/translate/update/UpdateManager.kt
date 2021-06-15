@@ -119,7 +119,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 
-        private const val BASE_URL_GITEE = "https://yiiguxing.gitee.io/translation-plugin"
         private const val BASE_URL_GITHUB = "https://yiiguxing.github.io/TranslationPlugin"
 
         private const val MILESTONE_URL =
@@ -132,22 +131,14 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         }
 
         private fun baseUrl(locale: Locale): String {
-            val baseUrl = when (locale) {
-                Locale.CHINA,
-                Locale.CHINESE,
-                Locale.SIMPLIFIED_CHINESE -> BASE_URL_GITEE
-                else ->
-                    if (locale.country == Locale.CHINA.country) BASE_URL_GITEE
-                    else BASE_URL_GITHUB
-            }
             val langPath = when (locale.language) {
-                Locale.CHINESE.language  -> ""
+                Locale.CHINESE.language -> ""
                 Locale.JAPANESE.language -> "/ja"
-                Locale.KOREAN.language   -> "/ko"
-                else                     -> "/en"
+                Locale.KOREAN.language -> "/ko"
+                else -> "/en"
             }
 
-            return "$baseUrl$langPath"
+            return "$BASE_URL_GITHUB$langPath"
         }
 
         fun getStartedUrl(locale: Locale = Locale.getDefault()): String {
