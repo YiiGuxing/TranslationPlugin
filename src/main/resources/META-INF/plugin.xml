@@ -12,7 +12,7 @@
       <a href="https://plugins.jetbrains.com/plugin/8579-translation">Website</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
       <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a> |
-      <a href="https://yiiguxing.gitee.io/translation-plugin/start.html">Doc</a> |
+      <a href="https://yiiguxing.github.io/TranslationPlugin/start.html">Doc</a> |
       <a href="https://plugins.jetbrains.com/plugin/8579-translation/support-donate">Donate</a>
       </b>
       </p>
@@ -47,9 +47,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>原文与译文文本区域滚动同步</li>
-        <li>用户体验优化调整</li>
-        <li>修复了一些问题</li>
+        <li>中添加了 Android Studio strings.xml 文件翻译的功能</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
