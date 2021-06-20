@@ -13,11 +13,11 @@ abstract class LanguageListModel : AbstractListModel<Lang>(), ComboBoxModel<Lang
     abstract var selected: Lang?
 
     companion object {
-        fun sorted(languages: Collection<Lang>, selection: Lang? = null): LanguageListModel =
-                SortedLanguageListModel(languages, selection)
+        fun sorted(languages: Collection<Lang>, selection: Lang? = languages.firstOrNull()): LanguageListModel =
+            SortedLanguageListModel(languages, selection)
 
         fun simple(languages: List<Lang>): LanguageListModel =
-                SimpleLanguageListModel(languages)
+            SimpleLanguageListModel(languages)
     }
 }
 
@@ -35,14 +35,13 @@ private class SimpleLanguageListModel(private val languages: List<Lang>) : Langu
     override fun getSelectedItem(): Lang? = selected
 }
 
-private class SortedLanguageListModel(languages: Collection<Lang>, selection: Lang? = null)
-    : LanguageListModel() {
+private class SortedLanguageListModel(languages: Collection<Lang>, selection: Lang? = null) : LanguageListModel() {
 
     private val appStorage = AppStorage
 
     private val languageList: MutableList<Lang> = ArrayList(languages).apply { sort() }
 
-    override var selected: Lang? = selection ?: languageList.firstOrNull()
+    override var selected: Lang? = selection
         set(value) {
             if (field != value) {
                 field = value?.apply { score += 1 }

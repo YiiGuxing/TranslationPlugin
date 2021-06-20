@@ -85,6 +85,7 @@
     <depends optional="true" config-file="xml-doc.xml">com.intellij.modules.xml</depends>
     <depends optional="true" config-file="xpath-doc.xml">XPathView</depends>
     <depends optional="true" config-file="yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
+    <depends optional="true" config-file="as.xml">com.intellij.modules.androidstudio</depends>
 
     <extensionPoints>
         <extensionPoint name="ignoredDocumentationElementsProvider"

@@ -1,0 +1,11 @@
+<idea-plugin>
+    <actions>
+        <action id="$TranslateAndroidStringResourcesAction"
+                icon="Icons.Translation"
+                text="Translate String Resources"
+                class="cn.yiiguxing.plugin.translate.action.TranslateAndroidStringResourcesAction">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
