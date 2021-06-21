@@ -4,6 +4,7 @@
 | -------- | -------- | ------------ |
 | CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 650 USD |
 | Takahisa Ishida | | 20 USD |
+| 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
