@@ -316,6 +316,7 @@ Support this project with your organization. Your logo will show up here with a 
 
 | **姓名** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
@@ -325,6 +326,5 @@ Support this project with your organization. Your logo will show up here with a 
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
 
 [更多捐赠者][financial-contributors]
