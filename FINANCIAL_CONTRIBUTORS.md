@@ -9,6 +9,7 @@
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| 一个李大壮罢了 | | 50 CNY |
 | Songc | [www.zdone.com](https://www.zdone.com) | 50 CNY |
 | Wangyangisgood | | 50 CNY |
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
