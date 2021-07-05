@@ -1,6 +1,6 @@
 # 捐赠者
 
-| **姓名** | **网站** | **捐赠总额** |
+| **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
 | CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 700 USD |
 | JetBrains | [www.jetbrains.com](https://jb.gg/OpenSource) | 696 USD |
