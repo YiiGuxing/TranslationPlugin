@@ -321,11 +321,11 @@ Support this project with your organization. Your logo will show up here with a 
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| Sampan | [gitlab.com/SamuelPan](http://gitlab.com/SamuelPan) | 50 CNY |
 | 一个李大壮罢了 | | 50 CNY |
 | Songc | [www.zdone.com](https://www.zdone.com) | 50 CNY |
 | Wangyangisgood | | 50 CNY |
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
-| 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 
 [更多捐赠者][financial-contributors]
