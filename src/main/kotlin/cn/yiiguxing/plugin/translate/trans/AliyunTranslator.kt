@@ -127,15 +127,8 @@ object AliyunTranslator : AbstractTranslator() {
         }
 
         val url = getRequestUrl(`in`, srcLang, targetLang, isDocumentation)
-        val body = """
-            {
-            "FormatType": "text",
-            "SourceLanguage": "${srcLang.aliyunCode}",
-            "TargetLanguage": "${targetLang.aliyunCode}",
-            "SourceText": "$`in`",
-            "Scene": "general"
-            }
-        """.trimIndent()
+
+        val body = Gson().toJson(AliyunRequest(`in`, srcLang.aliyunCode, targetLang.aliyunCode))
 
         val realUrl = URL(url)
         val accept = "application/json"

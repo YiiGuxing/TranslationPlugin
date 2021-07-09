@@ -34,3 +34,20 @@ data class AliyunTranslationResponse(
     @SerializedName("Translated")
     val translation: String
 )
+
+/**
+ * 序列化json模型
+ */
+@Suppress("MemberVisibilityCanBePrivate")
+data class AliyunRequest constructor(
+    @SerializedName("SourceText")
+    val sourceText: String,
+    @SerializedName("SourceLanguage")
+    val sourceLanguage: String,
+    @SerializedName("TargetLanguage")
+    val targetLanguage: String,
+    @SerializedName("FormatType")
+    val formatType: String = "text",
+    @SerializedName("Scene")
+    val scene: String = "general"
+)
