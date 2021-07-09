@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.TencentTranslator
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
@@ -55,6 +52,11 @@ class Settings : PersistentStateComponent<Settings> {
      * 腾讯翻译选项
      */
     var tencentTranslateSettings: TencentTranslateSettings = TencentTranslateSettings()
+
+    /**
+     * 阿里云翻译选项
+     */
+    var aliyunTranslateSettings: AliyunTranslateSettings = AliyunTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -184,6 +186,8 @@ private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val TENCENT_SERVICE_NAME = "YIIGUXING.TRANSLATION.TENCENT"
 private const val TENCENT_APP_KEY = "TENCENT_APP_KEY"
+private const val ALIYUN_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALIYUN"
+private const val ALIYUN_APP_KEY = "ALIYUN_APP_KEY"
 
 private val settingsChangePublisher: SettingsChangeListener =
     ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
@@ -255,6 +259,15 @@ class TencentTranslateSettings : AppKeySettings(
     TencentTranslator.defaultLangForLocale,
     securityName = TENCENT_SERVICE_NAME,
     securityKey = TENCENT_APP_KEY,
+)
+
+/**
+ * 阿里云翻译选项
+ */
+class AliyunTranslateSettings : AppKeySettings(
+    AliyunTranslator.defaultLangForLocale,
+    securityName = ALIYUN_SERVICE_NAME,
+    securityKey = ALIYUN_APP_KEY,
 )
 
 enum class TTSSource(val displayName: String) {

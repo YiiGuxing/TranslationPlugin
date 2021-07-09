@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.MyDynamicBundle
-import com.intellij.DynamicBundle
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
@@ -29,7 +28,8 @@ enum class Lang(
     val code: String,
     youdaoCode: String? = null,
     baiduCode: String? = null,
-    tencentCode: String? = null
+    tencentCode: String? = null,
+    aliyunCode: String? = null,
 ) {
 
     /** 自动检测 */
@@ -42,19 +42,20 @@ enum class Lang(
         youdaoCode = "zh-CHS",
         baiduCode = "zh",
         tencentCode = "zh",
+        aliyunCode = "zh",
     ),
 
     /** 英语 */
     ENGLISH("english", "en"),
 
     /** 中文(繁体) */
-    CHINESE_TRADITIONAL("chinese.traditional", "zh-TW", baiduCode = "cht"),
+    CHINESE_TRADITIONAL("chinese.traditional", "zh-TW", baiduCode = "cht", aliyunCode = "zh-tw"),
 
     /** 文言文 */
     CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL", baiduCode = "wyw"),
 
     /** 粤语 */
-    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", youdaoCode = "yue", baiduCode = "yue"),
+    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", youdaoCode = "yue", baiduCode = "yue", aliyunCode = "yue"),
 
     /** 阿尔巴尼亚语 */
     ALBANIAN("albanian", "sq"),
@@ -111,7 +112,7 @@ enum class Lang(
     FRENCH("french", "fr", baiduCode = "fra"),
 
     /** 菲律宾语 */
-    FILIPINO("filipino", "tl"),
+    FILIPINO("filipino", "tl", aliyunCode = "fil"),
 
     /** 芬兰语 */
     FINNISH("finnish", "fi", baiduCode = "fin"),
@@ -162,7 +163,7 @@ enum class Lang(
     CORSICAN("corsican", "co"),
 
     /** 克罗地亚语 */
-    CROATIAN("croatian", "hr"),
+    CROATIAN("croatian", "hr", aliyunCode = "hbs"),
 
     /** 库尔德语 */
     KURDISH("kurdish", "ku"),
@@ -305,14 +306,14 @@ enum class Lang(
     /** 乌克兰语 */
     UKRAINIAN("ukrainian", "uk"),
 
-    /** 乌兹别克语 */
+    /** 乌兹别克语(乌孜别克语) */
     UZBEK("uzbek", "uz"),
 
     /** 西班牙语 */
     SPANISH("spanish", "es", baiduCode = "spa"),
 
     /** 希伯来语 */
-    HEBREW("hebrew", "iw", youdaoCode = "he"),
+    HEBREW("hebrew", "iw", youdaoCode = "he", aliyunCode = "he"),
 
     /** 希腊语 */
     GREEK("greek", "el"),
@@ -363,6 +364,7 @@ enum class Lang(
     val youdaoCode: String = youdaoCode ?: code
     val baiduCode: String = baiduCode ?: code
     val tencentCode: String = tencentCode ?: code
+    val aliyunCode: String = aliyunCode ?: code
 
     companion object {
         private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
@@ -404,6 +406,10 @@ enum class Lang(
 
         fun valueOfTencentCode(code: String): Lang = values()
             .find { it.tencentCode.equals(code, ignoreCase = true) }
+            ?: throw IllegalArgumentException("Unknown language code:$code")
+
+        fun valueOfAliyunCode(code: String): Lang = values()
+            .find { it.aliyunCode.equals(code, ignoreCase = true) }
             ?: throw IllegalArgumentException("Unknown language code:$code")
     }
 }
