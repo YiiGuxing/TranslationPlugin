@@ -3,7 +3,9 @@ package cn.yiiguxing.plugin.translate.documentation
 import cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.lang.Language
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressManager
 import org.jetbrains.concurrency.runAsync
 import java.util.concurrent.TimeoutException
@@ -22,7 +24,7 @@ class TranslateDocumentationTask(
     //execute on a different thread outside read action
     private val promise = runAsync {
         translator.getTranslatedDocumentation(text, language)
-    }
+    }.onError { LOG.w(it) }
 
     fun onSuccess(callback: (String) -> Unit) {
         promise.onSuccess(callback)
@@ -45,5 +47,9 @@ class TranslateDocumentationTask(
 
         //translation is not ready yet, show original documentation
         return null
+    }
+
+    companion object {
+        private val LOG = Logger.getInstance(TranslateDocumentationTask::class.java)
     }
 }
