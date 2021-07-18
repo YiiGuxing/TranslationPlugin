@@ -56,10 +56,10 @@ class TranslationUIManager private constructor() : Disposable {
         }
 
         private fun <T> Ref<T>.clearOnDispose(disposable: Disposable) {
-            Disposer.register(disposable, {
+            Disposer.register(disposable) {
                 checkThread()
                 set(null)
-            })
+            }
         }
 
         fun instance(project: Project?): TranslationUIManager {
