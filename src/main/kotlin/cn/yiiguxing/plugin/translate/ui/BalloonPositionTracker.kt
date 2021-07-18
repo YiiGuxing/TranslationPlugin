@@ -20,10 +20,10 @@ class BalloonPositionTracker(
     private var lastLocation: RelativePoint? = null
 
     init {
-        Disposer.register(this, {
+        Disposer.register(this) {
             lastLocation = null
             caretRangeMarker.dispose()
-        })
+        }
     }
 
     override fun recalculateLocation(balloon: Balloon): RelativePoint {

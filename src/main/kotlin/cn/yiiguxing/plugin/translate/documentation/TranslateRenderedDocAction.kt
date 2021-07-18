@@ -63,6 +63,7 @@ internal class TranslateRenderedDocAction(
             val docRenderManagerClass = DocRenderManager::class.java
             val field = docRenderManagerClass.getDeclaredField("DOC_RENDER_ENABLED")
             field.isAccessible = true
+            @Suppress("UNCHECKED_CAST")
             val key = field.get(null) as? Key<Boolean>
             field.isAccessible = false
             key

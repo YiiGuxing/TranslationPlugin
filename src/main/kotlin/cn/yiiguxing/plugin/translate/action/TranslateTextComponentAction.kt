@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.DataContext
