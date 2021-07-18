@@ -10,11 +10,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.project.DumbAware
-import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.TextRange
 import com.intellij.ui.JBColor
-import java.util.*
 
 /**
  * 翻译动作
@@ -74,7 +72,7 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
         try {
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val tracker = BalloonPositionTracker(editor, caretRangeMarker)
-            val balloon = TranslationUIManager.showBalloon(editor, text, tracker, Balloon.Position.below)
+            val balloon = TranslationUIManager.showBalloon(editor, text, tracker)
 
             if (balloon.disposed) {
                 markupModel.removeHighlighters(highlighters)

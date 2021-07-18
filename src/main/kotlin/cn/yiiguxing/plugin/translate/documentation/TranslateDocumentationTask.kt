@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.lang.Language
 import com.intellij.openapi.diagnostic.Logger
@@ -40,7 +40,7 @@ class TranslateDocumentationTask(
             } catch (t: TimeoutException) {
                 //ignore
             } catch (e: Throwable) {
-                TranslateDocumentationAction.showWarning(e, null)
+                invokeLater { DocNotifications.showWarning(e, null) }
                 return null
             }
         }
