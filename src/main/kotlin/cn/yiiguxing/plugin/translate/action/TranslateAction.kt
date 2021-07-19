@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.util.Disposer
@@ -59,17 +60,19 @@ open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(c
         }
 
         val highlighters = ArrayList<RangeHighlighter>(starts.size)
-        for (i in starts.indices) {
-            highlighters += markupModel.addRangeHighlighter(
-                starts[i],
-                ends[i],
-                HighlighterLayer.SELECTION - 1,
-                highlightAttributes,
-                HighlighterTargetArea.EXACT_RANGE
-            )
-        }
-
         try {
+            for (i in starts.indices) {
+                highlighters += markupModel.addRangeHighlighter(
+                    starts[i],
+                    ends[i],
+                    HighlighterLayer.SELECTION - 1,
+                    highlightAttributes,
+                    HighlighterTargetArea.EXACT_RANGE
+                )
+            }
+
+            editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val tracker = BalloonPositionTracker(editor, caretRangeMarker)
             val balloon = TranslationUIManager.showBalloon(editor, text, tracker)
