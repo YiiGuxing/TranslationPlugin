@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
+import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -17,14 +17,13 @@ import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
 
-class TranslateRenderedDocSelectionAction : AnAction("Translate Selection") {
+class TranslateRenderedDocSelectionAction : AnAction() {
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
     init {
         templatePresentation.icon = Icons.Translation
         templatePresentation.text = adaptedMessage("action.TranslateRenderedDocSelectionAction.text")
-        templatePresentation.description = message("action.TranslateRenderedDocSelectionAction.description")
     }
 
     override fun update(e: AnActionEvent) {
@@ -42,7 +41,7 @@ class TranslateRenderedDocSelectionAction : AnAction("Translate Selection") {
     override fun actionPerformed(e: AnActionEvent) {
         val editor = e.editor ?: return
         val editorPane = getPaneWithSelection(null, editor) as? JEditorPane
-        val selectedText = editorPane?.selectedText
+        val selectedText = editorPane?.selectedText?.processBeforeTranslate()
         if (selectedText.isNullOrBlank()) {
             return
         }

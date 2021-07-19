@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction
-import cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction
 import cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction
+import cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction
 import com.intellij.codeInsight.documentation.DocumentationActionProvider
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.openapi.actionSystem.AnAction
@@ -18,8 +18,8 @@ class TranslateDocumentationActionProvider : DocumentationActionProvider {
     ): List<AnAction> {
         return listOf(
             Separator(),
-            TranslateRenderedDocAction(editor, docComment),
-            TranslateRenderedDocSelectionAction()
+            TranslateRenderedDocSelectionAction(),
+            TranslateRenderedDocAction(editor, docComment)
         )
     }
 
