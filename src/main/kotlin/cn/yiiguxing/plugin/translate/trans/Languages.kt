@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.MyDynamicBundle
-import com.intellij.DynamicBundle
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
@@ -295,6 +294,9 @@ enum class Lang(
 
     /** 土耳其语 */
     TURKISH("turkish", "tr"),
+
+    /** 土库曼语 */
+    TURKMEN("turkmen", "tk"),
 
     /** 威尔士语 */
     WELSH("welsh", "cy"),
