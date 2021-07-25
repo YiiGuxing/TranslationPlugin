@@ -9,7 +9,7 @@
 [![Downloads][downloads-img]][plugin]
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
-<p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio.</b></p>
+<p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
 
 ## Features
