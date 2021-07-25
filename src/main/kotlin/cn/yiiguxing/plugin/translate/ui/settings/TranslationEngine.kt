@@ -19,7 +19,7 @@ enum class TranslationEngine(
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
     YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000),
-    TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.Tencent, 2000, 400);
+    TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.TencentMachineTranslation, 2000, 400);
 
     var primaryLanguage: Lang
         get() {
@@ -84,7 +84,7 @@ enum class TranslationEngine(
             TENCENT -> AppKeySettingsDialog(
                 message("settings.tencent.title"),
                 AppKeySettingsPanel(
-                    Icons.load("/image/tencent_translate_logo.png"),
+                    Icons.load("/image/tencent_translate_logo.svg"),
                     TENCENT_CAPI_URL,
                     Settings.tencentTranslateSettings
                 )
