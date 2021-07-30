@@ -152,6 +152,8 @@ class Settings : PersistentStateComponent<Settings> {
 
     var translateDocumentation: Boolean = false
 
+    var showReplacementActionInContextMenu: Boolean = true
+
     var showActionsInContextMenuOnlyWithSelection: Boolean = true
 
     var primaryFontPreviewText = message("settings.font.default.preview.text")
