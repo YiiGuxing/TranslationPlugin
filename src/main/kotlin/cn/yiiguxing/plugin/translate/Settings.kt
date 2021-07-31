@@ -56,7 +56,7 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 阿里云翻译选项
      */
-    var aliyunTranslateSettings: AliyunTranslateSettings = AliyunTranslateSettings()
+    var aliTranslateSettings: AliTranslateSettings = AliTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -186,8 +186,8 @@ private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val TENCENT_SERVICE_NAME = "YIIGUXING.TRANSLATION.TENCENT"
 private const val TENCENT_APP_KEY = "TENCENT_APP_KEY"
-private const val ALIYUN_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALIYUN"
-private const val ALIYUN_APP_KEY = "ALIYUN_APP_KEY"
+private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
+private const val ALI_APP_KEY = "ALI_APP_KEY"
 
 private val settingsChangePublisher: SettingsChangeListener =
     ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
@@ -264,10 +264,10 @@ class TencentTranslateSettings : AppKeySettings(
 /**
  * 阿里云翻译选项
  */
-class AliyunTranslateSettings : AppKeySettings(
-    AliyunTranslator.defaultLangForLocale,
-    securityName = ALIYUN_SERVICE_NAME,
-    securityKey = ALIYUN_APP_KEY,
+class AliTranslateSettings : AppKeySettings(
+    AliTranslator.defaultLangForLocale,
+    securityName = ALI_SERVICE_NAME,
+    securityKey = ALI_APP_KEY,
 )
 
 enum class TTSSource(val displayName: String) {

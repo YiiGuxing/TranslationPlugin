@@ -20,7 +20,7 @@ enum class TranslationEngine(
     YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000),
     TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.Tencent, 2000, 400),
-    ALIYUN("fanyi.aliyun", message("translator.name.aliyun"), Icons.Aliyun, 2000, 400);
+    ALI("translate.ali", message("translator.name.ali"), Icons.Aliyun, 2000, 400);
 
     var primaryLanguage: Lang
         get() {
@@ -29,7 +29,7 @@ enum class TranslationEngine(
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage
                 TENCENT -> Settings.tencentTranslateSettings.primaryLanguage
-                ALIYUN -> Settings.aliyunTranslateSettings.primaryLanguage
+                ALI -> Settings.aliTranslateSettings.primaryLanguage
             }
         }
         set(value) {
@@ -38,7 +38,7 @@ enum class TranslationEngine(
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage = value
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage = value
                 TENCENT -> Settings.tencentTranslateSettings.primaryLanguage = value
-                ALIYUN -> Settings.aliyunTranslateSettings.primaryLanguage = value
+                ALI -> Settings.aliTranslateSettings.primaryLanguage = value
             }
         }
 
@@ -49,7 +49,7 @@ enum class TranslationEngine(
                 YOUDAO -> YoudaoTranslator
                 BAIDU -> BaiduTranslator
                 TENCENT -> TencentTranslator
-                ALIYUN -> AliyunTranslator
+                ALI -> AliTranslator
             }
         }
 
@@ -61,7 +61,7 @@ enum class TranslationEngine(
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             TENCENT -> isConfigured(Settings.tencentTranslateSettings)
-            ALIYUN -> isConfigured(Settings.aliyunTranslateSettings)
+            ALI -> isConfigured(Settings.aliTranslateSettings)
         }
     }
 
@@ -94,12 +94,12 @@ enum class TranslationEngine(
                     Settings.tencentTranslateSettings
                 )
             ).showAndGet()
-            ALIYUN -> AppKeySettingsDialog(
+            ALI -> AppKeySettingsDialog(
                 message("settings.aliyun.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/aliyun_translate_logo.png"),
-                    ALIYUN_CAPI_URL,
-                    Settings.aliyunTranslateSettings
+                    ALI_CAPI_URL,
+                    Settings.aliTranslateSettings
                 )
             ).showAndGet()
             else -> true

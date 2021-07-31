@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.trans
 import com.google.gson.annotations.SerializedName
 
 @Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")
-data class AliyunTranslation(
+data class AliTranslation(
     var query: String = "",
     var src: Lang,
     var target: Lang,
@@ -12,7 +12,7 @@ data class AliyunTranslation(
     @SerializedName("Code")
     val code: Int = 0,
     @SerializedName("Data")
-    val data: AliyunTranslationResponse,
+    val data: AliTranslationData,
     @SerializedName("Message")
     val errorMessage: String,
 ) : TranslationAdapter {
@@ -26,11 +26,9 @@ data class AliyunTranslation(
     }
 }
 
-data class AliyunTranslationResponse(
-
+data class AliTranslationData(
     @SerializedName("WordCount")
     val wordCount: Int? = 0,
-
     @SerializedName("Translated")
     val translation: String
 )
@@ -39,7 +37,7 @@ data class AliyunTranslationResponse(
  * 序列化json模型
  */
 @Suppress("MemberVisibilityCanBePrivate")
-data class AliyunRequest constructor(
+data class AliTranslationRequest constructor(
     @SerializedName("SourceText")
     val sourceText: String,
     @SerializedName("SourceLanguage")

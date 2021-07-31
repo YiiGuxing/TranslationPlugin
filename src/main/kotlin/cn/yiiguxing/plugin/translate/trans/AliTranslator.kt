@@ -1,9 +1,12 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.ALIYUN_TRANSLATE_URL
+import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALIYUN
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
+import cn.yiiguxing.plugin.translate.util.CacheService
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.w
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
@@ -17,7 +20,8 @@ import javax.swing.Icon
 import javax.xml.bind.DatatypeConverter
 
 
-object AliyunTranslator : AbstractTranslator() {
+// https://www.aliyun.com/product/ai/base_alimt
+object AliTranslator : AbstractTranslator() {
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
         Lang.CHINESE,
@@ -58,20 +62,20 @@ object AliyunTranslator : AbstractTranslator() {
         Lang.MALAY
     )
 
-    private val logger: Logger = Logger.getInstance(AliyunTranslator::class.java)
+    private val logger: Logger = Logger.getInstance(AliTranslator::class.java)
 
-    override val id: String = ALIYUN.id
+    override val id: String = ALI.id
 
-    override val name: String = ALIYUN.translatorName
+    override val name: String = ALI.translatorName
 
-    override val icon: Icon = ALIYUN.icon
+    override val icon: Icon = ALI.icon
 
-    override val intervalLimit: Int = ALIYUN.intervalLimit
+    override val intervalLimit: Int = ALI.intervalLimit
 
-    override val contentLengthLimit: Int = ALIYUN.contentLengthLimit
+    override val contentLengthLimit: Int = ALI.contentLengthLimit
 
     override val primaryLanguage: Lang
-        get() = ALIYUN.primaryLanguage
+        get() = ALI.primaryLanguage
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
         .toMutableList()
@@ -79,8 +83,8 @@ object AliyunTranslator : AbstractTranslator() {
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.aliyunTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
-            return ALIYUN.showConfigurationDialog()
+        if (force || Settings.aliTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+            return ALI.showConfigurationDialog()
         }
 
         return true
@@ -91,7 +95,7 @@ object AliyunTranslator : AbstractTranslator() {
         srcLang: Lang,
         targetLang: Lang,
         isDocumentation: Boolean
-    ): String = ALIYUN_TRANSLATE_URL
+    ): String = ALI_TRANSLATE_URL
 
     /**
      * 获得请求参数-不适用
@@ -128,7 +132,7 @@ object AliyunTranslator : AbstractTranslator() {
 
         val url = getRequestUrl(`in`, srcLang, targetLang, isDocumentation)
 
-        val body = Gson().toJson(AliyunRequest(`in`, srcLang.aliyunCode, targetLang.aliyunCode))
+        val body = Gson().toJson(AliTranslationRequest(`in`, srcLang.aliyunCode, targetLang.aliyunCode))
 
         val realUrl = URL(url)
         val accept = "application/json"
@@ -148,7 +152,7 @@ object AliyunTranslator : AbstractTranslator() {
             ${realUrl.file}
             """.trimIndent()
 
-        val settings = Settings.aliyunTranslateSettings
+        val settings = Settings.aliTranslateSettings
 
         return HttpRequests.post(url, contentType)
             .connect {
@@ -178,7 +182,7 @@ object AliyunTranslator : AbstractTranslator() {
         isDocumentation: Boolean
     ): BaseTranslation {
         logger.i("Translate result: $result")
-        return Gson().fromJson(result, AliyunTranslation::class.java).apply {
+        return Gson().fromJson(result, AliTranslation::class.java).apply {
             query = original
             src = srcLang
             target = targetLang
