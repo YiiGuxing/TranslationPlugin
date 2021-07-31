@@ -197,17 +197,17 @@ object AliTranslator : AbstractTranslator() {
         is TranslateResultException -> when (throwable.code) {
             10001 -> message("error.request.timeout")
             10002 -> message("error.systemError")
-            10003 -> message("error.aliyun.decode")
+            10003 -> message("error.bad.request")
             10004 -> message("error.missingParameter")
             10005 -> message("error.language.unsupported")
-            10006 -> message("error.aliyun.detectingLanguage")
-            10007 -> message("error.aliyun.translating")
+            10006 -> message("error.ali.language.detecting.failed")
+            10007 -> message("error.systemError")
             10008 -> message("error.text.too.long")
-            10009 -> message("error.aliyun.permission")
+            10009 -> message("error.ali.permission.denied")
             10010 -> message("error.service.is.down")
-            10011 -> message("error.aliyun.subAccountService")
-            10012 -> message("error.aliyun.translationService")
-            10013 -> message("error.account.has.run.out.of.balance")//"账号服务没有开通或者欠费"
+            10011 -> message("error.systemError")
+            10012 -> message("error.systemError")
+            10013 -> message("error.account.has.run.out.of.balance")
             else -> message("error.unknown") + "[${throwable.code}]"
         }
         else -> super.createErrorMessage(throwable)

@@ -96,7 +96,7 @@ object Icons {
 
     @JvmField
     @Suppress("SpellCheckingInspection")
-    val Aliyun: Icon = load("/icons/aliyun.svg")
+    val Ali: Icon = load("/icons/aliyun.svg")
 
     @JvmField
     val Support: Icon = load("/icons/support.svg")

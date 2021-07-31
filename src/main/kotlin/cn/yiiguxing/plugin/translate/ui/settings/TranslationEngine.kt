@@ -20,7 +20,7 @@ enum class TranslationEngine(
     YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000),
     TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.TencentMachineTranslation, 2000, 400),
-    ALI("translate.ali", message("translator.name.ali"), Icons.Aliyun, 2000, 400);
+    ALI("translate.ali", message("translator.name.ali"), Icons.Ali, 2000, 400);
 
     var primaryLanguage: Lang
         get() {
@@ -95,7 +95,7 @@ enum class TranslationEngine(
                 )
             ).showAndGet()
             ALI -> AppKeySettingsDialog(
-                message("settings.aliyun.title"),
+                message("settings.ali.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/aliyun_translate_logo.png"),
                     ALI_CAPI_URL,
