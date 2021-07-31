@@ -56,10 +56,10 @@ class TranslationUIManager private constructor() : Disposable {
         }
 
         private fun <T> Ref<T>.clearOnDispose(disposable: Disposable) {
-            Disposer.register(disposable, {
+            Disposer.register(disposable) {
                 checkThread()
                 set(null)
-            })
+            }
         }
 
         fun instance(project: Project?): TranslationUIManager {
@@ -100,7 +100,12 @@ class TranslationUIManager private constructor() : Disposable {
          * @param position 气泡位置
          * @return 气泡实例
          */
-        fun showBalloon(editor: Editor, text: String, tracker: PositionTracker<Balloon>, position: Balloon.Position)
+        fun showBalloon(
+            editor: Editor,
+            text: String,
+            tracker: PositionTracker<Balloon>,
+            position: Balloon.Position = Balloon.Position.below
+        )
                 : TranslationBalloon {
             checkThread()
             val project = editor.project

@@ -10,7 +10,6 @@ import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.documentation.QuickDocUtil
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
 import com.intellij.openapi.project.Project
@@ -20,7 +19,7 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
 
 open class ToggleQuickDocTranslationAction :
-    ToggleAction({ adaptedMessage("settings.options.translate.documentation") }, Icons.Translation),
+    FixedIconToggleAction(Icons.Documentation, { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }),
     HintManagerImpl.ActionToIgnore {
 
     override fun update(e: AnActionEvent) {

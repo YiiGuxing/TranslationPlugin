@@ -69,9 +69,10 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val editor = e.editor?.takeIf { it.document.isWritable } ?: return false
         val selectionModel = editor.selectionModel
         if (selectionModel.hasSelection()) {
-            return selectionModel.selectedText?.any(JAVA_IDENTIFIER_PART_CONDITION) ?: false
+            return showReplacementActionInContextMenu(e) &&
+                    selectionModel.selectedText?.any(JAVA_IDENTIFIER_PART_CONDITION) ?: false
         }
-        return mayTranslateWithNoSelection(e) && super.onUpdate(e)
+        return mayTranslateWithNoSelection(e) && showReplacementActionInContextMenu(e) && super.onUpdate(e)
     }
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {

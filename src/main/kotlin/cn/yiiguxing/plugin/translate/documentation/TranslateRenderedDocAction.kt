@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.action.FixedIconToggleAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import com.intellij.codeInsight.documentation.render.DocRenderManager
 import com.intellij.codeInsight.documentation.render.DocRenderPassFactory
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Editor
@@ -17,7 +17,7 @@ import icons.Icons
 internal class TranslateRenderedDocAction(
     val editor: Editor,
     private val docComment: PsiDocCommentBase
-) : ToggleAction({ adaptedMessage("translate") }, Icons.Translation) {
+) : FixedIconToggleAction(Icons.Documentation, { adaptedMessage("action.TranslateRenderedDocAction.text") }) {
 
     override fun isSelected(event: AnActionEvent): Boolean {
         return TranslatedDocComments.isTranslated(docComment)
@@ -63,6 +63,7 @@ internal class TranslateRenderedDocAction(
             val docRenderManagerClass = DocRenderManager::class.java
             val field = docRenderManagerClass.getDeclaredField("DOC_RENDER_ENABLED")
             field.isAccessible = true
+            @Suppress("UNCHECKED_CAST")
             val key = field.get(null) as? Key<Boolean>
             field.isAccessible = false
             key

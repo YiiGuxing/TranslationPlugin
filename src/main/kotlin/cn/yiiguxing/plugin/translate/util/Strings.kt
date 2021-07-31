@@ -8,8 +8,6 @@ package cn.yiiguxing.plugin.translate.util
 import java.net.URLEncoder
 import java.security.MessageDigest
 
-fun String?.isNullOrBlank() = (this as CharSequence?).isNullOrBlank()
-
 
 private val REGEX_UNDERLINE = Regex("([A-Za-z])_+([A-Za-z])")
 private val REGEX_NUM_WORD = Regex("([0-9])([A-Za-z])")

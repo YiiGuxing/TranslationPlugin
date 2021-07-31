@@ -166,6 +166,9 @@
         <action id="$TranslateQuickDocAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction"
                 use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$TranslateDocRenderSelectionAction"
+                class="cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction"
+                use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TranslateTextComponent"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 use-shortcut-of="$EditorTranslateAction"/>

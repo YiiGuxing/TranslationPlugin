@@ -15,7 +15,6 @@ import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
@@ -92,7 +91,7 @@ class TranslationBalloon(
         Disposer.register(TranslationUIManager.disposable(project), balloon)
         // 如果使用`Disposer.register(balloon, this)`的话，
         // `TranslationBalloon`在外部以子`Disposable`再次注册时将会使之无效。
-        Disposer.register(balloon, { Disposer.dispose(this) })
+        Disposer.register(balloon) { Disposer.dispose(this) }
         Disposer.register(this, processPane)
         Disposer.register(this, translationPane)
 
@@ -231,7 +230,6 @@ class TranslationBalloon(
         if (!isShowing) {
             isShowing = true
 
-            editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
             Disposer.register(this, tracker)
             balloon.show(tracker, position)
 

@@ -20,10 +20,10 @@ class BalloonPositionTracker(
     private var lastLocation: RelativePoint? = null
 
     init {
-        Disposer.register(this, {
+        Disposer.register(this) {
             lastLocation = null
             caretRangeMarker.dispose()
-        })
+        }
     }
 
     override fun recalculateLocation(balloon: Balloon): RelativePoint {
@@ -56,7 +56,7 @@ private fun Editor.getBalloonLocation(caretRangeMarker: RangeMarker): Point? {
     val y = endPoint.y + lineHeight
 
     return scrollingModel.visibleArea.let {
-        if (!it.contains(x, y) && !it.contains(x, y - lineHeight)) null else Point(x, y)
+        if (it.contains(x, y)) Point(x, y) else null
     }
 }
 

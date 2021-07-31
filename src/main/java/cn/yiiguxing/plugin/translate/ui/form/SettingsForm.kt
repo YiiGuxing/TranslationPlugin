@@ -110,6 +110,7 @@ abstract class SettingsForm {
 
     protected val showWordFormsCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordForms"))
     protected val autoReplaceCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoReplace"))
+    protected val showReplacementActionCheckBox: JBCheckBox = JBCheckBox(message("settings.options.show.replacement.action"))
     protected val selectTargetLanguageCheckBox: JBCheckBox = JBCheckBox(message("settings.options.selectLanguage"))
     protected val showWordsOnStartupCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordsOnStartup"))
     protected val showExplanationCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showExplanation"))
@@ -201,6 +202,7 @@ abstract class SettingsForm {
         }
 
         val translateAndReplacePanel = titledPanel(message("settings.panel.title.translate.and.replace")) {
+            add(showReplacementActionCheckBox, wrap().span(2))
             add(selectTargetLanguageCheckBox, wrap().span(2))
             add(autoReplaceCheckBox, wrap().span(2))
             add(JLabel(message("settings.label.separators")).apply {

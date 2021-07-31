@@ -297,6 +297,9 @@ enum class Lang(
     /** 土耳其语 */
     TURKISH("turkish", "tr"),
 
+    /** 土库曼语 */
+    TURKMEN("turkmen", "tk"),
+
     /** 威尔士语 */
     WELSH("welsh", "cy"),
 

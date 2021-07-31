@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.isNullOrBlank
 import java.util.*
 
 /**

@@ -9,15 +9,16 @@ import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
+import icons.Icons
 
 /**
- * TranslateQuickDocAction
+ * Translate quick doc selection action
  */
 class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.ActionToIgnore {
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = adaptedMessage("translate")
+        templatePresentation.text = adaptedMessage("action.TranslateQuickDocSelectionAction.text")
         templatePresentation.description = message("action.description.quickDoc")
     }
 
@@ -25,16 +26,17 @@ class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.
         //don't show in toolbar, invoke via context menu or with keyboard shortcut
         //to not clash with "Translate documentation" toggle
         e.presentation.isEnabledAndVisible = quickDocHasSelection(e) && !e.isFromActionToolbar
+        e.presentation.icon = Icons.Translation
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
-                ?.processBeforeTranslate()
-                ?.let {
-                    e.project.let { project ->
-                        TranslationUIManager.showDialog(project).translate(it)
-                    }
+            ?.processBeforeTranslate()
+            ?.let {
+                e.project.let { project ->
+                    TranslationUIManager.showDialog(project).translate(it)
                 }
+            }
     }
 
     companion object {

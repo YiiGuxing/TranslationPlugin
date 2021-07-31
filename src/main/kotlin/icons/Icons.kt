@@ -92,7 +92,7 @@ object Icons {
 
     @JvmField
     @Suppress("SpellCheckingInspection")
-    val Tencent: Icon = load("/icons/tencent.svg")
+    val TencentMachineTranslation: Icon = load("/icons/tmt.svg")
 
     @JvmField
     @Suppress("SpellCheckingInspection")

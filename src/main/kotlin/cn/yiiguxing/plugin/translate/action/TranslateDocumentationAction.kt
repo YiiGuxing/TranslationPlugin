@@ -1,16 +1,17 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.documentation.DocNotifications
 import cn.yiiguxing.plugin.translate.documentation.getTranslatedDocumentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Application
+import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.DocumentationProvider
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationAction
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -83,9 +84,9 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                     }
                 }
             } catch (e: Throwable) {
-                showWarning(e, project)
                 invokeLater {
                     documentationComponentRef.get()?.hint?.cancel()
+                    DocNotifications.showWarning(e, project)
                 }
             }
         }
@@ -144,26 +145,6 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
 
         private const val MIN_HEIGHT = 50
         private val MAX_DEFAULT = JBDimension(500, 350)
-
-        fun showWarning(e: Throwable, project: Project?) {
-            invokeLater {
-                val exceptionMessage = e.message ?: ""
-                Notifications.showErrorNotification(
-                    project,
-                    message("translate.documentation.notification.title"),
-                    message("translate.documentation.error", exceptionMessage),
-                    e,
-                    DisableAutoDocTranslationAction()
-                )
-            }
-        }
-
-        class DisableAutoDocTranslationAction : NotificationAction(message("translate.documentation.disable")) {
-            override fun actionPerformed(e: AnActionEvent, notification: Notification) {
-                Settings.translateDocumentation = false
-                notification.expire()
-            }
-        }
 
         private val PsiElement.documentationProvider: DocumentationProvider
             get() = DocumentationManager.getProviderFromElement(this)

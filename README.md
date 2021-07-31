@@ -9,7 +9,7 @@
 [![Downloads][downloads-img]][plugin]
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
-<p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio.</b></p>
+<p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
 
 ## Features
@@ -236,19 +236,27 @@
   <table>
     <thead align="center">
       <tr>
-        <th>Open Collective</th>
-        <th>支付宝</th>
-        <th>微信支付</th>
+        <th><a href="https://opencollective.com/translation-plugin" target="_blank">Open Collective</a></th>
+        <th><a href="https://global.alipay.com" target="_blank">支付宝</a></th>
+        <th><a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">微信支付</a></th>
       </tr>
     </thead>
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
+      <td>
+        <a href="https://global.alipay.com" target="_blank">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay">
+        </a>
+      </td>
+      <td>
+        <a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WeChat Play">
+        </a>
+      </td>
     </tr>
   </table>
   使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
