@@ -95,8 +95,7 @@ object Icons {
     val TencentMachineTranslation: Icon = load("/icons/tmt.svg")
 
     @JvmField
-    @Suppress("SpellCheckingInspection")
-    val Ali: Icon = load("/icons/aliyun.svg")
+    val Ali: Icon = load("/icons/ali.svg")
 
     @JvmField
     val Support: Icon = load("/icons/support.svg")

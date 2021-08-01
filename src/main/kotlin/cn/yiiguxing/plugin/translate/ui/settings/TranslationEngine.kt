@@ -19,8 +19,8 @@ enum class TranslationEngine(
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
     YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000),
-    TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.TencentMachineTranslation, 2000, 400),
-    ALI("translate.ali", message("translator.name.ali"), Icons.Ali, 2000, 400);
+    ALI("translate.ali", message("translator.name.ali"), Icons.Ali, 5000),
+    TENCENT("fanyi.tencent", message("translator.name.tencent"), Icons.TencentMachineTranslation, 2000, 400);
 
     var primaryLanguage: Lang
         get() {
@@ -28,8 +28,8 @@ enum class TranslationEngine(
                 GOOGLE -> Settings.googleTranslateSettings.primaryLanguage
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage
-                TENCENT -> Settings.tencentTranslateSettings.primaryLanguage
                 ALI -> Settings.aliTranslateSettings.primaryLanguage
+                TENCENT -> Settings.tencentTranslateSettings.primaryLanguage
             }
         }
         set(value) {
@@ -37,8 +37,8 @@ enum class TranslationEngine(
                 GOOGLE -> Settings.googleTranslateSettings.primaryLanguage = value
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage = value
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage = value
-                TENCENT -> Settings.tencentTranslateSettings.primaryLanguage = value
                 ALI -> Settings.aliTranslateSettings.primaryLanguage = value
+                TENCENT -> Settings.tencentTranslateSettings.primaryLanguage = value
             }
         }
 
@@ -48,8 +48,8 @@ enum class TranslationEngine(
                 GOOGLE -> GoogleTranslator
                 YOUDAO -> YoudaoTranslator
                 BAIDU -> BaiduTranslator
-                TENCENT -> TencentTranslator
                 ALI -> AliTranslator
+                TENCENT -> TencentTranslator
             }
         }
 
@@ -60,8 +60,8 @@ enum class TranslationEngine(
             GOOGLE -> true
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
-            TENCENT -> isConfigured(Settings.tencentTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
+            TENCENT -> isConfigured(Settings.tencentTranslateSettings)
         }
     }
 
@@ -86,20 +86,20 @@ enum class TranslationEngine(
                     Settings.baiduTranslateSettings
                 )
             ).showAndGet()
+            ALI -> AppKeySettingsDialog(
+                message("settings.ali.title"),
+                AppKeySettingsPanel(
+                    Icons.load("/image/ali_translate_logo.png"),
+                    ALI_CAPI_URL,
+                    Settings.aliTranslateSettings
+                )
+            ).showAndGet()
             TENCENT -> AppKeySettingsDialog(
                 message("settings.tencent.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/tencent_translate_logo.svg"),
                     TENCENT_CAPI_URL,
                     Settings.tencentTranslateSettings
-                )
-            ).showAndGet()
-            ALI -> AppKeySettingsDialog(
-                message("settings.ali.title"),
-                AppKeySettingsPanel(
-                    Icons.load("/image/aliyun_translate_logo.png"),
-                    ALI_CAPI_URL,
-                    Settings.aliTranslateSettings
                 )
             ).showAndGet()
             else -> true
