@@ -21,7 +21,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
 
     private val state = State()
 
-    private val memoryCache = LruCache<CacheKey, Translation>(MAX_MEMORY_CACHE_SIZE)
+    private val memoryCache = LruCache<MemoryCacheKey, Translation>(MAX_MEMORY_CACHE_SIZE)
 
     override fun getState(): State = state
 
@@ -30,66 +30,44 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     }
 
     fun putMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String, translation: Translation) {
-        memoryCache.put(CacheKey(text, srcLang, targetLang, translatorId), translation)
+        memoryCache.put(MemoryCacheKey(text, srcLang, targetLang, translatorId), translation)
         if (Lang.AUTO == srcLang) {
-            memoryCache.put(CacheKey(text, translation.srcLang, targetLang, translatorId), translation)
+            memoryCache.put(MemoryCacheKey(text, translation.srcLang, targetLang, translatorId), translation)
         }
         if (Lang.AUTO == targetLang) {
-            memoryCache.put(CacheKey(text, srcLang, translation.targetLang, translatorId), translation)
+            memoryCache.put(MemoryCacheKey(text, srcLang, translation.targetLang, translatorId), translation)
         }
         if (Lang.AUTO == srcLang && Lang.AUTO == targetLang) {
-            memoryCache.put(CacheKey(text, translation.srcLang, translation.targetLang, translatorId), translation)
+            memoryCache.put(
+                MemoryCacheKey(text, translation.srcLang, translation.targetLang, translatorId),
+                translation
+            )
         }
     }
 
     fun getMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String): Translation? {
-        return memoryCache[CacheKey(text, srcLang, targetLang, translatorId)]
+        return memoryCache[MemoryCacheKey(text, srcLang, targetLang, translatorId)]
     }
 
-    fun getMemoryCacheSnapshot(): Map<CacheKey, Translation> {
+    fun getMemoryCacheSnapshot(): Map<MemoryCacheKey, Translation> {
         return memoryCache.snapshot
     }
 
-    private fun getDiskCacheKey(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        translatorId: String,
-        isDocumentation: Boolean
-    ): String {
-        return "$text:$srcLang:$targetLang:$translatorId:$isDocumentation".md5()
-    }
-
-    fun putDiskCache(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        translatorId: String,
-        isDocumentation: Boolean,
-        translation: String
-    ) {
+    fun putDiskCache(key: String, translation: String) {
         try {
-            val cacheKey = getDiskCacheKey(text, srcLang, targetLang, translatorId, isDocumentation)
             CACHE_DIR.createDirectories()
-            CACHE_DIR.resolve(cacheKey).writeSafe { it.write(translation.toByteArray()) }
-            println("DEBUG - Puts disk cache: $cacheKey")
+            CACHE_DIR.resolve(key).writeSafe { it.write(translation.toByteArray()) }
+            println("DEBUG - Puts disk cache: $key")
             trimDiskCachesIfNeed()
         } catch (e: Exception) {
             LOG.w(e)
         }
     }
 
-    fun getDiskCache(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        translatorId: String,
-        isDocumentation: Boolean
-    ): String? {
+    fun getDiskCache(key: String): String? {
         return try {
-            val cacheKey = getDiskCacheKey(text, srcLang, targetLang, translatorId, isDocumentation)
-            CACHE_DIR.resolve(cacheKey).takeIf { Files.isRegularFile(it) }?.readText()?.apply {
-                println("DEBUG - Disk cache hit: $cacheKey")
+            CACHE_DIR.resolve(key).takeIf { Files.isRegularFile(it) }?.readText()?.apply {
+                println("DEBUG - Disk cache hit: $key")
             }
         } catch (e: Exception) {
             LOG.w(e)
@@ -167,9 +145,14 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     }
 
     /**
-     * CacheKey
+     * Data class for memory cache key
      */
-    data class CacheKey(val text: String, val srcLang: Lang, val targetLang: Lang, val translator: String = "unknown")
+    data class MemoryCacheKey(
+        val text: String,
+        val srcLang: Lang,
+        val targetLang: Lang,
+        val translator: String = "unknown"
+    )
 
     data class State(@Volatile var lastTrimTime: Long = System.currentTimeMillis())
 

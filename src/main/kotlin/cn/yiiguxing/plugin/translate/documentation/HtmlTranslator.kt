@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
-import cn.yiiguxing.plugin.translate.trans.GoogleTranslator
+import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -43,7 +43,7 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
 
     val translatedDocumentation =
         try {
-            if (this is GoogleTranslator) {
+            if (this is DocumentationTranslator) {
                 getTranslatedDocumentation(document, language)
             } else {
                 getTranslatedDocumentation(document)
@@ -82,7 +82,7 @@ private fun String.fixHtml(): String = replace(
     HTML_HEAD_REPLACEMENT
 )
 
-private fun GoogleTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
+private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
@@ -107,7 +107,7 @@ private fun GoogleTranslator.getTranslatedDocumentation(document: Document, lang
         .replaceTag(TAG_I, TAG_EM)
     val translation =
         if (content.isBlank()) ""
-        else translateDocumentation(content, Lang.AUTO, primaryLanguage).translation ?: ""
+        else translateDocumentation(content, Lang.AUTO, (this as Translator).primaryLanguage).translation ?: ""
 
     body.html(translation)
     // 去除原文标签。
@@ -149,7 +149,7 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
     }
     val translation =
         if (formatted.isEmpty()) ""
-        else translateDocumentation(formatted, Lang.AUTO, primaryLanguage).translation ?: ""
+        else translate(formatted, Lang.AUTO, primaryLanguage).translation ?: ""
 
     val newBody = Element("body")
     definition?.let { newBody.appendChild(it) }

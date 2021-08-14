@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
-import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -19,7 +18,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.WindowManager
-import com.intellij.ui.HyperlinkAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
@@ -157,15 +155,10 @@ class TranslationBalloon(
             border = JBEmptyBorder(INSETS, INSETS + 10, INSETS, INSETS + 10)
             maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
 
-            addHyperlinkListener(object : HyperlinkAdapter() {
+            addHyperlinkListener(object : DefaultHyperlinkListener() {
                 override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                    if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
-                        this@TranslationBalloon.hide()
-                        OptionsConfigurable.showSettingsDialog(project)
-                    } else if (HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION == hyperlinkEvent.description) {
-                        this@TranslationBalloon.hide()
-                        presenter.translator.checkConfiguration(true)
-                    }
+                    this@TranslationBalloon.hide()
+                    super.hyperlinkActivated(hyperlinkEvent)
                 }
             })
         }

@@ -41,5 +41,13 @@ class NetworkException(host: String, cause: IOException) : IOException("${cause.
                 else -> throwable
             }
         }
+
+        fun unwrap(throwable: Throwable): Throwable {
+            return if (throwable is NetworkException) {
+                throwable.cause!!
+            } else {
+                throwable
+            }
+        }
     }
 }

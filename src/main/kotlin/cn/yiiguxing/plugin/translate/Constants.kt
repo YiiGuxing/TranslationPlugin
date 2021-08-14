@@ -53,5 +53,6 @@ const val BAIDU_FANYI_URL = "http://api.fanyi.baidu.com/api/trans/product/deskto
 const val TENCENT_TRANSLATE_URL = "https://tmt.tencentcloudapi.com"
 const val TENCENT_CAPI_URL = "https://console.cloud.tencent.com/cam/capi"
 
-const val ALI_TRANSLATE_URL = "http://mt.cn-hangzhou.aliyuncs.com/api/translate/web/general"
+const val ALI_TRANSLATE_URL = "http://mt.aliyuncs.com/api/translate/web/general"
 const val ALI_CAPI_URL = "https://usercenter.console.aliyun.com/#/manage/ak"
+const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"

@@ -1,27 +1,25 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_PRODUCT_URL
 import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
-import cn.yiiguxing.plugin.translate.util.CacheService
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.hmacSha1
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.util.md5Base64
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import java.net.URL
-import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 import javax.swing.Icon
-import javax.xml.bind.DatatypeConverter
 
 
 // https://www.aliyun.com/product/ai/base_alimt
-object AliTranslator : AbstractTranslator() {
+object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
         Lang.CHINESE,
@@ -90,55 +88,60 @@ object AliTranslator : AbstractTranslator() {
         return true
     }
 
-    override fun getRequestUrl(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): String = ALI_TRANSLATE_URL
+    override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        return SimpleTranslateClient(
+            this,
+            { _, _, _ -> call(text, srcLang, targetLang, false) },
+            ::parseTranslation
+        ).execute(text, srcLang, targetLang)
+    }
+
+    override fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation {
+        return checkError {
+            val client = SimpleTranslateClient(
+                this,
+                { _, _, _ -> call(documentation, srcLang, targetLang, true) },
+                ::parseTranslation
+            )
+            with(client) {
+                updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
+                execute(documentation, srcLang, targetLang)
+            }
+        }
+    }
 
     /**
-     * 获得请求参数-不适用
+     * 序列化json模型
      */
-    override fun getRequestParams(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): List<Pair<String, String>> = emptyList()
+    @Suppress("MemberVisibilityCanBePrivate")
+    data class AliTranslationRequest constructor(
+        @SerializedName("SourceText")
+        val sourceText: String,
+        @SerializedName("SourceLanguage")
+        val sourceLanguage: String,
+        @SerializedName("TargetLanguage")
+        val targetLanguage: String,
+        @SerializedName("FormatType")
+        val formatType: String = "text",
+        @SerializedName("Scene")
+        val scene: String = "general"
+    )
 
-    /**
-     * 重写post和签名机制
-     */
-    override fun doTranslate(
-        `in`: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): BaseTranslation {
-        if (srcLang !in supportedSourceLanguages) {
-            throw UnsupportedLanguageException(srcLang, name)
-        }
-        if (targetLang !in supportedTargetLanguages) {
-            throw UnsupportedLanguageException(targetLang, name)
-        }
+    private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
+        val formatType = if (isDocumentation) "html" else "text"
+        val request = AliTranslationRequest(text, srcLang.aliyunCode, targetLang.aliyunCode, formatType)
 
-        val cache = CacheService.getDiskCache(`in`, srcLang, targetLang, id, isDocumentation)
-        if (cache != null) try {
-            return parserResult(`in`, srcLang, targetLang, cache, isDocumentation)
-        } catch (e: Throwable) {
-            Logger.getInstance(AbstractTranslator::class.java).w(e)
-        }
+        return sendHttpRequest(ALI_TRANSLATE_URL, request)
+    }
 
-        val url = getRequestUrl(`in`, srcLang, targetLang, isDocumentation)
-
-        val body = Gson().toJson(AliTranslationRequest(`in`, srcLang.aliyunCode, targetLang.aliyunCode))
+    private fun sendHttpRequest(url: String, request: Any): String {
+        val body = Gson().toJson(request)
 
         val realUrl = URL(url)
         val accept = "application/json"
-        val contentType = "application/json;chrset=utf-8"
+        val contentType = "application/json"
         val date: String = toGMTString(Date())
-        val bodyMd5: String = MD5Base64(body)
+        val bodyMd5: String = body.md5Base64()
         val uuid = UUID.randomUUID().toString()
         val stringToSign = """
             POST
@@ -154,40 +157,39 @@ object AliTranslator : AbstractTranslator() {
 
         val settings = Settings.aliTranslateSettings
 
-        return HttpRequests.post(url, contentType)
+        return HttpRequests
+            .post(url, contentType)
+            .tuner {
+                it.setRequestProperty("Accept", accept)
+                it.setRequestProperty("Content-MD5", bodyMd5)
+                it.setRequestProperty("Date", date)
+                it.setRequestProperty("Host", realUrl.host)
+                it.setRequestProperty(
+                    "Authorization",
+                    "acs ${settings.appId}:${stringToSign.hmacSha1(settings.getAppKey())}"
+                )
+                it.setRequestProperty("x-acs-signature-nonce", uuid)
+                it.setRequestProperty("x-acs-signature-method", "HMAC-SHA1")
+                it.setRequestProperty("x-acs-version", "2019-01-02") // 版本可选
+            }
             .connect {
-                it.connection.setRequestProperty("Accept", accept)
-                it.connection.setRequestProperty("Content-MD5", bodyMd5)
-                it.connection.setRequestProperty("Date", date)
-                it.connection.setRequestProperty("Host", realUrl.host)
-                it.connection.setRequestProperty("Authorization", "acs ${settings.appId}:${HMACSha1(stringToSign, settings.getAppKey())}")
-                it.connection.setRequestProperty("x-acs-signature-nonce", uuid)
-                it.connection.setRequestProperty("x-acs-signature-method", "HMAC-SHA1")
-                it.connection.setRequestProperty("x-acs-version", "2019-01-02") // 版本可选
                 it.write(body)
-                val result = it.readString()
-                val translation = parserResult(`in`, srcLang, targetLang, result, isDocumentation)
-
-                CacheService.putDiskCache(`in`, srcLang, targetLang, id, isDocumentation, result)
-
-                translation
+                it.readString()
             }
     }
 
-    override fun parserResult(
+    private fun parseTranslation(
+        translation: String,
         original: String,
         srcLang: Lang,
-        targetLang: Lang,
-        result: String,
-        isDocumentation: Boolean
-    ): BaseTranslation {
-        logger.i("Translate result: $result")
-        return Gson().fromJson(result, AliTranslation::class.java).apply {
+        targetLang: Lang
+    ): Translation {
+        logger.i("Translate result: $translation")
+        return Gson().fromJson(translation, AliTranslation::class.java).apply {
             query = original
             src = srcLang
             target = targetLang
             if (!isSuccessful) {
-                println(errorMessage)
                 throw TranslateResultException(code, name)
             }
         }.toTranslation()
@@ -204,27 +206,13 @@ object AliTranslator : AbstractTranslator() {
             10007 -> message("error.systemError")
             10008 -> message("error.text.too.long")
             10009 -> message("error.ali.permission.denied")
-            10010 -> message("error.service.is.down")
+            10010 -> message("error.service.is.down", ALI_TRANSLATE_PRODUCT_URL)
             10011 -> message("error.systemError")
             10012 -> message("error.systemError")
             10013 -> message("error.account.has.run.out.of.balance")
             else -> message("error.unknown") + "[${throwable.code}]"
         }
         else -> super.createErrorMessage(throwable)
-    }
-
-    private fun MD5Base64(s: String): String {
-        return with(MessageDigest.getInstance("MD5")) {
-            update(s.toByteArray())
-            DatatypeConverter.printBase64Binary(digest())
-        }
-    }
-
-    private fun HMACSha1(data: String, key: String): String {
-        val mac: Mac = Mac.getInstance("HMACSha1")
-        val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
-        mac.init(secretKeySpec)
-        return DatatypeConverter.printBase64Binary(mac.doFinal(data.toByteArray()))
     }
 
     private fun toGMTString(date: Date): String {

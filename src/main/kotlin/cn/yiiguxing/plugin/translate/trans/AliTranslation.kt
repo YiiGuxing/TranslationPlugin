@@ -22,7 +22,7 @@ data class AliTranslation(
         check(isSuccessful) { "Cannot convert to Translation: errorCode=${code}" }
         check(data.translation.isNotEmpty()) { "Cannot convert to Translation: data.translation = null" }
 
-        return Translation(query, data.translation, src, target, listOf(target))
+        return Translation(query, data.translation, src, target, listOf(src))
     }
 }
 
@@ -31,21 +31,4 @@ data class AliTranslationData(
     val wordCount: Int? = 0,
     @SerializedName("Translated")
     val translation: String
-)
-
-/**
- * 序列化json模型
- */
-@Suppress("MemberVisibilityCanBePrivate")
-data class AliTranslationRequest constructor(
-    @SerializedName("SourceText")
-    val sourceText: String,
-    @SerializedName("SourceLanguage")
-    val sourceLanguage: String,
-    @SerializedName("TargetLanguage")
-    val targetLanguage: String,
-    @SerializedName("FormatType")
-    val formatType: String = "text",
-    @SerializedName("Scene")
-    val scene: String = "general"
 )

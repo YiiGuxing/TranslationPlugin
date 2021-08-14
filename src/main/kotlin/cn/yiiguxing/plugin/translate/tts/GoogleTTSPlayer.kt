@@ -137,7 +137,7 @@ class GoogleTTSPlayer(
                 LOGGER.i("TTS>>> $url")
                 HttpRequests.request(url)
                     .userAgent()
-                    .tuner { it.setGoogleReferer() }
+                    .googleReferer()
                     .readBytes(indicator)
                     .let {
                         ByteArrayInputStream(it).apply { duration += getAudioDuration(it.size) }

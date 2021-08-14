@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
+import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.sha256
@@ -58,19 +59,15 @@ object YoudaoTranslator : AbstractTranslator() {
         return true
     }
 
-    override fun getRequestUrl(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): String = YOUDAO_TRANSLATE_URL
+    override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        return SimpleTranslateClient(this, ::call, ::parseTranslation).execute(text, srcLang, targetLang)
+    }
 
-    override fun getRequestParams(
+    private fun call(
         text: String,
         srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): List<Pair<String, String>> {
+        targetLang: Lang
+    ): String {
         val settings = Settings.youdaoTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
@@ -79,28 +76,24 @@ object YoudaoTranslator : AbstractTranslator() {
         val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
         val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
 
-        return ArrayList<Pair<String, String>>().apply {
-            add("appKey" to appId)
-            add("from" to srcLang.youdaoCode)
-            add("to" to targetLang.youdaoCode)
-            add("salt" to salt)
-            add("sign" to sign)
-            add("signType" to "v3")
-            add("curtime" to curTime)
-            add("q" to text)
-        }
+        return Http.postDataFrom(
+            YOUDAO_TRANSLATE_URL,
+            "appKey" to appId,
+            "from" to srcLang.youdaoCode,
+            "to" to targetLang.youdaoCode,
+            "salt" to salt,
+            "sign" to sign,
+            "signType" to "v3",
+            "curtime" to curTime,
+            "q" to text
+        )
     }
 
-    override fun parserResult(
-        original: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        result: String,
-        isDocumentation: Boolean
-    ): BaseTranslation {
-        logger.i("Translate result: $result")
+    @Suppress("UNUSED_PARAMETER")
+    private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
+        logger.i("Translate result: $translation")
 
-        return Gson().fromJson(result, YoudaoTranslation::class.java).apply {
+        return Gson().fromJson(translation, YoudaoTranslation::class.java).apply {
             query = original
             checkError()
             if (!isSuccessful) {

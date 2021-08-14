@@ -6,14 +6,13 @@ import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.util.io.RequestBuilder
 import java.lang.reflect.Type
 import javax.swing.Icon
 
 /**
  * GoogleTranslator
  */
-object GoogleTranslator : AbstractTranslator() {
+object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
@@ -42,16 +41,28 @@ object GoogleTranslator : AbstractTranslator() {
     override val supportedTargetLanguages: List<Lang> =
         (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
 
-    override fun buildRequest(builder: RequestBuilder, isDocumentation: Boolean) {
-        builder.userAgent().tuner { it.setGoogleReferer() }
+    override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        return SimpleTranslateClient(
+            this,
+            { _, _, _ -> call(text, srcLang, targetLang, false) },
+            ::parseTranslation
+        ).execute(text, srcLang, targetLang)
     }
 
-    override fun getRequestUrl(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): String {
+    override fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation {
+        return checkError {
+            val client = SimpleTranslateClient(
+                this,
+                { _, _, _ -> call(documentation, srcLang, targetLang, true) },
+                ::parseDocTranslation
+            )
+
+            client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
+            client.execute(documentation, srcLang, targetLang)
+        }
+    }
+
+    private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
         val baseUrl = if (isDocumentation) {
             GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
         } else {
@@ -76,45 +87,47 @@ object GoogleTranslator : AbstractTranslator() {
                 .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
         }
 
-        return urlBuilder
+        val url = urlBuilder
             .addQueryParameter("tk", text.tk())
             .build()
             .also { logger.i("Translate url: $it") }
-    }
 
-    override fun getRequestParams(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): List<Pair<String, String>> {
-        return listOf("q" to text)
-    }
-
-    override fun parserResult(
-        original: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        result: String,
-        isDocumentation: Boolean
-    ): BaseTranslation {
-        logger.i("Translate result: $result")
-
-        return if (isDocumentation) {
-            val results = gson.fromJson(result, Array<String>::class.java)
-            val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
-
-            BaseTranslation(sLang, targetLang, results[0])
-        } else {
-            gson.fromJson(result, GoogleTranslation::class.java).apply {
-                this.original = original
-                target = targetLang
-            }.toTranslation()
+        return Http.postDataFrom(url, "q" to text) {
+            userAgent().googleReferer()
         }
     }
 
-    override fun onError(throwable: Throwable): Throwable {
-        return NetworkException.wrapIfIsNetworkException(throwable, Http.googleHost)
+    @Suppress("UNUSED_PARAMETER")
+    private fun parseTranslation(
+        translation: String,
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang,
+    ): Translation {
+        logger.i("Translate result: $translation")
+
+        return gson.fromJson(translation, GoogleTranslation::class.java).apply {
+            this.original = original
+            target = targetLang
+        }.toTranslation()
+    }
+
+    private fun parseDocTranslation(
+        translation: String,
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang,
+    ): BaseTranslation {
+        logger.i("Translate result: $translation")
+
+        val results = gson.fromJson(translation, Array<String>::class.java)
+        val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
+
+        return BaseTranslation(original, sLang, targetLang, results[0])
+    }
+
+    override fun onError(throwable: Throwable): Nothing {
+        super.onError(NetworkException.wrapIfIsNetworkException(throwable, Http.googleHost))
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {

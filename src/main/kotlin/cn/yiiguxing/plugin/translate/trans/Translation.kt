@@ -14,7 +14,7 @@ interface TranslationAdapter {
  * Translation
  */
 data class Translation(
-    val original: String,
+    override val original: String,
     override val translation: String?,
     override val srcLang: Lang,
     override val targetLang: Lang,
@@ -24,7 +24,7 @@ data class Translation(
     val spell: String? = null,
     val dictDocument: TranslationDocument? = null,
     val extraDocument: NamedTranslationDocument? = null
-) : BaseTranslation(srcLang, targetLang, translation) {
+) : BaseTranslation(original, srcLang, targetLang, translation) {
     val observableFavoriteId: ObservableValue<Long?> = ObservableValue(null)
 
     var favoriteId: Long? by observableFavoriteId

@@ -62,7 +62,7 @@ object TKK {
         return try {
             val elementJS = HttpRequests.request(updateUrl)
                 .userAgent()
-                .tuner { it.setGoogleReferer() }
+                .googleReferer()
                 .readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {

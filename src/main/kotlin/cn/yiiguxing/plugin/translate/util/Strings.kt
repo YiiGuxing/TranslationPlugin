@@ -7,6 +7,9 @@ package cn.yiiguxing.plugin.translate.util
 
 import java.net.URLEncoder
 import java.security.MessageDigest
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import javax.xml.bind.DatatypeConverter
 
 
 private val REGEX_UNDERLINE = Regex("([A-Za-z])_+([A-Za-z])")
@@ -162,23 +165,11 @@ private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLe
  */
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
 
-private val hexDigits = charArrayOf(
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-)
-
 fun String.getMessageDigest(algorithm: String): String {
-    val messageDigest = with(MessageDigest.getInstance(algorithm)) {
+    return with(MessageDigest.getInstance(algorithm)) {
         update(toByteArray(Charsets.UTF_8))
-        digest()
+        DatatypeConverter.printHexBinary(digest())
     }
-
-    val result = CharArray(messageDigest.size * 2)
-    messageDigest.forEachIndexed { index, byte ->
-        result[index * 2] = hexDigits[byte.toInt() ushr 4 and 0xf]
-        result[index * 2 + 1] = hexDigits[byte.toInt() and 0xf]
-    }
-
-    return String(result)
 }
 
 /**
@@ -192,3 +183,20 @@ fun String.md5(): String = getMessageDigest("MD5")
  * @return SHA-256摘要
  */
 fun String.sha256(): String = getMessageDigest("SHA-256")
+
+/**
+ * 生成Base64格式的MD5摘要
+ */
+fun String.md5Base64(): String {
+    return with(MessageDigest.getInstance("MD5")) {
+        update(toByteArray())
+        DatatypeConverter.printBase64Binary(digest())
+    }
+}
+
+fun String.hmacSha1(key: String): String {
+    val mac: Mac = Mac.getInstance("HMACSha1")
+    val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
+    mac.init(secretKeySpec)
+    return DatatypeConverter.printBase64Binary(mac.doFinal(toByteArray()))
+}

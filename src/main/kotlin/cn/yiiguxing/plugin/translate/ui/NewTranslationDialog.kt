@@ -448,7 +448,7 @@ class NewTranslationDialog(
     }
 
     private fun updateDetectedLangLabel(translation: Translation?) {
-        val detected = translation?.srcLang?.langName?.takeIf { sourceLang == Lang.AUTO }
+        val detected = translation?.srcLang?.takeIf { sourceLang == Lang.AUTO && it != Lang.AUTO }?.langName
 
         detectedLanguageLabel.text = detected
         detectedLanguageLabel.isVisible = detected != null

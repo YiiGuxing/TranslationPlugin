@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_HOST_CN
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
-import java.net.URLConnection
 
 private const val GOOGLE_REFERER = "https://translate.google.com/"
 private const val GOOGLE_REFERER_CN = "https://translate.google.cn/"
@@ -57,11 +56,13 @@ object Http {
 
 fun RequestBuilder.userAgent(): RequestBuilder = apply { userAgent(Http.getUserAgent()) }
 
-fun URLConnection.setGoogleReferer() = apply {
-    val googleReferer = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
-        GOOGLE_REFERER
-    } else {
-        GOOGLE_REFERER_CN
+fun RequestBuilder.googleReferer() = apply {
+    tuner {
+        val googleReferer = if (Settings.googleTranslateSettings.useTranslateGoogleCom) {
+            GOOGLE_REFERER
+        } else {
+            GOOGLE_REFERER_CN
+        }
+        it.setRequestProperty("Referer", googleReferer)
     }
-    setRequestProperty("Referer", googleReferer)
 }

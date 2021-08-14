@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.form.TranslationDialogForm
-import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend
@@ -273,15 +272,10 @@ class TranslationDialog(private val project: Project?) : TranslationDialogForm(p
 
     private fun initMessagePane() = messagePane.run {
         editorKit = UI.errorHTMLKit
-        addHyperlinkListener(object : HyperlinkAdapter() {
+        addHyperlinkListener(object : DefaultHyperlinkListener() {
             override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                if (HTML_DESCRIPTION_SETTINGS == hyperlinkEvent.description) {
-                    close()
-                    OptionsConfigurable.showSettingsDialog(project)
-                } else if (HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION == hyperlinkEvent.description) {
-                    close()
-                    presenter.translator.checkConfiguration(true)
-                }
+                close()
+                super.hyperlinkActivated(hyperlinkEvent)
             }
         })
 

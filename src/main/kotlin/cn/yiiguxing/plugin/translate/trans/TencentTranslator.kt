@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.TENCENT_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.TENCENT
+import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
@@ -85,12 +86,9 @@ object TencentTranslator : AbstractTranslator() {
         return true
     }
 
-    override fun getRequestUrl(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): String = TENCENT_TRANSLATE_URL
+    override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        return SimpleTranslateClient(this, ::call, ::parseTranslation).execute(text, srcLang, targetLang)
+    }
 
     private fun sign(s: String, key: String, method: String = "HmacSHA1"): String {
         val mac: Mac = Mac.getInstance(method)
@@ -100,12 +98,11 @@ object TencentTranslator : AbstractTranslator() {
         return DatatypeConverter.printBase64Binary(hash)
     }
 
-    override fun getRequestParams(
+    private fun call(
         text: String,
         srcLang: Lang,
-        targetLang: Lang,
-        isDocumentation: Boolean
-    ): List<Pair<String, String>> {
+        targetLang: Lang
+    ): String {
         val settings = Settings.tencentTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
@@ -130,20 +127,15 @@ object TencentTranslator : AbstractTranslator() {
         val dataToSign = "POSTtmt.tencentcloudapi.com/?" +
                 postData.joinToString("&") { (key, value) -> "$key=${value}" }
         postData.add("Signature" to sign(dataToSign, privateKey))
-        return postData
+
+        return Http.postDataFrom(TENCENT_TRANSLATE_URL, *postData.toTypedArray())
     }
 
+    @Suppress("UNUSED_PARAMETER")
+    private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
+        logger.i("Translate result: $translation")
 
-    override fun parserResult(
-        original: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        result: String,
-        isDocumentation: Boolean
-    ): BaseTranslation {
-        logger.i("Translate result: $result")
-
-        return Gson().fromJson(result, TencentTranslation::class.java).apply {
+        return Gson().fromJson(translation, TencentTranslation::class.java).apply {
             query = original
             if (!isSuccessful) {
                 logger.w(response.error!!.message)
