@@ -52,17 +52,17 @@ object TKK {
 
         val newTKK = updateFromGoogle()
         needUpdate = newTKK == null
-        innerValue = newTKK ?: now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
+        innerValue = newTKK ?: (now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong()))
         return innerValue
     }
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
-        val updateUrl = ELEMENT_URL_FORMAT.format(googleHost)
+        val updateUrl = ELEMENT_URL_FORMAT.format(Http.googleHost)
 
         return try {
             val elementJS = HttpRequests.request(updateUrl)
                 .userAgent()
-                .googleReferer()
+                .tuner { it.setGoogleReferer() }
                 .readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {
@@ -79,7 +79,7 @@ object TKK {
                 null
             }
         } catch (e: Throwable) {
-            val error = NetworkException.wrapIfIsNetworkException(e, googleHost)
+            val error = NetworkException.wrapIfIsNetworkException(e, Http.googleHost)
 
             logger.w("TKK update failed", error)
             Notifications.showErrorNotification(

@@ -55,7 +55,7 @@ class GoogleTTSPlayer(
     private var duration = 0
 
     private val playlist: List<String> by lazy {
-        val baseUrl = GOOGLE_TTS_FORMAT.format(googleHost)
+        val baseUrl = GOOGLE_TTS_FORMAT.format(Http.googleHost)
         text.splitSentence(MAX_TEXT_LENGTH).let {
             it.mapIndexed { index, sentence ->
                 @Suppress("SpellCheckingInspection")
@@ -93,7 +93,7 @@ class GoogleTTSPlayer(
                     project
                 )
             } else {
-                val throwable = NetworkException.wrapIfIsNetworkException(error, googleHost)
+                val throwable = NetworkException.wrapIfIsNetworkException(error, Http.googleHost)
                 if (throwable is NetworkException) {
                     Notifications.showErrorNotification(
                         project,
@@ -137,7 +137,7 @@ class GoogleTTSPlayer(
                 LOGGER.i("TTS>>> $url")
                 HttpRequests.request(url)
                     .userAgent()
-                    .googleReferer()
+                    .tuner { it.setGoogleReferer() }
                     .readBytes(indicator)
                     .let {
                         ByteArrayInputStream(it).apply { duration += getAudioDuration(it.size) }

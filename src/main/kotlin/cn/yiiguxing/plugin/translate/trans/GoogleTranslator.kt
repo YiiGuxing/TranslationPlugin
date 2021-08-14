@@ -43,7 +43,7 @@ object GoogleTranslator : AbstractTranslator() {
         (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
 
     override fun buildRequest(builder: RequestBuilder, isDocumentation: Boolean) {
-        builder.userAgent().googleReferer()
+        builder.userAgent().tuner { it.setGoogleReferer() }
     }
 
     override fun getRequestUrl(
@@ -56,7 +56,7 @@ object GoogleTranslator : AbstractTranslator() {
             GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
         } else {
             GOOGLE_TRANSLATE_URL_FORMAT
-        }.format(googleHost)
+        }.format(Http.googleHost)
 
         val urlBuilder = UrlBuilder(baseUrl)
             .addQueryParameter("sl", srcLang.code)
@@ -114,7 +114,7 @@ object GoogleTranslator : AbstractTranslator() {
     }
 
     override fun onError(throwable: Throwable): Throwable {
-        return NetworkException.wrapIfIsNetworkException(throwable, googleHost)
+        return NetworkException.wrapIfIsNetworkException(throwable, Http.googleHost)
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {
