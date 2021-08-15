@@ -53,12 +53,12 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
 
-class NewTranslationDialog(
+class TranslationDialog(
     private val project: Project?,
-    val ui: NewTranslationDialogUI = NewTranslationDialogUiImpl(UIProvider())
+    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider())
 ) :
     DialogWrapper(project),
-    NewTranslationDialogUI by ui,
+    TranslationDialogUI by ui,
     View,
     Disposable,
     SettingsChangeListener {
@@ -396,7 +396,7 @@ class NewTranslationDialog(
 
     private fun initDictViewer() {
         dictViewer.apply {
-            setupActions(this@NewTranslationDialog::lastTranslation) { text, src, target ->
+            setupActions(this@TranslationDialog::lastTranslation) { text, src, target ->
                 translate(text, src, target)
             }
             onBeforeFoldingExpand { _, _ ->
@@ -442,7 +442,7 @@ class NewTranslationDialog(
         starButton.isEnabled = translation != null && WordBookService.canAddToWordbook(translation.original)
         starButton.setListener(StarButtons.listener, translation)
 
-        translation?.observableFavoriteId?.observe(this@NewTranslationDialog) { favoriteId, _ ->
+        translation?.observableFavoriteId?.observe(this@TranslationDialog) { favoriteId, _ ->
             updatePresentation(favoriteId)
         }
     }
@@ -764,7 +764,7 @@ class NewTranslationDialog(
         fixWindowHeight(savedWidth)
     }
 
-    private class UIProvider : NewTranslationDialogUiProvider {
+    private class UIProvider : TranslationDialogUiProvider {
         override fun createPinButton(): JComponent = actionButton(MyPinAction())
 
         override fun createSettingsButton(): JComponent = actionButton(MySettingsAction())

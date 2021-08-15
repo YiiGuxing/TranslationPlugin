@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsDialog
-import cn.yiiguxing.plugin.translate.ui.form.AppKeySettingsPanel
+import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
+import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
 import icons.Icons
 import javax.swing.Icon

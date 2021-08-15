@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui.form
+package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.openapi.ui.DialogWrapper
 import javax.swing.JComponent

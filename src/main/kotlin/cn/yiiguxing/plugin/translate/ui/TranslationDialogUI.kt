@@ -36,7 +36,7 @@ import java.lang.Integer.min
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
-interface NewTranslationDialogUI {
+interface TranslationDialogUI {
     val topPanel: JPanel
     val translationPanel: JPanel
     val sourceLangComboBox: LangComboBoxLink
@@ -77,7 +77,7 @@ interface NewTranslationDialogUI {
     fun hideDictViewer()
 }
 
-class NewTranslationDialogUiImpl(uiProvider: NewTranslationDialogUiProvider) : NewTranslationDialogUI {
+class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : TranslationDialogUI {
     private val mRoot: JPanel = JPanel()
     override val topPanel: JPanel = JPanel()
     private val bottomPanel: JPanel = JPanel()

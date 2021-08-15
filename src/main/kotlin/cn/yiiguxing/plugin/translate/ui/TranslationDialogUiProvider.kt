@@ -7,14 +7,14 @@ import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-interface NewTranslationDialogUiProvider {
+interface TranslationDialogUiProvider {
     fun createPinButton(): JComponent
     fun createSettingsButton(): JComponent
 
     companion object {
-        fun testProvider(): NewTranslationDialogUiProvider = TestProvider()
+        fun testProvider(): TranslationDialogUiProvider = TestProvider()
 
-        private class TestProvider : NewTranslationDialogUiProvider {
+        private class TestProvider : TranslationDialogUiProvider {
 
             override fun createPinButton(): JComponent = actionButtonLike(AllIcons.General.Pin_tab)
 

@@ -20,7 +20,7 @@ fun main() {
 
     val frame = JFrame("dialog test");
 
-    val ui = NewTranslationDialogUiImpl(NewTranslationDialogUiProvider.testProvider())
+    val ui = TranslationDialogUiImpl(TranslationDialogUiProvider.testProvider())
     val panel = ui.createMainPanel()
 
     ui.sourceLangComboBox.model = LanguageListModel.simple(listOf(Lang.AUTO, Lang.ENGLISH, Lang.CHINESE))

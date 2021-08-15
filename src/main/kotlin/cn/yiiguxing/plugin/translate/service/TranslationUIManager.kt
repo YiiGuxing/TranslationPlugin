@@ -2,7 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.service
 
-import cn.yiiguxing.plugin.translate.ui.NewTranslationDialog
+import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
@@ -23,7 +23,7 @@ import com.intellij.util.ui.PositionTracker
 class TranslationUIManager private constructor() : Disposable {
 
     private var balloonRef: Ref<TranslationBalloon> = Ref.create()
-    private var newTranslationDialogRef: Ref<NewTranslationDialog> = Ref.create()
+    private var translationDialogRef: Ref<TranslationDialog> = Ref.create()
     private var wordOfTheDayDialogRef: Ref<WordOfTheDayDialog> = Ref.create()
 
     /**
@@ -32,7 +32,7 @@ class TranslationUIManager private constructor() : Disposable {
     private fun disposeUI() {
         checkThread()
         balloonRef.get()?.hide()
-        newTranslationDialogRef.get()?.close()
+        translationDialogRef.get()?.close()
     }
 
     override fun dispose() {
@@ -41,7 +41,7 @@ class TranslationUIManager private constructor() : Disposable {
 
     fun currentBalloon(): TranslationBalloon? = balloonRef.get()
 
-    fun currentNewTranslationDialog(): NewTranslationDialog? = newTranslationDialogRef.get()
+    fun currentNewTranslationDialog(): TranslationDialog? = translationDialogRef.get()
 
     companion object {
 
@@ -124,9 +124,9 @@ class TranslationUIManager private constructor() : Disposable {
          *
          * @return 对话框实例
          */
-        fun showDialog(project: Project?): NewTranslationDialog {
-            return showDialog(instance(project).newTranslationDialogRef) {
-                NewTranslationDialog(project)
+        fun showDialog(project: Project?): TranslationDialog {
+            return showDialog(instance(project).translationDialogRef) {
+                TranslationDialog(project)
             }
         }
 

@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui.form
+package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.AppKeySettings
 import cn.yiiguxing.plugin.translate.action.BrowseAction
