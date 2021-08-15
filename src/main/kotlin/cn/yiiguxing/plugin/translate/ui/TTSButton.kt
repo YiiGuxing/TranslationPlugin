@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
+import com.intellij.util.ui.JBDimension
 import icons.Icons
 import javax.swing.SwingConstants
 
@@ -30,6 +31,7 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
         toolTipText = message("tooltip.listen")
         horizontalAlignment = SwingConstants.CENTER
         setListener(this, null)
+        preferredSize = JBDimension(16, 14)
     }
 
     fun dataSource(ds: () -> Pair<String, Lang>?) {
