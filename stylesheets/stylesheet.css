@@ -336,6 +336,14 @@ a:hover {
     margin-bottom: 2rem;
 }
 
+.translator-logo > img {
+    height: 30px;
+}
+
+.translator-logo > img + img {
+    margin-left: 2rem;
+}
+
 .developer {
     margin: 5rem 0 0.5rem;
     font-style: italic;
