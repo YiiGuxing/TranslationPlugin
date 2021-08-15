@@ -1,6 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.AliTranslator
+import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
@@ -47,11 +50,6 @@ class Settings : PersistentStateComponent<Settings> {
      * 百度翻译选项
      */
     var baiduTranslateSettings: BaiduTranslateSettings = BaiduTranslateSettings()
-
-    /**
-     * 腾讯翻译选项
-     */
-    var tencentTranslateSettings: TencentTranslateSettings = TencentTranslateSettings()
 
     /**
      * 阿里云翻译选项
@@ -252,15 +250,6 @@ class BaiduTranslateSettings : AppKeySettings(
     BaiduTranslator.defaultLangForLocale,
     securityName = BAIDU_SERVICE_NAME,
     securityKey = BAIDU_APP_KEY
-)
-
-/**
- * 腾讯翻译选项
- */
-class TencentTranslateSettings : AppKeySettings(
-    TencentTranslator.defaultLangForLocale,
-    securityName = TENCENT_SERVICE_NAME,
-    securityKey = TENCENT_APP_KEY,
 )
 
 /**

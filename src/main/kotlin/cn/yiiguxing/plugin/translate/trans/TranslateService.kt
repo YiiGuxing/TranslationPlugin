@@ -38,7 +38,6 @@ class TranslateService private constructor() : Disposable {
             translator = when (newTranslator) {
                 TranslationEngine.YOUDAO -> YoudaoTranslator
                 TranslationEngine.BAIDU -> BaiduTranslator
-                TranslationEngine.TENCENT -> TencentTranslator
                 TranslationEngine.ALI -> AliTranslator
                 else -> DEFAULT_TRANSLATOR
             }
