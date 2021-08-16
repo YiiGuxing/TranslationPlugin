@@ -44,7 +44,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
         openCollectiveLinkLabel.init(OPEN_COLLECTIVE_URL, false)
 
         donateLinkLabel.icon = null
-        donateLinkLabel.setListener({ _, _ -> showDonatePop(donateLinkLabel) }, SUPPORT_PATRONS_URL)
+        donateLinkLabel.setListener({ _, _ -> showDonatePop(donateLinkLabel) }, WebPages.support())
 
         shareLinkLabel.icon = null
         shareLinkLabel.setListener({ label, linkUrl ->
@@ -85,7 +85,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
                     if (it.description == "#e-mail") {
                         mail()
                     } else {
-                        BrowserUtil.browse(SUPPORT_PATRONS_URL)
+                        BrowserUtil.browse(WebPages.donors())
                     }
                 }
             }

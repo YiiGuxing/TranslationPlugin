@@ -1,10 +1,7 @@
 package cn.yiiguxing.plugin.translate.update
 
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
-import cn.yiiguxing.plugin.translate.UPDATE_NOTIFICATION_GROUP_ID
+import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
-import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.Plugin
@@ -110,7 +107,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
     private class GetStartedAction :
         DumbAwareAction(message("action.GetStartedAction.text"), null, AllIcons.General.Web) {
-        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getStartedUrl())
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(WebPages.getStarted())
     }
 
 
@@ -118,8 +115,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
 
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
-
-        private const val BASE_URL_GITHUB = "https://yiiguxing.github.io/TranslationPlugin"
 
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"
@@ -130,30 +125,14 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             return (color.rgb and 0xffffff).toString(16)
         }
 
-        private fun baseUrl(locale: Locale): String {
-            val langPath = when (locale.language) {
-                Locale.CHINESE.language -> ""
-                Locale.JAPANESE.language -> "/ja"
-                Locale.KOREAN.language -> "/ko"
-                else -> "/en"
-            }
-
-            return "$BASE_URL_GITHUB$langPath"
-        }
-
-        fun getStartedUrl(locale: Locale = Locale.getDefault()): String {
-            return "${baseUrl(locale)}/start.html"
-        }
-
         fun getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
-            val baseUrl = baseUrl(locale)
             val version = Version(Plugin.descriptor.version)
             val v = version.versionString
             return if (frame) {
-                "$baseUrl/updates.html?v=$v"
+                WebPages.updates(v, locale = locale)
             } else {
                 val isDark = UIUtil.isUnderDarcula()
-                "$baseUrl/updates/v${v.replace('.', '_')}.html?editor=true&dark=$isDark"
+                WebPages.releaseNote(v, isDark, locale = locale)
             }
         }
 
