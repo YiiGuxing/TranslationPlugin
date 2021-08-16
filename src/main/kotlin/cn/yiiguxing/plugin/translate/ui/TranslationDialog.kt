@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
-import cn.yiiguxing.plugin.translate.trans.text.setup
+import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
@@ -466,14 +466,14 @@ class TranslationDialog(
     private fun updateDictViewer(dictDocument: TranslationDocument?, extraDocument: NamedTranslationDocument?) {
         dictViewer.document.clear()
         dictDocument?.let {
-            dictViewer.setup(it)
+            dictViewer.apply(it)
         }
         extraDocument?.let {
             if (dictDocument != null) {
                 dictViewer.document.newLine()
                 dictViewer.document.newLine()
             }
-            dictViewer.setup(it)
+            dictViewer.apply(it)
         }
         val hasContent = dictDocument != null || extraDocument != null
 

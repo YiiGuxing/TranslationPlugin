@@ -7,11 +7,13 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
-import cn.yiiguxing.plugin.translate.trans.text.setup
+import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.TextToSpeech
+import cn.yiiguxing.plugin.translate.util.WordBookService
+import cn.yiiguxing.plugin.translate.util.splitSentence
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.newLine
@@ -537,7 +539,7 @@ abstract class TranslationPane<T : JComponent>(
             if (space) {
                 viewer.document.newLine()
             }
-            viewer.setup(dictDocument)
+            viewer.apply(dictDocument)
             viewer.isVisible = true
             wrapper.isVisible = true
         } else {

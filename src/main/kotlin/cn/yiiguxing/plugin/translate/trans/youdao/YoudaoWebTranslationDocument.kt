@@ -1,8 +1,8 @@
 @file:Suppress("SpellCheckingInspection")
 
-package cn.yiiguxing.plugin.translate.trans.text
+package cn.yiiguxing.plugin.translate.trans.youdao
 
-import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslation
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
@@ -18,7 +18,7 @@ class YoudaoWebTranslationDocument private constructor(private val webTranslatio
         "${translation.key} - ${translation.values.joinToString("; ")}"
     }
 
-    override fun setupTo(viewer: StyledViewer) {
+    override fun applyTo(viewer: StyledViewer) {
         viewer.dragEnabled = false
         viewer.disableSelection()
         viewer.styledDocument.apply {

@@ -3,9 +3,9 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
-import cn.yiiguxing.plugin.translate.trans.text.YoudaoDictDocument
-import cn.yiiguxing.plugin.translate.trans.text.YoudaoWebTranslationDocument
+import cn.yiiguxing.plugin.translate.trans.google.GoogleDictDocument
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoDictDocument
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoWebTranslationDocument
 import cn.yiiguxing.plugin.translate.util.text.text
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ide.CopyPasteManager

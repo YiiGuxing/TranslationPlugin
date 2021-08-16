@@ -1,6 +1,6 @@
-package cn.yiiguxing.plugin.translate.trans.text
+package cn.yiiguxing.plugin.translate.trans.google
 
-import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslation
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor
@@ -17,7 +17,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
 
     override val text: String = dictionaries.toText()
 
-    override fun setupTo(viewer: StyledViewer) {
+    override fun applyTo(viewer: StyledViewer) {
         viewer.dragEnabled = false
         viewer.disableSelection()
         viewer.styledDocument.apply {

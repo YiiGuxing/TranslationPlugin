@@ -9,7 +9,6 @@ package cn.yiiguxing.plugin.translate.trans.google
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
-import cn.yiiguxing.plugin.translate.trans.text.GoogleDictDocument
 import com.google.gson.annotations.SerializedName
 
 

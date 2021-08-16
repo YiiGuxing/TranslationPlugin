@@ -1,9 +1,8 @@
 @file:Suppress("SpellCheckingInspection")
 
-package cn.yiiguxing.plugin.translate.trans.text
+package cn.yiiguxing.plugin.translate.trans.youdao
 
-import cn.yiiguxing.plugin.translate.trans.youdao.YWordFormWrapper
-import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslation
+import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend
@@ -28,7 +27,7 @@ class YoudaoDictDocument private constructor(
 
     override val text: String get() = toString()
 
-    override fun setupTo(viewer: StyledViewer) {
+    override fun applyTo(viewer: StyledViewer) {
         viewer.apply {
             dragEnabled = false
             disableSelection()

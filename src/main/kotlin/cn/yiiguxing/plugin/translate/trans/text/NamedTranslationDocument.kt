@@ -22,10 +22,10 @@ class NamedTranslationDocument(
         }
     }
 
-    override fun setupTo(viewer: StyledViewer) {
+    override fun applyTo(viewer: StyledViewer) {
         viewer.initStyle()
         appendName(viewer)
-        document.setupTo(viewer)
+        document.applyTo(viewer)
     }
 
     companion object {

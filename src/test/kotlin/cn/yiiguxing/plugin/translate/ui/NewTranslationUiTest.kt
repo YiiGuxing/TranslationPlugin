@@ -92,14 +92,14 @@ fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
 
 fun setupGoogleDictDocument(dictViewer: StyledViewer, googleTranslation: GoogleTranslation) {
     val document = GoogleDictDocument.Factory.getDocument(googleTranslation)
-    dictViewer.setup(document!!)
+    dictViewer.apply(document!!)
 }
 
 fun setupYoudaoDictDocuments(dictViewer: StyledViewer, youdaoTranslation: YoudaoTranslation) {
     val document = YoudaoDictDocument.Factory.getDocument(youdaoTranslation)
     val webTranslationDocument = YoudaoWebTranslationDocument.Factory.getDocument(youdaoTranslation)
 
-    dictViewer.setup(document)
+    dictViewer.apply(document)
     dictViewer.document.newLine()
-    dictViewer.setup(NamedTranslationDocument(message("tip.label.webInterpretation"), webTranslationDocument!!))
+    dictViewer.apply(NamedTranslationDocument(message("tip.label.webInterpretation"), webTranslationDocument!!))
 }

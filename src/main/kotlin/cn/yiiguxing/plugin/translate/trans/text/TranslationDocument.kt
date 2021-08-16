@@ -8,11 +8,11 @@ interface TranslationDocument {
 
     val text: String
 
-    fun setupTo(viewer: StyledViewer)
+    fun applyTo(viewer: StyledViewer)
 
     interface Factory<T, R : TranslationDocument> {
         fun getDocument(input: T): R?
     }
 }
 
-fun StyledViewer.setup(document: TranslationDocument?) = document?.setupTo(this)
+fun StyledViewer.apply(document: TranslationDocument?) = document?.applyTo(this)
