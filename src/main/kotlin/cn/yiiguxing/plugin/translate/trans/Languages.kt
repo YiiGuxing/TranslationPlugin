@@ -28,8 +28,7 @@ enum class Lang(
     val code: String,
     youdaoCode: String? = null,
     baiduCode: String? = null,
-    tencentCode: String? = null,
-    aliyunCode: String? = null,
+    aliyunCode: String? = null
 ) {
 
     /** 自动检测 */
@@ -41,8 +40,7 @@ enum class Lang(
         "zh-CN",
         youdaoCode = "zh-CHS",
         baiduCode = "zh",
-        tencentCode = "zh",
-        aliyunCode = "zh",
+        aliyunCode = "zh"
     ),
 
     /** 英语 */
@@ -366,7 +364,6 @@ enum class Lang(
     val langName: String = LanguageBundle.getMessage(langNameKey)
     val youdaoCode: String = youdaoCode ?: code
     val baiduCode: String = baiduCode ?: code
-    val tencentCode: String = tencentCode ?: code
     val aliyunCode: String = aliyunCode ?: code
 
     companion object {
@@ -405,10 +402,6 @@ enum class Lang(
 
         fun valueOfBaiduCode(code: String): Lang = values()
             .find { it.baiduCode.equals(code, ignoreCase = true) }
-            ?: throw IllegalArgumentException("Unknown language code:$code")
-
-        fun valueOfTencentCode(code: String): Lang = values()
-            .find { it.tencentCode.equals(code, ignoreCase = true) }
             ?: throw IllegalArgumentException("Unknown language code:$code")
 
         fun valueOfAliyunCode(code: String): Lang = values()
