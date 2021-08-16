@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
+import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -24,7 +25,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     override fun getDisplayName(): String = adaptedMessage("settings.page.name")
 
-    override fun getHelpTopic(): String? = null
+    override fun getHelpTopic(): String = HelpTopic.DEFAULT.id
 
     override fun createComponent(): JComponent = SettingsPanel(Settings, AppStorage).let {
         configurablePanel = it

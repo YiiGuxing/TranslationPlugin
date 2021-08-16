@@ -71,7 +71,8 @@ enum class TranslationEngine(
                     Icons.load("/image/youdao_translate_logo.png"),
                     YOUDAO_AI_URL,
                     Settings.youdaoTranslateSettings
-                )
+                ),
+                HelpTopic.YOUDAO
             ).showAndGet()
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
@@ -79,7 +80,8 @@ enum class TranslationEngine(
                     Icons.load("/image/baidu_translate_logo.png"),
                     BAIDU_FANYI_URL,
                     Settings.baiduTranslateSettings
-                )
+                ),
+                HelpTopic.BAIDU
             ).showAndGet()
             ALI -> AppKeySettingsDialog(
                 message("settings.ali.title"),
@@ -87,7 +89,8 @@ enum class TranslationEngine(
                     Icons.load("/image/ali_translate_logo.png"),
                     ALI_CAPI_URL,
                     Settings.aliTranslateSettings
-                )
+                ),
+                HelpTopic.ALI
             ).showAndGet()
             else -> true
         }
