@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.trans.google.tk
 import org.junit.Assert
 import org.junit.Test
 

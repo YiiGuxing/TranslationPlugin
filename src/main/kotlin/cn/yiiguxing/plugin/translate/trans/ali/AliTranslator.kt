@@ -1,8 +1,9 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.ali
 
 import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_PRODUCT_URL
 import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.hmacSha1
@@ -92,7 +93,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         return SimpleTranslateClient(
             this,
             { _, _, _ -> call(text, srcLang, targetLang, false) },
-            ::parseTranslation
+            AliTranslator::parseTranslation
         ).execute(text, srcLang, targetLang)
     }
 
@@ -101,7 +102,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             val client = SimpleTranslateClient(
                 this,
                 { _, _, _ -> call(documentation, srcLang, targetLang, true) },
-                ::parseTranslation
+                AliTranslator::parseTranslation
             )
             with(client) {
                 updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }

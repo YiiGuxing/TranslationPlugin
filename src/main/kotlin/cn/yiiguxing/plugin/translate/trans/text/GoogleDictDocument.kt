@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.text
 
-import cn.yiiguxing.plugin.translate.trans.GoogleTranslation
+import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslation
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor

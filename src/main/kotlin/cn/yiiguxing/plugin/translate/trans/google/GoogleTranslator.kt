@@ -1,7 +1,8 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL_FORMAT
+import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
@@ -45,7 +46,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         return SimpleTranslateClient(
             this,
             { _, _, _ -> call(text, srcLang, targetLang, false) },
-            ::parseTranslation
+            GoogleTranslator::parseTranslation
         ).execute(text, srcLang, targetLang)
     }
 
@@ -54,7 +55,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
             val client = SimpleTranslateClient(
                 this,
                 { _, _, _ -> call(documentation, srcLang, targetLang, true) },
-                ::parseDocTranslation
+                GoogleTranslator::parseDocTranslation
             )
 
             client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
@@ -67,7 +68,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
             GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
         } else {
             GOOGLE_TRANSLATE_URL_FORMAT
-        }.format(Http.googleHost)
+        }.format(GoogleHttp.googleHost)
 
         val urlBuilder = UrlBuilder(baseUrl)
             .addQueryParameter("sl", srcLang.code)
@@ -127,7 +128,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun onError(throwable: Throwable): Nothing {
-        super.onError(NetworkException.wrapIfIsNetworkException(throwable, Http.googleHost))
+        super.onError(NetworkException.wrapIfIsNetworkException(throwable, GoogleHttp.googleHost))
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {

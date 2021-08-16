@@ -2,7 +2,9 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.google.*
 import cn.yiiguxing.plugin.translate.trans.text.*
+import cn.yiiguxing.plugin.translate.trans.youdao.*
 import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.ide.ui.laf.IntelliJLaf
 import com.intellij.openapi.util.IconLoader

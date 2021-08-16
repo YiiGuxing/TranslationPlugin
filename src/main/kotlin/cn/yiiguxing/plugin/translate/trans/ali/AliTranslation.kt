@@ -1,5 +1,8 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.ali
 
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
 import com.google.gson.annotations.SerializedName
 
 @Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")

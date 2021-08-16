@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.trans.AliTranslator
-import cn.yiiguxing.plugin.translate.trans.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
+import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate

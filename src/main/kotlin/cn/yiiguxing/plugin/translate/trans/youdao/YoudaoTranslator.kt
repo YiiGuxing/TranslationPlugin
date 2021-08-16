@@ -1,8 +1,9 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.youdao
 
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -60,7 +61,7 @@ object YoudaoTranslator : AbstractTranslator() {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(this, ::call, ::parseTranslation).execute(text, srcLang, targetLang)
+        return SimpleTranslateClient(this, YoudaoTranslator::call, YoudaoTranslator::parseTranslation).execute(text, srcLang, targetLang)
     }
 
     private fun call(

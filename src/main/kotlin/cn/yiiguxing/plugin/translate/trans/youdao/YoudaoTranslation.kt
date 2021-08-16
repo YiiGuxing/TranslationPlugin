@@ -3,9 +3,12 @@
  */
 @file:Suppress("ArrayInDataClass", "MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.youdao
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.YoudaoDictDocument
 import cn.yiiguxing.plugin.translate.trans.text.YoudaoWebTranslationDocument

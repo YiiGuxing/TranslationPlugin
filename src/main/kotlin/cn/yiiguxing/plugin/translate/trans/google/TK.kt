@@ -1,10 +1,13 @@
 /*
  * 计算谷歌翻译的tk值.
  */
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.trans.NetworkException
+import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import java.lang.StrictMath.abs
@@ -57,7 +60,7 @@ object TKK {
     }
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
-        val updateUrl = ELEMENT_URL_FORMAT.format(Http.googleHost)
+        val updateUrl = ELEMENT_URL_FORMAT.format(GoogleHttp.googleHost)
 
         return try {
             val elementJS = HttpRequests.request(updateUrl)
@@ -79,7 +82,7 @@ object TKK {
                 null
             }
         } catch (e: Throwable) {
-            val error = NetworkException.wrapIfIsNetworkException(e, Http.googleHost)
+            val error = NetworkException.wrapIfIsNetworkException(e, GoogleHttp.googleHost)
 
             logger.w("TKK update failed", error)
             Notifications.showErrorNotification(

@@ -2,6 +2,10 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
+import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
+import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem

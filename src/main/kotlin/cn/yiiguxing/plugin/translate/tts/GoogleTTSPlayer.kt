@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.GOOGLE_TTS_FORMAT
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.NetworkException
-import cn.yiiguxing.plugin.translate.trans.tk
+import cn.yiiguxing.plugin.translate.trans.google.*
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
@@ -55,7 +55,7 @@ class GoogleTTSPlayer(
     private var duration = 0
 
     private val playlist: List<String> by lazy {
-        val baseUrl = GOOGLE_TTS_FORMAT.format(Http.googleHost)
+        val baseUrl = GOOGLE_TTS_FORMAT.format(GoogleHttp.googleHost)
         text.splitSentence(MAX_TEXT_LENGTH).let {
             it.mapIndexed { index, sentence ->
                 @Suppress("SpellCheckingInspection")
@@ -93,7 +93,7 @@ class GoogleTTSPlayer(
                     project
                 )
             } else {
-                val throwable = NetworkException.wrapIfIsNetworkException(error, Http.googleHost)
+                val throwable = NetworkException.wrapIfIsNetworkException(error, GoogleHttp.googleHost)
                 if (throwable is NetworkException) {
                     Notifications.showErrorNotification(
                         project,

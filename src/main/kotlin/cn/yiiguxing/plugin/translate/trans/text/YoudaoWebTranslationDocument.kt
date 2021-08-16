@@ -2,7 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.trans.text
 
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslation
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslation
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd

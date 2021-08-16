@@ -1,10 +1,12 @@
 @file:Suppress("SpellCheckingInspection")
 
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.baidu
 
+import cn.yiiguxing.plugin.translate.BAIDU_FANYI_PRODUCT_URL
 import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -79,7 +81,11 @@ object BaiduTranslator : AbstractTranslator() {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(this, ::call, ::parseTranslation).execute(text, srcLang, targetLang)
+        return SimpleTranslateClient(this, BaiduTranslator::call, BaiduTranslator::parseTranslation).execute(
+            text,
+            srcLang,
+            targetLang
+        )
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang): String {
@@ -122,7 +128,7 @@ object BaiduTranslator : AbstractTranslator() {
             54004 -> message("error.account.has.run.out.of.balance")
             58000 -> message("error.access.ip")
             58001 -> message("error.language.unsupported")
-            58002 -> message("error.service.is.down")
+            58002 -> message("error.service.is.down", BAIDU_FANYI_PRODUCT_URL)
             90107 -> message("error.unauthorized")
             else -> message("error.unknown") + "[${throwable.code}]"
         }

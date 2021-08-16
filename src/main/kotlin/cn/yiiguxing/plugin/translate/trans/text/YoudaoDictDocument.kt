@@ -2,8 +2,8 @@
 
 package cn.yiiguxing.plugin.translate.trans.text
 
-import cn.yiiguxing.plugin.translate.trans.YWordFormWrapper
-import cn.yiiguxing.plugin.translate.trans.YoudaoTranslation
+import cn.yiiguxing.plugin.translate.trans.youdao.YWordFormWrapper
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslation
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend

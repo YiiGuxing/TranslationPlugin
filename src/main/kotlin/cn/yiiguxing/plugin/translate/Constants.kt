@@ -44,13 +44,11 @@ const val GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT = "https://%s/translate_a/t"
 const val GOOGLE_TTS_FORMAT = "https://%s/translate_tts"
 
 const val YOUDAO_TRANSLATE_URL = "https://openapi.youdao.com/api"
-const val YOUDAO_AI_URL = "http://ai.youdao.com"
+const val YOUDAO_AI_URL = "https://ai.youdao.com"
 
-const val BAIDU_TRANSLATE_URL = "http://api.fanyi.baidu.com/api/trans/vip/translate"
-const val BAIDU_FANYI_URL = "http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer"
-
-const val TENCENT_TRANSLATE_URL = "https://tmt.tencentcloudapi.com"
-const val TENCENT_CAPI_URL = "https://console.cloud.tencent.com/cam/capi"
+const val BAIDU_TRANSLATE_URL = "https://fanyi-api.baidu.com/api/trans/vip/translate"
+const val BAIDU_FANYI_URL = "https://fanyi-api.baidu.com/manage/developer"
+const val BAIDU_FANYI_PRODUCT_URL = "https://fanyi-api.baidu.com/choose"
 
 const val ALI_TRANSLATE_URL = "http://mt.aliyuncs.com/api/translate/web/general"
 const val ALI_CAPI_URL = "https://usercenter.console.aliyun.com/#/manage/ak"
