@@ -181,6 +181,9 @@ enum class Lang(
     /** 卢森堡语 */
     LUXEMBOURGISH("luxembourgish", "lb"),
 
+    /** 卢旺达语 */
+    KINYARWANDA("kinyarwanda", "rw"),
+
     /** 罗马尼亚语 */
     ROMANIAN("romanian", "ro", baiduCode = "rom"),
 
