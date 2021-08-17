@@ -45,8 +45,8 @@ data class YoudaoTranslation(
         val languagesList = languages!!.split("2")
         check(languagesList.size == 2) { "Can not convert to Translation: languages=$languages" }
 
-        val srcLang = Lang.valueOfYoudaoCode(languagesList[0])
-        val transLang = Lang.valueOfYoudaoCode(languagesList[1])
+        val srcLang = Lang.fromYoudaoLanguageCode(languagesList[0])
+        val transLang = Lang.fromYoudaoLanguageCode(languagesList[1])
 
         val phonetic = basicExplain?.let { basicExplain ->
             val phoneticUK = basicExplain.phoneticUK?.let { "[UK] $it" } ?: ""

@@ -130,7 +130,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
         val formatType = if (isDocumentation) "html" else "text"
-        val request = AliTranslationRequest(text, srcLang.aliyunCode, targetLang.aliyunCode, formatType)
+        val request = AliTranslationRequest(text, srcLang.aliLanguageCode, targetLang.aliLanguageCode, formatType)
 
         return sendHttpRequest(ALI_TRANSLATE_URL, request)
     }

@@ -44,7 +44,7 @@ class XmlWordBookImporter : WordBookImporter {
         }
 
         private fun Element.getLanguage(name: String): Lang? = try {
-            getChildText(name)?.let { Lang.valueOfCode(it) }
+            getChildText(name)?.let { Lang[it] }
         } catch (e: Exception) {
             null
         }

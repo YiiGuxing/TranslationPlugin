@@ -61,7 +61,11 @@ object YoudaoTranslator : AbstractTranslator() {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(this, YoudaoTranslator::call, YoudaoTranslator::parseTranslation).execute(text, srcLang, targetLang)
+        return SimpleTranslateClient(this, YoudaoTranslator::call, YoudaoTranslator::parseTranslation).execute(
+            text,
+            srcLang,
+            targetLang
+        )
     }
 
     private fun call(
@@ -80,8 +84,8 @@ object YoudaoTranslator : AbstractTranslator() {
         return Http.postDataFrom(
             YOUDAO_TRANSLATE_URL,
             "appKey" to appId,
-            "from" to srcLang.youdaoCode,
-            "to" to targetLang.youdaoCode,
+            "from" to srcLang.youdaoLanguageCode,
+            "to" to targetLang.youdaoLanguageCode,
             "salt" to salt,
             "sign" to sign,
             "signType" to "v3",

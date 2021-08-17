@@ -25,41 +25,32 @@ data class LanguagePair(
 enum class Lang(
     @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
     langNameKey: String,
-    val code: String,
-    youdaoCode: String? = null,
-    baiduCode: String? = null,
-    aliyunCode: String? = null
+    val code: String
 ) {
 
     /** 自动检测 */
     AUTO("auto", "auto"),
 
     /** 中文 */
-    CHINESE(
-        "chinese",
-        "zh-CN",
-        youdaoCode = "zh-CHS",
-        baiduCode = "zh",
-        aliyunCode = "zh"
-    ),
+    CHINESE("chinese", "zh-CN"),
 
     /** 英语 */
     ENGLISH("english", "en"),
 
     /** 中文(繁体) */
-    CHINESE_TRADITIONAL("chinese.traditional", "zh-TW", baiduCode = "cht", aliyunCode = "zh-tw"),
+    CHINESE_TRADITIONAL("chinese.traditional", "zh-TW"),
 
     /** 文言文 */
-    CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL", baiduCode = "wyw"),
+    CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL"),
 
     /** 粤语 */
-    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE", youdaoCode = "yue", baiduCode = "yue", aliyunCode = "yue"),
+    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE"),
 
     /** 阿尔巴尼亚语 */
     ALBANIAN("albanian", "sq"),
 
     /** 阿拉伯语 */
-    ARABIC("arabic", "ar", baiduCode = "ara"),
+    ARABIC("arabic", "ar"),
 
     /** 阿姆哈拉语 */
     AMHARIC("amharic", "am"),
@@ -71,7 +62,7 @@ enum class Lang(
     IRISH("irish", "ga"),
 
     /** 爱沙尼亚语 */
-    ESTONIAN("estonian", "et", baiduCode = "est"),
+    ESTONIAN("estonian", "et"),
 
     /** 巴斯克语 */
     BASQUE("basque", "eu"),
@@ -80,7 +71,7 @@ enum class Lang(
     BELARUSIAN("belarusian", "be"),
 
     /** 保加利亚语 */
-    BULGARIAN("bulgarian", "bg", baiduCode = "bul"),
+    BULGARIAN("bulgarian", "bg"),
 
     /** 冰岛语 */
     ICELANDIC("icelandic", "is"),
@@ -98,7 +89,7 @@ enum class Lang(
     AFRIKAANS("afrikaans", "af"),
 
     /** 丹麦语 */
-    DANISH("danish", "da", baiduCode = "dan"),
+    DANISH("danish", "da"),
 
     /** 德语 */
     GERMAN("german", "de"),
@@ -107,13 +98,13 @@ enum class Lang(
     RUSSIAN("russian", "ru"),
 
     /** 法语 */
-    FRENCH("french", "fr", baiduCode = "fra"),
+    FRENCH("french", "fr"),
 
     /** 菲律宾语 */
-    FILIPINO("filipino", "tl", aliyunCode = "fil"),
+    FILIPINO("filipino", "tl"),
 
     /** 芬兰语 */
-    FINNISH("finnish", "fi", baiduCode = "fin"),
+    FINNISH("finnish", "fi"),
 
     /** 弗里西语 */
     FRISIAN("frisian", "fy"),
@@ -134,7 +125,7 @@ enum class Lang(
     HAITIAN_CREOLE("haitianCreole", "ht"),
 
     /** 韩语 */
-    KOREAN("korean", "ko", baiduCode = "kor"),
+    KOREAN("korean", "ko"),
 
     /** 豪萨语 */
     HAUSA("hausa", "ha"),
@@ -161,7 +152,7 @@ enum class Lang(
     CORSICAN("corsican", "co"),
 
     /** 克罗地亚语 */
-    CROATIAN("croatian", "hr", aliyunCode = "hbs"),
+    CROATIAN("croatian", "hr"),
 
     /** 库尔德语 */
     KURDISH("kurdish", "ku"),
@@ -185,7 +176,7 @@ enum class Lang(
     KINYARWANDA("kinyarwanda", "rw"),
 
     /** 罗马尼亚语 */
-    ROMANIAN("romanian", "ro", baiduCode = "rom"),
+    ROMANIAN("romanian", "ro"),
 
     /** 马尔加什语 */
     MALAGASY("malagasy", "mg"),
@@ -245,10 +236,10 @@ enum class Lang(
     CHICHEWA("chichewa", "ny"),
 
     /** 日语 */
-    JAPANESE("japanese", "ja", baiduCode = "jp"),
+    JAPANESE("japanese", "ja"),
 
     /** 瑞典语 */
-    SWEDISH("swedish", "sv", baiduCode = "swe"),
+    SWEDISH("swedish", "sv"),
 
     /** 萨摩亚语 */
     SAMOAN("samoan", "sm"),
@@ -269,7 +260,7 @@ enum class Lang(
     SLOVAK("slovak", "sk"),
 
     /** 斯洛文尼亚语 */
-    SLOVENIAN("slovenian", "sl", baiduCode = "slo"),
+    SLOVENIAN("slovenian", "sl"),
 
     /** 斯瓦希里语 */
     SWAHILI("swahili", "sw"),
@@ -314,10 +305,10 @@ enum class Lang(
     UZBEK("uzbek", "uz"),
 
     /** 西班牙语 */
-    SPANISH("spanish", "es", baiduCode = "spa"),
+    SPANISH("spanish", "es"),
 
     /** 希伯来语 */
-    HEBREW("hebrew", "iw", youdaoCode = "he", aliyunCode = "he"),
+    HEBREW("hebrew", "iw"),
 
     /** 希腊语 */
     GREEK("greek", "el"),
@@ -362,15 +353,16 @@ enum class Lang(
     YORUBA("yoruba", "yo"),
 
     /** 越南语 */
-    VIETNAMESE("vietnamese", "vi", baiduCode = "vie");
+    VIETNAMESE("vietnamese", "vi");
 
     val langName: String = LanguageBundle.getMessage(langNameKey)
-    val youdaoCode: String = youdaoCode ?: code
-    val baiduCode: String = baiduCode ?: code
-    val aliyunCode: String = aliyunCode ?: code
+
+    class NoSuchLanguageException(code: String) : RuntimeException("No such language, code=$code.")
 
     companion object {
         private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
+
+        private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
 
         val default: Lang
             get() {
@@ -389,26 +381,15 @@ enum class Lang(
                 }
             }
 
+        /**
+         * Returns the [language][Lang] corresponding to the given [code].
+         */
+        operator fun get(code: String): Lang = mapping[code] ?: throw NoSuchLanguageException(code)
+
         fun sortedValues(): List<Lang> = when (Locale.getDefault()) {
             Locale.CHINESE,
             Locale.CHINA -> values().asList()
             else -> cachedValues
         }
-
-        fun valueOfCode(code: String): Lang = values()
-            .find { it.code.equals(code, ignoreCase = true) }
-            ?: throw IllegalArgumentException("Unknown language code:$code")
-
-        fun valueOfYoudaoCode(code: String): Lang = values()
-            .find { it.youdaoCode.equals(code, ignoreCase = true) }
-            ?: throw IllegalArgumentException("Unknown language code:$code")
-
-        fun valueOfBaiduCode(code: String): Lang = values()
-            .find { it.baiduCode.equals(code, ignoreCase = true) }
-            ?: throw IllegalArgumentException("Unknown language code:$code")
-
-        fun valueOfAliyunCode(code: String): Lang = values()
-            .find { it.aliyunCode.equals(code, ignoreCase = true) }
-            ?: throw IllegalArgumentException("Unknown language code:$code")
     }
 }

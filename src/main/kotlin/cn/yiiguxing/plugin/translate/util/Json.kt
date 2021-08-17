@@ -24,7 +24,7 @@ private object LanguageTypeAdapter : TypeAdapter<Lang>() {
             return null
         }
 
-        return Lang.valueOfCode(jsonReader.nextString())
+        return Lang[jsonReader.nextString()]
     }
 
 }

@@ -433,8 +433,8 @@ class WordBookService {
             return WordBookItem(
                 getLong(COLUMN_ID),
                 getString(COLUMN_WORD),
-                Lang.valueOfCode(getString(COLUMN_SOURCE_LANGUAGE)),
-                Lang.valueOfCode(getString(COLUMN_TARGET_LANGUAGE)),
+                Lang[getString(COLUMN_SOURCE_LANGUAGE)],
+                Lang[getString(COLUMN_TARGET_LANGUAGE)],
                 getString(COLUMN_PHONETIC),
                 getString(COLUMN_EXPLANATION),
                 getString(COLUMN_TAGS),

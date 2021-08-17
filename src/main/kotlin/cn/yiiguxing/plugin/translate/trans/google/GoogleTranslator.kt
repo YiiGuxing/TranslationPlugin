@@ -122,7 +122,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         logger.i("Translate result: $translation")
 
         val results = gson.fromJson(translation, Array<String>::class.java)
-        val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
+        val sLang = if (srcLang == Lang.AUTO) Lang[results[1]] else srcLang
 
         return BaseTranslation(original, sLang, targetLang, results[0])
     }
@@ -133,7 +133,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private object LangDeserializer : JsonDeserializer<Lang> {
         override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext)
-                : Lang = Lang.valueOfCode(jsonElement.asString)
+                : Lang = Lang[jsonElement.asString]
     }
 
     @Suppress("SpellCheckingInspection")

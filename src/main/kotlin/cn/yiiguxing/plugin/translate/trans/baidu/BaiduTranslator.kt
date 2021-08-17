@@ -98,8 +98,8 @@ object BaiduTranslator : AbstractTranslator() {
         return Http.postDataFrom(
             BAIDU_TRANSLATE_URL,
             "appid" to appId,
-            "from" to srcLang.baiduCode,
-            "to" to targetLang.baiduCode,
+            "from" to srcLang.baiduLanguageCode,
+            "to" to targetLang.baiduLanguageCode,
             "salt" to salt,
             "sign" to sign,
             "q" to text
