@@ -2,7 +2,7 @@
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 750 USD |
+| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 800 USD |
 | JetBrains | [www.jetbrains.com](https://jb.gg/OpenSource) | 696 USD |
 | Takahisa Ishida | | 20 USD |
 | 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
@@ -29,6 +29,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Kingkick | | 10 CNY |
 | 王勇 | [github.com/AdTomato](https://github.com/AdTomato) | 10 CNY |
 | Json159 | [blog.csdn.net/Json159](https://blog.csdn.net/Json159) | 10 CNY |
 | MrSTOP | [github.com/MrSTOP](https://github.com/MrSTOP) | 10 CNY |
