@@ -19,8 +19,6 @@ class YoudaoWebTranslationDocument private constructor(private val webTranslatio
     }
 
     override fun applyTo(viewer: StyledViewer) {
-        viewer.dragEnabled = false
-        viewer.disableSelection()
         viewer.styledDocument.apply {
             initStyle()
             appendContents(webTranslations)

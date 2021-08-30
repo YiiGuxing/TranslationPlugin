@@ -6,11 +6,10 @@ import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend
-import cn.yiiguxing.plugin.translate.util.text.StyledString
-import cn.yiiguxing.plugin.translate.util.text.appendString
-import cn.yiiguxing.plugin.translate.util.text.getStyleOrAdd
+import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.ui.JBColor
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import org.tritonus.share.ArraySet
@@ -29,8 +28,6 @@ class YoudaoDictDocument private constructor(
 
     override fun applyTo(viewer: StyledViewer) {
         viewer.apply {
-            dragEnabled = false
-            disableSelection()
             initStyle()
             setTabPosition()
             styledDocument.appendContents()
@@ -58,7 +55,8 @@ class YoudaoDictDocument private constructor(
         }
 
         if (variantStrings.isNotEmpty() && showWordForms()) {
-            appendString("\n\n")
+            newLine()
+            setParagraphStyle(length - 1, 1, SPACE_BELOW_STYLE, false)
             appendStrings(variantStrings)
         }
     }
@@ -228,6 +226,7 @@ class YoudaoDictDocument private constructor(
         private const val VARIANT_STYLE = "yd_dict_variant"
         private const val SEPARATOR_STYLE = "yd_dict_separator"
         private const val VARIANT_NAME_STYLE = "yd_dict_variant_name"
+        private const val SPACE_BELOW_STYLE = "yd_space_below"
 
         private val WORD_COLOR = JBColor(0x3333E8, 0xFFC66D)
         private val WORD_HOVER_COLOR = JBColor(0x762DFF, 0xDF7000)
@@ -260,6 +259,9 @@ class YoudaoDictDocument private constructor(
             }
             styledDocument.getStyleOrAdd(SEPARATOR_STYLE, defaultStyle) { style ->
                 StyleConstants.setForeground(style, JBColor(0xFF5555, 0x2196F3))
+            }
+            styledDocument.getStyleOrAdd(SPACE_BELOW_STYLE, defaultStyle) { style ->
+                StyleConstants.setSpaceBelow(style, JBUIScale.scale(14f))
             }
             styledDocument.getStyleOrAdd(VARIANT_NAME_STYLE, defaultStyle) { style ->
                 StyleConstants.setItalic(style, true)

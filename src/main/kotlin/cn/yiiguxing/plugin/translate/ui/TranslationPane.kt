@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.TTSSource.TRANSLATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.append
 import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
@@ -16,7 +16,6 @@ import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.splitSentence
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
-import cn.yiiguxing.plugin.translate.util.text.newLine
 import cn.yiiguxing.plugin.translate.util.text.replace
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
@@ -60,8 +59,10 @@ abstract class TranslationPane<T : JComponent>(
     private val translationViewer = Viewer()
     private val originalTransliterationLabel = TransliterationLabel()
     private val transliterationLabel = TransliterationLabel()
-    private val dictViewer = StyledViewer()
-    private val extraViewer = StyledViewer()
+    private val extraViewer = StyledViewer().apply {
+        dragEnabled = false
+        disableSelection()
+    }
     private val spellComponent: SpellComponent = SpellComponent()
 
     private lateinit var sourceLangRowComponent: JComponent
@@ -69,7 +70,6 @@ abstract class TranslationPane<T : JComponent>(
     private lateinit var targetRowComponent: JComponent
     private lateinit var originalComponent: JComponent
     private lateinit var translationComponent: JComponent
-    private lateinit var dictComponent: JComponent
     private lateinit var extraComponent: JComponent
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
@@ -139,15 +139,9 @@ abstract class TranslationPane<T : JComponent>(
         add(translationComponent)
         add(transliterationLabel)
 
-        dictComponent = onWrapViewer(dictViewer)
-        dictComponent.border = TOP_MARGIN_BORDER
-        onRowCreated(dictComponent)
-        add(dictComponent)
-
         extraComponent = onWrapViewer(extraViewer)
-
+        extraComponent.border = TOP_MARGIN_BORDER
         onRowCreated(extraComponent)
-
         add(extraComponent)
 
         initFont()
@@ -177,7 +171,7 @@ abstract class TranslationPane<T : JComponent>(
     }
 
     protected fun isDictViewer(viewer: Viewer): Boolean {
-        return viewer === dictViewer
+        return viewer === extraViewer
     }
 
     private fun initFont() {
@@ -192,8 +186,7 @@ abstract class TranslationPane<T : JComponent>(
             }
             originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
             translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
-            dictViewer.font = primaryFont.biggerOn(1f)
-            extraViewer.font = primaryFont
+            extraViewer.font = primaryFont.biggerOn(1f)
             originalTransliterationLabel.font = phoneticFont
             transliterationLabel.font = phoneticFont
         }
@@ -233,25 +226,20 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun initActions() {
         originalViewer.setupPopupMenu()
-        originalViewer.setFocusListener(translationViewer, dictViewer, extraViewer)
+        originalViewer.setFocusListener(translationViewer, extraViewer)
         translationViewer.setupPopupMenu()
-        translationViewer.setFocusListener(originalViewer, dictViewer, extraViewer)
-        dictViewer.setFocusListener(originalViewer, translationViewer, extraViewer)
-        extraViewer.setFocusListener(originalViewer, translationViewer, dictViewer)
-
-        dictViewer.setupActions(::translation) { text: String, srcLang: Lang, targetLang: Lang ->
-            onNewTranslateHandler?.invoke(text, srcLang, targetLang)
-        }
-        dictViewer.onBeforeFoldingExpand { _, _ ->
-            onBeforeFoldingExpand()
-        }
-        dictViewer.onFoldingExpanded {
-            onFoldingExpanded()
-            onRevalidateHandler?.invoke()
-        }
+        translationViewer.setFocusListener(originalViewer, extraViewer)
+        extraViewer.setFocusListener(originalViewer, translationViewer)
 
         extraViewer.setupActions(::translation) { text: String, srcLang: Lang, targetLang: Lang ->
             onNewTranslateHandler?.invoke(text, srcLang, targetLang)
+        }
+        extraViewer.onBeforeFoldingExpand { _, _ ->
+            onBeforeFoldingExpand()
+        }
+        extraViewer.onFoldingExpanded {
+            onFoldingExpanded()
+            onRevalidateHandler?.invoke()
         }
 
         originalTransliterationLabel.setupPopupMenu()
@@ -409,9 +397,7 @@ abstract class TranslationPane<T : JComponent>(
             updateText(transliteration)
         }
 
-        val dictDocument: TranslationDocument? = translation.dictDocument
-        updateViewer(dictViewer, dictComponent, dictDocument)
-        updateViewer(extraViewer, extraComponent, translation.extraDocument, dictDocument != null)
+        updateExtraViewer(translation)
     }
 
     private fun updateOriginalViewer(translation: Translation) {
@@ -508,17 +494,14 @@ abstract class TranslationPane<T : JComponent>(
         spellComponent.isVisible = false
         originalComponent.isVisible = false
         translationComponent.isVisible = false
-        dictComponent.isVisible = false
         extraComponent.isVisible = false
 
         originalViewer.empty()
         originalTransliterationLabel.empty()
         translationViewer.empty()
         transliterationLabel.empty()
-        extraViewer.empty()
 
-        updateViewer(dictViewer, dictComponent, null as TranslationDocument?)
-        updateViewer(extraViewer, extraComponent, null as TranslationDocument?)
+        updateExtraViewer(null)
     }
 
     private fun updateViewer(viewer: Viewer, wrapper: JComponent, text: String?) {
@@ -528,18 +511,17 @@ abstract class TranslationPane<T : JComponent>(
         }
     }
 
-    private fun updateViewer(
-        viewer: StyledViewer,
-        wrapper: JComponent,
-        dictDocument: TranslationDocument?,
-        space: Boolean = false
-    ) {
+    private fun updateExtraViewer(translation: Translation?) {
+        val viewer = extraViewer
+        val wrapper = extraComponent
         viewer.document.clear()
-        if (dictDocument != null) {
-            if (space) {
-                viewer.document.newLine()
+        if (translation != null) {
+            translation.dictDocument?.let {
+                viewer.apply(it)
             }
-            viewer.apply(dictDocument)
+            for (extraDocument in translation.extraDocuments) {
+                viewer.append(extraDocument)
+            }
             viewer.isVisible = true
             wrapper.isVisible = true
         } else {

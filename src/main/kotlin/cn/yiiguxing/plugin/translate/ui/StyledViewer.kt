@@ -11,6 +11,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
 import java.awt.Color
 import java.awt.Cursor
@@ -39,6 +40,8 @@ class StyledViewer : Viewer() {
     private var popupMenuTargetData: Any? = null
 
     init {
+        foreground = JBColor(0x333333, 0xD4D7D9)
+
         ViewerMouseAdapter().let {
             addMouseListener(it)
             addMouseMotionListener(it)
@@ -243,7 +246,10 @@ class StyledViewer : Viewer() {
         private inline val Element.offsetLength: Int
             get() = endOffset - startOffset
 
-        fun StyledViewer.setupActions(prevTranslation: () -> Translation?, onNewTranslateHandler: ((String, Lang, Lang) -> Unit)) {
+        fun StyledViewer.setupActions(
+            prevTranslation: () -> Translation?,
+            onNewTranslateHandler: ((String, Lang, Lang) -> Unit)
+        ) {
             addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
                 CopyPasteManager.getInstance().setContents(StringSelection(element.text))
             }

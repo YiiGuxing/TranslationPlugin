@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.append
 import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
@@ -14,7 +15,6 @@ import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
-import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
@@ -396,6 +396,8 @@ class TranslationDialog(
 
     private fun initDictViewer() {
         dictViewer.apply {
+            dragEnabled = false
+            disableSelection()
             setupActions(this@TranslationDialog::lastTranslation) { text, src, target ->
                 translate(text, src, target)
             }
@@ -424,7 +426,7 @@ class TranslationDialog(
         updateStarButton(translation)
         updateDetectedLangLabel(translation)
         updateTransliterations(translation)
-        updateDictViewer(translation?.dictDocument, translation?.extraDocument)
+        updateDictViewer(translation?.dictDocument, translation?.extraDocuments ?: emptyList())
         spellComponent.spell = translation?.spell
         fixLangComponent.updateOnTranslation(translation)
         fixWindowHeight()
@@ -463,20 +465,16 @@ class TranslationDialog(
         targetTransliterationLabel.text = translation?.transliteration
     }
 
-    private fun updateDictViewer(dictDocument: TranslationDocument?, extraDocument: NamedTranslationDocument?) {
+    private fun updateDictViewer(dictDocument: TranslationDocument?, extraDocuments: List<NamedTranslationDocument>) {
         dictViewer.document.clear()
         dictDocument?.let {
             dictViewer.apply(it)
         }
-        extraDocument?.let {
-            if (dictDocument != null) {
-                dictViewer.document.newLine()
-                dictViewer.document.newLine()
-            }
-            dictViewer.apply(it)
+        for (extraDocument in extraDocuments) {
+            dictViewer.append(extraDocument)
         }
-        val hasContent = dictDocument != null || extraDocument != null
 
+        val hasContent = dictDocument != null || extraDocuments.isNotEmpty()
         if (hasContent && AppStorage.newTranslationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)

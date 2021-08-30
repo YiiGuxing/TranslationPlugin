@@ -62,8 +62,8 @@ data class YoudaoTranslation(
             listOf(srcLang),
             phonetic,
             dictDocument = YoudaoDictDocument.Factory.getDocument(this),
-            extraDocument = YoudaoWebTranslationDocument.Factory.getDocument(this)
-                ?.let { NamedTranslationDocument(message("tip.label.webInterpretation"), it) }
+            extraDocuments = YoudaoWebTranslationDocument.Factory.getDocument(this)
+                ?.let { listOf(NamedTranslationDocument(message("tip.label.webInterpretation"), it)) } ?: emptyList()
         )
     }
 }

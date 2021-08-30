@@ -23,7 +23,7 @@ data class Translation(
     val transliteration: String? = null,
     val spell: String? = null,
     val dictDocument: TranslationDocument? = null,
-    val extraDocument: NamedTranslationDocument? = null
+    val extraDocuments: List<NamedTranslationDocument> = emptyList()
 ) : BaseTranslation(original, srcLang, targetLang, translation) {
     val observableFavoriteId: ObservableValue<Long?> = ObservableValue(null)
 

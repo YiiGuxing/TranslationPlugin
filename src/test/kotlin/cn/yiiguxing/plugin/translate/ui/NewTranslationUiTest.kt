@@ -1,9 +1,10 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.google.*
-import cn.yiiguxing.plugin.translate.trans.text.*
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
+import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.trans.youdao.*
 import cn.yiiguxing.plugin.translate.util.text.newLine
 import com.intellij.ide.ui.laf.IntelliJLaf
@@ -99,7 +100,9 @@ fun setupYoudaoDictDocuments(dictViewer: StyledViewer, youdaoTranslation: Youdao
     val document = YoudaoDictDocument.Factory.getDocument(youdaoTranslation)
     val webTranslationDocument = YoudaoWebTranslationDocument.Factory.getDocument(youdaoTranslation)
 
-    dictViewer.apply(document)
+    document?.let {
+        dictViewer.apply(it)
+    }
     dictViewer.document.newLine()
     dictViewer.apply(NamedTranslationDocument(message("tip.label.webInterpretation"), webTranslationDocument!!))
 }
