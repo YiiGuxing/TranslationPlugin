@@ -43,6 +43,14 @@ fun Document.newLine() = appendString("\n")
 
 fun StyledDocument.appendString(str: String, style: String) = apply { appendString(str, getStyle(style)) }
 
+fun StyledDocument.appendCharSequence(charSequence: CharSequence) = apply {
+    if (charSequence is StyledString) {
+        appendString(charSequence.toString(), charSequence.style)
+    } else {
+        appendString(charSequence.toString())
+    }
+}
+
 /**
  * 清空[Document]内容
  */

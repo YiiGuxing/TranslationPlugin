@@ -18,8 +18,6 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
     override val text: String = dictionaries.toText()
 
     override fun applyTo(viewer: StyledViewer) {
-        viewer.dragEnabled = false
-        viewer.disableSelection()
         viewer.styledDocument.apply {
             initStyle()
             appendDictionaries(dictionaries)

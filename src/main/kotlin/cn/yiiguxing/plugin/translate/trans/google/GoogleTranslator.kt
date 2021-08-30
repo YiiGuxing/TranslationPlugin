@@ -81,7 +81,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         } else {
             urlBuilder
                 .addQueryParameter("client", "gtx")
-                .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm", "qca")
+                .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm", "qca", "ex")
                 .addQueryParameter("dj", "1")
                 .addQueryParameter("ie", "UTF-8")
                 .addQueryParameter("oe", "UTF-8")
