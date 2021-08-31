@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>はじめに - TranslationPlugin</title>
     <link rel="icon" href="../favicon.ico">
-    <meta name="description" content="IntelliJ ベースの IDE/Android Studio 翻訳プラグインは、多言語翻訳、ドキュメントの翻訳、音声読み上げをサポートしています。">
+    <meta name="description" content="IntelliJ ベースの IDE/Android Studio/HUAWEI DevEco Studio 翻訳プラグインは、多言語翻訳、ドキュメントの翻訳、音声読み上げをサポートしています。">
     <meta name="keywords" content="IDEA プラグイン、IDEA 翻訳プラグイン、プラグイン">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.0" media="screen">
@@ -53,6 +53,7 @@
                         <li>Google 翻訳</li>
                         <li>Youdao 翻訳</li>
                         <li>Baidu 翻訳</li>
+                        <li>Ali 翻訳</li>
                     </ul>
                 </li>
                 <li>多言語翻訳</li>
@@ -70,6 +71,7 @@
                     <li>CLion</li>
                     <li>DataGrip</li>
                     <li>GoLand</li>
+                    <li>HUAWEI DevEco Studio</li>
                     <li>IntelliJ IDEA Ultimate</li>
                     <li>IntelliJ IDEA Community</li>
                     <li>IntelliJ IDEA Educational</li>
@@ -110,38 +112,32 @@
         </div>
         <div class="column">
             <h2 class="column_title">使用</h2>
-            <h3 class="column_item_title">1. 有道クラウド翻訳サービスの申し込み（オプション）</h3>
+            <h3 class="column_item_title">1. 注册翻译服务（可选）</h3>
             <div class="column_tip">
                 <ul>
-                    <li><a href="http://ai.youdao.com"
-                             target="_blank">有道クラウド</a>アカウントに登録し、<strong>アプリケーションID</strong>および<strong>キー</strong>を取得します</li>
-                    <li><strong>アプリケーション ID</strong>および<strong>キー</strong>をバインドする：環境設定（設定） > その他の設定 > 翻訳 > 有道翻訳
+                    <li>注册翻译服务（<a href="https://ai.youdao.com" target="_blank"
+                    >有道智云</a>、<a href="https://fanyi-api.baidu.com/manage/developer" target="_blank"
+                    >百度翻译开放平台</a>、<a href="https://www.aliyun.com/product/ai/base_alimt" target="_blank"
+                    >阿里云机器翻译</a>）帐号，开通翻译服务并获取其<strong>应用ID</strong>和<strong>密钥</strong>
+                    </li>
+                    <li>绑定<strong>应用ID</strong>和<strong>密钥</strong>：偏好设置（设置） > 工具 > 翻译 > 常规 > 翻译引擎 > 配置...
                     </li>
                 </ul>
 
                 <div style="color: red">注：アプリケーションキーが漏洩しないようにご注意ください。アカウントのサブスクリプションがない場合、使用できません。</div>
             </div>
 
-            <h3 class="column_item_title">2. Baidu 翻訳サービスのお申し込み（オプション）</h3>
-            <div class="column_tip">
-                <ul>
-                    <li><a href="http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer" target="_blank">Baidu 翻訳オープンプラットフォーム</a>アカウントに登録し、<strong>アプリケーションID</strong>および<strong>キー</strong>をを取得します
-                    </li>
-                    <li><strong>アプリケーションID</strong>および<strong>キー</strong>をバインドする：環境設定（設定） > その他の設定 > 翻訳 > Baidu 翻訳
-                    </li>
-                </ul>
-
-                <div style="color: red">注：アプリケーションキーが漏洩しないようにご注意ください。アカウントのサブスクリプションがない場合、使用できません。</div>
-            </div>
-
-            <h3 class="column_item_title">3. 翻訳の開始</h3>
+            <h3 class="column_item_title">2. 翻訳の開始</h3>
             <p class="column_tip">テキストを選択するか、マウスをテキストに向けて、マウスの右ボタンをクリックして、翻訳します</p>
             <p class="column_tip">または、ショートカットキーを使用して翻訳します。詳細については、「<a href="#actions">アクション</a>」を参照してください。</p>
 
-            <h3 class="column_item_title">4. 翻訳と置き換え</h3>
+            <h3 class="column_item_title">3. 翻訳と置き換え</h3>
             <p class="column_tip">ターゲット言語を翻訳して置き換えます。翻訳先言語が英語の場合、<strong>アストラ式の翻訳結果</strong>、<strong>単語区切り付きの翻訳結果</strong>（複数の単語を含む場合、単語の区切り符号はプラグインの設定画面で設定可能：翻訳設定 > 区切り記号）、そして<strong>元の翻訳結果</strong>をそれぞれ出力します。</p>
             <p class="column_tip">使用法：テキストを選択するか、マウスがテキストを向けて > マウスの右ボタンをクリック > 翻訳と置換...（または、ショートカットキーを使用して翻訳します。詳細については、「 <a href="#actions">アクション</a>」を参照してください）。
             </p>
+
+            <h3 class="column_item_title">4. 翻译文档</h3>
+            <p class="column_tip">偏好设置（设置） > 工具 > 翻译 > 其他 > <b>翻译文档</b>，勾选该选项后，文档将会在您查看时被自动翻译。</p>
 
             <h3 class="column_item_title">5. 翻訳エンジンの切り替え</h3>
             <p class="column_tip">ステータスバーの翻訳エンジンステータスアイコンをクリックするか、ショートカットキーの <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd>
