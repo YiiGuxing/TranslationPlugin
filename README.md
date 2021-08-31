@@ -18,6 +18,7 @@
   - Google翻译
   - 有道翻译
   - 百度翻译
+  - 阿里翻译
 - 多语言互译
 - 文档翻译
 - 语音朗读
@@ -32,6 +33,7 @@
 - CLion
 - DataGrip
 - GoLand
+- HUAWEI DevEco Studio
 - IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
 - IntelliJ IDEA Educational
@@ -49,7 +51,7 @@
 <table>
       <td>
         <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
+            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/jetbrains.svg" alt="JetBrains" title="JetBrains">
         </a>
       </td>
       <td>
@@ -75,33 +77,31 @@
 
 ## Usage
 
-1. **申请有道智云翻译服务（可选）:**
-   - 注册[有道智云](http://ai.youdao.com)帐号并获取其**应用ID**和**应用密钥**
-   - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>有道翻译</kbd>
+1. **注册翻译服务（可选）:**
+   - 注册翻译服务（ [有道智云](https://ai.youdao.com) 、[百度翻译开放平台](https://fanyi-api.baidu.com/manage/developer) 、[阿里云机器翻译](https://www.aliyun.com/product/ai/base_alimt) ）帐号，开通翻译服务并获取其**应用ID**和**应用密钥**
+   - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>常规</kbd> > <kbd>翻译引擎</kbd> > <kbd>配置...</kbd>
 
    注：请注意保管好你的**应用密钥**，防止其泄露。如帐号欠费，将无法使用。
 
-2. **申请百度翻译服务（可选）:**
-   - 注册[百度翻译开放平台](http://api.fanyi.baidu.com/api/trans/product/desktop?req=developer)帐号并获取其**应用ID**和**应用密钥**
-   - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>\[Other Settings]</kbd> > <kbd>Translation</kbd> > <kbd>百度翻译</kbd>
-
-   注：请注意保管好你的**应用密钥**，防止其泄露。如帐号欠费，将无法使用。
-
-3. **开始翻译:**
+2. **开始翻译:**
 
    <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
 
    或者使用快捷键进行翻译，详见 **[Actions](#actions)**
 
-4. **翻译并替换:**
+3. **翻译并替换:**
 
    翻译目标文本并将其替换。当翻译目标语言为英文时，会分别输出为**骆驼式输出**、**含单词分隔符输出**（输出包含多个单词时，分隔符可在插件配置页面中配置：翻译设置 > 分隔符）和**原输出**。
 
    用法：<kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate and Replace...</kbd>（或者使用快捷键进行翻译，详见 **[Actions](#actions)**）。
 
+4. **翻译文档:**
+
+   <kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>其他</kbd> > <kbd>翻译文档</kbd>，勾选该选项后，文档将会在您查看时被自动翻译。
+
 5. **切换翻译引擎:**
 
-   点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译和百度翻译。
+   点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译、百度翻译和阿里翻译。
 
 
 ## Actions
