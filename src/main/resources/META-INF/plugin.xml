@@ -1,4 +1,4 @@
-<idea-plugin url="http://yiiguxing.github.io/TranslationPlugin">
+<idea-plugin url="https://yiiguxing.github.io/TranslationPlugin">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
     <version>3.x</version>
@@ -24,6 +24,7 @@
             <li>Google translate.</li>
             <li>Youdao translate.</li>
             <li>Baidu translate.</li>
+            <li>Ali translate.</li>
           </ul>
         </li>
         <li>Multiple languages inter-translation.</li>
