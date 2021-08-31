@@ -42,7 +42,7 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
             StyleConstants.setComponent(expandIconAttr, ExpandButton(examples.size) {
                 remove(length - 2, 2)
                 val startOffset = length
-                examples.forEach { appendExample(it) }
+                examples.drop(1).forEach { appendExample(it) }
                 setParagraphStyle(startOffset, length - startOffset, EXAMPLE_STYLE, true)
             })
 
@@ -133,7 +133,6 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
             getStyleOrAdd(EXAMPLE_STYLE, defaultStyle) { style ->
                 StyleConstants.setTabSet(style, TabSet(arrayOf(TabStop(JBUIScale.scale(5f)))))
-                StyleConstants.setSpaceAbove(style, JBUIScale.scale(4f))
                 StyleConstants.setForeground(style, JBColor(0x606060, 0xBBBDBF))
             }
             getStyleOrAdd(EXAMPLE_BOLD_STYLE, defaultStyle) { style ->
