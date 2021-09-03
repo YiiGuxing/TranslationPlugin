@@ -59,7 +59,7 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
 
 private fun Document.addLimitHint(): Document {
     val hintColor = ColorUtil.toHex(JBUI.CurrentTheme.Label.disabledForeground())
-    body().selectFirst(CSS_QUERY_CONTENT).insertChildren(
+    body().selectFirst(CSS_QUERY_CONTENT)?.insertChildren(
         0,
         Element("div")
             .attr(
