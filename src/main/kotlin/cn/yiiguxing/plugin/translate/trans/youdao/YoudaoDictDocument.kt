@@ -102,7 +102,7 @@ class YoudaoDictDocument private constructor(
 
         private val REGEX_WORD = Regex("[a-zA-Z]+([ -]?[a-zA-Z]+)*")
         private val REGEX_EXPLANATION = Regex(
-            "^((a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr)\\.)(.+)$"
+            "^((a|adj|prep|pron|n|v|conj|s|sc|o|oc|vi|vt|aux|ad|adv|art|num|int|u|c|pl|abbr|det)\\.)(.+)$"
         )
         private val REGEX_WORDS_SEPARATOR = Regex("[,;，；]")
         private val REGEX_VARIANTS_SEPARATOR = Regex("\\s*或\\s*")
