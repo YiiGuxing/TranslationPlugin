@@ -1,11 +1,11 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.*
-import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
@@ -18,7 +18,7 @@ enum class TranslationEngine(
     val translatorName: String,
     val icon: Icon,
     val contentLengthLimit: Int = 0,
-    val intervalLimit: Int = 200
+    val intervalLimit: Int = 500
 ) {
 
     GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
