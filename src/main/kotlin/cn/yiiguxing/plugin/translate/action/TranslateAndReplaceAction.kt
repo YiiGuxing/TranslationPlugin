@@ -325,7 +325,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }
 
             if (targetLang != Lang.ENGLISH || language == PlainTextLanguage.INSTANCE) {
-                return items
+                return items.filter { it.isNotBlank() }
             }
 
             val camel = LinkedHashSet<String>()
@@ -374,7 +374,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                     }
                     addAll(original)
                 }
-                .toList()
+                .filter { it.isNotBlank() }
         }
 
         fun build(
@@ -386,7 +386,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             for (i in words.indices) {
                 val word = if (i == 0) words[i].sanitizeJavaIdentifierStart() else words[i]
                 val lowerCase = word.toLowerCase()
-
                 for ((separator, builder) in lowerWithSeparator) {
                     if (i > 0) {
                         builder.append(separator)
