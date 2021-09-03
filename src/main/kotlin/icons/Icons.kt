@@ -114,9 +114,6 @@ object Icons {
     @JvmField
     val Quote: Icon = load("/icons/quote.svg")
 
-    @JvmField
-    val ExpandExamples: Icon = load("/icons/expandExamples.svg")
-
     @JvmStatic
     fun load(path: String): Icon {
         return IconManager.getInstance().getIcon(path, Icons::class.java)

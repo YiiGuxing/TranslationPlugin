@@ -132,6 +132,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
 
         private fun StyledDocument.initFoldingStyle(defaultStyle: Style?) {
             getStyleOrAdd(FOLDING_STYLE, defaultStyle) { style ->
+                StyleConstants.setFontSize(style, getFont(style).size - 1)
                 StyleConstants.setForeground(style, JBColor(0x777777, 0x888888))
                 val background = JBColor(Color(0, 0, 0, 0x18), Color(0xFF, 0xFF, 0xFF, 0x10))
                 StyleConstants.setBackground(style, background)
