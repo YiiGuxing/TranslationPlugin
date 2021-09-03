@@ -93,10 +93,10 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?.let { text ->
                 val processedText = text.processBeforeTranslate() ?: text
+                val primaryLanguage = TranslateService.translator.primaryLanguage
                 fun translate(targetLang: Lang, reTranslate: Boolean = false) {
                     TranslateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
                         override fun onSuccess(translation: Translation) {
-                            val primaryLanguage = TranslateService.translator.primaryLanguage
                             if (reTranslate && translation.srcLang == Lang.ENGLISH
                                 && primaryLanguage != Lang.ENGLISH
                                 && targetLang == Lang.ENGLISH
@@ -154,11 +154,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 if (Settings.selectTargetLanguageBeforeReplacement) {
                     editor.showTargetLanguagesPopup { translate(it) }
                 } else {
-                    val targetLang = if (TranslateService.translator.supportedTargetLanguages.contains(Lang.AUTO)) {
-                        Lang.AUTO
-                    } else {
-                        Lang.ENGLISH
-                    }
+                    val targetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
                     translate(targetLang, true)
                 }
             }
