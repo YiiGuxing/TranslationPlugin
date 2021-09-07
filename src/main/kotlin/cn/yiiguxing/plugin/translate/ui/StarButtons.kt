@@ -17,7 +17,7 @@ object StarButtons {
         return when {
             !WordBookService.isInitialized -> message("tooltip.wordBookNotInitialized")
             favoriteId == null -> message("tooltip.addToWordBook")
-            else -> message("tooltip.removeFormWordBook")
+            else -> message("tooltip.removeFromWordBook")
         }
     }
 
