@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
+import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -24,6 +25,11 @@ class TranslateRenderedDocSelectionAction : AnAction() {
     init {
         templatePresentation.icon = Icons.Translation
         templatePresentation.text = adaptedMessage("action.TranslateRenderedDocSelectionAction.text")
+
+        // 为了在菜单项上显示快捷键提示
+        ActionManager.getInstance()
+            .getAction(EditorTranslateAction.ACTION_ID)
+            ?.let { copyShortcutFrom(it) }
     }
 
     override fun update(e: AnActionEvent) {

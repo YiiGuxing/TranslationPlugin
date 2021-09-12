@@ -23,4 +23,8 @@ class EditorTranslateAction : TranslateAction(true) {
     override val selectionMode
         get() = Settings.autoSelectionMode
 
+    companion object {
+        const val ACTION_ID = "\$EditorTranslateAction"
+    }
+
 }
