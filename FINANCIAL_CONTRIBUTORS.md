@@ -10,6 +10,7 @@
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
 | Sampan | [gitlab.com/SamuelPan](http://gitlab.com/SamuelPan) | 50 CNY |
 | 一个李大壮罢了 | | 50 CNY |
 | Songc | [www.zdone.com](https://www.zdone.com) | 50 CNY |
