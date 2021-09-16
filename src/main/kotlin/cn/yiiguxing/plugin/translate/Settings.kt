@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
@@ -184,8 +184,6 @@ private const val YOUDAO_SERVICE_NAME = "YIIGUXING.TRANSLATION"
 private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
 private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
-private const val TENCENT_SERVICE_NAME = "YIIGUXING.TRANSLATION.TENCENT"
-private const val TENCENT_APP_KEY = "TENCENT_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
 
