@@ -1,15 +1,14 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.AppKeySettings
-import cn.yiiguxing.plugin.translate.action.BrowseAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import com.intellij.icons.AllIcons
+import com.intellij.ide.BrowserUtil
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.components.labels.ActionLink
 import com.intellij.util.ui.JBUI
 import javax.swing.Icon
 import javax.swing.JLabel
@@ -21,7 +20,9 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
 
     private val logo: JLabel = JLabel(logoImage)
     private val getApiKeyLink: ActionLink =
-        ActionLink(message("settings.link.getAppKey"), AllIcons.Ide.Link, BrowseAction(appKeyLink))
+        ActionLink(message("settings.link.getAppKey"), AllIcons.Ide.Link, AllIcons.Ide.Link) {
+            BrowserUtil.browse(appKeyLink)
+        }
 
     init {
         layout = migLayout()
