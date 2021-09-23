@@ -59,8 +59,9 @@
 | 刘十年 | [www.l1ub0w3n.cn](https://www.l1ub0w3n.cn) | 8.8 CNY |
 | 甯 | | 8CNY |
 | 干巴爹 | | 8CNY |
-| J-Lee | [lsj97.com](http://lsj97.com) | 6.66CNY |
+| J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
 | 刘小明 | | 6.66CNY |
+| Aleksandr Stykalin | | 1 USD |
 | Hushuang | | 6CNY |
 | 张英奇 | | 6CNY |
 | 寤寐 | | 5CNY |
@@ -72,4 +73,3 @@
 | Afa | | 5 CNY |
 | 李振宇 | | 2 CNY |
 | 堂主 | | 1 CNY |
-| 憨鸠仔 | | 0.01 CNY |
