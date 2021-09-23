@@ -211,7 +211,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             body.select(TAG_B).forEach { it.replaceWith(Element(TAG_SPAN).html(it.html())) }
 
             preElements.forEachIndexed { index, element ->
-                body.selectFirst("""$TAG_PRE[id="$index"]""").replaceWith(element)
+                body.selectFirst("""$TAG_PRE[id="$index"]""")?.replaceWith(element)
             }
             definition?.let { body.prependChild(it) }
 
