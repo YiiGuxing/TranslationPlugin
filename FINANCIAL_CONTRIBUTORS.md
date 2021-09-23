@@ -30,6 +30,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Rorschach | [Rorschach's Code Wiki](https://unexpected-swim-49d.notion.site/Rorschach-s-Code-Wiki-9a8fb7ec84e1467bafa08824f033b338) | 10 CNY |
 | Kaiv2 | [github.com/JavaHello](https://github.com/JavaHello) | 10 CNY |
 | Kingkick | | 10 CNY |
 | 王勇 | [github.com/AdTomato](https://github.com/AdTomato) | 10 CNY |
