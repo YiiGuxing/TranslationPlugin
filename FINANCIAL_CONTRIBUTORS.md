@@ -22,6 +22,7 @@
 | STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
 | Marcel Heckel | | 5 USD |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
+| 张弛 | | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
