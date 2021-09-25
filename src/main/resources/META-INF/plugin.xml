@@ -47,9 +47,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>原文与译文文本区域滚动同步</li>
-        <li>用户体验优化调整</li>
-        <li>修复了一些问题</li>
+        <li>修复了一些Bug</li>
       </ul>
       <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
