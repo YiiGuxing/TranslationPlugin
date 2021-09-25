@@ -154,7 +154,6 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || !settings.translator.isConfigured()
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
-                    || settings.googleTranslateSettings.useTranslateGoogleCom != useTranslateGoogleComCheckBox.isSelected
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
                     || settings.takeWordWhenDialogOpens != takeWordCheckBox.isSelected
                     || settings.separators != separatorsTextField.text
@@ -194,7 +193,6 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             translator = selectedTranslator
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
-            googleTranslateSettings.useTranslateGoogleCom = useTranslateGoogleComCheckBox.isSelected
             primaryFontFamily = primaryFontComboBox.fontName
             primaryFontPreviewText = primaryFontPreview.text
             phoneticFontFamily = phoneticFontComboBox.fontName
@@ -224,7 +222,6 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         translationEngineComboBox.selected = settings.translator
         primaryLanguageComboBox.selected = settings.translator.primaryLanguage
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
-        useTranslateGoogleComCheckBox.isSelected = settings.googleTranslateSettings.useTranslateGoogleCom
         ignoreRegExp.text = settings.ignoreRegex
         separatorsTextField.text = settings.separators
         foldOriginalCheckBox.isSelected = settings.foldOriginal

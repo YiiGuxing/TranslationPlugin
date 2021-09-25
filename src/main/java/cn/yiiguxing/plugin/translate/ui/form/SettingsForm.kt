@@ -32,8 +32,6 @@ import javax.swing.text.PlainDocument
 abstract class SettingsForm {
     protected val wholePanel: JPanel = JPanel()
 
-    protected val useTranslateGoogleComCheckBox: JBCheckBox =
-        JBCheckBox(message("settings.google.options.useGoogleCom"))
     protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
 
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
@@ -140,7 +138,6 @@ abstract class SettingsForm {
             add(JLabel(message("settings.label.translation.engine")))
             add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup))
             val configurePanel = Box.createHorizontalBox().apply {
-                add(useTranslateGoogleComCheckBox)
                 add(configureTranslationEngineLink)
                 fixEngineConfigurationComponent()
             }
@@ -257,11 +254,9 @@ abstract class SettingsForm {
     private fun fixEngineConfigurationComponent() {
         when (translationEngineComboBox.selected) {
             TranslationEngine.GOOGLE -> {
-                useTranslateGoogleComCheckBox.isVisible = true
                 configureTranslationEngineLink.isVisible = false
             }
             else -> {
-                useTranslateGoogleComCheckBox.isVisible = false
                 configureTranslationEngineLink.isVisible = true
             }
         }
