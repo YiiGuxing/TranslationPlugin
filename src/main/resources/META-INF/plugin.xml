@@ -109,7 +109,7 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
 
         <applicationConfigurable groupId="tools"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable"/>

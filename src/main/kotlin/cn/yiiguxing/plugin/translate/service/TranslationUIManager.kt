@@ -20,7 +20,12 @@ import com.intellij.util.ui.PositionTracker
 /**
  * TranslationUIManager
  */
-class TranslationUIManager private constructor() : Disposable {
+open class TranslationUIManager private constructor() : Disposable {
+
+    // Issue: #845 (https://github.com/YiiGuxing/TranslationPlugin/issues/845)
+    // com.intellij.diagnostic.PluginException: Key cn.yiiguxing.plugin.translate.service.TranslationUIManager
+    // duplicated [Plugin: cn.yiiguxing.plugin.translate]
+    class AppService : TranslationUIManager()
 
     private var balloonRef: Ref<TranslationBalloon> = Ref.create()
     private var translationDialogRef: Ref<TranslationDialog> = Ref.create()
@@ -63,10 +68,11 @@ class TranslationUIManager private constructor() : Disposable {
         }
 
         fun instance(project: Project?): TranslationUIManager {
-            return if (project == null)
-                ServiceManager.getService(TranslationUIManager::class.java)
-            else
+            return if (project == null) {
+                ServiceManager.getService(AppService::class.java)
+            } else {
                 ServiceManager.getService(project, TranslationUIManager::class.java)
+            }
         }
 
         /**
