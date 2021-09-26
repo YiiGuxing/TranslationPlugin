@@ -213,15 +213,6 @@
 
    **答**：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
 
-## Change Notes
-
-## [v3.1.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.1.1) (2021-05-07)
-
-- 修复了一些错误
-
-[完整的更新历史记录](./CHANGELOG.md)
-
-
 ## Support
 
 您可以通过执行以下任意操作来贡献和支持此项目：

@@ -1,63 +1,7 @@
 <idea-plugin url="https://yiiguxing.github.io/TranslationPlugin">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <version>3.x</version>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
-
-    <description><![CDATA[
-      <p><b>Translation plugin for IntelliJ based IDEs.</b></p>
-      <br/>
-      <p>
-      <b>
-      <a href="https://yiiguxing.gitee.io/translation-plugin/index.html">Website</a> |
-      <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
-      <a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Issues</a> |
-      <a href="https://yiiguxing.gitee.io/translation-plugin/start.html">Doc</a> |
-      <a href="https://plugins.jetbrains.com/plugin/8579-translation/support-donate">Donate</a>
-      </b>
-      </p>
-      <br/>
-      <p><b>Features:</b>
-      <ul>
-        <li>Multiple translation engines.
-          <ul>
-            <li>Google translate.</li>
-            <li>Youdao translate.</li>
-            <li>Baidu translate.</li>
-            <li>Ali translate.</li>
-          </ul>
-        </li>
-        <li>Multiple languages inter-translation.</li>
-        <li>Document translation.</li>
-        <li>Text to speech.</li>
-        <li>Automatic word selection.</li>
-        <li>Automatic word division.</li>
-        <li>Word book.</li>
-      </ul>
-      </p>
-      <br/>
-      <p>
-      <b>Sponsors</b><br/><br/>
-      <a title="JetBrains" href="https://www.jetbrains.com/?from=TranslationPlugin"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/sponsor_jetbrains.png" width="131" height="142" alt="JetBrains"></a><br/>
-      Whatever platform or language you work with, JetBrains has a development tool for you.<br/>
-      <br/>
-      <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner"><img src="https://alt-images.codestream.com/codestream_logo_translation.png" width="294" alt="CodeStream"></a><br/>
-      Eliminate context switching and costly distractions. Create and merge PRs and perform code reviews from inside your IDE while using jump-to-definition, your keybindings, and other IDE favorites. <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">Learn more</a>.
-      </p>
-      <br/>
-      <p><a href="https://github.com/YiiGuxing/TranslationPlugin/issues">Send feedback</a></p>
-    ]]></description>
-
-    <!--suppress PluginXmlValidity -->
-    <change-notes><![CDATA[
-      <ul>
-        <li>修复了一些错误</li>
-      </ul>
-      <a href="https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"><b>Full Changelog History</b></a>
-    ]]></change-notes>
-
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="203.5981.155"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
