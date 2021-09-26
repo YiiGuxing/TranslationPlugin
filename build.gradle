@@ -10,7 +10,7 @@ buildscript {
 plugins {
     // https://github.com/JetBrains/gradle-intellij-plugin
     id "org.jetbrains.intellij" version "0.7.3"
-    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+    id "org.jetbrains.kotlin.jvm" version "1.5.0"
 }
 
 repositories {
@@ -40,8 +40,8 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['clion.jar', 'rider.jar'])
     implementation fileTree(dir: 'libs', include: ['idea-compat.jar'])
 
-    implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'org.apache.commons:commons-dbcp2:2.6.0'
+    implementation 'org.jsoup:jsoup:1.14.1'
+    implementation 'org.apache.commons:commons-dbcp2:2.8.0'
     implementation 'commons-dbutils:commons-dbutils:1.7'
     implementation('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
         exclude module: 'junit'
