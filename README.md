@@ -300,24 +300,27 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
 
-#### Individuals
+#### Backers
 
-<a href="https://opencollective.com/translation-plugin"><img src="https://opencollective.com/translation-plugin/individuals.svg?width=890"></a>
+Thank you to all our backers! ❤️ [[Become a backer](https://opencollective.com/translation-plugin/contribute)]
 
-#### Organizations
+<a href="https://opencollective.com/translation-plugin" target="_blank"><img src="https://opencollective.com/translation-plugin/backers.svg?width=890"></a>
 
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
+#### Sponsors
 
-<a href="https://opencollective.com/translation-plugin/organization/0/website"><img src="https://opencollective.com/translation-plugin/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/1/website"><img src="https://opencollective.com/translation-plugin/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/2/website"><img src="https://opencollective.com/translation-plugin/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/3/website"><img src="https://opencollective.com/translation-plugin/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/4/website"><img src="https://opencollective.com/translation-plugin/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/5/website"><img src="https://opencollective.com/translation-plugin/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/6/website"><img src="https://opencollective.com/translation-plugin/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/7/website"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
+Support this project by becoming a sponsor! Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/translation-plugin/contribute)]
+
+<a href="https://opencollective.com/translation-plugin/sponsor/0/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/1/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/2/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/3/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/4/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/5/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/6/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/7/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/8/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/translation-plugin/sponsor/9/website" target="_blank"><img src="https://opencollective.com/translation-plugin/sponsor/9/avatar.svg"></a>
+
 
 #### 捐赠者
 
