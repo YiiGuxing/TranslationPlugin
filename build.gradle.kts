@@ -20,8 +20,8 @@ version = "${properties("pluginVersion")}${if (properties("isSnapshot").toBoolea
 
 repositories {
     mavenLocal()
+    maven(url = "https://maven.aliyun.com/repository/public")
     maven(url = "https://maven-central.storage-download.googleapis.com/repos/central/data/")
-    maven(url = "https://maven.aliyun.com/nexus/content/groups/public/")
     maven(url = "https://repo.eclipse.org/content/groups/releases/")
     maven(url = "https://www.jetbrains.com/intellij-repository/releases")
     mavenCentral()
@@ -79,7 +79,7 @@ tasks {
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
             changelog.run {
-                getOrNull(properties("pluginVersion")) ?: getLatest()
+                getOrNull("v${properties("pluginVersion")}") ?: getLatest()
             }.toHTML() +
                     "<br/><a href=\"https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md\"><b>Full Changelog History</b></a>"
         })
