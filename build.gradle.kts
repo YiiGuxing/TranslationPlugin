@@ -54,7 +54,7 @@ intellij {
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
     version.set(properties("pluginVersion"))
-    header.set(provider { "[v${version.get()}] (${date("yyyy-MM-dd")})" })
+    header.set(provider { "v${version.get()} (${date("yyyy/MM/dd")})" })
     headerParserRegex.set(Regex("v\\d(\\.\\d+)+"))
     keepUnreleasedSection.set(false)
     groups.set(emptyList())
