@@ -1,3 +1,4 @@
+
 import org.apache.tools.ant.filters.EscapeUnicode
 import org.jetbrains.changelog.date
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -80,7 +81,7 @@ tasks {
         version.set(fullPluginVersion)
         sinceBuild.set(properties("pluginSinceBuild"))
         untilBuild.set(properties("pluginUntilBuild"))
-        pluginDescription.set(projectDir.resolve("description.html").readText())
+        pluginDescription.set(projectDir.resolve("DESCRIPTION.md").readText())
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
