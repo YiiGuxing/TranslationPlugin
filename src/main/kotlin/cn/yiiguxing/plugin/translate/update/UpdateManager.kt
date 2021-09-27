@@ -77,13 +77,13 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
             .createNotification(title, content, NotificationType.INFORMATION, Notifications.UrlOpeningListener(false))
             .setImportant(true)
-            .addAction(SupportAction())
             .apply {
                 if (isFeatureVersion && !canBrowseWhatsNewHTMLEditor) {
                     addAction(WhatsNewAction(version))
                 }
             }
             .addAction(GetStartedAction())
+            .addAction(SupportAction())
             .whenExpired {
                 if (isFeatureVersion && canBrowseWhatsNewHTMLEditor) {
                     browseWhatsNew(project)
