@@ -15,8 +15,14 @@ plugins {
     id("org.jetbrains.changelog") version "1.3.0"
 }
 
+val fullPluginVersion = properties("pluginVersion").let { pluginVersion ->
+    val variantPart = properties("pluginVariantVersion").let { if (it.isNotEmpty()) "-$it" else "" }
+    val snapshotPart = if (properties("isSnapshot").toBoolean()) "-SNAPSHOT" else ""
+    "$pluginVersion$variantPart$snapshotPart"
+}
+
 group = properties("pluginGroup")
-version = "${properties("pluginVersion")}${if (properties("isSnapshot").toBoolean()) "-SNAPSHOT" else ""}"
+version = fullPluginVersion
 
 repositories {
     mavenLocal()
@@ -71,17 +77,17 @@ tasks {
     }
 
     patchPluginXml {
-        version.set(properties("pluginVersion"))
+        version.set(fullPluginVersion)
         sinceBuild.set(properties("pluginSinceBuild"))
         untilBuild.set(properties("pluginUntilBuild"))
         pluginDescription.set(projectDir.resolve("description.html").readText())
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
+            val changelogUrl = "https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"
             changelog.run {
                 getOrNull("v${properties("pluginVersion")}") ?: getLatest()
-            }.toHTML() +
-                    "<br/><a href=\"https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md\"><b>Full Changelog History</b></a>"
+            }.toHTML() + "<br/><a href=\"$changelogUrl\"><b>Full Changelog History</b></a>"
         })
     }
 
