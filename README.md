@@ -3,11 +3,25 @@
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
-[![Build Status][build-img-master]][travis-ci]
+[![Build Status][build-img-master]][workflows-build]
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
+
+[build-img-master]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
+[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
+[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
+[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=flat-square
+[downloads-img]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square
+[version-img]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=0091ea
+[latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
+[license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
+[workflows-build]: https://github.com/YiiGuxing/TranslationPlugin/actions/workflows/build.yml
+[plugin]: https://plugins.jetbrains.com/plugin/8579
+[open-collective]: https://opencollective.com/translation-plugin
+[open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
+[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 <p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
@@ -263,22 +277,6 @@
 
 - [FIGlet](https://github.com/YiiGuxing/intellij-figlet)
 - [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
-
-
-[build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=flat-square
-[build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=flat-square
-[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=flat-square
-[downloads-img]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square
-[version-img]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=0091ea
-[latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
-[license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
-[travis-ci]: https://travis-ci.org/YiiGuxing/TranslationPlugin
-[plugin]: https://plugins.jetbrains.com/plugin/8579
-[open-collective]: https://opencollective.com/translation-plugin
-[open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
-[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 ## Contributors
 
