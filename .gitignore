@@ -3,8 +3,6 @@
 !.idea/uiDesigner.xml
 .gradle/
 build/
-sandbox/
-sandbox-*/
 out/
 .DS_Store
 *.iml
