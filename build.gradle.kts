@@ -65,7 +65,6 @@ changelog {
     version.set(properties("pluginVersion"))
     header.set(provider { "v${version.get()} (${date("yyyy/MM/dd")})" })
     headerParserRegex.set(Regex("v\\d(\\.\\d+)+"))
-    keepUnreleasedSection.set(false)
     groups.set(emptyList())
 }
 

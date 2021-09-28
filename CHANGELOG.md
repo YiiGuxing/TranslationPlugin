@@ -1,7 +1,7 @@
 # Translation Plugin Changelog
 
 
-## v3.2
+## [Unreleased]
 - 新增阿里翻译引擎
 - 新增文档渲染视图选择翻译的支持
 - 谷歌翻译新增单词示例展示
