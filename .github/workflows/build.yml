@@ -38,57 +38,57 @@ jobs:
         uses: gradle/wrapper-validation-action@v1.0.4
 
   # Run verifyPlugin and test Gradle tasks
-#  test:
-#    name: Test
-#    needs: gradleValidation
-#    runs-on: ubuntu-latest
-#    steps:
-#
-#      # Check out current repository
-#      - name: Fetch Sources
-#        uses: actions/checkout@v2.3.4
-#
-#      # Setup Java 11 environment for the next steps
-#      - name: Setup Java
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: zulu
-#          java-version: 11
-#          cache: gradle
-#
-#      # Set environment variables
-#      - name: Export Properties
-#        id: properties
-#        shell: bash
-#        run: |
-#          PROPERTIES="$(./gradlew properties --console=plain -q)"
-#          IDE_VERSIONS="$(echo "$PROPERTIES" | grep "^pluginVerifierIdeVersions:" | base64)"
-#
-#          echo "::set-output name=ideVersions::$IDE_VERSIONS"
-#          echo "::set-output name=pluginVerifierHomeDir::~/.pluginVerifier"
-#
-#      # Cache Plugin Verifier IDEs
-#      - name: Setup Plugin Verifier IDEs Cache
-#        uses: actions/cache@v2.1.6
-#        with:
-#          path: ${{ steps.properties.outputs.pluginVerifierHomeDir }}/ides
-#          key: ${{ runner.os }}-plugin-verifier-${{ steps.properties.outputs.ideVersions }}
-#
-#      # Run Qodana inspections
-#      # - name: Qodana - Code Inspection
-#      #   uses: JetBrains/qodana-action@v2.1-eap
-#
-#      # Run tests
-#      - name: Run Tests
-#        run: ./gradlew test
-#
-#      # Run verifyPlugin Gradle task
-#      - name: Verify Plugin
-#        run: ./gradlew verifyPlugin
-#
-#      # Run IntelliJ Plugin Verifier action using GitHub Action
-#      - name: Run Plugin Verifier
-#        run: ./gradlew runPluginVerifier -Pplugin.verifier.home.dir=${{ steps.properties.outputs.pluginVerifierHomeDir }}
+  test:
+    name: Test
+    needs: gradleValidation
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v2.3.4
+
+      # Setup Java 11 environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 11
+          cache: gradle
+
+      # Set environment variables
+      - name: Export Properties
+        id: properties
+        shell: bash
+        run: |
+          PROPERTIES="$(./gradlew properties --console=plain -q)"
+          IDE_VERSIONS="$(echo "$PROPERTIES" | grep "^pluginVerifierIdeVersions:" | base64)"
+
+          echo "::set-output name=ideVersions::$IDE_VERSIONS"
+          echo "::set-output name=pluginVerifierHomeDir::~/.pluginVerifier"
+
+      # Cache Plugin Verifier IDEs
+      - name: Setup Plugin Verifier IDEs Cache
+        uses: actions/cache@v2.1.6
+        with:
+          path: ${{ steps.properties.outputs.pluginVerifierHomeDir }}/ides
+          key: ${{ runner.os }}-plugin-verifier-${{ steps.properties.outputs.ideVersions }}
+
+      # Run Qodana inspections
+      - name: Qodana - Code Inspection
+        uses: JetBrains/qodana-action@v2.1-eap
+
+      # Run tests
+      - name: Run Tests
+        run: ./gradlew test
+
+      # Run verifyPlugin Gradle task
+      - name: Verify Plugin
+        run: ./gradlew verifyPlugin
+
+      # Run IntelliJ Plugin Verifier action using GitHub Action
+      - name: Run Plugin Verifier
+        run: ./gradlew runPluginVerifier -Pplugin.verifier.home.dir=${{ steps.properties.outputs.pluginVerifierHomeDir }}
 
   # Build plugin with buildPlugin Gradle task and provide the artifact for the next workflow jobs
   # Requires test job to be passed
@@ -128,20 +128,20 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=version::$VERSION"
-          echo "::set-output name=pluginVersion::$VERSION"
+          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
           echo "::set-output name=name::$NAME"
           echo "::set-output name=changelog::$CHANGELOG"
 
-#      # Build artifact using buildPlugin Gradle task
-#      - name: Build Plugin
-#        run: ./gradlew buildPlugin
-#
-#      # Store built plugin as an artifact for downloading
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v2.2.4
-#        with:
-#          name: "${{ steps.properties.outputs.name }}-${{ steps.properties.outputs.version }}.UnzipMe"
-#          path: ./build/distributions/*
+      # Build artifact using buildPlugin Gradle task
+      - name: Build Plugin
+        run: ./gradlew buildPlugin
+
+      # Store built plugin as an artifact for downloading
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: "${{ steps.properties.outputs.name }}-${{ steps.properties.outputs.version }}.UnzipMe"
+          path: ./build/distributions/*
 
   # Prepare a draft release for GitHub Releases page for the manual verification
   # If accepted and published, release workflow would be triggered
