@@ -1,4 +1,3 @@
-
 import org.apache.tools.ant.filters.EscapeUnicode
 import org.jetbrains.changelog.date
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -18,10 +17,11 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 }
 
-val fullPluginVersion = properties("pluginVersion").let { pluginVersion ->
+val pluginMajorVersion: String by project
+val fullPluginVersion = pluginMajorVersion.let { majorVersion ->
     val variantPart = properties("pluginVariantVersion").let { if (it.isNotEmpty()) "-$it" else "" }
     val snapshotPart = if (properties("isSnapshot").toBoolean()) "-SNAPSHOT" else ""
-    "$pluginVersion$variantPart$snapshotPart"
+    "$majorVersion$variantPart$snapshotPart"
 }
 
 group = properties("pluginGroup")
@@ -62,7 +62,7 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    version.set(properties("pluginVersion"))
+    version.set(pluginMajorVersion)
     header.set(provider { "v${version.get()} (${date("yyyy/MM/dd")})" })
     headerParserRegex.set(Regex("v\\d(\\.\\d+)+"))
     groups.set(emptyList())
@@ -96,8 +96,8 @@ tasks {
         changeNotes.set(provider {
             val changelogUrl = "https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"
             changelog.run {
-                getOrNull("v${properties("pluginVersion")}") ?: getLatest()
-            }.toHTML() + "<br/><a href=\"$changelogUrl\"><b>Full Changelog History</b></a>"
+                getOrNull("v${pluginMajorVersion}") ?: getLatest()
+            }.toHTML() + "<br/><a href=\"${changelogUrl}\"><b>Full Changelog History</b></a>"
         })
     }
 
