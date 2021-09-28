@@ -94,7 +94,7 @@ jobs:
   # Requires test job to be passed
   build:
     name: Build
-    needs: gradleValidation
+    needs: test
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.properties.outputs.version }}
