@@ -172,5 +172,6 @@ jobs:
         run: |
           gh release create v${{ needs.build.outputs.majorVersion }} \
             --draft \
+            --discussion-category "General" \
             --title "v${{ needs.build.outputs.majorVersion }}" \
             --notes "${{ needs.build.outputs.changelog }}"
