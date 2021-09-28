@@ -1,6 +1,6 @@
 .idea/*
+!.idea/icon.svg
 !.idea/runConfigurations/
-!.idea/uiDesigner.xml
 .gradle/
 build/
 out/
