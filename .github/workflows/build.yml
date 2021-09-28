@@ -97,7 +97,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.properties.outputs.version }}
+      majorVersion: ${{ steps.properties.outputs.majorVersion }}
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
 
@@ -120,7 +120,7 @@ jobs:
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
-          PLUGIN_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
+          MAJOR_VERSION="$(echo "$PROPERTIES" | grep "^pluginMajorVersion:" | cut -f2- -d ' ')"
           NAME="$(echo "$PROPERTIES" | grep "^pluginName:" | cut -f2- -d ' ')"
           CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
@@ -128,7 +128,7 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=version::$VERSION"
-          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
+          echo "::set-output name=majorVersion::$MAJOR_VERSION"
           echo "::set-output name=name::$NAME"
           echo "::set-output name=changelog::$CHANGELOG"
 
@@ -170,7 +170,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v${{ needs.build.outputs.pluginVersion }} \
+          gh release create v${{ needs.build.outputs.majorVersion }} \
             --draft \
-            --title "v${{ needs.build.outputs.pluginVersion }}" \
+            --title "v${{ needs.build.outputs.majorVersion }}" \
             --notes "${{ needs.build.outputs.changelog }}"
