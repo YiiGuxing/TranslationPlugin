@@ -128,7 +128,7 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=version::$VERSION"
-          echo "::set-output name=plugin_version::$PLUGIN_VERSION"
+          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
           echo "::set-output name=name::$NAME"
           echo "::set-output name=changelog::$CHANGELOG"
 
@@ -140,7 +140,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: "${{ steps.properties.outputs.name }} - ${{ steps.properties.outputs.version }}"
+          name: "${{ steps.properties.outputs.name }}-${{ steps.properties.outputs.version }}.UnzipMe"
           path: ./build/distributions/*
 
   # Prepare a draft release for GitHub Releases page for the manual verification
@@ -170,7 +170,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v${{ needs.build.outputs.plugin_version }} \
+          gh release create v${{ needs.build.outputs.pluginVersion }} \
             --draft \
-            --title "v${{ needs.build.outputs.plugin_version }}" \
+            --title "v${{ needs.build.outputs.pluginVersion }}" \
             --notes "${{ needs.build.outputs.changelog }}"
