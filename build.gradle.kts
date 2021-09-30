@@ -84,7 +84,6 @@ java {
 tasks {
     runIde {
         autoReloadPlugins.set(false)
-        systemProperties["idea.auto.reload.plugins"] = false
     }
 
     patchPluginXml {
