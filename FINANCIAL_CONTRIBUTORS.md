@@ -65,6 +65,7 @@
 | Aleksandr Stykalin | | 1 USD |
 | Hushuang | | 6CNY |
 | 张英奇 | | 6CNY |
+| 两颗西柚 | | 5CNY |
 | 寤寐 | | 5CNY |
 | 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
 | Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
