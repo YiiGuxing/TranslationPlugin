@@ -142,12 +142,12 @@ jobs:
         run: |
           ARTIFACT="${{ steps.properties.outputs.name }}-${{ steps.properties.outputs.version }}.zip"
           README="./build/distributions/README.txt"
-          echo -e "Installation:\n" > $README
-          echo -e "1. Open \"Settings/Preferences > Plugins > ⚙ > Install plugins from disk...\".\n" >> $README
-          echo -e "2. Select the $ARTIFACT file and install.\n\n" >> $README
-          echo -e "安装：\n" >> $README
-          echo -e "1. 打开“Settings/Preferences > Plugins > ⚙ > Install plugins from disk...”;\n" >> $README
-          echo -e "1. 选择 $ARTIFACT 并安装。\n" >> $README
+          echo -e "Installation:" > $README
+          echo -e "1. Open \"Settings/Preferences > Plugins > ⚙ > Install plugins from disk...\"." >> $README
+          echo -e "2. Select the $ARTIFACT file and install.\n" >> $README
+          echo -e "安装：" >> $README
+          echo -e "1. 打开“Settings/Preferences > Plugins > ⚙ > Install plugins from disk...”;" >> $README
+          echo -e "2. 选择 $ARTIFACT 并安装。\n" >> $README
 
       # Store built plugin as an artifact for downloading
       - name: Upload artifacts
