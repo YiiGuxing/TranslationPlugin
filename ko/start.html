@@ -2,9 +2,10 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>시작하기 - TranslationPlugin</title>
+    <title>TranslationPlugin - 시작하기</title>
     <link rel="icon" href="../favicon.ico">
-    <meta name="description" content="IntelliJ 기반 IDE/Android Studio/HUAWEI DevEco Studio 번역 플러그인, 다국어 번역, 문서 번역, 음성 읽기 지원...">
+    <meta name="description"
+          content="IntelliJ 기반 IDE/Android Studio/HUAWEI DevEco Studio 번역 플러그인은 다국어 번역, 문서 번역, 음성 읽기 서비스 등을 지원합니다.">
     <meta name="keywords" content="IDEA 플러그인, IDEA 번역 플러그인, 플러그인">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css?v1.0" media="screen">
@@ -53,7 +54,7 @@
                         <li>Google 번역</li>
                         <li>Youdao 번역</li>
                         <li>Baidu 번역</li>
-                        <li>Ali 번역</li>
+                        <li>Alibaba 번역</li>
                     </ul>
                 </li>
                 <li>다국어 번역</li>
@@ -112,15 +113,15 @@
         </div>
         <div class="column">
             <h2 class="column_title">사용</h2>
-            <h3 class="column_item_title">1. 注册翻译服务（可选）</h3>
+            <h3 class="column_item_title">1. 번역 서비스 가입 (선택 사항)</h3>
             <div class="column_tip">
                 <ul>
-                    <li>注册翻译服务（<a href="https://ai.youdao.com" target="_blank"
-                    >有道智云</a>、<a href="https://fanyi-api.baidu.com/manage/developer" target="_blank"
-                    >百度翻译开放平台</a>、<a href="https://www.aliyun.com/product/ai/base_alimt" target="_blank"
-                    >阿里云机器翻译</a>）帐号，开通翻译服务并获取其<strong>应用ID</strong>和<strong>密钥</strong>
+                    <li>번역 서비스 가입 (<a href="https://ai.youdao.com" target="_blank"
+                    >Youdao 클라우드</a>,<a href="https://fanyi-api.baidu.com/manage/developer" target="_blank"
+                    >Baidu 번역 오픈 플랫폼</a>,<a href="https://www.aliyun.com/product/ai/base_alimt" target="_blank"
+                    >Alibaba 클라우드 기계 번역</a>) 계정, 번역 서비스 개설, <strong>앱 ID</strong>  및 <strong>키</strong> 얻기
                     </li>
-                    <li>绑定<strong>应用ID</strong>和<strong>密钥</strong>：偏好设置（设置） > 工具 > 翻译 > 常规 > 翻译引擎 > 配置...
+                    <li><strong>앱 ID</strong>와 <strong>키</strong> 쌍으로 등록：환경설정 (설정) > 도구 > 번역 > 일반 > 번역 엔진 > 구성...
                     </li>
                 </ul>
 
@@ -137,8 +138,8 @@
             <p class="column_tip">사용법: 텍스트 선택 또는 마우스로 텍스트 가리킴 > 마우스 오른쪽 클릭 > 번역 및 바꾸기... (또는 단축키를 사용하여 번역, 자세한 내용은 <a href="#actions">액션</a> 참고)
             </p>
 
-            <h3 class="column_item_title">4. 翻译文档</h3>
-            <p class="column_tip">偏好设置（设置） > 工具 > 翻译 > 其他 > <b>翻译文档</b>，勾选该选项后，文档将会在您查看时被自动翻译。</p>
+            <h3 class="column_item_title">4. 문서 번역</h3>
+            <p class="column_tip">환경설정 (설정) > 도구 > 번역 > 기타 > <b>문서 번역</b>을 선택하면 문서를 볼 때 문서가 자동으로 번역됩니다.</p>
 
             <h3 class="column_item_title">5. 번역 엔진 전환</h3>
             <p class="column_tip">상태 표시줄의 번역 엔진 상태 아이콘을 클릭하거나 단축키 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>(Mac OS: <kbd>Control</kbd>
@@ -213,7 +214,7 @@
                     </ul>
                 </li>
                 <li>
-                    <h4 class="column_item_title">일일 단어</h4>
+                    <h4 class="column_item_title">오늘의 단어</h4>
                     <p>오늘의 단어 대화상자를 표시합니다.디폴트 단축키: (없음)</p>
                 </li>
                 <li>
@@ -232,7 +233,7 @@
                                 <li>번역 복사 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
                                 <li>입력 내용 지우기 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd></li>
                                 <li>더 많은 번역 펼치기 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd></li>
-                                <li>더 많은 번역 접기 - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd></li>
+                                <li>더 많은 번역 접기 - <kbd>Ctrl/Meta</kbd> + <kbd>Up</kbd></li>
                             </ul>
                         </li>
                         <li>
