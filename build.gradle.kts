@@ -1,5 +1,6 @@
+import java.time.*
+import java.time.format.*
 import org.apache.tools.ant.filters.EscapeUnicode
-import org.jetbrains.changelog.date
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -40,7 +41,7 @@ dependencies {
     compileOnly(fileTree("libs"))
     testImplementation("junit:junit:4.13.2")
 
-    implementation("org.jsoup:jsoup:1.14.2")
+    implementation("org.jsoup:jsoup:1.14.3")
     implementation("org.apache.commons:commons-dbcp2:2.8.0")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
@@ -62,8 +63,11 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
+    val date = LocalDate.now(ZoneId.of("Asia/Shanghai"))
+    val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+
     version.set(pluginMajorVersion)
-    header.set(provider { "v${version.get()} (${date("yyyy/MM/dd")})" })
+    header.set(provider { "v${version.get()} (${date.format(formatter)})" })
     headerParserRegex.set(Regex("v\\d(\\.\\d+)+"))
     groups.set(emptyList())
 }
