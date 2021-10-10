@@ -1,7 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import kotlinx.collections.immutable.toImmutableMap
-
 /**
  * Interface for language adapter.
  */
@@ -23,7 +21,7 @@ interface LanguageAdapter {
 abstract class BaseLanguageAdapter : LanguageAdapter {
 
     private val codeMapping: Map<String, Lang> by lazy {
-        getAdaptedLanguages().toImmutableMap()
+        getAdaptedLanguages()
     }
 
     private val langMapping: Map<Lang, String> by lazy {
