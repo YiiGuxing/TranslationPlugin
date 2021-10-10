@@ -186,4 +186,4 @@ jobs:
           gh release create v${{ needs.build.outputs.majorVersion }} \
             --draft \
             --title "v${{ needs.build.outputs.majorVersion }}" \
-            --notes "## What's Changed\n${{ needs.build.outputs.changelog }}"
+            --notes "## What's Changed\\n${{ needs.build.outputs.changelog }}"
