@@ -183,7 +183,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          TITLE=`echo -e "## What's Changed\n"`
           gh release create v${{ needs.build.outputs.majorVersion }} \
             --draft \
             --title "v${{ needs.build.outputs.majorVersion }}" \
-            --notes "## What's Changed\\n${{ needs.build.outputs.changelog }}"
+            --notes "$TITLE${{ needs.build.outputs.changelog }}"
