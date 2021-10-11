@@ -27,18 +27,16 @@
     <li>Word book.</li>
 </ul>
 <h2>Sponsors</h2>
+<a title="JetBrains" href="https://www.jetbrains.com/?from=TranslationPlugin">
+  <img border="0" src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/sponsor_jetbrains.png" width="131" alt="JetBrains">
+</a>
+<p>Whatever platform or language you work with, JetBrains has a development tool for you.</p>
+<br/>
+<a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">
+  <img border="0" src="https://alt-images.codestream.com/codestream_logo_translation.png" width="294" alt="CodeStream">
+</a>
 <p>
-    <a title="JetBrains" href="https://www.jetbrains.com/?from=TranslationPlugin">
-      <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/sponsor_jetbrains.png" width="131" height="142" alt="JetBrains">
-    </a>
-    <br/>
-    Whatever platform or language you work with, JetBrains has a development tool for you.<br/>
-    <br/>
-    <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">
-      <img src="https://alt-images.codestream.com/codestream_logo_translation.png" width="294" alt="CodeStream">
-    </a>
-    <br/>
-    Eliminate context switching and costly distractions. Create and merge PRs and perform code reviews from inside your
-    IDE while using jump-to-definition, your keybindings, and other IDE favorites.
-    <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">Learn more</a>.
+Eliminate context switching and costly distractions. Create and merge PRs and perform code reviews from inside your
+IDE while using jump-to-definition, your keybindings, and other IDE favorites.
+<a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">Learn more</a>.
 </p>

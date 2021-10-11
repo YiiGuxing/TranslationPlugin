@@ -59,8 +59,9 @@
 | 梅少锋 | | 10 CNY |
 | 洪晓波 | | 9.9 CNY |
 | 刘十年 | [www.l1ub0w3n.cn](https://www.l1ub0w3n.cn) | 8.8 CNY |
-| 甯 | | 8CNY |
-| 干巴爹 | | 8CNY |
+| ZZZping | [github.com/ZZZping](https://github.com/ZZZping) | 8.11 CNY |
+| 甯 | | 8 CNY |
+| 干巴爹 | | 8 CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
 | 刘小明 | | 6.66CNY |
 | Aleksandr Stykalin | | 1 USD |
@@ -77,4 +78,5 @@
 | Evil | | 2 CNY |
 | 李振宇 | | 2 CNY |
 | Code301 | [github.com/golangtoolkit](https://github.com/golangtoolkit/helper) | 1.11 CNY |
+| 解析短视频 | [www.jxdsp.com](https://www.jxdsp.com) | 1 CNY |
 | 堂主 | | 1 CNY |

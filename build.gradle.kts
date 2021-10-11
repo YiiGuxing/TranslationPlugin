@@ -1,7 +1,8 @@
-import java.time.*
-import java.time.format.*
 import org.apache.tools.ant.filters.EscapeUnicode
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -80,11 +81,6 @@ qodana {
     showReport.set(System.getenv("QODANA_SHOW_REPORT").toBoolean())
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
 tasks {
     runIde {
         autoReloadPlugins.set(false)
@@ -123,14 +119,16 @@ tasks {
         distributionType = Wrapper.DistributionType.ALL
     }
 
-    withType<KotlinCompile> {
-        kotlinOptions.languageVersion = properties("kotlinLanguageVersion")
-        kotlinOptions.apiVersion = properties("kotlinTargetVersion")
-        kotlinOptions.jvmTarget = properties("javaVersion")
-    }
-
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
+    // Set the JVM compatibility versions
+    properties("javaVersion").let {
+        withType<JavaCompile> {
+            sourceCompatibility = it
+            targetCompatibility = it
+            options.encoding = "UTF-8"
+        }
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = it
+        }
     }
 
     withType<ProcessResources> {

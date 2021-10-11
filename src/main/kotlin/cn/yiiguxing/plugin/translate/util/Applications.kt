@@ -11,7 +11,7 @@ import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
-import com.intellij.ide.IdeBundle
+import com.intellij.ide.actions.AboutPopup
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.notification.Notification
@@ -19,18 +19,13 @@ import com.intellij.notification.Notifications
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.application.ex.ApplicationInfoEx
-import com.intellij.openapi.application.impl.ApplicationInfoImpl
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.Alarm
-import com.intellij.util.text.DateFormatUtil
 import java.awt.datatransfer.StringSelection
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.text.SimpleDateFormat
 import java.util.concurrent.Future
 
 object Plugin {
@@ -42,35 +37,7 @@ object Plugin {
 
     val version: String by lazy { descriptor.version }
 
-    val systemInfo: String by lazy {
-        val appInfo = ApplicationInfoEx.getInstanceEx() as ApplicationInfoImpl
-
-        val appName = appInfo.fullApplicationName
-
-        var buildInfo = IdeBundle.message("about.box.build.number", appInfo.build.asString())
-        val cal = appInfo.buildDate
-        var buildDate = ""
-        if (appInfo.build.isSnapshot) {
-            buildDate = SimpleDateFormat("HH:mm, ").format(cal.time)
-        }
-        buildDate += DateFormatUtil.formatAboutDialogDate(cal.time)
-        buildInfo += IdeBundle.message("about.box.build.date", buildDate)
-
-        val properties = System.getProperties()
-        val javaVersion = properties.getProperty("java.version", "unknown")
-        val javaRuntimeVersion = properties.getProperty("java.runtime.version", javaVersion)
-        val arch = properties.getProperty("os.arch", "")
-        val jreInfo = IdeBundle.message("about.box.jre", javaRuntimeVersion, arch)
-
-        val vmVersion = properties.getProperty("java.vm.name", "unknown")
-        val vmVendor = properties.getProperty("java.vendor", "unknown")
-        val jvmInfo = IdeBundle.message("about.box.vm", vmVersion, vmVendor)
-
-        val pluginInfo = "Plugin v$version"
-        val osInfo = "OS: " + SystemInfo.getOsNameAndVersion()
-
-        "$pluginInfo\n$appName\n$buildInfo\n$jreInfo\n$jvmInfo\n$osInfo"
-    }
+    val ideaInfo: String by lazy { AboutPopup.getAboutText() }
 }
 
 inline val Application: Application get() = ApplicationManager.getApplication()
@@ -168,7 +135,7 @@ fun Throwable.copyToClipboard(message: String? = null) {
             it.println()
         }
 
-        it.println(Plugin.systemInfo.split("\n").joinToString(separator = "  \n>", prefix = ">"))
+        it.println(Plugin.ideaInfo.split("\n").joinToString(separator = "  \n> ", prefix = "> "))
         it.println()
 
         it.println("```")
