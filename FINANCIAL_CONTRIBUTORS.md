@@ -59,6 +59,7 @@
 | 随风 | [github.com/lzf971107](https://github.com/lzf971107) | 10 CNY |
 | 王兆强 | | 10 CNY |
 | 梅少锋 | | 10 CNY |
+| 李志豪 | | 9.99 CNY |
 | 洪晓波 | | 9.9 CNY |
 | 刘十年 | [www.l1ub0w3n.cn](https://www.l1ub0w3n.cn) | 8.8 CNY |
 | ZZZping | [github.com/ZZZping](https://github.com/ZZZping) | 8.11 CNY |
