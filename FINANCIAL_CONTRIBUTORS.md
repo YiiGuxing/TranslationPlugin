@@ -33,6 +33,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Saye_ui | | 10 CNY |
 | 美团平台App技术中心 | | 10 CNY |
 | 大奇 | | 10 CNY |
 | Rorschach | [Rorschach's Code Wiki](https://unexpected-swim-49d.notion.site/Rorschach-s-Code-Wiki-9a8fb7ec84e1467bafa08824f033b338) | 10 CNY |
