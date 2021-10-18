@@ -322,8 +322,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | SXueckShen | [github.com/sxueck](https://github.com/sxueck) | 10 USD |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
+| 王者之师 | | 50 CNY |
 | Donfy | | 50 CNY |
 | Sampan | [gitlab.com/SamuelPan](http://gitlab.com/SamuelPan) | 50 CNY |
-| 一个李大壮罢了 | | 50 CNY |
 
 [更多捐赠者][financial-contributors]
