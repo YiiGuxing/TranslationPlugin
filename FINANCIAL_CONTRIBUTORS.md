@@ -34,6 +34,7 @@
 | Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Cinclude | | 10 CNY |
 | Saye_ui | | 10 CNY |
 | 美团平台App技术中心 | | 10 CNY |
 | 大奇 | | 10 CNY |
