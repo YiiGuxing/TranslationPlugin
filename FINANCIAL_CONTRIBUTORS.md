@@ -68,6 +68,7 @@
 | ZZZping | [github.com/ZZZping](https://github.com/ZZZping) | 8.11 CNY |
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
+| 谭靖宇 | | 6.66CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
 | 刘小明 | | 6.66CNY |
 | Aleksandr Stykalin | | 1 USD |
