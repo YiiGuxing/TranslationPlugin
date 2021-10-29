@@ -233,7 +233,7 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin/donate" target="_blank">
-          <img src="https://opencollective.com/webpack/donate/button@2x.png?color=blue" width=300 alt="Donate To Our Collective">
+          <img src="https://opencollective.com/translation-plugin/donate/button@2x.png?color=blue" width=300 alt="Donate To Our Collective">
         </a>
       </td>
       <td>
