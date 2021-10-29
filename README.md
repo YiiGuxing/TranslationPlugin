@@ -60,21 +60,6 @@
 - RubyMine
 - WebStorm
 
-## Sponsors
-
-<table>
-      <td>
-        <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/jetbrains.svg" alt="JetBrains" title="JetBrains">
-        </a>
-      </td>
-      <td>
-        <a href="https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner" target="_blank">
-            <img src="https://alt-images.codestream.com/codestream_logo_translation.png" alt="CodeStream" title="CodeStream">
-        </a>
-      </td>
-</table>
-
 ## Installation
 
 <a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
