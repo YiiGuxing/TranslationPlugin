@@ -1,17 +1,41 @@
-# 捐赠者
+# Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
+
+## Backers
+
+Thank you to all our backers! ❤️ [[Become a backer](https://opencollective.com/translation-plugin/donate)]
+
+<a href="https://opencollective.com/translation-plugin/donate" target="_blank"><img src="https://opencollective.com/translation-plugin/backers.svg?width=800"></a>
+
+## Sponsors
+
+Support this project by becoming a sponsor! Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/translation-plugin/contribute)]
+
+<a href="https://opencollective.com/translation-plugin/organization/0/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/0/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/1/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/1/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/2/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/2/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/3/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/3/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/4/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/4/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/5/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/5/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/6/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/6/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/7/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/8/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg?avatarHeight=128"></a>
+<a href="https://opencollective.com/translation-plugin/organization/9/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg?avatarHeight=128"></a>
+
+
+-----
+
+
+#### 捐赠者列表
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| CodeStream | [www.codestream.com](https://www.codestream.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin) | 850 USD |
-| JetBrains | [www.jetbrains.com](https://jb.gg/OpenSource) | 696 USD |
-| Targeted Web Traffic | [www.targetedwebtraffic.com](https://www.targetedwebtraffic.com) | 50 USD |
-| Takahisa Ishida | | 20 USD |
 | 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
-| SXueckShen | [github.com/sxueck](https://github.com/sxueck) | 10 USD |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
 | 王者之师 | | 50 CNY |
 | Donfy | | 50 CNY |
@@ -22,9 +46,6 @@
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| Adam Gąsowski | [github.com/gander](https://github.com/gander) | 8 USD |
-| STRRL | [github.com/STRRL](https://github.com/STRRL) | 5 USD |
-| Marcel Heckel | | 5 USD |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
@@ -32,7 +53,6 @@
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
-| Kirill Semenchenko | | 2 USD |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
 | Cinclude | | 10 CNY |
@@ -72,7 +92,6 @@
 | 谭靖宇 | | 6.66CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
 | 刘小明 | | 6.66CNY |
-| Aleksandr Stykalin | | 1 USD |
 | Hushuang | | 6CNY |
 | 张英奇 | | 6CNY |
 | 两颗西柚 | | 5CNY |
