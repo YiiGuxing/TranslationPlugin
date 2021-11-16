@@ -258,11 +258,6 @@
 
 **感谢您的支持！**
 
-## More Plugins
-
-- [FIGlet](https://github.com/YiiGuxing/intellij-figlet)
-- [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
-
 ## Contributors
 
 ### Code Contributors
