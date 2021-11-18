@@ -28,12 +28,26 @@ jobs:
           java-version: 11
           cache: gradle
 
+      # Set environment variables
+      - name: Export Properties
+        id: properties
+        shell: bash
+        run: |
+          CHANGELOG="$(cat << 'EOM' | sed -e 's/^[[:space:]]*$//g' -e '/./,$!d'
+          ${{ github.event.release.body }}
+          EOM
+          )"
+
+          echo "::set-output name=changelog::$CHANGELOG"
+
       # Update Unreleased section with the current release note
       - name: Patch Changelog
+        if: ${{ steps.properties.outputs.changelog != '' }}
         run: |
-          ./gradlew patchChangelog --release-note="`cat << EOM
-          ${{ github.event.release.body }}
-          EOM`"
+          ./gradlew patchChangelog --release-note "$(cat << 'EOM'
+          ${{ steps.properties.outputs.changelog }}
+          EOM
+          )"
 
       # Publish the plugin to the Marketplace
       - name: Publish Plugin
@@ -49,6 +63,7 @@ jobs:
 
       # Create pull request
       - name: Create Pull Request
+        if: ${{ steps.properties.outputs.changelog != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
