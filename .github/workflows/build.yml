@@ -28,7 +28,6 @@ jobs:
   # Build plugin and provide the artifact for the next workflow jobs
   build:
     name: Build
-    needs: test
     runs-on: ubuntu-latest
     outputs:
       majorVersion: ${{ steps.properties.outputs.majorVersion }}
