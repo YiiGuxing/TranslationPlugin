@@ -76,7 +76,7 @@ qodana {
     cachePath.set(projectDir.resolve(".qodana").canonicalPath)
     reportPath.set(projectDir.resolve("build/reports/inspections").canonicalPath)
     saveReport.set(true)
-    showReport.set(System.getenv("QODANA_SHOW_REPORT").toBoolean())
+    showReport.set(System.getenv("QODANA_SHOW_REPORT")?.toBoolean() ?: false)
 }
 
 tasks {
@@ -97,6 +97,12 @@ tasks {
                 getOrNull("v${pluginMajorVersion}") ?: getLatest()
             }.toHTML() + "<br/><a href=\"${changelogUrl}\"><b>Full Changelog History</b></a>"
         })
+    }
+
+    signPlugin {
+        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+        privateKey.set(System.getenv("PRIVATE_KEY"))
+        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
     publishPlugin {
