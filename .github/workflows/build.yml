@@ -105,15 +105,15 @@ jobs:
           path: ${{ github.workspace }}/build/reports/pluginVerifier
 
       # Run Qodana inspections
-      - name: Qodana - Code Inspection
-        uses: JetBrains/qodana-action@v2.1-eap
+      #- name: Qodana - Code Inspection
+      #  uses: JetBrains/qodana-action@v2.1-eap
 
       # Collect Qodana Result
-      - name: Collect Qodana Result
-        uses: actions/upload-artifact@v2
-        with:
-          name: qodana-result
-          path: ${{ github.workspace }}/qodana
+      #- name: Collect Qodana Result
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: qodana-result
+      #    path: ${{ github.workspace }}/qodana
 
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
@@ -124,6 +124,7 @@ jobs:
           FILENAME=`ls *.zip`
           unzip "$FILENAME" -d content
           echo "::set-output name=filename::$FILENAME"
+
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
         uses: actions/upload-artifact@v2.2.4
