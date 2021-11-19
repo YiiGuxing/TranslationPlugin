@@ -75,8 +75,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val canBrowseWhatsNewHTMLEditor = canBrowseWhatsNewHTMLEditor()
         NotificationGroupManager.getInstance()
             .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
-            .createNotification(title, content, NotificationType.INFORMATION, Notifications.UrlOpeningListener(false))
+            .createNotification(title, content, NotificationType.INFORMATION)
             .setImportant(true)
+            .setListener(Notifications.UrlOpeningListener(false))
             .apply {
                 if (isFeatureVersion && !canBrowseWhatsNewHTMLEditor) {
                     addAction(WhatsNewAction(version))

@@ -42,8 +42,7 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
                 .createNotification(
                     message("notification.idea.version.title"),
                     message("notification.idea.version"),
-                    NotificationType.WARNING,
-                    null
+                    NotificationType.WARNING
                 )
                 .addAction(DoNotShowAgainAction())
                 .setImportant(true)
