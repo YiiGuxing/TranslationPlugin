@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.util.CacheService
+import cn.yiiguxing.plugin.translate.util.toHexString
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
 import java.security.MessageDigest
-import javax.xml.bind.DatatypeConverter
 
 abstract class TranslateClient<T : BaseTranslation>(private val translator: Translator) {
 
@@ -28,7 +28,7 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
         val key = MessageDigest.getInstance("MD5")
         updateCacheKey(key, translator, text, srcLang, targetLang)
         cacheKeyUpdater?.invoke(key)
-        return DatatypeConverter.printHexBinary(key.digest())
+        return key.digest().toHexString()
     }
 
     fun execute(text: String, srcLang: Lang, targetLang: Lang): T {

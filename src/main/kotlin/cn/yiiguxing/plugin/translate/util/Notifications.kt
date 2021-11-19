@@ -33,7 +33,8 @@ object Notifications {
     ) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup(groupId)
-            .createNotification(title, message, NotificationType.ERROR)
+            .createNotification(message, NotificationType.ERROR)
+            .setTitle(title)
             .setListener(UrlOpeningListener)
             .addAction(CopyToClipboardAction(message, throwable))
             .apply { for (action in actions) addAction(action) }
@@ -62,7 +63,8 @@ object Notifications {
     ) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup(groupId)
-            .createNotification(title, message, type)
+            .createNotification(message, type)
+            .setTitle(title)
             .show(project)
     }
 

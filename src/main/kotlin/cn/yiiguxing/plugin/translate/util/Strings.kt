@@ -170,18 +170,10 @@ private val HEX_DIGITS = charArrayOf(
 )
 
 fun String.getMessageDigest(algorithm: String): String {
-    val messageDigest = with(MessageDigest.getInstance(algorithm)) {
+    return with(MessageDigest.getInstance(algorithm)) {
         update(toByteArray(Charsets.UTF_8))
-        digest()
+        digest().toHexString()
     }
-
-    val result = CharArray(messageDigest.size * 2)
-    messageDigest.forEachIndexed { index, byte ->
-        result[index * 2] = HEX_DIGITS[byte.toInt() ushr 4 and 0xf]
-        result[index * 2 + 1] = HEX_DIGITS[byte.toInt() and 0xf]
-    }
-
-    return String(result)
 }
 
 /**
