@@ -12,8 +12,8 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBusConnection
 
@@ -145,7 +145,7 @@ class TranslateService private constructor() : Disposable {
         val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
 
         val instance: TranslateService
-            get() = ServiceManager.getService(TranslateService::class.java)
+            get() = ApplicationManager.getApplication().getService(TranslateService::class.java)
 
         private val LOGGER = Logger.getInstance(TranslateService::class.java)
 

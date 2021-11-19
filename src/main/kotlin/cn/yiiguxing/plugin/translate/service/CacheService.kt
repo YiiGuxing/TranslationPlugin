@@ -5,7 +5,11 @@ import cn.yiiguxing.plugin.translate.TRANSLATION_DIRECTORY
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.openapi.components.*
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.createDirectories
 import com.intellij.util.io.delete
@@ -166,6 +170,6 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         private val LOG = Logger.getInstance(CacheService::class.java)
 
         val instance: CacheService
-            get() = ServiceManager.getService(CacheService::class.java)
+            get() = ApplicationManager.getApplication().getService(CacheService::class.java)
     }
 }

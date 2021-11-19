@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.messages.Topic
@@ -172,7 +171,7 @@ class Settings : PersistentStateComponent<Settings> {
          * @return the unique [Settings] instance.
          */
         val instance: Settings
-            get() = ServiceManager.getService(Settings::class.java)
+            get() = ApplicationManager.getApplication().getService(Settings::class.java)
 
     }
 }

@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.TRANSLATION_DIRECTORY
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
@@ -413,7 +413,7 @@ class WordBookService {
         private val LOGGER = Logger.getInstance(WordBookService::class.java)
 
         val instance: WordBookService
-            get() = ServiceManager.getService(WordBookService::class.java)
+            get() = ApplicationManager.getApplication().getService(WordBookService::class.java)
 
         private fun ClassLoader.canDriveService(default: Boolean = true): Boolean {
             // 内置的SQLite驱动不支持Mac M1

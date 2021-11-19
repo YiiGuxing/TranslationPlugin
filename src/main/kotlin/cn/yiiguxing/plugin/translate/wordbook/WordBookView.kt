@@ -13,7 +13,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
@@ -413,6 +413,6 @@ class WordBookView {
         private const val TAB_NAME_ALL = "ALL"
 
         val instance: WordBookView
-            get() = ServiceManager.getService(WordBookView::class.java)
+            get() = ApplicationManager.getApplication().getService(WordBookView::class.java)
     }
 }

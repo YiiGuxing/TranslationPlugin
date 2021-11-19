@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.util.trimToSize
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.messages.Topic
@@ -139,7 +138,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
          * @return the unique [AppStorage] instance.
          */
         val instance: AppStorage
-            get() = ServiceManager.getService(AppStorage::class.java)
+            get() = ApplicationManager.getApplication().getService(AppStorage::class.java)
     }
 
 }

@@ -2,13 +2,13 @@
 
 package cn.yiiguxing.plugin.translate.service
 
-import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.TranslationBalloon
+import cn.yiiguxing.plugin.translate.ui.TranslationDialog
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -69,9 +69,9 @@ open class TranslationUIManager private constructor() : Disposable {
 
         fun instance(project: Project?): TranslationUIManager {
             return if (project == null) {
-                ServiceManager.getService(AppService::class.java)
+                ApplicationManager.getApplication().getService(AppService::class.java)
             } else {
-                ServiceManager.getService(project, TranslationUIManager::class.java)
+                project.getService(TranslationUIManager::class.java)
             }
         }
 
