@@ -40,10 +40,9 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
             NotificationGroupManager.getInstance()
                 .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
                 .createNotification(
-                    message("notification.idea.version.title"),
-                    message("notification.idea.version"),
-                    NotificationType.WARNING
+                    message("notification.idea.version"), NotificationType.WARNING
                 )
+                .setTitle(message("notification.idea.version.title"))
                 .addAction(DoNotShowAgainAction())
                 .setImportant(true)
                 .show(project)
