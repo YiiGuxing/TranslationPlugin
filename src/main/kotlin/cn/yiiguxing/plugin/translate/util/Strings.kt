@@ -7,9 +7,9 @@ package cn.yiiguxing.plugin.translate.util
 
 import java.net.URLEncoder
 import java.security.MessageDigest
+import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import javax.xml.bind.DatatypeConverter
 
 
 private val REGEX_UNDERLINE = Regex("([A-Za-z])_+([A-Za-z])")
@@ -165,11 +165,23 @@ private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLe
  */
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
 
+private val HEX_DIGITS = charArrayOf(
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+)
+
 fun String.getMessageDigest(algorithm: String): String {
-    return with(MessageDigest.getInstance(algorithm)) {
+    val messageDigest = with(MessageDigest.getInstance(algorithm)) {
         update(toByteArray(Charsets.UTF_8))
-        DatatypeConverter.printHexBinary(digest())
+        digest()
     }
+
+    val result = CharArray(messageDigest.size * 2)
+    messageDigest.forEachIndexed { index, byte ->
+        result[index * 2] = HEX_DIGITS[byte.toInt() ushr 4 and 0xf]
+        result[index * 2 + 1] = HEX_DIGITS[byte.toInt() and 0xf]
+    }
+
+    return String(result)
 }
 
 /**
@@ -190,7 +202,7 @@ fun String.sha256(): String = getMessageDigest("SHA-256")
 fun String.md5Base64(): String {
     return with(MessageDigest.getInstance("MD5")) {
         update(toByteArray())
-        DatatypeConverter.printBase64Binary(digest())
+        Base64.getEncoder().encodeToString(digest())
     }
 }
 
@@ -198,5 +210,5 @@ fun String.hmacSha1(key: String): String {
     val mac: Mac = Mac.getInstance("HMACSha1")
     val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
     mac.init(secretKeySpec)
-    return DatatypeConverter.printBase64Binary(mac.doFinal(toByteArray()))
+    return Base64.getEncoder().encodeToString(mac.doFinal(toByteArray()))
 }
