@@ -13,6 +13,7 @@ import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import com.google.gson.annotations.SerializedName
 
+private val ZERO_WIDTH_SPACE = Regex("​+")
 
 data class GoogleTranslation(
     var original: String? = null,
@@ -33,7 +34,10 @@ data class GoogleTranslation(
         check(target != null) { "Cannot convert to Translation: target=null" }
 
         val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
-        val trans = sentences.asSequence().mapNotNull { (it as? GTransSentence)?.trans }.joinToString("")
+        val trans = sentences.asSequence()
+            .mapNotNull { (it as? GTransSentence)?.trans }
+            .joinToString("")
+            .replace(ZERO_WIDTH_SPACE, "")
 
         val extraDocuments = GoogleExamplesDocument.getDocument(examples)?.let {
             listOf(NamedTranslationDocument(message("title.google.document.examples"), it))

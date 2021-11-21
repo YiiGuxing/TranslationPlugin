@@ -162,18 +162,15 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     private companion object {
 
-        /** 谷歌翻译的空格符：`0xA0` */
-        const val GT_WHITESPACE_CHARACTER = ' ' // 0xA0
-
-        /** 空格符：`0x20` */
-        const val WHITESPACE_CHARACTER = ' ' // 0x20
+        /** 谷歌翻译的空格符：`  -   　` */
+         val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
 
         val HIGHLIGHT_ATTRIBUTES = TextAttributes().apply {
             effectType = EffectType.BOXED
             effectColor = JBColor(0xFF0000, 0xFF0000)
         }
 
-        fun String.fixWhitespace() = replace(GT_WHITESPACE_CHARACTER, WHITESPACE_CHARACTER)
+        fun String.fixWhitespace() = replace(SPACES, " ")
 
         fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
             val appStorage = AppStorage
