@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 修复了零宽度空格的问题
 
 ## v3.2 (2021/10/10)
 - 新增阿里翻译引擎
