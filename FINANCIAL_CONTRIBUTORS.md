@@ -6,7 +6,7 @@ Become a financial contributor and help us sustain our community. [[Contribute](
 
 Thank you to all our backers! ❤️ [[Become a backer](https://opencollective.com/translation-plugin/donate)]
 
-<a href="https://opencollective.com/translation-plugin/donate" target="_blank"><img src="https://opencollective.com/translation-plugin/backers.svg?width=800"></a>
+<a href="https://opencollective.com/translation-plugin/donate" target="_blank"><img src="https://opencollective.com/translation-plugin/individuals.svg?width=800"></a>
 
 ## Sponsors
 
