@@ -19,13 +19,10 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 }
 
-val pluginMajorVersion: String by project
+val pluginVersion: String by project
 val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
-val fullPluginVersion = pluginMajorVersion.let { majorVersion ->
-    val variantPart = properties("pluginVariantVersion").let { if (it.isNotEmpty()) "-$it" else "" }
-    val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
-    "$majorVersion$variantPart$snapshotPart"
-}
+val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
+val fullPluginVersion = "v$pluginVersion$snapshotPart"
 
 group = properties("pluginGroup")
 version = fullPluginVersion
@@ -66,9 +63,9 @@ changelog {
     val date = LocalDate.now(ZoneId.of("Asia/Shanghai"))
     val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
-    version.set(pluginMajorVersion)
+    version.set(pluginVersion)
     header.set(provider { "v${version.get()} (${date.format(formatter)})" })
-    headerParserRegex.set(Regex("v\\d(\\.\\d+)+"))
+    headerParserRegex.set(Regex("v(\\d(\\.\\d+)+(-([0-9a-zA-Z]+(\\.[0-9a-zA-Z]+)*))?)"))
     groups.set(emptyList())
 }
 
@@ -95,7 +92,7 @@ tasks {
         changeNotes.set(provider {
             val changelogUrl = "https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"
             changelog.run {
-                getOrNull("v${pluginMajorVersion}") ?: getLatest()
+                getOrNull(pluginVersion) ?: getUnreleased()
             }.toHTML() + "<br/><a href=\"${changelogUrl}\"><b>Full Changelog History</b></a>"
         })
     }
