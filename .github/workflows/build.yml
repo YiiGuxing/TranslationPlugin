@@ -54,6 +54,8 @@ jobs:
       - name: Export Properties
         id: properties
         shell: bash
+        env:
+          SNAPSHOT_VERSION: true
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
