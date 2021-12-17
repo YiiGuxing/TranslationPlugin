@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## v3.2.1 (2021/12/17)
 - 修复了零宽度空格的问题
 
 ## v3.2 (2021/10/10)
