@@ -19,8 +19,8 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 }
 
-val isSnapshot = System.getenv("SNAPSHOT_VERSION").toBoolean()
 val pluginMajorVersion: String by project
+val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
 val fullPluginVersion = pluginMajorVersion.let { majorVersion ->
     val variantPart = properties("pluginVariantVersion").let { if (it.isNotEmpty()) "-$it" else "" }
     val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
