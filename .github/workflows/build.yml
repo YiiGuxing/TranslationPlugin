@@ -74,6 +74,8 @@ jobs:
 
       # Run tests
       - name: Run Tests
+        env:
+          SNAPSHOT_VERSION: true
         run: ./gradlew test
 
       # Collect Tests Result of failed tests
@@ -94,6 +96,8 @@ jobs:
       # Run Verify Plugin task and IntelliJ Plugin Verifier tool
       - name: Run Plugin Verification tasks
         continue-on-error: true
+        env:
+          SNAPSHOT_VERSION: true
         run: ./gradlew runPluginVerifier -Pplugin.verifier.home.dir=${{ steps.properties.outputs.pluginVerifierHomeDir }}
 
       # Collect Plugin Verifier Result
