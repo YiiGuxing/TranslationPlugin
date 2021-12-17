@@ -27,7 +27,7 @@ val DEFAULT_CONDITION: CharCondition = JAVA_IDENTIFIER_PART_CONDITION
 /**
  * 非英文条件
  */
-val NON_LATIN_CONDITION: CharCondition = CharCondition { it.toInt() > 0xFF && Character.isJavaIdentifierPart(it) }
+val NON_LATIN_CONDITION: CharCondition = CharCondition { it.code > 0xFF && Character.isJavaIdentifierPart(it) }
 
 /**
  * 非空白条件

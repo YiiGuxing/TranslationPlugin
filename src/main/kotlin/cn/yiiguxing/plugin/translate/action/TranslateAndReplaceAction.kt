@@ -33,6 +33,7 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler
 import com.intellij.ui.JBColor
 import com.intellij.util.concurrency.EdtScheduledExecutorService
 import java.lang.ref.WeakReference
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.swing.text.JTextComponent
 
@@ -357,7 +358,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 for ((separator, builder) in lowerWithSeparatorBuilders) {
                     withSeparator.getValue(separator).apply {
                         add(builder.toString())
-                        add(builder.toString().toUpperCase())
+                        add(builder.toString().uppercase())
                     }
                 }
             }
@@ -382,7 +383,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         ) {
             for (i in words.indices) {
                 val word = if (i == 0) words[i].sanitizeJavaIdentifierStart() else words[i]
-                val lowerCase = word.toLowerCase()
+                val lowerCase = word.lowercase(Locale.getDefault())
                 for ((separator, builder) in lowerWithSeparator) {
                     if (i > 0) {
                         builder.append(separator)

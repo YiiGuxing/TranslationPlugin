@@ -8,13 +8,13 @@ import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserFactory
-import com.intellij.openapi.fileChooser.FileElement
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import java.util.*
 
 
 /**
@@ -119,7 +119,7 @@ fun importWordBook(project: Project?) {
     val selectFile = selectImportSource(project) ?: return
     val title = message("wordbook.window.import.notification.title")
 
-    val importer = WORD_BOOK_IMPORTERS[selectFile.extension?.toLowerCase()]
+    val importer = WORD_BOOK_IMPORTERS[selectFile.extension?.lowercase(Locale.getDefault())]
     if (importer == null) {
         LOG.e("Word book import: file extension=${selectFile.extension}")
         Notifications.showErrorNotification(
@@ -160,17 +160,17 @@ fun importWordBook(project: Project?) {
 
 private fun VirtualFile.isValidExtension(): Boolean {
     val extension = extension ?: return false
-    return WORD_BOOK_IMPORTERS.containsKey(extension.toLowerCase())
+    return WORD_BOOK_IMPORTERS.containsKey(extension.lowercase())
 }
 
 private fun selectImportSource(project: Project?): VirtualFile? {
     val descriptor = object : FileChooserDescriptor(true, false, false, false, false, false) {
         override fun isFileVisible(file: VirtualFile, showHiddenFiles: Boolean): Boolean {
-            return (file.isDirectory || file.isValidExtension()) && (showHiddenFiles || !FileElement.isFileHidden(file))
+            return super.isFileVisible(file, showHiddenFiles) && (file.isDirectory || file.isValidExtension())
         }
 
-        override fun isFileSelectable(file: VirtualFile): Boolean {
-            return !file.isDirectory && file.isValidExtension()
+        override fun isFileSelectable(file: VirtualFile?): Boolean {
+            return super.isFileSelectable(file) && file != null && !file.isDirectory && file.isValidExtension()
         }
     }
 

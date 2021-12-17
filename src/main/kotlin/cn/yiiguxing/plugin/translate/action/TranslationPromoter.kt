@@ -5,7 +5,8 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.DataContext
 
 class TranslationPromoter : ActionPromoter {
-    override fun promote(actions: MutableList<AnAction>, context: DataContext): MutableList<AnAction> {
+
+    override fun promote(actions: MutableList<out AnAction>, context: DataContext): MutableList<AnAction> {
         return ArrayList(actions).apply { sortWith(COMPARATOR) }
     }
 

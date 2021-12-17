@@ -18,7 +18,6 @@ import com.intellij.util.io.HttpRequests
 import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
-import org.sqlite.SQLiteErrorCode
 import java.io.IOException
 import java.io.RandomAccessFile
 import java.net.URLClassLoader
@@ -212,7 +211,7 @@ class WordBookService {
      */
     fun addWord(item: WordBookItem, notifyOnFailed: Boolean = true): Long? {
         checkIsInitialized()
-        return lock {
+        return lock<Long?> {
             val sql = """
                 INSERT INTO wordbook (
                     $COLUMN_WORD,
@@ -243,7 +242,8 @@ class WordBookService {
                     }
                 }
             } catch (e: SQLException) {
-                if (e.errorCode != SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
+                // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
+                if (e.errorCode != 19) {
                     LOGGER.w("Insert word", e)
                     if (notifyOnFailed) {
                         Notifications.showErrorNotification(

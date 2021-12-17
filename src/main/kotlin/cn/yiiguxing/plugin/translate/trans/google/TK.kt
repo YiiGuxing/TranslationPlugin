@@ -18,7 +18,7 @@ private fun `fun`(a: Long, b: String): Long {
     var g = a
     for (c in 0..b.length - 2 step 3) {
         val d = b[c + 2]
-        val e = if ('a' <= d) d.toInt() - 87 else d.toString().toInt()
+        val e = if ('a' <= d) d.code - 87 else d.toString().toInt()
         val f = if ('+' == b[c + 1]) g.ushr(e) else g shl e
         g = if ('+' == b[c]) g + f and (Int.MAX_VALUE.toLong() * 2 + 1) else g xor f
     }
@@ -104,15 +104,15 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.value): String {
     val a = mutableListOf<Long>()
     var b = 0
     while (b < length) {
-        var c = this[b].toInt()
+        var c = this[b].code
         if (128 > c) {
             a += c.toLong()
         } else {
             if (2048 > c) {
                 a += (c shr 6 or 192).toLong()
             } else {
-                if (55296 == (c and 64512) && b + 1 < length && 56320 == (this[b + 1].toInt() and 64512)) {
-                    c = 65536 + ((c and 1023) shl 10) + (this[++b].toInt() and 1023)
+                if (55296 == (c and 64512) && b + 1 < length && 56320 == (this[b + 1].code and 64512)) {
+                    c = 65536 + ((c and 1023) shl 10) + (this[++b].code and 1023)
                     a += (c shr 18 or 240).toLong()
                     a += (c shr 12 and 63 or 128).toLong()
                 } else {

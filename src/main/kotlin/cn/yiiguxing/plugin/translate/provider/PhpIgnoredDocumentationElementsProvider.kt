@@ -16,7 +16,7 @@ class PhpIgnoredDocumentationElementsProvider : IgnoredDocumentationElementsProv
 
     override fun restoreIgnoredElements(body: Element, ignoredElements: List<Element>) {
         ignoredElements.forEachIndexed { index, element ->
-            body.selectFirst("""table.sections td > span[id="php-ignored-$index"]""").replaceWith(element)
+            body.selectFirst("""table.sections td > span[id="php-ignored-$index"]""")?.replaceWith(element)
         }
     }
 

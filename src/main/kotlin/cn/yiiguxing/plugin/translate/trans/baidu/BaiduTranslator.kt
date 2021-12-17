@@ -14,6 +14,7 @@ import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
+import java.util.*
 import javax.swing.Icon
 
 /**
@@ -177,7 +178,7 @@ object BaiduTranslator : AbstractTranslator() {
         val appId = settings.appId
         val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()
-        val sign = (appId + text + salt + privateKey).md5().toLowerCase()
+        val sign = (appId + text + salt + privateKey).md5().lowercase(Locale.getDefault())
 
         return Http.postDataFrom(
             BAIDU_TRANSLATE_URL,

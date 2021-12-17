@@ -16,7 +16,7 @@ class JavaScriptIgnoredDocumentationElementsProvider : IgnoredDocumentationEleme
 
     override fun restoreIgnoredElements(body: Element, ignoredElements: List<Element>) {
         val element = ignoredElements.firstOrNull() ?: return
-        body.selectFirst(RESTORE_CSS_QUERY).replaceWith(element)
+        body.selectFirst(RESTORE_CSS_QUERY)?.replaceWith(element)
     }
 
     companion object {
