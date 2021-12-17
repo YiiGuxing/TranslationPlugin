@@ -33,7 +33,7 @@ jobs:
         id: properties
         shell: bash
         run: |
-          CHANGELOG="$(cat << 'EOM' | sed -e 's/^[[:space:]]*$//g' -e '/./,$!d'
+          CHANGELOG="$(cat << 'EOM' | sed -e "/## What's Changed/d" -e 's/^[[:space:]]*$//g' -e '/./,$!d'
           ${{ github.event.release.body }}
           EOM
           )"
