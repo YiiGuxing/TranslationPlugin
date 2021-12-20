@@ -13,7 +13,8 @@ class TranslationPromoter : ActionPromoter {
     companion object {
         private val COMPARATOR = Comparator.comparingInt { action: AnAction ->
             when (action) {
-                is TranslateRenderedDocSelectionAction -> 0
+                is TranslateRenderedDocSelectionAction,
+                is TranslateQuickDocSelectionAction -> 0
                 is PinBalloonAction,
                 is EditorTranslateAction,
                 is ToggleQuickDocTranslationAction -> 1

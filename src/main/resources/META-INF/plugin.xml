@@ -53,7 +53,8 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
+        <applicationService
+                serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
 
         <applicationConfigurable groupId="tools"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable"/>
@@ -174,6 +175,12 @@
             <reference ref="$TranslateAndReplaceAction"/>
             <reference ref="TranslationGroup.Expanded"/>
             <separator/>
+        </group>
+        <group id="Documentation.PrimaryTranslationGroup">
+            <separator/>
+            <reference ref="$TranslateQuickDocAction"/>
+
+            <add-to-group group-id="Documentation.PrimaryGroup"/>
         </group>
     </actions>
 
