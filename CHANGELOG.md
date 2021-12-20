@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## v3.2.1-213 (2021/12/20)
 - 修复了零宽度空格的问题
 - 修复了快速文档窗口上无法使用快捷键进行翻译的问题
 
