@@ -33,7 +33,7 @@
 <p>Whatever platform or language you work with, JetBrains has a development tool for you.</p>
 <br/>
 <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">
-  <img border="0" src="https://alt-images.codestream.com/codestream_logo_translation.png" width="294" alt="CodeStream">
+  <img border="0" src="https://alt-images.codestream.com/codestream_logo_translation.png" width="198" height="50" alt="CodeStream">
 </a>
 <p>
 Eliminate context switching and costly distractions. Create and merge PRs and perform code reviews from inside your
