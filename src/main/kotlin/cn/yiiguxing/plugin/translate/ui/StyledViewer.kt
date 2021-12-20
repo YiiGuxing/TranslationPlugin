@@ -111,6 +111,7 @@ class StyledViewer : Viewer() {
         private var activeElement: Element? = null
 
         private inline val MouseEvent.characterElement: Element
+            @Suppress("deprecation")
             get() = styledDocument.getCharacterElement(viewToModel(point))
 
         private inline val Element.mouseListener: MouseListener?

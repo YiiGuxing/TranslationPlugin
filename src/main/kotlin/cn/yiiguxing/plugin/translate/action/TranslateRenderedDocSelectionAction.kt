@@ -71,7 +71,9 @@ class TranslateRenderedDocSelectionAction : AnAction() {
 
         override fun recalculateLocation(balloon: Balloon): RelativePoint {
             val positionStartInEditor = getSelectionPositionInEditor(editorPane) as Point
+            @Suppress("deprecation")
             val positionStartInPane = editorPane.modelToView(editorPane.selectionStart)
+            @Suppress("deprecation")
             val positionEndInPane = editorPane.modelToView(editorPane.selectionEnd)
             val positionEndXInEditor = positionEndInPane.x + positionStartInEditor.x - positionStartInPane.x
             val positionEndYInEditor = positionEndInPane.y + positionStartInEditor.y - positionStartInPane.y
