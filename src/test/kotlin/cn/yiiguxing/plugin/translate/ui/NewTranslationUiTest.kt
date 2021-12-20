@@ -16,12 +16,12 @@ import javax.swing.UIManager
 
 fun main() {
     IconLoader.activate()
-    IconManager.activate()
+    IconManager.activate(IconManager.getInstance())
     val laf = IntelliJLaf()
     // val laf = DarculaLaf()
     UIManager.setLookAndFeel(laf)
 
-    val frame = JFrame("dialog test");
+    val frame = JFrame("dialog test")
 
     val ui = TranslationDialogUiImpl(TranslationDialogUiProvider.testProvider())
     val panel = ui.createMainPanel()

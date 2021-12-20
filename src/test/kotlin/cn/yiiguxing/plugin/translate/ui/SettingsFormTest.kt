@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import com.intellij.ide.ui.laf.IntelliJLaf
-import com.intellij.ide.ui.laf.darcula.DarculaLaf
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.IconManager
 import com.intellij.util.ui.JBDimension
@@ -12,7 +11,7 @@ import javax.swing.UIManager
 
 fun main() {
     IconLoader.activate()
-    IconManager.activate()
+    IconManager.activate(IconManager.getInstance())
     val laf = IntelliJLaf()
 //    val laf = DarculaLaf()
     UIManager.setLookAndFeel(laf)
