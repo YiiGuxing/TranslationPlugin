@@ -83,7 +83,9 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
                 Point(x, y)
             }
             component.hasSelection -> {
+                @Suppress("deprecation")
                 val startRect = component.modelToView(component.selectionStart)
+                @Suppress("deprecation")
                 val endRect = component.modelToView(component.selectionEnd)
                 val x = minOf(startRect.x, endRect.x)
                 val y = maxOf(startRect.y, endRect.y) + endRect.height
@@ -91,6 +93,7 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
             }
             else -> {
                 val caretPosition = component.caret.magicCaretPosition
+                @Suppress("deprecation")
                 val modelRect = component.modelToView(component.caret.dot)
                 Point(caretPosition.x, caretPosition.y + modelRect.height)
             }
