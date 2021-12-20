@@ -37,6 +37,10 @@ jobs:
           ${{ github.event.release.body }}
           EOM
           )"
+          
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=changelog::$CHANGELOG"
 
