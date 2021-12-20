@@ -7,7 +7,7 @@ import java.util.function.Supplier
 import javax.swing.Icon
 
 abstract class FixedIconToggleAction(
-    private val icon: Icon,
+    protected val icon: Icon,
     text: Supplier<@ActionText String?>,
     description: Supplier<@NlsActions.ActionDescription String?> = Presentation.NULL_STRING,
 ) : ToggleAction(text, description, null) {
@@ -16,7 +16,11 @@ abstract class FixedIconToggleAction(
         val selected = isSelected(e)
         val presentation = e.presentation
         Toggleable.setSelected(presentation, selected)
-        presentation.icon = if (ActionPlaces.isPopupPlace(e.place) && selected) null else icon
+        presentation.icon = getIcon(e.place, selected)
+    }
+
+    protected open fun getIcon(place: String, selected: Boolean): Icon? {
+        return if (ActionPlaces.isPopupPlace(place) && selected) null else icon
     }
 
 }

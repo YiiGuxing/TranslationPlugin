@@ -116,6 +116,9 @@
         <action id="$TranslateQuickDocAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction"
                 use-shortcut-of="$EditorTranslateAction"/>
+        <action id="$ToggleQuickDocTranslationAction"
+                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
+                use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TranslateRenderedDocSelectionAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction"
                 use-shortcut-of="$EditorTranslateAction"/>
@@ -133,11 +136,6 @@
         <action id="$WhatsNewInTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
             <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
-        </action>
-
-        <action id="ToggleQuickDocTranslationActionWithShortcut"
-                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationActionWithShortcut"
-                use-shortcut-of="$EditorTranslateAction">
         </action>
 
         <action id="PinBalloonAction"
@@ -179,6 +177,7 @@
         <group id="Documentation.PrimaryTranslationGroup">
             <separator/>
             <reference ref="$TranslateQuickDocAction"/>
+            <reference ref="$ToggleQuickDocTranslationAction"/>
 
             <add-to-group group-id="Documentation.PrimaryGroup"/>
         </group>

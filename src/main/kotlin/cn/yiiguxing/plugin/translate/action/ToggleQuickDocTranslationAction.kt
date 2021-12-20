@@ -9,20 +9,34 @@ import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.documentation.QuickDocUtil
 import com.intellij.codeInsight.hint.HintManagerImpl
+import com.intellij.lang.documentation.ide.DocumentationBrowserFacade
+import com.intellij.lang.documentation.ide.actions.DOCUMENTATION_BROWSER
+import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.concurrency.AppExecutorUtil
 import icons.Icons
+import javax.swing.Icon
 
 open class ToggleQuickDocTranslationAction :
     FixedIconToggleAction(Icons.Documentation, { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }),
     HintManagerImpl.ActionToIgnore {
 
-    override fun update(e: AnActionEvent) {
+    init {
+        // enable in hovering documentation popup
+        isEnabledInModalContext = true
+    }
+
+    @Suppress("UnstableApiUsage")
+    private fun documentationBrowser(dc: DataContext): DocumentationBrowserFacade? = dc.getData(DOCUMENTATION_BROWSER)
+
+    final override fun update(e: AnActionEvent) {
         super.update(e)
         val project = e.project
         if (project == null) {
@@ -30,6 +44,19 @@ open class ToggleQuickDocTranslationAction :
             return
         }
 
+        if (Registry.`is`("documentation.v2")) {
+            e.presentation.isEnabled = documentationBrowser(e.dataContext) != null
+            return
+        }
+
+        update(project, e)
+    }
+
+    override fun getIcon(place: String, selected: Boolean): Icon? {
+        return if (ActionPlaces.JAVADOC_TOOLBAR != place && selected) null else icon
+    }
+
+    private fun update(project: Project, e: AnActionEvent) {
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)
         val editorMouseHoverPopupManager = EditorMouseHoverPopupManager.getInstance()
         val rdMouseHoverDocComponent = editorMouseHoverPopupManager.documentationComponent
@@ -44,8 +71,15 @@ open class ToggleQuickDocTranslationAction :
         return Settings.translateDocumentation
     }
 
+
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         Settings.translateDocumentation = state
+
+        if (Registry.`is`("documentation.v2")) {
+            @Suppress("UnstableApiUsage")
+            documentationBrowser(e.dataContext)?.reload()
+            return
+        }
 
         val project = e.project ?: return
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
@@ -90,26 +124,6 @@ open class ToggleQuickDocTranslationAction :
                 component?.replaceText(newText, component.element)
             }
         }
-    }
-
-}
-
-private class ToggleQuickDocTranslationActionWithShortcut : ToggleQuickDocTranslationAction() {
-    override fun update(e: AnActionEvent) {
-        val project = e.project
-        if (project == null) {
-            e.presentation.isEnabled = false
-            return
-        }
-
-        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)
-        val docComponentExists = activeDocComponent != null
-        val hasSelection = TranslateQuickDocSelectionAction.quickDocHasSelection(e)
-
-        val toolWindowIsActiveIfShown =
-            ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)?.isActive ?: true
-
-        e.presentation.isEnabled = docComponentExists && !hasSelection && toolWindowIsActiveIfShown
     }
 
 }
