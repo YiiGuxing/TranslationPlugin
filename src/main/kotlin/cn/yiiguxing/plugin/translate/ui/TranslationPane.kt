@@ -513,22 +513,23 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun updateExtraViewer(translation: Translation?) {
         val viewer = extraViewer
-        val wrapper = extraComponent
         viewer.document.clear()
+
+        var hasExtraContent = false
         if (translation != null) {
             translation.dictDocument?.let {
+                hasExtraContent = true
                 viewer.apply(it)
             }
             for (extraDocument in translation.extraDocuments) {
+                hasExtraContent = true
                 viewer.append(extraDocument)
             }
-            viewer.isVisible = true
-            wrapper.isVisible = true
-        } else {
-            viewer.isVisible = false
-            wrapper.isVisible = false
         }
+
         viewer.caretPosition = 0
+        viewer.isVisible = hasExtraContent
+        extraComponent.isVisible = hasExtraContent
     }
 
     private fun Viewer.updateText(text: String?) {
