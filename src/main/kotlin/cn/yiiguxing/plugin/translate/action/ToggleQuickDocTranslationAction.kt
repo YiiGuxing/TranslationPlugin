@@ -45,8 +45,7 @@ open class ToggleQuickDocTranslationAction :
         }
 
         if (Registry.`is`("documentation.v2")) {
-            e.presentation.isEnabledAndVisible =
-                IdeVersion.buildNumber.productCode != "RD" && documentationBrowser(e.dataContext) != null
+            e.presentation.isEnabledAndVisible = documentationBrowser(e.dataContext) != null
             return
         }
 

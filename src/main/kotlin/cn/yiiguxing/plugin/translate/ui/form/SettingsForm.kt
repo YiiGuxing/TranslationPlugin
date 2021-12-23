@@ -15,6 +15,7 @@ import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.*
@@ -232,7 +233,10 @@ abstract class SettingsForm {
         }
 
         val otherPanel = titledPanel(message("settings.panel.title.other")) {
-            add(translateDocumentationCheckBox, wrap())
+            // Document translation is not supported in Rider.
+            if (IdeVersion.buildNumber.productCode != "RD") {
+                add(translateDocumentationCheckBox, wrap())
+            }
             add(showActionsInContextMenuOnlyWithSelectionCheckbox, wrap())
         }
 
