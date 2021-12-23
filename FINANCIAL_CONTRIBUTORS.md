@@ -52,6 +52,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Stan Chen | [github.com/stan-chen](https://github.com/stan-chen) | 20 CNY |
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
+| 贺小五 | | 18.8 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
