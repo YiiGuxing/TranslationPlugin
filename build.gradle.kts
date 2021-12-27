@@ -22,7 +22,7 @@ plugins {
 val pluginVersion: String by project
 val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
 val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
-val fullPluginVersion = "v$pluginVersion$snapshotPart"
+val fullPluginVersion = "$pluginVersion$snapshotPart"
 
 group = properties("pluginGroup")
 version = fullPluginVersion
