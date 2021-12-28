@@ -304,8 +304,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 凌高 | | 100 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
+| 贺小五 | | 66.6CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
-| SXueckShen | [github.com/sxueck](https://github.com/sxueck) | 10 USD |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
 | 王者之师 | | 50 CNY |
 | Donfy | | 50 CNY |
