@@ -95,6 +95,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 刘小明 | | 6.66CNY |
 | Hushuang | | 6CNY |
 | 张英奇 | | 6CNY |
+| 谢嘉豪 | [xiejiahao.com](http://xiejiahao.com) | 5CNY |
 | 白鸟无言 | | 5CNY |
 | 两颗西柚 | | 5CNY |
 | 寤寐 | | 5CNY |
