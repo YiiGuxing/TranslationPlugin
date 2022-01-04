@@ -52,6 +52,7 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
             document.addLimitHint()
         }
 
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, null)
 
     return translatedDocumentation.outerHtml().fixHtml()
@@ -59,6 +60,7 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
 
 private fun Document.addLimitHint(): Document {
     val hintColor = ColorUtil.toHex(JBUI.CurrentTheme.Label.disabledForeground())
+    @Suppress("UNNECESSARY_SAFE_CALL")
     body().selectFirst(CSS_QUERY_CONTENT)?.insertChildren(
         0,
         Element("div")
@@ -84,9 +86,11 @@ private fun String.fixHtml(): String = replace(
 
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
+    @Suppress("UNNECESSARY_SAFE_CALL")
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     // 删除多余的 `p` 标签。
+    @Suppress("UNNECESSARY_SAFE_CALL")
     body.selectFirst(CSS_QUERY_CONTENT)
         ?.nextElementSibling()
         ?.takeIf { it.isEmptyParagraph() }
@@ -138,6 +142,7 @@ private fun Translator.checkContentLengthLimit(content: String): String {
 
 private fun Translator.getTranslatedDocumentation(document: Document): Document {
     val body = document.body()
+    @Suppress("UNNECESSARY_SAFE_CALL")
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
