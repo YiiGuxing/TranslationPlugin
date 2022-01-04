@@ -79,7 +79,8 @@ qodana {
 
 tasks {
     runIde {
-        autoReloadPlugins.set(false)
+        // Path to IDE distribution that will be used to run the IDE with the plugin.
+        // ideDir.set(File("path to IDE-dependency"))
     }
 
     patchPluginXml {
