@@ -2,11 +2,11 @@
 
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.ui.icon.ProcessIcon
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridLayoutManager
+import com.intellij.util.ui.AnimatedIcon
 import com.intellij.util.ui.JBUI
 import java.awt.Insets
 import javax.swing.JPanel
@@ -14,9 +14,7 @@ import javax.swing.JPanel
 /**
  * ProcessComponent
  */
-class ProcessComponent(insets: Insets = JBUI.emptyInsets()) : JPanel(), Disposable {
-
-    private val icon: ProcessIcon = ProcessIcon()
+class ProcessComponent(private val icon: AnimatedIcon, insets: Insets = JBUI.emptyInsets()) : JPanel(), Disposable {
 
     val isRunning: Boolean get() = icon.isRunning
 

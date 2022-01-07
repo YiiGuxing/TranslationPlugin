@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
+import cn.yiiguxing.plugin.translate.ui.icon.Spinner
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -49,7 +50,7 @@ class TranslationBalloon(
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
     private val errorPanel = NonOpaquePanel(FrameLayout())
     private val errorPane = JTextPane()
-    private val processPane = ProcessComponent(JBUI.insets(INSETS, INSETS * 2))
+    private val processPane = ProcessComponent(Spinner(), JBUI.insets(INSETS, INSETS * 2))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
     private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
