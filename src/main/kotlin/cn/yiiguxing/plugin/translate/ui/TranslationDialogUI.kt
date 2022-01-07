@@ -11,10 +11,13 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
+import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.ui.VerticalFlowLayout
+import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupBorder
 import com.intellij.ui.components.JBTextArea
@@ -22,6 +25,7 @@ import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.scale.JBUIScale
+import com.intellij.util.ui.AnimatedIcon
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
@@ -36,7 +40,7 @@ import java.lang.Integer.min
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
-interface TranslationDialogUI {
+interface TranslationDialogUI : Disposable {
     val topPanel: JPanel
     val translationPanel: JPanel
     val sourceLangComboBox: LangComboBoxLink
@@ -71,6 +75,9 @@ interface TranslationDialogUI {
     fun setActive(active: Boolean)
 
     fun initFonts(pair: UI.FontPair)
+
+    fun showProgress()
+    fun hideProgress()
 
     fun expandDictViewer()
     fun collapseDictViewer()
@@ -130,6 +137,10 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
     override val spellComponent: SpellComponent = createSpellComponent()
     override val fixLangComponent: FixLangComponent = FixLangComponent()
+    private val progressIcon: AnimatedIcon = SmallProgressIcon().apply {
+        isVisible = false
+        suspend()
+    }
 
     override fun createMainPanel(): JComponent {
         initTextAreas()
@@ -242,6 +253,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
             add(spellComponent, HorizontalLayout.LEFT)
             add(fixLangComponent, HorizontalLayout.LEFT)
+            add(progressIcon, HorizontalLayout.LEFT)
             add(JLabel(" "), HorizontalLayout.LEFT)
             add(expandDictViewerButton, HorizontalLayout.RIGHT)
             add(collapseDictViewerButton, HorizontalLayout.RIGHT)
@@ -360,6 +372,23 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         return getLineHeight(textComponent) + borderInsets.top + borderInsets.bottom
     }
 
+    override fun showProgress() {
+        progressIcon.apply {
+            isVisible = true
+            resume()
+        }
+    }
+
+    override fun hideProgress() {
+        progressIcon.apply {
+            isVisible = false
+            suspend()
+        }
+    }
+
+    override fun dispose() {
+        Disposer.dispose(progressIcon)
+    }
 
     private class Separator : JComponent() {
         val myColor = JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground()

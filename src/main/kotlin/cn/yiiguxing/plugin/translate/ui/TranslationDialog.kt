@@ -104,6 +104,8 @@ class TranslationDialog(
         Application.messageBus
             .connect(this)
             .subscribe(SettingsChangeListener.TOPIC, this)
+
+        Disposer.register(this, ui)
     }
 
     private fun registerESCListener() {
@@ -534,12 +536,15 @@ class TranslationDialog(
         inputTTSButton.isEnabled = false
         translationTTSButton.isEnabled = false
         translationTextArea.text = "${lastTranslation?.translation ?: ""}..."
+        ui.showProgress()
     }
 
     override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         if (currentRequest != request && !fromCache) {
             return
         }
+
+        ui.hideProgress()
 
         // forcibly modify the target language
         if (translation.srcLang != Lang.AUTO &&
@@ -580,6 +585,7 @@ class TranslationDialog(
     }
 
     override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
+        ui.hideProgress()
         if (currentRequest == request) {
             clearTranslation()
         }
