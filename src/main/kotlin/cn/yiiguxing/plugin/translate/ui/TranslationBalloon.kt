@@ -238,6 +238,11 @@ class TranslationBalloon(
         invokeLater {
             if (!disposed) {
                 layout.show(contentPanel, card)
+                if (card == CARD_PROCESSING) {
+                    processPane.resume()
+                } else {
+                    processPane.suspend()
+                }
                 balloon.revalidate()
             }
         }
