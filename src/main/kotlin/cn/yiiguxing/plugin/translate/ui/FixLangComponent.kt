@@ -21,7 +21,7 @@ class FixLangComponent : JPanel() {
             lastTranslation?.srclangs?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
         }
         add(JLabel("${message("tip.label.sourceLanguage")}: "), HorizontalLayout.LEFT)
-        add(actionLink, HorizontalLayout.CENTER)
+        add(actionLink, HorizontalLayout.LEFT)
     }
 
     fun onFixLanguage(handler: (lang: Lang) -> Unit) {

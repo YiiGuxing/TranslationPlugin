@@ -17,6 +17,6 @@ internal class Spinner : AnimatedIcon("Spinner", ICONS, STEP_PASSIVE, CYCLE_LENG
 
         private val ICONS = Array(9) { Icons.load("/icons/spinner/step_${it}.svg") }
 
-        private val STEP_PASSIVE = Icons.load("/icons/spinner/step_passive.svg")
+        private val STEP_PASSIVE = Icons.load("/icons/spinner/passive.svg")
     }
 }
