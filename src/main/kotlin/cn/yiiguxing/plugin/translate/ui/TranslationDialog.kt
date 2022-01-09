@@ -369,10 +369,12 @@ class TranslationDialog(
         spellComponent.onSpellFixed {
             inputTextArea.text = it
             sourceLangComboBox.selected = Lang.AUTO
+            spellComponent.isVisible = false
         }
 
         fixLangComponent.onFixLanguage {
             sourceLangComboBox.selected = it
+            fixLangComponent.isVisible = false
         }
     }
 

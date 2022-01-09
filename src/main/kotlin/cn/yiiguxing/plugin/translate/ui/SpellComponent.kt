@@ -27,6 +27,8 @@ class SpellComponent : BorderLayoutPanel() {
         spell?.let { handler(it) }
     }
 
+    private var onSpellFixedHandler: ((String) -> Unit)? = null
+
     init {
         isOpaque = false
         isVisible = false
@@ -34,8 +36,6 @@ class SpellComponent : BorderLayoutPanel() {
         addToCenter(spellText)
         spellLabel.border = JBUI.Borders.empty(0, 0, 0, 5)
     }
-
-    private var onSpellFixedHandler: ((String) -> Unit)? = null
 
     fun onSpellFixed(handler: (spell: String) -> Unit) {
         onSpellFixedHandler = handler
