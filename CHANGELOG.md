@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 翻译窗口状态栏显示加载状态
 
 ## v3.2.1-213 (2021/12/20)
 - 修复了零宽度空格的问题
