@@ -122,7 +122,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         logger.i("Translate result: $translation")
 
         val results = gson.fromJson(translation, Array<String>::class.java)
-        val sLang = if (srcLang == Lang.AUTO) Lang[results[1]] else srcLang
+        val sLang = if (srcLang == Lang.AUTO && results.size >= 2) Lang[results[1]] else srcLang
 
         return BaseTranslation(original, sLang, targetLang, results[0])
     }
