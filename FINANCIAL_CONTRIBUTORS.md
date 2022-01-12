@@ -88,6 +88,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 梅少锋 | | 10 CNY |
 | 李志豪 | | 9.99 CNY |
 | 洪晓波 | | 9.9 CNY |
+| MaybeMirracle | [gitee.com/MaybeMirracle](https://gitee.com/MaybeMirracle) | 8.88 CNY |
 | 刘十年 | [www.l1ub0w3n.cn](https://www.l1ub0w3n.cn) | 8.8 CNY |
 | ZZZping | [github.com/ZZZping](https://github.com/ZZZping) | 8.11 CNY |
 | 甯 | | 8 CNY |
