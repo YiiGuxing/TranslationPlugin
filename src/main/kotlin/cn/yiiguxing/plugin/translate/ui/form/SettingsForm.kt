@@ -233,8 +233,7 @@ abstract class SettingsForm {
         }
 
         val otherPanel = titledPanel(message("settings.panel.title.other")) {
-            // Document translation is not supported in Rider.
-            if (IdeVersion.buildNumber.productCode != "RD") {
+            if (isSupportDocumentTranslation()) {
                 add(translateDocumentationCheckBox, wrap())
             }
             add(showActionsInContextMenuOnlyWithSelectionCheckbox, wrap())
@@ -260,6 +259,11 @@ abstract class SettingsForm {
 
     private fun fixEngineConfigurationComponent() {
         configureTranslationEngineLink.isVisible = translationEngineComboBox.selected != TranslationEngine.GOOGLE
+    }
+
+    open fun isSupportDocumentTranslation(): Boolean {
+        // Document translation is not supported in Rider.
+        return IdeVersion.buildNumber.productCode != "RD"
     }
 
     companion object {
