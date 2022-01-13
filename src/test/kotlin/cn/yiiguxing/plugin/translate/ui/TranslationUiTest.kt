@@ -1,3 +1,5 @@
+@file:Suppress("unused", "SpellCheckingInspection")
+
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
@@ -7,24 +9,10 @@ import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.trans.youdao.*
 import cn.yiiguxing.plugin.translate.util.text.newLine
-import com.intellij.ide.ui.laf.IntelliJLaf
-import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.IconManager
-import com.intellij.util.ui.JBDimension
-import javax.swing.JFrame
-import javax.swing.UIManager
 
-fun main() {
-    IconLoader.activate()
-    IconManager.activate(IconManager.getInstance())
-    val laf = IntelliJLaf()
-    // val laf = DarculaLaf()
-    UIManager.setLookAndFeel(laf)
-
-    val frame = JFrame("dialog test")
-
+fun main() = uiTest("Translation UI Test", 500, 300/*, true*/) {
     val ui = TranslationDialogUiImpl(TranslationDialogUiProvider.testProvider())
-    val panel = ui.createMainPanel()
+    val mainPanel = ui.createMainPanel()
 
     ui.sourceLangComboBox.model = LanguageListModel.simple(listOf(Lang.AUTO, Lang.ENGLISH, Lang.CHINESE))
     ui.targetLangComboBox.model = LanguageListModel.simple(listOf(Lang.CHINESE, Lang.ENGLISH))
@@ -39,17 +27,16 @@ fun main() {
 
     val googleTranslation = createGoogleTranslation()
     val translation = googleTranslation.toTranslation().copy(srcLang = Lang.CHINESE)
-    // ui.spellComponent.spell = "translation"
+    ui.spellComponent.spell = "translation"
     ui.fixLangComponent.updateOnTranslation(translation)
 
     // setupGoogleDictDocument(ui.dictViewer, googleTranslation)
     setupYoudaoDictDocuments(ui.dictViewer, createDummyYoudaoTranslation())
 
+    ui.showProgress()
     ui.expandDictViewer()
-    frame.size = JBDimension(400, 300)
-    frame.contentPane = panel
-    frame.isVisible = true
-    frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+
+    mainPanel
 }
 
 fun createDummyYoudaoTranslation(): YoudaoTranslation = YoudaoTranslation(
@@ -86,7 +73,7 @@ fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
             )
         )
     ),
-    GSpell(""),
+    GSpell("translation"),
     GLDResult(listOf(Lang.ENGLISH), listOf(0.80f)),
     null
 )
