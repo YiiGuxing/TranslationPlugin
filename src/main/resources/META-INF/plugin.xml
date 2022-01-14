@@ -88,8 +88,8 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
 
-        <action id="$ChooseTranslatorAction"
-                class="cn.yiiguxing.plugin.translate.action.ChooseTranslatorAction">
+        <action id="$SwitchTranslatorAction"
+                class="cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>

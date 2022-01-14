@@ -16,15 +16,15 @@ import javax.swing.JComponent
 
 
 /**
- * ChooseTranslatorAction
+ * Switch translator action
  */
-class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
+class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
     init {
-        setPopupTitle(adaptedMessage("choose.translator.popup.title"))
+        setPopupTitle(adaptedMessage("translator.popup.title"))
         isEnabledInModalContext = true
-        templatePresentation.text = message("action.ChooseTranslatorAction.text")
-        templatePresentation.description = message("action.ChooseTranslatorAction.description")
+        templatePresentation.text = message("action.SwitchTranslatorAction.text")
+        templatePresentation.description = message("action.SwitchTranslatorAction.description")
     }
 
     override fun update(e: AnActionEvent) {
@@ -40,7 +40,7 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
         WindowManagerEx.getInstanceEx()
             .findFrameFor(e.project)
             ?.component
-            ?.let { createActionPopup(message("choose.translator.popup.title"), e.dataContext, it).showInCenterOf(it) }
+            ?.let { createActionPopup(message("translator.popup.title"), e.dataContext, it).showInCenterOf(it) }
     }
 
     private fun createActionPopup(

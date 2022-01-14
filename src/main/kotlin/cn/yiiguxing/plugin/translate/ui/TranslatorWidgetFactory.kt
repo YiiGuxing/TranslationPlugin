@@ -25,7 +25,7 @@ class TranslatorWidgetFactory : StatusBarWidgetFactory {
     }
 
     override fun getDisplayName(): String {
-        return message("choose.translator.widget.name")
+        return message("translator.widget.name")
     }
 
     override fun disposeWidget(widget: StatusBarWidget) {
