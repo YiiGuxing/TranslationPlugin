@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import java.io.IOException
-import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -33,7 +32,6 @@ class NetworkException(host: String, cause: IOException) : IOException("${cause.
                 is SocketException,
                 is SocketTimeoutException,
                 is SSLHandshakeException,
-                is ConnectException,
                 is UnknownHostException -> NetworkException(host, throwable as IOException)
                 else -> throwable
             }

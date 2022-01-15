@@ -29,8 +29,8 @@ abstract class AbstractTranslator : Translator {
 
     protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
         is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
-        is SocketException, is SSLHandshakeException -> message("error.network")
         is ConnectException, is UnknownHostException -> message("error.network.connection")
+        is SocketException, is SSLHandshakeException -> message("error.network")
         is SocketTimeoutException -> message("error.network.timeout")
         is JsonSyntaxException -> message("error.parse")
         is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
