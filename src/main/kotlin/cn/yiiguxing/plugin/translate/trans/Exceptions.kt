@@ -22,7 +22,7 @@ open class TranslateException(
 class UnsupportedLanguageException(val lang: Lang, translatorName: String) :
     TranslateException("Unsupported language: ${lang.langName}", translatorName)
 
-class TranslateResultException(val code: Int, translatorName: String) :
+class TranslationResultException(val code: Int, translatorName: String) :
     TranslateException("Translate failed: $code", translatorName)
 
 class NetworkException(host: String, cause: IOException) : IOException("${cause.message}. host=$host", cause) {

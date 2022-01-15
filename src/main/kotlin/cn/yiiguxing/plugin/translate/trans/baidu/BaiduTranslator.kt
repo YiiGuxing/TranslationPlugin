@@ -197,13 +197,13 @@ object BaiduTranslator : AbstractTranslator() {
 
         return Gson().fromJson(translation, BaiduTranslation::class.java).apply {
             if (!isSuccessful) {
-                throw TranslateResultException(code, name)
+                throw TranslationResultException(code, name)
             }
         }.toTranslation()
     }
 
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslateResultException -> when (throwable.code) {
+        is TranslationResultException -> when (throwable.code) {
             52001 -> message("error.request.timeout")
             52002 -> message("error.systemError")
             52003 -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)

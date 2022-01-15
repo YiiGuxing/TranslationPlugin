@@ -191,13 +191,13 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             src = srcLang
             target = targetLang
             if (!isSuccessful) {
-                throw TranslateResultException(code, name)
+                throw TranslationResultException(code, name)
             }
         }.toTranslation()
     }
 
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslateResultException -> when (throwable.code) {
+        is TranslationResultException -> when (throwable.code) {
             10001 -> message("error.request.timeout")
             10002 -> message("error.systemError")
             10003 -> message("error.bad.request")

@@ -102,13 +102,13 @@ object YoudaoTranslator : AbstractTranslator() {
             query = original
             checkError()
             if (!isSuccessful) {
-                throw TranslateResultException(errorCode, name)
+                throw TranslationResultException(errorCode, name)
             }
         }.toTranslation()
     }
 
     override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslateResultException -> when (throwable.code) {
+        is TranslationResultException -> when (throwable.code) {
             101 -> message("error.missingParameter")
             102 -> message("error.language.unsupported")
             103 -> message("error.text.too.long")
