@@ -283,10 +283,10 @@ class TranslationBalloon(
         }
     }
 
-    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
+    override fun showError(request: Presenter.Request, throwable: Throwable) {
         if (!disposed) {
             lastError = throwable
-            errorPane.text = errorMessage
+            errorPane.text = throwable.message
             invokeLater(5) { showCard(CARD_ERROR) }
         }
     }

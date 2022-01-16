@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans.youdao
 
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
@@ -52,6 +51,29 @@ object YoudaoTranslator : AbstractTranslator() {
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
+    private val errorMessageMap: Map<Int, String> by lazy {
+        mapOf(
+            101 to message("error.missingParameter"),
+            102 to message("error.language.unsupported"),
+            103 to message("error.text.too.long"),
+            104 to message("error.youdao.unsupported.api"),
+            105 to message("error.youdao.unsupported.signature"),
+            106 to message("error.youdao.unsupported.response"),
+            107 to message("error.youdao.unsupported.encryptType"),
+            108 to message("error.youdao.invalidKey"),
+            109 to message("error.youdao.batchLog"),
+            110 to message("error.youdao.noInstance"),
+            111 to message("error.invalidAccount"),
+            201 to message("error.youdao.decrypt"),
+            202 to message("error.invalidSignature"),
+            203 to message("error.access.ip"),
+            301 to message("error.youdao.dictionary"),
+            302 to message("error.youdao.translation"),
+            303 to message("error.youdao.serverError"),
+            401 to message("error.account.has.run.out.of.balance")
+        )
+    }
+
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force || Settings.youdaoTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return YOUDAO.showConfigurationDialog()
@@ -102,33 +124,25 @@ object YoudaoTranslator : AbstractTranslator() {
             query = original
             checkError()
             if (!isSuccessful) {
-                throw TranslationResultException(errorCode, name)
+                throw TranslationResultException(errorCode)
             }
         }.toTranslation()
     }
 
-    override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslationResultException -> when (throwable.code) {
-            101 -> message("error.missingParameter")
-            102 -> message("error.language.unsupported")
-            103 -> message("error.text.too.long")
-            104 -> message("error.youdao.unsupported.api")
-            105 -> message("error.youdao.unsupported.signature")
-            106 -> message("error.youdao.unsupported.response")
-            107 -> message("error.youdao.unsupported.encryptType")
-            108 -> message("error.youdao.invalidKey", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
-            109 -> message("error.youdao.batchLog")
-            110 -> message("error.youdao.noInstance")
-            111 -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
-            201 -> message("error.youdao.decrypt")
-            202 -> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
-            203 -> message("error.access.ip")
-            301 -> message("error.youdao.dictionary")
-            302 -> message("error.youdao.translation")
-            303 -> message("error.youdao.serverError")
-            401 -> message("error.account.has.run.out.of.balance")
-            else -> message("error.unknown") + "[${throwable.code}]"
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo {
+        if (throwable is TranslationResultException) {
+            val errorMessage =
+                errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")
+            val continueAction = when (throwable.code) {
+                108, 111, 202 -> ErrorInfo.continueAction(message("action.check.configuration")) {
+                    YOUDAO.showConfigurationDialog()
+                }
+                else -> null
+            }
+
+            return ErrorInfo(errorMessage, if (continueAction != null) listOf(continueAction) else emptyList())
         }
-        else -> super.createErrorMessage(throwable)
+
+        return super.createErrorInfo(throwable)
     }
 }

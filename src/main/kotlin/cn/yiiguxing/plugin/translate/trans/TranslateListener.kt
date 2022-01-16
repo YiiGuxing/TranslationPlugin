@@ -7,6 +7,6 @@ interface TranslateListener {
 
     fun onSuccess(translation: Translation)
 
-    fun onError(message: String, throwable: Throwable)
+    fun onError(throwable: Throwable)
 
 }

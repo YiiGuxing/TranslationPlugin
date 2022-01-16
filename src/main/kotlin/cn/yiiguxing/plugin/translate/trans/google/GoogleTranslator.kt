@@ -127,10 +127,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         return BaseTranslation(original, sLang, targetLang, results[0])
     }
 
-    override fun onError(throwable: Throwable): Nothing {
-        super.onError(NetworkException.wrapIfIsNetworkException(throwable, GoogleHttp.googleHost))
-    }
-
     private object LangDeserializer : JsonDeserializer<Lang> {
         override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext)
                 : Lang = Lang[jsonElement.asString]

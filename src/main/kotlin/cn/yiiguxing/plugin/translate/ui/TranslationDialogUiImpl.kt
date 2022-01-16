@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
@@ -42,12 +43,21 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         background = topPanel.background
     }
 
+    override val translationFailedComponent: TranslationFailedComponent = TranslationFailedComponent()
+    private val rightPanelLayout = FixedSizeCardLayout()
+    private val rightPanel: JPanel = JPanel(rightPanelLayout).apply {
+        background = topPanel.background
+        add(translationTextArea, CARD_TRANSLATION)
+        add(translationFailedComponent, CARD_ERROR)
+        rightPanelLayout.show(this, CARD_TRANSLATION)
+    }
+
     private val inputTextAreaWrapper = createScrollPane(inputTextArea, ScrollPane.FADING_END)
-    private val translationTextAreaWrapper = createScrollPane(translationTextArea, ScrollPane.FADING_END)
+    private val rightPanelWrapper = createScrollPane(rightPanel, ScrollPane.FADING_END)
 
     override val scrollSynchronizer: ScrollSynchronizer = ScrollSynchronizer.syncScroll(
         inputTextAreaWrapper.verticalScrollBar,
-        translationTextAreaWrapper.verticalScrollBar
+        rightPanelWrapper.verticalScrollBar
     )
 
     override val inputTTSButton: TTSButton = TTSButton()
@@ -182,8 +192,11 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
             val rightPanel = JPanel(UI.migLayout()).apply {
                 background = translationTextArea.background
 
-                add(translationTextAreaWrapper, UI.fill().wrap())
-                add(createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton), UI.fillX())
+                add(rightPanelWrapper, UI.fill().wrap())
+                add(
+                    createToolbar(translationTTSButton, targetTransliterationLabel, copyButton, starButton),
+                    UI.fillX().cell(0, 1)
+                )
             }
 
             add(leftPanel, UI.fill().sizeGroup("content"))
@@ -329,6 +342,15 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         }
     }
 
+    override fun showTranslationPanel() {
+        rightPanelLayout.show(rightPanel, CARD_TRANSLATION)
+    }
+
+    override fun showErrorPanel() {
+        rightPanelLayout.show(rightPanel, CARD_ERROR)
+        invokeLater { mRoot.revalidate() }
+    }
+
     override fun dispose() {
         Disposer.dispose(progressIcon)
     }
@@ -354,5 +376,10 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         override fun getMaximumSize(): Dimension {
             return preferredSize
         }
+    }
+
+    companion object {
+        private const val CARD_TRANSLATION = "TRANSLATION"
+        private const val CARD_ERROR = "ERROR"
     }
 }

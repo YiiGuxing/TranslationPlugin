@@ -34,6 +34,8 @@ interface TranslationDialogUI : Disposable {
     val expandDictViewerButton: LinkLabel<Void>
     val collapseDictViewerButton: LinkLabel<Void>
 
+    val translationFailedComponent: TranslationFailedComponent
+
     val scrollSynchronizer: ScrollSynchronizer
 
     fun createMainPanel(): JComponent
@@ -45,7 +47,10 @@ interface TranslationDialogUI : Disposable {
     fun showProgress()
     fun hideProgress()
 
+    fun showTranslationPanel()
     fun expandDictViewer()
     fun collapseDictViewer()
     fun hideDictViewer()
+
+    fun showErrorPanel()
 }
