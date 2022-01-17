@@ -217,7 +217,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
                 10009 -> message("error.ali.permission.denied")
                 10010 -> return ErrorInfo(
                     message("error.service.is.down"),
-                    ErrorInfo.openUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
+                    ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
                 )
                 10011 -> message("error.systemError")
                 10012 -> message("error.systemError")

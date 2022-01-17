@@ -226,7 +226,7 @@ object BaiduTranslator : AbstractTranslator() {
                 52003, 54001 -> ErrorInfo.continueAction(message("action.check.configuration")) {
                     BAIDU.showConfigurationDialog()
                 }
-                58002 -> ErrorInfo.openUrlAction(message("error.service.is.down.action.name"), BAIDU_FANYI_PRODUCT_URL)
+                58002 -> ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), BAIDU_FANYI_PRODUCT_URL)
                 else -> null
             }
 
