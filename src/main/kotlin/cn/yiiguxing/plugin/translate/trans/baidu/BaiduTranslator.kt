@@ -12,6 +12,7 @@ import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
 import java.util.*
 import javax.swing.Icon
@@ -223,10 +224,16 @@ object BaiduTranslator : AbstractTranslator() {
             val errorMessage =
                 errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")
             val continueAction = when (throwable.code) {
-                52003, 54001 -> ErrorInfo.continueAction(message("action.check.configuration")) {
+                52003, 54001 -> ErrorInfo.continueAction(
+                    message("action.check.configuration"),
+                    icon = AllIcons.General.Settings
+                ) {
                     BAIDU.showConfigurationDialog()
                 }
-                58002 -> ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), BAIDU_FANYI_PRODUCT_URL)
+                58002 -> ErrorInfo.browseUrlAction(
+                    message("error.service.is.down.action.name"),
+                    BAIDU_FANYI_PRODUCT_URL
+                )
                 else -> null
             }
 

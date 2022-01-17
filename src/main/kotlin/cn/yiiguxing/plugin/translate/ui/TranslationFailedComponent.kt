@@ -13,6 +13,7 @@ import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import icons.Icons
 import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
@@ -111,9 +112,10 @@ class TranslationFailedComponent : JPanel() {
             options += errorInfo.continueActions
         }
         if (throwable != null) {
-            options += object : AnAction(message("translation.failed.component.action.copy.error.info")) {
+            options += object :
+                AnAction(message("translation.failed.component.action.copy.error.info"), null, Icons.RecordErrorInfo) {
                 override fun actionPerformed(e: AnActionEvent) {
-                    throwable.copyToClipboard(errorInfo?.message)
+                    throwable.copyToClipboard(errorInfo?.let { message("error.translate.failed", it.message) })
                 }
             }
         }
