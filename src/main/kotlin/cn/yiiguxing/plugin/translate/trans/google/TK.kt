@@ -4,7 +4,6 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.NetworkException
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
@@ -81,9 +80,7 @@ object TKK {
 
                 null
             }
-        } catch (e: Throwable) {
-            val error = NetworkException.wrapIfIsNetworkException(e, GoogleHttp.googleHost)
-
+        } catch (error: Throwable) {
             logger.w("TKK update failed", error)
             Notifications.showErrorNotification(
                 null,

@@ -99,10 +99,10 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
             }
         }
 
-        override fun onError(message: String, throwable: Throwable) {
+        override fun onError(throwable: Throwable) {
             val presenter = presenterRef.get()
             if (presenter !== null) {
-                presenter.onPostResult(request) { showError(request, message, throwable) }
+                presenter.onPostResult(request) { showError(request, throwable) }
             } else {
                 LOGGER.w("We lost the presenter!")
             }

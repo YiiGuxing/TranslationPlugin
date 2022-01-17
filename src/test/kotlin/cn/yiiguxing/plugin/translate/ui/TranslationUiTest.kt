@@ -35,6 +35,7 @@ fun main() = uiTest("Translation UI Test", 500, 300/*, true*/) {
 
     ui.showProgress()
     ui.expandDictViewer()
+    // ui.showErrorPanel()
 
     mainPanel
 }

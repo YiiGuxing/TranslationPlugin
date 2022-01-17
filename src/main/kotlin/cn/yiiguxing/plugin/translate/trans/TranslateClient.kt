@@ -33,10 +33,10 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
 
     fun execute(text: String, srcLang: Lang, targetLang: Lang): T {
         if (srcLang !in translator.supportedSourceLanguages) {
-            throw UnsupportedLanguageException(srcLang, translator.name)
+            throw UnsupportedLanguageException(srcLang)
         }
         if (targetLang !in translator.supportedTargetLanguages) {
-            throw UnsupportedLanguageException(targetLang, translator.name)
+            throw UnsupportedLanguageException(targetLang)
         }
 
         val cacheKey = getCacheKey(text, srcLang, targetLang)

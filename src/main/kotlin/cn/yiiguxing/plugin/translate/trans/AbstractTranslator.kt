@@ -27,24 +27,29 @@ abstract class AbstractTranslator : Translator {
         onError(throwable)
     }
 
-    protected open fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
-        is SocketException, is SSLHandshakeException -> message("error.network")
-        is ConnectException, is UnknownHostException -> message("error.network.connection")
-        is SocketTimeoutException -> message("error.network.timeout")
-        is JsonSyntaxException -> message("error.parse")
-        is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
-        else -> when (
-            throwable.message?.let { HTTP_STATUS_EXCEPTION_REGEX.matchEntire(it) }?.let { it.groupValues[1].toInt() }
-        ) {
-            429 -> message("error.too.many.requests")
-            else -> message("error.unknown")
+    protected open fun createErrorInfo(throwable: Throwable): ErrorInfo {
+        val errorMessage = when (throwable) {
+            is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
+            is ConnectException, is UnknownHostException -> message("error.network.connection")
+            is SocketException, is SSLHandshakeException -> message("error.network")
+            is SocketTimeoutException -> message("error.network.timeout")
+            is JsonSyntaxException -> message("error.parse")
+            is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
+            else -> when (
+                throwable.message?.let { HTTP_STATUS_EXCEPTION_REGEX.matchEntire(it) }
+                    ?.let { it.groupValues[1].toInt() }
+            ) {
+                429 -> message("error.too.many.requests")
+                else -> message("error.unknown")
+            }
         }
+
+        return ErrorInfo(errorMessage)
     }
 
-    protected open fun onError(throwable: Throwable): Nothing {
-        val errorMessage = message("error.translate.failed", createErrorMessage(NetworkException.unwrap(throwable)))
-        throw TranslateException(errorMessage, name, throwable)
+    protected fun onError(throwable: Throwable): Nothing {
+        val errorInfo = createErrorInfo(throwable)
+        throw TranslateException(id, name, errorInfo, throwable)
     }
 
     companion object {

@@ -54,7 +54,7 @@ import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
 
 class TranslationDialog(
-    private val project: Project?,
+    project: Project?,
     val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider())
 ) :
     DialogWrapper(project),
@@ -194,6 +194,8 @@ class TranslationDialog(
         initButtons()
         initFonts(UI.getFonts(FONT_SIZE_DEFAULT, FONT_SIZE_PHONETIC))
         initDictViewer()
+
+        ui.translationFailedComponent.onRetry { onTranslate() }
         updateOnTranslation(null)
     }
 
@@ -539,6 +541,8 @@ class TranslationDialog(
         translationTTSButton.isEnabled = false
         translationTextArea.text = "${lastTranslation?.translation ?: ""}..."
         ui.showProgress()
+        ui.showTranslationPanel()
+        ui.translationFailedComponent.update(null as Throwable?)
     }
 
     override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
@@ -586,12 +590,13 @@ class TranslationDialog(
         updateOnTranslation(translation)
     }
 
-    override fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable) {
-        ui.hideProgress()
+    override fun showError(request: Presenter.Request, throwable: Throwable) {
         if (currentRequest == request) {
             clearTranslation()
         }
-        Notifications.showErrorNotification(project, message("error.title"), errorMessage, throwable)
+        ui.translationFailedComponent.update(throwable)
+        ui.hideProgress()
+        ui.showErrorPanel()
     }
 
     override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {

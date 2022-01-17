@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
@@ -132,7 +133,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                             }
                         }
 
-                        override fun onError(message: String, throwable: Throwable) {
+                        override fun onError(throwable: Throwable) {
                             editorRef.get()?.let { editor ->
                                 invokeLater {
                                     if (editor is TextComponentEditor) {
@@ -141,11 +142,15 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                         editor.showLookup(project, selectionRange, text, emptyList())
                                     }
                                 }
+
+                                // TODO: add switch translator action
+                                val errorInfo = (throwable as? TranslateException)?.errorInfo
                                 Notifications.showErrorNotification(
                                     editor.project,
                                     message("translate.and.replace.notification.title"),
-                                    message,
-                                    throwable
+                                    errorInfo?.message ?: message("error.unknown"),
+                                    throwable,
+                                    *errorInfo?.continueActions?.toTypedArray() ?: arrayOf()
                                 )
                             }
                         }
@@ -164,7 +169,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     private companion object {
 
         /** 谷歌翻译的空格符：`  -   　` */
-         val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
+        val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
 
         val HIGHLIGHT_ATTRIBUTES = TextAttributes().apply {
             effectType = EffectType.BOXED

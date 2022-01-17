@@ -3,8 +3,10 @@ package cn.yiiguxing.plugin.translate.tts
 import cn.yiiguxing.plugin.translate.GOOGLE_TTS_FORMAT
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.NetworkException
-import cn.yiiguxing.plugin.translate.trans.google.*
+import cn.yiiguxing.plugin.translate.trans.google.GoogleHttp
+import cn.yiiguxing.plugin.translate.trans.google.googleReferer
+import cn.yiiguxing.plugin.translate.trans.google.tk
+import cn.yiiguxing.plugin.translate.trans.google.userAgent
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
@@ -23,6 +25,10 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
 import java.lang.StrictMath.round
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 import javax.sound.sampled.*
 
 
@@ -93,16 +99,19 @@ class GoogleTTSPlayer(
                     project
                 )
             } else {
-                val throwable = NetworkException.wrapIfIsNetworkException(error, GoogleHttp.googleHost)
-                if (throwable is NetworkException) {
-                    Notifications.showErrorNotification(
-                        project,
-                        "TTS",
-                        message("error.network"),
-                        throwable
-                    )
-                } else {
-                    LOGGER.e("TTS Error", error)
+                when (error) {
+                    is SocketException,
+                    is SocketTimeoutException,
+                    is SSLHandshakeException,
+                    is UnknownHostException -> {
+                        Notifications.showErrorNotification(
+                            project,
+                            "TTS",
+                            message("error.network"),
+                            error
+                        )
+                    }
+                    else -> LOGGER.e("TTS Error", error)
                 }
             }
         }

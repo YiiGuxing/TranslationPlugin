@@ -4,7 +4,6 @@ package cn.yiiguxing.plugin.translate.trans.baidu
 
 import cn.yiiguxing.plugin.translate.BAIDU_FANYI_PRODUCT_URL
 import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
@@ -157,6 +156,23 @@ object BaiduTranslator : AbstractTranslator() {
         .apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
+    private val errorMessageMap: Map<Int, String> by lazy {
+        mapOf(
+            52001 to message("error.request.timeout"),
+            52002 to message("error.systemError"),
+            52003 to message("error.invalidAccount"),
+            54000 to message("error.missingParameter"),
+            54001 to message("error.invalidSignature"),
+            54003 to message("error.access.limited"),
+            54005 to message("error.access.limited"),
+            54004 to message("error.account.has.run.out.of.balance"),
+            58000 to message("error.access.ip"),
+            58001 to message("error.language.unsupported"),
+            58002 to message("error.service.is.down"),
+            90107 to message("error.unauthorized"),
+        )
+    }
+
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force || Settings.baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return BAIDU.showConfigurationDialog()
@@ -197,26 +213,26 @@ object BaiduTranslator : AbstractTranslator() {
 
         return Gson().fromJson(translation, BaiduTranslation::class.java).apply {
             if (!isSuccessful) {
-                throw TranslateResultException(code, name)
+                throw TranslationResultException(code)
             }
         }.toTranslation()
     }
 
-    override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslateResultException -> when (throwable.code) {
-            52001 -> message("error.request.timeout")
-            52002 -> message("error.systemError")
-            52003 -> message("error.invalidAccount", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
-            54000 -> message("error.missingParameter")
-            54001 -> message("error.invalidSignature", HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION)
-            54003, 54005 -> message("error.access.limited")
-            54004 -> message("error.account.has.run.out.of.balance")
-            58000 -> message("error.access.ip")
-            58001 -> message("error.language.unsupported")
-            58002 -> message("error.service.is.down", BAIDU_FANYI_PRODUCT_URL)
-            90107 -> message("error.unauthorized")
-            else -> message("error.unknown") + "[${throwable.code}]"
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo {
+        if (throwable is TranslationResultException) {
+            val errorMessage =
+                errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")
+            val continueAction = when (throwable.code) {
+                52003, 54001 -> ErrorInfo.continueAction(message("action.check.configuration")) {
+                    BAIDU.showConfigurationDialog()
+                }
+                58002 -> ErrorInfo.openUrlAction(message("error.service.is.down.action.name"), BAIDU_FANYI_PRODUCT_URL)
+                else -> null
+            }
+
+            return ErrorInfo(errorMessage, if (continueAction != null) listOf(continueAction) else emptyList())
         }
-        else -> super.createErrorMessage(throwable)
+
+        return super.createErrorInfo(throwable)
     }
 }

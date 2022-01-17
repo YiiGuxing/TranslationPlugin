@@ -80,8 +80,6 @@ interface View : Disposable {
 
     /**
      * 显示错误信息
-     *
-     * @param errorMessage 错误信息
      */
-    fun showError(request: Presenter.Request, errorMessage: String, throwable: Throwable)
+    fun showError(request: Presenter.Request, throwable: Throwable)
 }

@@ -82,9 +82,9 @@ class TranslateService private constructor() : Disposable {
                     }
                 }
             } catch (e: TranslateException) {
-                LOGGER.w("translate", e)
+                LOGGER.w("Translation error", e)
                 invokeLater(ModalityState.any()) {
-                    listeners.run(key) { onError(e.message, e) }
+                    listeners.run(key) { onError(e) }
                 }
             }
         }

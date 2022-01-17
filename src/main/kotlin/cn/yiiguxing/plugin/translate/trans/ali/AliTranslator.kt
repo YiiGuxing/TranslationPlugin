@@ -132,10 +132,11 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         val formatType = if (isDocumentation) "html" else "text"
         val request = AliTranslationRequest(text, srcLang.aliLanguageCode, targetLang.aliLanguageCode, formatType)
 
-        return sendHttpRequest(ALI_TRANSLATE_URL, request)
+        return sendHttpRequest(request)
     }
 
-    private fun sendHttpRequest(url: String, request: Any): String {
+    private fun sendHttpRequest(request: Any): String {
+        val url = ALI_TRANSLATE_URL
         val body = Gson().toJson(request)
 
         val realUrl = URL(url)
@@ -179,6 +180,12 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             }
     }
 
+    class AliTranslationResultException(code: Int, val errorMessage: String) : TranslationResultException(code) {
+        override fun getLocalizedMessage(): String {
+            return "$message[$errorMessage]"
+        }
+    }
+
     private fun parseTranslation(
         translation: String,
         original: String,
@@ -191,29 +198,36 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             src = srcLang
             target = targetLang
             if (!isSuccessful) {
-                throw TranslateResultException(code, name)
+                throw AliTranslationResultException(code, errorMessage)
             }
         }.toTranslation()
     }
 
-    override fun createErrorMessage(throwable: Throwable): String = when (throwable) {
-        is TranslateResultException -> when (throwable.code) {
-            10001 -> message("error.request.timeout")
-            10002 -> message("error.systemError")
-            10003 -> message("error.bad.request")
-            10004 -> message("error.missingParameter")
-            10005 -> message("error.language.unsupported")
-            10006 -> message("error.ali.language.detecting.failed")
-            10007 -> message("error.systemError")
-            10008 -> message("error.text.too.long")
-            10009 -> message("error.ali.permission.denied")
-            10010 -> message("error.service.is.down", ALI_TRANSLATE_PRODUCT_URL)
-            10011 -> message("error.systemError")
-            10012 -> message("error.systemError")
-            10013 -> message("error.account.has.run.out.of.balance")
-            else -> message("error.unknown") + "[${throwable.code}]"
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo {
+        val errorMessage = when (throwable) {
+            is TranslationResultException -> when (throwable.code) {
+                10001 -> message("error.request.timeout")
+                10002 -> message("error.systemError")
+                10003 -> message("error.bad.request")
+                10004 -> message("error.missingParameter")
+                10005 -> message("error.language.unsupported")
+                10006 -> message("error.ali.language.detecting.failed")
+                10007 -> message("error.systemError")
+                10008 -> message("error.text.too.long")
+                10009 -> message("error.ali.permission.denied")
+                10010 -> return ErrorInfo(
+                    message("error.service.is.down"),
+                    ErrorInfo.openUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
+                )
+                10011 -> message("error.systemError")
+                10012 -> message("error.systemError")
+                10013 -> message("error.account.has.run.out.of.balance")
+                else -> message("error.unknown") + "[${throwable.code}]"
+            }
+            else -> return super.createErrorInfo(throwable)
         }
-        else -> super.createErrorMessage(throwable)
+
+        return ErrorInfo(errorMessage)
     }
 
     private fun toGMTString(date: Date): String {

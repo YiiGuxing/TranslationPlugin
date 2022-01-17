@@ -17,9 +17,6 @@ object Icons {
     val Wordbook: Icon = load("/icons/wordbook.svg")
 
     @JvmField
-    val Pin: Icon = load("/icons/pin.svg")
-
-    @JvmField
     val Audio: Icon = load("/icons/audio.svg")
 
     @JvmField
@@ -48,33 +45,6 @@ object Icons {
 
     @JvmField
     val Swap: Icon = load("/icons/swap.svg")
-
-    @JvmField
-    val Swap2: Icon = load("/icons/swap2.svg")
-
-    @JvmField
-    val SwapHovering: Icon = load("/icons/swapHovering.svg")
-
-    @JvmField
-    val SwapDisabled: Icon = load("/icons/swapDisabled.svg")
-
-    @JvmField
-    val ClearText: Icon = load("/icons/clearText.svg")
-
-    @JvmField
-    val ClearTextHovering: Icon = load("/icons/clearTextHovering.svg")
-
-    @JvmField
-    val ClearTextDisabled: Icon = load("/icons/clearTextDisabled.svg")
-
-    @JvmField
-    val CopyAll: Icon = load("/icons/copy.svg")
-
-    @JvmField
-    val CopyAllHovering: Icon = load("/icons/copyHovering.svg")
-
-    @JvmField
-    val CopyAllDisabled: Icon = load("/icons/copyDisabled.svg")
 
     @JvmField
     val CopyToClipboard: Icon = load("/icons/copyToClipboard.svg")
