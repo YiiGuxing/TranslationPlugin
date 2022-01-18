@@ -1,10 +1,13 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.ErrorInfo
 import cn.yiiguxing.plugin.translate.trans.TranslateException
+import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import com.intellij.icons.AllIcons
+import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.ui.components.JBLabel
@@ -13,6 +16,7 @@ import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import icons.Icons
 import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
@@ -30,7 +34,7 @@ class TranslationFailedComponent : JPanel() {
     private val switchTranslatorAction =
         object : AbstractAction(message("translation.failed.component.action.switch.translator")) {
             override fun actionPerformed(e: ActionEvent) {
-                // TODO switch translator
+                doSwitchTranslator()
             }
         }
 
@@ -89,6 +93,19 @@ class TranslationFailedComponent : JPanel() {
     override fun setBounds(x: Int, y: Int, width: Int, height: Int) {
         super.setBounds(x, y, width, height)
         errorInfo.maximumSize = Dimension(width - JBUIScale.scale(INSETS * 10), Int.MAX_VALUE)
+    }
+
+    private fun doSwitchTranslator() {
+        val dataContext = DataManager.getInstance().getDataContext(optionButton)
+        if (SwitchTranslatorAction.canSwitchTranslatorQuickly()) {
+            val offsetX = if (UIUtil.isUnderDarcula()) JBUIScale.scale(3) else 0
+            SwitchTranslatorAction
+                .createTranslatorPopup(dataContext)
+                .apply { maximumSize = Dimension(optionButton.width - offsetX * 2, 1) }
+                .showBelow(optionButton, offsetX, JBUIScale.scale(3))
+        } else {
+            OptionsConfigurable.showSettingsDialog()
+        }
     }
 
     fun onRetry(handler: () -> Unit) {

@@ -8,15 +8,15 @@ package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.textarea.TextComponentEditor
-import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.openapi.ui.popup.ListPopup
-import com.intellij.openapi.ui.popup.ListPopupStep
+import com.intellij.openapi.ui.popup.*
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
+import com.intellij.ui.ScreenUtil
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.JBUI
 import java.awt.Dimension
 import java.awt.Point
 import javax.swing.Icon
+import javax.swing.JComponent
 import javax.swing.JTextField
 import javax.swing.text.JTextComponent
 
@@ -85,6 +85,7 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
             component.hasSelection -> {
                 @Suppress("deprecation")
                 val startRect = component.modelToView(component.selectionStart)
+
                 @Suppress("deprecation")
                 val endRect = component.modelToView(component.selectionEnd)
                 val x = minOf(startRect.x, endRect.x)
@@ -93,6 +94,7 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
             }
             else -> {
                 val caretPosition = component.caret.magicCaretPosition
+
                 @Suppress("deprecation")
                 val modelRect = component.modelToView(component.caret.dot)
                 Point(caretPosition.x, caretPosition.y + modelRect.height)
@@ -104,3 +106,26 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
     }
 
 private val JTextComponent.hasSelection: Boolean get() = selectionStart != selectionEnd
+
+fun JBPopup.showBelow(component: JComponent, offsetX: Int = 0, offsetY: Int = 0) {
+    val belowLocation = RelativePoint(
+        component,
+        Point(JBUI.scale(offsetX), component.height + JBUI.scale(offsetY))
+    )
+
+    addListener(object : JBPopupListener {
+        override fun beforeShown(event: LightweightWindowEvent) {
+            val popup = event.asPopup()
+            val screen = ScreenUtil.getScreenRectangle(component.locationOnScreen)
+            val above = screen.height < popup.size.height + belowLocation.screenPoint.y
+
+            if (above) {
+                val aboveLocation = RelativePoint(component, Point(JBUI.scale(offsetX), -JBUI.scale(offsetY)))
+                val point = Point(aboveLocation.screenPoint)
+                point.translate(0, -popup.size.height)
+                popup.setLocation(point)
+            }
+        }
+    })
+    show(belowLocation)
+}

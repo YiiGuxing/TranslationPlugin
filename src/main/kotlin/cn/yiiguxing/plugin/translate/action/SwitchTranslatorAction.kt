@@ -10,8 +10,6 @@ import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.Condition
-import com.intellij.openapi.wm.ex.WindowManagerEx
-import java.awt.Dimension
 import javax.swing.JComponent
 
 
@@ -28,7 +26,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
     }
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isEnabledAndVisible = TranslatorAction.availableActions().size > 1
+        e.presentation.isEnabledAndVisible = canSwitchTranslatorQuickly()
 
         TranslateService.translator.let {
             e.presentation.text = it.name
@@ -36,45 +34,49 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         }
     }
 
-    override fun actionPerformed(e: AnActionEvent) {
-        WindowManagerEx.getInstanceEx()
-            .findFrameFor(e.project)
-            ?.component
-            ?.let { createActionPopup(message("translator.popup.title"), e.dataContext, it).showInCenterOf(it) }
-    }
-
-    private fun createActionPopup(
-        title: String?,
-        context: DataContext,
-        component: JComponent,
-        disposeCallback: Runnable? = null
-    ): ListPopup {
-        val group = createPopupActionGroup(component, context)
-        return JBPopupFactory
-            .getInstance()
-            .createActionGroupPopup(
-                title,
-                group,
-                context,
-                false,
-                shouldShowDisabledActions(),
-                false,
-                disposeCallback,
-                maxRows,
-                preselectCondition
-            )
-            .apply { setMinimumSize(Dimension(minWidth, minHeight)) }
-    }
-
     override fun getPreselectCondition(): Condition<AnAction> = TranslatorAction.PRESELECT_CONDITION
 
-    override fun createPopupActionGroup(button: JComponent)
-            : DefaultActionGroup = DefaultActionGroup(TranslatorAction.availableActions())
+    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup = createPopupActionGroup()
 
-    override fun createComboBoxButton(presentation: Presentation): ComboBoxButton =
-        object : ComboBoxButton(presentation) {
+    override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
+        return object : ComboBoxButton(presentation) {
             override fun createPopup(onDispose: Runnable?): JBPopup {
-                return createActionPopup(null, dataContext, this, onDispose)
+                val originalPopupTitle = myPopupTitle
+                myPopupTitle = null
+                val popup = super.createPopup(onDispose)
+                myPopupTitle = originalPopupTitle
+                return popup
             }
         }
+    }
+
+
+    companion object {
+        fun canSwitchTranslatorQuickly() = TranslatorAction.availableActions().size > 1
+
+        fun createTranslatorPopup(
+            context: DataContext,
+            title: String? = adaptedMessage("translator.popup.title"),
+            disposeCallback: Runnable? = null
+        ): ListPopup {
+            val group = createPopupActionGroup()
+            return JBPopupFactory
+                .getInstance()
+                .createActionGroupPopup(
+                    title,
+                    group,
+                    context,
+                    false,
+                    false,
+                    false,
+                    disposeCallback,
+                    10,
+                    TranslatorAction.PRESELECT_CONDITION
+                )
+        }
+
+        private fun createPopupActionGroup(): DefaultActionGroup {
+            return DefaultActionGroup(TranslatorAction.availableActions())
+        }
+    }
 }
