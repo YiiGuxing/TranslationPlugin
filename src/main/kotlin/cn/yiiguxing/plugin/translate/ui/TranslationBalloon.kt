@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.ui.icon.Spinner
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
@@ -19,12 +18,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.WindowManager
-import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.intellij.util.ui.*
-import icons.Icons
+import com.intellij.util.ui.JBEmptyBorder
+import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.PositionTracker
+import com.intellij.util.ui.UIUtil
 import java.awt.AWTEvent
 import java.awt.Color
 import java.awt.Component.RIGHT_ALIGNMENT
@@ -33,10 +33,8 @@ import java.awt.Toolkit
 import java.awt.event.AWTEventListener
 import java.awt.event.MouseEvent
 import javax.swing.JComponent
-import javax.swing.JTextPane
 import javax.swing.MenuElement
 import javax.swing.SwingUtilities
-import javax.swing.event.HyperlinkEvent
 
 class TranslationBalloon(
     private val editor: Editor,
@@ -48,24 +46,17 @@ class TranslationBalloon(
 
     private val layout = FixedSizeCardLayout()
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
-    private val errorPanel = NonOpaquePanel(FrameLayout())
-    private val errorPane = JTextPane()
+    private val errorPanel = TranslationFailedComponent()
     private val processPane = ProcessComponent(Spinner(), JBUI.insets(INSETS, INSETS * 2))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
     private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
-    private val copyErrorLink = ActionLink(icon = Icons.CopyToClipboard) {
-        lastError?.copyToClipboard()
-        hide()
-    }
 
     private val balloon: Balloon
 
     private var isShowing = false
     private var _disposed = false
     override val disposed get() = _disposed || balloon.isDisposed
-
-    private var lastError: Throwable? = null
 
     private var lastMoveWasInsideBalloon = false
     private val eventListener = AWTEventListener {
@@ -74,13 +65,11 @@ class TranslationBalloon(
             if (inside != lastMoveWasInsideBalloon) {
                 lastMoveWasInsideBalloon = inside
                 pinButton.isVisible = inside
-                copyErrorLink.isVisible = inside
             }
         }
     }
 
     init {
-        initErrorPanel()
         initTranslationPanel()
         initContentPanel()
 
@@ -126,55 +115,26 @@ class TranslationBalloon(
         }
     }
 
-    private fun initActions() = with(translationPane) {
-        onRevalidate { if (!disposed) balloon.revalidate() }
-        onLanguageChanged { src, target ->
-            run {
-                presenter.updateLastLanguages(src, target)
-                translate(src, target)
+    private fun initActions() {
+        with(translationPane) {
+            onRevalidate { if (!disposed) balloon.revalidate() }
+            onLanguageChanged { src, target ->
+                run {
+                    presenter.updateLastLanguages(src, target)
+                    translate(src, target)
+                }
+            }
+            onNewTranslate { text, src, target ->
+                invokeLater { showOnTranslationDialog(text, src, target) }
+            }
+            onSpellFixed { spell ->
+                val targetLang = presenter.getTargetLang(spell)
+                invokeLater { showOnTranslationDialog(spell, Lang.AUTO, targetLang) }
             }
         }
-        onNewTranslate { text, src, target ->
-            invokeLater { showOnTranslationDialog(text, src, target) }
-        }
-        onSpellFixed { spell ->
-            val targetLang = presenter.getTargetLang(spell)
-            invokeLater { showOnTranslationDialog(spell, Lang.AUTO, targetLang) }
-        }
 
+        errorPanel.onRetry { onTranslate() }
         Toolkit.getDefaultToolkit().addAWTEventListener(eventListener, AWTEvent.MOUSE_MOTION_EVENT_MASK)
-    }
-
-    private fun initErrorPanel() {
-        errorPane.apply {
-            contentType = "text/html"
-            isEditable = false
-            isOpaque = false
-            editorKit = UI.errorHTMLKit
-            foreground = JBColor(0xFF3333, 0xFF3333)
-            font = UI.primaryFont(15)
-            border = JBEmptyBorder(INSETS, INSETS + 10, INSETS, INSETS + 10)
-            maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
-
-            addHyperlinkListener(object : DefaultHyperlinkListener() {
-                override fun hyperlinkActivated(hyperlinkEvent: HyperlinkEvent) {
-                    this@TranslationBalloon.hide()
-                    super.hyperlinkActivated(hyperlinkEvent)
-                }
-            })
-        }
-
-        copyErrorLink.apply {
-            isVisible = false
-            border = JBEmptyBorder(0, 0, 0, 2)
-            toolTipText = message("copy.error.to.clipboard.tooltip")
-            alignmentX = RIGHT_ALIGNMENT
-            alignmentY = TOP_ALIGNMENT
-        }
-        errorPanel.apply {
-            add(copyErrorLink)
-            add(errorPane)
-        }
     }
 
     private fun isInsideBalloon(target: RelativePoint): Boolean {
@@ -227,9 +187,13 @@ class TranslationBalloon(
             Disposer.register(this, tracker)
             balloon.show(tracker, position)
 
-            val targetLang = presenter.getTargetLang(text)
-            translate(Lang.AUTO, targetLang)
+            onTranslate()
         }
+    }
+
+    private fun onTranslate() {
+        val targetLang = presenter.getTargetLang(text)
+        translate(Lang.AUTO, targetLang)
     }
 
     private fun translate(srcLang: Lang, targetLang: Lang) = presenter.translate(text, srcLang, targetLang)
@@ -272,6 +236,7 @@ class TranslationBalloon(
     override fun showStartTranslate(request: Presenter.Request, text: String) {
         if (!disposed) {
             showCard(CARD_PROCESSING)
+            errorPanel.update(null as Throwable?)
         }
     }
 
@@ -285,8 +250,7 @@ class TranslationBalloon(
 
     override fun showError(request: Presenter.Request, throwable: Throwable) {
         if (!disposed) {
-            lastError = throwable
-            errorPane.text = throwable.message
+            errorPanel.update(throwable)
             invokeLater(5) { showCard(CARD_ERROR) }
         }
     }
