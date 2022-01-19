@@ -94,16 +94,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | ZZZping | [github.com/ZZZping](https://github.com/ZZZping) | 8.11 CNY |
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
-| 谭靖宇 | | 6.66CNY |
+| 尼古拉斯 | | 6.67 CNY |
+| 谭靖宇 | | 6.66 CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
-| 刘小明 | | 6.66CNY |
-| Hushuang | | 6CNY |
-| 张英奇 | | 6CNY |
-| 麦可 | [github.com/way2fly](https://github.com/way2fly) | 5CNY |
-| 谢嘉豪 | [xiejiahao.com](http://xiejiahao.com) | 5CNY |
-| 白鸟无言 | | 5CNY |
-| 两颗西柚 | | 5CNY |
-| 寤寐 | | 5CNY |
+| 刘小明 | | 6.66 CNY |
+| Hushuang | | 6 CNY |
+| 张英奇 | | 6 CNY |
+| 麦可 | [github.com/way2fly](https://github.com/way2fly) | 5 CNY |
+| 谢嘉豪 | [xiejiahao.com](http://xiejiahao.com) | 5 CNY |
+| 白鸟无言 | | 5 CNY |
+| 两颗西柚 | | 5 CNY |
+| 寤寐 | | 5 CNY |
 | 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
 | Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
 | Qiuyukuhe |  | 5 CNY |
