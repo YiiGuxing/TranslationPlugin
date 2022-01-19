@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 全新的错误提示面板
 - 翻译窗口状态栏显示加载状态
 
 ## v3.2.1-213 (2021/12/20)
