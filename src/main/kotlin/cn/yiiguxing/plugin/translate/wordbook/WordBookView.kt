@@ -2,10 +2,10 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import cn.yiiguxing.plugin.translate.ui.Popups
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordBookPanel
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordDetailsDialog
 import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.Popups
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.assertIsDispatchThread
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread

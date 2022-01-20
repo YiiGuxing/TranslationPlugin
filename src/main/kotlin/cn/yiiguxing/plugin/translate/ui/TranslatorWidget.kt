@@ -78,6 +78,6 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
     }
 
     companion object {
-        val ID = "TranslatorWidget"
+        const val ID = "TranslatorWidget"
     }
 }

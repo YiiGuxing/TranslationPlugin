@@ -57,11 +57,11 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
             setHoveringIcon(Icons.TTSSuspendHovering)
             TextToSpeech.speak(project, text, lang).let { disposable ->
                 ttsDisposable = disposable
-                Disposer.register(disposable, Disposable {
+                Disposer.register(disposable) {
                     ttsDisposable = null
                     icon = Icons.Audio
                     setHoveringIcon(Icons.AudioPressed)
-                })
+                }
             }
         }
     }

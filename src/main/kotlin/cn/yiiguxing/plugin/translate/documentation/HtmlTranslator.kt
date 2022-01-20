@@ -100,7 +100,7 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     val ignoredElementsProvider = language?.let { IgnoredDocumentationElementsProvider.forLanguage(it) }
     val ignoredElements = ignoredElementsProvider?.ignoreElements(body)
 
-    // 翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
+    // 谷歌翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
     // 无需检查内容长度，因为谷歌翻好像没有限制
     val content = body.html()
         .replaceTag(TAG_B, TAG_STRONG)

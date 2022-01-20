@@ -22,9 +22,9 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun init(toolWindow: ToolWindow) {
         val toolWindowRef: Ref<ToolWindow?> = Ref.create(toolWindow)
         val uiDisposable = TranslationUIManager.disposable()
-        Disposer.register(uiDisposable, {
+        Disposer.register(uiDisposable) {
             toolWindowRef.set(null)
-        })
+        }
 
         val messageBusConnection = Application.messageBus.connect(uiDisposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {

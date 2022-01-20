@@ -4,33 +4,14 @@ import cn.yiiguxing.plugin.translate.Presenter
 import cn.yiiguxing.plugin.translate.trans.Lang
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.ui.SimpleListCellRenderer
-import javax.swing.AbstractListModel
-import javax.swing.ComboBoxModel
 import javax.swing.JList
 
-class HistoryModel(private val fullList: List<String>) : AbstractListModel<String>(), ComboBoxModel<String> {
-    private var selectedItem: Any? = null
 
-    override fun getElementAt(index: Int): String = fullList[index]
-
-    override fun getSize(): Int = fullList.size
-
-    override fun getSelectedItem(): Any? = selectedItem
-
-    override fun setSelectedItem(anItem: Any) {
-        selectedItem = anItem
-        fireContentsChanged()
-    }
-
-    internal fun fireContentsChanged() {
-        fireContentsChanged(this, -1, -1)
-    }
-}
-
-class HistoryRenderer(private val sourceLangProvider: () -> Lang?,
-                      private val targetLangProvider: () -> Lang?,
-                      private val presenter: Presenter)
-    : SimpleListCellRenderer<String>() {
+class HistoryRenderer(
+    private val sourceLangProvider: () -> Lang?,
+    private val targetLangProvider: () -> Lang?,
+    private val presenter: Presenter
+) : SimpleListCellRenderer<String>() {
 
     private val builder = StringBuilder()
 

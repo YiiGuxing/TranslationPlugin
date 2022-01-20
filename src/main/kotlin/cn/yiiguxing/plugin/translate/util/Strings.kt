@@ -155,7 +155,7 @@ private fun String.splitBy(regex: Regex): List<String> {
 }
 
 private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLength: Int) {
-    for (i in 0 until length step maxLength) {
+    for (i in indices step maxLength) {
         destination += substring(i, minOf(i + maxLength, length))
     }
 }

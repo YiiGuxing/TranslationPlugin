@@ -98,11 +98,12 @@ class TranslationFailedComponent : JPanel() {
     private fun doSwitchTranslator() {
         val dataContext = DataManager.getInstance().getDataContext(optionButton)
         if (SwitchTranslatorAction.canSwitchTranslatorQuickly()) {
-            val offsetX = if (UIUtil.isUnderDarcula()) JBUIScale.scale(3) else 0
+            val offset = JBUIScale.scale(3)
+            val offsetX = if (UIUtil.isUnderDarcula()) offset else 0
             SwitchTranslatorAction
                 .createTranslatorPopup(dataContext)
                 .apply { maximumSize = Dimension(optionButton.width - offsetX * 2, 1) }
-                .showBelow(optionButton, offsetX, JBUIScale.scale(3))
+                .showBelow(optionButton, offsetX, offset)
         } else {
             OptionsConfigurable.showSettingsDialog()
         }

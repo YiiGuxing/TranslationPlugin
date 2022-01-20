@@ -1,13 +1,11 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
-import cn.yiiguxing.plugin.translate.ui.UI.fillY
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import com.intellij.icons.AllIcons
 import com.intellij.ui.components.labels.LinkLabel
 import net.miginfocom.layout.CC
 import java.awt.BorderLayout
-import java.awt.Dimension
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.SwingConstants.LEADING

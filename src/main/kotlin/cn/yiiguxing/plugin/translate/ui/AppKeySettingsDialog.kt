@@ -11,7 +11,7 @@ class AppKeySettingsDialog(
 ) : DialogWrapper(false) {
     init {
         setTitle(title)
-        setResizable(false)
+        isResizable = false
         appKeySettingsPanel.reset()
         init()
     }

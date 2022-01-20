@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.psi.PsiElement
@@ -46,7 +48,7 @@ fun <T : PsiElement> PsiElement.findChildOfType(type: Class<T>, depth: Boolean =
         if (type.isInstance(child)) {
             return child as? T
         } else if (depth) {
-            child.findChildOfType(type, depth)?.let {
+            child.findChildOfType(type, true)?.let {
                 return@findChildOfType it
             }
         }
@@ -80,7 +82,7 @@ fun PsiElement.findChild(depth: Boolean = true, condition: (PsiElement) -> Boole
         if (condition(child)) {
             return child
         } else if (depth) {
-            child.findChild(depth, condition)?.let {
+            child.findChild(true, condition)?.let {
                 return@findChild it
             }
         }
