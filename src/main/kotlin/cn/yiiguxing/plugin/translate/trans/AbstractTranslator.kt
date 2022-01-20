@@ -34,6 +34,7 @@ abstract class AbstractTranslator : Translator {
             is SocketException, is SSLHandshakeException -> message("error.network")
             is SocketTimeoutException -> message("error.network.timeout")
             is JsonSyntaxException -> message("error.parse")
+            is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
             else -> when (
                 throwable.message?.let { HTTP_STATUS_EXCEPTION_REGEX.matchEntire(it) }

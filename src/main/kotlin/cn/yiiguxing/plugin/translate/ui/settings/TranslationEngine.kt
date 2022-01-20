@@ -17,7 +17,7 @@ enum class TranslationEngine(
     val id: String,
     val translatorName: String,
     val icon: Icon,
-    val contentLengthLimit: Int = 0,
+    val contentLengthLimit: Int = -1,
     val intervalLimit: Int = 500
 ) {
 

@@ -2,11 +2,14 @@ package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL_FORMAT
+import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.lang.reflect.Type
 import javax.swing.Icon
 
@@ -14,6 +17,14 @@ import javax.swing.Icon
  * GoogleTranslator
  */
 object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
+
+    private const val TAG_I = "i"
+    private const val TAG_EM = "em"
+    private const val TAG_B = "b"
+    private const val TAG_STRONG = "strong"
+    private const val TAG_SPAN = "span"
+
+
     private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
@@ -50,17 +61,52 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         ).execute(text, srcLang, targetLang)
     }
 
-    override fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation {
+    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
         return checkError {
-            val client = SimpleTranslateClient(
-                this,
-                { _, _, _ -> call(documentation, srcLang, targetLang, true) },
-                GoogleTranslator::parseDocTranslation
-            )
-
-            client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
-            client.execute(documentation, srcLang, targetLang)
+            processAndTranslateDocumentation(documentation) {
+                translateDocumentation(it, srcLang, targetLang)
+            }
         }
+    }
+
+    private inline fun processAndTranslateDocumentation(
+        documentation: Document,
+        translate: (String) -> String
+    ): Document {
+        val body = documentation.body()
+
+        // 翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
+        val content = body.html()
+            .replaceTag(TAG_B, TAG_STRONG)
+            .replaceTag(TAG_I, TAG_EM)
+        if (content.isBlank()) {
+            return documentation
+        }
+
+        val translation = translate(content)
+
+        body.html(translation)
+        // 去除原文标签。
+        body.select(TAG_I).remove()
+        // 去除译文的粗体效果，`b` 标签替换为 `span` 标签。
+        body.select(TAG_B).forEach { it.replaceWith(Element(TAG_SPAN).html(it.html())) }
+
+        return documentation
+    }
+
+    private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
+        val client = SimpleTranslateClient(
+            this,
+            { _, _, _ -> call(documentation, srcLang, targetLang, true) },
+            GoogleTranslator::parseDocTranslation
+        )
+        client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
+        return client.execute(documentation, srcLang, targetLang).translation ?: ""
+    }
+
+    private fun String.replaceTag(targetTag: String, replacementTag: String): String {
+        val regex = Regex("<(?<pre>/??)$targetTag(?<pos>( .+?)*?)>")
+        return replace(regex, "<${'$'}{pre}$replacementTag${'$'}{pos}>")
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {

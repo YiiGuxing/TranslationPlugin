@@ -2,9 +2,7 @@ package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
-import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.Translator
+import cn.yiiguxing.plugin.translate.trans.*
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
 import com.intellij.ui.ColorUtil
@@ -20,11 +18,6 @@ import javax.swing.text.html.HTMLEditorKit
 private const val CSS_QUERY_DEFINITION = ".definition"
 private const val CSS_QUERY_CONTENT = ".content"
 private const val TAG_PRE = "pre"
-private const val TAG_I = "i"
-private const val TAG_EM = "em"
-private const val TAG_B = "b"
-private const val TAG_STRONG = "strong"
-private const val TAG_SPAN = "span"
 
 private const val TRANSLATED_ATTR = "translated"
 
@@ -33,7 +26,6 @@ private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
 
 private val HTML_KIT = HTMLEditorKit()
 
-private class ContentLengthLimitException : Exception()
 
 fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
     val document: Document = Jsoup.parse(documentation)
@@ -41,16 +33,21 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
         return documentation
     }
 
-    val translatedDocumentation =
-        try {
-            if (this is DocumentationTranslator) {
-                getTranslatedDocumentation(document, language)
-            } else {
-                getTranslatedDocumentation(document)
-            }
-        } catch (e: ContentLengthLimitException) {
-            document.addLimitHint()
+    val translatedDocumentation = try {
+        if (this is DocumentationTranslator) {
+            getTranslatedDocumentation(document, language)
+        } else {
+            getTranslatedDocumentation(document)
         }
+    } catch (e: ContentLengthLimitException) {
+        document.addLimitHint()
+    } catch (e: TranslateException) {
+        if (e.cause is ContentLengthLimitException) {
+            document.addLimitHint()
+        } else {
+            throw e
+        }
+    }
 
     translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, null)
 
@@ -100,41 +97,20 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     val ignoredElementsProvider = language?.let { IgnoredDocumentationElementsProvider.forLanguage(it) }
     val ignoredElements = ignoredElementsProvider?.ignoreElements(body)
 
-    // 谷歌翻译内容会带有原文与译文，分号包在 `i` 标签和 `b` 标签内，因此替换掉这两个标签以免影响到翻译后的处理。
-    // 无需检查内容长度，因为谷歌翻好像没有限制
-    val content = body.html()
-        .replaceTag(TAG_B, TAG_STRONG)
-        .replaceTag(TAG_I, TAG_EM)
-    val translation =
-        if (content.isBlank()) ""
-        else translateDocumentation(content, Lang.AUTO, (this as Translator).primaryLanguage).translation ?: ""
-
-    body.html(translation)
-    // 去除原文标签。
-    body.select(TAG_I).remove()
-    // 去除译文的粗体效果，`b` 标签替换为 `span` 标签。
-    body.select(TAG_B).forEach { it.replaceWith(Element(TAG_SPAN).html(it.html())) }
+    val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
+    val translatedBody = translatedDocument.body()
 
     preElements.forEachIndexed { index, element ->
-        body.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
+        translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
-    ignoredElements?.let { ignoredElementsProvider.restoreIgnoredElements(body, it) }
+    ignoredElements?.let { ignoredElementsProvider.restoreIgnoredElements(translatedBody, it) }
+    definition?.let { translatedBody.prependChild(it) }
 
-    definition?.let { body.prependChild(it) }
-
-    return document
-}
-
-private fun String.replaceTag(targetTag: String, replacementTag: String): String {
-    return replace(Regex("<(?<pre>/??)$targetTag(?<pos>( .+?)*?)>"), "<${'$'}{pre}$replacementTag${'$'}{pos}>")
+    return translatedDocument
 }
 
 private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
 
-private fun Translator.checkContentLengthLimit(content: String): String {
-    if (contentLengthLimit > 0 && content.length > contentLengthLimit) throw ContentLengthLimitException()
-    return content
-}
 
 private fun Translator.getTranslatedDocumentation(document: Document): Document {
     val body = document.body()
@@ -142,7 +118,8 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
 
     val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
     val formatted = try {
-        checkContentLengthLimit(htmlDocument.getText(0, htmlDocument.length).trim())
+        val content = htmlDocument.getText(0, htmlDocument.length).trim()
+        checkContentLength(content, contentLengthLimit)
     } catch (e: ContentLengthLimitException) {
         definition?.let { body.insertChildren(0, it) }
         throw e

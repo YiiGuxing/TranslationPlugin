@@ -1,7 +1,9 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import org.jsoup.nodes.Document
+
 interface DocumentationTranslator {
 
-    fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation
+    fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document
 
 }

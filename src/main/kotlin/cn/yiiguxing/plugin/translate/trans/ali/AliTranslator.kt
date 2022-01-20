@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
+import org.jsoup.nodes.Document
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
@@ -97,17 +98,28 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         ).execute(text, srcLang, targetLang)
     }
 
-    override fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): BaseTranslation {
+    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
         return checkError {
+            val body = documentation.body()
+            val content = body.html().trim()
+            if (content.isBlank()) {
+                return documentation
+            }
+
+            checkContentLength(content, contentLengthLimit)
+
             val client = SimpleTranslateClient(
                 this,
-                { _, _, _ -> call(documentation, srcLang, targetLang, true) },
+                { _, _, _ -> call(content, srcLang, targetLang, true) },
                 AliTranslator::parseTranslation
             )
-            with(client) {
+            val translation = with(client) {
                 updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
-                execute(documentation, srcLang, targetLang)
+                execute(content, srcLang, targetLang)
             }
+
+            body.html(translation.translation ?: "")
+            documentation
         }
     }
 
