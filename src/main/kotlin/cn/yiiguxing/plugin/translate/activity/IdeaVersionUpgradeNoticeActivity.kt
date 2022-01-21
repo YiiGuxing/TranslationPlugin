@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.activity
 
-import cn.yiiguxing.plugin.translate.UPDATE_NOTIFICATION_GROUP_ID
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.update.UpdateManager.Companion.UPDATE_NOTIFICATION_GROUP_ID
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.show
 import com.intellij.ide.util.PropertiesComponent
@@ -31,7 +31,6 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
     }
 
     companion object {
-        private const val DISPLAY_ID = "Outdated IDE Version"
 
         private val DO_NOT_NOTIFY_AGAIN_PROPERTY =
             "yii.guxing.translate.IdeaVersionUpgradeNotice.${IdeVersion.buildNumber}.disable"

@@ -16,6 +16,7 @@ import javax.net.ssl.SSLHandshakeException
 abstract class AbstractTranslator : Translator {
 
     final override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = checkError {
+        checkContentLength(text, contentLengthLimit)
         doTranslate(text, srcLang, targetLang)
     }
 

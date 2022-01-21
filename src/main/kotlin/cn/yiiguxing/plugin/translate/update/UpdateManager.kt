@@ -1,7 +1,10 @@
 package cn.yiiguxing.plugin.translate.update
 
-import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
+import cn.yiiguxing.plugin.translate.WebPages
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
+import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.Plugin
@@ -114,6 +117,8 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
 
     companion object {
+        const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin Updates"
+
         private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
 
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
