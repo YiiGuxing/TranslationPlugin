@@ -23,8 +23,6 @@ val TRANSLATION_DIRECTORY: Path =
         DEFAULT_TRANSLATION_DIRECTORY
     }
 
-const val DEFAULT_NOTIFICATION_GROUP_ID = "Translation Plugin"
-const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin Updates"
 
 const val STORAGE_NAME = "yiiguxing.translation.xml"
 
@@ -49,6 +47,7 @@ const val BAIDU_TRANSLATE_URL = "https://fanyi-api.baidu.com/api/trans/vip/trans
 const val BAIDU_FANYI_URL = "https://fanyi-api.baidu.com/manage/developer"
 const val BAIDU_FANYI_PRODUCT_URL = "https://fanyi-api.baidu.com/choose"
 
+@Suppress("HttpUrlsUsage")
 const val ALI_TRANSLATE_URL = "http://mt.aliyuncs.com/api/translate/web/general"
 const val ALI_CAPI_URL = "https://usercenter.console.aliyun.com/#/manage/ak"
 const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"
