@@ -47,9 +47,6 @@ object Icons {
     val Swap: Icon = load("/icons/swap.svg")
 
     @JvmField
-    val CopyToClipboard: Icon = load("/icons/copyToClipboard.svg")
-
-    @JvmField
     val Google: Icon = load("/icons/google.svg")
 
     @JvmField
