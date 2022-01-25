@@ -106,14 +106,7 @@ jobs:
 
       # Run Qodana inspections
       #- name: Qodana - Code Inspection
-      #  uses: JetBrains/qodana-action@v2.1-eap
-
-      # Collect Qodana Result
-      #- name: Collect Qodana Result
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: qodana-result
-      #    path: ${{ github.workspace }}/qodana
+      #  uses: JetBrains/qodana-action@v4.2.3
 
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
