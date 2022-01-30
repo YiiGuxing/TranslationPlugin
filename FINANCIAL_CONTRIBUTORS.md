@@ -98,6 +98,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 谭靖宇 | | 6.66 CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
 | 刘小明 | | 6.66 CNY |
+| MetaYu | | 6 CNY |
 | 秦秦秦 | | 6 CNY |
 | Hushuang | | 6 CNY |
 | 张英奇 | | 6 CNY |
