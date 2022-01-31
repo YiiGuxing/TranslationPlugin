@@ -33,6 +33,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | -------- | -------- | ------------ |
 | 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
 | 凌高 | | 100 CNY |
+| Mritd | [mritd.com/](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | 贺小五 | | 66.6 CNY |
