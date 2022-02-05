@@ -50,6 +50,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
+| Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
 | Frank-yf | [github.com/frank-yf](https://github.com/frank-yf) | 20 CNY |
