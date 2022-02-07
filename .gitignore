@@ -4,5 +4,6 @@
 .gradle/
 build/
 out/
+sandbox/
 .DS_Store
 *.iml
