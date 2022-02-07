@@ -102,7 +102,7 @@ object GoogleTranslator : AbstractTranslator() {
 
         return if (forDocumentation) {
             val results = gson.fromJson(result, Array<String>::class.java)
-            val sLang = if (srcLang == Lang.AUTO) Lang.valueOfCode(results[1]) else srcLang
+            val sLang = if (srcLang == Lang.AUTO && results.size >= 2) Lang.valueOfCode(results[1]) else srcLang
 
             BaseTranslation(sLang, targetLang, results[0])
         } else {
