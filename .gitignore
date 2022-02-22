@@ -1,9 +1,6 @@
+.DS_Store
 .idea/*
 !.idea/icon.svg
-!.idea/runConfigurations/
-.gradle/
-build/
-out/
-sandbox/
-.DS_Store
-*.iml
+.gradle
+build
+sandbox
