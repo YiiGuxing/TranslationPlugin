@@ -37,7 +37,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly(fileTree("libs"))
     testImplementation("junit:junit:4.13.2")
 
     implementation("org.jsoup:jsoup:1.14.3")
