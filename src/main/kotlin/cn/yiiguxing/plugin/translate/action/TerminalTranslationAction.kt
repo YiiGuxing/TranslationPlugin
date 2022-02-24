@@ -2,12 +2,11 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.terminal.JBTerminalWidget
 
-class TerminalTranslationAction : AnAction(), DumbAware {
+class TerminalTranslationAction : DumbAwareAction(), ImportantTranslationAction {
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabledAndVisible = !e.getSelectedTextFromTerminal().isNullOrBlank()

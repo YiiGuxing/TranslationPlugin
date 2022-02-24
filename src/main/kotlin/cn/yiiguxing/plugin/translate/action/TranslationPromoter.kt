@@ -18,7 +18,8 @@ class TranslationPromoter : ActionPromoter {
                 is PinBalloonAction,
                 is EditorTranslateAction,
                 is ToggleQuickDocTranslationAction -> 1
-                else -> 2
+                is ImportantTranslationAction -> 2
+                else -> 3
             }
         }
     }

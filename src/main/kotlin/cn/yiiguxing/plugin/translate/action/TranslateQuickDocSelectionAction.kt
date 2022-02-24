@@ -6,15 +6,17 @@ import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbAwareAction
 import icons.Icons
 
 /**
  * Translate quick doc selection action
  */
-class TranslateQuickDocSelectionAction : AnAction(), DumbAware, HintManagerImpl.ActionToIgnore {
+class TranslateQuickDocSelectionAction :
+    DumbAwareAction(),
+    ImportantTranslationAction,
+    HintManagerImpl.ActionToIgnore {
 
     init {
         isEnabledInModalContext = true

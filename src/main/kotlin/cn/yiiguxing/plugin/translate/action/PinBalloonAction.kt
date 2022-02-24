@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 
-class PinBalloonAction : AnAction() {
+class PinBalloonAction : AnAction(), ImportantTranslationAction {
     init {
         templatePresentation.text = message("action.PinBalloonAction.text")
     }

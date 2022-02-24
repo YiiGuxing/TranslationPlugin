@@ -16,7 +16,10 @@ import com.intellij.openapi.editor.actions.TextComponentEditorAction
 /**
  * 文本组件（如文本框、提示气泡、输入框……）翻译
  */
-class TranslateTextComponentAction : TextComponentEditorAction(Handler()), HintManagerImpl.ActionToIgnore {
+class TranslateTextComponentAction :
+    TextComponentEditorAction(Handler()),
+    HintManagerImpl.ActionToIgnore,
+    ImportantTranslationAction {
 
     init {
         isEnabledInModalContext = true

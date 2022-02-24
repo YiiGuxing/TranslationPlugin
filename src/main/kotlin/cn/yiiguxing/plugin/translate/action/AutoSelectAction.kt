@@ -14,7 +14,7 @@ import com.intellij.openapi.util.TextRange
 abstract class AutoSelectAction(
     private val checkSelection: Boolean,
     private val wordPartCondition: CharCondition = DEFAULT_CONDITION
-) : AnAction() {
+) : AnAction(), ImportantTranslationAction {
 
     protected abstract val selectionMode: SelectionMode
 

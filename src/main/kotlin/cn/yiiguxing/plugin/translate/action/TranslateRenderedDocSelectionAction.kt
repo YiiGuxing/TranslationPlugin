@@ -18,7 +18,7 @@ import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
 
-class TranslateRenderedDocSelectionAction : AnAction() {
+class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationAction {
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
@@ -71,8 +71,10 @@ class TranslateRenderedDocSelectionAction : AnAction() {
 
         override fun recalculateLocation(balloon: Balloon): RelativePoint {
             val positionStartInEditor = getSelectionPositionInEditor(editorPane) as Point
+
             @Suppress("deprecation")
             val positionStartInPane = editorPane.modelToView(editorPane.selectionStart)
+
             @Suppress("deprecation")
             val positionEndInPane = editorPane.modelToView(editorPane.selectionEnd)
             val positionEndXInEditor = positionEndInPane.x + positionStartInEditor.x - positionStartInPane.x

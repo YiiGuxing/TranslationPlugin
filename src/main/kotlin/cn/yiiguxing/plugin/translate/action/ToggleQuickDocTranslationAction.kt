@@ -26,7 +26,8 @@ import javax.swing.Icon
 
 open class ToggleQuickDocTranslationAction :
     FixedIconToggleAction(Icons.Documentation, { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }),
-    HintManagerImpl.ActionToIgnore {
+    HintManagerImpl.ActionToIgnore,
+    ImportantTranslationAction {
 
     init {
         // enable in hovering documentation popup
