@@ -26,10 +26,11 @@ class ShowTranslationDialogAction : TranslateAction(true) {
     override fun update(e: AnActionEvent) {}
 
     override fun actionPerformed(e: AnActionEvent) {
-        if (!ApplicationManager.getApplication().isHeadlessEnvironment) {
-            TranslationUIManager.showDialog(e.project)
+        if (ApplicationManager.getApplication().isHeadlessEnvironment) {
+            return
         }
 
+        TranslationUIManager.showDialog(e.project)
         if (Settings.takeWordWhenDialogOpens) {
             super.actionPerformed(e)
         }
