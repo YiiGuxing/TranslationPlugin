@@ -5,6 +5,7 @@ import org.jsoup.nodes.Element
 class JavaScriptIgnoredDocumentationElementsProvider : IgnoredDocumentationElementsProvider {
 
     override fun ignoreElements(body: Element): List<Element> {
+        @Suppress("UNNECESSARY_SAFE_CALL")
         val ignoredElement = body.selectFirst(CSS_QUERY)
             ?.parent()
             ?: return emptyList()
@@ -16,6 +17,7 @@ class JavaScriptIgnoredDocumentationElementsProvider : IgnoredDocumentationEleme
 
     override fun restoreIgnoredElements(body: Element, ignoredElements: List<Element>) {
         val element = ignoredElements.firstOrNull() ?: return
+        @Suppress("UNNECESSARY_SAFE_CALL")
         body.selectFirst(RESTORE_CSS_QUERY)?.replaceWith(element)
     }
 
