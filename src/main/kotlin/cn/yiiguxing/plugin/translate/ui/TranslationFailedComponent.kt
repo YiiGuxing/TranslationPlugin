@@ -133,7 +133,11 @@ class TranslationFailedComponent : JPanel() {
             options += object :
                 AnAction(message("translation.failed.component.action.copy.error.info"), null, Icons.RecordErrorInfo) {
                 override fun actionPerformed(e: AnActionEvent) {
-                    throwable.copyToClipboard(errorInfo?.let { message("error.translate.failed", it.message) })
+                    val errorMessage = errorInfo?.message ?: message("error.unknown")
+                    val message = message("error.translate.failed", errorMessage)
+                    throwable.copyToClipboard(message)
+
+                    // TODO copy and send feedback
                 }
             }
         }
