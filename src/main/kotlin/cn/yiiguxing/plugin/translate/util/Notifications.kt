@@ -3,7 +3,6 @@
 package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.ui.DefaultHyperlinkHandler
 import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnAction
@@ -11,39 +10,18 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
 
-typealias ErrorMessageProvider = (Throwable) -> String?
-
 object Notifications {
 
     const val DEFAULT_NOTIFICATION_GROUP_ID = "Translation Plugin"
-
-    val DEFAULT_ERROR_MESSAGE_PROVIDER: ErrorMessageProvider = { null }
-
-    val TRANSLATION_ERROR_MESSAGE_PROVIDER: ErrorMessageProvider = { throwable ->
-        (throwable as? TranslateException)
-            ?.errorInfo
-            ?.message
-            ?.takeIf { it.isNotBlank() }
-            ?: message("error.unknown")
-    }
 
     fun showErrorNotification(
         project: Project?,
         title: String,
         content: String,
         throwable: Throwable,
-        vararg actions: AnAction,
-        errorMessage: ErrorMessageProvider = DEFAULT_ERROR_MESSAGE_PROVIDER
+        vararg actions: AnAction
     ) {
-        showErrorNotification(
-            DEFAULT_NOTIFICATION_GROUP_ID,
-            project,
-            title,
-            content,
-            throwable,
-            actions = actions,
-            errorMessage = errorMessage
-        )
+        showErrorNotification(DEFAULT_NOTIFICATION_GROUP_ID, project, title, content, throwable, actions = actions)
     }
 
     fun showErrorNotification(
@@ -52,21 +30,15 @@ object Notifications {
         title: String,
         content: String,
         throwable: Throwable,
-        vararg actions: AnAction,
-        errorMessage: ErrorMessageProvider = DEFAULT_ERROR_MESSAGE_PROVIDER
+        vararg actions: AnAction
     ) {
-        val errorInfo = (throwable as? TranslateException)?.errorInfo
-        var message = content
-        errorMessage(throwable)?.let { message += ": $it" }
-
         NotificationGroupManager.getInstance()
             .getNotificationGroup(groupId)
-            .createNotification(message, NotificationType.ERROR)
+            .createNotification(content, NotificationType.ERROR)
             .setTitle(title)
             .setListener(UrlOpeningListener)
+            .addAction(CopyToClipboardAction(content, throwable))
             .addActions(actions.toList() as Collection<AnAction>)
-            .addActions((errorInfo?.continueActions ?: emptyList()) as Collection<AnAction>)
-            .addAction(CopyToClipboardAction(message, throwable))
             .show(project)
     }
 
@@ -79,6 +51,8 @@ object Notifications {
         override fun actionPerformed(e: AnActionEvent, notification: Notification) {
             throwable.copyToClipboard(message)
             notification.expire()
+
+            // TODO copy and send feedback
         }
 
     }

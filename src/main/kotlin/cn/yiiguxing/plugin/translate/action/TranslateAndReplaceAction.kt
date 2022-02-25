@@ -3,9 +3,9 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
 import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.TranslationNotifications
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
@@ -143,14 +143,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                     }
                                 }
 
-                                // TODO: add switch translator action
-                                val errorInfo = (throwable as? TranslateException)?.errorInfo
-                                Notifications.showErrorNotification(
+                                TranslationNotifications.showTranslationErrorNotification(
                                     editor.project,
                                     message("translate.and.replace.notification.title"),
-                                    errorInfo?.message ?: message("error.unknown"),
-                                    throwable,
-                                    *errorInfo?.continueActions?.toTypedArray() ?: arrayOf()
+                                    null,
+                                    throwable
                                 )
                             }
                         }
