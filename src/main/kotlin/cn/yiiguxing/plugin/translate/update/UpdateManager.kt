@@ -1,15 +1,11 @@
 package cn.yiiguxing.plugin.translate.update
 
-import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.WebPages
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.Plugin
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.show
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
@@ -64,9 +60,9 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
         val content = """
             If you find my plugin helpful, please
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>.</b>
+            <b><a href="${Hyperlinks.SUPPORT_DESCRIPTION}">support me</a>.</b>
             If you love this plugin, please consider
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain the plugin related activities.<br/>
+            <b><a href="${Hyperlinks.SUPPORT_DESCRIPTION}">donating</a></b> to sustain the plugin related activities.<br/>
             Thank you for your support!
             <div style="$partStyle $refStyle">
                 This update addresses these <a href="${MILESTONE_URL.format(version.version)}">issues</a>.

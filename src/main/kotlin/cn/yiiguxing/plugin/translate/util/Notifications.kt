@@ -3,7 +3,6 @@
 package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.ui.DefaultHyperlinkHandler
 import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -102,7 +101,7 @@ object Notifications {
         NotificationListener.UrlOpeningListener(expireNotification) {
 
         override fun hyperlinkActivated(notification: Notification, hyperlinkEvent: HyperlinkEvent) {
-            if (!DefaultHyperlinkHandler.handleHyperlinkActivated(hyperlinkEvent)) {
+            if (!Hyperlinks.handleDefaultHyperlinkActivated(hyperlinkEvent)) {
                 super.hyperlinkActivated(notification, hyperlinkEvent)
             }
         }
