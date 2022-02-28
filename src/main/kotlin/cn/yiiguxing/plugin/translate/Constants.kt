@@ -35,11 +35,6 @@ const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION = "#TRANSLATOR_CONFIGURATION"
 const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"
 
-const val GOOGLE_TRANSLATE_HOST = "translate.googleapis.com"
-const val GOOGLE_TRANSLATE_URL_FORMAT = "https://%s/translate_a/single"
-const val GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT = "https://%s/translate_a/t"
-const val GOOGLE_TTS_FORMAT = "https://%s/translate_tts"
-
 const val YOUDAO_TRANSLATE_URL = "https://openapi.youdao.com/api"
 const val YOUDAO_AI_URL = "https://ai.youdao.com"
 

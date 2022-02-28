@@ -30,7 +30,7 @@ private fun `fun`(a: Long, b: String): Long {
  */
 object TKK {
     private const val MIM = 60 * 60 * 1000
-    private const val ELEMENT_URL_FORMAT = "https://%s/translate_a/element.js"
+    private const val ELEMENT_URL = "https://translate.googleapis.com/translate_a/element.js"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
@@ -59,10 +59,8 @@ object TKK {
     }
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
-        val updateUrl = ELEMENT_URL_FORMAT.format(GoogleHttp.googleHost)
-
         return try {
-            val elementJS = HttpRequests.request(updateUrl)
+            val elementJS = HttpRequests.request(ELEMENT_URL)
                 .userAgent()
                 .googleReferer()
                 .readString(null)

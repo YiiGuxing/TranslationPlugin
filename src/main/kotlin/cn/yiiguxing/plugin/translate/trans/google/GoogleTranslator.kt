@@ -1,7 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
-import cn.yiiguxing.plugin.translate.GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
-import cn.yiiguxing.plugin.translate.GOOGLE_TRANSLATE_URL_FORMAT
 import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
@@ -17,6 +15,10 @@ import javax.swing.Icon
  * GoogleTranslator
  */
 object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
+
+    private const val TRANSLATE_API_URL = "https://translate.googleapis.com/translate_a/single"
+    private const val DOCUMENTATION_TRANSLATION_API_URL = "https://translate.googleapis.com/translate_a/t"
+
 
     private const val TAG_I = "i"
     private const val TAG_EM = "em"
@@ -52,6 +54,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - notSupportedLanguages).toList()
     override val supportedTargetLanguages: List<Lang> =
         (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
+
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         return SimpleTranslateClient(
@@ -110,12 +113,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
-        val baseUrl = if (isDocumentation) {
-            GOOGLE_DOCUMENTATION_TRANSLATE_URL_FORMAT
-        } else {
-            GOOGLE_TRANSLATE_URL_FORMAT
-        }.format(GoogleHttp.googleHost)
-
+        val baseUrl = if (isDocumentation) DOCUMENTATION_TRANSLATION_API_URL else TRANSLATE_API_URL
         val urlBuilder = UrlBuilder(baseUrl)
             .addQueryParameter("sl", srcLang.code)
             .addQueryParameter("tl", targetLang.code)

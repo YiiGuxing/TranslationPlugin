@@ -1,9 +1,7 @@
 package cn.yiiguxing.plugin.translate.tts
 
-import cn.yiiguxing.plugin.translate.GOOGLE_TTS_FORMAT
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.google.GoogleHttp
 import cn.yiiguxing.plugin.translate.trans.google.googleReferer
 import cn.yiiguxing.plugin.translate.trans.google.tk
 import cn.yiiguxing.plugin.translate.trans.google.userAgent
@@ -61,11 +59,10 @@ class GoogleTTSPlayer(
     private var duration = 0
 
     private val playlist: List<String> by lazy {
-        val baseUrl = GOOGLE_TTS_FORMAT.format(GoogleHttp.googleHost)
         text.splitSentence(MAX_TEXT_LENGTH).let {
             it.mapIndexed { index, sentence ->
                 @Suppress("SpellCheckingInspection")
-                UrlBuilder(baseUrl)
+                UrlBuilder(TTS_API_URL)
                     .addQueryParameter("client", "gtx")
                     .addQueryParameter("ie", "UTF-8")
                     .addQueryParameter("tl", lang.code)
@@ -211,6 +208,8 @@ class GoogleTTSPlayer(
     }
 
     companion object {
+        private const val TTS_API_URL = "https://translate.googleapis.com/translate_tts"
+
         private val LOGGER = Logger.getInstance(GoogleTTSPlayer::class.java)
 
         private const val MAX_TEXT_LENGTH = 200
