@@ -74,7 +74,7 @@ enum class TranslationEngine(
                 message("settings.youdao.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/youdao_translate_logo.png"),
-                    YOUDAO_AI_URL,
+                    "https://ai.youdao.com",
                     Settings.youdaoTranslateSettings
                 ),
                 HelpTopic.YOUDAO

@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans.youdao
 
-import cn.yiiguxing.plugin.translate.YOUDAO_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
@@ -15,6 +14,9 @@ import javax.swing.Icon
 
 @Suppress("SpellCheckingInspection")
 object YoudaoTranslator : AbstractTranslator() {
+
+    private const val YOUDAO_API_URL = "https://openapi.youdao.com/api"
+
 
     private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedValues() - listOf(
         Lang.CHINESE_TRADITIONAL,
@@ -104,7 +106,7 @@ object YoudaoTranslator : AbstractTranslator() {
         val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
 
         return Http.postDataFrom(
-            YOUDAO_TRANSLATE_URL,
+            YOUDAO_API_URL,
             "appKey" to appId,
             "from" to srcLang.youdaoLanguageCode,
             "to" to targetLang.youdaoLanguageCode,
