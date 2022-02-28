@@ -2,8 +2,6 @@
 
 package cn.yiiguxing.plugin.translate.trans.baidu
 
-import cn.yiiguxing.plugin.translate.BAIDU_FANYI_PRODUCT_URL
-import cn.yiiguxing.plugin.translate.BAIDU_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
@@ -21,6 +19,10 @@ import javax.swing.Icon
  * Baidu translator
  */
 object BaiduTranslator : AbstractTranslator() {
+
+    private const val BAIDU_TRANSLATE_API_URL = "https://fanyi-api.baidu.com/api/trans/vip/translate"
+    private const val BAIDU_FANYI_PRODUCT_URL = "https://fanyi-api.baidu.com/choose"
+
 
     /** 通用版支持的语言列表 */
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
@@ -198,7 +200,7 @@ object BaiduTranslator : AbstractTranslator() {
         val sign = (appId + text + salt + privateKey).md5().lowercase(Locale.getDefault())
 
         return Http.postDataFrom(
-            BAIDU_TRANSLATE_URL,
+            BAIDU_TRANSLATE_API_URL,
             "appid" to appId,
             "from" to srcLang.baiduLanguageCode,
             "to" to targetLang.baiduLanguageCode,

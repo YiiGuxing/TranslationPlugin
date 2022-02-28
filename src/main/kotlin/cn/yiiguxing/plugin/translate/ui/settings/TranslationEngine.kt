@@ -1,6 +1,9 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.ALI_CAPI_URL
+import cn.yiiguxing.plugin.translate.AppKeySettings
+import cn.yiiguxing.plugin.translate.HelpTopic
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
@@ -83,7 +86,7 @@ enum class TranslationEngine(
                 message("settings.baidu.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/baidu_translate_logo.png"),
-                    BAIDU_FANYI_URL,
+                    "https://fanyi-api.baidu.com/manage/developer",
                     Settings.baiduTranslateSettings
                 ),
                 HelpTopic.BAIDU
