@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.WebPages
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.SupportForm
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.ide.CopyPasteManager
@@ -41,7 +42,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
         prLinkLabel.init(GITHUB_URL)
         reportLinkLabel.init(NEW_ISSUES_URL)
         ideaLinkLabel.init(NEW_ISSUES_URL)
-        openCollectiveLinkLabel.init(OPEN_COLLECTIVE_URL, false)
+        openCollectiveLinkLabel.init(OPEN_COLLECTIVE_DONATE_URL, false)
 
         donateLinkLabel.icon = null
         donateLinkLabel.setListener({ _, _ -> showDonatePop(donateLinkLabel) }, WebPages.support())
@@ -118,6 +119,11 @@ class SupportDialog private constructor() : DialogWrapper(null) {
     override fun createActions(): Array<Action> = arrayOf(okAction)
 
     companion object {
+        private const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
+        private const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
+        private const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-translation"
+        private const val OPEN_COLLECTIVE_DONATE_URL = "https://opencollective.com/translation-plugin/donate"
+
         private val BALLOON_FILL_COLOR = JBColor(0xE4E6EB, 0x45494B)
 
         fun show() = SupportDialog().show()
