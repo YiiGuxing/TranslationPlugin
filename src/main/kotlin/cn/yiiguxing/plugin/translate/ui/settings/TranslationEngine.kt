@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.ALI_CAPI_URL
 import cn.yiiguxing.plugin.translate.AppKeySettings
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
@@ -95,7 +94,7 @@ enum class TranslationEngine(
                 message("settings.ali.title"),
                 AppKeySettingsPanel(
                     Icons.load("/image/ali_translate_logo.png"),
-                    ALI_CAPI_URL,
+                    "https://usercenter.console.aliyun.com/#/manage/ak",
                     Settings.aliTranslateSettings
                 ),
                 HelpTopic.ALI

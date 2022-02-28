@@ -34,8 +34,3 @@ const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-transla
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 const val HTML_DESCRIPTION_TRANSLATOR_CONFIGURATION = "#TRANSLATOR_CONFIGURATION"
 const val HTML_DESCRIPTION_SUPPORT = "#SUPPORT"
-
-@Suppress("HttpUrlsUsage")
-const val ALI_TRANSLATE_URL = "http://mt.aliyuncs.com/api/translate/web/general"
-const val ALI_CAPI_URL = "https://usercenter.console.aliyun.com/#/manage/ak"
-const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"

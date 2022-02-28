@@ -1,7 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans.ali
 
-import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_PRODUCT_URL
-import cn.yiiguxing.plugin.translate.ALI_TRANSLATE_URL
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
@@ -19,9 +17,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.swing.Icon
 
-
-// https://www.aliyun.com/product/ai/base_alimt
+/**
+ * Ali translator
+ */
+// Product description: https://www.aliyun.com/product/ai/base_alimt
 object AliTranslator : AbstractTranslator(), DocumentationTranslator {
+
+    @Suppress("HttpUrlsUsage")
+    private const val ALI_TRANSLATE_API_URL = "http://mt.aliyuncs.com/api/translate/web/general"
+    private const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"
+
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
         Lang.CHINESE,
@@ -148,7 +153,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun sendHttpRequest(request: Any): String {
-        val url = ALI_TRANSLATE_URL
+        val url = ALI_TRANSLATE_API_URL
         val body = Gson().toJson(request)
 
         val realUrl = URL(url)
