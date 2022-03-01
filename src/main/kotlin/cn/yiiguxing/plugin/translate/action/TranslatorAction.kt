@@ -15,6 +15,10 @@ class TranslatorAction(private val translator: TranslationEngine) :
 
     fun isAvailable(): Boolean = translator.isConfigured() || Settings.translator == translator
 
+    override fun update(e: AnActionEvent) {
+        e.presentation.isEnabled = isAvailable()
+    }
+
     override fun actionPerformed(e: AnActionEvent) {
         Settings.translator = translator
     }
@@ -23,6 +27,8 @@ class TranslatorAction(private val translator: TranslationEngine) :
         private val ACTIONS: List<TranslatorAction> = TranslationEngine.values().toList().map { TranslatorAction(it) }
 
         fun availableActions(): List<TranslatorAction> = ACTIONS.filter { it.isAvailable() }
+
+        fun unavailableActions(): List<TranslatorAction> = ACTIONS.filterNot { it.isAvailable() }
 
         val PRESELECT_CONDITION: Condition<AnAction> = Condition { action ->
             (action as? TranslatorAction)?.translator == Settings.translator

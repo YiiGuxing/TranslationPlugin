@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.*
@@ -19,7 +18,7 @@ import javax.swing.JComponent
 class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
     init {
-        setPopupTitle(adaptedMessage("translator.popup.title"))
+        setPopupTitle(message("translator.popup.title"))
         isEnabledInModalContext = true
         templatePresentation.text = message("action.SwitchTranslatorAction.text")
         templatePresentation.description = message("action.SwitchTranslatorAction.description")
@@ -50,13 +49,15 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         }
     }
 
+    override fun shouldShowDisabledActions(): Boolean = true
+
 
     companion object {
         fun canSwitchTranslatorQuickly() = TranslatorAction.availableActions().size > 1
 
         fun createTranslatorPopup(
             context: DataContext,
-            title: String? = adaptedMessage("translator.popup.title"),
+            title: String? = message("translator.popup.title"),
             disposeCallback: Runnable? = null
         ): ListPopup {
             val group = createPopupActionGroup()
@@ -67,7 +68,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
                     group,
                     context,
                     false,
-                    false,
+                    true,
                     false,
                     disposeCallback,
                     10,
@@ -76,7 +77,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         }
 
         private fun createPopupActionGroup(): DefaultActionGroup {
-            return DefaultActionGroup(TranslatorAction.availableActions())
+            return TranslatorActionGroup()
         }
     }
 }

@@ -2,13 +2,11 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
-import cn.yiiguxing.plugin.translate.action.TranslatorAction
-import cn.yiiguxing.plugin.translate.action.TranslatorActionGroup
+import cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.ide.DataManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.StatusBarWidget
@@ -49,20 +47,8 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
     }
 
     private fun getPopupStep(component: Component): ListPopup {
-        val group = TranslatorActionGroup()
         val context = DataManager.getInstance().getDataContext(component)
-        return JBPopupFactory.getInstance()
-            .createActionGroupPopup(
-                "Translators",
-                group,
-                context,
-                false,
-                false,
-                false,
-                null,
-                5,
-                TranslatorAction.PRESELECT_CONDITION
-            )
+        return SwitchTranslatorAction.createTranslatorPopup(context)
     }
 
     override fun dispose() {
