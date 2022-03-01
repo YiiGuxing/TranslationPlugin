@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.action.SettingsAction
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
@@ -11,7 +12,6 @@ import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
-import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.text.clear
@@ -778,7 +778,7 @@ class TranslationDialog(
     private class UIProvider : TranslationDialogUiProvider {
         override fun createPinButton(): JComponent = actionButton(MyPinAction())
 
-        override fun createSettingsButton(): JComponent = actionButton(MySettingsAction())
+        override fun createSettingsButton(): JComponent = actionButton(SettingsAction())
 
         private fun actionButton(action: AnAction): ActionButton =
             ActionButton(
@@ -804,16 +804,6 @@ class TranslationDialog(
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
             AppStorage.pinNewTranslationDialog = state
-        }
-    }
-
-    private class MySettingsAction : AnAction(
-        message("settings.title.translate"),
-        message("settings.title.translate"),
-        AllIcons.General.GearPlain
-    ), DumbAware {
-        override fun actionPerformed(e: AnActionEvent) {
-            OptionsConfigurable.showSettingsDialog(e.project)
         }
     }
 
