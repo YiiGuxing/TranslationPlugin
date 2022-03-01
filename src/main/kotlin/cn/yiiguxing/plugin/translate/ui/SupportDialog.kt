@@ -75,7 +75,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             通过邮件发送时，请还提供以下信息：<br/><i><b>
             捐赠金额：
             支付平台：支付宝/微信支付
-            支付宝用户名/微信用户名/单号（后5位）：</i></b><br/>
+            账单号（后5位）：</i></b><br/>
             邮箱地址：<a href="#e-mail"><b>yii.guxing@gmail.com</b></a> (点击发送邮件)<br/>
             您提供的名字、网站和捐赠总额将会被添加到<a href="#patrons"><b>捐赠者</b></a>列表中。<br/>
             感谢您的慷慨捐赠！
