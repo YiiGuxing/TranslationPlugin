@@ -1,6 +1,6 @@
 ---
-name: Bug报告（中文）
-about: 反馈Bug
+name: Bug报告
+about: 创建报告以帮助我们改进TranslationPlugin
 
 ---
 
