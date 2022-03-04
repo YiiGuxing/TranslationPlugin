@@ -36,8 +36,9 @@ object Notifications {
             .createNotification(content, NotificationType.ERROR)
             .setTitle(title)
             .setListener(UrlOpeningListener)
-            .addAction(CopyToClipboardAction(content, throwable))
+            // actions的折叠是从左往右折叠的
             .addActions(actions.toList() as Collection<AnAction>)
+            .addAction(CopyToClipboardAction(content, throwable))
             .show(project)
     }
 
