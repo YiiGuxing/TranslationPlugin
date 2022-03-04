@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.JBPopup
-import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.Condition
 import javax.swing.JComponent
@@ -35,7 +34,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
     override fun getPreselectCondition(): Condition<AnAction> = TranslatorAction.PRESELECT_CONDITION
 
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup = createPopupActionGroup()
+    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup = TranslatorActionGroup()
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
         return object : ComboBoxButton(presentation) {
@@ -59,25 +58,6 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
             context: DataContext,
             title: String? = message("translator.popup.title"),
             disposeCallback: Runnable? = null
-        ): ListPopup {
-            val group = createPopupActionGroup()
-            return JBPopupFactory
-                .getInstance()
-                .createActionGroupPopup(
-                    title,
-                    group,
-                    context,
-                    false,
-                    true,
-                    false,
-                    disposeCallback,
-                    10,
-                    TranslatorAction.PRESELECT_CONDITION
-                )
-        }
-
-        private fun createPopupActionGroup(): DefaultActionGroup {
-            return TranslatorActionGroup()
-        }
+        ): ListPopup = TranslatorActionGroup().createActionPopup(context, title, disposeCallback)
     }
 }
