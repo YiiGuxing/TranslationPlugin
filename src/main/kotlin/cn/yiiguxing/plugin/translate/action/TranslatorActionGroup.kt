@@ -60,7 +60,7 @@ open class TranslatorActionGroup(
                 actions.add(Separator.create(message("action.TranslatorActionGroup.separator.inactivated")))
                 actions.addAll(unavailableActions)
                 actions.add(Separator.create())
-                actions.add(SettingsAction(message("action.TranslatorActionGroup.go.to.activate"), null))
+                actions.add(SettingsAction(message("action.TranslatorActionGroup.manage.translators"), null))
             }
 
             return actions
