@@ -3,10 +3,16 @@
 package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.message
-import com.intellij.notification.*
+import cn.yiiguxing.plugin.translate.ui.ErrorsDialog
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationListener
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
+import icons.Icons
 import javax.swing.event.HyperlinkEvent
 
 object Notifications {
@@ -38,21 +44,18 @@ object Notifications {
             .setListener(UrlOpeningListener)
             // actions的折叠是从左往右折叠的
             .addActions(actions.toList() as Collection<AnAction>)
-            .addAction(CopyToClipboardAction(content, throwable))
+            .addAction(ErrorDetailsAction(content, throwable))
             .show(project)
     }
 
 
-    private class CopyToClipboardAction(
+    private class ErrorDetailsAction(
         val message: String,
         val throwable: Throwable
-    ) : NotificationAction(message("copy.to.clipboard.action.name")) {
+    ) : DumbAwareAction(message("error.see.details.and.submit.report"), null, Icons.RecordErrorInfo) {
 
-        override fun actionPerformed(e: AnActionEvent, notification: Notification) {
-            throwable.copyToClipboard(message)
-            notification.expire()
-
-            // TODO copy and send feedback
+        override fun actionPerformed(e: AnActionEvent) {
+            ErrorsDialog.show(e.project, message, throwable)
         }
 
     }

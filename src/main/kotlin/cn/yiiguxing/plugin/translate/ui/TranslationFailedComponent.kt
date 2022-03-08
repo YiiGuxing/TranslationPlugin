@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.ErrorInfo
 import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
-import cn.yiiguxing.plugin.translate.util.copyToClipboard
 import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
 import com.intellij.ide.ui.laf.darcula.ui.DarculaOptionButtonUI
@@ -132,13 +131,11 @@ class TranslationFailedComponent : JPanel() {
         }
         if (throwable != null) {
             options += object :
-                AnAction(message("translation.failed.component.action.copy.error.info"), null, Icons.RecordErrorInfo) {
+                AnAction(message("error.see.details.and.submit.report"), null, Icons.RecordErrorInfo) {
                 override fun actionPerformed(e: AnActionEvent) {
                     val errorMessage = errorInfo?.message ?: message("error.unknown")
                     val message = message("error.translate.failed", errorMessage)
-                    throwable.copyToClipboard(message)
-
-                    // TODO copy and send feedback
+                    ErrorsDialog.show(e.project, message, throwable)
                 }
             }
         }
