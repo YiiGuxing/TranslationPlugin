@@ -38,24 +38,34 @@ object TKK {
 
     private val tkkPattern = Pattern.compile("tkk='(\\d+).(-?\\d+)'")
 
-    private var innerValue: Pair<Long, Long> = 0L to 0L
+    private var innerValue: Pair<Long, Long>? = null
 
-    private var needUpdate: Boolean = true
 
     val value get() = update()
 
-    @Synchronized
+
     fun update(): Pair<Long, Long> {
-        val now = System.currentTimeMillis() / MIM
-        val (curVal) = innerValue
-        if (!needUpdate && now == curVal) {
-            return innerValue
+        synchronized(this) {
+            innerValue?.let { tkk ->
+                val now = System.currentTimeMillis() / MIM
+                if (tkk.first == now) {
+                    return tkk
+                }
+            }
         }
 
         val newTKK = updateFromGoogle()
-        needUpdate = newTKK == null
-        innerValue = newTKK ?: (now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong()))
-        return innerValue
+
+        synchronized(this) {
+            val now = System.currentTimeMillis() / MIM
+            val oldTKK = innerValue
+            if (oldTKK == null || (newTKK != null && newTKK.first > oldTKK.first)) {
+                innerValue = newTKK
+            }
+
+            // 取不到就胡乱生成一个，乱生成的对普通翻译有效，对文档翻译无效。。。
+            return innerValue ?: (now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong()))
+        }
     }
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
@@ -63,6 +73,7 @@ object TKK {
             val elementJS = HttpRequests.request(ELEMENT_URL)
                 .userAgent()
                 .googleReferer()
+                .connectTimeout(5000)
                 .readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {
