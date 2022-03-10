@@ -94,6 +94,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?.let { text ->
+                // TODO refactor: show progress indicator
                 val processedText = text.processBeforeTranslate() ?: text
                 val primaryLanguage = TranslateService.translator.primaryLanguage
                 fun translate(targetLang: Lang, reTranslate: Boolean = false) {
