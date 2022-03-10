@@ -2,14 +2,11 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.ErrorInfo
 import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
 import com.intellij.ide.ui.laf.darcula.ui.DarculaOptionButtonUI
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBOptionButton
 import com.intellij.ui.components.panels.HorizontalLayout
@@ -17,7 +14,6 @@ import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import icons.Icons
 import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
@@ -121,27 +117,10 @@ class TranslationFailedComponent : JPanel() {
             toolTipText = errorMessage
             isVisible = !errorMessage.isNullOrEmpty()
         }
-        optionButton.setOptions(createOptions(errorInfo, throwable))
+
+        optionButton.setOptions(errorInfo?.continueActions)
     }
 
-    private fun createOptions(errorInfo: ErrorInfo?, throwable: Throwable?): List<AnAction> {
-        val options = mutableListOf<AnAction>()
-        if (errorInfo != null) {
-            options += errorInfo.continueActions
-        }
-        if (throwable != null) {
-            options += object :
-                AnAction(message("error.see.details.and.submit.report"), null, Icons.RecordErrorInfo) {
-                override fun actionPerformed(e: AnActionEvent) {
-                    val errorMessage = errorInfo?.message ?: message("error.unknown")
-                    val message = message("error.translate.failed", errorMessage)
-                    ErrorsDialog.show(e.project, message, throwable)
-                }
-            }
-        }
-
-        return options
-    }
 
     companion object {
         private const val INSETS = 10
