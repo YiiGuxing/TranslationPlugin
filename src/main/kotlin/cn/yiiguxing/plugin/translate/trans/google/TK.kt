@@ -13,17 +13,6 @@ import java.lang.StrictMath.abs
 import java.util.*
 import java.util.regex.Pattern
 
-private fun `fun`(a: Long, b: String): Long {
-    var g = a
-    for (c in 0..b.length - 2 step 3) {
-        val d = b[c + 2]
-        val e = if ('a' <= d) d.code - 87 else d.toString().toInt()
-        val f = if ('+' == b[c + 1]) g.ushr(e) else g shl e
-        g = if ('+' == b[c]) g + f and (Int.MAX_VALUE.toLong() * 2 + 1) else g xor f
-    }
-
-    return g
-}
 
 /**
  * 计算谷歌翻译的tkk值.
@@ -135,9 +124,9 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.value): String {
     var f = d
     for (h in a) {
         f += h
-        f = `fun`(f, "+-a^+6")
+        f = calculate(f, "+-a^+6")
     }
-    f = `fun`(f, "+-3^+b+-f")
+    f = calculate(f, "+-3^+b+-f")
     f = f xor e
     if (0 > f) {
         f = (f and Int.MAX_VALUE.toLong()) + Int.MAX_VALUE.toLong() + 1
@@ -145,4 +134,16 @@ fun String.tk(tkk: Pair<Long, Long> = TKK.value): String {
     f = (f % 1E6).toLong()
 
     return "$f.${f xor d}"
+}
+
+private fun calculate(a: Long, b: String): Long {
+    var g = a
+    for (c in 0..b.length - 2 step 3) {
+        val d = b[c + 2]
+        val e = if ('a' <= d) d.code - 87 else d.toString().toInt()
+        val f = if ('+' == b[c + 1]) g.ushr(e) else g shl e
+        g = if ('+' == b[c]) g + f and (Int.MAX_VALUE.toLong() * 2 + 1) else g xor f
+    }
+
+    return g
 }
