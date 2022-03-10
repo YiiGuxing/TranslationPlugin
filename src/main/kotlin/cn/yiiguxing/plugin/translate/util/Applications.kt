@@ -11,7 +11,6 @@ import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
-import com.intellij.ide.actions.AboutPopup
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.notification.Notification
@@ -20,12 +19,8 @@ import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.extensions.PluginId
-import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.util.Alarm
-import java.awt.datatransfer.StringSelection
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.util.concurrent.Future
 
 object Plugin {
@@ -37,7 +32,6 @@ object Plugin {
 
     val version: String by lazy { descriptor.version }
 
-    val ideaInfo: String by lazy { AboutPopup.getAboutText() }
 }
 
 inline val Application: Application get() = ApplicationManager.getApplication()
@@ -122,26 +116,4 @@ inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
  */
 fun Notification.show(project: Project? = null) {
     Notifications.Bus.notify(this, project)
-}
-
-/**
- * Copy the stack trace to clipboard.
- */
-fun Throwable.copyToClipboard(message: String? = null) {
-    val stringWriter = StringWriter()
-    PrintWriter(stringWriter).use {
-        if (!message.isNullOrBlank()) {
-            it.println(message)
-            it.println()
-        }
-
-        it.println(Plugin.ideaInfo.split("\n").joinToString(separator = "  \n> ", prefix = "> "))
-        it.println()
-
-        it.println("```")
-        printStackTrace(it)
-        it.println("```")
-
-        stringWriter.toString()
-    }.let { CopyPasteManager.getInstance().setContents(StringSelection(it)) }
 }
