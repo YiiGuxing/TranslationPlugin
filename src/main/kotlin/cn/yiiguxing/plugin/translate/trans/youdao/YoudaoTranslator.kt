@@ -131,7 +131,7 @@ object YoudaoTranslator : AbstractTranslator() {
         }.toTranslation()
     }
 
-    override fun createErrorInfo(throwable: Throwable): ErrorInfo {
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         if (throwable is TranslationResultException) {
             val errorMessage =
                 errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")

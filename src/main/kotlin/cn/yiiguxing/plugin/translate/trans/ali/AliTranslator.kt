@@ -220,7 +220,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         }.toTranslation()
     }
 
-    override fun createErrorInfo(throwable: Throwable): ErrorInfo {
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         val errorMessage = when (throwable) {
             is TranslationResultException -> when (throwable.code) {
                 10001 -> message("error.request.timeout")

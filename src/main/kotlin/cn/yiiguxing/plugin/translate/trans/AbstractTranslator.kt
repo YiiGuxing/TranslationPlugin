@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.message
-import com.google.gson.JsonSyntaxException
 import com.intellij.util.io.HttpRequests
 import io.netty.handler.codec.http.HttpResponseStatus
 import java.net.ConnectException
@@ -28,13 +27,12 @@ abstract class AbstractTranslator : Translator {
         onError(throwable)
     }
 
-    protected open fun createErrorInfo(throwable: Throwable): ErrorInfo {
+    protected open fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         val errorMessage = when (throwable) {
             is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
             is ConnectException, is UnknownHostException -> message("error.network.connection")
             is SocketException, is SSLHandshakeException -> message("error.network")
             is SocketTimeoutException -> message("error.network.timeout")
-            is JsonSyntaxException -> message("error.parse")
             is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
             else -> when (
@@ -42,7 +40,7 @@ abstract class AbstractTranslator : Translator {
                     ?.let { it.groupValues[1].toInt() }
             ) {
                 429 -> message("error.too.many.requests")
-                else -> message("error.unknown")
+                else -> return null
             }
         }
 
@@ -50,7 +48,7 @@ abstract class AbstractTranslator : Translator {
     }
 
     protected fun onError(throwable: Throwable): Nothing {
-        val errorInfo = createErrorInfo(throwable)
+        val errorInfo = createErrorInfo(throwable) ?: throw throwable
         throw TranslateException(id, name, errorInfo, throwable)
     }
 

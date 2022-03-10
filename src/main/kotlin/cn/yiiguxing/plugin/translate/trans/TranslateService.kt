@@ -81,8 +81,14 @@ class TranslateService private constructor() : Disposable {
                         }
                     }
                 }
-            } catch (e: TranslateException) {
-                LOGGER.w("Translation error", e)
+            } catch (e: Throwable) {
+                if (e is TranslateException) {
+                    // 已知异常，仅记录日志
+                    LOGGER.w("Translation error", e)
+                } else {
+                    // 将异常写入IDE异常池，以便用户反馈
+                    LOGGER.e("Translation error: [${translator.id}]", e)
+                }
                 invokeLater(ModalityState.any()) {
                     listeners.run(key) { onError(e) }
                 }
