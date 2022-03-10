@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.util
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import com.google.gson.annotations.SerializedName
-import com.intellij.ide.BrowserUtil
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
 import com.intellij.notification.NotificationGroupManager
@@ -193,43 +192,16 @@ class ReportSubmitter : ErrorReportSubmitter() {
     companion object {
         private const val API_BASE_URL = "https://api.github.com"
         private const val REPO = "YiiGuxing/TranslationPlugin"
+
         @Suppress("SpellCheckingInspection")
         private const val ACCESS_TOKEN = "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"
         private const val NEW_ISSUE_POST_URL = "$API_BASE_URL/repos/$REPO/issues"
         private const val ISSUES_SEARCH_URL = "$API_BASE_URL/search/issues?per_page=1&q=repo:$REPO+is:issue+in:body"
-        private const val NEW_ISSUE_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new"
 
         private val logger = Logger.getInstance(ReportSubmitter::class.java)
 
         private fun RequestBuilder.acceptGitHubV3Json() = accept("application/vnd.github.v3+json")
 
-        fun submit(message: String, comment: String, stacktrace: String) {
-            val body = StringBuilder()
-                .appendLine("## Issue Details")
-                .appendLine("### Description")
-                .appendLine(comment)
-                .appendLine()
-                .appendLine("### Environment")
-                .append("> **Plugin version: ").append(Plugin.version).appendLine("**")
-                .appendLine()
-                .appendLine(Plugin.ideaInfo)
-                .apply {
-                    if (stacktrace.isNotBlank()) {
-                        appendLine()
-                        appendLine("### Stack Trace")
-                        appendLine("```")
-                        appendLine(stacktrace)
-                        appendLine("```")
-                    }
-                }
-
-            val reportUrl = UrlBuilder(NEW_ISSUE_URL)
-                .addQueryParameter("title", message)
-                .addQueryParameter("body", body.toString())
-                .build()
-
-            BrowserUtil.browse(reportUrl)
-        }
     }
 
 }
