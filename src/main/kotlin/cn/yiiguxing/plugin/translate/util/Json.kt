@@ -49,7 +49,7 @@ private object DateTypeAdapter : TypeAdapter<Date>() {
     }
 }
 
-fun GsonBuilder.registerDateTypeAdapter(): GsonBuilder = apply {
+fun GsonBuilder.registerDefaultTypeAdapter(): GsonBuilder = apply {
     registerTypeAdapter(Lang::class.java, LanguageTypeAdapter)
     registerTypeAdapter(Date::class.java, DateTypeAdapter)
     registerTypeAdapter(java.sql.Date::class.java, DateTypeAdapter)

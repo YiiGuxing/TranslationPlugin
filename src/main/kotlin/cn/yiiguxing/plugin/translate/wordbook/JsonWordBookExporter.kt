@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.plugin.translate.util.registerDateTypeAdapter
+import cn.yiiguxing.plugin.translate.util.registerDefaultTypeAdapter
 import com.google.gson.GsonBuilder
 import java.io.OutputStream
 import java.io.OutputStreamWriter
@@ -16,7 +16,7 @@ class JsonWordBookExporter : WordBookExporter {
     override fun export(words: List<WordBookItem>, outputStream: OutputStream) {
         OutputStreamWriter(outputStream, Charsets.UTF_8).use { writer ->
             GsonBuilder()
-                .registerDateTypeAdapter()
+                .registerDefaultTypeAdapter()
                 .setPrettyPrinting()
                 .create()
                 .toJson(words, writer)

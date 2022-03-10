@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.plugin.translate.util.registerDateTypeAdapter
+import cn.yiiguxing.plugin.translate.util.registerDefaultTypeAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.InputStream
@@ -12,7 +12,7 @@ class JsonWordBookImporter : WordBookImporter {
         val type = object : TypeToken<List<WordBookItem>>() {}.type
 
         return GsonBuilder()
-            .registerDateTypeAdapter()
+            .registerDefaultTypeAdapter()
             .create()
             .fromJson(reader, type)
     }
