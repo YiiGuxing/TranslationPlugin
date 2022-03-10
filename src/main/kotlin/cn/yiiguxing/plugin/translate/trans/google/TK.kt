@@ -84,7 +84,6 @@ object TKK {
                 null,
                 "TKK",
                 message("notification.ttk.update.failed"),
-                error
             )
 
             null

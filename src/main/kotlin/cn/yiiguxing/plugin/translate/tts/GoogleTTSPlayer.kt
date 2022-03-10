@@ -104,8 +104,7 @@ class GoogleTTSPlayer(
                         Notifications.showErrorNotification(
                             project,
                             "TTS",
-                            message("error.network"),
-                            error
+                            message("error.network")
                         )
                     }
                     else -> LOGGER.e("TTS Error", error)

@@ -244,14 +244,15 @@ class WordBookService {
             } catch (e: SQLException) {
                 // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
                 if (e.errorCode != 19) {
-                    LOGGER.w("Insert word", e)
                     if (notifyOnFailed) {
+                        LOGGER.w("Insert word", e)
                         Notifications.showErrorNotification(
                             null,
                             message("wordbook.notification.title"),
-                            message("wordbook.notification.content.addFailed"),
-                            e
+                            message("wordbook.notification.content.addFailed")
                         )
+                    } else {
+                        LOGGER.e("Insert word failed", e)
                     }
                 }
                 null

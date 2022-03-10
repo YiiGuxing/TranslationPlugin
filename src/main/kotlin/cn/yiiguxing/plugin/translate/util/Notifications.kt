@@ -2,17 +2,12 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.ui.ErrorsDialog
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationListener
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import icons.Icons
 import javax.swing.event.HyperlinkEvent
 
 object Notifications {
@@ -23,10 +18,9 @@ object Notifications {
         project: Project?,
         title: String,
         content: String,
-        throwable: Throwable,
         vararg actions: AnAction
     ) {
-        showErrorNotification(DEFAULT_NOTIFICATION_GROUP_ID, project, title, content, throwable, actions = actions)
+        showErrorNotification(DEFAULT_NOTIFICATION_GROUP_ID, project, title, content, actions = actions)
     }
 
     fun showErrorNotification(
@@ -34,7 +28,6 @@ object Notifications {
         project: Project?,
         title: String,
         content: String,
-        throwable: Throwable,
         vararg actions: AnAction
     ) {
         NotificationGroupManager.getInstance()
@@ -44,20 +37,7 @@ object Notifications {
             .setListener(UrlOpeningListener)
             // actions的折叠是从左往右折叠的
             .addActions(actions.toList() as Collection<AnAction>)
-            .addAction(ErrorDetailsAction(content, throwable))
             .show(project)
-    }
-
-
-    private class ErrorDetailsAction(
-        val message: String,
-        val throwable: Throwable
-    ) : DumbAwareAction(message("error.see.details.and.submit.report"), null, Icons.RecordErrorInfo) {
-
-        override fun actionPerformed(e: AnActionEvent) {
-            ErrorsDialog.show(e.project, message, throwable)
-        }
-
     }
 
     fun showNotification(
@@ -71,6 +51,7 @@ object Notifications {
             .getNotificationGroup(groupId)
             .createNotification(message, type)
             .setTitle(title)
+            .setListener(UrlOpeningListener)
             .show(project)
     }
 
