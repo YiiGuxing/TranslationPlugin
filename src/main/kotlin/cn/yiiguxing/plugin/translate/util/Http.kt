@@ -1,17 +1,62 @@
 package cn.yiiguxing.plugin.translate.util
 
+import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
+import java.lang.reflect.Type
 
 object Http {
 
     private val logger = Logger.getInstance(Http::class.java)
 
-    fun postDataFrom(url: String, vararg dataFrom: Pair<String, String>, init: RequestBuilder.() -> Unit = {}): String {
+    val defaultGson = Gson()
+
+    inline fun <reified T> request(
+        url: String,
+        gson: Gson = defaultGson,
+        typeOfT: Type = T::class.java,
+        noinline init: RequestBuilder.() -> Unit = {}
+    ): T {
+        val result = HttpRequests.request(url)
+            .apply(init)
+            .readString()
+        return gson.fromJson(result, typeOfT)
+    }
+
+    fun postDataFrom(
+        url: String,
+        vararg dataFrom: Pair<String, String>,
+        init: RequestBuilder.() -> Unit = {}
+    ): String {
         val data = dataFrom.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
+        return post(url, "application/x-www-form-urlencoded", data, init)
+    }
+
+    inline fun <reified T> postJson(
+        url: String,
+        data: Any,
+        gson: Gson = defaultGson,
+        typeOfT: Type = T::class.java,
+        noinline init: RequestBuilder.() -> Unit = {}
+    ): T {
+        val result = postJson(url, data, gson, init)
+        return gson.fromJson(result, typeOfT)
+    }
+
+    fun postJson(url: String, data: Any, gson: Gson = defaultGson, init: RequestBuilder.() -> Unit = {}): String {
+        val json = gson.toJson(data)
+        return post(url, "application/json", json, init)
+    }
+
+    private fun post(
+        url: String,
+        contentType: String,
+        data: String,
+        init: RequestBuilder.() -> Unit
+    ): String {
         logger.d("POST ==> $url\n\t|==> $data")
-        return HttpRequests.post(url, "application/x-www-form-urlencoded")
+        return HttpRequests.post(url, contentType)
             .apply(init)
             .connect {
                 it.write(data)
