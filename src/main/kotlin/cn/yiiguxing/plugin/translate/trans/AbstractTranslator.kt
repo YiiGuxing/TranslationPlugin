@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.util.io.HttpRequests
 import io.netty.handler.codec.http.HttpResponseStatus
-import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -35,16 +34,9 @@ abstract class AbstractTranslator : Translator {
             is SocketException, is SSLHandshakeException -> message("error.network")
             is SocketTimeoutException -> message("error.network.timeout")
             is ContentLengthLimitException -> message("error.text.too.long")
-            is HttpRequests.HttpStatusException -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
-            is IOException -> {
-                val code = throwable.message
-                    ?.let { HTTP_STATUS_EXCEPTION_REGEX.matchEntire(it) }
-                    ?.let { it.groupValues[1].toInt() }
-                when (code) {
-                    null -> return null
-                    429 -> message("error.too.many.requests")
-                    else -> "[$code]${HttpResponseStatus.valueOf(code).reasonPhrase()}"
-                }
+            is HttpRequests.HttpStatusException -> when (throwable.statusCode) {
+                HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
+                else -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
             }
             else -> return null
         }
@@ -55,10 +47,6 @@ abstract class AbstractTranslator : Translator {
     protected fun onError(throwable: Throwable): Nothing {
         val errorInfo = createErrorInfo(throwable) ?: throw throwable
         throw TranslateException(id, name, errorInfo, throwable)
-    }
-
-    companion object {
-        private val HTTP_STATUS_EXCEPTION_REGEX = Regex("^Server returned HTTP response code: (\\d{3}) .+$")
     }
 
 }
