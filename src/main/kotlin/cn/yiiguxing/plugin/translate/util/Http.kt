@@ -5,6 +5,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import java.lang.reflect.Type
+import java.net.HttpURLConnection
 
 object Http {
 
@@ -18,10 +19,9 @@ object Http {
         typeOfT: Type = T::class.java,
         noinline init: RequestBuilder.() -> Unit = {}
     ): T {
-        val result = HttpRequests.request(url)
+        return HttpRequests.request(url)
             .apply(init)
-            .readString()
-        return gson.fromJson(result, typeOfT)
+            .connect { gson.fromJson(it.reader, typeOfT) }
     }
 
     fun postDataFrom(
@@ -58,10 +58,22 @@ object Http {
         logger.d("POST ==> $url\n\t|==> $data")
         return HttpRequests.post(url, contentType)
             .apply(init)
+            .throwStatusCodeException(false)
             .connect {
                 it.write(data)
+                it.checkResponseCode()
                 it.readString()
             }
+    }
+
+    private fun HttpRequests.Request.checkResponseCode() {
+        val responseCode = (connection as HttpURLConnection).responseCode
+        if (responseCode >= 400) {
+            val message = readError()
+            logger.w("RESPONSE ==> $url\n\t|[$responseCode]==> $message")
+
+            throw HttpRequests.HttpStatusException("Request failed with status code $responseCode", responseCode, url)
+        }
     }
 
 }
