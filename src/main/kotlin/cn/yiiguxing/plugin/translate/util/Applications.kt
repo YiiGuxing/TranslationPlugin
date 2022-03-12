@@ -1,7 +1,4 @@
-/*
- * ApplicationUtils
- */
-@file:Suppress("unused", "NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
+@file:Suppress("NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
 
 package cn.yiiguxing.plugin.translate.util
 
@@ -20,7 +17,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
-import com.intellij.util.Alarm
 import java.util.concurrent.Future
 
 object Plugin {
@@ -33,6 +29,7 @@ object Plugin {
     val version: String by lazy { descriptor.version }
 
 }
+
 
 inline val Application: Application get() = ApplicationManager.getApplication()
 
@@ -84,15 +81,6 @@ inline fun invokeOnDispatchThread(crossinline action: () -> Unit) {
             invokeLater { action() }
         }
     }
-}
-
-private val alarm: Alarm = Alarm(Alarm.ThreadToUse.SWING_THREAD)
-
-/**
- * Asynchronously execute the [action] on the AWT event dispatching thread after the given [delay][delayMillis].
- */
-fun invokeLater(delayMillis: Long, modalityState: ModalityState = ModalityState.any(), action: () -> Unit) {
-    alarm.addRequest(action, delayMillis, modalityState)
 }
 
 /**
