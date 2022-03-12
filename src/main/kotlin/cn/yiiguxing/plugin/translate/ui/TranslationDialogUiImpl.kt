@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
-import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
@@ -348,7 +347,9 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
     override fun showErrorPanel() {
         rightPanelLayout.show(rightPanel, CARD_ERROR)
-        invokeLater { mRoot.revalidate() }
+        // 使用`SwingUtilities.invokeLater`似乎要比使用`Application.invokeLater`更好，
+        // `Application.invokeLater`有时候会得不到想要的效果，对话框不会自动调整尺寸。
+        SwingUtilities.invokeLater { mRoot.revalidate() }
     }
 
     override fun dispose() {

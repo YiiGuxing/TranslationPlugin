@@ -199,7 +199,9 @@ class TranslationBalloon(
     private fun translate(srcLang: Lang, targetLang: Lang) = presenter.translate(text, srcLang, targetLang)
 
     private fun showCard(card: String) {
-        invokeLater {
+        // 使用`SwingUtilities.invokeLater`似乎要比使用`Application.invokeLater`更好，
+        // `Application.invokeLater`有时候会得不到想要的效果，UI组件不会自动调整尺寸。
+        SwingUtilities.invokeLater {
             if (!disposed) {
                 layout.show(contentPanel, card)
                 if (card == CARD_PROCESSING) {
@@ -243,15 +245,14 @@ class TranslationBalloon(
     override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
         if (!disposed) {
             translationPane.translation = translation
-            // 太快了会没有朋友，大小又会不对了，谁能告诉我到底发生了什么？
-            invokeLater(5) { showCard(CARD_TRANSLATION) }
+            showCard(CARD_TRANSLATION)
         }
     }
 
     override fun showError(request: Presenter.Request, throwable: Throwable) {
         if (!disposed) {
             errorPanel.update(throwable)
-            invokeLater(5) { showCard(CARD_ERROR) }
+            showCard(CARD_ERROR)
         }
     }
 
