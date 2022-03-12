@@ -1,7 +1,8 @@
-package cn.yiiguxing.plugin.translate.util
+package cn.yiiguxing.plugin.translate.diagnostic
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.annotations.SerializedName
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
