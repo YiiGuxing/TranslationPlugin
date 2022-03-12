@@ -20,6 +20,7 @@ object Http {
         noinline init: RequestBuilder.() -> Unit = {}
     ): T {
         return HttpRequests.request(url)
+            .accept("application/json")
             .apply(init)
             .connect { gson.fromJson(it.reader, typeOfT) }
     }
@@ -57,6 +58,7 @@ object Http {
     ): String {
         logger.d("POST ==> $url\n\t|==> $data")
         return HttpRequests.post(url, contentType)
+            .accept("application/json")
             .apply(init)
             .throwStatusCodeException(false)
             .connect {
