@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.annotations.SerializedName
+import com.intellij.credentialStore.Credentials
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
 import com.intellij.notification.NotificationGroupManager
@@ -45,11 +46,13 @@ class ReportSubmitter : ErrorReportSubmitter() {
             return false
         }
 
+        val credentials = ReportCredentials.credentials
+
         val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(parentComponent))
         object : Task.Backgroundable(project, message("title.submitting.error.report"), false) {
             override fun run(indicator: ProgressIndicator) {
                 try {
-                    doSubmit(project, message, stacktrace, additionalInfo, consumer)
+                    doSubmit(project, credentials, message, stacktrace, additionalInfo, consumer)
                 } catch (e: Exception) {
                     onError(project, e, events, additionalInfo, parentComponent, consumer)
                 }
@@ -61,6 +64,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
 
     private fun doSubmit(
         project: Project?,
+        credentials: Credentials,
         message: String?,
         stacktrace: String,
         additionalInfo: String?,
@@ -69,7 +73,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
         val issueSHA = stacktrace.md5()
         val (status, issue) = findIssue(issueSHA)
             ?.let { issue -> SubmittedReportInfo.SubmissionStatus.DUPLICATE to issue }
-            ?: postNewIssue(issueSHA, message, additionalInfo, stacktrace)
+            ?: postNewIssue(credentials, issueSHA, message, additionalInfo, stacktrace)
                 .let { issue -> SubmittedReportInfo.SubmissionStatus.NEW_ISSUE to issue }
 
         val reportInfo = SubmittedReportInfo(issue.htmlUrl, "Issue#${issue.number}", status)
@@ -129,7 +133,13 @@ class ReportSubmitter : ErrorReportSubmitter() {
         return issue
     }
 
-    private fun postNewIssue(issueSHA: String, message: String?, comment: String?, stacktrace: String): Issue {
+    private fun postNewIssue(
+        credentials: Credentials,
+        issueSHA: String,
+        message: String?,
+        comment: String?,
+        stacktrace: String
+    ): Issue {
         val eventMessage = message?.takeIf { it.isNotBlank() }?.let { ": $it" } ?: ""
         val title = "[Auto Generated]Plugin error occurred$eventMessage"
         val body = StringBuilder()
@@ -152,7 +162,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
 
         return Http.postJson<Issue>(NEW_ISSUE_POST_URL, mapOf("title" to title, "body" to body)) {
             acceptGitHubV3Json()
-            tuner { it.setRequestProperty("Authorization", "token $token") }
+            tuner { it.setRequestProperty("Authorization", credentials.getPasswordAsString()) }
         }
     }
 
@@ -197,16 +207,9 @@ class ReportSubmitter : ErrorReportSubmitter() {
         private const val NEW_ISSUE_POST_URL = "$API_BASE_URL/repos/$REPO/issues"
         private const val ISSUES_SEARCH_URL = "$API_BASE_URL/search/issues?per_page=1&q=repo:$REPO+is:issue+in:body"
 
-        // Base64 encoded token to prevent detection by GitHub Advanced Security, which could lead to token revocation.
-        @Suppress("SpellCheckingInspection")
-        private const val ACCESS_TOKEN = "Z2hwX2ZrQ3JGblJ4ZXJ4MlNXNEVJ" + "THJMRUo3N1o3NHJ0dTRXNGptTw=="
-
-        private val token: String by lazy { String(Base64.getDecoder().decode(ACCESS_TOKEN)) }
-
         private val logger = Logger.getInstance(ReportSubmitter::class.java)
 
         private fun RequestBuilder.acceptGitHubV3Json() = accept("application/vnd.github.v3+json")
-
     }
 
 }
