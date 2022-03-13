@@ -137,7 +137,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
             .build()
             .also { logger.i("Translate url: $it") }
 
-        return Http.postDataFrom(url, "q" to text) {
+        return Http.post(url, "q" to text) {
             userAgent().googleReferer()
         }
     }

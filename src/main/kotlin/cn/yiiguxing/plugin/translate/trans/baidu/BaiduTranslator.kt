@@ -199,7 +199,7 @@ object BaiduTranslator : AbstractTranslator() {
         val salt = System.currentTimeMillis().toString()
         val sign = (appId + text + salt + privateKey).md5().lowercase(Locale.getDefault())
 
-        return Http.postDataFrom(
+        return Http.post(
             BAIDU_TRANSLATE_API_URL,
             "appid" to appId,
             "from" to srcLang.baiduLanguageCode,

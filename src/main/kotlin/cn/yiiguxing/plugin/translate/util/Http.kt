@@ -25,12 +25,12 @@ object Http {
             .connect { gson.fromJson(it.reader, typeOfT) }
     }
 
-    fun postDataFrom(
+    fun post(
         url: String,
-        vararg dataFrom: Pair<String, String>,
+        vararg dataForm: Pair<String, String>,
         init: RequestBuilder.() -> Unit = {}
     ): String {
-        val data = dataFrom.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
+        val data = dataForm.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
         return post(url, "application/x-www-form-urlencoded", data, init)
     }
 

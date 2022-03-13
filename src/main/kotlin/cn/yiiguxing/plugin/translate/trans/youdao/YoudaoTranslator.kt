@@ -105,7 +105,7 @@ object YoudaoTranslator : AbstractTranslator() {
         val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
         val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
 
-        return Http.postDataFrom(
+        return Http.post(
             YOUDAO_API_URL,
             "appKey" to appId,
             "from" to srcLang.youdaoLanguageCode,
