@@ -25,6 +25,17 @@ object Http {
             .connect { gson.fromJson(it.reader, typeOfT) }
     }
 
+    inline fun <reified T> post(
+        url: String,
+        vararg dataForm: Pair<String, String>,
+        gson: Gson = defaultGson,
+        typeOfT: Type = T::class.java,
+        noinline init: RequestBuilder.() -> Unit = {}
+    ): T {
+        val result = post(url, dataForm = dataForm, init)
+        return gson.fromJson(result, typeOfT)
+    }
+
     fun post(
         url: String,
         vararg dataForm: Pair<String, String>,
