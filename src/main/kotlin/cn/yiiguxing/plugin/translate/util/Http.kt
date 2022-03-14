@@ -32,7 +32,7 @@ object Http {
         typeOfT: Type = T::class.java,
         noinline init: RequestBuilder.() -> Unit = {}
     ): T {
-        val result = post(url, dataForm = dataForm, init)
+        val result = post(url, dataForm.toMap(), init)
         return gson.fromJson(result, typeOfT)
     }
 
@@ -41,7 +41,17 @@ object Http {
         vararg dataForm: Pair<String, String>,
         init: RequestBuilder.() -> Unit = {}
     ): String {
-        val data = dataForm.joinToString("&") { (key, value) -> "$key=${value.urlEncode()}" }
+        return post(url, dataForm.toMap(), init)
+    }
+
+    fun post(
+        url: String,
+        dataForm: Map<String, String>,
+        init: RequestBuilder.() -> Unit = {}
+    ): String {
+        val data = dataForm.entries.joinToString("&") { (key, value) ->
+            "$key=${value.urlEncode()}"
+        }
         return post(url, "application/x-www-form-urlencoded", data, init)
     }
 
