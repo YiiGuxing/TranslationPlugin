@@ -17,7 +17,9 @@ import com.intellij.openapi.diagnostic.ErrorReportSubmitter
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.SubmittedReportInfo
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
@@ -28,10 +30,71 @@ import com.intellij.xml.util.XmlStringUtil
 import java.awt.Component
 import java.text.DateFormat
 import java.util.*
+import javax.swing.JComponent
 
 class ReportSubmitter : ErrorReportSubmitter() {
 
     override fun getReportActionText(): String = adaptedMessage("error.report.to.yiiguxing.action")
+
+    override fun getReporterAccount(): String = ReportCredentials.userName
+
+    override fun changeReporterAccount(parentComponent: Component) {
+        val project = parentComponent.getProject()
+
+        val yes = MessageDialogBuilder.yesNo(
+            "Change Reporter Account",
+            "Do you want to clear your current account and use a new one?"
+        ).ask(project)
+        if (!yes) {
+            return
+        }
+
+        val gitHubVerification = try {
+            ProgressManager.getInstance()
+                .run(object : Task.WithResult<GitHubVerification, Exception>(
+                    project,
+                    parentComponent as JComponent,
+                    "Retrieving GitHub Device Code",
+                    true
+                ) {
+                    override fun compute(indicator: ProgressIndicator): GitHubVerification {
+                        indicator.checkCanceled()
+                        return Http.post<GitHubVerification>(
+                            "https://github.com/login/device/code",
+                            "client_id" to "e8a353548fe014bb27de",
+                            "scope" to "public_repo"
+                        ).also { indicator.checkCanceled() }
+                    }
+                })
+
+        } catch (e: ProcessCanceledException) {
+            return
+        } catch (e: Throwable) {
+            // TODO show notification
+            return
+        }
+
+        println(gitHubVerification)
+
+    }
+
+    data class GitHubVerification(
+        @SerializedName("device_code")
+        val deviceCode: String,
+        @SerializedName("user_code")
+        val userCode: String,
+        @SerializedName("verification_uri")
+        val verificationUri: String,
+        @SerializedName("expires_in")
+        val expiresIn: Int,
+        @SerializedName("interval")
+        val interval: Int
+    )
+
+    private fun Component.getProject(): Project? {
+        val dataContext = DataManager.getInstance().getDataContext(this)
+        return CommonDataKeys.PROJECT.getData(dataContext)
+    }
 
     override fun submit(
         events: Array<out IdeaLoggingEvent>,
@@ -48,7 +111,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
 
         val credentials = ReportCredentials.credentials
 
-        val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(parentComponent))
+        val project = parentComponent.getProject()
         object : Task.Backgroundable(project, message("title.submitting.error.report"), false) {
             override fun run(indicator: ProgressIndicator) {
                 try {
@@ -70,10 +133,10 @@ class ReportSubmitter : ErrorReportSubmitter() {
         additionalInfo: String?,
         consumer: Consumer<in SubmittedReportInfo>
     ) {
-        val issueSHA = stacktrace.md5()
-        val (status, issue) = findIssue(issueSHA)
+        val issueID = stacktrace.md5()
+        val (status, issue) = findIssue(issueID)
             ?.let { issue -> SubmittedReportInfo.SubmissionStatus.DUPLICATE to issue }
-            ?: postNewIssue(credentials, issueSHA, message, additionalInfo, stacktrace)
+            ?: postNewIssue(credentials, issueID, message, additionalInfo, stacktrace)
                 .let { issue -> SubmittedReportInfo.SubmissionStatus.NEW_ISSUE to issue }
 
         val reportInfo = SubmittedReportInfo(issue.htmlUrl, "Issue#${issue.number}", status)
@@ -122,8 +185,8 @@ class ReportSubmitter : ErrorReportSubmitter() {
         }
     }
 
-    private fun findIssue(issueSHA: String): Issue? {
-        val url = "$ISSUES_SEARCH_URL+$issueSHA"
+    private fun findIssue(issueId: String): Issue? {
+        val url = "$ISSUES_SEARCH_URL+$issueId"
         val result = Http.request<IssueSearchResult>(url) { acceptGitHubV3Json() }
         val issue = result.items.firstOrNull()
         if (issue != null) {
@@ -135,7 +198,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
 
     private fun postNewIssue(
         credentials: Credentials,
-        issueSHA: String,
+        issueId: String,
         message: String?,
         comment: String?,
         stacktrace: String
@@ -143,7 +206,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
         val eventMessage = message?.takeIf { it.isNotBlank() }?.let { ": $it" } ?: ""
         val title = "[Auto Generated]Plugin error occurred$eventMessage"
         val body = StringBuilder()
-            .appendLine(":warning:_`[Auto Generated Report]-=$issueSHA=-`_")
+            .appendLine(":warning:_`[Auto Generated Report]-=$issueId=-`_")
             .appendLine("<!-- Auto Generated Report. DO NOT MODIFY!!! -->\n")
             .appendLine("## Description")
             .appendLine(comment ?: "")
