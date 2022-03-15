@@ -7,9 +7,6 @@ import com.google.gson.annotations.SerializedName
 import com.intellij.credentialStore.Credentials
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationListener
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ex.ApplicationInfoEx
@@ -17,9 +14,7 @@ import com.intellij.openapi.diagnostic.ErrorReportSubmitter
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.SubmittedReportInfo
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
@@ -41,55 +36,17 @@ class ReportSubmitter : ErrorReportSubmitter() {
     override fun changeReporterAccount(parentComponent: Component) {
         val project = parentComponent.getProject()
 
-        val yes = MessageDialogBuilder.yesNo(
-            "Change Reporter Account",
-            "Do you want to clear your current account and use a new one?"
-        ).ask(project)
-        if (!yes) {
-            return
+        if (!ReportCredentials.isAnonymous) {
+            val title = message("error.change.reporter.account.title")
+            val message = message("error.change.reporter.account.message")
+            if (!MessageDialogBuilder.yesNo(title, message).ask(project)) {
+                return
+            }
         }
 
-        val gitHubVerification = try {
-            ProgressManager.getInstance()
-                .run(object : Task.WithResult<GitHubVerification, Exception>(
-                    project,
-                    parentComponent as JComponent,
-                    "Retrieving GitHub Device Code",
-                    true
-                ) {
-                    override fun compute(indicator: ProgressIndicator): GitHubVerification {
-                        indicator.checkCanceled()
-                        return Http.post<GitHubVerification>(
-                            "https://github.com/login/device/code",
-                            "client_id" to "e8a353548fe014bb27de",
-                            "scope" to "public_repo"
-                        ).also { indicator.checkCanceled() }
-                    }
-                })
-
-        } catch (e: ProcessCanceledException) {
-            return
-        } catch (e: Throwable) {
-            // TODO show notification
-            return
-        }
-
-        println(gitHubVerification)
-
+        ReportCredentials.requestNewCredentials(project, parentComponent as JComponent)
     }
 
-    data class GitHubVerification(
-        @SerializedName("device_code")
-        val deviceCode: String,
-        @SerializedName("user_code")
-        val userCode: String,
-        @SerializedName("verification_uri")
-        val verificationUri: String,
-        @SerializedName("expires_in")
-        val expiresIn: Int,
-        @SerializedName("interval")
-        val interval: Int
-    )
 
     private fun Component.getProject(): Project? {
         val dataContext = DataManager.getInstance().getDataContext(this)
@@ -156,14 +113,10 @@ class ReportSubmitter : ErrorReportSubmitter() {
             append("<br/>")
             append(message("error.report.gratitude"))
         }
-        val content = XmlStringUtil.wrapInHtml(text)
+
         val title = message("error.report.submitted")
-        NotificationGroupManager.getInstance()
-            .getNotificationGroup("Error Report")
-            .createNotification(title, content, NotificationType.INFORMATION)
-            .setListener(NotificationListener.URL_OPENING_LISTENER)
-            .setImportant(false)
-            .notify(project)
+        val content = XmlStringUtil.wrapInHtml(text)
+        ErrorReportNotifications.showNotification(project, title, content)
     }
 
     private fun onError(

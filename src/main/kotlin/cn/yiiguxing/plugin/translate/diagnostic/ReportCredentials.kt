@@ -1,10 +1,14 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
+import cn.yiiguxing.plugin.translate.message
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageDialogBuilder
 import java.util.*
+import javax.swing.JComponent
 
 internal object ReportCredentials {
 
@@ -28,15 +32,41 @@ internal object ReportCredentials {
     val credentials: Credentials
         get() = PasswordSafe.instance.get(CredentialAttributes(serviceName)) ?: anonymousCredentials
 
-    fun save(userName: String, token: String) {
+    fun clear() {
+        PasswordSafe.instance.set(CredentialAttributes(serviceName), null)
+        lastUserName = ""
+    }
+
+    private fun save(userName: String, token: String): Credentials {
+        check(userName.isNotBlank()) { "User name must not be blank" }
         val credentials = Credentials(userName, token)
         val attributes = CredentialAttributes(serviceName, userName)
         PasswordSafe.instance.set(attributes, credentials)
         lastUserName = userName
+
+        return credentials
     }
 
-    fun clear() {
-        PasswordSafe.instance.set(CredentialAttributes(serviceName), null)
-        lastUserName = ""
+    fun requestNewCredentials(project: Project?, parentComponent: JComponent): Credentials? {
+        val verification = getVerification(project, parentComponent) ?: return null
+        println(verification)
+
+        // TODO 认证
+
+        return save("", "")
+    }
+
+    private fun getVerification(project: Project?, parentComponent: JComponent): GitHubVerification? {
+        return try {
+            VerificationTask(project, parentComponent).queueAndGet()
+        } catch (e: Exception) {
+            val title = message("error.account.change.failed.title")
+            val message = message("error.account.verification.failed.message", e.message.toString())
+            if (MessageDialogBuilder.yesNo(title, message).ask(project)) {
+                getVerification(project, parentComponent)
+            } else {
+                null
+            }
+        }
     }
 }
