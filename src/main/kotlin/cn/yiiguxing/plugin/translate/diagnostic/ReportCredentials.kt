@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
 import com.intellij.credentialStore.generateServiceName
@@ -48,8 +49,15 @@ internal object ReportCredentials {
     }
 
     fun requestNewCredentials(project: Project?, parentComponent: JComponent): Credentials? {
+        checkDispatchThread {
+            "ReportCredentials.requestNewCredentials() can only be called in the Event Dispatch Thread."
+        }
+
         val verification = getVerification(project, parentComponent) ?: return null
-        println(verification)
+        val ok = VerificationDialog(project, parentComponent, verification).showAndGet()
+        if (!ok) {
+            return null
+        }
 
         // TODO 认证
 

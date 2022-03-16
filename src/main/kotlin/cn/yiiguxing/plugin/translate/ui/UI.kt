@@ -9,6 +9,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
+import net.miginfocom.layout.LayoutUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.image.RGBImageFilter
@@ -91,8 +92,9 @@ object UI {
     fun migLayoutVertical() =
         MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
 
-    fun fill(): CC = CC().grow().push()
+    fun spanX(cells: Int = LayoutUtil.INF): CC = CC().spanX(cells)
 
+    fun fill(): CC = CC().grow().push()
     fun fillX(): CC = CC().growX().pushX()
     fun fillY(): CC = CC().growY().pushY()
 
