@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
+import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
 import cn.yiiguxing.plugin.translate.ui.UI.spanX
 import com.intellij.icons.AllIcons
@@ -31,7 +33,7 @@ internal class VerificationDialog(
     DialogWrapper(project, parentComponent, false, IdeModalityType.IDE) {
 
     init {
-        title = "Sign in to GitHub"
+        title = message("verification.dialog.title")
         isModal = true
         isResizable = false
         init()
@@ -51,20 +53,23 @@ internal class VerificationDialog(
 
             val text = JTextPane().apply {
                 isEditable = false
-                text = "Error Reporter uses a GitHub account. Please enter the following code " +
-                        "on the GitHub website to authorize your GitHub account with Error Reporter."
+                text = message("verification.dialog.description")
             }
             add(text, spanX().gapBottom(JBUIScale.scale(4).toString()).wrap())
 
-            add(JBLabel("GitHub website:"))
+            add(JBLabel(message("verification.dialog.website.label")))
             add(BrowserLink(verification.verificationUri), fillX().wrap())
-            add(JBLabel("Device code:"))
+            add(JBLabel(message("verification.dialog.device.code.label")))
 
             val userCodeTextField = ExtendableTextField(verification.userCode).apply {
                 isEditable = false
-                addExtension(ExtendableTextComponent.Extension.create(AllIcons.Actions.Copy, "Copy") {
-                    copyUserCode()
-                })
+                addExtension(
+                    ExtendableTextComponent.Extension.create(
+                        AllIcons.Actions.Copy, message("copy.action.name")
+                    ) {
+                        copyUserCode()
+                    }
+                )
             }
             add(userCodeTextField, fillX().wrap())
         }
@@ -74,7 +79,7 @@ internal class VerificationDialog(
         CopyPasteManager.getInstance().setContents(StringSelection(verification.userCode))
     }
 
-    private inner class CopyAndOpenAction : DialogWrapperAction("Copy and Open") {
+    private inner class CopyAndOpenAction : DialogWrapperAction(adaptedMessage("copy.and.open.action.name")) {
 
         init {
             putValue(DEFAULT_ACTION, true)
