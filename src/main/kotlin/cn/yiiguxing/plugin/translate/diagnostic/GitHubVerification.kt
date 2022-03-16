@@ -12,5 +12,7 @@ internal data class GitHubVerification(
     @SerializedName("expires_in")
     val expiresIn: Int,
     @SerializedName("interval")
-    val interval: Int
+    val interval: Int,
+    @Transient
+    val timestamp: Long = System.currentTimeMillis()
 )

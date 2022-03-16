@@ -13,10 +13,13 @@ internal class VerificationTask(project: Project?, component: JComponent) :
     Task.WithResult<GitHubVerification, Exception>(
         project, component, message("error.account.device.code.task.title"), true
     ) {
+
     override fun compute(indicator: ProgressIndicator): GitHubVerification {
         indicator.checkCanceled()
-        return Http.post<GitHubVerification>(DEVICE_CODE_URL, "client_id" to CLIENT_ID, "scope" to SCOPE)
-            .also { indicator.checkCanceled() }
+        return Http.post<GitHubVerification>(
+            DEVICE_CODE_URL,
+            "client_id" to GITHUB_CLIENT_ID, "scope" to GITHUB_OAUTH_SCOPES
+        ).also { indicator.checkCanceled() }
     }
 
     fun queueAndGet(): GitHubVerification? {
@@ -29,8 +32,6 @@ internal class VerificationTask(project: Project?, component: JComponent) :
 
 
     companion object {
-        private const val SCOPE = "public_repo"
-        private const val CLIENT_ID = "e8a353548fe014bb27de"
         private const val DEVICE_CODE_URL = "https://github.com/login/device/code"
     }
 }
