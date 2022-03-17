@@ -140,9 +140,9 @@ object DeeplTranslator : AbstractTranslator() {
         val privateKey = settings.getAppKey()
 
         return Http.postDataFrom(
-            DEEPL_TRANSLATE_API_URL,
+            DEEPL_FREE_TRANSLATE_API_URL,
             "auth_key" to privateKey,
-            "target_lang" to targetLang
+            "target_lang" to targetLang.deeplLanguageCode,
             "text" to text
         )
     }
