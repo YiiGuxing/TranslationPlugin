@@ -34,6 +34,33 @@ object DeeplTranslator : AbstractTranslator() {
         Lang.GERMAN,
         Lang.GREEK,
         Lang.ENGLISH,
+        Lang.ESTONIAN,
+        Lang.FINNISH,
+        Lang.FRENCH,
+        Lang.HUNGARIAN,
+        Lang.ITALIAN,
+        Lang.JAPANESE,
+        Lang.LATVIAN,
+        Lang.LITHUANIAN,
+        Lang.POLISH,
+        Lang.PORTUGUESE,
+        Lang.ROMANIAN,
+        Lang.RUSSIAN,
+        Lang.SLOVAK,
+        Lang.SLOVENIAN,
+        Lang.SPANISH,
+        Lang.SWEDISH,
+    )
+
+    private val SUPPORTED_TARGET_LANGUAGES: List<Lang> = listOf(
+        Lang.BULGARIAN,
+        Lang.CHINESE,
+        Lang.CZECH,
+        Lang.DANISH,
+        Lang.DUTCH,
+        Lang.GERMAN,
+        Lang.GREEK,
+        Lang.ENGLISH,
         Lang.ENGLISH_AMERICAN,
         Lang.ENGLISH_BRITISH,
         Lang.ESTONIAN,
@@ -74,7 +101,7 @@ object DeeplTranslator : AbstractTranslator() {
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
         .toMutableList()
         .apply { add(0, Lang.AUTO) }
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
 
     private val errorMessageMap: Map<Int, String> by lazy {
         mapOf(
