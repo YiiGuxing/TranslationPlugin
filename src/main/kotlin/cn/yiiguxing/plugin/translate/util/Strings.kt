@@ -161,6 +161,18 @@ private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLe
 }
 
 /**
+ * 如果内容长度超出指定[长度][n]，则省略超出部分，显示为”...“。
+ */
+fun String.ellipsis(n: Int): String {
+    require(n >= 0) { "Requested character count $n is less than zero." }
+    return when {
+        n == 0 -> "..."
+        n < length -> "${take(n)}..."
+        else -> this
+    }
+}
+
+/**
  * URL编码
  */
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
