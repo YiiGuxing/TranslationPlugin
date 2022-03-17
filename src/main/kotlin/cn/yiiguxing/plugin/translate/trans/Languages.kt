@@ -37,6 +37,12 @@ enum class Lang(
     /** 英语 */
     ENGLISH("english", "en"),
 
+    /** 英语 */
+    ENGLISH_AMERICAN("english.american", "en-US"),
+
+    /** 英语 */
+    ENGLISH_BRITISH("english.british", "en-GB"),
+
     /** 中文(繁体) */
     CHINESE_TRADITIONAL("chinese.traditional", "zh-TW"),
 
@@ -228,6 +234,12 @@ enum class Lang(
 
     /** 葡萄牙语 */
     PORTUGUESE("portuguese", "pt"),
+
+    /** 葡萄牙语 */
+    PORTUGUESE_BRAZILIAN("portuguese.brazilian", "pt-BR"),
+
+    /** 葡萄牙语 */
+    PORTUGUESE_PORTUGUESE("portuguese.portuguese", "pt-PT"),
 
     /** 普什图语 */
     PASHTO("pashto", "ps"),
