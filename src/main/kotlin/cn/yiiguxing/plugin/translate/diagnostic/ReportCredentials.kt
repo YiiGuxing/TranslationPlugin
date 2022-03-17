@@ -6,6 +6,7 @@ import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
 import java.util.*
@@ -59,9 +60,8 @@ internal object ReportCredentials {
             return null
         }
 
-        // TODO 认证
-
-        return save("", "")
+        val (user, token) = authorize(project, parentComponent, verification) ?: return null
+        return save(user.name, token.authorizationToken)
     }
 
     private fun getVerification(project: Project?, parentComponent: JComponent): GitHubVerification? {
@@ -75,6 +75,23 @@ internal object ReportCredentials {
             } else {
                 null
             }
+        }
+    }
+
+    private fun authorize(
+        project: Project?,
+        parentComponent: JComponent,
+        verification: GitHubVerification
+    ): GitHubCredentials? {
+        return try {
+            AuthenticationTask(project, parentComponent, verification).queueAndGet()
+        } catch (e: Exception) {
+            val title = message("error.account.change.failed.title")
+            val errorMessage = (e as? GitHubAuthenticationException)?.errorDescription ?: e.message ?: ""
+            val message = message("error.account.authentication.failed.message", errorMessage)
+            ErrorReportNotifications.showNotification(project, title, message, NotificationType.ERROR)
+
+            return null
         }
     }
 }
