@@ -78,6 +78,8 @@ qodana {
 
 tasks {
     runIde {
+        systemProperties["idea.is.internal"] = true
+
         // Path to IDE distribution that will be used to run the IDE with the plugin.
         // ideDir.set(File("path to IDE-dependency"))
     }
