@@ -151,9 +151,11 @@ object DeeplTranslator : AbstractTranslator() {
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 
-        return Gson().fromJson(translation, DeeplTranslation::class.java).apply {
+        return Gson().fromJson(translation, DeeplTranslations::class.java).apply {
+            this.original = original
+            this.targetLang = targetLang
             if (!isSuccessful) {
-                throw TranslationResultException(code)
+                throw TranslationResultException(translations[0].code)
             }
         }.toTranslation()
     }
