@@ -1,28 +1,31 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
-import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
-import com.intellij.notification.NotificationType
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageDialogBuilder
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import java.util.*
-import javax.swing.JComponent
 
-internal object ReportCredentials {
+@Service
+internal class ReportCredentials private constructor() {
 
-    // Base64 encoded token to prevent detection by GitHub Advanced Security, which could lead to token revocation.
-    @Suppress("SpellCheckingInspection")
-    private const val ANONYMOUS_ACCOUNT_TOKEN = "dG9rZW4gZ2hwX2ZrQ3JGblJ4ZXJ4MlNXNEVJTHJMRUo3N1o3NHJ0dTRXNGptTw=="
+    companion object {
+        // Base64 encoded token to prevent detection by GitHub Advanced Security, which could lead to token revocation.
+        @Suppress("SpellCheckingInspection")
+        private const val ANONYMOUS_ACCOUNT_TOKEN = "dG9rZW4gZ2hwX2ZrQ3JGblJ4ZXJ4MlNXNEVJTHJMRUo3N1o3NHJ0dTRXNGptTw=="
 
-    private val serviceName = generateServiceName("TranslationPlugin", "Report Account")
+        private val SERVICE_NAME = generateServiceName("TranslationPlugin", "Report Account")
+
+        val instance: ReportCredentials get() = service()
+    }
+
 
     private val anonymousCredentials: Credentials
         get() = Credentials("", Base64.getDecoder().decode(ANONYMOUS_ACCOUNT_TOKEN))
 
+    @Volatile
     private var lastUserName: String? = null
 
     val userName: String
@@ -32,66 +35,19 @@ internal object ReportCredentials {
         get() = userName.isEmpty()
 
     val credentials: Credentials
-        get() = PasswordSafe.instance.get(CredentialAttributes(serviceName)) ?: anonymousCredentials
+        get() = PasswordSafe.instance.get(CredentialAttributes(SERVICE_NAME)) ?: anonymousCredentials
 
     fun clear() {
-        PasswordSafe.instance.set(CredentialAttributes(serviceName), null)
+        PasswordSafe.instance.set(CredentialAttributes(SERVICE_NAME), null)
         lastUserName = ""
     }
 
-    private fun save(userName: String, token: String): Credentials {
+    fun save(userName: String, token: String) {
         check(userName.isNotBlank()) { "User name must not be blank" }
         val credentials = Credentials(userName, token)
-        val attributes = CredentialAttributes(serviceName, userName)
+        val attributes = CredentialAttributes(SERVICE_NAME, userName)
         PasswordSafe.instance.set(attributes, credentials)
         lastUserName = userName
-
-        return credentials
     }
 
-    fun requestNewCredentials(project: Project?, parentComponent: JComponent): Credentials? {
-        checkDispatchThread {
-            "ReportCredentials.requestNewCredentials() can only be called in the Event Dispatch Thread."
-        }
-
-        val verification = getVerification(project, parentComponent) ?: return null
-        val ok = VerificationDialog(project, parentComponent, verification).showAndGet()
-        if (!ok) {
-            return null
-        }
-
-        val (user, token) = authorize(project, parentComponent, verification) ?: return null
-        return save(user.name, token.authorizationToken)
-    }
-
-    private fun getVerification(project: Project?, parentComponent: JComponent): GitHubVerification? {
-        return try {
-            VerificationTask(project, parentComponent).queueAndGet()
-        } catch (e: Exception) {
-            val title = message("error.account.change.failed.title")
-            val message = message("error.account.verification.failed.message", e.message.toString())
-            if (MessageDialogBuilder.yesNo(title, message).ask(project)) {
-                getVerification(project, parentComponent)
-            } else {
-                null
-            }
-        }
-    }
-
-    private fun authorize(
-        project: Project?,
-        parentComponent: JComponent,
-        verification: GitHubVerification
-    ): GitHubCredentials? {
-        return try {
-            AuthenticationTask(project, parentComponent, verification).queueAndGet()
-        } catch (e: Exception) {
-            val title = message("error.account.change.failed.title")
-            val errorMessage = (e as? GitHubAuthenticationException)?.errorDescription ?: e.message ?: ""
-            val message = message("error.account.authentication.failed.message", errorMessage)
-            ErrorReportNotifications.showNotification(project, title, message, NotificationType.ERROR)
-
-            return null
-        }
-    }
 }

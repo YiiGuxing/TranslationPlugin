@@ -1,10 +1,10 @@
-package cn.yiiguxing.plugin.translate.diagnostic
+package cn.yiiguxing.plugin.translate.diagnostic.github.auth
 
 import com.google.gson.annotations.SerializedName
 
-internal data class GitHubVerification(
+internal data class GitHubDeviceCode(
     @SerializedName("device_code")
-    val deviceCode: String = "",
+    val code: String = "",
     @SerializedName("user_code")
     val userCode: String = "",
     @SerializedName("verification_uri")

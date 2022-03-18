@@ -1,12 +1,15 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppException
+import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppService
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.annotations.SerializedName
 import com.intellij.credentialStore.Credentials
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ex.ApplicationInfoEx
@@ -17,6 +20,7 @@ import com.intellij.openapi.diagnostic.SubmittedReportInfo
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageConstants
 import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.Consumer
@@ -27,26 +31,55 @@ import java.text.DateFormat
 import java.util.*
 import javax.swing.JComponent
 
-class ReportSubmitter : ErrorReportSubmitter() {
+internal class ReportSubmitter : ErrorReportSubmitter() {
 
     override fun getReportActionText(): String = adaptedMessage("error.report.to.yiiguxing.action")
 
-    override fun getReporterAccount(): String = ReportCredentials.userName
+    override fun getReporterAccount(): String = ReportCredentials.instance.userName
 
     override fun changeReporterAccount(parentComponent: Component) {
         val project = parentComponent.getProject()
 
-        if (!ReportCredentials.isAnonymous) {
+        val reportCredentials = ReportCredentials.instance
+        if (!reportCredentials.isAnonymous) {
             val title = message("error.change.reporter.account.title")
             val message = message("error.change.reporter.account.message")
-            if (!MessageDialogBuilder.yesNo(title, message).ask(project)) {
-                return
+
+            val choice = MessageDialogBuilder.yesNoCancel(title, message)
+                .noText(adaptedMessage("error.change.reporter.account.anonymous.button"))
+                .show(project)
+
+            when (choice) {
+                MessageConstants.YES -> reportCredentials.clear()
+                MessageConstants.NO -> {
+                    // Use anonymous account
+                    reportCredentials.clear()
+                    return
+                }
+                else -> return
             }
         }
 
-        ReportCredentials.requestNewCredentials(project, parentComponent as JComponent)
+        requestNewCredentials(project, parentComponent as? JComponent)
     }
 
+    private fun requestNewCredentials(project: Project?, parentComponent: JComponent?) {
+        val (user, token) = try {
+            TranslationGitHubAppService.instance.auth(project, parentComponent as JComponent) ?: return
+        } catch (e: Exception) {
+            LOG.w("Failed to request new credentials", e)
+
+            val title = message("error.change.reporter.account.failed.title")
+            val message = if (e is TranslationGitHubAppException) {
+                e.message
+            } else {
+                message("error.change.reporter.account.failed.message", e.message.toString())
+            }
+            ErrorReportNotifications.showNotification(project, title, message, NotificationType.ERROR)
+            return
+        }
+        ReportCredentials.instance.save(user.name, token.authorizationToken)
+    }
 
     private fun Component.getProject(): Project? {
         val dataContext = DataManager.getInstance().getDataContext(this)
@@ -66,8 +99,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
             return false
         }
 
-        val credentials = ReportCredentials.credentials
-
+        val credentials = ReportCredentials.instance.credentials
         val project = parentComponent.getProject()
         object : Task.Backgroundable(project, message("title.submitting.error.report"), false) {
             override fun run(indicator: ProgressIndicator) {
@@ -127,7 +159,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
         parentComponent: Component,
         callback: Consumer<in SubmittedReportInfo>
     ) {
-        logger.w("reporting failed:", e)
+        LOG.w("reporting failed:", e)
         invokeLater {
             val message = message("error.report.failed.message", e.message.toString())
             val title = message("error.report.failed.title")
@@ -143,7 +175,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
         val result = Http.request<IssueSearchResult>(url) { acceptGitHubV3Json() }
         val issue = result.items.firstOrNull()
         if (issue != null) {
-            logger.d("Issue is actually a duplicate of existing one: $result")
+            LOG.d("Issue is actually a duplicate of existing one: $result")
         }
 
         return issue
@@ -223,7 +255,7 @@ class ReportSubmitter : ErrorReportSubmitter() {
         private const val NEW_ISSUE_POST_URL = "$API_BASE_URL/repos/$REPO/issues"
         private const val ISSUES_SEARCH_URL = "$API_BASE_URL/search/issues?per_page=1&q=repo:$REPO+is:issue+in:body"
 
-        private val logger = Logger.getInstance(ReportSubmitter::class.java)
+        private val LOG = Logger.getInstance(ReportSubmitter::class.java)
 
         private fun RequestBuilder.acceptGitHubV3Json() = accept("application/vnd.github.v3+json")
     }

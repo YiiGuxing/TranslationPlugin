@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.diagnostic
+package cn.yiiguxing.plugin.translate.diagnostic.github.auth
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
@@ -17,7 +17,6 @@ import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBDimension
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
-import java.awt.Component
 import java.awt.datatransfer.StringSelection
 import java.awt.event.ActionEvent
 import javax.swing.Action
@@ -25,15 +24,14 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTextPane
 
-internal class VerificationDialog(
+internal class GitHubDeviceLoginDialog(
     project: Project?,
-    parentComponent: Component,
-    private val verification: GitHubVerification
-) :
-    DialogWrapper(project, parentComponent, false, IdeModalityType.IDE) {
+    parentComponent: JComponent?,
+    private val deviceCode: GitHubDeviceCode
+) : DialogWrapper(project, parentComponent, false, IdeModalityType.IDE) {
 
     init {
-        title = message("verification.dialog.title")
+        title = message("github.login.dialog.title")
         isModal = true
         isResizable = false
         init()
@@ -53,15 +51,15 @@ internal class VerificationDialog(
 
             val text = JTextPane().apply {
                 isEditable = false
-                text = message("verification.dialog.description")
+                text = message("github.login.dialog.description")
             }
             add(text, spanX().gapBottom(JBUIScale.scale(4).toString()).wrap())
 
-            add(JBLabel(message("verification.dialog.website.label")))
-            add(BrowserLink(verification.verificationUri), fillX().wrap())
-            add(JBLabel(message("verification.dialog.device.code.label")))
+            add(JBLabel(message("github.login.dialog.website.label")))
+            add(BrowserLink(deviceCode.verificationUri), fillX().wrap())
+            add(JBLabel(message("github.login.dialog.device.code.label")))
 
-            val userCodeTextField = ExtendableTextField(verification.userCode).apply {
+            val userCodeTextField = ExtendableTextField(deviceCode.userCode).apply {
                 isEditable = false
                 addExtension(
                     ExtendableTextComponent.Extension.create(
@@ -76,7 +74,7 @@ internal class VerificationDialog(
     }
 
     private fun copyUserCode() {
-        CopyPasteManager.getInstance().setContents(StringSelection(verification.userCode))
+        CopyPasteManager.getInstance().setContents(StringSelection(deviceCode.userCode))
     }
 
     private inner class CopyAndOpenAction : DialogWrapperAction(adaptedMessage("copy.and.open.action.name")) {
@@ -87,7 +85,7 @@ internal class VerificationDialog(
 
         override fun doAction(e: ActionEvent) {
             copyUserCode()
-            BrowserUtil.browse(verification.verificationUri)
+            BrowserUtil.browse(deviceCode.verificationUri)
             close(OK_EXIT_CODE)
         }
     }
