@@ -138,10 +138,14 @@ object DeeplTranslator : AbstractTranslator() {
     private fun call(text: String, srcLang: Lang, targetLang: Lang): String {
         val settings = Settings.deeplTranslateSettings
         val privateKey = settings.getAppKey()
+        val splitPrivatekeys = privateKey.split(":")
+        val isFree = (splitPrivatekeys.size == 2 && splitPrivatekeys[1] == "fx")
+        val requestURL = if (isFree) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
 
         return Http.post(
-            DEEPL_FREE_TRANSLATE_API_URL,
+            requestURL,
             "auth_key" to privateKey,
+            "tag_handling" to "xml",
             "target_lang" to targetLang.deeplLanguageCode,
             "text" to text
         )
