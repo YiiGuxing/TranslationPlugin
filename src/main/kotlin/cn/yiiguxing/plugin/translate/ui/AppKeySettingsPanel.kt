@@ -21,6 +21,7 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
 
     private val isDeepl: Boolean = (appKeySettings is DeeplTranslateSettings)
     private val getAppKeyString: String = if (isDeepl) "settings.deepl.link.getAppKey" else "settings.link.getAppKey"
+    private val appKeyString: String = if (isDeepl) "settings.deepl.label.appPrivateKey" else "settings.label.appPrivateKey"
     private val logo: JLabel = JLabel(logoImage)
     private val getApiKeyLink: ActionLink =
         ActionLink(message(getAppKeyString), AllIcons.Ide.Link, AllIcons.Ide.Link) {
@@ -38,7 +39,7 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
             add(appIdField, fillX().wrap())
         }
 
-        add(JLabel(message("settings.label.appPrivateKey")))
+        add(JLabel(message(appKeyString)))
         add(appKeyField, fillX().wrap())
 
         getApiKeyLink.border = JBUI.Borders.empty(10, 0, 0, 0)
