@@ -108,7 +108,7 @@ enum class TranslationEngine(
             DEEPL -> AppKeySettingsDialog(
                 message("settings.deepl.title"),
                 AppKeySettingsPanel(
-                    TranslationIcons.load("/image/baidu_translate_logo.png"),
+                    TranslationIcons.load("/image/deepl_translate_logo.png"),
                     "https://www.deepl.com/pro-api?cta=header-pro-api",
                     Settings.deeplTranslateSettings
                 ),
