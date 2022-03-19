@@ -163,28 +163,4 @@ object DeeplTranslator : AbstractTranslator() {
             }
         }.toTranslation()
     }
-
-    override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
-        if (throwable is TranslationResultException) {
-            val errorMessage =
-                errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")
-            val continueAction = when (throwable.code) {
-                403 -> ErrorInfo.continueAction(
-                    message("action.check.configuration"),
-                    icon = AllIcons.General.Settings
-                ) {
-                    DEEPL.showConfigurationDialog()
-                }
-                503 -> ErrorInfo.browseUrlAction(
-                    message("error.service.is.down.action.name"),
-                    DEEPL_PRODUCT_URL
-                )
-                else -> null
-            }
-
-            return ErrorInfo(errorMessage, if (continueAction != null) listOf(continueAction) else emptyList())
-        }
-
-        return super.createErrorInfo(throwable)
-    }
 }
