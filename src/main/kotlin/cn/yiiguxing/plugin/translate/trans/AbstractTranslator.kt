@@ -37,6 +37,16 @@ abstract class AbstractTranslator : Translator {
             is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> when (throwable.statusCode) {
                 HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
+                HttpResponseStatus.FORBIDDEN.code() -> message("error.invalidAccount")
+                HttpResponseStatus.BAD_REQUEST.code() -> message("error.bad.request")
+                HttpResponseStatus.NOT_FOUND.code() -> message("error.request.not.found")
+                HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE.code() -> message("error.text.too.long")
+                HttpResponseStatus.REQUEST_URI_TOO_LONG.code() -> message("error.request.uri.too.long")
+                HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
+                HttpResponseStatus.SERVICE_UNAVAILABLE.code() -> message("error.deepl.service.is.down")
+                HttpResponseStatus.INTERNAL_SERVER_ERROR.code() -> message("error.systemError")
+                456 -> message("error.access.limited") // Quota exceeded. The character limit has been reached.
+                529 -> message("error.too.many.requests") // Too many requests. Please wait and resend your request.
                 else -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
             }
             is IOException -> message("error.io.exception", throwable.message ?: "")
