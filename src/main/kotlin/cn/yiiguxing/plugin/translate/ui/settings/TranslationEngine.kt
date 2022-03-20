@@ -28,7 +28,7 @@ enum class TranslationEngine(
     YOUDAO("ai.youdao", message("translator.name.youdao"), TranslationIcons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translator.name.baidu"), TranslationIcons.Baidu, 10000, 1000),
     ALI("translate.ali", message("translator.name.ali"), TranslationIcons.Ali, 5000),
-    DEEPL("translate.deepl", message("translator.name.deepl"), TranslationIcons.Deepl, 10000, 1000);
+    DEEPL("translate.deepl", message("translator.name.deepl"), TranslationIcons.Deepl, 131072, 1000);
 
     var primaryLanguage: Lang
         get() {
