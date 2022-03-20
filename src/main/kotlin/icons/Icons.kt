@@ -81,9 +81,6 @@ object Icons {
     @JvmField
     val Quote: Icon = load("/icons/quote.svg")
 
-    @JvmField
-    val RecordErrorInfo: Icon = load("/icons/recordErrorInfo.svg")
-
     @JvmStatic
     fun load(path: String): Icon {
         return IconManager.getInstance().getIcon(path, Icons::class.java)
