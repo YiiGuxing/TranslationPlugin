@@ -43,6 +43,8 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
 
     override fun getReportActionText(): String = adaptedMessage("error.report.to.yiiguxing.action")
 
+    override fun getPrivacyNoticeText(): String = adaptedMessage("error.report.notice")
+
     override fun getReporterAccount(): String = ReportCredentials.instance.userName
 
     override fun changeReporterAccount(parentComponent: Component) {
