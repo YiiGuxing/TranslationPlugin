@@ -28,7 +28,7 @@ enum class TranslationEngine(
     YOUDAO("ai.youdao", message("translator.name.youdao"), TranslationIcons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translator.name.baidu"), TranslationIcons.Baidu, 10000, 1000),
     ALI("translate.ali", message("translator.name.ali"), TranslationIcons.Ali, 5000),
-    DEEPL("translate.deepl", message("translator.name.deepl"), Icons.Deepl, 10000, 1000);
+    DEEPL("translate.deepl", message("translator.name.deepl"), TranslationIcons.Deepl, 10000, 1000);
 
     var primaryLanguage: Lang
         get() {
@@ -108,7 +108,7 @@ enum class TranslationEngine(
             DEEPL -> AppKeySettingsDialog(
                 message("settings.deepl.title"),
                 AppKeySettingsPanel(
-                    Icons.load("/image/deepl_translate_logo.png"),
+                    TranslationIcons.load("/image/deepl_translate_logo.png"),
                     "https://www.deepl.com/pro-api?cta=header-pro-api",
                     Settings.deeplTranslateSettings
                 ),
