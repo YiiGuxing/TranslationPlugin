@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel
-import icons.Icons
+import icons.TranslationIcons
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
@@ -18,7 +18,7 @@ class SpellComponent : BorderLayoutPanel() {
 
     val spellLabel = JLabel(
         message("translation.ui.pane.label.spell"),
-        Icons.AutoAwesome,
+        TranslationIcons.AutoAwesome,
         SwingConstants.LEADING
     )
 

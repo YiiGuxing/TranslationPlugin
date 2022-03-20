@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.PositionTracker
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
@@ -23,7 +23,7 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
     init {
-        templatePresentation.icon = Icons.Translation
+        templatePresentation.icon = TranslationIcons.Translation
         templatePresentation.text = adaptedMessage("action.TranslateRenderedDocSelectionAction.text")
 
         // 为了在菜单项上显示快捷键提示

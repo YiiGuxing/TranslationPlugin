@@ -12,12 +12,15 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.util.concurrency.AppExecutorUtil
-import icons.Icons
+import icons.TranslationIcons
 
 internal class TranslateRenderedDocAction(
     val editor: Editor,
     private val docComment: PsiDocCommentBase
-) : FixedIconToggleAction(Icons.Documentation, { adaptedMessage("action.TranslateRenderedDocAction.text") }) {
+) : FixedIconToggleAction(
+    TranslationIcons.Documentation,
+    { adaptedMessage("action.TranslateRenderedDocAction.text") }
+) {
 
     override fun isSelected(event: AnActionEvent): Boolean {
         return TranslatedDocComments.isTranslated(docComment)

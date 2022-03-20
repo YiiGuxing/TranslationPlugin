@@ -12,7 +12,7 @@ import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
-import icons.Icons
+import icons.TranslationIcons
 import javax.swing.Icon
 
 enum class TranslationEngine(
@@ -23,10 +23,10 @@ enum class TranslationEngine(
     val intervalLimit: Int = 500
 ) {
 
-    GOOGLE("translate.google", message("translator.name.google"), Icons.Google),
-    YOUDAO("ai.youdao", message("translator.name.youdao"), Icons.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translator.name.baidu"), Icons.Baidu, 10000, 1000),
-    ALI("translate.ali", message("translator.name.ali"), Icons.Ali, 5000);
+    GOOGLE("translate.google", message("translator.name.google"), TranslationIcons.Google),
+    YOUDAO("ai.youdao", message("translator.name.youdao"), TranslationIcons.Youdao, 5000),
+    BAIDU("fanyi.baidu", message("translator.name.baidu"), TranslationIcons.Baidu, 10000, 1000),
+    ALI("translate.ali", message("translator.name.ali"), TranslationIcons.Ali, 5000);
 
     var primaryLanguage: Lang
         get() {
@@ -75,7 +75,7 @@ enum class TranslationEngine(
             YOUDAO -> AppKeySettingsDialog(
                 message("settings.youdao.title"),
                 AppKeySettingsPanel(
-                    Icons.load("/image/youdao_translate_logo.png"),
+                    TranslationIcons.load("/image/youdao_translate_logo.png"),
                     "https://ai.youdao.com",
                     Settings.youdaoTranslateSettings
                 ),
@@ -84,7 +84,7 @@ enum class TranslationEngine(
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
                 AppKeySettingsPanel(
-                    Icons.load("/image/baidu_translate_logo.png"),
+                    TranslationIcons.load("/image/baidu_translate_logo.png"),
                     "https://fanyi-api.baidu.com/manage/developer",
                     Settings.baiduTranslateSettings
                 ),
@@ -93,7 +93,7 @@ enum class TranslationEngine(
             ALI -> AppKeySettingsDialog(
                 message("settings.ali.title"),
                 AppKeySettingsPanel(
-                    Icons.load("/image/ali_translate_logo.png"),
+                    TranslationIcons.load("/image/ali_translate_logo.png"),
                     "https://usercenter.console.aliyun.com/#/manage/ak",
                     Settings.aliTranslateSettings
                 ),

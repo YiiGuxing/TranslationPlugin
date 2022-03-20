@@ -21,11 +21,14 @@ import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.concurrency.AppExecutorUtil
-import icons.Icons
+import icons.TranslationIcons
 import javax.swing.Icon
 
 open class ToggleQuickDocTranslationAction :
-    FixedIconToggleAction(Icons.Documentation, { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }),
+    FixedIconToggleAction(
+        TranslationIcons.Documentation,
+        { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }
+    ),
     HintManagerImpl.ActionToIgnore,
     ImportantTranslationAction {
 

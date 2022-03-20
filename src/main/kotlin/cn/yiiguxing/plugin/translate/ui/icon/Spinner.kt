@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.icon
 
 import com.intellij.util.ui.AnimatedIcon
 import com.intellij.util.ui.JBDimension
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.Dimension
 
 internal class Spinner : AnimatedIcon("Spinner", ICONS, STEP_PASSIVE, CYCLE_LENGTH) {
@@ -15,8 +15,8 @@ internal class Spinner : AnimatedIcon("Spinner", ICONS, STEP_PASSIVE, CYCLE_LENG
     companion object {
         private const val CYCLE_LENGTH = 400
 
-        private val ICONS = Array(9) { Icons.load("/icons/spinner/step_${it}.svg") }
+        private val ICONS = Array(9) { TranslationIcons.load("/icons/spinner/step_${it}.svg") }
 
-        private val STEP_PASSIVE = Icons.load("/icons/spinner/passive.svg")
+        private val STEP_PASSIVE = TranslationIcons.load("/icons/spinner/passive.svg")
     }
 }
