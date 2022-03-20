@@ -22,7 +22,7 @@ import com.intellij.ui.*
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.util.ui.JBUI
-import icons.Icons
+import icons.TranslationIcons
 import net.miginfocom.layout.CC
 import java.awt.Dimension
 import javax.swing.*
@@ -130,9 +130,10 @@ abstract class SettingsForm {
     protected val showActionsInContextMenuOnlyWithSelectionCheckbox: JBCheckBox =
         JBCheckBox(message("settings.options.show.actions.only.with.selection"))
 
-    protected val supportLinkLabel: LinkLabel<*> = LinkLabel<Any>(message("support.or.donate"), Icons.Support).apply {
-        border = JBUI.Borders.empty(20, 0, 0, 0)
-    }
+    protected val supportLinkLabel: LinkLabel<*> =
+        LinkLabel<Any>(message("support.or.donate"), TranslationIcons.Support).apply {
+            border = JBUI.Borders.empty(20, 0, 0, 0)
+        }
 
     protected fun doLayout() {
         val generalPanel = titledPanel(message("settings.panel.title.general")) {

@@ -40,7 +40,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation("org.jsoup:jsoup:1.14.3")
-    implementation("org.apache.commons:commons-dbcp2:2.8.0")
+    implementation("org.apache.commons:commons-dbcp2:2.9.0")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
@@ -78,6 +78,8 @@ qodana {
 
 tasks {
     runIde {
+        systemProperties["idea.is.internal"] = true
+
         // Path to IDE distribution that will be used to run the IDE with the plugin.
         // ideDir.set(File("path to IDE-dependency"))
     }

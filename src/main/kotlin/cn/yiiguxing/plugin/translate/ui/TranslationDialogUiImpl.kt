@@ -18,7 +18,7 @@ import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.*
-import icons.Icons
+import icons.TranslationIcons
 import net.miginfocom.layout.CC
 import java.awt.Color
 import java.awt.Dimension
@@ -68,7 +68,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     override val detectedLanguageLabel: JLabel = JLabel()
     override val lightningLabel: JLabel = JLabel().apply {
         isOpaque = false
-        icon = Icons.Lightning
+        icon = TranslationIcons.Lightning
     }
     override val srcTransliterationLabel: JLabel = TransliterationLabel()
     override val targetTransliterationLabel: JLabel = TransliterationLabel()
@@ -166,7 +166,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         }
 
         expandDictViewerButton.apply {
-            setIcons(Icons.ArrowDownExpand)
+            setIcons(TranslationIcons.ArrowDownExpand)
             text = message("translation.dialog.more.translations")
             horizontalTextPosition = SwingConstants.LEADING
             foreground = JBUI.CurrentTheme.Label.foreground()
@@ -174,7 +174,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
             setListener({ _, _ -> expandDictViewer() }, null)
         }
         collapseDictViewerButton.apply {
-            setIcons(Icons.ArrowUpCollapse)
+            setIcons(TranslationIcons.ArrowUpCollapse)
             setListener({ _, _ -> collapseDictViewer() }, null)
         }
     }
@@ -289,11 +289,11 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     }
 
     private fun setButtonIcons() {
-        swapButton.setIcons(Icons.Swap)
+        swapButton.setIcons(TranslationIcons.Swap)
         copyButton.setIcons(AllIcons.Actions.Copy)
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
-        starButton.setIcons(Icons.GrayStarOff)
+        starButton.setIcons(TranslationIcons.GrayStarOff)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =

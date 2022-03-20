@@ -8,7 +8,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
-import icons.Icons
+import icons.TranslationIcons
 
 /**
  * Translate quick doc selection action
@@ -28,7 +28,7 @@ class TranslateQuickDocSelectionAction :
         //don't show in toolbar, invoke via context menu or with keyboard shortcut
         //to not clash with "Translate documentation" toggle
         e.presentation.isEnabledAndVisible = quickDocHasSelection(e) && !e.isFromActionToolbar
-        e.presentation.icon = Icons.Translation
+        e.presentation.icon = TranslationIcons.Translation
     }
 
     override fun actionPerformed(e: AnActionEvent) {

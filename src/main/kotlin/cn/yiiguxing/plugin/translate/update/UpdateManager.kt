@@ -21,7 +21,7 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.jcef.JBCefApp
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
@@ -93,7 +93,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             .show(project)
     }
 
-    private class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
+    private class SupportAction : DumbAwareAction(message("support.notification"), null, TranslationIcons.Support) {
         override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
     }
 

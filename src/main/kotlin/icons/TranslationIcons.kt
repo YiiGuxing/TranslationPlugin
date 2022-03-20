@@ -5,7 +5,7 @@ import com.intellij.ui.IconManager
 import com.intellij.ui.JBColor
 import javax.swing.Icon
 
-object Icons {
+object TranslationIcons {
 
     @JvmField
     val Translation: Icon = load("/icons/translation.svg")
@@ -84,11 +84,8 @@ object Icons {
     @JvmField
     val Quote: Icon = load("/icons/quote.svg")
 
-    @JvmField
-    val RecordErrorInfo: Icon = load("/icons/recordErrorInfo.svg")
-
     @JvmStatic
     fun load(path: String): Icon {
-        return IconManager.getInstance().getIcon(path, Icons::class.java)
+        return IconManager.getInstance().getIcon(path, TranslationIcons::class.java)
     }
 }

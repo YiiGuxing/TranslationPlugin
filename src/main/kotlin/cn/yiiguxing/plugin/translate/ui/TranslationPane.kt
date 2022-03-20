@@ -32,7 +32,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.FocusAdapter
@@ -291,8 +291,8 @@ abstract class TranslationPane<T : JComponent>(
                 disabledIcon = AllIcons.Actions.Copy.disabled()
                 addActionListener { copy() }
             }
-            val translate = JBMenuItem(message("menu.item.translate"), Icons.Translation).apply {
-                disabledIcon = Icons.Translation.disabled()
+            val translate = JBMenuItem(message("menu.item.translate"), TranslationIcons.Translation).apply {
+                disabledIcon = TranslationIcons.Translation.disabled()
                 addActionListener {
                     translation?.let { translation ->
                         selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->
@@ -425,12 +425,12 @@ abstract class TranslationPane<T : JComponent>(
 
     @Suppress("DuplicatedCode")
     private fun Viewer.appendStarButton(translation: Translation) {
-        val starIcon = if (translation.favoriteId == null) Icons.StarOff else Icons.StarOn
+        val starIcon = if (translation.favoriteId == null) TranslationIcons.StarOff else TranslationIcons.StarOn
         val starLabel = LinkLabel("", starIcon, StarButtons.listener, translation)
         starLabel.alignmentY = 0.9f
         starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
         translation.observableFavoriteId.observe(this@TranslationPane) { favoriteId, _ ->
-            starLabel.icon = if (favoriteId == null) Icons.StarOff else Icons.StarOn
+            starLabel.icon = if (favoriteId == null) TranslationIcons.StarOff else TranslationIcons.StarOn
             starLabel.toolTipText = getStarButtonToolTipText(favoriteId)
         }
 

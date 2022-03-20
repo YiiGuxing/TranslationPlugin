@@ -42,7 +42,7 @@ import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.Alarm
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.*
@@ -313,8 +313,8 @@ class TranslationDialog(
                     disabledIcon = AllIcons.Actions.Copy.disabled()
                     addActionListener { copy() }
                 }
-                val translate = JBMenuItem(message("menu.item.translate"), Icons.Translation).apply {
-                    disabledIcon = Icons.Translation.disabled()
+                val translate = JBMenuItem(message("menu.item.translate"), TranslationIcons.Translation).apply {
+                    disabledIcon = TranslationIcons.Translation.disabled()
                     addActionListener {
                         selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->
                             if (this@setupPopupMenu === inputTextArea) {
@@ -440,7 +440,7 @@ class TranslationDialog(
 
     private fun updateStarButton(translation: Translation?) {
         fun updatePresentation(favoriteId: Long?) {
-            val icon = if (favoriteId == null) Icons.GrayStarOff else Icons.StarOn
+            val icon = if (favoriteId == null) TranslationIcons.GrayStarOff else TranslationIcons.StarOn
             starButton.setIcons(icon)
             starButton.toolTipText = StarButtons.toolTipText(favoriteId)
         }

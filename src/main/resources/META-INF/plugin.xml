@@ -3,6 +3,9 @@
     <name>Translation</name>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
+    <resource-bundle>messages.TranslationBundle</resource-bundle>
+    <resource-bundle>messages.LanguageBundle</resource-bundle>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends optional="true" config-file="action-group.xml">com.intellij.modules.lang</depends>
@@ -61,7 +64,7 @@
 
         <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslatorWidgetFactory"/>
         <toolWindow id="Word Book"
-                    icon="Icons.Wordbook"
+                    icon="TranslationIcons.Wordbook"
                     anchor="right"
                     secondary="true"
                     doNotActivateOnStart="true"
@@ -83,7 +86,7 @@
 
     <actions>
         <action id="$ShowTranslationDialogAction"
-                icon="Icons.Translation"
+                icon="TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
@@ -97,19 +100,19 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
         </action>
         <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
-                icon="Icons.Translation">
+                icon="TranslationIcons.Translation">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
         </action>
         <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
-                icon="Icons.TranslationReplace">
+                icon="TranslationIcons.TranslationReplace">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
         <action id="$TranslateDocumentationAction"
-                icon="Icons.Documentation"
+                icon="TranslationIcons.Documentation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"/>
         <action id="$InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"/>
@@ -129,7 +132,7 @@
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$TerminalTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
-                icon="Icons.Translation"
+                icon="TranslationIcons.Translation"
                 use-shortcut-of="$EditorTranslateAction"/>
         <action id="$ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"

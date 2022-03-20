@@ -26,11 +26,16 @@ import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
+import com.intellij.openapi.progress.EmptyProgressIndicatorBase
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.TaskInfo
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.ReadonlyStatusHandler
+import com.intellij.openapi.wm.ex.ProgressIndicatorEx
 import com.intellij.ui.JBColor
 import com.intellij.util.concurrency.EdtScheduledExecutorService
 import java.lang.ref.WeakReference
@@ -91,78 +96,102 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         val language = event.getData(LangDataKeys.LANGUAGE)
         val editorRef = WeakReference(editor)
-        editor.document.getText(selectionRange)
+        val text = editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
-            ?.let { text ->
-                // TODO refactor: show progress indicator
-                val processedText = text.processBeforeTranslate() ?: text
-                val primaryLanguage = TranslateService.translator.primaryLanguage
-                fun translate(targetLang: Lang, reTranslate: Boolean = false) {
-                    TranslateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
-                        override fun onSuccess(translation: Translation) {
-                            if (reTranslate && translation.srcLang == Lang.ENGLISH
-                                && primaryLanguage != Lang.ENGLISH
-                                && targetLang == Lang.ENGLISH
-                            ) {
-                                val delay = TranslateService.translator.intervalLimit
-                                if (delay <= 0) {
-                                    translate(primaryLanguage)
-                                } else {
-                                    EdtScheduledExecutorService.getInstance()
-                                        .schedule({ translate(primaryLanguage) }, delay.toLong(), TimeUnit.MILLISECONDS)
-                                }
-                            } else {
-                                val translationSet =
-                                    translation.dictDocument?.translations?.toMutableSet() ?: mutableSetOf()
-                                translation.translation?.let { translationSet.add(it) }
-                                val items = translationSet
-                                    .asSequence()
-                                    .filter { it.isNotEmpty() }
-                                    .map { it.fixWhitespace() }
-                                    .toList()
-                                val elementsToReplace = createReplaceElements(language, items, translation.targetLang)
+            ?: return
+        val processedText = text.processBeforeTranslate() ?: text
+        val primaryLanguage = TranslateService.translator.primaryLanguage
 
-                                editorRef.get()?.let { e ->
-                                    invokeLater {
-                                        if (e is TextComponentEditor) {
-                                            e.showListPopup(selectionRange, text, elementsToReplace)
-                                        } else if (project != null) {
-                                            e.showLookup(project, selectionRange, text, elementsToReplace)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+        val indicatorTitle = message("action.TranslateAndReplaceAction.description")
+        val progressIndicator = BackgroundableProcessIndicator(project, indicatorTitle, null, "", true)
+        progressIndicator.text = message("action.TranslateAndReplaceAction.task.text")
+        progressIndicator.text2 = message("action.TranslateAndReplaceAction.task.text2", processedText)
+        progressIndicator.addStateDelegate(ProcessIndicatorDelegate(progressIndicator))
 
-                        override fun onError(throwable: Throwable) {
-                            editorRef.get()?.let { editor ->
-                                invokeLater {
-                                    if (editor is TextComponentEditor) {
-                                        editor.showListPopup(selectionRange, text, emptyList())
-                                    } else if (project != null) {
-                                        editor.showLookup(project, selectionRange, text, emptyList())
-                                    }
-                                }
-
-                                TranslationNotifications.showTranslationErrorNotification(
-                                    editor.project,
-                                    message("translate.and.replace.notification.title"),
-                                    null,
-                                    throwable
-                                )
-                            }
-                        }
-                    })
-                }
-
-                if (Settings.selectTargetLanguageBeforeReplacement) {
-                    editor.showTargetLanguagesPopup { translate(it) }
-                } else {
-                    val targetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
-                    translate(targetLang, true)
-                }
+        fun checkProcessCanceledAndEditorDisposed(): Boolean {
+            if (progressIndicator.isCanceled) {
+                // no need to finish the progress indicator,
+                // because it's already finished in the delegate.
+                return true
             }
+            if (editorRef.get().let { it == null || it.isDisposed }) {
+                progressIndicator.processFinish()
+                return true
+            }
+            return false
+        }
+
+        fun translate(targetLang: Lang, reTranslate: Boolean = false) {
+            if (checkProcessCanceledAndEditorDisposed()) {
+                return
+            }
+            TranslateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
+                override fun onSuccess(translation: Translation) {
+                    if (checkProcessCanceledAndEditorDisposed()) {
+                        return
+                    }
+                    if (reTranslate
+                        && translation.srcLang == Lang.ENGLISH
+                        && primaryLanguage != Lang.ENGLISH
+                        && targetLang == Lang.ENGLISH
+                    ) {
+                        val delay = TranslateService.translator.intervalLimit
+                        if (delay <= 0) {
+                            translate(primaryLanguage)
+                        } else {
+                            EdtScheduledExecutorService.getInstance()
+                                .schedule({ translate(primaryLanguage) }, delay.toLong(), TimeUnit.MILLISECONDS)
+                        }
+                    } else {
+                        progressIndicator.processFinish()
+                        val elementsToReplace = createReplaceElements(translation, language)
+                        editorRef.get()?.showResultsIfNeeds(project, selectionRange, text, elementsToReplace)
+                    }
+                }
+
+                override fun onError(throwable: Throwable) {
+                    if (checkProcessCanceledAndEditorDisposed()) {
+                        return
+                    }
+
+                    progressIndicator.processFinish()
+                    editorRef.get()?.showResultsIfNeeds(project, selectionRange, text, emptyList())
+                    TranslationNotifications.showTranslationErrorNotification(
+                        project, message("translate.and.replace.notification.title"), null, throwable
+                    )
+                }
+            })
+        }
+
+        if (Settings.selectTargetLanguageBeforeReplacement) {
+            editor.showTargetLanguagesPopup { translate(it) }
+        } else {
+            val targetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
+            translate(targetLang, true)
+        }
     }
+
+
+    private class ProcessIndicatorDelegate(
+        private val progressIndicator: BackgroundableProcessIndicator,
+    ) : EmptyProgressIndicatorBase(), ProgressIndicatorEx {
+        override fun cancel() {
+            // 在用户取消的时候使`progressIndicator`立即结束并且不再显示，否则需要等待任务结束才能跟着结束
+            progressIndicator.processFinish()
+        }
+
+        override fun isCanceled(): Boolean = true
+        override fun finish(task: TaskInfo) = Unit
+        override fun isFinished(task: TaskInfo): Boolean = true
+        override fun wasStarted(): Boolean = false
+        override fun processFinish() = Unit
+        override fun initStateFrom(indicator: ProgressIndicator) = Unit
+
+        override fun addStateDelegate(delegate: ProgressIndicatorEx) {
+            throw UnsupportedOperationException()
+        }
+    }
+
 
     private companion object {
 
@@ -199,10 +228,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             showListPopup(step, 10)
         }
 
-
         fun Editor.canShowPopup(selectionRange: TextRange, targetText: String): Boolean {
-            return !isDisposed &&
-                    selectionRange.endOffset <= document.textLength &&
+            return selectionRange.endOffset <= document.textLength &&
                     targetText == document.getText(selectionRange) &&
                     selectionRange.containsOffset(caretModel.offset)
         }
@@ -238,6 +265,9 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             targetText: String,
             elementsToReplace: List<String>
         ): Boolean {
+            if (isDisposed) {
+                return false
+            }
             if (!canShowPopup(selectionRange, targetText)) {
                 return false
             }
@@ -250,16 +280,24 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             return true
         }
 
-        fun Editor.showLookup(
-            project: Project,
+        fun Editor.showResultsIfNeeds(
+            project: Project?,
             selectionRange: TextRange,
             targetText: String,
-            elementsToReplace: List<String>
+            elements: List<String>
         ) {
-            if (!beforeShowPopup(selectionRange, targetText, elementsToReplace)) {
+            if (!beforeShowPopup(selectionRange, targetText, elements)) {
                 return
             }
 
+            if (this is TextComponentEditor) {
+                showListPopup(selectionRange, elements)
+            } else if (project != null) {
+                showLookup(project, selectionRange, elements)
+            }
+        }
+
+        fun Editor.showLookup(project: Project, selectionRange: TextRange, elementsToReplace: List<String>) {
             val markupModel = markupModel
             val lookupElements = elementsToReplace.map(LookupElementBuilder::create).toTypedArray()
             val lookup = LookupManager.getInstance(project).showLookup(this, *lookupElements) ?: return
@@ -306,11 +344,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }
         }
 
-        fun TextComponentEditor.showListPopup(selectionRange: TextRange, targetText: String, elements: List<String>) {
-            if (!beforeShowPopup(selectionRange, targetText, elements)) {
-                return
-            }
-
+        fun TextComponentEditor.showListPopup(selectionRange: TextRange, elements: List<String>) {
             val step = object : SpeedSearchListPopupStep<String>(elements) {
                 override fun onChosen(selectedValue: String, finalChoice: Boolean): PopupStep<*>? {
                     replaceText(selectionRange, selectedValue)
@@ -320,12 +354,19 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             showListPopup(step, 10)
         }
 
-        fun createReplaceElements(language: Language?, items: List<String>, targetLang: Lang): List<String> {
+        fun createReplaceElements(translation: Translation, language: Language?): List<String> {
+            val translationSet = translation.dictDocument?.translations?.toMutableSet() ?: mutableSetOf()
+            translation.translation?.let { translationSet.add(it) }
+            val items = translationSet.asSequence()
+                .filter { it.isNotEmpty() }
+                .map { it.fixWhitespace() }
+                .toList()
+
             if (items.isEmpty()) {
                 return emptyList()
             }
 
-            if (targetLang != Lang.ENGLISH || language == PlainTextLanguage.INSTANCE) {
+            if (translation.targetLang != Lang.ENGLISH || language == PlainTextLanguage.INSTANCE) {
                 return items.filter { it.isNotBlank() }
             }
 

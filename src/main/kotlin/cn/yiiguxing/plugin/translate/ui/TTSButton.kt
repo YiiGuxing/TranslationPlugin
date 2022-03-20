@@ -9,7 +9,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.util.ui.JBDimension
-import icons.Icons
+import icons.TranslationIcons
 import javax.swing.SwingConstants
 
 /**
@@ -24,9 +24,9 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
     private lateinit var dataSource: () -> Pair<String, Lang>?
 
     init {
-        icon = Icons.Audio
-        disabledIcon = Icons.AudioDisabled
-        setHoveringIcon(Icons.AudioPressed)
+        icon = TranslationIcons.Audio
+        disabledIcon = TranslationIcons.AudioDisabled
+        setHoveringIcon(TranslationIcons.AudioPressed)
         myPaintUnderline = false
         toolTipText = message("tooltip.listen")
         horizontalAlignment = SwingConstants.CENTER
@@ -53,14 +53,14 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
                 return
             }
 
-            icon = Icons.TTSSuspend
-            setHoveringIcon(Icons.TTSSuspendHovering)
+            icon = TranslationIcons.TTSSuspend
+            setHoveringIcon(TranslationIcons.TTSSuspendHovering)
             TextToSpeech.speak(project, text, lang).let { disposable ->
                 ttsDisposable = disposable
                 Disposer.register(disposable) {
                     ttsDisposable = null
-                    icon = Icons.Audio
-                    setHoveringIcon(Icons.AudioPressed)
+                    icon = TranslationIcons.Audio
+                    setHoveringIcon(TranslationIcons.AudioPressed)
                 }
             }
         }

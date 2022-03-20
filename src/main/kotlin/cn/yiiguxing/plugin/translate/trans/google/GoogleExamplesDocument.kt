@@ -7,7 +7,7 @@ import cn.yiiguxing.plugin.translate.util.chunked
 import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.Color
 import javax.swing.text.*
 
@@ -97,7 +97,7 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
                 StyleConstants.setForeground(style, JBColor(0x555555, 0xC8CACC))
             }
             getStyleOrAdd(ICON_QUOTE_STYLE) { style ->
-                StyleConstants.setIcon(style, Icons.Quote)
+                StyleConstants.setIcon(style, TranslationIcons.Quote)
             }
             getStyleOrAdd(EXAMPLE_FOLDING_STYLE, defaultStyle) { style ->
                 StyleConstants.setFontSize(style, getFont(style).size - 1)

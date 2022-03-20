@@ -30,7 +30,7 @@ import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.ui.content.ContentManagerListener
 import com.intellij.util.ui.JBUI
-import icons.Icons
+import icons.TranslationIcons
 import java.awt.datatransfer.StringSelection
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
@@ -154,7 +154,7 @@ class WordBookView {
     private fun WordBookPanel.setupMenu(project: Project) {
         val panel = this@setupMenu
         popupMenu = JBPopupMenu().also { menu ->
-            val detailItem = createMenuItem(message("wordbook.window.menu.detail"), Icons.Detail) {
+            val detailItem = createMenuItem(message("wordbook.window.menu.detail"), TranslationIcons.Detail) {
                 panel.selectedWord?.let { word -> openWordDetails(project, word) }
             }
             val copyItem = createMenuItem(message("wordbook.window.menu.copy"), AllIcons.Actions.Copy) {
