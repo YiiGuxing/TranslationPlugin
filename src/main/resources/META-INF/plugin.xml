@@ -3,6 +3,9 @@
     <name>Translation</name>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
+    <resource-bundle>messages.TranslationBundle</resource-bundle>
+    <resource-bundle>messages.LanguageBundle</resource-bundle>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends optional="true" config-file="action-group.xml">com.intellij.modules.lang</depends>
