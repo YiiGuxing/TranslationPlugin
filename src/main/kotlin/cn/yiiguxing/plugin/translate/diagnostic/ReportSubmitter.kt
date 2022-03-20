@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.diagnostic.github.issues.Issue
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.credentialStore.Credentials
+import com.intellij.diagnostic.AbstractMessage
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
 import com.intellij.notification.NotificationType
@@ -100,9 +101,9 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         consumer: Consumer<in SubmittedReportInfo>
     ): Boolean {
         val event = events[0]
-        val message = event.message
-        val stacktrace = event.throwableText
-        if (stacktrace.isNullOrBlank()) {
+        val message = event.getUsefulMessage()
+        val stacktrace = event.throwableText?.trim()
+        if (stacktrace.isNullOrEmpty()) {
             return false
         }
 
@@ -119,6 +120,10 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         }.queue()
 
         return true
+    }
+
+    private fun IdeaLoggingEvent.getUsefulMessage(): String? {
+        return message ?: (data as? AbstractMessage)?.throwable?.message
     }
 
     private fun doSubmit(
