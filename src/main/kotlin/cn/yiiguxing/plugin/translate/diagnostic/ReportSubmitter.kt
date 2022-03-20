@@ -3,9 +3,10 @@ package cn.yiiguxing.plugin.translate.diagnostic
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppException
 import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppService
+import cn.yiiguxing.plugin.translate.diagnostic.github.issues.GitHubIssuesApis
+import cn.yiiguxing.plugin.translate.diagnostic.github.issues.Issue
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.*
-import com.google.gson.annotations.SerializedName
 import com.intellij.credentialStore.Credentials
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
@@ -24,14 +25,20 @@ import com.intellij.openapi.ui.MessageConstants
 import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.Consumer
-import com.intellij.util.io.RequestBuilder
 import com.intellij.xml.util.XmlStringUtil
+import org.jetbrains.kotlin.ir.types.IdSignatureValues.result
 import java.awt.Component
 import java.text.DateFormat
 import java.util.*
 import javax.swing.JComponent
 
 internal class ReportSubmitter : ErrorReportSubmitter() {
+
+    companion object {
+        private const val TARGET_REPOSITORY = "YiiGuxing/TranslationPlugin"
+
+        private val LOG = Logger.getInstance(ReportSubmitter::class.java)
+    }
 
     override fun getReportActionText(): String = adaptedMessage("error.report.to.yiiguxing.action")
 
@@ -171,9 +178,9 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
     }
 
     private fun findIssue(issueId: String): Issue? {
-        val url = "$ISSUES_SEARCH_URL+$issueId"
-        val result = Http.request<IssueSearchResult>(url) { acceptGitHubV3Json() }
-        val issue = result.items.firstOrNull()
+        val query = "repo:$TARGET_REPOSITORY is:issue in:body $issueId"
+        val searchResult = GitHubIssuesApis.search(query, page = 1, perPage = 1)
+        val issue = searchResult.items.firstOrNull()
         if (issue != null) {
             LOG.d("Issue is actually a duplicate of existing one: $result")
         }
@@ -208,10 +215,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             }
             .toString()
 
-        return Http.postJson<Issue>(NEW_ISSUE_POST_URL, mapOf("title" to title, "body" to body)) {
-            acceptGitHubV3Json()
-            tuner { it.setRequestProperty("Authorization", credentials.getPasswordAsString()) }
-        }
+        return GitHubIssuesApis.create(TARGET_REPOSITORY, title, body, credentials.getPasswordAsString()!!)
     }
 
     private fun StringBuilder.appendEnvironments() = apply {
@@ -242,22 +246,4 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         append("Operating system: ", SystemInfo.getOsNameAndVersion(), "\n")
         append("Last action id: ", IdeaLogger.ourLastActionId, "\n")
     }
-
-
-    internal data class Issue(val number: Int, @SerializedName("html_url") val htmlUrl: String)
-
-    internal data class IssueSearchResult(val items: List<Issue>)
-
-
-    companion object {
-        private const val API_BASE_URL = "https://api.github.com"
-        private const val REPO = "YiiGuxing/TranslationPlugin"
-        private const val NEW_ISSUE_POST_URL = "$API_BASE_URL/repos/$REPO/issues"
-        private const val ISSUES_SEARCH_URL = "$API_BASE_URL/search/issues?per_page=1&q=repo:$REPO+is:issue+in:body"
-
-        private val LOG = Logger.getInstance(ReportSubmitter::class.java)
-
-        private fun RequestBuilder.acceptGitHubV3Json() = accept("application/vnd.github.v3+json")
-    }
-
 }
