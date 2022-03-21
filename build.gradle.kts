@@ -1,5 +1,5 @@
+
 import org.apache.tools.ant.filters.EscapeUnicode
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -44,6 +44,13 @@ dependencies {
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
+    }
+}
+
+// Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
@@ -117,18 +124,6 @@ tasks {
     wrapper {
         gradleVersion = properties("gradleVersion")
         distributionType = Wrapper.DistributionType.ALL
-    }
-
-    // Set the JVM compatibility versions
-    properties("javaVersion").let {
-        withType<JavaCompile> {
-            sourceCompatibility = it
-            targetCompatibility = it
-            options.encoding = "UTF-8"
-        }
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = it
-        }
     }
 
     withType<ProcessResources> {
