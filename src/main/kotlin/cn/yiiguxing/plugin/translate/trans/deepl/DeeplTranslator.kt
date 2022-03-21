@@ -9,12 +9,13 @@ import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
+import org.jsoup.nodes.Document
 import javax.swing.Icon
 
 /**
  * Deepl translator
  */
-object DeeplTranslator : AbstractTranslator() {
+object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private const val DEEPL_FREE_TRANSLATE_API_URL = "https://api-free.deepl.com/v2/translate"
     private const val DEEPL_PRO_TRANSLATE_API_URL = "https://api.deepl.com/v2/translate"
@@ -142,5 +143,38 @@ object DeeplTranslator : AbstractTranslator() {
                 throw TranslationResultException(translations[0].code)
             }
         }.toTranslation()
+    }
+
+    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
+        return checkError {
+                processAndTranslateDocumentation(documentation) {
+                translateDocumentation(it, srcLang, targetLang)
+            }
+        }
+    }
+
+    private fun processAndTranslateDocumentation(
+        documentation: Document,
+        translate: (String) -> String
+    ): Document {
+        val body = documentation.body()
+        val content = body.html()
+        if (content.isBlank()) {
+            return documentation
+        }
+
+        val translation = translate(content)
+
+        body.html(translation)
+
+        return documentation
+    }
+
+    private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
+        return SimpleTranslateClient(this, DeeplTranslator::call, DeeplTranslator::parseTranslation).execute(
+            documentation,
+            srcLang,
+            targetLang
+        ).translation ?: ""
     }
 }
