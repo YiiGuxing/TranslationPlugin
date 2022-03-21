@@ -25,6 +25,7 @@
     <depends optional="true" config-file="properties-doc.xml">com.intellij.properties</depends>
     <depends optional="true" config-file="rest-doc.xml">com.jetbrains.restClient</depends>
     <depends optional="true" config-file="ruby-doc.xml">com.intellij.modules.ruby</depends>
+    <depends optional="true" config-file="rust-doc.xml">org.rust.lang</depends>
     <depends optional="true" config-file="scala-doc.xml">org.intellij.scala</depends>
     <depends optional="true" config-file="shell-doc.xml">com.jetbrains.sh</depends>
     <depends optional="true" config-file="sql-doc.xml">com.intellij.modules.sql</depends>
