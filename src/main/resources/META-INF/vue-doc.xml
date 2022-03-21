@@ -7,5 +7,4 @@
                 language="VueJS" order="first"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
     </extensions>
-
 </idea-plugin>

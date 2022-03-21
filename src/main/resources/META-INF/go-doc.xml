@@ -5,7 +5,6 @@
                 implementationClass="cn.yiiguxing.plugin.translate.provider.GoDocumentationElementProvider"/>
     </extensions>
 
-
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
                 language="go" order="first"
