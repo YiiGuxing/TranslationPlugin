@@ -17,8 +17,7 @@ internal fun uiTest(
     uiProvider: (() -> Container)
 ) {
     IconLoader.activate()
-    @Suppress("UnstableApiUsage")
-    IconManager.activate()
+    IconManager.activate(null)
     val laf = if (darcula) DarculaLaf() else IntelliJLaf()
     UIManager.setLookAndFeel(laf)
 
