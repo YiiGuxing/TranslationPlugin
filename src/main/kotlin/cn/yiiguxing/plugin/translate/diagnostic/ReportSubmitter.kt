@@ -27,7 +27,6 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.Consumer
 import com.intellij.xml.util.XmlStringUtil
-import org.jetbrains.kotlin.ir.types.IdSignatureValues.result
 import java.awt.Component
 import java.text.DateFormat
 import java.util.*
@@ -189,7 +188,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         val searchResult = GitHubIssuesApis.search(query, page = 1, perPage = 1)
         val issue = searchResult.items.firstOrNull()
         if (issue != null) {
-            LOG.d("Issue is actually a duplicate of existing one: $result")
+            LOG.d("Issue is actually a duplicate of existing one: $issue")
         }
 
         return issue
