@@ -16,11 +16,18 @@ import javax.swing.JComponent
  */
 class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
+    private var lastPopupTitle: String? = null
+
     init {
         setPopupTitle(message("translator.popup.title"))
         isEnabledInModalContext = true
         templatePresentation.text = message("action.SwitchTranslatorAction.text")
         templatePresentation.description = message("action.SwitchTranslatorAction.description")
+    }
+
+    override fun setPopupTitle(popupTitle: String?) {
+        super.setPopupTitle(popupTitle)
+        lastPopupTitle = popupTitle
     }
 
     override fun update(e: AnActionEvent) {
@@ -39,10 +46,10 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
         return object : ComboBoxButton(presentation) {
             override fun createPopup(onDispose: Runnable?): JBPopup {
-                val originalPopupTitle = myPopupTitle
-                myPopupTitle = null
+                val originalPopupTitle = lastPopupTitle
+                setPopupTitle(null)
                 val popup = super.createPopup(onDispose)
-                myPopupTitle = originalPopupTitle
+                setPopupTitle(originalPopupTitle)
                 return popup
             }
         }

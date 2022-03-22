@@ -5,6 +5,7 @@ package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.code
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger

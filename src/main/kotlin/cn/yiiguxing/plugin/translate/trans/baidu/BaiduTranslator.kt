@@ -5,10 +5,7 @@ package cn.yiiguxing.plugin.translate.trans.baidu
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
-import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.md5
+import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
