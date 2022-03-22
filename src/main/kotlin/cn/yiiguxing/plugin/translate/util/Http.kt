@@ -92,6 +92,9 @@ object Http {
     private fun HttpRequests.Request.checkResponseCode() {
         val responseCode = (connection as HttpURLConnection).responseCode
         if (responseCode >= 400) {
+            val message = readError()
+            logger.w("RESPONSE ==> $url\n\t|[$responseCode]==> $message")
+
             throw HttpRequests.HttpStatusException("Request failed with status code $responseCode", responseCode, url)
         }
     }

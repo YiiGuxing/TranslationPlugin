@@ -9,7 +9,7 @@ import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.components.ActionLink
+import com.intellij.ui.components.BrowserLink
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.fields.ExtendableTextComponent
 import com.intellij.ui.components.fields.ExtendableTextField
@@ -33,7 +33,7 @@ internal class GitHubDeviceLoginDialog(
     init {
         title = message("github.login.dialog.title")
         isModal = true
-        setResizable(false)
+        isResizable = false
         init()
     }
 
@@ -56,10 +56,7 @@ internal class GitHubDeviceLoginDialog(
             add(text, spanX().gapBottom(JBUIScale.scale(4).toString()).wrap())
 
             add(JBLabel(message("github.login.dialog.website.label")))
-            add(
-                ActionLink(deviceCode.verificationUri) { BrowserUtil.browse(deviceCode.verificationUri) },
-                fillX().wrap()
-            )
+            add(BrowserLink(deviceCode.verificationUri), fillX().wrap())
             add(JBLabel(message("github.login.dialog.device.code.label")))
 
             val userCodeTextField = ExtendableTextField(deviceCode.userCode).apply {

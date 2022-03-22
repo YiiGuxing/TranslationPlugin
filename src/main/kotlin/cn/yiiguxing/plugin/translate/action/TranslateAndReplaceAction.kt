@@ -26,11 +26,10 @@ import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
-import com.intellij.openapi.progress.PerformInBackgroundOption
+import com.intellij.openapi.progress.EmptyProgressIndicatorBase
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.TaskInfo
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.util.TextRange
@@ -104,13 +103,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val primaryLanguage = TranslateService.translator.primaryLanguage
 
         val indicatorTitle = message("action.TranslateAndReplaceAction.description")
-        val progressIndicator = BackgroundableProcessIndicator(
-            project, indicatorTitle,
-            PerformInBackgroundOption.ALWAYS_BACKGROUND,
-            null,
-            "",
-            true
-        )
+        val progressIndicator = BackgroundableProcessIndicator(project, indicatorTitle, null, "", true)
         progressIndicator.text = message("action.TranslateAndReplaceAction.task.text")
         progressIndicator.text2 = message("action.TranslateAndReplaceAction.task.text2", processedText)
         progressIndicator.addStateDelegate(ProcessIndicatorDelegate(progressIndicator))
@@ -181,7 +174,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     private class ProcessIndicatorDelegate(
         private val progressIndicator: BackgroundableProcessIndicator,
-    ) : AbstractProgressIndicatorBase(), ProgressIndicatorEx {
+    ) : EmptyProgressIndicatorBase(), ProgressIndicatorEx {
         override fun cancel() {
             // 在用户取消的时候使`progressIndicator`立即结束并且不再显示，否则需要等待任务结束才能跟着结束
             progressIndicator.processFinish()
