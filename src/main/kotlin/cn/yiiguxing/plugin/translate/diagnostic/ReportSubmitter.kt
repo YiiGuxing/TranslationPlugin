@@ -22,12 +22,11 @@ import com.intellij.openapi.diagnostic.SubmittedReportInfo
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageConstants
 import com.intellij.openapi.ui.MessageDialogBuilder
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.Consumer
 import com.intellij.xml.util.XmlStringUtil
-import org.jetbrains.kotlin.ir.types.IdSignatureValues.result
 import java.awt.Component
 import java.text.DateFormat
 import java.util.*
@@ -60,8 +59,8 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
                 .show(project)
 
             when (choice) {
-                MessageConstants.YES -> reportCredentials.clear()
-                MessageConstants.NO -> {
+                Messages.YES -> reportCredentials.clear()
+                Messages.NO -> {
                     // Use anonymous account
                     reportCredentials.clear()
                     return
@@ -189,7 +188,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         val searchResult = GitHubIssuesApis.search(query, page = 1, perPage = 1)
         val issue = searchResult.items.firstOrNull()
         if (issue != null) {
-            LOG.d("Issue is actually a duplicate of existing one: $result")
+            LOG.d("Issue is actually a duplicate of existing one: $issue")
         }
 
         return issue

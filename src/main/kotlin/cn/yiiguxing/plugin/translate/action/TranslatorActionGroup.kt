@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.PlatformDataKeys.CONTEXT_COMPONENT
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
@@ -24,7 +25,7 @@ open class TranslatorActionGroup(
     override fun actionPerformed(e: AnActionEvent) {
         val dataContext = e.dataContext
         val popup = createActionPopup(dataContext)
-        PlatformCoreDataKeys.CONTEXT_COMPONENT
+        CONTEXT_COMPONENT
             .getData(dataContext)
             ?.let { component -> popup.showUnderneathOf(component) }
             ?: popup.showInBestPositionFor(dataContext)

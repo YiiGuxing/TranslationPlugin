@@ -36,7 +36,7 @@ object Notifications {
             .setTitle(title)
             .setListener(UrlOpeningListener)
             // actions的折叠是从左往右折叠的
-            .addActions(actions.toList() as Collection<AnAction>)
+            .apply { addActions(actions.toList()) }
             .show(project)
     }
 

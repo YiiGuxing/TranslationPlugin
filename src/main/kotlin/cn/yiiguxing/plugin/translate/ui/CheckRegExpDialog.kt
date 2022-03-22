@@ -25,7 +25,7 @@ class CheckRegExpDialog(project: Project, regExp: String, private val ok: (Strin
 
     init {
         title = message("settings.check.regex.title")
-        isResizable = false
+        setResizable(false)
 
         regExpPsiFile = PsiFileFactory.getInstance(project).createFileFromText(RegExpLanguage.INSTANCE, regExp)
         document = PsiDocumentManager.getInstance(project).getDocument(regExpPsiFile)!!

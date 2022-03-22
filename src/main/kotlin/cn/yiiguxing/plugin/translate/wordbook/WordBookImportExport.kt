@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.wordbook
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.e
+import cn.yiiguxing.plugin.translate.util.lowercase
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.diagnostic.Logger
