@@ -4,6 +4,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.project.DumbAwareAction
 import javax.swing.Icon
 
 /**
@@ -31,9 +32,9 @@ data class ErrorInfo(
             name: String,
             description: String? = null,
             icon: Icon? = null,
-            crossinline action: (() -> Unit)
-        ): AnAction = object : AnAction(name, description, icon) {
-            override fun actionPerformed(e: AnActionEvent) = action()
+            crossinline action: ((AnActionEvent) -> Unit)
+        ): AnAction = object : DumbAwareAction(name, description, icon) {
+            override fun actionPerformed(e: AnActionEvent) = action(e)
         }
 
         /**
@@ -50,7 +51,7 @@ data class ErrorInfo(
             description: String? = null,
             icon: Icon? = AllIcons.General.Web
         ): AnAction {
-            return object : AnAction(name, description, icon) {
+            return object : DumbAwareAction(name, description, icon) {
                 override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(url)
             }
         }
