@@ -109,26 +109,32 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(this, DeeplTranslator::call, DeeplTranslator::parseTranslation).execute(
-            text,
-            srcLang,
-            targetLang
-        )
+        return SimpleTranslateClient(
+            this,
+            { _, _, _ ->call(text, srcLang, targetLang, false) },
+            DeeplTranslator::parseTranslation
+        ).execute(text, srcLang, targetLang)
     }
 
-    private fun call(text: String, srcLang: Lang, targetLang: Lang): String {
+    private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
         val settings = Settings.deeplTranslateSettings
         val privateKey = settings.getAppKey()
         val splitPrivatekeys = privateKey.split(":")
         val isFree = (splitPrivatekeys.size == 2 && splitPrivatekeys[1] == "fx")
         val requestURL = if (isFree) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
+        val postData: LinkedHashMap<String, String> = linkedMapOf(
+            "auth_key" to privateKey,
+            "target_lang" to targetLang.deeplLanguageCode,
+            "text" to text
+        )
+
+        if (isDocument) {
+            postData["tag_handling"] = "html"
+        }
 
         return Http.post(
             requestURL,
-            "auth_key" to privateKey,
-            "tag_handling" to "xml",
-            "target_lang" to targetLang.deeplLanguageCode,
-            "text" to text
+            postData
         )
     }
 
@@ -171,10 +177,10 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
-        return SimpleTranslateClient(this, DeeplTranslator::call, DeeplTranslator::parseTranslation).execute(
-            documentation,
-            srcLang,
-            targetLang
-        ).translation ?: ""
+        return SimpleTranslateClient(
+            this,
+            { _, _, _ ->call(documentation, srcLang, targetLang, true) },
+            DeeplTranslator::parseTranslation
+        ).execute(documentation, srcLang, targetLang).translation ?: ""
     }
 }
