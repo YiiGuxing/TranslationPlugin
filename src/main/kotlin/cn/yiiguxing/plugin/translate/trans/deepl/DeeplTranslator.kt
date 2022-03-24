@@ -132,6 +132,10 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
             postData["tag_handling"] = "html"
         }
 
+        if (srcLang !== Lang.AUTO) {
+            postData["source_lang"] = srcLang.langName
+        }
+
         return Http.post(
             requestURL,
             postData
