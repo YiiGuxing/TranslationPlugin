@@ -32,6 +32,15 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 100;
 }
 
+h1 > a, h2 > a, h3 > a {
+    display: none;
+    cursor: pointer;
+}
+
+h1:hover > a, h2:hover > a, h3:hover > a {
+    display: inline-block;
+}
+
 .dark h1, .dark h2, .dark h3 {
     color: white;
 }
