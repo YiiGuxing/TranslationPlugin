@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## v3.3-203u212 (2022/03/25)
 - 全新的错误提示面板
 - 翻译引擎列表显示未激活的翻译引擎
 - 翻译窗口状态栏显示翻译状态
