@@ -1,4 +1,3 @@
-
 import org.apache.tools.ant.filters.EscapeUnicode
 import java.time.LocalDate
 import java.time.ZoneId
@@ -99,10 +98,9 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
-            val changelogUrl = "https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"
             changelog.run {
                 getOrNull(pluginVersion) ?: getUnreleased()
-            }.toHTML() + "<br/><a href=\"${changelogUrl}\"><b>Full Changelog History</b></a>"
+            }.toHTML()
         })
     }
 
