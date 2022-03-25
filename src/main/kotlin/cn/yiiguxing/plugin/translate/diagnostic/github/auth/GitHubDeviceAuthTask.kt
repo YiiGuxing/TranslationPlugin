@@ -1,15 +1,12 @@
 package cn.yiiguxing.plugin.translate.diagnostic.github.auth
 
+import cn.yiiguxing.plugin.translate.compat.progress.TaskWithResultCompat
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.d
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
-import com.intellij.openapi.progress.impl.ProgressManagerImpl
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils
 import com.intellij.openapi.project.Project
 import com.intellij.util.concurrency.AppExecutorUtil
@@ -21,11 +18,12 @@ import kotlin.math.max
 
 internal class GitHubDeviceAuthTask(
     project: Project?,
+    parentComponent: JComponent?,
     private val clientId: String,
     private val deviceCode: GitHubDeviceCode
 ) :
-    Task.WithResult<GitHubCredentials, Exception>(
-        project, message("github.waiting.authentication.task.title"), true
+    TaskWithResultCompat<GitHubCredentials, Exception>(
+        project, parentComponent, message("github.waiting.authentication.task.title"), true
     ) {
 
     companion object {
@@ -70,16 +68,6 @@ internal class GitHubDeviceAuthTask(
             "operation_timed_out",
             message("github.authentication.timeout.message")
         )
-    }
-
-    fun queueAndGet(parentComponent: JComponent?): GitHubCredentials? {
-        return try {
-            val progressManager = ProgressManager.getInstance() as ProgressManagerImpl
-            progressManager.runProcessWithProgressSynchronously(this, parentComponent)
-            result
-        } catch (e: ProcessCanceledException) {
-            null
-        }
     }
 
     private fun fetchGitHubUser(token: GitHubDeviceToken): GitHubUser {

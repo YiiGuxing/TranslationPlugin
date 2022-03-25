@@ -16,7 +16,7 @@ import javax.swing.JComponent
  */
 class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
-    private var lastPopupTitle: String? = null
+    private var lastPopupTitle: String = ""
 
     init {
         setPopupTitle(message("translator.popup.title"))
@@ -25,7 +25,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         templatePresentation.description = message("action.SwitchTranslatorAction.description")
     }
 
-    override fun setPopupTitle(popupTitle: String?) {
+    override fun setPopupTitle(popupTitle: String) {
         super.setPopupTitle(popupTitle)
         lastPopupTitle = popupTitle
     }
@@ -47,7 +47,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         return object : ComboBoxButton(presentation) {
             override fun createPopup(onDispose: Runnable?): JBPopup {
                 val originalPopupTitle = lastPopupTitle
-                setPopupTitle(null)
+                setPopupTitle("")
                 val popup = super.createPopup(onDispose)
                 setPopupTitle(originalPopupTitle)
                 return popup

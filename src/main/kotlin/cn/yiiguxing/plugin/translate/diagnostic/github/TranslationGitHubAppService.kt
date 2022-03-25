@@ -33,7 +33,7 @@ internal class TranslationGitHubAppService private constructor() {
 
     private fun getDeviceCode(project: Project?, parentComponent: JComponent?): GitHubDeviceCode? {
         return try {
-            GitHubDeviceCodeTask(project, CLIENT_ID, *SCOPES).queueAndGet(parentComponent)
+            GitHubDeviceCodeTask(project, parentComponent, CLIENT_ID, *SCOPES).queueAndGet()
         } catch (e: Exception) {
             val message = message("github.retrieving.device.code.failed.message", e.message.toString())
             throw TranslationGitHubAppException(message, e)
@@ -46,7 +46,7 @@ internal class TranslationGitHubAppService private constructor() {
         deviceCode: GitHubDeviceCode
     ): GitHubCredentials? {
         return try {
-            GitHubDeviceAuthTask(project, CLIENT_ID, deviceCode).queueAndGet(parentComponent)
+            GitHubDeviceAuthTask(project, parentComponent, CLIENT_ID, deviceCode).queueAndGet()
         } catch (e: Exception) {
             val errorMessage = (e as? GitHubDeviceAuthException)?.errorDescription ?: e.message ?: ""
             val message = message("github.authentication.failed.message", errorMessage)
