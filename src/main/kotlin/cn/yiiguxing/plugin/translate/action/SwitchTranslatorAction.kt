@@ -38,7 +38,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         return object : ComboBoxButton(presentation) {
             override fun createPopup(onDispose: Runnable?): JBPopup {
                 val originalPopupTitle = myPopupTitle
-                myPopupTitle = null
+                myPopupTitle = ""
                 val popup = super.createPopup(onDispose)
                 myPopupTitle = originalPopupTitle
                 return popup
