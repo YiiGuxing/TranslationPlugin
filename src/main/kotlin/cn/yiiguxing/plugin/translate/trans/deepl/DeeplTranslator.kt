@@ -127,8 +127,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
         val settings = Settings.deeplTranslateSettings
         val privateKey = settings.getAppKey()
-        val splitPrivatekeys = privateKey.split(":")
-        val isFree = (splitPrivatekeys.size == 2 && splitPrivatekeys[1] == "fx")
+        val isFree = privateKey.endsWith(":fx")
         val requestURL = if (isFree) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
         val postData: LinkedHashMap<String, String> = linkedMapOf(
             "auth_key" to privateKey,
