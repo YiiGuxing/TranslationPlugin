@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>3.3 版本</title>
+    <title>Version 3.3</title>
     <base target="_blank">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../../stylesheets/stylesheet.css?v1.0" media="screen">
@@ -25,44 +25,52 @@
 </head>
 <body>
 <div class="content">
-    <h1>3.3 版本 (2022-03-**)</h1>
+    <h1>Version 3.3 (2022-03-25)</h1>
     <hr/>
-    <p>欢迎使用<b>Translation v3.3</b>，希望您会喜欢此版本中的许多更新，其中一些主要亮点包括：</p>
+    <p>Welcome to <b>Translation v3.3</b>. There are many updates in this version that we hope you will like,
+        some key highlights include:</p>
     <ul>
-        <li><b>新的翻译错误提示面板</b> - <i>更直观地显示错误信息并提供一些快捷操作</i></li>
-        <li><b>新的翻译引擎菜单</b> - <i>展示更多内容，包括未激活的翻译引擎</i></li>
-        <li><b>翻译状态指示器</b> - <i>指示当前的翻译状态</i></li>
-        <li><b>错误报告</b> - <i>可以匿名或者使用GitHub帐号直接提交错误报告</i></li>
+        <li><b>New Translation Error Panel</b> - <i>Display error messages more intuitively and provide some quick actions.</i></li>
+        <li><b>New Translation Engines Menu</b> - <i>Show more content including inactive translation engines.</i></li>
+        <li><b>Translation Status Indicator</b> - <i>Indicates the current translation status.</i></li>
+        <li><b>Error reporting</b> - <i>Error reports can be submitted directly in the IDE.</i></li>
     </ul>
-    <div class="reference">如果您想在线阅读此发行说明，请访问<a href="../updates.html">这里</a>。</div>
+    <div class="reference">If you'd like to read these release notes online,
+        please click <a href="../updates.html">here</a>.</div>
 
 
-    <h2 id="_translation">翻译 <a href="#_translation" target="_self">#</a></h2>
-    <h3 id="_translation_error">新翻译错误提示面板 <a href="#_translation_error" target="_self">#</a></h3>
-    <p>我们重新设计了翻译错误的提示方式，引入了全新的翻译错误提示面板，更直观地显示错误信息，并提供了一些快捷操作。</p>
-    <p><img src="../../updates/img/v3_3/translation_error.png" alt="翻译错误提示面板"></p>
+    <h2 id="_translation">Translation <a href="#_translation" target="_self">#</a></h2>
+    <h3 id="_translation_error">New Translation Error Panel <a href="#_translation_error" target="_self">#</a></h3>
+    <p>We have redesigned the way to indicate translation errors, introduced a new translation error alert panel that
+        displays error messages more visually and provides some quick actions.</p>
+    <p><img src="../../updates/img/v3_3/translation_error.png" alt="Translation Error Panel"></p>
 
-    <h3 id="_translators">新翻译引擎菜单 <a href="#_translators" target="_self">#</a></h3>
-    <p>翻译引擎菜单现在展示了所有翻译引擎，包括未激活的翻译引擎，以及管理翻译引擎的菜单项。</p>
-    <p><img src="../../updates/img/v3_3/translators.png" alt="翻译引擎菜单"></p>
+    <h3 id="_translators">New Translation Engines Menu <a href="#_translators" target="_self">#</a></h3>
+    <p>The Translation Engines Menu now displays all translation engines, including inactive,
+        and menu items for managing translation engines.</p>
+    <p><img src="../../updates/img/v3_3/translators.png" alt="Translation Engines Menu"></p>
 
-    <h3 id="_indicator">翻译状态指示器 <a href="#_indicator" target="_self">#</a></h3>
-    <p>翻译对话框的状态栏上加入了翻译状态指示器，它将在有翻译正在进行时显示。</p>
-    <p><img src="../../updates/img/v3_3/status.gif" alt="翻译状态指示器"></p>
-    <p>同时，我们也为“翻译并替换”操作也加入了状态指示器，以显示操作的当前状态。</p>
-    <p style="font-size: 0.9rem"><i>IDE状态栏：</i></p>
-    <p><img src="../../updates/img/v3_3/indicator_2.gif" alt="翻译与替换状态指示器" style="box-shadow: 0 0 6px rgba(0,0,0,0.2)"></p>
-    <p style="font-size: 0.9rem"><i>后台任务列表：</i></p>
-    <p><img src="../../updates/img/v3_3/indicator_1.gif" alt="翻译与替换状态指示器"></p>
+    <h3 id="_indicator">Translation Status Indicator <a href="#_indicator" target="_self">#</a></h3>
+    <p>A translation status indicator has been added to the status bar of the translation dialog,
+        which will show when a translation is in progress.</p>
+    <p><img src="../../updates/img/v3_3/status.gif" alt="Translation Status Indicator"></p>
+    <p>At the same time, we also added a status indicator to the "Translate and Replace" action to show the progress
+        status of the action.</p>
+    <p style="font-size: 0.9rem"><i>In the IDE status bar：</i></p>
+    <p><img src="../../updates/img/v3_3/indicator_2.gif" alt='Status Indicator of "Translate and Replace"' style="box-shadow: 0 0 6px rgba(0,0,0,0.2)"></p>
+    <p style="font-size: 0.9rem"><i>In the background tasks：</i></p>
+    <p><img src="../../updates/img/v3_3/indicator_1.gif" alt='Status Indicator of "Translate and Replace"'></p>
 
-    <h3 id="_doc">文档翻译 <a href="#_doc" target="_self">#</a></h3>
-    <p>文档翻译新增了对Rust语言的支持。</p>
+    <h3 id="_doc">Documentation translation <a href="#_doc" target="_self">#</a></h3>
+    <p>The Rust language now supports documentation translation.</p>
 
-    <h2 id="_general">综合 <a href="#_general" target="_self">#</a></h2>
-    <h3 id="_error_report">错误报告 <a href="#_error_report" target="_self">#</a></h3>
-    <p>现在，当插件发生错误时，您可以直接在错误面板上提交错误报告。错误报告默认是以匿名方式提交，或者您也可以点击面板上的
-        <b>“Log in”</b> 并认证您的GitHub帐号，通过您的GitHub帐号交错误报告，以便您在GitHub上跟进错误的处理进度。</p>
-    <p><img src="../../updates/img/v3_3/error_report.png" alt="恢复默认显示“翻译与替换”操作"></p>
+    <h2 id="_general">General <a href="#_general" target="_self">#</a></h2>
+    <h3 id="_error_report">Error Reporting <a href="#_error_report" target="_self">#</a></h3>
+    <p>Now, when an error occurs with the plugin, you can submit the error report directly on the error dialog.
+        Error reports are submitted anonymously by default, Or you can click <b>"Log in"</b> on the panel
+        and log in to your GitHub account, submit the error report through your GitHub account,
+        so you can track the progress of the error on GitHub.</p>
+    <p><img src="../../updates/img/v3_3/error_report.png" alt="Error Reporting"></p>
 
 </div>
 </body>
