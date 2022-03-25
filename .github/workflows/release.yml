@@ -84,7 +84,7 @@ jobs:
           gh pr create \
             --title ":rocket: \`$VERSION\`" \
             --body "Current pull request contains patched \`CHANGELOG.md\` file for the \`$VERSION\` version." \
-            --base master \
+            --base "${{ github.event.release.target_commitish }}" \
             --head $BRANCH
 
       # Close the milestone

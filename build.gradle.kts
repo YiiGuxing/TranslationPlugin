@@ -18,10 +18,16 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 }
 
-val pluginVersion: String by project
+val pluginMajorVersion: String by project
+val pluginVariantVersion: String by project
+val variantVersionPart = pluginVariantVersion.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
 val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
 val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
+val pluginVersion = "$pluginMajorVersion$variantVersionPart"
 val fullPluginVersion = "$pluginVersion$snapshotPart"
+
+extra["pluginVersion"] = pluginVersion
+extra["fullPluginVersion"] = fullPluginVersion
 
 group = properties("pluginGroup")
 version = fullPluginVersion
