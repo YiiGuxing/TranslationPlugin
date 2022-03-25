@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateException
-import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
 import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
 import com.intellij.ide.ui.laf.darcula.ui.DarculaOptionButtonUI
@@ -93,16 +92,11 @@ class TranslationFailedComponent : JPanel() {
 
     private fun doSwitchTranslator() {
         val dataContext = DataManager.getInstance().getDataContext(optionButton)
-        if (SwitchTranslatorAction.canSwitchTranslatorQuickly()) {
-            val offset = JBUIScale.scale(3)
-            val offsetX = if (UIUtil.isUnderDarcula() || optionButton.ui is DarculaOptionButtonUI) offset else 0
-            SwitchTranslatorAction
-                .createTranslatorPopup(dataContext)
-                .apply { minimumSize = Dimension(optionButton.width - offsetX * 2, 1) }
-                .showBelow(optionButton, offsetX, offset)
-        } else {
-            OptionsConfigurable.showSettingsDialog()
-        }
+        val offset = JBUIScale.scale(3)
+        val offsetX = if (UIUtil.isUnderDarcula() || optionButton.ui is DarculaOptionButtonUI) offset else 0
+        SwitchTranslatorAction.createTranslatorPopup(dataContext)
+            .apply { minimumSize = Dimension(optionButton.width - offsetX * 2, 1) }
+            .showBelow(optionButton, offsetX, offset)
     }
 
     fun onRetry(handler: () -> Unit) {
