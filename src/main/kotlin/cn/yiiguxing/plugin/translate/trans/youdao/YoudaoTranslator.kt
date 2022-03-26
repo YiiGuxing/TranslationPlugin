@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.sha256
 import com.google.gson.Gson
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
 import java.util.*
 import javax.swing.Icon
@@ -136,7 +137,10 @@ object YoudaoTranslator : AbstractTranslator() {
             val errorMessage =
                 errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")
             val continueAction = when (throwable.code) {
-                108, 111, 202 -> ErrorInfo.continueAction(message("action.check.configuration")) {
+                108, 111, 202 -> ErrorInfo.continueAction(
+                    message("action.check.configuration"),
+                    icon = AllIcons.General.Settings
+                ) {
                     YOUDAO.showConfigurationDialog()
                 }
                 else -> null

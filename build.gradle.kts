@@ -1,5 +1,4 @@
 import org.apache.tools.ant.filters.EscapeUnicode
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -19,10 +18,16 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 }
 
-val pluginVersion: String by project
+val pluginMajorVersion: String by project
+val pluginVariantVersion: String by project
+val variantVersionPart = pluginVariantVersion.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
 val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
 val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
+val pluginVersion = "$pluginMajorVersion$variantVersionPart"
 val fullPluginVersion = "$pluginVersion$snapshotPart"
+
+extra["pluginVersion"] = pluginVersion
+extra["fullPluginVersion"] = fullPluginVersion
 
 group = properties("pluginGroup")
 version = fullPluginVersion
@@ -44,6 +49,13 @@ dependencies {
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
+    }
+}
+
+// Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
@@ -92,10 +104,9 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
-            val changelogUrl = "https://github.com/YiiGuxing/TranslationPlugin/blob/master/CHANGELOG.md"
             changelog.run {
                 getOrNull(pluginVersion) ?: getUnreleased()
-            }.toHTML() + "<br/><a href=\"${changelogUrl}\"><b>Full Changelog History</b></a>"
+            }.toHTML()
         })
     }
 
@@ -117,18 +128,6 @@ tasks {
     wrapper {
         gradleVersion = properties("gradleVersion")
         distributionType = Wrapper.DistributionType.ALL
-    }
-
-    // Set the JVM compatibility versions
-    properties("javaVersion").let {
-        withType<JavaCompile> {
-            sourceCompatibility = it
-            targetCompatibility = it
-            options.encoding = "UTF-8"
-        }
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = it
-        }
     }
 
     withType<ProcessResources> {

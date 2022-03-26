@@ -24,8 +24,6 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
     }
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isEnabledAndVisible = canSwitchTranslatorQuickly()
-
         TranslateService.translator.let {
             e.presentation.text = it.name
             e.presentation.icon = it.icon
@@ -40,7 +38,7 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         return object : ComboBoxButton(presentation) {
             override fun createPopup(onDispose: Runnable?): JBPopup {
                 val originalPopupTitle = myPopupTitle
-                myPopupTitle = null
+                myPopupTitle = ""
                 val popup = super.createPopup(onDispose)
                 myPopupTitle = originalPopupTitle
                 return popup
@@ -52,8 +50,6 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
 
     companion object {
-        fun canSwitchTranslatorQuickly() = TranslatorAction.availableActions().size > 1
-
         fun createTranslatorPopup(
             context: DataContext,
             title: String? = message("translator.popup.title"),

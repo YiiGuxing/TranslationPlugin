@@ -1,5 +1,4 @@
 <idea-plugin>
-
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
         <ignoredDocumentationElementsProvider
                 language="JavaScript"
@@ -23,5 +22,4 @@
                 language="Flow JS" order="first"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
     </extensions>
-
 </idea-plugin>

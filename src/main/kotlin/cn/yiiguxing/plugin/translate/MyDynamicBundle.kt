@@ -36,7 +36,7 @@ open class MyDynamicBundle(private val pathToBundle: String) : AbstractBundle(pa
     }
 
     fun getAdaptedMessage(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String {
-        return adaptedBundle?.getMessage(key, *params) ?: TranslationBundle.getMessage(key, *params)
+        return adaptedBundle?.getMessage(key, *params) ?: getMessage(key, *params)
     }
 
     companion object {

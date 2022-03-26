@@ -17,7 +17,10 @@ name: Build
 on:
   # Trigger the workflow on pushes to only the 'master' branch (this avoids duplicate checks being run e.g. for dependabot pull requests)
   push:
-    branches: [master]
+    branches:
+      - master
+      - 'compat/*'
+
   # Trigger the workflow on any pull request
   pull_request:
 
@@ -30,13 +33,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     outputs:
-      majorVersion: ${{ steps.properties.outputs.majorVersion }}
+      pluginVersion: ${{ steps.properties.outputs.pluginVersion }}
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
@@ -57,7 +60,7 @@ jobs:
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
-          MAJOR_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
+          PLUGIN_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
           NAME="$(echo "$PROPERTIES" | grep "^pluginName:" | cut -f2- -d ' ')"
           CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
@@ -65,7 +68,7 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=version::$VERSION"
-          echo "::set-output name=majorVersion::$MAJOR_VERSION"
+          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
           echo "::set-output name=name::$NAME"
           echo "::set-output name=changelog::$CHANGELOG"
           echo "::set-output name=pluginVerifierHomeDir::~/.pluginVerifier"
@@ -86,7 +89,7 @@ jobs:
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: ${{ steps.properties.outputs.pluginVerifierHomeDir }}/ides
           key: plugin-verifier-${{ hashFiles('build/listProductsReleases.txt') }}
@@ -136,15 +139,17 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       # Remove old release drafts by using the curl request for the available releases with draft flag
       - name: Remove Old Release Drafts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH="${{ github.ref }}"
+          BRANCH="${BRANCH//'refs/heads/'/}"
           gh api repos/{owner}/{repo}/releases \
-            --jq '.[] | select(.draft == true) | .id' \
+            --jq ".[] | select(.draft == true and .target_commitish == \"${BRANCH}\") | .id" \
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
 
       # Create new release draft - which is not publicly visible and requires manual acceptance
@@ -152,9 +157,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v${{ needs.build.outputs.majorVersion }} \
+          BRANCH="${{ github.ref }}"
+          BRANCH="${BRANCH//'refs/heads/'/}"
+          gh release create v${{ needs.build.outputs.pluginVersion }} \
+            --target "$BRANCH" \
             --draft \
-            --title "v${{ needs.build.outputs.majorVersion }}" \
+            --title "v${{ needs.build.outputs.pluginVersion }}" \
             --notes "$(cat << 'EOM'
           ## What's Changed
 
