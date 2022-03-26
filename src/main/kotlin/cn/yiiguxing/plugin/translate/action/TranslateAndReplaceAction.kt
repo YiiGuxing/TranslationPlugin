@@ -19,6 +19,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -323,19 +325,24 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.replaceText(range: TextRange, text: String) {
-            ApplicationManager.getApplication().runWriteAction {
-                document.startGuardedBlockChecking()
-                try {
-                    WriteCommandAction.runWriteCommandAction(project) {
-                        document.replaceString(range.startOffset, range.endOffset, text)
+            ApplicationManager.getApplication().invokeLater({
+                WriteAction.run<Throwable> {
+                    document.startGuardedBlockChecking()
+                    try {
+                        WriteCommandAction.runWriteCommandAction(
+                            project,
+                            "Translate And Replace",
+                            "Translate And Replace - Replace Text",
+                            { document.replaceString(range.startOffset, range.endOffset, text) }
+                        )
+                        selectionModel.removeSelection()
+                        caretModel.moveToOffset(range.startOffset + text.length)
+                        scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+                    } finally {
+                        document.stopGuardedBlockChecking()
                     }
-                    selectionModel.removeSelection()
-                    caretModel.moveToOffset(range.startOffset + text.length)
-                    scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
-                } finally {
-                    document.stopGuardedBlockChecking()
                 }
-            }
+            }, ModalityState.current())
         }
 
         fun MarkupModel.addHighlight(selectionRange: TextRange): RangeHighlighter {
