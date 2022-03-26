@@ -188,11 +188,13 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
-        return SimpleTranslateClient(
+        val client = SimpleTranslateClient(
             this,
             { _, _, _ ->call(documentation, srcLang, targetLang, true) },
             DeeplTranslator::parseTranslation
-        ).execute(documentation, srcLang, targetLang).translation ?: ""
+        )
+        client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
+        return client.execute(documentation, srcLang, targetLang).translation ?: ""
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
