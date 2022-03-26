@@ -1,26 +1,13 @@
-# [![TranslationPlugin](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/pluginIcon.svg)](https://github.com/YiiGuxing/TranslationPlugin) TranslationPlugin
+# [![TranslationPlugin][plugin-logo]][gh:translation-plugin] TranslationPlugin
 
-[![Plugin Homepage][plugin-img]][plugin]
-[![License][license-img]][license]
-[![Build Status][build-img-master]][workflows-build]
-[![GitHub releases][release-img]][releases]
-[![Version][version-img]][plugin]
-[![Downloads][downloads-img]][plugin]
-[![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
+[![Plugin Homepage][badge:plugin-homepage]][plugin-homepage]
+[![Build Status][badge:build]][gh:workflows-build]
+[![License][badge:license]][gh:license]
+[![GitHub releases][badge:release]][gh:releases]
+[![Version][badge:version]][plugin-homepage]
+[![Downloads][badge:downloads]][plugin-homepage]
+[![Financial Contributors on Open Collective][badge:open-collective]][open-collective]
 
-[build-img-master]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
-[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[plugin-img]: https://img.shields.io/badge/PluginHomepage-Translation-orange.svg?style=flat-square
-[downloads-img]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square
-[version-img]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=0091ea
-[releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
-[license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
-[workflows-build]: https://github.com/YiiGuxing/TranslationPlugin/actions/workflows/build.yml
-[plugin]: https://plugins.jetbrains.com/plugin/8579-translation
-[open-collective]: https://opencollective.com/translation-plugin
-[open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
-[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 <p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
@@ -29,10 +16,10 @@
 <br/><br/><br/>
 
 
-[![Getting Started](https://img.shields.io/badge/Get%20Started-English-4CAF50?style=flat-square)](https://yiiguxing.github.io/TranslationPlugin/en/start.html)
-[![开始使用](https://img.shields.io/badge/%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8-%E4%B8%AD%E6%96%87-2196F3?style=flat-square)](https://yiiguxing.github.io/TranslationPlugin/start.html)
-[![はじめに](https://img.shields.io/badge/%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB-%E6%97%A5%E6%9C%AC%E8%AA%9E-009688?style=flat-square)](https://yiiguxing.github.io/TranslationPlugin/ja/start.html)
-[![시작하기](https://img.shields.io/badge/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-%ED%95%9C%EA%B5%AD%EC%96%B4-7CB342?style=flat-square)](https://yiiguxing.github.io/TranslationPlugin/ko/start.html)
+[![Getting Started][badge:get-started-en]][get-started-en]
+[![开始使用][badge:get-started-zh]][get-started-zh]
+[![はじめに][badge:get-started-jp]][get-started-ja]
+[![시작하기][badge:get-started-ko]][get-started-ko]
 
 ---
 
@@ -93,7 +80,7 @@
       Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
 
 - **Installing manually:**
-    - Download the plugin package on [GitHub][releases] or in the [JetBrains Plugin Repository][plugin].
+    - Download the plugin package on [GitHub Releases][gh:releases] or in the [JetBrains Plugin Repository][plugin-homepage].
     - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd> >
       Select the plugin package and install (no need to unzip)
 
@@ -102,10 +89,9 @@ Restart the **IDE** after installation.
 ## Using The Plugin
 
 1. **Sign up for a translation service (optional)**
-    - Sign up for a translation service ([Youdao Cloud](https://ai.youdao.com)
-      , [Baidu Translate Open Platform](https://fanyi-api.baidu.com/manage/developer)
-      , [Alibaba Cloud Machine Translation](https://www.aliyun.com/product/ai/base_alimt)) account, open up the
-      translation service and obtain the **Application ID** and **Key**.
+    - Sign up for a translation service ([Youdao Cloud][youdao-cloud],
+      [Baidu Translate Open Platform][baidu-translate], [Alibaba Cloud Machine Translation][ali-mt]) account,
+      open up the translation service and obtain the **Application ID** and **Key**.
     - To bind the **Application ID** and **Key**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
@@ -236,7 +222,7 @@ Restart the **IDE** after installation.
 
 ## FAQ
 
-> *If you have any questions, please ask [here](https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/q-a).*
+> *If you have any questions, please ask [here][gh:discussions-q-a].*
 
 1. **What should I do if there is a network error or the network connection times out?**
 
@@ -250,14 +236,14 @@ Restart the **IDE** after installation.
    **A:** Garbled code generally appears when there are a lack of corresponding characters in the font. You can go to
    the Settings page of the plugin to modify the font in order to fix the garbled code (as shown below).
 
-   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
+   ![screenshots][file:settings-font]
 
 3. **What if I can't save the application key?**
 
    **A:** You can try changing the way passwords are saved to `In KeePass` (<kbd>Settings</kbd> > <kbd>Appearance &
    Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>). For more details:
-    - For macOS, please refer to [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
-    - For Linux, please refer to [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)
+    - For macOS, please refer to [#81][gh:#81]
+    - For Linux, please refer to [#115][gh:#115]
 
 4. **What if the shortcuts don't work?**
 
@@ -305,8 +291,9 @@ You can contribute and support this project by doing any of the following:
   **Note:** After using Alipay/WeChat to pay for your donation, please provide your name/nickname and website by leaving
   a message or via email in the following format:
 
-  `Name/Nickname [<website>][: message]` (website and message are optional.
-  Example:`Yii.Guxing <github.com/YiiGuxing>: I like the plugin!`)
+  `Name/Nickname [<website>][: message]` (website and message are optional.)
+
+  Example: `Yii.Guxing <github.com/YiiGuxing>: I like the plugin!`
 
   If you choose to send an email, please also provide the following information:
   ```text
@@ -314,11 +301,9 @@ You can contribute and support this project by doing any of the following:
   Payment Platform: Alipay/WeChat Pay
   Payment Number (last 5 digits): <number>
   ```
-  Email
-  address: [yii.guxing@gmail.com](mailto:yii.guxing@gmail.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Pay%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D) (
-  click to send email)
+  Email address: [yii.guxing@gmail.com][mailto] (click to send email)
 
-  The name, website and total donation amount you provide will be added to the [donor list][financial-contributors].
+  The name, website and total donation amount you provide will be added to the [donor list][file:financial-contributors].
 
 **Thank you for your support!**
 
@@ -332,7 +317,7 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 ### Financial Contributors
 
 Become a financial contributor and help us sustain our
-community. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
+community. [[Contribute][open-collective-contribute]]
 
 #### Backers
 
@@ -343,7 +328,7 @@ Thank you to all our backers! ❤️ [[Become a backer](https://opencollective.c
 #### Sponsors
 
 Support this project by becoming a sponsor! Your logo will show up here with a link to your
-website. [[Become a sponsor](https://opencollective.com/translation-plugin/contribute)]
+website. [[Become a sponsor][open-collective-contribute]]
 
 <a href="https://opencollective.com/translation-plugin/organization/0/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/0/avatar.svg?avatarHeight=128"></a>
 <a href="https://opencollective.com/translation-plugin/organization/1/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/1/avatar.svg?avatarHeight=128"></a>
@@ -371,4 +356,47 @@ website. [[Become a sponsor](https://opencollective.com/translation-plugin/contr
 | Kagada   | [github.com/kagada](https://github.com/kagada)             | 60 CNY     |
 | 王者之师     |                                                            | 50 CNY     |
 
-[More donors][financial-contributors]
+[More donors][file:financial-contributors]
+
+
+[plugin-logo]: https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/pluginIcon.svg
+
+[badge:plugin-homepage]: https://img.shields.io/badge/plugin%20homepage-translation-4caf50.svg?style=flat-square
+[badge:build]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
+[badge:license]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
+[badge:release]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square&colorB=0097A7
+[badge:version]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=2196F3
+[badge:downloads]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square&colorB=5C6BC0
+[badge:open-collective]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&color=d05ce3
+[badge:get-started-en]: https://img.shields.io/badge/Get%20Started-English-4CAF50?style=flat-square
+[badge:get-started-zh]: https://img.shields.io/badge/%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8-%E4%B8%AD%E6%96%87-2196F3?style=flat-square
+[badge:get-started-jp]: https://img.shields.io/badge/%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB-%E6%97%A5%E6%9C%AC%E8%AA%9E-009688?style=flat-square
+[badge:get-started-ko]: https://img.shields.io/badge/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-%ED%95%9C%EA%B5%AD%EC%96%B4-7CB342?style=flat-square
+
+[gh:translation-plugin]: https://github.com/YiiGuxing/TranslationPlugin
+[gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
+[gh:workflows-build]: https://github.com/YiiGuxing/TranslationPlugin/actions/workflows/build.yml
+[gh:license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
+[gh:discussions-q-a]: https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/q-a
+[gh:#81]: https://github.com/YiiGuxing/TranslationPlugin/issues/81
+[gh:#115]: https://github.com/YiiGuxing/TranslationPlugin/issues/115
+
+[file:settings-font]: https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png
+[file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
+
+[get-started-en]: https://yiiguxing.github.io/TranslationPlugin/en/start.html
+[get-started-zh]: https://yiiguxing.github.io/TranslationPlugin/start.html
+[get-started-ja]: https://yiiguxing.github.io/TranslationPlugin/ja/start.html
+[get-started-ko]: https://yiiguxing.github.io/TranslationPlugin/ko/start.html
+
+[plugin-homepage]: https://plugins.jetbrains.com/plugin/8579-translation
+
+[open-collective]: https://opencollective.com/translation-plugin
+[open-collective-contribute]: https://opencollective.com/translation-plugin/contribute
+
+[youdao-cloud]: https://ai.youdao.com
+[baidu-translate]: https://fanyi-api.baidu.com/manage/developer
+[ali-mt]: https://www.aliyun.com/product/ai/base_alimt
+
+[mailto]: mailto:yii.guxing@gmail.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Pay%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D
+
