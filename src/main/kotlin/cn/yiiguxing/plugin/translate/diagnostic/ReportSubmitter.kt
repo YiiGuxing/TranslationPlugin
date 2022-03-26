@@ -113,7 +113,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         object : Task.Backgroundable(project, message("title.submitting.error.report"), false) {
             override fun run(indicator: ProgressIndicator) {
                 try {
-                    doSubmit(project, credentials, message, stacktrace, additionalInfo, consumer)
+                    doSubmit(project, credentials, event, message, stacktrace, additionalInfo, consumer)
                 } catch (e: Exception) {
                     onError(project, e, events, additionalInfo, parentComponent, consumer)
                 }
@@ -127,15 +127,37 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         return message ?: (data as? AbstractMessage)?.throwable?.message
     }
 
+    private fun getIssueId(event: IdeaLoggingEvent, stacktrace: String): String {
+        // eliminate system newline differences
+        var content = stacktrace.replace("\r", "")
+
+        // eliminate message differences
+        event.message?.takeIf { it.isNotBlank() }
+            ?.let { content = content.replace(it, "") }
+
+        var throwable = (event.data as? AbstractMessage)?.throwable
+        while (throwable != null) {
+            val message = throwable.message
+            if (!message.isNullOrBlank()) {
+                // eliminate message differences
+                content = content.replace(message, "")
+            }
+            throwable = throwable.cause
+        }
+
+        return content.md5()
+    }
+
     private fun doSubmit(
         project: Project?,
         credentials: Credentials,
+        event: IdeaLoggingEvent,
         message: String?,
         stacktrace: String,
         additionalInfo: String?,
         consumer: Consumer<in SubmittedReportInfo>
     ) {
-        val issueID = stacktrace.md5()
+        val issueID = getIssueId(event, stacktrace)
         val (status, issue) = findIssue(issueID)
             ?.let { issue -> SubmittedReportInfo.SubmissionStatus.DUPLICATE to issue }
             ?: postNewIssue(credentials, issueID, message, additionalInfo, stacktrace)
