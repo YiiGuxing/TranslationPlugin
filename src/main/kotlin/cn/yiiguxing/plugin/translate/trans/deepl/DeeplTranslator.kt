@@ -140,7 +140,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
         }
 
         if (srcLang !== Lang.AUTO) {
-            postData["source_lang"] = srcLang.langName
+            postData["source_lang"] = srcLang.deeplLanguageCode
         }
 
         return Http.post(
