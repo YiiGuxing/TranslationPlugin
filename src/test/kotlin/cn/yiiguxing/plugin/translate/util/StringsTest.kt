@@ -117,4 +117,31 @@ class StringsTest {
         Assert.assertEquals("baby", "baby".ellipsis(10))
     }
 
+    @Test
+    fun testSingleLine() {
+        Assert.assertEquals(" ", "\n".singleLine())
+        Assert.assertEquals(" ", "\r".singleLine())
+        Assert.assertEquals(" ", "\r\n".singleLine())
+        Assert.assertEquals("  ", "\n\r".singleLine())
+        Assert.assertEquals("  ", "\n\r\n".singleLine())
+        Assert.assertEquals("  ", "\r\n\r".singleLine())
+        Assert.assertEquals("  ", "\r\n\n".singleLine())
+        Assert.assertEquals("   ", "\r\r\r".singleLine())
+        Assert.assertEquals("   ", "\n\n\n".singleLine())
+        Assert.assertEquals("   ", "\r\n\r\r".singleLine())
+        Assert.assertEquals("   ", "\r\r\n\r".singleLine())
+        Assert.assertEquals("   ", "\r\r\r\n".singleLine())
+        Assert.assertEquals("   ", "\r\n\n\n".singleLine())
+        Assert.assertEquals("   ", "\n\r\n\n".singleLine())
+        Assert.assertEquals("   ", "\n\n\r\n".singleLine())
+    }
+
+    @Test
+    fun testCompressWhitespace() {
+        Assert.assertEquals(" ", " ".compressWhitespace())
+        Assert.assertEquals(" ", "  ".compressWhitespace())
+        Assert.assertEquals(" ", "    ".compressWhitespace())
+        Assert.assertEquals(" a b c ", " a  b   c    ".compressWhitespace())
+    }
+
 }
