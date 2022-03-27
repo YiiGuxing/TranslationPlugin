@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.trans
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.util.io.HttpRequests
 import io.netty.handler.codec.http.HttpResponseStatus
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -38,6 +39,7 @@ abstract class AbstractTranslator : Translator {
                 HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
                 else -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
             }
+            is IOException -> message("error.io.exception", throwable.message ?: "")
             else -> return null
         }
 
