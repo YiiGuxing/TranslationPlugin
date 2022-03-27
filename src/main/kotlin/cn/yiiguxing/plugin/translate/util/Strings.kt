@@ -5,6 +5,7 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import com.intellij.util.io.DigestUtil
 import java.net.URLEncoder
 import java.security.MessageDigest
 import java.util.*
@@ -19,6 +20,8 @@ private val REGEX_LOWER_UPPER = Regex("([a-z])([A-Z])")
 private val REGEX_UPPER_WORD = Regex("([A-Z])([A-Z][a-z])")
 private val REGEX_WHITESPACE_CHARACTER = Regex("\\s")
 private val REGEX_WHITESPACE_CHARACTERS = Regex("\\s+")
+private val REGEX_SINGLE_LINE = Regex("\\r\\n|\\r|\\n")
+private val REGEX_COMPRESS_WHITESPACE = Regex("\\s{2,}")
 private const val REPLACEMENT_SPLIT_GROUP = "$1 $2"
 
 /**
@@ -160,6 +163,10 @@ private fun String.splitByLengthTo(destination: MutableCollection<String>, maxLe
     }
 }
 
+fun String.singleLine(): String = replace(REGEX_SINGLE_LINE, " ")
+
+fun String.compressWhitespace(): String = replace(REGEX_COMPRESS_WHITESPACE, " ")
+
 /**
  * 如果内容长度超出指定[长度][n]，则省略超出部分，显示为”...“。
  */
@@ -181,8 +188,8 @@ private val HEX_DIGITS = charArrayOf(
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 )
 
-fun String.getMessageDigest(algorithm: String): String {
-    return with(MessageDigest.getInstance(algorithm)) {
+fun String.getMessageDigest(messageDigest: MessageDigest): String {
+    return with(messageDigest) {
         update(toByteArray(Charsets.UTF_8))
         digest().toHexString()
     }
@@ -192,19 +199,19 @@ fun String.getMessageDigest(algorithm: String): String {
  * 生成32位MD5摘要
  * @return MD5摘要
  */
-fun String.md5(): String = getMessageDigest("MD5")
+fun String.md5(): String = getMessageDigest(DigestUtil.md5())
 
 /**
  * 生成SHA-256摘要
  * @return SHA-256摘要
  */
-fun String.sha256(): String = getMessageDigest("SHA-256")
+fun String.sha256(): String = getMessageDigest(DigestUtil.sha256())
 
 /**
  * 生成Base64格式的MD5摘要
  */
 fun String.md5Base64(): String {
-    return with(MessageDigest.getInstance("MD5")) {
+    return with(DigestUtil.md5()) {
         update(toByteArray())
         Base64.getEncoder().encodeToString(digest())
     }
