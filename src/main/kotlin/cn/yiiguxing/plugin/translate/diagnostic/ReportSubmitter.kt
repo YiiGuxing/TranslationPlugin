@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.credentialStore.Credentials
 import com.intellij.diagnostic.AbstractMessage
+import com.intellij.diagnostic.IdeaReportingEvent
 import com.intellij.ide.DataManager
 import com.intellij.idea.IdeaLogger
 import com.intellij.notification.NotificationType
@@ -25,6 +26,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.SystemInfo
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.Consumer
 import com.intellij.xml.util.XmlStringUtil
 import java.awt.Component
@@ -36,6 +38,8 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
 
     companion object {
         private const val TARGET_REPOSITORY = "YiiGuxing/TranslationPlugin"
+
+        private const val EXCEPTION_CLASS_CHANGED_MESSAGE = "*** exception class was changed or removed"
 
         private val LOG = Logger.getInstance(ReportSubmitter::class.java)
     }
@@ -103,8 +107,8 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
     ): Boolean {
         val event = events[0]
         val message = event.getUsefulMessage()
-        val stacktrace = event.throwableText?.trim()
-        if (stacktrace.isNullOrEmpty()) {
+        val stacktrace = event.stacktrace
+        if (stacktrace.isEmpty()) {
             return false
         }
 
@@ -123,31 +127,6 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         return true
     }
 
-    private fun IdeaLoggingEvent.getUsefulMessage(): String? {
-        return message ?: (data as? AbstractMessage)?.throwable?.message
-    }
-
-    private fun getIssueId(event: IdeaLoggingEvent, stacktrace: String): String {
-        // eliminate system newline differences
-        var content = stacktrace.replace("\r", "")
-
-        // eliminate message differences
-        event.message?.takeIf { it.isNotBlank() }
-            ?.let { content = content.replace(it, "") }
-
-        var throwable = (event.data as? AbstractMessage)?.throwable
-        while (throwable != null) {
-            val message = throwable.message
-            if (!message.isNullOrBlank()) {
-                // eliminate message differences
-                content = content.replace(message, "")
-            }
-            throwable = throwable.cause
-        }
-
-        return content.md5()
-    }
-
     private fun doSubmit(
         project: Project?,
         credentials: Credentials,
@@ -157,10 +136,10 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         additionalInfo: String?,
         consumer: Consumer<in SubmittedReportInfo>
     ) {
-        val issueID = getIssueId(event, stacktrace)
+        val issueID = event.getIssueId(stacktrace)
         val (status, issue) = findIssue(issueID)
             ?.let { issue -> SubmittedReportInfo.SubmissionStatus.DUPLICATE to issue }
-            ?: postNewIssue(credentials, issueID, message, additionalInfo, stacktrace)
+            ?: postNewIssue(event, credentials, issueID, message, additionalInfo, stacktrace)
                 .let { issue -> SubmittedReportInfo.SubmissionStatus.NEW_ISSUE to issue }
 
         val reportInfo = SubmittedReportInfo(issue.htmlUrl, "Issue#${issue.number}", status)
@@ -217,33 +196,51 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
     }
 
     private fun postNewIssue(
+        event: IdeaLoggingEvent,
         credentials: Credentials,
         issueId: String,
         message: String?,
         comment: String?,
         stacktrace: String
     ): Issue {
-        val eventMessage = message?.takeIf { it.isNotBlank() }?.let { ": $it" } ?: ""
-        val title = "[Auto Generated]Plugin error occurred$eventMessage"
+        val titleMessage = message
+            ?.takeIf { it.isNotEmpty() && it != EXCEPTION_CLASS_CHANGED_MESSAGE }
+            ?.let { ": ${it.singleLine().compressWhitespace().ellipsis(100)}" }
+            ?: ""
+        val title = "[Auto Generated]Plugin error occurred$titleMessage"
         val body = StringBuilder()
             .appendLine(":warning:_`[Auto Generated Report]-=$issueId=-`_")
             .appendLine("<!-- Auto Generated Report. DO NOT MODIFY!!! -->\n")
-            .appendLine("## Description")
-            .appendLine(comment ?: "")
-            .appendLine()
+            .appendDescription(event, message, comment, stacktrace)
             .appendEnvironments()
-            .apply {
-                if (stacktrace.isNotBlank()) {
-                    appendLine()
-                    appendLine("## Stack Trace")
-                    appendLine("```")
-                    appendLine(stacktrace)
-                    appendLine("```")
-                }
-            }
+            .appendStacktrace(stacktrace)
             .toString()
 
         return GitHubIssuesApis.create(TARGET_REPOSITORY, title, body, credentials.getPasswordAsString()!!)
+    }
+
+    private fun StringBuilder.appendDescription(
+        event: IdeaLoggingEvent, message: String?,
+        comment: String?,
+        stacktrace: String
+    ) = apply {
+        appendLine("## Description")
+        appendLine()
+
+        val summary = event.getDataRedactedSummary(stacktrace)
+        if (!summary.isNullOrEmpty()) {
+            appendLine(summary)
+            appendLine()
+        }
+        if (!message.isNullOrEmpty()) {
+            appendLine(message)
+            appendLine()
+        }
+        if (!comment.isNullOrBlank()) {
+            appendLine("### Additional Information")
+            appendLine(comment)
+            appendLine()
+        }
     }
 
     private fun StringBuilder.appendEnvironments() = apply {
@@ -273,5 +270,60 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         append("VM: ", vmVersion, " by ", vmVendor, "\n")
         append("Operating system: ", SystemInfo.getOsNameAndVersion(), "\n")
         append("Last action id: ", IdeaLogger.ourLastActionId, "\n")
+    }
+
+    private fun StringBuilder.appendStacktrace(stacktrace: String) = apply {
+        appendLine()
+        appendLine("## Stack Trace")
+        appendLine("```")
+        appendLine(stacktrace)
+        appendLine("```")
+    }
+
+    private fun String.removeCR(): String = replace("\r", "")
+
+    private fun IdeaLoggingEvent.getUsefulMessage(): String? {
+        return (message?.removeCR() ?: (data as? AbstractMessage)?.throwable?.message)?.trim()
+    }
+
+    private val IdeaLoggingEvent.stacktrace: String get() = throwableText?.trim()?.removeCR() ?: ""
+    private val IdeaReportingEvent.originalStacktrace: String get() = originalThrowableText.trim().removeCR()
+
+    private fun IdeaLoggingEvent.getIssueId(stacktrace: String): String {
+        if (this is IdeaReportingEvent && stacktrace != originalStacktrace) {
+            return stacktrace.md5()
+        }
+
+        return (data as? AbstractMessage)?.throwable?.md5() ?: stacktrace.md5()
+    }
+
+    private fun IdeaLoggingEvent.getDataRedactedSummary(stacktrace: String): String? {
+        if (this !is IdeaReportingEvent) {
+            return null
+        }
+
+        val originalMessage = originalMessage?.trim()?.removeCR() ?: ""
+        val message = message?.trim()?.removeCR() ?: ""
+        val originalStacktrace = originalStacktrace
+        val messagesDiffer = originalMessage != message
+        val tracesDiffer = stacktrace != originalStacktrace
+        if (messagesDiffer || tracesDiffer) {
+            var summary = ""
+            if (messagesDiffer) summary += "*** message was redacted (${diff(originalMessage, message)})\n"
+            if (tracesDiffer) summary += "*** stacktrace was redacted (${diff(originalStacktrace, stacktrace)})\n"
+            return summary.trim()
+        }
+
+        return null
+    }
+
+    private fun diff(original: String, redacted: String): String {
+        return "original:${original.wc()} submitted:${redacted.wc()}"
+    }
+
+    private fun String.wc(): String = if (isEmpty()) {
+        "-"
+    } else {
+        "${StringUtil.splitByLines(this).size}/${split("[^\\w']+".toRegex()).size}/$length"
     }
 }
