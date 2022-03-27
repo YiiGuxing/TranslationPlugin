@@ -1,0 +1,17 @@
+# https://github.com/Naturalclar/issue-action
+
+name: Label Auto Generated Issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  Label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Naturalclar/issue-action@v2.0.2
+        with:
+          title-or-body: "title"
+          parameters: '[{"keywords": ["[Auto Generated]"], "labels": ["auto generated report 🤖"]}]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
