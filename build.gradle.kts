@@ -22,9 +22,17 @@ val pluginMajorVersion: String by project
 val pluginVariantVersion: String by project
 val variantVersionPart = pluginVariantVersion.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
 val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
-val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
+val snapshotSeparator = if (variantVersionPart.isNotEmpty()) "." else "-"
+val snapshotPart = if (isSnapshot) "${snapshotSeparator}SNAPSHOT" else ""
 val pluginVersion = "$pluginMajorVersion$variantVersionPart"
 val fullPluginVersion = "$pluginVersion$snapshotPart"
+
+
+val versionRegex = Regex("v(\\d(\\.\\d+)+(-([0-9a-zA-Z]+(\\.[0-9a-zA-Z]+)*))?)")
+if (!versionRegex.matches("v$fullPluginVersion")) {
+    throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
+}
+
 
 extra["pluginVersion"] = pluginVersion
 extra["fullPluginVersion"] = fullPluginVersion
@@ -76,7 +84,7 @@ changelog {
 
     version.set(pluginVersion)
     header.set(provider { "v${version.get()} (${date.format(formatter)})" })
-    headerParserRegex.set(Regex("v(\\d(\\.\\d+)+(-([0-9a-zA-Z]+(\\.[0-9a-zA-Z]+)*))?)"))
+    headerParserRegex.set(versionRegex)
     groups.set(emptyList())
 }
 
