@@ -9,6 +9,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import javax.swing.Icon
 import javax.swing.JLabel
@@ -26,15 +27,17 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
 
     init {
         layout = migLayout()
+        minimumSize = JBUI.size(300, 0)
 
-        logo.border = JBUI.Borders.empty(0, 0, 10, 0)
+        logo.border = JBUI.Borders.empty(10, 0, 18, 0)
         add(logo, wrap().span(2).alignX("50%"))
 
+        val gap = JBUIScale.scale(8).toString()
         add(JLabel(message("settings.label.appId")))
-        add(appIdField, fillX().wrap())
+        add(appIdField, fillX().gapLeft(gap).wrap())
 
         add(JLabel(message("settings.label.appPrivateKey")))
-        add(appKeyField, fillX().wrap())
+        add(appKeyField, fillX().gapLeft(gap).wrap())
 
         getApiKeyLink.border = JBUI.Borders.empty(10, 0, 0, 0)
         add(getApiKeyLink, wrap().span(2))
