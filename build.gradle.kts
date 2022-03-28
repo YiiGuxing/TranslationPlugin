@@ -104,6 +104,10 @@ tasks {
         // ideDir.set(File("path to IDE-dependency"))
     }
 
+    buildSearchableOptions {
+        enabled = !isSnapshot
+    }
+
     patchPluginXml {
         version.set(fullPluginVersion)
         sinceBuild.set(properties("pluginSinceBuild"))
