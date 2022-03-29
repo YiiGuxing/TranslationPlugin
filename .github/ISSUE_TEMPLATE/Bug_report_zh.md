@@ -1,11 +1,10 @@
 ---
 name: Bug报告
 about: 创建报告以帮助我们改进TranslationPlugin
-
 ---
 
 ## 检查清单
-*请确保通过将 [ ] 替换为 [x] 来完成以下步骤*
+*请确保通过将 `[ ]` 替换为 `[x]` 来完成以下步骤*
 
 * [ ] 我已经阅读了 [README](https://github.com/YiiGuxing/TranslationPlugin) 中的 [FAQ](https://github.com/YiiGuxing/TranslationPlugin#faq) ，但仍然无法解决我的问题。
 * [ ] 我已经搜索过与我要提交的问题相匹配的问题，但没有找到。
@@ -31,5 +30,3 @@ about: 创建报告以帮助我们改进TranslationPlugin
 在此粘贴错误日志
 ```
 -->
-
-<!-- 获取环境与错误日志: http://yiiguxing.github.io/TranslationPlugin/start.html#faq-fb -->

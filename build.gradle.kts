@@ -11,7 +11,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.4.0"
+    id("org.jetbrains.intellij") version "1.5.1"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -22,9 +22,17 @@ val pluginMajorVersion: String by project
 val pluginVariantVersion: String by project
 val variantVersionPart = pluginVariantVersion.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
 val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
-val snapshotPart = if (isSnapshot) "-SNAPSHOT" else ""
+val snapshotSeparator = if (variantVersionPart.isNotEmpty()) "." else "-"
+val snapshotPart = if (isSnapshot) "${snapshotSeparator}SNAPSHOT" else ""
 val pluginVersion = "$pluginMajorVersion$variantVersionPart"
 val fullPluginVersion = "$pluginVersion$snapshotPart"
+
+
+val versionRegex = Regex("v(\\d(\\.\\d+)+(-([0-9a-zA-Z]+(\\.[0-9a-zA-Z]+)*))?)")
+if (!versionRegex.matches("v$fullPluginVersion")) {
+    throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
+}
+
 
 extra["pluginVersion"] = pluginVersion
 extra["fullPluginVersion"] = fullPluginVersion
@@ -76,7 +84,7 @@ changelog {
 
     version.set(pluginVersion)
     header.set(provider { "v${version.get()} (${date.format(formatter)})" })
-    headerParserRegex.set(Regex("v(\\d(\\.\\d+)+(-([0-9a-zA-Z]+(\\.[0-9a-zA-Z]+)*))?)"))
+    headerParserRegex.set(versionRegex)
     groups.set(emptyList())
 }
 
@@ -94,6 +102,10 @@ tasks {
 
         // Path to IDE distribution that will be used to run the IDE with the plugin.
         // ideDir.set(File("path to IDE-dependency"))
+    }
+
+    buildSearchableOptions {
+        enabled = !isSnapshot
     }
 
     patchPluginXml {

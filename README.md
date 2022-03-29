@@ -1,46 +1,55 @@
+# [![TranslationPlugin][plugin-logo]][gh:translation-plugin] TranslationPlugin
 
-# [![TranslationPlugin](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/pluginIcon.svg)](https://github.com/YiiGuxing/TranslationPlugin) TranslationPlugin
+[![Plugin Homepage][badge:plugin-homepage]][plugin-homepage]
+[![Build Status][badge:build]][gh:workflows-build]
+[![License][badge:license]][gh:license]
+[![GitHub releases][badge:release]][gh:releases]
+[![Version][badge:version]][plugin-homepage]
+[![Downloads][badge:downloads]][plugin-homepage]
+[![Financial Contributors on Open Collective][badge:open-collective]][open-collective]
 
-[![Jetbrains Plugins][plugin-img]][plugin]
-[![License][license-img]][license]
-[![Build Status][build-img-master]][workflows-build]
-[![GitHub release][release-img]][latest-release]
-[![Version][version-img]][plugin]
-[![Downloads][downloads-img]][plugin]
-[![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
-
-[build-img-master]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
-[license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=flat-square
-[downloads-img]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square
-[version-img]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=0091ea
-[latest-release]: https://github.com/YiiGuxing/TranslationPlugin/releases/latest
-[license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
-[workflows-build]: https://github.com/YiiGuxing/TranslationPlugin/actions/workflows/build.yml
-[plugin]: https://plugins.jetbrains.com/plugin/8579
-[open-collective]: https://opencollective.com/translation-plugin
-[open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
-[financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 <p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
 
+
+<br/><br/><br/>
+
+
+[![Getting Started][badge:get-started-en]][get-started-en]
+[![开始使用][badge:get-started-zh]][get-started-zh]
+[![はじめに][badge:get-started-jp]][get-started-ja]
+[![시작하기][badge:get-started-ko]][get-started-ko]
+
+---
+
+- [Features](#features)
+- [Compatibility](#compatibility)
+- [Installation](#installation)
+- [Using the Plugin](#using-the-plugin)
+- [Actions](#actions)
+- [FAQ](#faq)
+- [Support and Donations](#support-and-donations)
+- [Contributors](#contributors)
+  - [Code Contributors](#code-contributors)
+  - [Financial Contributors](#financial-contributors)
+
+
 ## Features
 
-- 多翻译引擎
-  - Google翻译
-  - 有道翻译
-  - 百度翻译
-  - 阿里翻译
-- 多语言互译
-- 文档翻译
-- 语音朗读
-- 自动选词
-- 自动单词拆分
-- 单词本
+- Multiple Translation Engines
+    - Google Translate
+    - Youdao Translate
+    - Baidu Translate
+    - Alibaba Translate
+- Multilingual translation
+- Document translation
+- Text-to-speech
+- Automatic word selection
+- Automatic word breaks
+- Word Book
 
-## Compatibility:
+## Compatibility
 
 - Android Studio
 - AppCode
@@ -66,173 +75,198 @@
     <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/button-install.png" alt="Get from Marketplace" title="Get from Marketplace">
 </a>
 
-- **使用 IDE 内置插件系统安装:**
-  - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>搜索并找到<b>"Translation"</b></kbd> > <kbd>Install</kbd>
+- **Installing from the plugin repository within the IDE:**
+    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"
+      Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
 
-- **手动安装:**
-  - 下载[插件包][latest-release] -> <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd> -> 选择插件包并安装（无需解压）
+- **Installing manually:**
+    - Download the plugin package on [GitHub Releases][gh:releases] or in the [JetBrains Plugin Repository][plugin-homepage].
+    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd> >
+      Select the plugin package and install (no need to unzip)
 
-重启**IDE**.
+Restart the **IDE** after installation.
 
-## Usage
+## Using The Plugin
 
-1. **注册翻译服务（可选）:**
-   - 注册翻译服务（ [有道智云](https://ai.youdao.com) 、[百度翻译开放平台](https://fanyi-api.baidu.com/manage/developer) 、[阿里云机器翻译](https://www.aliyun.com/product/ai/base_alimt) ）帐号，开通翻译服务并获取其**应用ID**和**应用密钥**
-   - 绑定**应用ID**和**应用密钥**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>常规</kbd> > <kbd>翻译引擎</kbd> > <kbd>配置...</kbd>
+1. **Sign up for a translation service (optional)**
+    - Sign up for a translation service ([Youdao Cloud][youdao-cloud],
+      [Baidu Translate Open Platform][baidu-translate], [Alibaba Cloud Machine Translation][ali-mt]) account,
+      open up the translation service and obtain the **Application ID** and **Key**.
+    - To bind the **Application ID** and **Key**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
+      Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
-   注：请注意保管好你的**应用密钥**，防止其泄露。如帐号欠费，将无法使用。
+   Note: Please protect your **Application Key** to prevent any security breaches. If your account has any outstanding
+   debts, you will not be able to use it for these services.
 
-2. **开始翻译:**
+2. **Begin translating**
 
-   <kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate</kbd>
+   <kbd>Select text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate</kbd>
 
-   或者使用快捷键进行翻译，详见 **[Actions](#actions)**
+   Or use shortcuts for translation, as detailed in **[Actions](#actions)**.
 
-3. **翻译并替换:**
+3. **Translate and replace**
 
-   翻译目标文本并将其替换。当翻译目标语言为英文时，会分别输出为**骆驼式输出**、**含单词分隔符输出**（输出包含多个单词时，分隔符可在插件配置页面中配置：翻译设置 > 分隔符）和**原输出**。
+   Translate the target text and replace it. If the target language is English, the output has several formats: **in
+   camel case, with a word separator** (when the output contains multiple words, the separator can be configured in the
+   plugin configuration page: <kbd>Translation Settings</kbd> > <kbd>Translate and replace</kbd> > <kbd>Separator</kbd>)
+   and in the **original format**.
 
-   用法：<kbd>选择文本或者鼠标指向文本</kbd> > <kbd>单击鼠标右键</kbd> > <kbd>Translate and Replace...</kbd>（或者使用快捷键进行翻译，详见 **[Actions](#actions)**）。
+   Instructions: <kbd>Select text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate and
+   Replace...</kbd> (Or use shortcuts for translation, as detailed in **[Actions](#actions)**).
 
-4. **翻译文档:**
+4. **Translate documents**
 
-   <kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>其他</kbd> > <kbd>翻译文档</kbd>，勾选该选项后，文档将会在您查看时被自动翻译。
+   <kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>Other</kbd> > <kbd>Translate
+   documents</kbd>: When you check this option, the document will be automatically translated when you view it.
 
-5. **切换翻译引擎:**
+5. **Switch translation engines**
 
-   点击状态栏的翻译引擎状态图标或者使用快捷键 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>（Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>）可以快速切换翻译引擎，目前有谷歌翻译、有道翻译、百度翻译和阿里翻译。
-
+   Click the translation engine icon in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>
+   S</kbd> (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to quickly switch between translation engines.
+   Currently, Google Translate, Youdao Translate, Baidu Translate and Alibaba Translate are supported.
 
 ## Actions
 
 - **Show Translation Dialog...**
 
-  打开翻译对话框。默认显示在工具栏上。默认快捷键:
+  Open the translation dialog, which appears by default on the toolbar. Default shortcut:
 
-  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>
-  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd>
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd>
 
 - **Translate**
 
-  取词并翻译。如果有已选择的文本，优先从选择的文本内取词，否则默认以最大范围自动取词（该取词模式可在Settings中配置）。默认显示在编辑器右键菜单上，默认快捷键:
+  Extract words and translate them. If you have already selected a text, extract the words from the portion of the text
+  you'd like translate. Otherwise, words are extracted automatically from the maximum range (this extraction can be
+  configured in Settings). This action is displayed by default in the editor's right-click context menu. Default
+  shortcut:
 
-  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
-  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 - **Translate(Inclusive)**
 
-  取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。默认快捷键: (无)
+  Extract words and translate them. Automatically extract and translate all words from a specific range, ignoring
+  manually selected text. Default shortcut: (None)
 
 - **Translate(Exclusive)**
 
-  取词并翻译。自动取最近的单个词，忽略手动选择的文本。默认快捷键: (无)
+  Extract words and translate them. Automatically extract the nearest single word, ignoring manually selected text.
+  Default shortcut: (None)
 
 - **Translate and Replace...**
 
-  翻译并替换。取词方式同`Translate`操作。默认显示在编辑器右键菜单上，默认快捷键:
+  Translate and replace. The word extraction method works the same as when **translating**. Default shortcut:
 
-  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>
-  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd>
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd>
 
 - **Translate Documentation**
-  
-  翻译文档注释内容。默认显示在编辑器右键菜单上，光标在文档注释块内时可用。默认快捷键: (无)
+
+  Translate the contents of document comments. This option is displayed by default in the editor's context menu (
+  right-click to access) and is available when the cursor is in the document's comment block. Default shortcut: (None)
 
 - **Toggle Quick Documentation Translation**
-  
-  快速文档中将文档内容在译文和原文之间切换。窗口聚焦于快速文档弹出窗或者文档工具窗口时可用。默认快捷键(同**Translate**): 
-  
-  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
-  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+
+  Toggle between the original and translated texts in Quick Documentation. This option is available when the focus is on
+  the Quick Documentation pop-up window or the documentation tool window. Default shortcut (same as **translation**
+  shortcut):
+
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 - **Translate Text Component**
 
-  翻译一些文本组件（如快速文档、提示气泡、输入框……）中选中的文本，不支持自动取词。默认快捷键:
+  Translate selected text in some text components (e.g. Quick Docs, popup hints, input boxes……). This does not support
+  automatic word extraction. Default shortcut (same as **translation** shortcut):
 
-  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
-  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 - **Choose Translator**
 
-  快速切换翻译引擎。默认快捷键:
+  Quickly toggle between translation engines. Default shortcut:
 
-  - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-  - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
 
 - **Word of the Day**
 
-  显示每日单词对话框。默认快捷键: (无)
+  Display the 'Word of the Day' dialog box. Default shortcut: (None)
 
-- **其他**
+- **Other**
 
-  - 翻译对话框快捷键：
-  
-    - 显示源语言列表 - <kbd>Alt</kbd> + <kbd>S</kbd>
-    - 显示目标语言列表 - <kbd>Alt</kbd> + <kbd>T</kbd>
-    - 交换语言 - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-    - 切换窗口固定状态 - <kbd>Alt</kbd> + <kbd>P</kbd>
-    - 播放TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd>
-    - 收藏到单词本 - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd>
-    - 显示历史记录 - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd>
-    - 拷贝译文 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
-    - 清空输入 - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd>
-    - 展开更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd>
-    - 收起更多翻译 - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd>
+    - Translation dialog shortcuts:
 
-  - 翻译气泡快捷键：
-  
-    - 以对话框打开 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+        - Display the list of source languages - <kbd>Alt</kbd> + <kbd>S</kbd>
+        - Display the list of target languages - <kbd>Alt</kbd> + <kbd>T</kbd>
+        - Switch between languages - <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+        - Pin/unpin a window - <kbd>Alt</kbd> + <kbd>P</kbd>
+        - Play TTS - <kbd>Alt/Meta/Shift</kbd> + <kbd>Enter</kbd>
+        - Save to Word Book - <kbd>Ctrl/Meta</kbd> + <kbd>F</kbd>
+        - Show history - <kbd>Ctrl/Meta</kbd> + <kbd>H</kbd>
+        - Copy translation - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+        - Clear input - <kbd>Ctrl/Meta</kbd> + <kbd>Shift</kbd> + <kbd>BackSpace/Delete</kbd>
+        - Expand more translations - <kbd>Ctrl/Meta</kbd> + <kbd>Down</kbd>
+        - Hide more translations - <kbd>Ctrl/Meta</kbd> + <kbd>UP</kbd>
 
-  - 快速文档窗口快捷键：
-  
-    - 开启/关闭自动翻译 - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+    - Translation balloon shortcuts:
+
+        - Open dialog - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>
+          U</kbd>
+
+    - Quick Documentation window shortcuts:
+
+        - Enable/disable automatic translation - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd>
+          + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 ## FAQ
 
-> *如果您有任何疑问，可以在[这里](https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/q-a)提出。*
+> *If you have any questions, please ask [here][gh:discussions-q-a].*
 
-### 常见问题解答：
+1. **What should I do if there is a network error or the network connection times out?**
 
-1. **出现网络错误或者网络连接超时怎么办？**
+   **A:**
+    - Check the network environment and make sure the network is running smoothly.
+    - Check whether a proxy is preventing the plugin from accessing the translation API.
+    - Check the IDE proxy configuration to see if that is the cause of the problem.
 
-   **答**：请按照以下步骤操作以尝试解决问题。  
-   - 检查网络环境，确保网络畅通。
-   - 检查是否是因为使用了代理软件而导致插件无法访问翻译API。
-   - 检查IDE代理配置，查看是否是因为IDE代理配置导致的问题。
+2. **What should I do if the translated content appears garbled?**
 
-2. **翻译内容出现乱码怎么办？**
+   **A:** Garbled code generally appears when there are a lack of corresponding characters in the font. You can go to
+   the Settings page of the plugin to modify the font in order to fix the garbled code (as shown below).
 
-   **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
-   
-   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
+   ![screenshots][file:settings-font]
 
-3. **无法保存应用密钥怎么办?**
+3. **What if I can't save the application key?**
 
-   **答**：可以尝试将密码保存方式改成`In KeePass`方式 (<kbd>Settings</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>)，原因与细节：
-   - MacOS，请另阅 [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
-   - Linux，请另阅 [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)
+   **A:** You can try changing the way passwords are saved to `In KeePass` (<kbd>Settings</kbd> > <kbd>Appearance &
+   Behavior</kbd> > <kbd>System Settings</kbd> > <kbd>Passwords</kbd>). For more details:
+    - For macOS, please refer to [#81][gh:#81]
+    - For Linux, please refer to [#115][gh:#115]
 
-4. **快捷键不能使用怎么办？**
+4. **What if the shortcuts don't work?**
 
-   **答**：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
+   **A:** The shortcut keys are most likely not working because they are being used in other plugins or external
+   applications. You can reset shortcut keys for the corresponding operations.
 
+## Support and Donations
 
-## Support
+You can contribute and support this project by doing any of the following:
 
-您可以通过执行以下任意操作来贡献和支持此项目：
-* 在GitHub上标星
-* 将插件分享给您的小伙伴们
-* 提交PR
-* 反馈问题
-* 提出您的想法/建议
-* 如果您喜欢这个插件，请考虑捐赠以维持插件的相关活动：
+* Star the project on GitHub
+* Give feedback
+* Commit PR
+* Contribute your ideas/suggestions
+* Share the plugin with your friends/colleagues
+* If you like the plugin, please consider making a donation to keep the plugin active:
 
   <table>
     <thead align="center">
       <tr>
         <th><a href="https://opencollective.com/translation-plugin" target="_blank">Open Collective</a></th>
-        <th><a href="https://global.alipay.com" target="_blank">支付宝</a></th>
-        <th><a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">微信支付</a></th>
+        <th><a href="https://global.alipay.com" target="_blank">Alipay</a></th>
+        <th><a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">WeChat Pay</a></th>
       </tr>
     </thead>
     <tr align="center">
@@ -253,15 +287,25 @@
       </td>
     </tr>
   </table>
-  使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
 
-  `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
+  **Note:** After using Alipay/WeChat to pay for your donation, please provide your name/nickname and website by leaving
+  a message or via email in the following format:
 
-  您提供的名字、网站和捐赠总额将会被添加到[**捐赠者**][financial-contributors]列表中。
-  
-  邮箱地址：[yii.guxing@gmail.com](mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A) (点击发送邮件)
+  `Name/Nickname [<website>][: message]` (website and message are optional.)
 
-**感谢您的支持！**
+  Example: `Yii.Guxing <github.com/YiiGuxing>: I like the plugin!`
+
+  If you choose to send an email, please also provide the following information:
+  ```text
+  Donation Amount: <amount>
+  Payment Platform: Alipay/WeChat Pay
+  Payment Number (last 5 digits): <number>
+  ```
+  Email address: [yii.guxing@gmail.com][mailto] (click to send email)
+
+  The name, website and total donation amount you provide will be added to the [donor list][file:financial-contributors].
+
+**Thank you for your support!**
 
 ## Contributors
 
@@ -272,7 +316,8 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 ### Financial Contributors
 
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
+Become a financial contributor and help us sustain our
+community. [[Contribute][open-collective-contribute]]
 
 #### Backers
 
@@ -282,7 +327,8 @@ Thank you to all our backers! ❤️ [[Become a backer](https://opencollective.c
 
 #### Sponsors
 
-Support this project by becoming a sponsor! Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/translation-plugin/contribute)]
+Support this project by becoming a sponsor! Your logo will show up here with a link to your
+website. [[Become a sponsor][open-collective-contribute]]
 
 <a href="https://opencollective.com/translation-plugin/organization/0/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/0/avatar.svg?avatarHeight=128"></a>
 <a href="https://opencollective.com/translation-plugin/organization/1/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/1/avatar.svg?avatarHeight=128"></a>
@@ -295,20 +341,62 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 <a href="https://opencollective.com/translation-plugin/organization/8/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg?avatarHeight=128"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website" target="_blank"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg?avatarHeight=128"></a>
 
+#### Donors
 
-#### 捐赠者
+| **Name** | **Website**                                                | **Amount** |
+|----------|------------------------------------------------------------|------------|
+| 唐嘉       | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY    |
+| 凌高       |                                                            | 100 CNY    |
+| Mritd    | [mritd.com](https://mritd.com)                             | 88.88 CNY  |
+| 三分醉      | [www.sanfenzui.com](http://www.sanfenzui.com)              | 88 CNY     |
+| LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt)         | 76.6 CNY   |
+| 弦曲       |                                                            | 66.6 CNY   |
+| 贺小五      |                                                            | 66.6 CNY   |
+| Him188   | [github.com/him188](https://github.com/him188)             | 66 CNY     |
+| Kagada   | [github.com/kagada](https://github.com/kagada)             | 60 CNY     |
+| 王者之师     |                                                            | 50 CNY     |
 
-| **姓名** | **网站** | **捐赠总额** |
-| -------- | -------- | ------------ |
-| 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
-| 凌高 | | 100 CNY |
-| Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
-| 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
-| LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
-| 弦曲 | | 66.6 CNY |
-| 贺小五 | | 66.6 CNY |
-| Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
-| Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
-| 王者之师 | | 50 CNY |
+[More donors][file:financial-contributors]
 
-[更多捐赠者][financial-contributors]
+
+[plugin-logo]: https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/pluginIcon.svg
+
+[badge:plugin-homepage]: https://img.shields.io/badge/plugin%20homepage-translation-4caf50.svg?style=flat-square
+[badge:build]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
+[badge:license]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
+[badge:release]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square&colorB=0097A7
+[badge:version]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=2196F3
+[badge:downloads]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square&colorB=5C6BC0
+[badge:open-collective]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&color=d05ce3
+[badge:get-started-en]: https://img.shields.io/badge/Get%20Started-English-4CAF50?style=flat-square
+[badge:get-started-zh]: https://img.shields.io/badge/%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8-%E4%B8%AD%E6%96%87-2196F3?style=flat-square
+[badge:get-started-jp]: https://img.shields.io/badge/%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB-%E6%97%A5%E6%9C%AC%E8%AA%9E-009688?style=flat-square
+[badge:get-started-ko]: https://img.shields.io/badge/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-%ED%95%9C%EA%B5%AD%EC%96%B4-7CB342?style=flat-square
+
+[gh:translation-plugin]: https://github.com/YiiGuxing/TranslationPlugin
+[gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
+[gh:workflows-build]: https://github.com/YiiGuxing/TranslationPlugin/actions/workflows/build.yml
+[gh:license]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/LICENSE
+[gh:discussions-q-a]: https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/q-a
+[gh:#81]: https://github.com/YiiGuxing/TranslationPlugin/issues/81
+[gh:#115]: https://github.com/YiiGuxing/TranslationPlugin/issues/115
+
+[file:settings-font]: https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png
+[file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
+
+[get-started-en]: https://yiiguxing.github.io/TranslationPlugin/en/start.html
+[get-started-zh]: https://yiiguxing.github.io/TranslationPlugin/start.html
+[get-started-ja]: https://yiiguxing.github.io/TranslationPlugin/ja/start.html
+[get-started-ko]: https://yiiguxing.github.io/TranslationPlugin/ko/start.html
+
+[plugin-homepage]: https://plugins.jetbrains.com/plugin/8579-translation
+
+[open-collective]: https://opencollective.com/translation-plugin
+[open-collective-contribute]: https://opencollective.com/translation-plugin/contribute
+
+[youdao-cloud]: https://ai.youdao.com
+[baidu-translate]: https://fanyi-api.baidu.com/manage/developer
+[ali-mt]: https://www.aliyun.com/product/ai/base_alimt
+
+[mailto]: mailto:yii.guxing@gmail.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Pay%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D
+

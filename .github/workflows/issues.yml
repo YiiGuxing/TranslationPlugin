@@ -1,0 +1,55 @@
+
+name: Issues
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  issues: write
+
+jobs:
+
+  label:
+    name: Label Issue
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+
+      - name: Label Issue
+        uses: IvanFon/super-labeler-action@v1
+        with:
+          github-token: "${{ secrets.ISSUE_LABEL_TOKEN }}"
+
+
+  comment:
+    name: Comment On Issue
+    if: github.event.action == 'labeled'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Comment
+        if: github.event.label.name == 'dynamic plugin :electric_plug:'
+        uses: ben-z/actions-comment-on-issue@1.0.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message: >
+            This problem is caused by the dynamic loading of the plugin, you need to restart the IDE to solve it.
+
+
+  close:
+    name: Close Issue
+    if: github.event.action == 'labeled'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Close
+        if: github.event.label.name == 'not plugin''s bug'
+        uses: peter-evans/close-issue@v2
+        with:
+          comment: >
+            This issue has been automatically closed because it is not an issue for this project.
+            If you think there are something really wrong, please reply this issue. Thanks for your cooperation.

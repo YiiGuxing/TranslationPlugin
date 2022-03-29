@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.documentation.*
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
@@ -9,6 +10,7 @@ import com.intellij.openapi.diagnostic.Logger
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.lang.reflect.Type
+import java.net.HttpRetryException
 import javax.swing.Icon
 
 /**
@@ -169,6 +171,14 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         val sLang = if (srcLang == Lang.AUTO && results.size >= 2) Lang[results[1]] else srcLang
 
         return BaseTranslation(original, sLang, targetLang, results[0])
+    }
+
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
+        if (throwable is HttpRetryException) {
+            return ErrorInfo(message("error.service.unavailable"))
+        }
+
+        return super.createErrorInfo(throwable)
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {
