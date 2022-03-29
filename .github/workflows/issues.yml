@@ -46,10 +46,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Close
+      - name: Close As `not plugin's bug`
         if: github.event.label.name == 'not plugin''s bug'
         uses: peter-evans/close-issue@v2
         with:
           comment: >
             This issue has been automatically closed because it is not an issue for this project.
+            If you think there are something really wrong, please reply this issue. Thanks for your cooperation.
+
+      - name: Close As `wontfix`
+        if: github.event.label.name == 'wontfix'
+        uses: peter-evans/close-issue@v2
+        with:
+          comment: >
+            This issue has been automatically closed as `wontfix` because nothing it's wrong here.
             If you think there are something really wrong, please reply this issue. Thanks for your cooperation.
