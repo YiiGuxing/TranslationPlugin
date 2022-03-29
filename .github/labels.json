@@ -14,6 +14,11 @@
       "name": "dynamic plugin :electric_plug:",
       "colour": "#E0E0E0",
       "description": "Caused by the dynamic loading"
+    },
+    "wont-fix": {
+      "name": "wontfix",
+      "colour": "#FFFFFF",
+      "description": "This will not be worked on"
     }
   },
   "issue": {
@@ -35,11 +40,7 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "java\\.lang\\.ClassCastException: class (?<class>cn\\.yiiguxing\\.plugin\\.translate\\.\\S+) cannot be cast to class \\k<class> "
-        },
-        {
-          "type": "descriptionMatches",
-          "pattern": "java\\.lang\\.ClassCastException: class cn\\.yiiguxing\\.plugin\\.translate\\.service\\.TranslationUIManager\\$AppService cannot be cast to class cn\\.yiiguxing\\.plugin\\.translate\\.service\\.TranslationUIManager "
+          "pattern": "java\\.lang\\.ClassCastException: class (?<class1>\\S+) cannot be cast to class (?<class2>\\S+) \\(\\k<class1> (and|is in unnamed module of loader \\S+ClassLoader @[0-9a-f]+;) \\k<class2> (is|are) in unnamed module of loader \\S+ClassLoader @[0-9a-f]+\\)"
         }
       ]
     },
@@ -48,11 +49,16 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "java\\.lang\\.ClassCastException: class (?<class>cn\\.yiiguxing\\.plugin\\.translate\\.\\S+) cannot be cast to class \\k<class> "
-        },
+          "pattern": "java\\.lang\\.ClassCastException: class (?<class1>\\S+) cannot be cast to class (?<class2>\\S+) \\(\\k<class1> (and|is in unnamed module of loader \\S+ClassLoader @[0-9a-f]+;) \\k<class2> (is|are) in unnamed module of loader \\S+ClassLoader @[0-9a-f]+\\)"
+        }
+      ]
+    },
+    "wont-fix": {
+      "requires": 1,
+      "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "java\\.lang\\.ClassCastException: class cn\\.yiiguxing\\.plugin\\.translate\\.service\\.TranslationUIManager\\$AppService cannot be cast to class cn\\.yiiguxing\\.plugin\\.translate\\.service\\.TranslationUIManager "
+          "pattern": "group with id \"Documentation.PrimaryGroup\" isn't registered;"
         }
       ]
     }
