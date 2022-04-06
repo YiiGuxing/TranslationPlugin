@@ -110,6 +110,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 秦秦秦 | | 6 CNY |
 | Hushuang | | 6 CNY |
 | 张英奇 | | 6 CNY |
+| Hanks | [github.com/CrazeJack](https://github.com/CrazeJack) | 5 CNY |
 | 大雄 | [199508.com](http://199508.com) | 5 CNY |
 | 麦可 | [github.com/way2fly](https://github.com/way2fly) | 5 CNY |
 | 谢嘉豪 | [xiejiahao.com](http://xiejiahao.com) | 5 CNY |
