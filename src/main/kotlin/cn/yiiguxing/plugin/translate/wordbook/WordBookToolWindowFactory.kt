@@ -16,6 +16,10 @@ import com.intellij.openapi.wm.ToolWindowFactory
 class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1186
+        if (project.isDisposed) {
+            return
+        }
         WordBookView.instance.setup(project, toolWindow)
     }
 
