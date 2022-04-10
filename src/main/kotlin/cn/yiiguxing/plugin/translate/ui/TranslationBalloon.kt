@@ -183,10 +183,7 @@ class TranslationBalloon(
 
         if (!isShowing) {
             isShowing = true
-
-            Disposer.register(this, tracker)
             balloon.show(tracker, position)
-
             onTranslate()
         }
     }
