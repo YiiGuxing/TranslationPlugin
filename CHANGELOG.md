@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 修复了一些错误
 
 ## v3.3 (2022/03/25)
 - 全新的错误提示面板
