@@ -17,7 +17,7 @@ import com.intellij.psi.PsiElement
 /**
  * Translates documentation computed by another documentation provider. It should have
  *
- * order="first"
+ * `order = "first"`
  *
  * in the extension declaration.
  */
@@ -29,7 +29,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
-            val originalDoc = providerFromElement.generateDoc(element, originalElement)
+            val originalDoc = nullIfError { providerFromElement.generateDoc(element, originalElement) }
             translate(originalDoc, element?.language)
         }
     }
@@ -39,12 +39,11 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         if (!TranslatedDocComments.isTranslated(docComment))
             return null
 
-        val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
-        val originalDoc = nullIfRecursive {
-            providerFromElement.generateRenderedDoc(docComment)
+        return nullIfRecursive {
+            val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
+            val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
+            translate(originalDoc, docComment.language)
         }
-
-        return translate(originalDoc, docComment.language)
     }
 
     override fun fetchExternalDocumentation(
@@ -61,12 +60,9 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
                 element?.language to DocumentationManager.getProviderFromElement(element, null)
             })
             val originalDoc = when (providerFromElement) {
-                is ExternalDocumentationProvider -> providerFromElement.fetchExternalDocumentation(
-                    project,
-                    element,
-                    docUrls,
-                    onHover
-                )
+                is ExternalDocumentationProvider -> nullIfError {
+                    providerFromElement.fetchExternalDocumentation(project, element, docUrls, onHover)
+                }
                 else -> null
             }
 
@@ -80,13 +76,42 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
     override fun promptToConfigureDocumentation(element: PsiElement?) {}
 
-    //this method is deprecated and not used by the platform
+    // This method is deprecated and not used by the platform
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun hasDocumentationFor(element: PsiElement?, originalElement: PsiElement?): Boolean {
         return false
     }
 
     companion object {
         private val recursion = ThreadLocal.withInitial { 0 }
+
+        // To reuse long-running translation task
+        private var lastTranslationTask: TranslateDocumentationTask? = null
+
+        /**
+         * 用于[DocumentationProviderEx]和[ExternalDocumentationProvider]生成文档方法的包装调用，
+         * 此方法应该在[nullIfRecursive]方法的`computation`参数中调用：
+         *
+         * ```
+         * nullIfRecursive {
+         *     val originalDoc = nullIfError { provider.generateDoc(element, originalElement) }
+         *     // ...
+         * }
+         * ```
+         * 它的作用是：
+         * 如果在调用真正的文档提供者生成文档时发生错误的话，屏蔽错误并跳过文档翻译。错误将会在轮到真正的文档提供者
+         * 自己提供文档时的重新发生，此时的错误就和[TranslatingDocumentationProvider]无关了，
+         * 否则原本是属于真正文档提供者的错误将会被IDE误认为是[TranslatingDocumentationProvider]的错误，
+         * 避免插件自己背黑锅，例如
+         * [#1203](https://github.com/YiiGuxing/TranslationPlugin/issues/1203)
+         */
+        private inline fun <T> nullIfError(block: () -> T?): T? {
+            return try {
+                block()
+            } catch (e: Throwable) {
+                null
+            }
+        }
 
         private fun <T> nullIfRecursive(computation: () -> T?): T? {
             if (recursion.get() > 0)
@@ -101,20 +126,17 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             }
         }
 
-        //to reuse long running translation task
-        private var lastTranslation: TranslateDocumentationTask? = null
-
         private fun translate(text: String?, language: Language?): String? {
             if (text.isNullOrEmpty()) return null
 
-            val lastTask = lastTranslation
+            val lastTask = lastTranslationTask
             val translator = TranslateService.translator
 
             val task =
                 if (lastTask != null && lastTask.translator.id == translator.id && lastTask.text == text) lastTask
                 else TranslateDocumentationTask(text, language, translator)
 
-            lastTranslation = task
+            lastTranslationTask = task
 
             return task.nonBlockingGet()
         }
