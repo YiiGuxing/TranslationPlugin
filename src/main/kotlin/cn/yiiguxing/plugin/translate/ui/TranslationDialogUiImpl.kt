@@ -37,10 +37,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     override val targetLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val swapButton: LinkLabel<Void> = LinkLabel()
     override val inputTextArea: JTextArea = JBTextArea(1, 1)
-    override val translationTextArea: JTextArea = JBTextArea(1, 1).apply {
-        isEditable = false
-        background = topPanel.background
-    }
+    override val translationTextArea: JTextArea = TranslationTextArea(topPanel.background)
 
     override val translationFailedComponent: TranslationFailedComponent = TranslationFailedComponent()
     private val rightPanelLayout = FixedSizeCardLayout()
@@ -354,6 +351,24 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
     override fun dispose() {
         Disposer.dispose(progressIcon)
+    }
+
+    private class TranslationTextArea(background: Color) : JBTextArea(1, 1) {
+
+        init {
+            isEditable = false
+            this.background = background
+        }
+
+        override fun paintComponent(g: Graphics) {
+            //region Fix #1025(https://github.com/YiiGuxing/TranslationPlugin/issues/1025)
+            //强制绘制背景，以修复`Material Theme UI`主题所导致的显示异常。
+            g.color = background
+            g.fillRect(0, 0, width, height)
+            //endregion
+
+            super.paintComponent(g)
+        }
     }
 
     private class Separator : JComponent() {
