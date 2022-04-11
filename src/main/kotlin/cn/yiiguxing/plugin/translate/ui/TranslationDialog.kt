@@ -494,6 +494,10 @@ class TranslationDialog(
     }
 
     private fun requestTranslate(delay: Int = presenter.translator.intervalLimit) {
+        if (isDisposed) {
+            return
+        }
+
         alarm.apply {
             cancelAllRequests()
             addRequest(translateAction, maxOf(delay, 500))
