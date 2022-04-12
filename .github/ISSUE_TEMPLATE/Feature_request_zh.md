@@ -1,7 +1,7 @@
 ---
 name: 功能需求
 about: 建议新的功能或对现有功能的更新
-labels: feature request :sparkles:
+labels: 'feature request :sparkles:'
 ---
 
 ### 检查清单

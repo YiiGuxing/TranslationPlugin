@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest a new feature or updates to an existing feature
-labels: feature request :sparkles:
+labels: 'feature request :sparkles:'
 ---
 
 ### Preflight Checklist
