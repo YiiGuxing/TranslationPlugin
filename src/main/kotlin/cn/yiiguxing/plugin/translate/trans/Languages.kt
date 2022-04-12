@@ -64,6 +64,9 @@ enum class Lang(
     /** 爱沙尼亚语 */
     ESTONIAN("estonian", "et"),
 
+    /** 奥利亚语 */
+    ORIYA("oriya", "or"),
+
     /** 巴斯克语 */
     BASQUE("basque", "eu"),
 
@@ -87,6 +90,9 @@ enum class Lang(
 
     /** 布尔语(南非荷兰语) */
     AFRIKAANS("afrikaans", "af"),
+
+    /** 鞑靼语 */
+    TATAR("tatar", "tt"),
 
     /** 丹麦语 */
     DANISH("danish", "da"),
@@ -294,6 +300,9 @@ enum class Lang(
 
     /** 威尔士语 */
     WELSH("welsh", "cy"),
+
+    /** 维吾尔语 */
+    UYGHUR("uyghur", "ug"),
 
     /** 乌尔都语 */
     URDU("urdu", "ur"),
