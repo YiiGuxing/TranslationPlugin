@@ -1,7 +1,7 @@
 ---
 name: Bug报告
 about: 创建报告以帮助我们改进TranslationPlugin
-labels: bug
+labels: bug :bug:
 ---
 
 ## 检查清单
