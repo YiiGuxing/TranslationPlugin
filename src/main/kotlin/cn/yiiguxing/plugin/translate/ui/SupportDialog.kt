@@ -41,7 +41,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
         starLinkLabel.init(GITHUB_URL)
         prLinkLabel.init(GITHUB_URL)
         reportLinkLabel.init(NEW_ISSUES_URL)
-        ideaLinkLabel.init(NEW_ISSUES_URL)
+        ideaLinkLabel.init(IDEA_DISCUSSION_URL)
         openCollectiveLinkLabel.init(OPEN_COLLECTIVE_DONATE_URL, false)
 
         donateLinkLabel.icon = null
@@ -121,6 +121,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
     companion object {
         private const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
         private const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
+        private const val IDEA_DISCUSSION_URL = "https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/ideas"
         private const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-translation"
         private const val OPEN_COLLECTIVE_DONATE_URL = "https://opencollective.com/translation-plugin/donate"
 
