@@ -91,6 +91,7 @@ class WordBookService {
         ProgressManager.getInstance()
             .run(object : Task.Backgroundable(null, message("word.book.progress.downloading.driver"), true) {
                 override fun run(indicator: ProgressIndicator) = downloadDriverAndInitializeService(indicator)
+
                 override fun onThrowable(error: Throwable) {
                     if (error !is ProcessCanceledException) {
                         Notifications.showErrorNotification(
