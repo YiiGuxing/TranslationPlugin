@@ -4,9 +4,9 @@ import com.intellij.credentialStore.CredentialAttributes;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * CredentialAttributesFactory
+ * Factory class for creating instances of {@link CredentialAttributes}.
  * <p>
- * https://github.com/YiiGuxing/TranslationPlugin/issues/319
+ * Fix <a href="https://github.com/YiiGuxing/TranslationPlugin/issues/319">#319</a>
  */
 public final class CredentialAttributesFactory {
 
