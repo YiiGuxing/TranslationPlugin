@@ -9,13 +9,10 @@ import kotlin.reflect.KProperty
 /**
  * PasswordSafeDelegate
  */
-class PasswordSafeDelegate private constructor(private val attributes: CredentialAttributes) :
-    ReadWriteProperty<Any?, String?> {
-
-    constructor(serviceName: String, userName: String? = null) :
-            this(CredentialAttributesFactory.create(serviceName, userName))
+class PasswordSafeDelegate(serviceName: String) : ReadWriteProperty<Any?, String?> {
 
     private val store = PasswordSafe.instance
+    private val attributes: CredentialAttributes = CredentialAttributes(serviceName)
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): String? = store.getPassword(attributes)
 
