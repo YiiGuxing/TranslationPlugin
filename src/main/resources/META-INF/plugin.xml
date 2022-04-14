@@ -37,12 +37,14 @@
 
     <extensionPoints>
         <extensionPoint name="ignoredDocumentationElementsProvider"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint">
+                        beanClass="com.intellij.lang.LanguageExtensionPoint"
+                        dynamic="true">
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider"/>
         </extensionPoint>
         <extensionPoint name="docElementProvider"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint">
+                        beanClass="com.intellij.lang.LanguageExtensionPoint"
+                        dynamic="true">
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider"/>
         </extensionPoint>
