@@ -51,7 +51,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0")
         if (versionString == lastVersionString) {
-            //return
+            return
         }
 
         val version = Version(versionString)
