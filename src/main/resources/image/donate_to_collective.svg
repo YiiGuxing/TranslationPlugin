@@ -13,12 +13,8 @@
           fill="#3faff0" fill-rule="evenodd"/>
     <path d="M285.51,16a14,14,0,0,1,0,15.94l-3.63-3.62a9,9,0,0,0,0-8.7L285.51,16Z" fill="#b8d5e6" fill-rule="evenodd"/>
     <g style="isolation:isolate">
-        <text transform="translate(19 28)" font-size="12" fill="#fff" font-family="Montserrat-Regular, Montserrat, ArialMT, Arial"
-              font-weight="bold" letter-spacing="0.17em" style="isolation:isolate">DON
-            <tspan x="32.64" y="0" letter-spacing="0.09em">A</tspan>
-            <tspan x="41.75" y="0">TE</tspan>
-            <tspan x="61.07" y="0" xml:space="preserve" letter-spacing="0.15em"> T</tspan>
-            <tspan x="75.28" y="0">O OUR COLLECTIVE</tspan>
+        <text transform="translate(16 28.5)" font-size="12" fill="#fff" font-family="Montserrat-Regular, Montserrat, ArialMT, Arial"
+              font-weight="bold" letter-spacing="0.15em">DONATE TO OUR COLLECTIVE
         </text>
     </g>
 </svg>
