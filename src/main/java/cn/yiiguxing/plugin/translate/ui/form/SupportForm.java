@@ -16,4 +16,6 @@ public class SupportForm {
     public LinkLabel<String> openCollectiveLinkLabel;
     public LinkLabel<String> donateLinkLabel;
     public LinkLabel<String> shareLinkLabel;
+    public JLabel weChatPayLabel;
+    public JLabel aliPayLabel;
 }

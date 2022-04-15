@@ -245,27 +245,25 @@
             </constraints>
             <properties/>
           </component>
-          <component id="27513" class="javax.swing.JLabel">
+          <component id="27513" class="javax.swing.JLabel" binding="weChatPayLabel">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <horizontalTextPosition value="0"/>
-              <icon value="image/alipay.png"/>
               <iconTextGap value="5"/>
-              <text resource-bundle="messages/TranslationBundle" key="support.donate.alipay"/>
+              <text resource-bundle="messages/TranslationBundle" key="support.donate.wechat"/>
               <verticalTextPosition value="3"/>
             </properties>
           </component>
-          <component id="933d5" class="javax.swing.JLabel">
+          <component id="933d5" class="javax.swing.JLabel" binding="aliPayLabel">
             <constraints>
               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <horizontalTextPosition value="0"/>
-              <icon value="image/wechat.png"/>
               <iconTextGap value="5"/>
-              <text resource-bundle="messages/TranslationBundle" key="support.donate.wechat"/>
+              <text resource-bundle="messages/TranslationBundle" key="support.donate.alipay"/>
               <verticalTextPosition value="3"/>
             </properties>
           </component>

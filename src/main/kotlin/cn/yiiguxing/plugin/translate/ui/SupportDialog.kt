@@ -61,6 +61,9 @@ class SupportDialog private constructor() : DialogWrapper(null) {
                     .show(guessBestPopupLocation(label), Balloon.Position.below)
             }
         }, SUPPORT_SHARE_URL)
+
+        weChatPayLabel.icon = TranslationIcons.load("/image/donating_wechat_pay.svg")
+        aliPayLabel.icon = TranslationIcons.load("/image/donating_alipay.svg")
     }
 
     private fun LinkLabel<String>.init(url: String, cleanIcon: Boolean = true) {
