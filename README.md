@@ -265,24 +265,24 @@ You can contribute and support this project by doing any of the following:
     <thead align="center">
       <tr>
         <th><a href="https://opencollective.com/translation-plugin" target="_blank">Open Collective</a></th>
-        <th><a href="https://global.alipay.com" target="_blank">Alipay</a></th>
         <th><a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">WeChat Pay</a></th>
+        <th><a href="https://global.alipay.com" target="_blank">Alipay</a></th>
       </tr>
     </thead>
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin/donate" target="_blank">
-          <img src="https://opencollective.com/translation-plugin/donate/button@2x.png?color=blue" width=300 alt="Donate To Our Collective">
-        </a>
-      </td>
-      <td>
-        <a href="https://global.alipay.com" target="_blank">
-          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donate_to_collective.svg" width=298 alt="Donate To Our Collective">
         </a>
       </td>
       <td>
         <a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">
-          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WeChat Play">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donating_wechat_pay" alt="WeChat Play">
+        </a>
+      </td>
+      <td>
+        <a href="https://global.alipay.com" target="_blank">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donating_alipay.svg" alt="Alipay">
         </a>
       </td>
     </tr>
