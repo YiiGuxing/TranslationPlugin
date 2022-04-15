@@ -30,6 +30,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
 
     init {
         title = message("support")
+        setResizable(false)
         setOKButtonText(message("support.thanks"))
         form.init()
         init()
