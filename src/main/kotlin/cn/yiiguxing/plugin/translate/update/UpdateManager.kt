@@ -51,7 +51,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0")
         if (versionString == lastVersionString) {
-            return
+            //return
         }
 
         val version = Version(versionString)
@@ -71,21 +71,13 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val color = getBorderColor()
         val partStyle = "margin: ${JBUI.scale(8)}px 0;"
         val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
-        //language=HTML
-        val content = """
-            If you find my plugin helpful, please
-            <b><a href="${Hyperlinks.SUPPORT_DESCRIPTION}">support us</a>.</b>
-            If you love this plugin, please consider
-            <b><a href="${Hyperlinks.SUPPORT_DESCRIPTION}">donating</a></b> to sustain the plugin related activities.
-            <br/>
-            Thank you for your support!
-            <div style="$partStyle $refStyle">
-                This update addresses these <a href="${MILESTONE_URL.format(version.version)}">issues</a>.
-            </div>
-            Change notes:<br/>
-            ${plugin.changeNotes}
-            <br/>
-        """.trimIndent()
+        val content = message(
+            "plugin.updated.notification.message",
+            Hyperlinks.SUPPORT_DESCRIPTION,
+            "$partStyle $refStyle",
+            MILESTONE_URL.format(version.version),
+            plugin.changeNotes
+        )
 
         val canBrowseWhatsNewHTMLEditor = canBrowseWhatsNewHTMLEditor()
         val notification = NotificationGroupManager.getInstance()
