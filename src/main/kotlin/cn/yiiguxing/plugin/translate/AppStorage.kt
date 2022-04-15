@@ -31,7 +31,7 @@ class AppStorage : PersistentStateComponent<AppStorage> {
 
     var lastReplacementTargetLanguage: Lang? = null
 
-    var pinNewTranslationDialog: Boolean = false
+    var pinTranslationDialog: Boolean = false
     var newTranslationDialogX: Int? = null
     var newTranslationDialogY: Int? = null
     var newTranslationDialogWidth: Int = 600

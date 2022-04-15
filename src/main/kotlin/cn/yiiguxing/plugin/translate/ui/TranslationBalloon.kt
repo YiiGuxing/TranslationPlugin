@@ -215,7 +215,7 @@ class TranslationBalloon(
         val readyTranslation = translationPane.translation ?: return
         hide()
 
-        AppStorage.pinNewTranslationDialog = true
+        AppStorage.pinTranslationDialog = true
         TranslationUIManager.showDialog(editor.project)
             .applyTranslation(readyTranslation)
     }
@@ -223,7 +223,7 @@ class TranslationBalloon(
     private fun showOnTranslationDialog(text: String, srcLang: Lang, targetLang: Lang) {
         hide()
 
-        AppStorage.pinNewTranslationDialog = true
+        AppStorage.pinTranslationDialog = true
         TranslationUIManager.showDialog(editor.project)
             .translate(text, srcLang, targetLang)
     }

@@ -127,7 +127,7 @@ class TranslationDialog(
         awtActivityListener = AWTEventListener { event ->
             val needCloseDialog = when (event) {
                 is MouseEvent -> event.id == MouseEvent.MOUSE_PRESSED &&
-                        !AppStorage.pinNewTranslationDialog &&
+                        !AppStorage.pinTranslationDialog &&
                         !isInside(event)
                 is KeyEvent -> event.keyCode == KeyEvent.VK_ESCAPE &&
                         !PopupUtil.handleEscKeyEvent() &&
@@ -812,11 +812,11 @@ class TranslationDialog(
         }
 
         override fun isSelected(e: AnActionEvent): Boolean {
-            return AppStorage.pinNewTranslationDialog
+            return AppStorage.pinTranslationDialog
         }
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
-            AppStorage.pinNewTranslationDialog = state
+            AppStorage.pinTranslationDialog = state
         }
     }
 
