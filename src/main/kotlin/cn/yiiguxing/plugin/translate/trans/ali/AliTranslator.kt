@@ -178,18 +178,17 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
         return HttpRequests
             .post(url, contentType)
-            .tuner {
-                it.setRequestProperty("Accept", accept)
-                it.setRequestProperty("Content-MD5", bodyMd5)
-                it.setRequestProperty("Date", date)
-                it.setRequestProperty("Host", realUrl.host)
-                it.setRequestProperty(
-                    "Authorization",
-                    "acs ${settings.appId}:${stringToSign.hmacSha1(settings.getAppKey())}"
-                )
-                it.setRequestProperty("x-acs-signature-nonce", uuid)
-                it.setRequestProperty("x-acs-signature-method", "HMAC-SHA1")
-                it.setRequestProperty("x-acs-version", "2019-01-02") // 版本可选
+            .tuner { conn ->
+                conn.setRequestProperty("Accept", accept)
+                conn.setRequestProperty("Content-MD5", bodyMd5)
+                conn.setRequestProperty("Date", date)
+                conn.setRequestProperty("Host", realUrl.host)
+                settings.getAppKey().takeIf { it.isNotEmpty() }?.let { key ->
+                    conn.setRequestProperty("Authorization", "acs ${settings.appId}:${stringToSign.hmacSha1(key)}")
+                }
+                conn.setRequestProperty("x-acs-signature-nonce", uuid)
+                conn.setRequestProperty("x-acs-signature-method", "HMAC-SHA1")
+                conn.setRequestProperty("x-acs-version", "2019-01-02") // 版本可选
             }
             .connect {
                 it.write(body)
