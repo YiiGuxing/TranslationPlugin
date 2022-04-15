@@ -143,7 +143,7 @@ tasks {
         distributionType = Wrapper.DistributionType.ALL
     }
 
-    withType<ProcessResources> {
+    processResources {
         filesMatching("**/*.properties") {
             filter(EscapeUnicode::class)
         }
