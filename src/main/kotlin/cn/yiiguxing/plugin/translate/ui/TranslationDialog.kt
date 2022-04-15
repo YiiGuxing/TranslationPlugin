@@ -456,8 +456,9 @@ class TranslationDialog(
     }
 
     private fun updateDetectedLangLabel(translation: Translation?) {
-        val detected = translation?.srcLang?.takeIf { sourceLang == Lang.AUTO && it != Lang.AUTO }?.langName
-
+        val detected = translation?.srcLang
+            ?.takeIf { sourceLang == Lang.AUTO && it != Lang.AUTO && it != Lang.UNKNOWN }
+            ?.langName
         detectedLanguageLabel.text = detected
         detectedLanguageLabel.isVisible = detected != null
     }
@@ -574,7 +575,7 @@ class TranslationDialog(
         ignoreInputEvent = true
         try {
             inputTextArea.text = translation.original
-            sourceLangComboBox.selected = translation.srcLang
+            sourceLangComboBox.selected = translation.srcLang.takeIf { it != Lang.UNKNOWN } ?: Lang.AUTO
             targetLangComboBox.selected = translation.targetLang
         } finally {
             ignoreLanguageEvent = false

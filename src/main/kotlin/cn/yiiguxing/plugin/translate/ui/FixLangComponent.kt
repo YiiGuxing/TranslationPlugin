@@ -18,7 +18,7 @@ class FixLangComponent : JPanel() {
         isOpaque = false
         isVisible = false
         actionLink = ActionLink {
-            lastTranslation?.srclangs?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
+            lastTranslation?.sourceLanguages?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
         }
         add(JLabel("${message("tip.label.sourceLanguage")}: "), HorizontalLayout.LEFT)
         add(actionLink, HorizontalLayout.LEFT)
@@ -30,8 +30,9 @@ class FixLangComponent : JPanel() {
 
     fun updateOnTranslation(translation: Translation?) {
         lastTranslation = translation
-        if (translation != null && !translation.srclangs.contains(translation.srcLang)) {
-            isVisible = translation.srclangs.firstOrNull()?.langName.let {
+        val sourceLanguages = translation?.sourceLanguages
+        if (sourceLanguages != null && !sourceLanguages.contains(translation.srcLang)) {
+            isVisible = sourceLanguages.firstOrNull()?.langName.let {
                 actionLink.text = it
                 !it.isNullOrEmpty()
             }

@@ -31,6 +31,9 @@ enum class Lang(
     /** 自动检测 */
     AUTO("auto", "auto"),
 
+    /** 未知语言 */
+    UNKNOWN("unknown", "_unknown_"),
+
     /** 中文 */
     CHINESE("chinese", "zh-CN"),
 
@@ -241,8 +244,20 @@ enum class Lang(
     /** 齐切瓦语 */
     CHICHEWA("chichewa", "ny"),
 
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
     /** 日语 */
-    JAPANESE("japanese", "ja"),
+    JAPANESE("japanese", "jaaa"),
 
     /** 瑞典语 */
     SWEDISH("swedish", "sv"),
@@ -366,10 +381,9 @@ enum class Lang(
 
     val langName: String = LanguageBundle.getMessage(langNameKey)
 
-    class NoSuchLanguageException(code: String) : RuntimeException("No such language, code=$code.")
 
     companion object {
-        private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
+        private val cachedValues: List<Lang> by lazy { values().filter { it != UNKNOWN }.sortedBy { it.langName } }
 
         private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
 
@@ -393,11 +407,11 @@ enum class Lang(
         /**
          * Returns the [language][Lang] corresponding to the given [code].
          */
-        operator fun get(code: String): Lang = mapping[code] ?: throw NoSuchLanguageException(code)
+        operator fun get(code: String): Lang = mapping[code] ?: UNKNOWN
 
         fun sortedValues(): List<Lang> = when (Locale.getDefault()) {
             Locale.CHINESE,
-            Locale.CHINA -> values().asList()
+            Locale.CHINA -> values().filter { it != UNKNOWN }
             else -> cachedValues
         }
     }
