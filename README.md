@@ -277,7 +277,7 @@ You can contribute and support this project by doing any of the following:
       </td>
       <td>
         <a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">
-          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donating_wechat_pay" alt="WeChat Play">
+          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donating_wechat_pay.svg" alt="WeChat Play">
         </a>
       </td>
       <td>
