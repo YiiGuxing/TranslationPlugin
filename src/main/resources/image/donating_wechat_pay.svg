@@ -7,7 +7,7 @@
         </linearGradient>
         <linearGradient id="linearGradient_2" x1="347.23" y1="332.53" x2="362.55" y2="347.85" xlink:href="#linearGradient_1"/>
     </defs>
-    <rect x="0" y="0" width="650" height="650" fill="#fff" stroke="#4d4d4d" stroke-width="2"/>
+    <rect x="0" y="0" width="650" height="650" fill="#fff"/>
     <g id="Dots">
         <circle cx="199" cy="451" r="4"/>
         <circle cx="213" cy="437" r="4"/>

@@ -9,7 +9,7 @@
         <linearGradient id="linearGradient_2" x1="218.89" y1="213.01" x2="225.02" y2="219.14"
                         xlink:href="#linearGradient_1"/>
     </defs>
-    <rect width="420" height="420" fill="#fff" stroke="#4d4d4d" stroke-width="2"/>
+    <rect width="420" height="420" fill="#fff"/>
     <rect x="46" y="214" width="8" height="8"/>
     <polygon points="46 294 46 302 46 310 54 310 54 302 54 294 46 294"/>
     <polygon points="54 246 46 246 46 254 54 254 62 254 62 246 54 246"/>
