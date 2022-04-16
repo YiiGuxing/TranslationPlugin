@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 420 420" width="200"
-     height="200">
+<svg id="QR_Code" data-name="QR Code" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 420 420" width="200" height="200">
     <defs>
         <linearGradient id="linearGradient_1" x1="177.65" y1="177.65" x2="236.22" y2="236.22"
                         gradientUnits="userSpaceOnUse">
@@ -8,6 +8,9 @@
         </linearGradient>
         <linearGradient id="linearGradient_2" x1="218.89" y1="213.01" x2="225.02" y2="219.14"
                         xlink:href="#linearGradient_1"/>
+        <clipPath id="clip-path">
+            <rect x="226" y="227" width="24" height="24" rx="12" fill="none"/>
+        </clipPath>
     </defs>
     <rect width="420" height="420" fill="#fff"/>
     <rect x="46" y="214" width="8" height="8"/>
@@ -152,10 +155,16 @@
     <path d="M366,286h-8v-8h-8v8H326v8h16v8H326v-8h-8v8h-8V278h8v8h8V270H310v-8H294v16h-8v8h8v8h8v8H286v16h-8v-8h-8v-8h16V286h-8v8h-8v-8h-8v8H246V278h-8v24h8v24h8v-8h8v16h8v8h-8v-8h-8v8h-8v24h-8V350h-8v8h-8V342H198v-8h-8v16h8v8h16v8h-8v8h16v-8h8v8h40v-8h24v-8h-8v-8h8v-8H278v-8h8v-8h16v8h-8v8h8v8h-8v8h16V342h40v-8h-8V310h8V294h24v-8Zm-88,72H262v8h-8V350h24Zm24-40h-8v-8h8Zm32,0v16H310V310h24Z"/>
     <polygon points="366 302 358 302 358 310 366 310 366 318 374 318 374 310 374 302 366 302"/>
     <polygon points="366 342 366 350 366 358 358 358 358 366 366 366 374 366 374 358 374 350 374 342 366 342"/>
-    <rect x="174" y="174" width="72" height="72" fill="#fff"/>
+    <rect x="172" y="172" width="76" height="76" rx="5" fill="#fff"/>
     <g id="Icon">
         <path d="M237,178H183a5,5,0,0,0-5,5v54a5,5,0,0,0,5,5h54a5,5,0,0,0,5-5V183A5,5,0,0,0,237,178Zm-36.1,36.4s-3.3,2.3-4.9,3.2a66.2,66.2,0,0,1-9,5l-3.7-6a50.3,50.3,0,0,0,12-5.5l.8-.4-.3-.7a23.1,23.1,0,0,1-4.2-6.6c-.5-.9-.8-2-1.3-3h6.2a7.5,7.5,0,0,1,.6,1.3,30,30,0,0,0,3.2,4.7l.4.6.5-.6a21.7,21.7,0,0,0,3.2-4.7,24.5,24.5,0,0,0,1.8-5.4v-1.2H183.7v-5.7H198v-6.9h5.7v6.9H218v5.8h-5.4v1.3a27.3,27.3,0,0,1-2,6.9,37.5,37.5,0,0,1-4.3,6.6l-.5.6,1.2.8c1.7.9,3.3,2,5.3,3l-2.9,5.7a52.2,52.2,0,0,1-8-5.2Zm30.3,19.3-3.4-9H216.7l-3.3,9h-7.2L219,202.1h6.6l12.8,31.6Z"
               fill="url(#linearGradient_1)"/>
         <polygon points="218.7 219.2 225.9 219.2 222.3 210 218.7 219.2" fill="url(#linearGradient_2)"/>
+    </g>
+    <circle cx="238" cy="239" r="15" fill="#fff"/>
+    <rect x="226" y="227" width="24" height="24" rx="12" fill="#1677ff"/>
+    <g clip-path="url(#clip-path)">
+        <path d="M244.8,241.6l-3.2-1.1a15.1,15.1,0,0,0,1.8-4.5h-4.2v-1.4h5.1v-.9h-5.1v-2.4h-2c-.4,0-.4.3-.4.3v2.1h-5.1v.9h5.1V236h-4.2v.9h8.2a14.8,14.8,0,0,1-1.2,2.9c-2.7-.9-5.5-1.6-7.3-1.2a4.5,4.5,0,0,0-2.3,1.3c-2,2.4-.5,6.1,3.6,6.1a8.7,8.7,0,0,0,6.7-3.7l8.2,3.6,1.1-3.2A21.7,21.7,0,0,1,244.8,241.6Zm-11.6,3c-3.2,0-4.2-2.6-2.6-4a5,5,0,0,1,2.1-.8,12.1,12.1,0,0,1,5.8,1.6C237,243.4,235.1,244.6,233.2,244.6Z"
+              fill="#fff"/>
     </g>
 </svg>
