@@ -72,7 +72,7 @@
 ## Installation
 
 <a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/button-install.png" alt="Get from Marketplace" title="Get from Marketplace">
+    <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
 </a>
 
 - **Installing from the plugin repository within the IDE:**
