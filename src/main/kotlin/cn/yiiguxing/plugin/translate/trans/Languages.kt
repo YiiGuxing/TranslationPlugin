@@ -244,18 +244,6 @@ enum class Lang(
     /** 齐切瓦语 */
     CHICHEWA("chichewa", "ny"),
 
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
     /** 日语 */
     JAPANESE("japanese", "jaaa"),
 
