@@ -16,6 +16,7 @@ import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.notification.impl.NotificationsManagerImpl
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileEditor.impl.HTMLEditorProvider
 import com.intellij.openapi.project.DumbAware
@@ -189,7 +190,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
         fun browseWhatsNew(project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
-                invokeLater {
+                invokeLater(ModalityState.NON_MODAL) {
                     if (project.isDisposed) {
                         return@invokeLater
                     }
