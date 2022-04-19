@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 298 48" width="298" height="48">
+    <defs>
+        <linearGradient id="linearGradient_01" x1="141.02" y1="32.34" x2="141.02" y2="31.35"
+                        gradientTransform="matrix(298, 0, 0, -48, -41876, 1553)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#52bbf8"/>
+            <stop offset="1" stop-color="#2fa8ee"/>
+        </linearGradient>
+    </defs>
+    <path d="M24,0H274a24,24,0,0,1,24,24h0a24,24,0,0,1-24,24H24A24,24,0,0,1,0,24H0A24,24,0,0,1,24,0Z"
+          fill-rule="evenodd" fill="url(#linearGradient_01)"/>
+    <circle cx="274" cy="24" r="22" fill="#fff"/>
+    <path d="M285.51,16a14,14,0,0,1,0,15.94l-3.63-3.62a9,9,0,0,0,0-8.7L285.51,16ZM282,12.49l-3.62,3.63A8.88,8.88,0,0,0,274,15a9,9,0,1,0,4.35,16.88L282,35.51a14,14,0,1,1,0-23Z"
+          fill="#3faff0" fill-rule="evenodd"/>
+    <path d="M285.51,16a14,14,0,0,1,0,15.94l-3.63-3.62a9,9,0,0,0,0-8.7L285.51,16Z" fill="#b8d5e6" fill-rule="evenodd"/>
+    <g style="isolation:isolate">
+        <text transform="translate(16 28.5)" font-size="12" fill="#fff" font-family="Montserrat-Regular, Montserrat, ArialMT, Arial"
+              font-weight="bold" letter-spacing="0.15em">DONATE TO OUR COLLECTIVE
+        </text>
+    </g>
+</svg>

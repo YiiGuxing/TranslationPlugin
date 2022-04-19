@@ -1,6 +1,10 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 一些优化与改进
+- 修复了谷歌文档翻译未知错误的问题
+- 修复了Material Theme UI主题导致翻译对话框UI显示异常的问题
+- 还修复了其他好多问题
 
 ## v3.3 (2022/03/25)
 - 全新的错误提示面板

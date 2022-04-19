@@ -16,6 +16,10 @@ import com.intellij.openapi.wm.ToolWindowFactory
 class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1186
+        if (project.isDisposed) {
+            return
+        }
         WordBookView.instance.setup(project, toolWindow)
     }
 
@@ -29,32 +33,34 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         val messageBusConnection = Application.messageBus.connect(uiDisposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {
             override fun onRequire() {
-                toolWindow.isAvailable = true
-                toolWindow.isShowStripeButton = true
-                toolWindow.show()
+                toolWindow.runIfSurvive {
+                    isAvailable = true
+                    isShowStripeButton = true
+                    show()
+                }
             }
         })
         messageBusConnection.subscribe(WordBookListener.TOPIC, object : WordBookListener {
             override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
-                toolWindow.isAvailable = true
+                toolWindow.runIfSurvive { isAvailable = true }
             }
 
             override fun onWordRemoved(service: WordBookService, id: Long) {
                 Application.executeOnPooledThread {
-                    val isAvailable = WordBookService.instance.hasAnyWords()
+                    val available = WordBookService.instance.hasAnyWords()
                     invokeOnDispatchThread {
-                        toolWindowRef.get()?.isAvailable = isAvailable
+                        toolWindowRef.get()?.runIfSurvive { isAvailable = available }
                     }
                 }
             }
         })
 
         Application.executeOnPooledThread {
-            val isAvailable = WordBookService.instance.let { service ->
+            val available = WordBookService.instance.let { service ->
                 service.isInitialized && service.hasAnyWords()
             }
             invokeOnDispatchThread {
-                toolWindowRef.get()?.isAvailable = isAvailable
+                toolWindowRef.get()?.runIfSurvive { isAvailable = available }
             }
         }
     }
@@ -70,6 +76,12 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
         fun requireWordBook() {
             requirePublisher.onRequire()
+        }
+
+        private inline fun ToolWindow.runIfSurvive(action: ToolWindow.() -> Unit) {
+            if (!isDisposed) {
+                action()
+            }
         }
 
     }

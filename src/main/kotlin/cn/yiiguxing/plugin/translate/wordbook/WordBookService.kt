@@ -18,7 +18,6 @@ import com.intellij.util.io.HttpRequests
 import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
-import java.io.IOException
 import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
@@ -92,6 +91,16 @@ class WordBookService {
         ProgressManager.getInstance()
             .run(object : Task.Backgroundable(null, message("word.book.progress.downloading.driver"), true) {
                 override fun run(indicator: ProgressIndicator) = downloadDriverAndInitializeService(indicator)
+
+                override fun onThrowable(error: Throwable) {
+                    if (error !is ProcessCanceledException) {
+                        Notifications.showErrorNotification(
+                            message("wordbook.notification.title"),
+                            message("wordbook.window.message.driver.download.failed", error.message.toString())
+                        )
+                    }
+                }
+
                 override fun onFinished() = isDownloading.set(false)
             })
 
@@ -148,8 +157,6 @@ class WordBookService {
 
             indicator.fraction = 1.0
             indicator.isIndeterminate = true
-        } catch (e: IOException) {
-            throw  IOException("Failed to download driver file", e)
         } finally {
             downloadedFile?.let { Files.deleteIfExists(it) }
         }
@@ -247,7 +254,6 @@ class WordBookService {
                     if (notifyOnFailed) {
                         LOGGER.w("Insert word", e)
                         Notifications.showErrorNotification(
-                            null,
                             message("wordbook.notification.title"),
                             message("wordbook.notification.content.addFailed")
                         )

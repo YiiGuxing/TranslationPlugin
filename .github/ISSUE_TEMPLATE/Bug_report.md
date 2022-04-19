@@ -1,6 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve TranslationPlugin
+labels: 'bug :bug:'
 ---
 
 ## Preflight Checklist

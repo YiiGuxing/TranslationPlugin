@@ -44,11 +44,11 @@
         },
         {
           "type": "descriptionMatches",
-          "pattern": "Conflicting component name 'Settings': .+ \\(componentManager=Application \\(containerState=COMPONENT_CREATED\\) \\)"
+          "pattern": "Conflicting component name '(?<name>\\S+)': class \\S+\\.\\k<name> and class \\S+\\.\\k<name> \\(componentManager=.+ \\(containerState=.+\\) \\)"
         },
         {
           "type": "descriptionMatches",
-          "pattern": "com\\.intellij\\.diagnostic\\.PluginException: Key (?<id>cn\\.yiiguxing\\.plugin\\.translate)\\.\\S+ duplicated \\[Plugin: \\k<id>]"
+          "pattern": "com\\.intellij\\.diagnostic\\.PluginException: Key cn\\.yiiguxing\\.plugin\\.translate\\.\\S+ duplicated"
         }
       ]
     },

@@ -31,6 +31,9 @@ enum class Lang(
     /** 自动检测 */
     AUTO("auto", "auto"),
 
+    /** 未知语言 */
+    UNKNOWN("unknown", "_unknown_"),
+
     /** 中文 */
     CHINESE("chinese", "zh-CN"),
 
@@ -64,6 +67,9 @@ enum class Lang(
     /** 爱沙尼亚语 */
     ESTONIAN("estonian", "et"),
 
+    /** 奥利亚语 */
+    ORIYA("oriya", "or"),
+
     /** 巴斯克语 */
     BASQUE("basque", "eu"),
 
@@ -87,6 +93,9 @@ enum class Lang(
 
     /** 布尔语(南非荷兰语) */
     AFRIKAANS("afrikaans", "af"),
+
+    /** 鞑靼语 */
+    TATAR("tatar", "tt"),
 
     /** 丹麦语 */
     DANISH("danish", "da"),
@@ -236,7 +245,7 @@ enum class Lang(
     CHICHEWA("chichewa", "ny"),
 
     /** 日语 */
-    JAPANESE("japanese", "ja"),
+    JAPANESE("japanese", "jaaa"),
 
     /** 瑞典语 */
     SWEDISH("swedish", "sv"),
@@ -294,6 +303,9 @@ enum class Lang(
 
     /** 威尔士语 */
     WELSH("welsh", "cy"),
+
+    /** 维吾尔语 */
+    UYGHUR("uyghur", "ug"),
 
     /** 乌尔都语 */
     URDU("urdu", "ur"),
@@ -357,10 +369,9 @@ enum class Lang(
 
     val langName: String = LanguageBundle.getMessage(langNameKey)
 
-    class NoSuchLanguageException(code: String) : RuntimeException("No such language, code=$code.")
 
     companion object {
-        private val cachedValues: List<Lang> by lazy { values().sortedBy { it.langName } }
+        private val cachedValues: List<Lang> by lazy { values().filter { it != UNKNOWN }.sortedBy { it.langName } }
 
         private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
 
@@ -384,11 +395,11 @@ enum class Lang(
         /**
          * Returns the [language][Lang] corresponding to the given [code].
          */
-        operator fun get(code: String): Lang = mapping[code] ?: throw NoSuchLanguageException(code)
+        operator fun get(code: String): Lang = mapping[code] ?: UNKNOWN
 
         fun sortedValues(): List<Lang> = when (Locale.getDefault()) {
             Locale.CHINESE,
-            Locale.CHINA -> values().asList()
+            Locale.CHINA -> values().filter { it != UNKNOWN }
             else -> cachedValues
         }
     }
