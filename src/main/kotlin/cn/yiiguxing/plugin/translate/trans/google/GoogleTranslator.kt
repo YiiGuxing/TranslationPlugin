@@ -1,10 +1,12 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
-import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.UrlBuilder
+import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.*
 import com.intellij.openapi.diagnostic.Logger
 import org.jsoup.nodes.Document
@@ -35,6 +37,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     @Suppress("SpellCheckingInspection")
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
+        .registerTypeAdapter(GDocTranslation::class.java, GDocTranslationDeserializer)
         .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
         .create()
 
@@ -167,10 +170,9 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     ): BaseTranslation {
         logger.i("Translate result: $translation")
 
-        val results = gson.fromJson(translation, Array<String>::class.java)
-        val sLang = if (srcLang == Lang.AUTO && results.size >= 2) Lang[results[1]] else srcLang
-
-        return BaseTranslation(original, sLang, targetLang, results[0])
+        val (translatedText, lang) = gson.fromJson(translation, GDocTranslation::class.java)
+        val sLang = lang?.takeIf { srcLang == Lang.AUTO } ?: srcLang
+        return BaseTranslation(original, sLang, targetLang, translatedText)
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
@@ -179,6 +181,26 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         }
 
         return super.createErrorInfo(throwable)
+    }
+
+    private data class GDocTranslation(val translatedText: String, val lang: Lang?)
+
+    private object GDocTranslationDeserializer : JsonDeserializer<GDocTranslation> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext
+        ): GDocTranslation {
+            var array = json.asJsonArray
+            while (true) {
+                val firstElement = array.first()
+                array = if (firstElement.isJsonArray) firstElement.asJsonArray else break
+            }
+
+            val translatedText = array.first().asString
+            val lang = if (array.size() > 1) Lang[array[1].asString] else null
+            return GDocTranslation(translatedText, lang)
+        }
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {
