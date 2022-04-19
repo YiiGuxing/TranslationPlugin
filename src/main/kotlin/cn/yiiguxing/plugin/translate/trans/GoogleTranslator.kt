@@ -24,6 +24,7 @@ object GoogleTranslator : AbstractTranslator() {
     @Suppress("SpellCheckingInspection")
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
+        .registerTypeAdapter(GDocTranslation::class.java, GDocTranslationDeserializer)
         .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
         .create()
 
@@ -88,10 +89,9 @@ object GoogleTranslator : AbstractTranslator() {
         logger.i("Translate result: $result")
 
         return if (forDocumentation) {
-            val results = gson.fromJson(result, Array<String>::class.java)
-            val sLang = if (srcLang == Lang.AUTO && results.size >= 2) Lang.valueOfCode(results[1]) else srcLang
-
-            BaseTranslation(sLang, targetLang, results[0])
+            val (translatedText, lang) = gson.fromJson(result, GDocTranslation::class.java)
+            val sLang = lang?.takeIf { srcLang == Lang.AUTO } ?: srcLang
+            BaseTranslation(sLang, targetLang, translatedText)
         } else {
             gson.fromJson(result, GoogleTranslation::class.java).apply {
                 this.original = original
@@ -102,6 +102,26 @@ object GoogleTranslator : AbstractTranslator() {
 
     override fun onError(throwable: Throwable): Throwable {
         return NetworkException.wrapIfIsNetworkException(throwable, googleHost)
+    }
+
+    private data class GDocTranslation(val translatedText: String, val lang: Lang?)
+
+    private object GDocTranslationDeserializer : JsonDeserializer<GDocTranslation> {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext
+        ): GDocTranslation {
+            var array = json.asJsonArray
+            while (true) {
+                val firstElement = array.first()
+                array = if (firstElement.isJsonArray) firstElement.asJsonArray else break
+            }
+
+            val translatedText = array.first().asString
+            val lang = if (array.size() > 1) Lang.valueOfCode(array[1].asString) else null
+            return GDocTranslation(translatedText, lang)
+        }
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {
