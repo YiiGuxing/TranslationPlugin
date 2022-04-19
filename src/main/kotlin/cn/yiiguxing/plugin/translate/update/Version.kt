@@ -1,7 +1,9 @@
 package cn.yiiguxing.plugin.translate.update
 
+import com.google.gson.annotations.SerializedName
 
-data class Version constructor(val version: String = "v0.0") {
+
+data class Version constructor(@SerializedName("tag_name") val version: String = "v0.0") {
 
     val versionNumbers: Pair<Int, Int> by lazy { version.toVersionParts() }
 

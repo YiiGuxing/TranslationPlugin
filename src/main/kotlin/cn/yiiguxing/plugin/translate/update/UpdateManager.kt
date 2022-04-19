@@ -5,10 +5,8 @@ import cn.yiiguxing.plugin.translate.HTML_DESCRIPTION_SUPPORT
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.IdeVersion
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.Plugin
-import cn.yiiguxing.plugin.translate.util.show
+import cn.yiiguxing.plugin.translate.util.*
+import com.google.gson.Gson
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
@@ -16,22 +14,21 @@ import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
-import com.intellij.ui.JBColor
-import com.intellij.util.ui.JBUI
+import com.intellij.util.io.HttpRequests
 import com.intellij.util.ui.UIUtil
 import icons.Icons
-import java.awt.Color
 import java.util.*
-import javax.swing.UIManager
 
 class UpdateManager : BaseStartupActivity(), DumbAware {
 
     override fun onRunActivity(project: Project) {
         checkUpdate(project)
+        checkUpdateFromGithub(project)
     }
 
     private fun checkUpdate(project: Project) {
@@ -50,6 +47,41 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         properties.setValue(VERSION_PROPERTY, versionString)
     }
 
+    private fun checkUpdateFromGithub(project: Project) {
+        val key = "${Plugin.PLUGIN_ID}.LAST_CHECKED_TIME"
+        val properties: PropertiesComponent = PropertiesComponent.getInstance()
+        val last = properties.getInt(key, 0)
+        val days = System.currentTimeMillis() / (24 * 60 * 60 * 1000)
+        if (days <= last) {
+            return
+        }
+        properties.setValue(key, days.toInt(), last)
+        executeOnPooledThread {
+            val newVersion = try {
+                HttpRequests.request(UPDATES_API)
+                    .connect { Gson().fromJson(it.readString(null), Version::class.java) }!!
+            } catch (e: Throwable) {
+                LOGGER.w("Cannot get release info from Github.", e)
+                return@executeOnPooledThread
+            }
+
+            LOGGER.d("Latest released plugin version: $newVersion")
+
+            val lastVersionString = properties.getValue(VERSION_IN_GITHUB_PROPERTY, "0.0")
+            val lastVersion = Version(lastVersionString)
+
+            if (newVersion > lastVersion) {
+                invokeOnDispatchThread {
+                    if (!project.isDisposed) {
+                        showUpdateIDENotification(project, newVersion)
+                    }
+                }
+            }
+
+            properties.setValue(VERSION_IN_GITHUB_PROPERTY, newVersion.versionString)
+        }
+    }
+
     private fun showUpdateNotification(
         project: Project,
         plugin: IdeaPluginDescriptor,
@@ -58,18 +90,12 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     ) {
         val displayId = "${plugin.name} Plugin Update"
         val title = message("plugin.name.updated.to.version.notification.title", plugin.name, version.version)
-        val color = getBorderColor()
-        val partStyle = "margin: ${JBUI.scale(8)}px 0;"
-        val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
         val content = """
             If you find my plugin helpful, please
             <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>.</b>
             If you love this plugin, please consider
             <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain the plugin related activities.<br/>
-            Thank you for your support!
-            <div style="$partStyle $refStyle">
-                This update addresses these <a href="${MILESTONE_URL.format(version.version)}">issues</a>.
-            </div>
+            Thank you for your support!<br/>
             Change notes:<br/>
             ${plugin.changeNotes}
         """.trimIndent()
@@ -92,8 +118,27 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             .show(project)
     }
 
+    private fun showUpdateIDENotification(project: Project, version: Version) {
+        NotificationGroup("Translation Plugin Update(IDE)", NotificationDisplayType.STICKY_BALLOON, false)
+            .createNotification(
+                message("updater.new.version.notification.title", version.versionString),
+                message("updater.new.version.notification.content", version.versionString),
+                NotificationType.INFORMATION,
+                null
+            )
+            .addAction(SupportAction())
+            .addAction(UpdateDetailsAction(version))
+            .setImportant(true)
+            .show(project)
+    }
+
     private class SupportAction : DumbAwareAction(message("support.notification"), null, Icons.Support) {
         override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
+    }
+
+    private class UpdateDetailsAction(private val version: Version) :
+        DumbAwareAction(message("updater.new.version.notification.action.detail")) {
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(version.updatesUrl)
     }
 
     private class WhatsNewAction(version: Version) :
@@ -105,19 +150,19 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     companion object {
         private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
 
-        private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
+        private const val VERSION_IN_GITHUB_PROPERTY = "${Plugin.PLUGIN_ID}.version.github"
 
         private const val BASE_URL_GITEE = "https://yiiguxing.gitee.io/translation-plugin"
         private const val BASE_URL_GITHUB = "https://yiiguxing.github.io/TranslationPlugin"
 
-        private const val MILESTONE_URL =
-            "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"
+        private const val UPDATES_BASE_URL = "http://yiiguxing.github.io/TranslationPlugin/updates"
+
+        private const val UPDATES_API = "https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest"
+
+        private val LOGGER: Logger = Logger.getInstance(UpdateManager::class.java)
 
 
-        private fun getBorderColor(): String {
-            val color = UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR
-            return (color.rgb and 0xffffff).toString(16)
-        }
+        private val Version.updatesUrl: String get() = "$UPDATES_BASE_URL.html?v=$versionString"
 
         fun getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
             val version = Version(Plugin.descriptor.version)
@@ -166,11 +211,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
                     )
                 }
 
-                if (IdeVersion.isIde2020_3OrNewer) {
-                    browse()
-                } else {
-                    DumbService.getInstance(project).smartInvokeLater { browse() }
-                }
+                DumbService.getInstance(project).smartInvokeLater { browse() }
             } else {
                 BrowserUtil.browse(getWhatsNewUrl(true))
             }
