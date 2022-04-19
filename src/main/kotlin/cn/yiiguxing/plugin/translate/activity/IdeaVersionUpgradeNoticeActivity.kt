@@ -13,8 +13,7 @@ import com.intellij.openapi.project.Project
 class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
 
     override fun onBeforeRunActivity(project: Project): Boolean {
-        return !(IdeVersion.isIde2019_3OrNewer || PropertiesComponent.getInstance()
-            .getBoolean(DO_NOT_NOTIFY_AGAIN_PROPERTY, false))
+        return !PropertiesComponent.getInstance().getBoolean(DO_NOT_NOTIFY_AGAIN_PROPERTY, false)
     }
 
     override fun onRunActivity(project: Project) = showNotification(project)
