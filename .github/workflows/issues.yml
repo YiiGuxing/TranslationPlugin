@@ -46,6 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Close Fixed
+        if: github.event.label.name == 'fixed :hammer:'
+        uses: peter-evans/close-issue@v2
+
       - name: Close As `not plugin's bug`
         if: github.event.label.name == 'not plugin''s bug'
         uses: peter-evans/close-issue@v2
