@@ -305,7 +305,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             return stacktrace.md5()
         }
 
-        return (data as? AbstractMessage)?.throwable?.md5() ?: stacktrace.md5()
+        return (data as? AbstractMessage)?.throwable?.generateId() ?: stacktrace.md5()
     }
 
     private fun IdeaLoggingEvent.getDataRedactedSummary(stacktrace: String): String? {
