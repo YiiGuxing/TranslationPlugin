@@ -77,7 +77,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             Hyperlinks.SUPPORT_DESCRIPTION,
             "$partStyle $refStyle",
             MILESTONE_URL.format(version.version),
-            plugin.changeNotes
+            plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 
         val canBrowseWhatsNewHTMLEditor = canBrowseWhatsNewHTMLEditor()
