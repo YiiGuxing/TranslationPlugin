@@ -9,7 +9,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 
-@Suppress("unused")
 class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
 
     override fun onBeforeRunActivity(project: Project): Boolean {
