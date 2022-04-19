@@ -6,11 +6,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.terminal.JBTerminalWidget
 
-class TerminalTranslationAction : DumbAwareAction(), ImportantTranslationAction {
+class TerminalTranslationAction : DumbAwareAction({ adaptedMessage("action.TerminalTranslationAction.text") }),
+    ImportantTranslationAction {
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabledAndVisible = !e.getSelectedTextFromTerminal().isNullOrBlank()
-        templatePresentation.text = adaptedMessage("action.TerminalTranslationAction.text")
     }
 
     override fun actionPerformed(e: AnActionEvent) {

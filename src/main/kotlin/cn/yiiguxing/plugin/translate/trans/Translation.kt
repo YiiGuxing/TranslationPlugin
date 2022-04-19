@@ -18,13 +18,16 @@ data class Translation(
     override val translation: String?,
     override val srcLang: Lang,
     override val targetLang: Lang,
-    val srclangs: List<Lang>,
+    private val sourceLangs: List<Lang>,
     val srcTransliteration: String? = null,
     val transliteration: String? = null,
     val spell: String? = null,
     val dictDocument: TranslationDocument? = null,
     val extraDocuments: List<NamedTranslationDocument> = emptyList()
 ) : BaseTranslation(original, srcLang, targetLang, translation) {
+
+    val sourceLanguages: List<Lang> by lazy { sourceLangs.filter { it != Lang.UNKNOWN } }
+
     val observableFavoriteId: ObservableValue<Long?> = ObservableValue(null)
 
     var favoriteId: Long? by observableFavoriteId

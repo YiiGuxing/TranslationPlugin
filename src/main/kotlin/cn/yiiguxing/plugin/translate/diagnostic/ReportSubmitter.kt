@@ -28,7 +28,9 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.Consumer
+import com.intellij.util.io.HttpRequests
 import com.intellij.xml.util.XmlStringUtil
+import io.netty.handler.codec.http.HttpResponseStatus
 import java.awt.Component
 import java.text.DateFormat
 import java.util.*
@@ -175,11 +177,20 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
     ) {
         LOG.w("reporting failed:", e)
         invokeLater {
-            val message = message("error.report.failed.message", e.message.toString())
             val title = message("error.report.failed.title")
-            val result = MessageDialogBuilder.yesNo(title, message).ask(project)
-            if (!result || !submit(events, additionalInfo, parentComponent, callback)) {
+            if (e is HttpRequests.HttpStatusException &&
+                e.statusCode == HttpResponseStatus.UNAUTHORIZED.code() &&
+                ReportCredentials.instance.isAnonymous
+            ) {
+                val message = message("error.report.failed.message.anonymity.disabled")
+                ErrorReportNotifications.showNotification(project, title, message)
                 callback.consume(SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED))
+            } else {
+                val message = message("error.report.failed.message", e.message.toString())
+                val result = MessageDialogBuilder.yesNo(title, message).ask(project)
+                if (!result || !submit(events, additionalInfo, parentComponent, callback)) {
+                    callback.consume(SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED))
+                }
             }
         }
     }
@@ -294,7 +305,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             return stacktrace.md5()
         }
 
-        return (data as? AbstractMessage)?.throwable?.md5() ?: stacktrace.md5()
+        return (data as? AbstractMessage)?.throwable?.generateId() ?: stacktrace.md5()
     }
 
     private fun IdeaLoggingEvent.getDataRedactedSummary(stacktrace: String): String? {

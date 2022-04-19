@@ -12,6 +12,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.util.ui.JBUI
+import icons.TranslationIcons
 import org.apache.http.client.utils.URIBuilder
 import java.awt.Desktop
 import java.awt.datatransfer.StringSelection
@@ -29,6 +30,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
 
     init {
         title = message("support")
+        setResizable(false)
         setOKButtonText(message("support.thanks"))
         form.init()
         init()
@@ -41,8 +43,11 @@ class SupportDialog private constructor() : DialogWrapper(null) {
         starLinkLabel.init(GITHUB_URL)
         prLinkLabel.init(GITHUB_URL)
         reportLinkLabel.init(NEW_ISSUES_URL)
-        ideaLinkLabel.init(NEW_ISSUES_URL)
-        openCollectiveLinkLabel.init(OPEN_COLLECTIVE_DONATE_URL, false)
+        ideaLinkLabel.init(IDEA_DISCUSSION_URL)
+        openCollectiveLinkLabel.apply {
+            icon = TranslationIcons.load("/image/donate_to_collective.svg")
+            init(OPEN_COLLECTIVE_DONATE_URL, false)
+        }
 
         donateLinkLabel.icon = null
         donateLinkLabel.setListener({ _, _ -> showDonatePop(donateLinkLabel) }, WebPages.support())
@@ -56,6 +61,9 @@ class SupportDialog private constructor() : DialogWrapper(null) {
                     .show(guessBestPopupLocation(label), Balloon.Position.below)
             }
         }, SUPPORT_SHARE_URL)
+
+        weChatPayLabel.icon = TranslationIcons.load("/image/donating_wechat_pay.svg")
+        aliPayLabel.icon = TranslationIcons.load("/image/donating_alipay.svg")
     }
 
     private fun LinkLabel<String>.init(url: String, cleanIcon: Boolean = true) {
@@ -121,6 +129,8 @@ class SupportDialog private constructor() : DialogWrapper(null) {
     companion object {
         private const val GITHUB_URL = "https://github.com/YiiGuxing/TranslationPlugin"
         private const val NEW_ISSUES_URL = "https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose"
+        private const val IDEA_DISCUSSION_URL =
+            "https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/ideas"
         private const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-translation"
         private const val OPEN_COLLECTIVE_DONATE_URL = "https://opencollective.com/translation-plugin/donate"
 

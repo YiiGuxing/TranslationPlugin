@@ -91,7 +91,7 @@ abstract class TranslationPane<T : JComponent>(
 
     private val fixLanguageLabel = JLabel("${message("tip.label.sourceLanguage")}: ")
     private val fixLanguageLink = ActionLink {
-        translation?.srclangs?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
+        translation?.sourceLanguages?.firstOrNull()?.let { lang -> onFixLanguageHandler?.invoke(lang) }
     }
 
     var translation: Translation?
@@ -340,8 +340,9 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun checkSourceLanguage() {
         val translation = translation
-        if (translation != null && !translation.srclangs.contains(translation.srcLang)) {
-            val visible = translation.srclangs.firstOrNull()?.langName.let {
+        val sourceLanguages = translation?.sourceLanguages
+        if (sourceLanguages != null && !sourceLanguages.contains(translation.srcLang)) {
+            val visible = sourceLanguages.firstOrNull()?.langName.let {
                 fixLanguageLink.text = it
                 !it.isNullOrEmpty()
             }
@@ -377,7 +378,7 @@ abstract class TranslationPane<T : JComponent>(
     }
 
     private fun updateComponents(translation: Translation) {
-        sourceLangComponent.updateLanguage(translation.srcLang)
+        sourceLangComponent.updateLanguage(translation.srcLang.takeIf { it != Lang.UNKNOWN } ?: Lang.AUTO)
         targetLangComponent.updateLanguage(translation.targetLang)
 
         originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)

@@ -6,12 +6,16 @@ import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
-import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
-import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.credentialStore.CredentialAttributes
+import com.intellij.credentialStore.generateServiceName
+import com.intellij.ide.passwordSafe.PasswordSafe
+import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
@@ -30,7 +34,7 @@ class Settings : PersistentStateComponent<Settings> {
     var translator: TranslationEngine
             by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
                 if (oldValue != newValue) {
-                    settingsChangePublisher.onTranslatorChanged(this, newValue)
+                    SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
             }
 
@@ -60,7 +64,7 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var isOverrideFont: Boolean by Delegates.observable(false) { _, oldValue: Boolean, newValue: Boolean ->
         if (oldValue != newValue) {
-            settingsChangePublisher.onOverrideFontChanged(this)
+            SETTINGS_CHANGE_PUBLISHER.onOverrideFontChanged(this)
         }
     }
 
@@ -69,7 +73,7 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var primaryFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
         if (oldValue != newValue) {
-            settingsChangePublisher.onOverrideFontChanged(this)
+            SETTINGS_CHANGE_PUBLISHER.onOverrideFontChanged(this)
         }
     }
 
@@ -78,7 +82,7 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var phoneticFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
         if (oldValue != newValue) {
-            settingsChangePublisher.onOverrideFontChanged(this)
+            SETTINGS_CHANGE_PUBLISHER.onOverrideFontChanged(this)
         }
     }
 
@@ -161,6 +165,15 @@ class Settings : PersistentStateComponent<Settings> {
 
     override fun loadState(state: Settings) {
         XmlSerializerUtil.copyBean(state, this)
+
+        val properties: PropertiesComponent = PropertiesComponent.getInstance()
+        val dataVersion = properties.getInt(DATA_VERSION_KEY, 0)
+
+        LOG.d("===== Settings Data Version: $dataVersion =====")
+        if (dataVersion < CURRENT_DATA_VERSION) {
+            migrate()
+            properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+        }
     }
 
     companion object {
@@ -173,20 +186,59 @@ class Settings : PersistentStateComponent<Settings> {
         val instance: Settings
             get() = ApplicationManager.getApplication().getService(Settings::class.java)
 
+
+        private const val CURRENT_DATA_VERSION = 1
+        private const val DATA_VERSION_KEY = "${Plugin.PLUGIN_ID}.settings.data.version"
+
+        private val LOG = Logger.getInstance(Settings::class.java)
+
+        //region Data Migration - Will be removed on v4.0
+        private fun Settings.migrate() {
+            LOG.d("===== Start Migration =====")
+            with(PasswordSafe.instance) {
+                migratePassword(youdaoTranslateSettings, YOUDAO_SERVICE_NAME, YOUDAO_APP_KEY)
+                migratePassword(baiduTranslateSettings, BAIDU_SERVICE_NAME, BAIDU_APP_KEY)
+                migratePassword(aliTranslateSettings, ALI_SERVICE_NAME, ALI_APP_KEY)
+            }
+            LOG.d("===== Migration End =====")
+        }
+
+        private fun PasswordSafe.migratePassword(settings: AppKeySettings, securityName: String, securityKey: String) {
+            val securityInfo = "securityName=$securityName, securityKey=$securityKey"
+            try {
+                val attributes = CredentialAttributes(securityName, securityKey)
+                val password = getPassword(attributes)
+
+                LOG.d("Migrate password: $securityInfo, hasPassword=${password != null}.")
+
+                if (password == null) {
+                    return
+                }
+
+                if (password.isNotEmpty() && !settings.isAppKeySet) {
+                    settings.setAppKey(password)
+                    LOG.d("Password migrated: $securityInfo.")
+                }
+                setPassword(attributes, null)
+                LOG.d("Old password removed: $securityInfo.")
+            } catch (e: Throwable) {
+                LOG.w("Migration failed: $securityInfo", e)
+            }
+        }
+        //endregion
     }
 }
 
-@Suppress("SpellCheckingInspection")
 private const val YOUDAO_SERVICE_NAME = "YIIGUXING.TRANSLATION"
-
-@Suppress("SpellCheckingInspection")
 private const val YOUDAO_APP_KEY = "YOUDAO_APP_KEY"
 private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
 
-private val settingsChangePublisher: SettingsChangeListener =
+private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", Plugin.PLUGIN_ID)
+
+private val SETTINGS_CHANGE_PUBLISHER: SettingsChangeListener =
     ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
 
 /**
@@ -202,18 +254,14 @@ data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default)
  * @property appId              应用ID
  */
 @Tag("app-key")
-abstract class AppKeySettings(
-    var primaryLanguage: Lang,
-    securityName: String,
-    securityKey: String
-) {
+abstract class AppKeySettings(serviceKey: String, var primaryLanguage: Lang) {
     var appId: String by Delegates.observable("") { _, oldValue: String, newValue: String ->
         if (oldValue != newValue) {
-            settingsChangePublisher.onTranslatorConfigurationChanged()
+            SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
         }
     }
 
-    private var _appKey: String? by PasswordSafeDelegate(securityName, securityKey)
+    private var _appKey: String? by PasswordSafeDelegate("$SETTINGS_REPOSITORY_SERVICE.$serviceKey")
         @Transient get
         @Transient set
 
@@ -225,8 +273,11 @@ abstract class AppKeySettings(
     @Transient
     fun setAppKey(value: String?) {
         _appKey = if (value.isNullOrBlank()) null else value
-        settingsChangePublisher.onTranslatorConfigurationChanged()
+        SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
     }
+
+    val isAppKeySet: Boolean
+        @Transient get() = getAppKey().isNotEmpty()
 }
 
 /**
@@ -234,29 +285,17 @@ abstract class AppKeySettings(
  */
 @Suppress("SpellCheckingInspection")
 @Tag("youdao-translate")
-class YoudaoTranslateSettings : AppKeySettings(
-    YoudaoTranslator.defaultLangForLocale,
-    securityName = YOUDAO_SERVICE_NAME,
-    securityKey = YOUDAO_APP_KEY
-)
+class YoudaoTranslateSettings : AppKeySettings(YOUDAO_APP_KEY, YoudaoTranslator.defaultLangForLocale)
 
 /**
  * 百度翻译选项
  */
-class BaiduTranslateSettings : AppKeySettings(
-    BaiduTranslator.defaultLangForLocale,
-    securityName = BAIDU_SERVICE_NAME,
-    securityKey = BAIDU_APP_KEY
-)
+class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY, BaiduTranslator.defaultLangForLocale)
 
 /**
  * 阿里云翻译选项
  */
-class AliTranslateSettings : AppKeySettings(
-    AliTranslator.defaultLangForLocale,
-    securityName = ALI_SERVICE_NAME,
-    securityKey = ALI_APP_KEY,
-)
+class AliTranslateSettings : AppKeySettings(ALI_APP_KEY, AliTranslator.defaultLangForLocale)
 
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),

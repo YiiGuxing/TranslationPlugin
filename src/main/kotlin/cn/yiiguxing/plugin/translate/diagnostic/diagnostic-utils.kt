@@ -8,30 +8,32 @@ import java.util.*
 private const val CAUSE_CAPTION = "CAUSE"
 private const val SUPPRESSED_CAPTION = "SUPPRESSED"
 
+private const val PLUGIN_PACKAGE = "cn.yiiguxing.plugin.translate"
+
 /**
- * Returns the MD5 digest of the [Throwable], used to identify its uniqueness.
+ * Generate an ID for the [Throwable], used to identify its uniqueness.
  *
- * Note: The generated MD5 digest is based on [throwable][Throwable]'s
+ * Note: The generated ID is based on [throwable][Throwable]'s
  * [stack trace][Throwable.stackTrace] and does not include its [message][Throwable.message],
  * So it can eliminate the influence of the dynamic content that may exist in the
  * [message][Throwable.message] on its uniqueness. Also, since the [message][Throwable.message]
- * is not used as input to generate the MD5 digest, it is also inaccurate,
+ * is not used as input to generate the ID, it is also inaccurate,
  * but it is very useful in error reporting, it can avoid a lot of duplicate
  * error reports being submitted. So relative to the benefit it brings,
  * this loss of accuracy is acceptable.
  */
-internal fun Throwable.md5(): String {
+internal fun Throwable.generateId(): String {
     val md5 = DigestUtil.md5()
     // Guard against malicious overrides of Throwable.equals by
     // using a Set with identity equality semantics.
     val dejaVu = Collections.newSetFromMap(IdentityHashMap<Throwable, Boolean>())
 
-    updateMD5(md5, emptyArray(), null, dejaVu)
+    update(md5, emptyArray(), null, dejaVu)
 
     return md5.digest().toHexString()
 }
 
-private fun Throwable.updateMD5(
+private fun Throwable.update(
     md5: MessageDigest,
     enclosingTrace: Array<out StackTraceElement>,
     caption: String?,
@@ -47,23 +49,33 @@ private fun Throwable.updateMD5(
     md5.update(javaClass.name.toByteArray(Charsets.UTF_8))
 
     val trace = stackTrace
-    var m = trace.size - 1
-    var n = enclosingTrace.size - 1
-    while (m >= 0 && n >= 0 && trace[m] == enclosingTrace[n]) {
-        m--
-        n--
+    val lastIndexWithoutCommonFrames = trace.lastIndexWithoutCommonFrames(enclosingTrace)
+    val lastPluginPackageIndex = trace.indexOfLast { it.className.startsWith(PLUGIN_PACKAGE) }
+
+    var traceEndIndex = trace.lastIndex
+    if (lastPluginPackageIndex >= 0) {
+        traceEndIndex = lastPluginPackageIndex
     }
-    for (i in 0..m) {
+    if (lastIndexWithoutCommonFrames in 0 until traceEndIndex) {
+        traceEndIndex = lastIndexWithoutCommonFrames
+    }
+
+    for (i in 0..traceEndIndex) {
         md5.update(trace[i].toString().toByteArray(Charsets.UTF_8))
     }
 
-    val framesInCommon = trace.size - 1 - m
-    if (framesInCommon != 0) {
-        md5.update(framesInCommon.toString().toByteArray(Charsets.UTF_8))
-    }
-
     for (se in suppressed) {
-        se.updateMD5(md5, trace, SUPPRESSED_CAPTION, dejaVu)
+        se.update(md5, trace, SUPPRESSED_CAPTION, dejaVu)
     }
-    cause?.updateMD5(md5, trace, CAUSE_CAPTION, dejaVu)
+    cause?.update(md5, trace, CAUSE_CAPTION, dejaVu)
+}
+
+private fun Array<out StackTraceElement>.lastIndexWithoutCommonFrames(other: Array<out StackTraceElement>): Int {
+    var m = lastIndex
+    var n = other.lastIndex
+    while (m >= 0 && n >= 0 && this[m] == other[n]) {
+        m--
+        n--
+    }
+    return m
 }

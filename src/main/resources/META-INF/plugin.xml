@@ -3,8 +3,8 @@
     <name>Translation</name>
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
-    <resource-bundle>messages.TranslationBundle</resource-bundle>
     <resource-bundle>messages.LanguageBundle</resource-bundle>
+    <resource-bundle>messages.TranslationBundle</resource-bundle>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -37,12 +37,14 @@
 
     <extensionPoints>
         <extensionPoint name="ignoredDocumentationElementsProvider"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint">
+                        beanClass="com.intellij.lang.LanguageExtensionPoint"
+                        dynamic="true">
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider"/>
         </extensionPoint>
         <extensionPoint name="docElementProvider"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint">
+                        beanClass="com.intellij.lang.LanguageExtensionPoint"
+                        dynamic="true">
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider"/>
         </extensionPoint>

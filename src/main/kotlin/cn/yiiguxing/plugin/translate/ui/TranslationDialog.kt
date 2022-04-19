@@ -42,6 +42,7 @@ import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.Alarm
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
@@ -49,6 +50,7 @@ import java.awt.event.*
 import javax.swing.JComponent
 import javax.swing.JTextArea
 import javax.swing.ListSelectionModel
+import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
 import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
@@ -87,7 +89,7 @@ class TranslationDialog(
     private inline val sourceLang: Lang get() = sourceLangComboBox.selected!!
     private inline val targetLang: Lang get() = targetLangComboBox.selected!!
 
-    private lateinit var escListener: AWTEventListener
+    private lateinit var awtActivityListener: AWTEventListener
 
     init {
         setUndecorated(true)
@@ -110,16 +112,35 @@ class TranslationDialog(
 
     private fun registerESCListener() {
         val win = window
-        escListener = AWTEventListener { event ->
-            if (event is KeyEvent &&
-                event.keyCode == KeyEvent.VK_ESCAPE &&
-                !PopupUtil.handleEscKeyEvent() &&
-                !win.isFocused // close the displayed popup window first
-            ) {
+
+        fun isInside(event: MouseEvent): Boolean {
+            val target = RelativePoint(event)
+            if (UIUtil.isDescendingFrom(target.originalComponent, win)) {
+                return true
+            }
+            return target.screenPoint.let { point ->
+                SwingUtilities.convertPointFromScreen(point, win)
+                win.contains(point)
+            }
+        }
+
+        awtActivityListener = AWTEventListener { event ->
+            val needCloseDialog = when (event) {
+                is MouseEvent -> event.id == MouseEvent.MOUSE_PRESSED &&
+                        !AppStorage.pinTranslationDialog &&
+                        !isInside(event)
+                is KeyEvent -> event.keyCode == KeyEvent.VK_ESCAPE &&
+                        !PopupUtil.handleEscKeyEvent() &&
+                        !win.isFocused // close the displayed popup window first
+                else -> false
+            }
+            if (needCloseDialog) {
                 doCancelAction()
             }
         }
-        Toolkit.getDefaultToolkit().addAWTEventListener(escListener, AWTEvent.KEY_EVENT_MASK)
+
+        val eventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
+        Toolkit.getDefaultToolkit().addAWTEventListener(awtActivityListener, eventMask)
     }
 
     private fun registerShortcuts() {
@@ -236,20 +257,8 @@ class TranslationDialog(
         window.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
                 window.addWindowFocusListener(object : WindowAdapter() {
-                    override fun windowGainedFocus(e: WindowEvent) {
-                        setActive(true)
-                    }
-
-                    override fun windowLostFocus(e: WindowEvent) {
-                        setActive(false)
-                        val oppositeWindow = e.oppositeWindow
-                        if (oppositeWindow === window || oppositeWindow != null && oppositeWindow.owner === window) {
-                            return
-                        }
-                        if (!AppStorage.pinNewTranslationDialog && oppositeWindow != null) {
-                            doCancelAction()
-                        }
-                    }
+                    override fun windowGainedFocus(e: WindowEvent) = setActive(true)
+                    override fun windowLostFocus(e: WindowEvent) = setActive(false)
                 })
             }
         })
@@ -456,8 +465,9 @@ class TranslationDialog(
     }
 
     private fun updateDetectedLangLabel(translation: Translation?) {
-        val detected = translation?.srcLang?.takeIf { sourceLang == Lang.AUTO && it != Lang.AUTO }?.langName
-
+        val detected = translation?.srcLang
+            ?.takeIf { sourceLang == Lang.AUTO && it != Lang.AUTO && it != Lang.UNKNOWN }
+            ?.langName
         detectedLanguageLabel.text = detected
         detectedLanguageLabel.isVisible = detected != null
     }
@@ -494,6 +504,10 @@ class TranslationDialog(
     }
 
     private fun requestTranslate(delay: Int = presenter.translator.intervalLimit) {
+        if (isDisposed) {
+            return
+        }
+
         alarm.apply {
             cancelAllRequests()
             addRequest(translateAction, maxOf(delay, 500))
@@ -570,7 +584,7 @@ class TranslationDialog(
         ignoreInputEvent = true
         try {
             inputTextArea.text = translation.original
-            sourceLangComboBox.selected = translation.srcLang
+            sourceLangComboBox.selected = translation.srcLang.takeIf { it != Lang.UNKNOWN } ?: Lang.AUTO
             targetLangComboBox.selected = translation.targetLang
         } finally {
             ignoreLanguageEvent = false
@@ -641,9 +655,8 @@ class TranslationDialog(
         super.dispose()
         _disposed = true
 
-        Toolkit.getDefaultToolkit().removeAWTEventListener(escListener)
+        Toolkit.getDefaultToolkit().removeAWTEventListener(awtActivityListener)
         Disposer.dispose(this)
-        println("Translation dialog disposed.")
     }
 
     /**
@@ -799,11 +812,11 @@ class TranslationDialog(
         }
 
         override fun isSelected(e: AnActionEvent): Boolean {
-            return AppStorage.pinNewTranslationDialog
+            return AppStorage.pinTranslationDialog
         }
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
-            AppStorage.pinNewTranslationDialog = state
+            AppStorage.pinTranslationDialog = state
         }
     }
 

@@ -29,7 +29,7 @@ open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_A
         super.setHorizontalScrollBarPolicy(policy)
     }
 
-    protected open fun getFadingEdgeColor(): Color = UIManager.getColor("Panel.background")
+    protected open fun getFadingEdgeColor(): Color? = UIManager.getColor("Panel.background")
 
     protected open fun getFadingEdgeSize(): Int = 20
 
@@ -43,7 +43,14 @@ open class ScrollPane(view: Component) : JBScrollPane(view, VERTICAL_SCROLLBAR_A
     protected open fun getFadingFlag(): Int = FADING_ALL
 
     final override fun createViewport(): JViewport {
-        return Viewport(getFadingEdgeColor(), getFadingEdgeSize(), getFadingFlag())
+        val fadingFlag = getFadingFlag()
+        val fadingEdgeSize = getFadingEdgeSize()
+        val fadingEdgeColor = getFadingEdgeColor()
+        return if (fadingEdgeColor == null || fadingEdgeSize <= 0 || (fadingFlag and FADING_ALL) == FADING_NONE) {
+            super.createViewport()
+        } else {
+            Viewport(fadingEdgeColor, fadingEdgeSize, fadingFlag)
+        }
     }
 
     @Suppress("unused")

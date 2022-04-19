@@ -29,6 +29,7 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
         "fil" to Lang.FILIPINO,
         "fin" to Lang.FINNISH,
         "fra" to Lang.FRENCH,
+        "fry" to Lang.FRISIAN,
         "glg" to Lang.GALICIAN,
         "geo" to Lang.GEORGIAN,
         "guj" to Lang.GUJARATI,
