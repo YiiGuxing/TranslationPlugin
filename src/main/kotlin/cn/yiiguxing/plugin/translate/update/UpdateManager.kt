@@ -67,8 +67,14 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     }
 
     private fun checkUpdateFromGithub(project: Project) {
-        if (IdeVersion.isIde2019_3OrNewer) return
-
+        val key = "${Plugin.PLUGIN_ID}.LAST_CHECKED_TIME"
+        val properties: PropertiesComponent = PropertiesComponent.getInstance()
+        val last = properties.getInt(key, 0)
+        val days = System.currentTimeMillis() / (24 * 60 * 60 * 1000)
+        if (days <= last) {
+            return
+        }
+        properties.setValue(key, days.toInt(), last)
         executeOnPooledThread {
             val newVersion = try {
                 HttpRequests.request(UPDATES_API)
@@ -80,21 +86,18 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
             LOGGER.d("Latest released plugin version: $newVersion")
 
-            if (newVersion.versionNumbers.first >= 3) {
-                val properties: PropertiesComponent = PropertiesComponent.getInstance()
-                val lastVersionString = properties.getValue(VERSION_IN_GITHUB_PROPERTY, "0.0")
-                val lastVersion = Version(lastVersionString)
+            val lastVersionString = properties.getValue(VERSION_IN_GITHUB_PROPERTY, "0.0")
+            val lastVersion = Version(lastVersionString)
 
-                if (newVersion > lastVersion) {
-                    invokeOnDispatchThread {
-                        if (!project.isDisposed) {
-                            showUpdateIDENotification(project, newVersion)
-                        }
+            if (newVersion > lastVersion) {
+                invokeOnDispatchThread {
+                    if (!project.isDisposed) {
+                        showUpdateIDENotification(project, newVersion)
                     }
                 }
-
-                properties.setValue(VERSION_IN_GITHUB_PROPERTY, newVersion.versionString)
             }
+
+            properties.setValue(VERSION_IN_GITHUB_PROPERTY, newVersion.versionString)
         }
     }
 
@@ -102,18 +105,12 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         val version = plugin.version
         val displayId = "${plugin.name} Plugin Update"
         val title = "${plugin.name} plugin updated to v$version"
-        val color = getBorderColor()
-        val partStyle = "margin: ${JBUI.scale(8)}px 0;"
-        val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
         val content = """
             If you find my plugin helpful, please
             <b><a href="$HTML_DESCRIPTION_SUPPORT">support me</a>.</b>
             If you love this plugin, please consider
             <b><a href="$HTML_DESCRIPTION_SUPPORT">donating</a></b> to sustain the plugin related activities.<br/>
-            Thank you for your support!
-            <div style="$partStyle $refStyle">
-                This update addresses these <a href="${MILESTONE_URL.format(version)}">issues</a>.
-            </div>
+            Thank you for your support!<br/>
             Change notes:<br/>
             ${plugin.changeNotes}
         """.trimIndent()
@@ -140,8 +137,8 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     private fun showUpdateIDENotification(project: Project, version: Version) {
         NotificationGroup("Translation Plugin Update(IDE)", NotificationDisplayType.STICKY_BALLOON, false)
             .createNotification(
-                message("updater.v3.notification.title", version.versionString),
-                message("updater.v3.notification.content", version.versionString),
+                message("updater.new.version.notification.title", version.versionString),
+                message("updater.new.version.notification.content", version.versionString),
                 NotificationType.INFORMATION,
                 null
             )
@@ -156,7 +153,7 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
     }
 
     private class UpdateDetailsAction(private val version: Version) :
-        DumbAwareAction(message("updater.v3.notification.action.detail")) {
+        DumbAwareAction(message("updater.new.version.notification.action.detail")) {
         override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(version.updatesUrl)
     }
 
@@ -195,9 +192,6 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 
         private const val UPDATES_BASE_URL = "http://yiiguxing.github.io/TranslationPlugin/updates"
-
-        private const val MILESTONE_URL =
-            "https://github.com/YiiGuxing/TranslationPlugin/issues?q=is%%3Aissue+milestone%%3Av%s+is%%3Aclosed"
 
         private const val UPDATES_API = "https://api.github.com/repos/YiiGuxing/TranslationPlugin/releases/latest"
 
