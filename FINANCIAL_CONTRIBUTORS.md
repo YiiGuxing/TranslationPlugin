@@ -54,6 +54,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 丿初音 | | 20 CNY |
+| 包子 | | 20 CNY |
 | 耳朵先生 | [fetter.cn](http://fetter.cn) | 20 CNY |
 | Lubeij | | 20 CNY |
 | 封尘 | | 20 CNY |
@@ -65,6 +67,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 张飞 | | 10 CNY |
+| 袁恩志 | | 10 CNY |
 | Leviackerman | | 10 CNY |
 | Yaocijie0104 | | 10 CNY |
 | Sirmin | [github.com/SirMin](https://github.com/SirMin) | 10 CNY |
@@ -105,6 +109,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 会飞的丶猪 | | 6.66 CNY |
+| Scorpius丶 | | 6.66 CNY |
+| 龙 | | 6.66 CNY |
 | 谭靖宇 | | 6.66 CNY |
 | J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
 | 刘小明 | | 6.66 CNY |
@@ -124,14 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Qiuyukuhe |  | 5 CNY |
 | Oliveryuchang | [github.com/oliveryunchang](https://github.com/oliveryunchang) | 5 CNY |
 | Futao | [《喜欢天文》](http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0) | 5 CNY |
-| Afa | | 5 CNY |
-| 你的益达 | | 3 CNY |
-| Codervibe | [github.com/codervibe](https://github.com/codervibe) | 2 CNY |
-| 木岚 | | 2 CNY |
-| Evil | | 2 CNY |
-| 李振宇 | | 2 CNY |
-| Code301 | [github.com/golangtoolkit](https://github.com/golangtoolkit/helper) | 1.11 CNY |
-| 刘丫丫 | | 1 CNY |
-| 林伟杰 | | 1 CNY |
-| 解析短视频 | [www.jxdsp.com](https://www.jxdsp.com) | 1 CNY |
-| 堂主 | | 1 CNY |
