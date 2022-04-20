@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.lang.Language
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.progress.ProgressManager
 import org.jetbrains.concurrency.runAsync
 import java.util.concurrent.TimeoutException
@@ -22,6 +23,8 @@ class TranslateDocumentationTask(
     //execute on a different thread outside read action
     private val promise = runAsync {
         translator.getTranslatedDocumentation(text, language)
+    }.onError { e ->
+        invokeLater(ModalityState.NON_MODAL) { DocNotifications.showWarning(e, null) }
     }
 
     fun onSuccess(callback: (String) -> Unit) {
@@ -38,7 +41,6 @@ class TranslateDocumentationTask(
             } catch (t: TimeoutException) {
                 //ignore
             } catch (e: Throwable) {
-                invokeLater { DocNotifications.showWarning(e, null) }
                 return null
             }
         }
