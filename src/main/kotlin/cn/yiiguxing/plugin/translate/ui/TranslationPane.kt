@@ -416,7 +416,7 @@ abstract class TranslationPane<T : JComponent>(
             viewer.text = text
         }
 
-        if (WordBookService.canAddToWordbook(text)) {
+        if ((project != null || WordBookService.isInitialized) && WordBookService.canAddToWordbook(text)) {
             viewer.appendStarButton(translation)
         }
 

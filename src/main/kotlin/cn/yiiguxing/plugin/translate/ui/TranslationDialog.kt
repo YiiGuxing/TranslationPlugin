@@ -56,7 +56,7 @@ import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
 
 class TranslationDialog(
-    project: Project?,
+    private val project: Project?,
     val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider())
 ) :
     DialogWrapper(project),
@@ -456,7 +456,9 @@ class TranslationDialog(
 
         updatePresentation(translation?.favoriteId)
 
-        starButton.isEnabled = translation != null && WordBookService.canAddToWordbook(translation.original)
+        starButton.isEnabled = translation != null
+                && (project != null || WordBookService.isInitialized)
+                && WordBookService.canAddToWordbook(translation.original)
         starButton.setListener(StarButtons.listener, translation)
 
         translation?.observableFavoriteId?.observe(this@TranslationDialog) { favoriteId, _ ->
