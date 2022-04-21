@@ -73,12 +73,15 @@ inline fun executeOnPooledThread(crossinline action: () -> Unit)
 /**
  * Asynchronously execute the [action] on the AWT event dispatching thread.
  */
-inline fun invokeOnDispatchThread(crossinline action: () -> Unit) {
+inline fun invokeLaterIfNeeded(
+    state: ModalityState = ModalityState.defaultModalityState(),
+    crossinline action: () -> Unit
+) {
     with(Application) {
         if (isDispatchThread) {
             action()
         } else {
-            invokeLater { action() }
+            invokeLater(state) { action() }
         }
     }
 }

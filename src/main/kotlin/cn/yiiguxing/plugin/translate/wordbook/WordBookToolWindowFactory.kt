@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
+import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -48,7 +48,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             override fun onWordRemoved(service: WordBookService, id: Long) {
                 Application.executeOnPooledThread {
                     val available = WordBookService.instance.hasAnyWords()
-                    invokeOnDispatchThread {
+                    invokeLaterIfNeeded {
                         toolWindowRef.get()?.runIfSurvive { isAvailable = available }
                     }
                 }
@@ -59,7 +59,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             val available = WordBookService.instance.let { service ->
                 service.isInitialized && service.hasAnyWords()
             }
-            invokeOnDispatchThread {
+            invokeLaterIfNeeded {
                 toolWindowRef.get()?.runIfSurvive { isAvailable = available }
             }
         }
