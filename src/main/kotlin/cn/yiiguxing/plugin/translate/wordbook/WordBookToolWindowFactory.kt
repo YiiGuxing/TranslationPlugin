@@ -1,8 +1,9 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Application
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -25,24 +26,24 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun init(toolWindow: ToolWindow) {
         val toolWindowRef: Ref<ToolWindow?> = Ref.create(toolWindow)
-        val uiDisposable = TranslationUIManager.disposable()
-        Disposer.register(uiDisposable) {
-            toolWindowRef.set(null)
-        }
+        Disposer.register(toolWindow.disposable) { toolWindowRef.set(null) }
 
-        val messageBusConnection = Application.messageBus.connect(uiDisposable)
+        val messageBusConnection = Application.messageBus.connect(toolWindow.disposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {
             override fun onRequire() {
-                toolWindow.runIfSurvive {
-                    isAvailable = true
-                    isShowStripeButton = true
-                    show()
+                // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1354
+                invokeLater(ModalityState.NON_MODAL) {
+                    toolWindowRef.get()?.runIfSurvive {
+                        isAvailable = true
+                        isShowStripeButton = true
+                        show()
+                    }
                 }
             }
         })
         messageBusConnection.subscribe(WordBookListener.TOPIC, object : WordBookListener {
             override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
-                toolWindow.runIfSurvive { isAvailable = true }
+                toolWindowRef.get()?.runIfSurvive { isAvailable = true }
             }
 
             override fun onWordRemoved(service: WordBookService, id: Long) {
