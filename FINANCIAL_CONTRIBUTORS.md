@@ -67,6 +67,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 爱吃鱼的小灰喵 | | 10 CNY |
 | 张飞 | | 10 CNY |
 | 袁恩志 | | 10 CNY |
 | Leviackerman | | 10 CNY |
@@ -109,6 +110,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 枫伙火 | | 6.66 CNY |
+| Aenlly丶言谕 | | 6.66 CNY |
+| 超 | | 6.66 CNY |
+| 坚定的素食主义者😎😎 | | 6.66 CNY |
+| 5717 | | 6.66 CNY |
 | 会飞的丶猪 | | 6.66 CNY |
 | Scorpius丶 | | 6.66 CNY |
 | 龙 | | 6.66 CNY |
@@ -125,9 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 谢嘉豪 | [xiejiahao.com](http://xiejiahao.com) | 5 CNY |
 | 白鸟无言 | | 5 CNY |
 | 两颗西柚 | | 5 CNY |
-| 寤寐 | | 5 CNY |
-| 双霖 | [linesoft.top](https://www.linesoft.top) | 5 CNY |
-| Chunlife | [chunlife.top](https://chunlife.top) | 5 CNY |
-| Qiuyukuhe |  | 5 CNY |
-| Oliveryuchang | [github.com/oliveryunchang](https://github.com/oliveryunchang) | 5 CNY |
-| Futao | [《喜欢天文》](http://mmbiz.qpic.cn/mmbiz_jpg/xrLkEkGhY2axPVo5PaFBDt4EmtaIgC9SY0Dm8W1ibyic9Ge5100iadSfz2umyPdFo4NKLHLTJTAribjJoKnbvXKrMw/0) | 5 CNY |
