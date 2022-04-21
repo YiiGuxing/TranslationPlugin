@@ -4,7 +4,7 @@
 [![Build Status][badge:build]][gh:workflows-build]
 [![License][badge:license]][gh:license]
 [![GitHub releases][badge:release]][gh:releases]
-[![Version][badge:version]][plugin-homepage]
+[![Version][badge:version]][plugin-versions]
 [![Downloads][badge:downloads]][plugin-homepage]
 [![Financial Contributors on Open Collective][badge:open-collective]][open-collective]
 
@@ -76,11 +76,10 @@
 </a>
 
 - **Installing from the plugin repository within the IDE:**
-    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"
-      Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
+    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
 
 - **Installing manually:**
-    - Download the plugin package on [GitHub Releases][gh:releases] or in the [JetBrains Plugin Repository][plugin-homepage].
+    - Download the plugin package on [GitHub Releases][gh:releases] or in the [JetBrains Plugin Repository][plugin-versions].
     - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd> >
       Select the plugin package and install (no need to unzip)
 
@@ -390,6 +389,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 [get-started-ko]: https://yiiguxing.github.io/TranslationPlugin/ko/start.html
 
 [plugin-homepage]: https://plugins.jetbrains.com/plugin/8579-translation
+[plugin-versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
 
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-contribute]: https://opencollective.com/translation-plugin/contribute
