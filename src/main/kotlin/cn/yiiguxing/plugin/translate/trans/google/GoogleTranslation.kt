@@ -19,7 +19,7 @@ data class GoogleTranslation(
     var original: String? = null,
     val src: Lang,
     var target: Lang? = null,
-    val sentences: List<GSentence>,
+    val sentences: List<GSentence>?,
     val dict: List<GDict>?,
     val spell: GSpell?,
     @SerializedName("ld_result")
@@ -33,6 +33,7 @@ data class GoogleTranslation(
         check(original != null) { "Cannot convert to Translation: original=null" }
         check(target != null) { "Cannot convert to Translation: target=null" }
 
+        val sentences = sentences ?: emptyList()
         val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
         val trans = sentences.asSequence()
             .mapNotNull { (it as? GTransSentence)?.trans }
