@@ -245,7 +245,7 @@ enum class Lang(
     CHICHEWA("chichewa", "ny"),
 
     /** 日语 */
-    JAPANESE("japanese", "jaaa"),
+    JAPANESE("japanese", "ja"),
 
     /** 瑞典语 */
     SWEDISH("swedish", "sv"),
