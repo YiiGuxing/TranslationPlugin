@@ -41,6 +41,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 贺小五 | | 66.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
+| BruceCheung | [github.com/bruuuces](https://github.com/bruuuces) | 50 CNY |
+| 白开水 | | 50 CNY |
 | 王者之师 | | 50 CNY |
 | Donfy | | 50 CNY |
 | Sampan | [gitlab.com/SamuelPan](http://gitlab.com/SamuelPan) | 50 CNY |
@@ -50,6 +52,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
+| 薛定谔的猫 | | 30 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
@@ -67,6 +70,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Gohobo | | 10 CNY |
+| 我的名字真的超级无敌特别非常的长 | | 10 CNY |
+| Yiyi | | 10 CNY |
 | 布口袋 | | 10 CNY |
 | 爱吃鱼的小灰喵 | | 10 CNY |
 | 张飞 | | 10 CNY |
@@ -111,23 +117,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
-| 枫伙火 | | 6.66 CNY |
-| Aenlly丶言谕 | | 6.66 CNY |
-| 超 | | 6.66 CNY |
-| 坚定的素食主义者😎😎 | | 6.66 CNY |
-| 5717 | | 6.66 CNY |
-| 会飞的丶猪 | | 6.66 CNY |
-| Scorpius丶 | | 6.66 CNY |
-| 龙 | | 6.66 CNY |
-| 谭靖宇 | | 6.66 CNY |
-| J-Lee | [lsj97.com](http://lsj97.com) | 6.66 CNY |
-| 刘小明 | | 6.66 CNY |
-| MetaYu | | 6 CNY |
-| 秦秦秦 | | 6 CNY |
-| Hushuang | | 6 CNY |
-| 张英奇 | | 6 CNY |
-| Hanks | [github.com/CrazeJack](https://github.com/CrazeJack) | 5 CNY |
-| 大雄 | [199508.com](http://199508.com) | 5 CNY |
-| 麦可 | [github.com/way2fly](https://github.com/way2fly) | 5 CNY |
-| 谢嘉豪 | [xiejiahao.com](http://xiejiahao.com) | 5 CNY |
-| 白鸟无言 | | 5 CNY |
+| 麦芽糖 | | 6.66 CNY |
+| Live“” | | 6.66 CNY |
+| 李天奇 | | 6.66 CNY |
+| Forevermark | | 6.66 CNY |
+| 汤勺 | | 6.66 CNY |
+| RunYing | | 6.66 CNY |
+| Ksco | | 6.66 CNY |
+| 兰斯 | | 6.66 CNY |
+| 吴智强 | | 6.66 CNY |
+| Cairo💻 | | 6.66 CNY |
+| Ingress | | 6.66 CNY |
+| Final | | 6.66 CNY |
+| 李玉成 | | 6.66 CNY |
+| Soul | | 6.66 CNY |
