@@ -87,7 +87,12 @@ class TranslateService private constructor() : Disposable {
                     LOGGER.w("Translation error", e)
                 } else {
                     // 将异常写入IDE异常池，以便用户反馈
-                    LOGGER.e("Translation error: [${translator.id}] - ${e.message}", e)
+                    LOGGER.e(
+                        "Translation error: [${translator.id}]\n" +
+                                "- source text: ${text.ellipsis(50)}\n" +
+                                "- message: ${e.message}",
+                        e
+                    )
                 }
                 invokeLater(ModalityState.any()) {
                     listeners.run(key) { onError(e) }
