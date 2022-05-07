@@ -70,6 +70,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 庞** | | 10 CNY |
+| 晨 | | 10 CNY |
 | Gohobo | | 10 CNY |
 | 我的名字真的超级无敌特别非常的长 | | 10 CNY |
 | Yiyi | | 10 CNY |
@@ -114,9 +116,13 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | MaybeMirracle | [gitee.com/MaybeMirracle](https://gitee.com/MaybeMirracle) | 8.88 CNY |
 | 刘十年 | [www.l1ub0w3n.cn](https://www.l1ub0w3n.cn) | 8.8 CNY |
 | ZZZping | [github.com/ZZZping](https://github.com/ZZZping) | 8.11 CNY |
+| .p | | 8 CNY |
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 浮筠 | | 6.66 CNY |
+| Zero | | 6.66 CNY |
+| ... | | 6.66 CNY |
 | 麦芽糖 | | 6.66 CNY |
 | Live“” | | 6.66 CNY |
 | 李天奇 | | 6.66 CNY |
@@ -125,9 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | RunYing | | 6.66 CNY |
 | Ksco | | 6.66 CNY |
 | 兰斯 | | 6.66 CNY |
-| 吴智强 | | 6.66 CNY |
-| Cairo💻 | | 6.66 CNY |
-| Ingress | | 6.66 CNY |
-| Final | | 6.66 CNY |
-| 李玉成 | | 6.66 CNY |
-| Soul | | 6.66 CNY |
