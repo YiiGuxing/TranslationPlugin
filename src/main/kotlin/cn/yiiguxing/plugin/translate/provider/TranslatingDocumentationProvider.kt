@@ -104,8 +104,10 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
          * 否则原本是属于真正文档提供者的错误将会被IDE误认为是[TranslatingDocumentationProvider]的错误，
          * 避免插件自己背黑锅，例如
          * [#1203](https://github.com/YiiGuxing/TranslationPlugin/issues/1203)
+         *
+         * 2022/5/9 去除`inline`关键字，使之变为普通方法，以便`Github Action`识别自动处理。
          */
-        private inline fun <T> nullIfError(block: () -> T?): T? {
+        private fun <T> nullIfError(block: () -> T?): T? {
             return try {
                 block()
             } catch (e: Throwable) {
