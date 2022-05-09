@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileEditor.impl.HTMLEditorProvider
-import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
@@ -38,12 +37,10 @@ import java.awt.Point
 import java.util.*
 import javax.swing.UIManager
 
-class UpdateManager : BaseStartupActivity(), DumbAware {
+class UpdateManager : BaseStartupActivity() {
 
     override fun onRunActivity(project: Project) {
-        invokeLater {
-            checkUpdate(project)
-        }
+        checkUpdate(project)
     }
 
     private fun checkUpdate(project: Project) {
@@ -210,5 +207,4 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
             }
         }
     }
-
 }
