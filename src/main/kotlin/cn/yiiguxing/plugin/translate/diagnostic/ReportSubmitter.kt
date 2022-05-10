@@ -93,7 +93,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             ErrorReportNotifications.showNotification(project, title, message, NotificationType.ERROR)
             return
         }
-        ReportCredentials.instance.save(user.name, token.authorizationToken)
+        ReportCredentials.instance.save(user.userName, token.authorizationToken)
     }
 
     private fun Component.getProject(): Project? {
