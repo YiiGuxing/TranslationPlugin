@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.util.Application
+import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
@@ -32,14 +33,13 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         val messageBusConnection = project.messageBus.connect(toolWindow.disposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {
             override fun onRequire() {
-                // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1376
-                // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1425
-                invokeLater(ModalityState.NON_MODAL) {
-                    toolWindowRef.get()?.runIfSurvive {
-                        setAvailable(true) {
-                            isShowStripeButton = true
-                            show()
-                        }
+                toolWindowRef.get()?.runIfSurvive {
+                    if (isAvailable) {
+                        return@runIfSurvive
+                    }
+                    setAvailable(true) {
+                        isShowStripeButton = true
+                        show()
                     }
                 }
             }
@@ -52,9 +52,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             override fun onWordRemoved(service: WordBookService, id: Long) {
                 Application.executeOnPooledThread {
                     val available = WordBookService.instance.hasAnyWords()
-                    invokeLater(ModalityState.NON_MODAL) {
-                        toolWindowRef.get()?.runIfSurvive { isAvailable = available }
-                    }
+                    toolWindowRef.get()?.runIfSurvive { isAvailable = available }
                 }
             }
         })
@@ -63,9 +61,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             val available = WordBookService.instance.let { service ->
                 service.isInitialized && service.hasAnyWords()
             }
-            invokeLater(ModalityState.NON_MODAL) {
-                toolWindowRef.get()?.runIfSurvive { isAvailable = available }
-            }
+            toolWindowRef.get()?.runIfSurvive { isAvailable = available }
         }
     }
 
@@ -79,15 +75,19 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         }
 
         fun requireWordBook() {
+            checkDispatchThread { "Must only be invoked from the Event Dispatch Thread." }
             requirePublisher.onRequire()
         }
 
-        private inline fun ToolWindow.runIfSurvive(action: ToolWindow.() -> Unit) {
-            if (!isDisposed && !(this as ToolWindowEx).project.isDisposed) {
-                action()
+        private inline fun ToolWindow.runIfSurvive(crossinline action: ToolWindow.() -> Unit) {
+            if (isDisposed) {
+                return
+            }
+            invokeLater(ModalityState.NON_MODAL, (this as ToolWindowEx).project.disposed) {
+                if (!isDisposed) {
+                    action()
+                }
             }
         }
-
     }
-
 }

@@ -189,7 +189,7 @@ class WordBookService {
                 """.trimIndent()
             queryRunner.update(createIndexSQL)
             isInitialized = true
-            invokeLaterIfNeeded(ModalityState.NON_MODAL) { wordBookPublisher.onInitialized(this@WordBookService) }
+            invokeLaterIfNeeded(ModalityState.any()) { wordBookPublisher.onInitialized(this@WordBookService) }
         }
     }
 
@@ -249,7 +249,7 @@ class WordBookService {
                     item.createdAt
                 )?.also {
                     item.id = it
-                    invokeLaterIfNeeded(ModalityState.NON_MODAL) {
+                    invokeLaterIfNeeded(ModalityState.any()) {
                         wordBookPublisher.onWordAdded(this@WordBookService, item)
                     }
                 }
@@ -287,7 +287,7 @@ class WordBookService {
             ) > 0
         } == true
         if (updated) {
-            invokeLaterIfNeeded(ModalityState.NON_MODAL) {
+            invokeLaterIfNeeded(ModalityState.any()) {
                 wordBookPublisher.onWordUpdated(this@WordBookService, word)
             }
         }
@@ -315,7 +315,7 @@ class WordBookService {
             queryRunner.update("DELETE FROM wordbook WHERE $COLUMN_ID = $id") > 0
         }?.also { removed ->
             if (removed) {
-                invokeLaterIfNeeded(ModalityState.NON_MODAL) {
+                invokeLaterIfNeeded(ModalityState.any()) {
                     wordBookPublisher.onWordRemoved(this@WordBookService, id)
                 }
             }
@@ -331,7 +331,7 @@ class WordBookService {
             queryRunner.update("DELETE FROM wordbook WHERE $COLUMN_ID IN (${ids.joinToString()})") > 0
         }?.also { removed ->
             if (removed) {
-                invokeLaterIfNeeded(ModalityState.NON_MODAL) {
+                invokeLaterIfNeeded(ModalityState.any()) {
                     for (id in ids) {
                         wordBookPublisher.onWordRemoved(this@WordBookService, id)
                     }
