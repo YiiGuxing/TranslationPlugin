@@ -49,7 +49,11 @@ class WordBookService {
         }
 
         lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
-        findDriverClassLoader()?.let { initialize(it) }
+        try {
+            findDriverClassLoader()?.let { initialize(it) }
+        } catch (e: Throwable) {
+            LOGGER.e("Unable to initialize wordbook service.", e)
+        }
     }
 
     private fun initialize(classLoader: ClassLoader) {
