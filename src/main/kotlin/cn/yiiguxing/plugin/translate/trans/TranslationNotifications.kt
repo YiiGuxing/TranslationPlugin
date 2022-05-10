@@ -35,7 +35,7 @@ object TranslationNotifications {
 
         if (throwable !is TranslateException) {
             // 将异常写入IDE异常池，以便用户反馈
-            logger.e("Translation error", throwable)
+            logger.e("Translation error: ${throwable.message}", throwable)
         }
         Notifications.showErrorNotification(project, title, message, *actionList.toTypedArray())
     }
