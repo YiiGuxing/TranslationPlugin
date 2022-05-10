@@ -18,8 +18,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
@@ -123,7 +121,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 // because it's already finished in the delegate.
                 return true
             }
-            if (editorRef.get().let { it == null || it.isDisposed }) {
+            if ((project != null && project.isDisposed) || editorRef.get().let { it == null || it.isDisposed }) {
                 progressIndicator.processFinish()
                 return true
             }
@@ -154,7 +152,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                     } else {
                         progressIndicator.processFinish()
                         val elementsToReplace = createReplaceElements(translation, language)
-                        editorRef.get()?.showResultsIfNeeds(project, selectionRange, text, elementsToReplace)
+                        editorRef.get()?.showResultsIfNeeds(selectionRange, text, elementsToReplace)
                     }
                 }
 
@@ -164,7 +162,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                     }
 
                     progressIndicator.processFinish()
-                    editorRef.get()?.showResultsIfNeeds(project, selectionRange, text, emptyList())
+                    editorRef.get()?.showResultsIfNeeds(selectionRange, text, emptyList())
                     TranslationNotifications.showTranslationErrorNotification(
                         project, message("translate.and.replace.notification.title"), null, throwable
                     )
@@ -290,7 +288,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.showResultsIfNeeds(
-            project: Project?,
             selectionRange: TextRange,
             targetText: String,
             elements: List<String>
@@ -299,9 +296,10 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 return
             }
 
-            if (this is TextComponentEditor) {
+            val project = project
+            if (this is TextComponentEditor || project == null) {
                 showListPopup(selectionRange, elements)
-            } else if (project != null) {
+            } else if (!project.isDisposed) {
                 showLookup(project, selectionRange, elements)
             }
         }
@@ -325,24 +323,22 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.replaceText(range: TextRange, text: String) {
-            ApplicationManager.getApplication().invokeLater({
-                WriteAction.run<Throwable> {
-                    document.startGuardedBlockChecking()
-                    try {
-                        WriteCommandAction.runWriteCommandAction(
-                            project,
-                            "Translate And Replace",
-                            "Translate And Replace - Replace Text",
-                            { document.replaceString(range.startOffset, range.endOffset, text) }
-                        )
-                        selectionModel.removeSelection()
-                        caretModel.moveToOffset(range.startOffset + text.length)
-                        scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
-                    } finally {
-                        document.stopGuardedBlockChecking()
-                    }
+            WriteAction.run<Throwable> {
+                document.startGuardedBlockChecking()
+                try {
+                    WriteCommandAction.runWriteCommandAction(
+                        project,
+                        "Translate And Replace",
+                        "Translate And Replace - Replace Text",
+                        { document.replaceString(range.startOffset, range.endOffset, text) }
+                    )
+                    selectionModel.removeSelection()
+                    caretModel.moveToOffset(range.startOffset + text.length)
+                    scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+                } finally {
+                    document.stopGuardedBlockChecking()
                 }
-            }, ModalityState.current())
+            }
         }
 
         fun MarkupModel.addHighlight(selectionRange: TextRange): RangeHighlighter {
@@ -358,7 +354,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }
         }
 
-        fun TextComponentEditor.showListPopup(selectionRange: TextRange, elements: List<String>) {
+        fun Editor.showListPopup(selectionRange: TextRange, elements: List<String>) {
             val step = object : SpeedSearchListPopupStep<String>(elements) {
                 override fun onChosen(selectedValue: String, finalChoice: Boolean): PopupStep<*>? {
                     replaceText(selectionRange, selectedValue)

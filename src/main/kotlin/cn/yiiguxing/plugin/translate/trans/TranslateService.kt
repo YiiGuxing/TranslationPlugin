@@ -67,6 +67,7 @@ class TranslateService private constructor() : Disposable {
         }
         listeners[key] = mutableSetOf(listener)
 
+        val modalityState = ModalityState.current()
         executeOnPooledThread {
             try {
                 with(translator) {
@@ -76,9 +77,7 @@ class TranslateService private constructor() : Disposable {
                             // 这里的`sourceLanguage`参数不能直接使用`srcLang`，因为`srcLang`的值可能为`Lang.AUTO`
                             ?.getWordId(text, translation.srcLang, translation.targetLang)
                         CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
-                        invokeLater(ModalityState.any()) {
-                            listeners.run(key) { onSuccess(translation) }
-                        }
+                        invokeLater(modalityState) { listeners.run(key) { onSuccess(translation) } }
                     }
                 }
             } catch (e: Throwable) {
@@ -94,9 +93,7 @@ class TranslateService private constructor() : Disposable {
                         e
                     )
                 }
-                invokeLater(ModalityState.any()) {
-                    listeners.run(key) { onError(e) }
-                }
+                invokeLater(modalityState) { listeners.run(key) { onError(e) } }
             }
         }
     }
