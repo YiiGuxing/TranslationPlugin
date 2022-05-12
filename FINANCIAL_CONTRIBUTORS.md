@@ -70,6 +70,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 蒙奇D路飞 | | 10 CNY |
+| 姜巍 | | 10 CNY |
 | 庞** | | 10 CNY |
 | 晨 | | 10 CNY |
 | Gohobo | | 10 CNY |
@@ -120,6 +122,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 亚林 | | 6.66 CNY |
+| 没时间了 | | 6.66 CNY |
 | 浮筠 | | 6.66 CNY |
 | Zero | | 6.66 CNY |
 | ... | | 6.66 CNY |
@@ -127,7 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Live“” | | 6.66 CNY |
 | 李天奇 | | 6.66 CNY |
 | Forevermark | | 6.66 CNY |
-| 汤勺 | | 6.66 CNY |
-| RunYing | | 6.66 CNY |
-| Ksco | | 6.66 CNY |
-| 兰斯 | | 6.66 CNY |
