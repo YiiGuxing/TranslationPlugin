@@ -16,10 +16,9 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ex.ApplicationInfoEx
-import com.intellij.openapi.diagnostic.ErrorReportSubmitter
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.diagnostic.SubmittedReportInfo
+import com.intellij.openapi.diagnostic.*
+import com.intellij.openapi.fileTypes.FileTypeManager
+import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -225,6 +224,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             .appendDescription(event, message, comment, stacktrace)
             .appendEnvironments()
             .appendStacktrace(stacktrace)
+            .appendAttachments(event)
             .toString()
 
         return GitHubIssuesApis.create(TARGET_REPOSITORY, title, body, credentials.getPasswordAsString()!!)
@@ -289,6 +289,32 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         appendLine("```")
         appendLine(stacktrace)
         appendLine("```")
+    }
+
+    private fun StringBuilder.appendAttachments(event: IdeaLoggingEvent) = apply {
+        val attachments = (event.data as? AbstractMessage)?.includedAttachments
+            ?.takeIf { it.isNotEmpty() }
+            ?: return@apply
+
+        appendLine()
+        appendLine("## Attachments")
+        for (attachment in attachments) {
+            appendAttachment(attachment)
+        }
+    }
+
+    private fun StringBuilder.appendAttachment(attachment: Attachment) = apply {
+        val fileType = FileTypeManager.getInstance().getFileTypeByFileName(attachment.name) as? LanguageFileType
+        val language = fileType?.language?.displayName ?: ""
+
+        appendLine("<details>")
+        appendLine("<summary>${attachment.path}</summary>")
+        appendLine()
+        appendLine("```$language")
+        appendLine(attachment.displayText)
+        appendLine("```")
+        appendLine()
+        appendLine("</details>")
     }
 
     private fun String.removeCR(): String = replace("\r", "")
