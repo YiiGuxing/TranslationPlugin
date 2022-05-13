@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.diagnostic.Attachment
 import com.intellij.openapi.diagnostic.Logger
 import java.util.*
 import javax.swing.Icon
@@ -214,41 +213,11 @@ object BaiduTranslator : AbstractTranslator() {
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 
-        val baiduTranslation = gson.fromJson(translation, BaiduTranslation::class.java)
-        investigate(baiduTranslation, original, srcLang, targetLang, translation)
-
-        if (!baiduTranslation.isSuccessful) {
-            throw TranslationResultException(baiduTranslation.code)
-        }
-
-        return baiduTranslation.toTranslation()
-    }
-
-    private fun investigate(
-        translationObj: Any?,
-        requestText: String,
-        srcLang: Lang,
-        targetLang: Lang,
-        translation: String
-    ) {
-        if (translationObj != null) {
-            return
-        }
-
-        val requestAttachment = Attachment(
-            "request.txt",
-            "Translator: $id\n" +
-                    "Source language: ${srcLang.langName}(${srcLang.code})\n" +
-                    "Target language: ${targetLang.langName}(${targetLang.code})\n" +
-                    "================ Request Text ================\n" +
-                    requestText +
-                    "\n=============================================="
-        ).apply { isIncluded = true }
-        val translationAttachment = Attachment("translation.txt", translation).apply { isIncluded = true }
-
-        val exception = IllegalStateException("Translation should not be null.")
-        logger.error("Translation should not be null.", exception, requestAttachment, translationAttachment)
-        throw exception
+        return gson.fromJson(translation, BaiduTranslation::class.java).apply {
+            if (!isSuccessful) {
+                throw TranslationResultException(code)
+            }
+        }.toTranslation()
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {

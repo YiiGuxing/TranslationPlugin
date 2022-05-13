@@ -80,22 +80,23 @@ class TranslateService private constructor() : Disposable {
                         invokeLater(modalityState) { listeners.run(key) { onSuccess(translation) } }
                     }
                 }
-            } catch (e: Throwable) {
-                if (e is TranslateException) {
+            } catch (error: Throwable) {
+                if (error is TranslateException) {
                     // 已知异常，仅记录日志
-                    LOGGER.w("Translation error", e)
+                    LOG.w("Translation error", error)
                 } else {
                     // 将异常写入IDE异常池，以便用户反馈
-                    LOGGER.e(
-                        "Translation error: [${translator.id}]\n" +
-                                "- source text: ${text.ellipsis(50)}\n" +
-                                "- message: ${e.message}",
-                        e
-                    )
+                    investigate(text, srcLang, targetLang, error)
                 }
-                invokeLater(modalityState) { listeners.run(key) { onError(e) } }
+                invokeLater(modalityState) { listeners.run(key) { onError(error) } }
             }
         }
+    }
+
+    private fun investigate(requestText: String, srcLang: Lang, targetLang: Lang, error: Throwable) {
+        val requestAttachment = TranslationAttachmentFactory
+            .createRequestAttachment(translator, requestText, srcLang, targetLang)
+        LOG.error("Translation error[${translator.id}]: ${error.message}", error, requestAttachment)
     }
 
     private inline fun MutableMap<ListenerKey, MutableSet<TranslateListener>>.run(
@@ -155,7 +156,7 @@ class TranslateService private constructor() : Disposable {
         val instance: TranslateService
             get() = ApplicationManager.getApplication().getService(TranslateService::class.java)
 
-        private val LOGGER = Logger.getInstance(TranslateService::class.java)
+        private val LOG = Logger.getInstance(TranslateService::class.java)
 
         private fun checkThread() = checkDispatchThread(TranslateService::class.java)
     }
