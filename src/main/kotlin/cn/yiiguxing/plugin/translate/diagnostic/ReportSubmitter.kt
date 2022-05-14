@@ -28,6 +28,7 @@ import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.Consumer
 import com.intellij.util.io.HttpRequests
+import com.intellij.util.ui.UIUtil
 import com.intellij.xml.util.XmlStringUtil
 import io.netty.handler.codec.http.HttpResponseStatus
 import java.awt.Component
@@ -175,15 +176,23 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         callback: Consumer<in SubmittedReportInfo>
     ) {
         LOG.w("reporting failed:", e)
-        invokeLater {
+        invokeLater(expired = (project ?: Application).disposed) {
             val title = message("error.report.failed.title")
             if (e is HttpRequests.HttpStatusException &&
                 e.statusCode == HttpResponseStatus.UNAUTHORIZED.code() &&
                 ReportCredentials.instance.isAnonymous
             ) {
-                val message = message("error.report.failed.message.anonymity.disabled")
-                ErrorReportNotifications.showNotification(project, title, message)
                 callback.consume(SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED))
+                val message = message("error.report.failed.message.anonymity.disabled")
+                val result = MessageDialogBuilder
+                    .okCancel(title, message)
+                    .icon(UIUtil.getInformationIcon())
+                    .yesText(message("error.change.reporter.account.login"))
+                    .noText(message("close.action.name"))
+                    .ask(project)
+                if (result) {
+                    changeReporterAccount(parentComponent)
+                }
             } else {
                 val message = message("error.report.failed.message", e.message.toString())
                 val result = MessageDialogBuilder.yesNo(title, message).ask(project)
