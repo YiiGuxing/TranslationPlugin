@@ -109,7 +109,11 @@ inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
  * @param state the state in which the runnable will be executed.
  * @param expired condition to check before execution.
  */
-inline fun invokeLater(state: ModalityState, expired: Condition<*>, crossinline action: () -> Unit) {
+inline fun invokeLater(
+    state: ModalityState = ModalityState.defaultModalityState(),
+    expired: Condition<*>,
+    crossinline action: () -> Unit
+) {
     Application.invokeLater({ action() }, state, expired)
 }
 
