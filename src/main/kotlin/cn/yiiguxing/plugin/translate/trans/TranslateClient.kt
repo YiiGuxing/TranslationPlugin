@@ -50,10 +50,10 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
         val result = doExecute(text, srcLang, targetLang)
         val translation = try {
             parse(result, text, srcLang, targetLang)
-        } catch (error: TranslationResultException) {
-            throw error
         } catch (error: Throwable) {
-            investigate(error, text, srcLang, targetLang, result)
+            if (!skipInvestigation(error)) {
+                investigate(error, text, srcLang, targetLang, result)
+            }
             throw error
         }
         CacheService.putDiskCache(cacheKey, result)
@@ -64,6 +64,10 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
     protected abstract fun doExecute(text: String, srcLang: Lang, targetLang: Lang): String
 
     protected abstract fun parse(translation: String, original: String, srcLang: Lang, targetLang: Lang): T
+
+    protected open fun skipInvestigation(error: Throwable): Boolean {
+        return error is TranslationResultException
+    }
 
     private fun investigate(
         error: Throwable,
