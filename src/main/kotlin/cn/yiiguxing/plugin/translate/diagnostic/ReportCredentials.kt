@@ -15,9 +15,9 @@ internal class ReportCredentials private constructor() {
 
         // https://github.com/settings/tokens/new?description=Bug+Reporting+Access+Token+for+Translation+Plugin+-+v%3Cversion%3E&scopes=public_repo
         // Base64 encoded token to prevent detection by GitHub Advanced Security, which could lead to token revocation.
-        // Version: 1
+        // Version: 2
         @Suppress("SpellCheckingInspection")
-        private const val ANONYMOUS_ACCOUNT_TOKEN = "dG9rZW4gZ2hwX2VFdGFQeldHTEZhc2c3U1JwQXh6S1NHeWh2WVJtdTNkWERLRg=="
+        private const val ANONYMOUS_ACCOUNT_TOKEN = "dG9rZW4gZ2hwX2Z4cmVONjQ0UVJQOUxhQUZnS3dRQ0ZiTGxvOXdPVTAxMEtmRA=="
 
         private val SERVICE_NAME = generateServiceName("TranslationPlugin", "Report Account")
 
