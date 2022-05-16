@@ -17,6 +17,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Condition
 import java.util.concurrent.Future
 
 object Plugin {
@@ -73,12 +74,15 @@ inline fun executeOnPooledThread(crossinline action: () -> Unit)
 /**
  * Asynchronously execute the [action] on the AWT event dispatching thread.
  */
-inline fun invokeOnDispatchThread(crossinline action: () -> Unit) {
+inline fun invokeLaterIfNeeded(
+    state: ModalityState = ModalityState.defaultModalityState(),
+    crossinline action: () -> Unit
+) {
     with(Application) {
         if (isDispatchThread) {
             action()
         } else {
-            invokeLater { action() }
+            invokeLater(state) { action() }
         }
     }
 }
@@ -97,6 +101,20 @@ inline fun invokeLater(crossinline action: () -> Unit) {
  */
 inline fun invokeLater(state: ModalityState, crossinline action: () -> Unit) {
     Application.invokeLater({ action() }, state)
+}
+
+/**
+ * Asynchronously execute the [action] on the AWT event dispatching thread.
+ *
+ * @param state the state in which the runnable will be executed.
+ * @param expired condition to check before execution.
+ */
+inline fun invokeLater(
+    state: ModalityState = ModalityState.defaultModalityState(),
+    expired: Condition<*>,
+    crossinline action: () -> Unit
+) {
+    Application.invokeLater({ action() }, state, expired)
 }
 
 /**

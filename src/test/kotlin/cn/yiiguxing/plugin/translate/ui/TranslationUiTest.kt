@@ -75,7 +75,7 @@ fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
         )
     ),
     GSpell("translation"),
-    GLDResult(listOf(Lang.ENGLISH), listOf(0.80f)),
+    GLanguageDetectionResult(listOf(Lang.ENGLISH), listOf(0.80f)),
     null
 )
 

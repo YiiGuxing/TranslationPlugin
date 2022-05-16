@@ -196,7 +196,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             }
     }
 
-    class AliTranslationResultException(code: Int, val errorMessage: String) : TranslationResultException(code) {
+    class AliTranslationResultException(code: Int, private val errorMessage: String?) : TranslationResultException(code) {
         override fun getLocalizedMessage(): String {
             return "$message[$errorMessage]"
         }

@@ -39,6 +39,10 @@
       "requires": 1,
       "conditions": [
         {
+          "type": "titleMatches",
+          "pattern": "find: An invalid record was encountered\\. \\(-67701\\)"
+        },
+        {
           "type": "descriptionMatches",
           "pattern": "java\\.lang\\.ClassCastException: class (?<class1>\\S+) cannot be cast to class (?<class2>\\S+) \\(\\k<class1> (and|is in unnamed module of loader \\S+ClassLoader @[0-9a-f]+;) \\k<class2> (is|are) in unnamed module of loader \\S+ClassLoader @[0-9a-f]+\\)"
         },
@@ -49,6 +53,10 @@
         {
           "type": "descriptionMatches",
           "pattern": "com\\.intellij\\.diagnostic\\.PluginException: Key cn\\.yiiguxing\\.plugin\\.translate\\.\\S+ duplicated"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "TranslatingDocumentationProvider\\$Companion\\.nullIfError\\(TranslatingDocumentationProvider\\.kt:\\d+\\)"
         }
       ]
     },

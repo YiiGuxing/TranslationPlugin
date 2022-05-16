@@ -1,5 +1,8 @@
 # Translation Plugin Changelog
 
+## [Unreleased]
+- 一些优化与改进
+- 修复了一些问题
 
 ## v3.3.1 (2022/04/20)
 - 一些优化与改进

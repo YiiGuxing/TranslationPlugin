@@ -44,11 +44,18 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
         if (cache != null) try {
             return parse(cache, text, srcLang, targetLang)
         } catch (e: Throwable) {
-            LOG.w(e)
+            LOG.w("Failed to parse from disk cache.", e)
         }
 
         val result = doExecute(text, srcLang, targetLang)
-        val translation = parse(result, text, srcLang, targetLang)
+        val translation = try {
+            parse(result, text, srcLang, targetLang)
+        } catch (error: Throwable) {
+            if (!skipInvestigation(error)) {
+                investigate(error, text, srcLang, targetLang, result)
+            }
+            throw error
+        }
         CacheService.putDiskCache(cacheKey, result)
 
         return translation
@@ -57,6 +64,29 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
     protected abstract fun doExecute(text: String, srcLang: Lang, targetLang: Lang): String
 
     protected abstract fun parse(translation: String, original: String, srcLang: Lang, targetLang: Lang): T
+
+    protected open fun skipInvestigation(error: Throwable): Boolean {
+        return error is TranslationResultException
+    }
+
+    private fun investigate(
+        error: Throwable,
+        requestText: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        translation: String
+    ) {
+        val requestAttachment = TranslationAttachmentFactory
+            .createRequestAttachment(translator, requestText, srcLang, targetLang)
+        val translationAttachment = TranslationAttachmentFactory
+            .createTranslationAttachment(translation)
+        LOG.error(
+            "Translation parsing failed[${translator.id}]: ${error.message}",
+            error,
+            requestAttachment,
+            translationAttachment
+        )
+    }
 
     companion object {
         private val LOG = Logger.getInstance(TranslateClient::class.java)

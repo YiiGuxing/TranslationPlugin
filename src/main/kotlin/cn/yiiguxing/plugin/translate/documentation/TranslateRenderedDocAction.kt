@@ -33,14 +33,19 @@ internal class TranslateRenderedDocAction(
 
         val project = file.project
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
-        ReadAction.nonBlocking<DocRenderPassFactory.Items> {
-            //if doc rendering is disabled, calculated items have textToRender=null
-            withDocRenderingEnabled {
-                DocRenderPassFactory.calculateItemsToRender(editor, file)
+        ReadAction
+            .nonBlocking<DocRenderPassFactory.Items> {
+                //if doc rendering is disabled, calculated items have textToRender=null
+                withDocRenderingEnabled {
+                    DocRenderPassFactory.calculateItemsToRender(editor, file)
+                }
             }
-        }.finishOnUiThread(ModalityState.current()) {
-            DocRenderPassFactory.applyItemsToRender(editor, project, it, false)
-        }.submit(AppExecutorUtil.getAppExecutorService())
+            .expireWhen { !editor.isValid }
+            .withDocumentsCommitted(project)
+            .finishOnUiThread(ModalityState.current()) {
+                DocRenderPassFactory.applyItemsToRender(editor, project, it, false)
+            }
+            .submit(AppExecutorUtil.getAppExecutorService())
     }
 
     /**
@@ -73,5 +78,16 @@ internal class TranslateRenderedDocAction(
         } catch (e: Exception) {
             null
         }
+    }
+
+    companion object {
+        private val Editor.isValid: Boolean
+            get() {
+                val editorProject = project
+                return editorProject != null
+                        && !editorProject.isDisposed
+                        && !isDisposed
+                        && contentComponent.isShowing
+            }
     }
 }

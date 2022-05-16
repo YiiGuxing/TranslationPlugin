@@ -67,6 +67,7 @@ class TranslateService private constructor() : Disposable {
         }
         listeners[key] = mutableSetOf(listener)
 
+        val modalityState = ModalityState.current()
         executeOnPooledThread {
             try {
                 with(translator) {
@@ -76,24 +77,26 @@ class TranslateService private constructor() : Disposable {
                             // 这里的`sourceLanguage`参数不能直接使用`srcLang`，因为`srcLang`的值可能为`Lang.AUTO`
                             ?.getWordId(text, translation.srcLang, translation.targetLang)
                         CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
-                        invokeLater(ModalityState.any()) {
-                            listeners.run(key) { onSuccess(translation) }
-                        }
+                        invokeLater(modalityState) { listeners.run(key) { onSuccess(translation) } }
                     }
                 }
-            } catch (e: Throwable) {
-                if (e is TranslateException) {
+            } catch (error: Throwable) {
+                if (error is TranslateException) {
                     // 已知异常，仅记录日志
-                    LOGGER.w("Translation error", e)
+                    LOG.w("Translation error", error)
                 } else {
                     // 将异常写入IDE异常池，以便用户反馈
-                    LOGGER.e("Translation error: [${translator.id}] - ${e.message}", e)
+                    investigate(text, srcLang, targetLang, error)
                 }
-                invokeLater(ModalityState.any()) {
-                    listeners.run(key) { onError(e) }
-                }
+                invokeLater(modalityState) { listeners.run(key) { onError(error) } }
             }
         }
+    }
+
+    private fun investigate(requestText: String, srcLang: Lang, targetLang: Lang, error: Throwable) {
+        val requestAttachment = TranslationAttachmentFactory
+            .createRequestAttachment(translator, requestText, srcLang, targetLang)
+        LOG.error("Translation error[${translator.id}]: ${error.message}", error, requestAttachment)
     }
 
     private inline fun MutableMap<ListenerKey, MutableSet<TranslateListener>>.run(
@@ -153,7 +156,7 @@ class TranslateService private constructor() : Disposable {
         val instance: TranslateService
             get() = ApplicationManager.getApplication().getService(TranslateService::class.java)
 
-        private val LOGGER = Logger.getInstance(TranslateService::class.java)
+        private val LOG = Logger.getInstance(TranslateService::class.java)
 
         private fun checkThread() = checkDispatchThread(TranslateService::class.java)
     }

@@ -25,11 +25,11 @@ class WordOfTheDayStartupActivity : BaseStartupActivity(true), DumbAware {
                 .takeIf { it.isInitialized }
                 ?.getWords()
                 ?.takeIf { it.isNotEmpty() }
+                ?.shuffled()
                 ?.let { words ->
-                    val sortedWords = words.sortedBy { Math.random() }
                     invokeLater {
                         if (!project.isDisposed) {
-                            TranslationUIManager.showWordOfTheDayDialog(project, sortedWords)
+                            TranslationUIManager.showWordOfTheDayDialog(project, words)
                         }
                     }
                 }

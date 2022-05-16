@@ -17,7 +17,7 @@ data class AliTranslation(
     @SerializedName("Data")
     val data: AliTranslationData,
     @SerializedName("Message")
-    val errorMessage: String,
+    val errorMessage: String? = null,
 ) : TranslationAdapter {
     val isSuccessful get() = code == 200
 

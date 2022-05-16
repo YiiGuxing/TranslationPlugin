@@ -51,7 +51,7 @@ object TranslationIcons {
 
     @JvmField
     @Suppress("SpellCheckingInspection")
-    val Youdao: Icon = load("/icons/youdao.png")
+    val Youdao: Icon = load("/icons/youdao.svg")
 
     @JvmField
     @Suppress("SpellCheckingInspection")
