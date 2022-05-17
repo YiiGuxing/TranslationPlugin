@@ -17,15 +17,20 @@ private val ZERO_WIDTH_SPACE = Regex("​+")
 
 data class GoogleTranslation(
     var original: String? = null,
+    @SerializedName("src")
     val src: Lang,
     var target: Lang? = null,
-    val sentences: List<GSentence>,
+    @SerializedName("sentences")
+    val sentences: List<GSentence>?,
+    @SerializedName("dict")
     val dict: List<GDict>?,
+    @SerializedName("spell")
     val spell: GSpell?,
     @SerializedName("ld_result")
-    val ldResult: GLDResult,
+    val languageDetectionResult: GLanguageDetectionResult,
     @SerializedName("alternative_translations")
     val alternativeTranslations: List<GAlternativeTranslations>? = null,
+    @SerializedName("examples")
     val examples: GExamples? = null
 ) : TranslationAdapter {
 
@@ -33,6 +38,7 @@ data class GoogleTranslation(
         check(original != null) { "Cannot convert to Translation: original=null" }
         check(target != null) { "Cannot convert to Translation: target=null" }
 
+        val sentences = sentences ?: emptyList()
         val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
         val trans = sentences.asSequence()
             .mapNotNull { (it as? GTransSentence)?.trans }
@@ -48,7 +54,7 @@ data class GoogleTranslation(
             trans,
             src,
             target!!,
-            ldResult.srclangs,
+            languageDetectionResult.srclangs,
             translit?.srcTranslit,
             translit?.translit,
             spell?.spell,
@@ -60,7 +66,14 @@ data class GoogleTranslation(
 
 sealed class GSentence
 
-data class GTransSentence(val orig: String, val trans: String, val backend: Int) : GSentence()
+data class GTransSentence(
+    @SerializedName("orig")
+    val orig: String,
+    @SerializedName("trans")
+    val trans: String,
+    @SerializedName("backend")
+    val backend: Int
+) : GSentence()
 
 data class GTranslitSentence(
     @SerializedName("src_translit")
@@ -69,7 +82,14 @@ data class GTranslitSentence(
     val translit: String?
 ) : GSentence()
 
-data class GDict(val pos: String, val terms: List<String>, val entry: List<GDictEntry>)
+data class GDict(
+    @SerializedName("pos")
+    val pos: String,
+    @SerializedName("terms")
+    val terms: List<String>,
+    @SerializedName("entry")
+    val entry: List<GDictEntry>
+)
 
 data class GDictEntry(
     @SerializedName("word")
@@ -80,14 +100,14 @@ data class GDictEntry(
     val score: Float
 )
 
-data class GLDResult(
+data class GLanguageDetectionResult(
     @SerializedName("srclangs")
     val srclangs: List<Lang>,
     @SerializedName("srclangs_confidences")
     val srclangsConfidences: List<Float>
 )
 
-// For dt=at
+//region For dt=at
 data class GAlternativeTranslations(
     @SerializedName("src_phrase")
     val srcPhrase: String,
@@ -107,16 +127,24 @@ data class GAlternative(
     @SerializedName("attach_to_next_token")
     val attachToNextToken: Boolean
 )
-// End
+//endregion
 
-// For dt=qca
-data class GSpell(@SerializedName("spell_res") val spell: String)
-// End
+//region For dt=qca
+data class GSpell(
+    @SerializedName("spell_res")
+    val spell: String
+)
+//endregion
 
-// For dt=ex
-data class GExamples(@SerializedName("example") val examples: List<GExample>)
+
+//region For dt=ex
+data class GExamples(
+    @SerializedName("example")
+    val examples: List<GExample>
+)
 
 data class GExample(
+    @SerializedName("text")
     val text: String,
     @SerializedName("source_type")
     val sourceType: Int,
@@ -124,5 +152,8 @@ data class GExample(
     val labelInfo: GLabelInfo? = null
 )
 
-data class GLabelInfo(val subject: List<String>)
-// End
+data class GLabelInfo(
+    @SerializedName("subject")
+    val subject: List<String>
+)
+//endregion

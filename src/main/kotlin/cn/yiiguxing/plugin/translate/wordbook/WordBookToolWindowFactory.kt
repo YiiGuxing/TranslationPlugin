@@ -1,14 +1,16 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.invokeOnDispatchThread
+import cn.yiiguxing.plugin.translate.util.checkDispatchThread
+import cn.yiiguxing.plugin.translate.util.invokeLater
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.Ref
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.openapi.wm.ex.ToolWindowEx
 
 /**
  * Word book tool window factory
@@ -25,32 +27,32 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun init(toolWindow: ToolWindow) {
         val toolWindowRef: Ref<ToolWindow?> = Ref.create(toolWindow)
-        val uiDisposable = TranslationUIManager.disposable()
-        Disposer.register(uiDisposable) {
-            toolWindowRef.set(null)
-        }
+        Disposer.register(toolWindow.disposable) { toolWindowRef.set(null) }
 
-        val messageBusConnection = Application.messageBus.connect(uiDisposable)
+        val project = (toolWindow as ToolWindowEx).project
+        val messageBusConnection = project.messageBus.connect(toolWindow.disposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {
             override fun onRequire() {
-                toolWindow.runIfSurvive {
-                    isAvailable = true
-                    isShowStripeButton = true
-                    show()
+                toolWindowRef.get()?.runIfSurvive {
+                    if (isAvailable) {
+                        return@runIfSurvive
+                    }
+                    setAvailable(true) {
+                        isShowStripeButton = true
+                        show()
+                    }
                 }
             }
         })
         messageBusConnection.subscribe(WordBookListener.TOPIC, object : WordBookListener {
             override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
-                toolWindow.runIfSurvive { isAvailable = true }
+                toolWindowRef.get()?.runIfSurvive { isAvailable = true }
             }
 
             override fun onWordRemoved(service: WordBookService, id: Long) {
                 Application.executeOnPooledThread {
                     val available = WordBookService.instance.hasAnyWords()
-                    invokeOnDispatchThread {
-                        toolWindowRef.get()?.runIfSurvive { isAvailable = available }
-                    }
+                    toolWindowRef.get()?.runIfSurvive { isAvailable = available }
                 }
             }
         })
@@ -59,9 +61,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             val available = WordBookService.instance.let { service ->
                 service.isInitialized && service.hasAnyWords()
             }
-            invokeOnDispatchThread {
-                toolWindowRef.get()?.runIfSurvive { isAvailable = available }
-            }
+            toolWindowRef.get()?.runIfSurvive { isAvailable = available }
         }
     }
 
@@ -75,15 +75,19 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         }
 
         fun requireWordBook() {
+            checkDispatchThread { "Must only be invoked from the Event Dispatch Thread." }
             requirePublisher.onRequire()
         }
 
-        private inline fun ToolWindow.runIfSurvive(action: ToolWindow.() -> Unit) {
-            if (!isDisposed) {
-                action()
+        private inline fun ToolWindow.runIfSurvive(crossinline action: ToolWindow.() -> Unit) {
+            if (isDisposed) {
+                return
+            }
+            invokeLater(ModalityState.NON_MODAL, (this as ToolWindowEx).project.disposed) {
+                if (!isDisposed) {
+                    action()
+                }
             }
         }
-
     }
-
 }

@@ -139,6 +139,8 @@ object BaiduTranslator : AbstractTranslator() {
         Lang.ARMENIAN,
     )
 
+    private val gson = Gson()
+
     private val logger: Logger = Logger.getInstance(BaiduTranslator::class.java)
 
     override val id: String = BAIDU.id
@@ -214,7 +216,7 @@ object BaiduTranslator : AbstractTranslator() {
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 
-        return Gson().fromJson(translation, BaiduTranslation::class.java).apply {
+        return gson.fromJson(translation, BaiduTranslation::class.java).apply {
             if (!isSuccessful) {
                 throw TranslationResultException(code)
             }

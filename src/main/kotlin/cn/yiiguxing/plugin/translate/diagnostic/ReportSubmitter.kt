@@ -16,10 +16,9 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ex.ApplicationInfoEx
-import com.intellij.openapi.diagnostic.ErrorReportSubmitter
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.diagnostic.SubmittedReportInfo
+import com.intellij.openapi.diagnostic.*
+import com.intellij.openapi.fileTypes.FileTypeManager
+import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -29,6 +28,7 @@ import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.Consumer
 import com.intellij.util.io.HttpRequests
+import com.intellij.util.ui.UIUtil
 import com.intellij.xml.util.XmlStringUtil
 import io.netty.handler.codec.http.HttpResponseStatus
 import java.awt.Component
@@ -93,7 +93,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             ErrorReportNotifications.showNotification(project, title, message, NotificationType.ERROR)
             return
         }
-        ReportCredentials.instance.save(user.name, token.authorizationToken)
+        ReportCredentials.instance.save(user.userName, token.authorizationToken)
     }
 
     private fun Component.getProject(): Project? {
@@ -176,15 +176,23 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         callback: Consumer<in SubmittedReportInfo>
     ) {
         LOG.w("reporting failed:", e)
-        invokeLater {
+        invokeLater(expired = (project ?: Application).disposed) {
             val title = message("error.report.failed.title")
             if (e is HttpRequests.HttpStatusException &&
                 e.statusCode == HttpResponseStatus.UNAUTHORIZED.code() &&
                 ReportCredentials.instance.isAnonymous
             ) {
-                val message = message("error.report.failed.message.anonymity.disabled")
-                ErrorReportNotifications.showNotification(project, title, message)
                 callback.consume(SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED))
+                val message = message("error.report.failed.message.anonymity.disabled")
+                val result = MessageDialogBuilder
+                    .okCancel(title, message)
+                    .icon(UIUtil.getInformationIcon())
+                    .yesText(message("error.change.reporter.account.login"))
+                    .noText(message("close.action.name"))
+                    .ask(project)
+                if (result) {
+                    changeReporterAccount(parentComponent)
+                }
             } else {
                 val message = message("error.report.failed.message", e.message.toString())
                 val result = MessageDialogBuilder.yesNo(title, message).ask(project)
@@ -225,6 +233,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             .appendDescription(event, message, comment, stacktrace)
             .appendEnvironments()
             .appendStacktrace(stacktrace)
+            .appendAttachments(event)
             .toString()
 
         return GitHubIssuesApis.create(TARGET_REPOSITORY, title, body, credentials.getPasswordAsString()!!)
@@ -289,6 +298,32 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
         appendLine("```")
         appendLine(stacktrace)
         appendLine("```")
+    }
+
+    private fun StringBuilder.appendAttachments(event: IdeaLoggingEvent) = apply {
+        val attachments = (event.data as? AbstractMessage)?.includedAttachments
+            ?.takeIf { it.isNotEmpty() }
+            ?: return@apply
+
+        appendLine()
+        appendLine("## Attachments")
+        for (attachment in attachments) {
+            appendAttachment(attachment)
+        }
+    }
+
+    private fun StringBuilder.appendAttachment(attachment: Attachment) = apply {
+        val fileType = FileTypeManager.getInstance().getFileTypeByFileName(attachment.name) as? LanguageFileType
+        val language = fileType?.language?.displayName ?: ""
+
+        appendLine("<details>")
+        appendLine("<summary>${attachment.path}</summary>")
+        appendLine()
+        appendLine("```$language")
+        appendLine(attachment.displayText)
+        appendLine("```")
+        appendLine()
+        appendLine("</details>")
     }
 
     private fun String.removeCR(): String = replace("\r", "")
