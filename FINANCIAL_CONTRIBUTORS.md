@@ -123,6 +123,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 刘烨 | | 6.66 CNY |
 | 伴ve | | 6.66 CNY |
 | 遐迩先生 | | 6.66 CNY |
 | 亚林 | | 6.66 CNY |
@@ -130,4 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 浮筠 | | 6.66 CNY |
 | Zero | | 6.66 CNY |
 | ... | | 6.66 CNY |
-| 麦芽糖 | | 6.66 CNY |
