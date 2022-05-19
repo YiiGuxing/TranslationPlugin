@@ -57,6 +57,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| Imagin | | 20 CNY |
 | 凯 | | 20 CNY |
 | 丿初音 | | 20 CNY |
 | 包子 | | 20 CNY |
@@ -130,4 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 遐迩先生 | | 6.66 CNY |
 | 亚林 | | 6.66 CNY |
 | 没时间了 | | 6.66 CNY |
-| 浮筠 | | 6.66 CNY |
