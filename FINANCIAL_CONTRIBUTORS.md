@@ -124,10 +124,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Valhalla_s | | 6.66 CNY |
+| 木头人小站 | [blog.itmtr.cn](https://blog.itmtr.cn) | 6.66 CNY |
 | 希 | | 6.66 CNY |
 | 天清江月白 | | 6.66 CNY |
 | 刘烨 | | 6.66 CNY |
 | 伴ve | | 6.66 CNY |
 | 遐迩先生 | | 6.66 CNY |
-| 亚林 | | 6.66 CNY |
-| 没时间了 | | 6.66 CNY |
