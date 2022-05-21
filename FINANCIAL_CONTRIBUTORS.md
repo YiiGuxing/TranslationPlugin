@@ -72,6 +72,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| XMJC | | 10 CNY |
 | 蒙奇D路飞 | | 10 CNY |
 | 姜巍 | | 10 CNY |
 | 庞** | | 10 CNY |
@@ -130,4 +131,3 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 天清江月白 | | 6.66 CNY |
 | 刘烨 | | 6.66 CNY |
 | 伴ve | | 6.66 CNY |
-| 遐迩先生 | | 6.66 CNY |
