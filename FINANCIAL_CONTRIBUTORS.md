@@ -72,6 +72,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 古乐 | | 10 CNY |
 | XMJC | | 10 CNY |
 | 蒙奇D路飞 | | 10 CNY |
 | 姜巍 | | 10 CNY |
