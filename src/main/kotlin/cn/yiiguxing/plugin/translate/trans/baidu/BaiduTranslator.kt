@@ -213,6 +213,10 @@ object BaiduTranslator : AbstractTranslator() {
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 
+        if (translation.isBlank()) {
+            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
+        }
+
         return gson.fromJson(translation, BaiduTranslation::class.java).apply {
             if (!isSuccessful) {
                 throw TranslationResultException(code)
