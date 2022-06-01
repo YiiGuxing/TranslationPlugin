@@ -78,6 +78,15 @@ a:hover {
     text-decoration: underline;
 }
 
+h1 > a, h2 > a, h3 > a {
+    display: none;
+    cursor: pointer;
+}
+
+h1:hover > a, h2:hover > a, h3:hover > a {
+    display: inline-block;
+}
+
 .btn {
     min-width: 10rem;
     display: inline-block;
