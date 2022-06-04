@@ -72,6 +72,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 陈 | | 10 CNY |
+| Dominic | | 10 CNY |
+| 太阳 | | 10 CNY |
 | Laoniu | [refblogs.com](https://refblogs.com) | 10 CNY |
 | 古乐 | | 10 CNY |
 | XMJC | | 10 CNY |
