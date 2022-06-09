@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.diagnostic.Logger
 
 /**
  * 显示翻译对话框动作
@@ -30,8 +29,6 @@ class ShowTranslationDialogAction : TranslateAction(true) {
         if (ApplicationManager.getApplication().isHeadlessEnvironment) {
             return
         }
-
-        Logger.getInstance("Test").error(RuntimeException("===TEST==="))
 
         TranslationUIManager.showDialog(e.project)
         if (Settings.takeWordWhenDialogOpens) {
