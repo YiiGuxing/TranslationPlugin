@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
+import cn.yiiguxing.plugin.translate.action.BrowseUrlAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppException
 import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppService
@@ -90,7 +91,12 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             } else {
                 message("error.change.reporter.account.failed.message", e.message.toString())
             }
-            ErrorReportNotifications.showNotification(project, title, message, NotificationType.ERROR)
+            ErrorReportNotifications.showNotification(
+                project,
+                title,
+                message,
+                notificationType = NotificationType.ERROR
+            )
             return
         }
         ReportCredentials.instance.save(user.userName, token.authorizationToken)
@@ -153,18 +159,18 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
 
     private fun showIssueNotification(project: Project?, reportInfo: SubmittedReportInfo) {
         val text = StringBuilder().apply {
-            append(message("error.report.submitted.as.link", reportInfo.url, reportInfo.linkText))
+            append(message("error.report.submitted.as.link", reportInfo.linkText))
             if (reportInfo.status == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
                 append(message("error.report.duplicate"))
             }
-            append('.')
-            append("<br/>")
+            append(". ")
             append(message("error.report.gratitude"))
         }
 
         val title = message("error.report.submitted")
         val content = XmlStringUtil.wrapInHtml(text)
-        ErrorReportNotifications.showNotification(project, title, content)
+        val action = BrowseUrlAction(message("error.report.action.text.view", reportInfo.linkText), reportInfo.url)
+        ErrorReportNotifications.showNotification(project, title, content, action)
     }
 
     private fun onError(
