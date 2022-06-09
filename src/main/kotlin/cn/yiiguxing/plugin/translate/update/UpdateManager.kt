@@ -83,7 +83,10 @@ class UpdateManager : BaseStartupActivity() {
             .createNotification(content, NotificationType.INFORMATION)
             .setTitle(title)
             .setImportant(true)
-            .setListener(Notifications.UrlOpeningListener(false))
+            .apply {
+                @Suppress("DEPRECATION", "deprecation")
+                setListener(Notifications.UrlOpeningListener(false))
+            }
             .apply {
                 if (isFeatureVersion && !canBrowseWhatsNewHTMLEditor) {
                     addAction(WhatsNewAction(version))

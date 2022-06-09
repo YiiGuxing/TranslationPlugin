@@ -34,7 +34,6 @@ object Notifications {
             .getNotificationGroup(groupId)
             .createNotification(content, NotificationType.ERROR)
             .setTitle(title)
-            .setListener(UrlOpeningListener)
             // actions的折叠是从左往右折叠的
             .apply { addActions(actions.toList()) }
             .show(project)
@@ -51,7 +50,6 @@ object Notifications {
             .getNotificationGroup(groupId)
             .createNotification(message, type)
             .setTitle(title)
-            .setListener(UrlOpeningListener)
             .show(project)
     }
 
@@ -90,8 +88,6 @@ object Notifications {
                 super.hyperlinkActivated(notification, hyperlinkEvent)
             }
         }
-
-        companion object : UrlOpeningListener()
     }
 
 }
