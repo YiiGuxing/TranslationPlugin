@@ -263,8 +263,8 @@ abstract class SettingsForm {
     }
 
     open fun isSupportDocumentTranslation(): Boolean {
-        // Document translation is not supported in Rider.
-        return IdeVersion.buildNumber.productCode != "RD"
+        // Documentation translation is not supported before Rider 2022.1.
+        return IdeVersion >= IdeVersion.IDE2022_1 || IdeVersion.buildNumber.productCode != "RD"
     }
 
     companion object {
