@@ -17,7 +17,7 @@ internal object ErrorReportNotifications {
         NotificationGroupManager.getInstance()
             .getNotificationGroup("Error Report")
             .createNotification(title, message, notificationType)
-            .apply { addActions(actions.toList()) }
+            .addActions(actions.toList() as Collection<AnAction>)
             .setImportant(false)
             .notify(project)
     }
