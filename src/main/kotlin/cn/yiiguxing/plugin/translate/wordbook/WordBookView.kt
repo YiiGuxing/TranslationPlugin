@@ -272,8 +272,16 @@ class WordBookView {
     }
 
     private fun updateContent(project: Project, toolWindow: ToolWindow) {
+        if (project.isDisposed) {
+            return
+        }
+
         val groupedWords = groupedWords
         val contentManager = toolWindow.contentManager
+        if (contentManager.isDisposed) {
+            return
+        }
+
         val allContent = contentManager.getContent(0)!!
         val groupedContents = contentManager.contents.let { contents ->
             if (contents.size > 1) contents.copyOfRange(1, contents.size) else emptyArray()
