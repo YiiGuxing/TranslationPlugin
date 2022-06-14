@@ -3,7 +3,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     // Java support
@@ -18,17 +17,27 @@ plugins {
     id("org.jetbrains.qodana") version "0.1.13"
 }
 
+
+fun properties(key: String) = project.findProperty(key).toString()
+fun dateValue(pattern: String) = LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
+
+
 val pluginMajorVersion: String by project
-val pluginVariantVersion: String by project
-val variantVersionPart = pluginVariantVersion.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
-val isSnapshot = !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
-val snapshotSeparator = if (variantVersionPart.isNotEmpty()) "." else "-"
-val snapshotPart = if (isSnapshot) "${snapshotSeparator}SNAPSHOT" else ""
-val pluginVersion = "$pluginMajorVersion$variantVersionPart"
-val fullPluginVersion = "$pluginVersion$snapshotPart"
+val pluginPreReleaseVersion: String by project
+val pluginBuildMetadata: String by project
+val preReleaseVersionVersion = pluginPreReleaseVersion
+    .takeIf { it.isNotBlank() }
+    ?: "SNAPSHOT.${dateValue("yyMMdd")}".takeIf {
+        properties("autoSnapshotVersion").toBoolean()
+                && !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
+    }
+val preReleaseVersionPart = preReleaseVersionVersion?.let { "-$it" } ?: ""
+val buildMetadataPart = pluginBuildMetadata.takeIf { it.isNotBlank() }?.let { "+$it" } ?: ""
+val pluginVersion = pluginMajorVersion + preReleaseVersionPart
+val fullPluginVersion = pluginVersion + buildMetadataPart
 
-
-val versionRegex = Regex("v(\\d(\\.\\d+)+(-([0-9a-zA-Z]+(\\.[0-9a-zA-Z]+)*))?)")
+val versionRegex =
+    Regex("""^v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
 if (!versionRegex.matches("v$fullPluginVersion")) {
     throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
 }
@@ -63,7 +72,7 @@ dependencies {
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
     jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
@@ -79,11 +88,8 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    val date = LocalDate.now(ZoneId.of("Asia/Shanghai"))
-    val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-
     version.set(pluginVersion)
-    header.set(provider { "v${version.get()} (${date.format(formatter)})" })
+    header.set(provider { "v${version.get()} (${dateValue("yyyy/MM/dd")})" })
     headerParserRegex.set(versionRegex)
     groups.set(emptyList())
 }
@@ -105,7 +111,7 @@ tasks {
     }
 
     buildSearchableOptions {
-        enabled = !isSnapshot
+        enabled = !"false".equals(properties("intellij.buildSearchableOptions.enabled"), ignoreCase = true)
     }
 
     patchPluginXml {
@@ -134,7 +140,7 @@ tasks {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        // channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
+        channels.set(listOf(preReleaseVersionVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"))
     }
 
     wrapper {
