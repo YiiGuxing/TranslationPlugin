@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.editor.markup.*
@@ -326,19 +327,24 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             WriteAction.run<Throwable> {
                 document.startGuardedBlockChecking()
                 try {
-                    WriteCommandAction.runWriteCommandAction(
-                        project,
-                        "Translate And Replace",
-                        "Translate And Replace - Replace Text",
-                        { document.replaceString(range.startOffset, range.endOffset, text) }
-                    )
+                    val offset = WriteCommandAction.runWriteCommandAction<Int>(project) {
+                        document.replaceString(range, text)
+                    }
                     selectionModel.removeSelection()
-                    caretModel.moveToOffset(range.startOffset + text.length)
+                    caretModel.moveToOffset(offset)
                     scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
                 } finally {
                     document.stopGuardedBlockChecking()
                 }
             }
+        }
+
+        fun Document.replaceString(range: TextRange, text: String): Int {
+            val length = textLength
+            val startOffset = minOf(range.startOffset, length)
+            val endOffset = minOf(range.endOffset, length)
+            replaceString(startOffset, endOffset, text)
+            return startOffset + text.length
         }
 
         fun MarkupModel.addHighlight(selectionRange: TextRange): RangeHighlighter {
