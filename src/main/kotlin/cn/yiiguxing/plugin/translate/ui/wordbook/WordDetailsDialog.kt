@@ -93,7 +93,7 @@ class WordDetailsDialog(
 
             override fun focusGained(e: FocusEvent?) {
                 if (toShowHint && phoneticField.text.isEmpty()) {
-                    invokeLater {
+                    invokeLater(expired = { phoneticField.editor.let { it == null || it.isDisposed } }) {
                         phoneticField.editor?.let {
                             HintManager.getInstance().showInformationHint(it, message("word.details.tip.phonetic"))
                         }
@@ -130,7 +130,7 @@ class WordDetailsDialog(
 
             override fun focusGained(editor: Editor) {
                 if (toShowHint && editor.document.text.isEmpty()) {
-                    invokeLater {
+                    invokeLater(expired = { editor.isDisposed }) {
                         HintManager.getInstance().showInformationHint(editor, message("word.details.tags.hit"))
                     }
                 }
