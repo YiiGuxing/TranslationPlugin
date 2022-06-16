@@ -5,6 +5,11 @@
       "colour": "#5C6BC0",
       "description": "This is an automatically generated report"
     },
+    "bug-crash": {
+      "name": "bug/crash :boom:",
+      "colour": "#B60205",
+      "description": "Uh-oh!"
+    },
     "not-plugins-bug": {
       "name": "not plugin's bug",
       "colour": "#1A322A",
@@ -32,6 +37,23 @@
         {
           "type": "descriptionMatches",
           "pattern": ":warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_"
+        }
+      ]
+    },
+    "bug-crash": {
+      "requires": 3,
+      "conditions": [
+        {
+          "type": "titleMatches",
+          "pattern": "^\\[Auto Generated].+"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": ":warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "## Stack Trace"
         }
       ]
     },
