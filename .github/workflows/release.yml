@@ -78,7 +78,7 @@ jobs:
           git config user.name "GitHub Action"
 
           git checkout -b $BRANCH
-          git commit -am ":rocket: $VERSION"
+          git commit -am ":rocket: ${VERSION}" -m "[skip ci]"
           git push --set-upstream origin $BRANCH
 
           gh pr create \
