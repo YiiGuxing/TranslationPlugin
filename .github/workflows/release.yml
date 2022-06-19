@@ -33,6 +33,8 @@ jobs:
         id: properties
         shell: bash
         run: |
+          PROPERTIES="$(./gradlew properties --console=plain -q)"
+          PLUGIN_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
           CHANGELOG="$(cat << 'EOM' | sed -e "/## What's Changed/d" -e 's/^[[:space:]]*$//g' -e '/./,$!d'
           ${{ github.event.release.body }}
           EOM
@@ -42,11 +44,12 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
+          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
           echo "::set-output name=changelog::$CHANGELOG"
 
       # Update Unreleased section with the current release note
       - name: Patch Changelog
-        if: ${{ steps.properties.outputs.changelog != '' }}
+        if: github.event.release.target_commitish == 'master' && steps.properties.outputs.changelog != ''
         env:
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
@@ -63,11 +66,11 @@ jobs:
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./build/distributions/*
+        run: gh release upload v${{ steps.properties.outputs.pluginVersion }} ./build/distributions/*
 
       # Create pull request
       - name: Create Pull Request
-        if: ${{ steps.properties.outputs.changelog != '' }}
+        if: github.event.release.target_commitish == 'master' && steps.properties.outputs.changelog != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -89,9 +92,20 @@ jobs:
 
       # Close the milestone
       - name: Close Milestone
+        if: github.event.release.target_commitish == 'master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/{owner}/{repo}/milestones \
             --jq '.[] | select(.title == "${{ github.event.release.tag_name }}") | .number' \
             | xargs -I '{}' gh api -X PATCH repos/{owner}/{repo}/milestones/{} -F state='closed'
+
+      # Delete release if not master branch
+      - name: Delete Release
+        if: github.event.release.target_commitish != 'master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/{owner}/{repo}/releases \
+            --jq ".[] | select(.tag_name == \"${{ github.event.release.tag_name }}\") | .id" \
+            | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
