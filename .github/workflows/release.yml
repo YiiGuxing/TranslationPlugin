@@ -31,6 +31,8 @@ jobs:
       # Set environment variables
       - name: Export Properties
         id: properties
+        env:
+          SNAPSHOT_VERSION: false
         shell: bash
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
@@ -51,6 +53,7 @@ jobs:
       - name: Patch Changelog
         if: github.event.release.target_commitish == 'master' && steps.properties.outputs.changelog != ''
         env:
+          SNAPSHOT_VERSION: false
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
           ./gradlew patchChangelog --release-note="$CHANGELOG"
