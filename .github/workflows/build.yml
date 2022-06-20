@@ -57,7 +57,7 @@ jobs:
       - name: Export Properties
         id: properties
         env:
-          SNAPSHOT_VERSION: false
+          AUTO_SNAPSHOT_VERSION: false
         shell: bash
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"

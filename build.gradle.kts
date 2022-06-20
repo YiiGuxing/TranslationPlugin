@@ -29,7 +29,7 @@ val preReleaseVersionVersion = pluginPreReleaseVersion
     .takeIf { it.isNotBlank() }
     ?: "SNAPSHOT.${dateValue("yyMMdd")}".takeIf {
         properties("autoSnapshotVersion").toBoolean()
-                && !"false".equals(System.getenv("SNAPSHOT_VERSION"), ignoreCase = true)
+                && !"false".equals(System.getenv("AUTO_SNAPSHOT_VERSION"), ignoreCase = true)
     }
 val preReleaseVersionPart = preReleaseVersionVersion?.let { "-$it" } ?: ""
 val buildMetadataPart = pluginBuildMetadata.takeIf { it.isNotBlank() }?.let { "+$it" } ?: ""
