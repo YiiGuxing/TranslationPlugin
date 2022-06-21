@@ -49,6 +49,7 @@
             <constraints/>
             <properties>
               <enabled value="true"/>
+              <fillsViewportHeight value="true"/>
               <striped value="true"/>
             </properties>
           </component>

@@ -47,6 +47,8 @@ class WordBookView {
     private val words: MutableList<WordBookItem> = ArrayList()
     private var groupedWords: Map<String, MutableList<WordBookItem>> = HashMap()
 
+    val wordTags: Set<String> get() = groupedWords.keys
+
     private val windows: MutableMap<Project, ToolWindow> = HashMap()
     private val wordBookPanels: MutableMap<Project, WordBookPanel> = HashMap()
 
@@ -341,7 +343,7 @@ class WordBookView {
     }
 
     private fun openWordDetails(project: Project?, word: WordBookItem) {
-        WordDetailsDialog(project, word, groupedWords.keys).show()
+        WordDetailsDialog(project, word).show()
     }
 
     private abstract inner class WordBookAction(text: String, description: String? = text, icon: Icon? = null) :

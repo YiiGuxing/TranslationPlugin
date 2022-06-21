@@ -1,32 +1,25 @@
 package cn.yiiguxing.plugin.translate.ui.wordbook
 
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.form.WordBookWindowForm
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.table.TableView
-import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import java.awt.CardLayout
-import java.awt.Component
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.*
 import javax.swing.JComponent
 import javax.swing.JPopupMenu
-import javax.swing.JTable
 import javax.swing.SwingUtilities
-import javax.swing.table.DefaultTableCellRenderer
-import javax.swing.table.TableCellRenderer
 
 /**
  * WordBookPanel
  */
 class WordBookPanel : WordBookWindowForm() {
 
-    private val tableModel: ListTableModel<WordBookItem> = ListTableModel(WordColumnInfo, ExplainsColumnInfo)
+    private val tableModel: ListTableModel<WordBookItem> = ListTableModel(WordColumnInfo(), ExplainsColumnInfo())
 
     val selectedWord: WordBookItem? get() = tableView.selectedObject
 
@@ -94,37 +87,6 @@ class WordBookPanel : WordBookWindowForm() {
 
     fun onDownloadDriver(handler: (JComponent) -> Unit) {
         onDownloadDriverHandler = handler
-    }
-
-    private object WordsTableCellRenderer : DefaultTableCellRenderer.UIResource() {
-        override fun getTableCellRendererComponent(
-            table: JTable?,
-            value: Any?,
-            isSelected: Boolean,
-            hasFocus: Boolean,
-            row: Int,
-            column: Int
-        ): Component {
-            return super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-        }
-    }
-
-    private object WordColumnInfo :
-        ColumnInfo<WordBookItem, String>(message("wordbook.window.table.title.word")) {
-        private val COMPARATOR = Comparator<WordBookItem> { word1, word2 -> word1.word.compareTo(word2.word, true) }
-
-        override fun valueOf(item: WordBookItem): String = item.word
-
-        override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
-
-        override fun getComparator(): Comparator<WordBookItem> = COMPARATOR
-    }
-
-    private object ExplainsColumnInfo :
-        ColumnInfo<WordBookItem, String>(message("wordbook.window.table.title.explanation")) {
-        override fun valueOf(item: WordBookItem): String = item.explanation?.replace('\n', ' ') ?: ""
-
-        override fun getRenderer(item: WordBookItem?): TableCellRenderer = WordsTableCellRenderer
     }
 
     private inner class KeyHandler : KeyAdapter() {
