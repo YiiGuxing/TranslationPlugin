@@ -26,7 +26,7 @@ internal class WordBookTableView : TableView<WordBookItem>() {
 
     private var onWordDoubleClickHandler: ((WordBookItem) -> Unit)? = null
 
-    val popupMenu: JBPopupMenu? = null
+    var popupMenu: JBPopupMenu? = null
 
     init {
         isStriped = true

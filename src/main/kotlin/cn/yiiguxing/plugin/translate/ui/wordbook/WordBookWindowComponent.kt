@@ -8,7 +8,10 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
 import com.intellij.icons.AllIcons
 import com.intellij.ide.plugins.MultiPanel
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.ui.JBMenuItem
+import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBLoadingPanel
 import com.intellij.ui.components.JBScrollPane
@@ -17,15 +20,17 @@ import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
+import icons.TranslationIcons
 import java.awt.BorderLayout
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.SwingConstants
+import java.awt.datatransfer.StringSelection
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
+import javax.swing.*
+import javax.swing.event.PopupMenuEvent
 
-class WordBookWindowComponent(/*project: Project*/) : SimpleToolWindowPanel(true, true), Disposable {
+class WordBookWindowComponent(private val parentDisposable: Disposable) :
+    JBLoadingPanel(BorderLayout(), parentDisposable) {
 
-    private val loadingPanel = JBLoadingPanel(BorderLayout(), this)
     private val emptyPanel = JPanel()
 
     private val tableView = WordBookTableView()
@@ -51,16 +56,68 @@ class WordBookWindowComponent(/*project: Project*/) : SimpleToolWindowPanel(true
     }
 
 
+    private var onViewWordDetailHandler: ((WordBookItem) -> Unit)? = null
+    private var onDeleteWordsHandler: ((List<WordBookItem>) -> Unit)? = null
+
+
     init {
+        initWordBookTableView()
         initDownloadPanel()
         initErrorPanel()
 
         multiPanel.select(EMPTY_PANEL, true)
-        loadingPanel.add(multiPanel)
-        setContent(loadingPanel)
-        loadingPanel.startLoading()
+        add(multiPanel)
+    }
 
-        //Disposer.register(TranslationUIManager.disposable(project), this)
+    private fun initWordBookTableView() {
+        val table = tableView
+        table.onWordDoubleClick { word -> onViewWordDetailHandler?.invoke(word) }
+        table.popupMenu = JBPopupMenu().also { menu ->
+            val detailItem = createMenuItem(message("wordbook.window.menu.detail"), TranslationIcons.Detail) {
+                table.selectedWord?.let { word -> onViewWordDetailHandler?.invoke(word) }
+            }
+            val copyItem = createMenuItem(message("wordbook.window.menu.copy"), AllIcons.Actions.Copy) {
+                table.selectedWord?.let { word ->
+                    CopyPasteManager.getInstance().setContents(StringSelection(word.word))
+                }
+            }
+            val deleteItem = createMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.Cancel) {
+                performWordsDelete()
+            }
+            menu.add(deleteItem)
+
+            menu.addPopupMenuListener(object : PopupMenuListenerAdapter() {
+                override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                    if (!table.isMultipleSelection) {
+                        menu.add(detailItem, 0)
+                        menu.add(copyItem, 1)
+                    } else {
+                        menu.remove(detailItem)
+                        menu.remove(copyItem)
+                    }
+                }
+            })
+        }
+        table.addKeyListener(object : KeyAdapter() {
+            override fun keyPressed(event: KeyEvent) {
+                if (event.keyCode == KeyEvent.VK_DELETE) {
+                    performWordsDelete()
+                    event.consume()
+                }
+            }
+        })
+    }
+
+    private inline fun createMenuItem(text: String, icon: Icon, crossinline action: () -> Unit): JBMenuItem {
+        return JBMenuItem(text, icon).apply {
+            addActionListener { action() }
+        }
+    }
+
+    private fun performWordsDelete() {
+        tableView.selectedWords.takeIf { it.isNotEmpty() }?.let {
+            onDeleteWordsHandler?.invoke(it)
+        }
     }
 
     private fun initDownloadPanel() {
@@ -84,12 +141,20 @@ class WordBookWindowComponent(/*project: Project*/) : SimpleToolWindowPanel(true
         }
     }
 
-    fun setDownloadDriverHandler(handler: (JComponent) -> Unit) {
+    fun onDownloadDriver(handler: (JComponent) -> Unit) {
         downloadLinkLabel.setListener({ label, _ -> handler(label) }, null)
     }
 
+    fun onViewWordDetail(handler: (WordBookItem) -> Unit) {
+        onViewWordDetailHandler = handler
+    }
+
+    fun onDeleteWords(handler: (List<WordBookItem>) -> Unit) {
+        onDeleteWordsHandler = handler
+    }
+
     fun bindState(state: ObservableValue<WordBookState>) {
-        state.observe(this) { newValue, _ -> updateState(newValue) }
+        state.observe(parentDisposable) { newValue, _ -> updateState(newValue) }
         updateState(state.value)
     }
 
@@ -105,11 +170,11 @@ class WordBookWindowComponent(/*project: Project*/) : SimpleToolWindowPanel(true
 
         multiPanel.select(key, true)
         when (state) {
-            INITIALIZING, DOWNLOADING_DRIVER -> if (!loadingPanel.isLoading) {
-                loadingPanel.startLoading()
+            INITIALIZING, DOWNLOADING_DRIVER -> if (!isLoading) {
+                startLoading()
             }
-            else -> if (loadingPanel.isLoading) {
-                loadingPanel.stopLoading()
+            else -> if (isLoading) {
+                stopLoading()
             }
         }
     }
@@ -118,8 +183,6 @@ class WordBookWindowComponent(/*project: Project*/) : SimpleToolWindowPanel(true
         tableView.setWords(words)
     }
 
-    override fun dispose() {
-    }
 
     companion object {
         private const val DATA_CONTENT = 0
