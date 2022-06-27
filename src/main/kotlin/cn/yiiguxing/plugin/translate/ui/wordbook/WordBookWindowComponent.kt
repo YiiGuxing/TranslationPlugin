@@ -162,9 +162,11 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
         onDeleteWordsHandler = handler
     }
 
-    fun bindState(state: Observable<WordBookState>) {
+    fun bindState(state: Observable<WordBookState>, updateNow: Boolean = true) {
         state.observe(parentDisposable) { newValue, _ -> updateState(newValue) }
-        updateState(state.value)
+        if (updateNow) {
+            updateState(state.value)
+        }
     }
 
     private fun updateState(state: WordBookState) {
@@ -181,6 +183,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
 
         multiPanel.select(key, true)
         if (state == INITIALIZING && !isLoading) {
+            setLoadingText("初始化中...")
             startLoading()
         } else if (isLoading) {
             stopLoading()
@@ -196,6 +199,26 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
 
     fun setWords(words: List<WordBookItem>) {
         tableView.setWords(words)
+    }
+
+    fun bindLoading(loading: Observable<Boolean>, updateNow: Boolean = false) {
+        loading.observe(parentDisposable) { newValue, _ -> updateLoading(newValue) }
+        if (updateNow) {
+            updateLoading(loading.value)
+        }
+    }
+
+    private fun updateLoading(loading: Boolean) {
+        if (loading && !isLoading) {
+            setLoadingText("加载中...")
+            startLoading()
+        } else if (isLoading) {
+            stopLoading()
+        }
+    }
+
+    fun selectWord(word: WordBookItem) {
+        tableView.selectWord(word)
     }
 
 

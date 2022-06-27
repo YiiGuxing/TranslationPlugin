@@ -8,11 +8,6 @@ import com.intellij.util.messages.Topic
 interface WordBookListener {
 
     /**
-     * Called after the service initialized.
-     */
-    fun onInitialized(service: WordBookService) {}
-
-    /**
      * Called when a new [word][wordBookItem] is added.
      */
     fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {}

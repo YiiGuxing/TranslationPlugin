@@ -11,6 +11,7 @@ import com.intellij.openapi.util.Ref
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ex.ToolWindowEx
+import org.jetbrains.concurrency.runAsync
 
 /**
  * Word book tool window factory
@@ -18,6 +19,8 @@ import com.intellij.openapi.wm.ex.ToolWindowEx
 class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        println("WordBookToolWindowFactory -> createToolWindowContent, $project")
+
         // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1186
         if (project.isDisposed) {
             return
@@ -30,6 +33,8 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         Disposer.register(toolWindow.disposable) { toolWindowRef.set(null) }
 
         val project = (toolWindow as ToolWindowEx).project
+
+        println("WordBookToolWindowFactory -> init, $project")
         val messageBusConnection = project.messageBus.connect(toolWindow.disposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {
             override fun onRequire() {
@@ -57,12 +62,24 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             }
         })
 
-        Application.executeOnPooledThread {
-            val available = WordBookService.instance.let { service ->
-                service.isInitialized && service.hasAnyWords()
+        val disposable = Disposer.newDisposable(toolWindow.disposable, "Wordbook tool window availability state")
+        WordBookService.instance.stateBinding.observe(disposable) { state, _ ->
+            if (state == WordBookState.RUNNING) {
+                Disposer.dispose(disposable)
+                updateAvailable(toolWindowRef)
             }
-            toolWindowRef.get()?.runIfSurvive { isAvailable = available }
         }
+        if (WordBookService.instance.isInitialized) {
+            Disposer.dispose(disposable)
+            updateAvailable(toolWindowRef)
+        }
+    }
+
+    private fun updateAvailable(toolWindowRef: Ref<ToolWindow?>) {
+        runAsync { with(WordBookService.instance) { isInitialized && hasAnyWords() } }
+            .onSuccess { available ->
+                toolWindowRef.get()?.runIfSurvive { isAvailable = available }
+            }
     }
 
     override fun shouldBeAvailable(project: Project): Boolean = false
