@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.ObservableValue
+import cn.yiiguxing.plugin.translate.util.Observable
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
@@ -11,6 +11,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.openapi.util.Disposer
 import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBLoadingPanel
@@ -19,6 +20,7 @@ import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.scale.JBUIScale
+import com.intellij.util.ui.AsyncProcessIcon
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import java.awt.BorderLayout
@@ -36,6 +38,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
     private val tableView = WordBookTableView()
     private val dataContentPanel = JBScrollPane(tableView)
 
+    private val downloadingIcon = AsyncProcessIcon("")
     private val downloadLinkLabel =
         LinkLabel<Any>(message("wordbook.window.message.download"), AllIcons.General.Warning)
     private val downloadPanel = JPanel()
@@ -121,8 +124,14 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
     }
 
     private fun initDownloadPanel() {
+        downloadingIcon.isVisible = false
+        Disposer.register(parentDisposable, downloadingIcon)
+
+        downloadLinkLabel.iconTextGap = JBUIScale.scale(5)
+
         downloadPanel.apply {
             layout = HorizontalLayout(JBUIScale.scale(5))
+            add(downloadingIcon, HorizontalLayout.CENTER)
             add(downloadLinkLabel, HorizontalLayout.CENTER)
             add(JBLabel(message("wordbook.window.message.driver.files")), HorizontalLayout.CENTER)
         }
@@ -153,7 +162,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
         onDeleteWordsHandler = handler
     }
 
-    fun bindState(state: ObservableValue<WordBookState>) {
+    fun bindState(state: Observable<WordBookState>) {
         state.observe(parentDisposable) { newValue, _ -> updateState(newValue) }
         updateState(state.value)
     }
@@ -161,21 +170,27 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
     private fun updateState(state: WordBookState) {
         val key = when (state) {
             UNINITIALIZED,
-            INITIALIZING,
-            DOWNLOADING_DRIVER -> EMPTY_PANEL
-            NO_DRIVER -> DOWNLOAD_PANEL
+            INITIALIZING -> EMPTY_PANEL
+
+            NO_DRIVER,
+            DOWNLOADING_DRIVER -> DOWNLOAD_PANEL
+
             INITIALIZATION_ERROR -> ERROR_PANEL
             RUNNING -> DATA_CONTENT
         }
 
         multiPanel.select(key, true)
-        when (state) {
-            INITIALIZING, DOWNLOADING_DRIVER -> if (!isLoading) {
-                startLoading()
-            }
-            else -> if (isLoading) {
-                stopLoading()
-            }
+        if (state == INITIALIZING && !isLoading) {
+            startLoading()
+        } else if (isLoading) {
+            stopLoading()
+        }
+        if (state == DOWNLOADING_DRIVER) {
+            downloadingIcon.resume()
+            downloadLinkLabel.icon = null
+        } else {
+            downloadingIcon.suspend()
+            downloadLinkLabel.icon = AllIcons.General.Warning
         }
     }
 
