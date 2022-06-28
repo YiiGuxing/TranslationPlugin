@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -40,6 +39,7 @@ class WordBookService {
     private val observableState: ObservableValue<WordBookState> =
         object : ObservableValue<WordBookState>(UNINITIALIZED) {
             override fun notifyChanged(oldValue: WordBookState, newValue: WordBookState) {
+                LOGGER.i("Wordbook service state changed: $oldValue -> $newValue")
                 invokeLaterIfNeeded(ModalityState.any()) { super.notifyChanged(oldValue, newValue) }
             }
         }
@@ -155,6 +155,10 @@ class WordBookService {
                     initService()
                 }
 
+                override fun onCancel() {
+                    nextState(NO_DRIVER)
+                }
+
                 override fun onThrowable(error: Throwable) {
                     val state = synchronized(this@WordBookService) {
                         val nextState = if (state == INITIALIZING) INITIALIZATION_ERROR else NO_DRIVER
@@ -162,7 +166,7 @@ class WordBookService {
                         nextState
                     }
 
-                    if (state == NO_DRIVER && error !is ProcessCanceledException) {
+                    if (state == NO_DRIVER) {
                         Notifications.showErrorNotification(
                             message("wordbook.notification.title"),
                             message("wordbook.window.message.driver.download.failed", error.message.toString())
@@ -180,9 +184,9 @@ class WordBookService {
         var downloadedFile: Path? = null
         try {
             val tempFile = Files.createTempFile(TRANSLATION_DIRECTORY, "download.", ".tmp")
-            HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
-
             downloadedFile = tempFile
+
+            HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
             indicator.checkCanceled()
 
             driverLock {
