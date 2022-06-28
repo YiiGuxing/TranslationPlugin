@@ -184,7 +184,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
 
         multiPanel.select(key, true)
         if (state == INITIALIZING && !isLoading) {
-            setLoadingText("初始化中...")
+            setLoadingText(message("label.initializing"))
             startLoading()
         } else if (isLoading) {
             stopLoading()
@@ -211,7 +211,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
 
     private fun updateLoading(loading: Boolean) {
         if (loading && !isLoading) {
-            setLoadingText("加载中...")
+            setLoadingText(message("label.loading"))
             startLoading()
         } else if (isLoading) {
             stopLoading()
