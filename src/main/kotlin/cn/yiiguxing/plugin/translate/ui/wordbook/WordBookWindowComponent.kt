@@ -197,10 +197,12 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
             stopLoading()
         }
         if (state == DOWNLOADING_DRIVER) {
-            downloadingIcon.resume()
             downloadLinkLabel.icon = null
+            downloadingIcon.isVisible = true
+            downloadingIcon.resume()
         } else {
             downloadingIcon.suspend()
+            downloadingIcon.isVisible = false
             downloadLinkLabel.icon = AllIcons.General.Warning
         }
     }
