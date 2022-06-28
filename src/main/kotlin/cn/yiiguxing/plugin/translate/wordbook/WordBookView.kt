@@ -105,6 +105,7 @@ class WordBookView {
         val component = WordBookWindowComponent(disposable).apply {
             bindLoading(observableLoading.asReadOnly(), false)
             bindState(WordBookService.stateBinding)
+            onRetryInitialization { WordBookService.asyncInitialize() }
             onDownloadDriver {
                 if (!WordBookService.downloadDriverAndInitService()) {
                     val message = message("wordbook.window.message.in.download")

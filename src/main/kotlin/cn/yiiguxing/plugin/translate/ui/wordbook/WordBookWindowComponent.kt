@@ -25,6 +25,7 @@ import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import java.awt.BorderLayout
 import java.awt.datatransfer.StringSelection
+import java.awt.event.ActionEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import javax.swing.*
@@ -148,6 +149,12 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
             }
             add(label, VerticalLayout.CENTER)
             add(retryButton, VerticalLayout.CENTER)
+        }
+    }
+
+    fun onRetryInitialization(handler: () -> Unit) {
+        retryButton.action = object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) = handler()
         }
     }
 
