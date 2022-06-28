@@ -30,8 +30,9 @@ import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 
+@Suppress("UnstableApiUsage")
 class WordBookWindowComponent(private val parentDisposable: Disposable) :
-    JBLoadingPanel(BorderLayout(), parentDisposable) {
+    JBLoadingPanel(BorderLayout(), WordBookWindowLoadingDecorator.Creator(parentDisposable)) {
 
     private val emptyPanel = JPanel()
 
