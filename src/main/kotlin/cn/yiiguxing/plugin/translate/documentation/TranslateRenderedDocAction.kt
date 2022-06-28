@@ -2,11 +2,13 @@ package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.action.FixedIconToggleAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.codeInsight.documentation.render.DocRenderManager
 import com.intellij.codeInsight.documentation.render.DocRenderPassFactory
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.util.Key
@@ -34,16 +36,25 @@ internal class TranslateRenderedDocAction(
         val project = file.project
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
         ReadAction
-            .nonBlocking<DocRenderPassFactory.Items> {
-                //if doc rendering is disabled, calculated items have textToRender=null
-                withDocRenderingEnabled {
-                    DocRenderPassFactory.calculateItemsToRender(editor, file)
+            .nonBlocking<DocRenderPassFactory.Items?> {
+                try {
+                    // if doc rendering is disabled, calculated items have textToRender=null
+                    withDocRenderingEnabled {
+                        DocRenderPassFactory.calculateItemsToRender(editor, file)
+                    }
+                } catch (e: Throwable) {
+                    LOG.w("Failed to calculate doc items to render", e)
+                    null
                 }
             }
             .expireWhen { !editor.isValid }
             .withDocumentsCommitted(project)
             .finishOnUiThread(ModalityState.current()) {
-                DocRenderPassFactory.applyItemsToRender(editor, project, it, false)
+                if (it != null) {
+                    DocRenderPassFactory.applyItemsToRender(editor, project, it, false)
+                } else {
+                    TranslatedDocComments.setTranslated(docComment, false)
+                }
             }
             .submit(AppExecutorUtil.getAppExecutorService())
     }
@@ -81,6 +92,9 @@ internal class TranslateRenderedDocAction(
     }
 
     companion object {
+
+        private val LOG = Logger.getInstance(TranslateRenderedDocAction::class.java)
+
         private val Editor.isValid: Boolean
             get() {
                 val editorProject = project

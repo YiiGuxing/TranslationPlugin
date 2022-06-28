@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
 import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationListener
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.project.Project
 
 internal object ErrorReportNotifications {
@@ -11,12 +11,13 @@ internal object ErrorReportNotifications {
         project: Project?,
         title: String,
         message: String,
+        vararg actions: AnAction,
         notificationType: NotificationType = NotificationType.INFORMATION
     ) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup("Error Report")
             .createNotification(title, message, notificationType)
-            .setListener(NotificationListener.URL_OPENING_LISTENER)
+            .apply { addActions(actions.toList()) }
             .setImportant(false)
             .notify(project)
     }

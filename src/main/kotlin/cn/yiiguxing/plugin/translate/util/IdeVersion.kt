@@ -7,22 +7,14 @@ import com.intellij.openapi.util.BuildNumber
 
 // http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html
 enum class IdeVersion(val buildNumber: Int) {
-    IDE2019_1(191),
-    IDE2019_3(193),
-    IDE2020_3(203);
+    IDE2020_3(203),
+    IDE2022_1(221);
 
     companion object {
-
         val buildNumber: BuildNumber get() = ApplicationInfo.getInstance().build
 
-        @Suppress("MemberVisibilityCanBePrivate")
-        val BUILD_NUMBER = buildNumber.baselineVersion
-
-        val isIde2019OrNewer: Boolean = BUILD_NUMBER >= IDE2019_1.buildNumber
-
-        val isIde2019_3OrNewer: Boolean = BUILD_NUMBER >= IDE2019_3.buildNumber
-
-        val isIde2020_3OrNewer: Boolean = BUILD_NUMBER >= IDE2020_3.buildNumber
+        operator fun compareTo(ideVersion: IdeVersion): Int {
+            return buildNumber.baselineVersion.compareTo(ideVersion.buildNumber)
+        }
     }
 }
-
