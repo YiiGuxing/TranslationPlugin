@@ -33,7 +33,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     outputs:
-      pluginVersion: ${{ steps.properties.outputs.pluginVersion }}
+      version: ${{ steps.properties.outputs.version }}
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
 
@@ -56,6 +56,8 @@ jobs:
       # Set environment variables
       - name: Export Properties
         id: properties
+        env:
+          AUTO_SNAPSHOT_VERSION: false
         shell: bash
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
@@ -146,8 +148,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="${{ github.ref }}"
-          BRANCH="${BRANCH//'refs/heads/'/}"
+          BRANCH="${{ github.ref_name }}"
           gh api repos/{owner}/{repo}/releases \
             --jq ".[] | select(.draft == true and .target_commitish == \"${BRANCH}\") | .id" \
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
@@ -157,12 +158,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="${{ github.ref }}"
-          BRANCH="${BRANCH//'refs/heads/'/}"
-          gh release create v${{ needs.build.outputs.pluginVersion }} \
+          BRANCH="${{ github.ref_name }}"
+          gh release create v${{ needs.build.outputs.version }} \
             --target "$BRANCH" \
             --draft \
-            --title "v${{ needs.build.outputs.pluginVersion }}" \
+            --title "v${{ needs.build.outputs.version }}" \
             --notes "$(cat << 'EOM'
           ## What's Changed
 

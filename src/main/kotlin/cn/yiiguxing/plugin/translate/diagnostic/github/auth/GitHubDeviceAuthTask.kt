@@ -34,7 +34,7 @@ internal class GitHubDeviceAuthTask(
     }
 
     override fun compute(indicator: ProgressIndicator): GitHubCredentials {
-        indicator.text2 = message("github.waiting.authentication.task.message")
+        indicator.text2 = message("github.waiting.authentication.task.message", deviceCode.userCode)
 
         while (System.currentTimeMillis() < deviceCode.expiresTimestamp) {
             indicator.checkCanceled()
