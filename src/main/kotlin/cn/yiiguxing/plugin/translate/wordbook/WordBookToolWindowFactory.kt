@@ -19,8 +19,6 @@ import org.jetbrains.concurrency.runAsync
 class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        println("WordBookToolWindowFactory -> createToolWindowContent, $project")
-
         // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1186
         if (project.isDisposed) {
             return
@@ -33,8 +31,6 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         Disposer.register(toolWindow.disposable) { toolWindowRef.set(null) }
 
         val project = (toolWindow as ToolWindowEx).project
-
-        println("WordBookToolWindowFactory -> init, $project")
         val messageBusConnection = project.messageBus.connect(toolWindow.disposable)
         messageBusConnection.subscribe(RequireWordBookListener.TOPIC, object : RequireWordBookListener {
             override fun onRequire() {
