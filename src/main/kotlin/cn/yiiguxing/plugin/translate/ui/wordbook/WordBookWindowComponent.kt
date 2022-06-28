@@ -153,7 +153,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
     }
 
     fun onRetryInitialization(handler: () -> Unit) {
-        retryButton.action = object : AbstractAction() {
+        retryButton.action = object : AbstractAction(message("retry.action.name")) {
             override fun actionPerformed(e: ActionEvent) = handler()
         }
     }
