@@ -87,6 +87,13 @@
         <notificationGroup id="Translation Plugin Updates" displayType="STICKY_BALLOON" isLogByDefault="false"/>
     </extensions>
 
+    <applicationListeners>
+        <listener class="cn.yiiguxing.plugin.translate.action.TitleBarActionRegistrar"
+                  topic="com.intellij.ide.AppLifecycleListener"/>
+        <listener class="cn.yiiguxing.plugin.translate.action.TitleBarActionRegistrar"
+                  topic="com.intellij.ide.plugins.DynamicPluginListener"/>
+    </applicationListeners>
+
     <actions>
         <action id="$ShowTranslationDialogAction"
                 icon="TranslationIcons.Translation"
@@ -169,6 +176,9 @@
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
+        </group>
+        <group id="TranslationTitleBar" text="Translation Title Bar Actions">
+            <reference ref="$ShowTranslationDialogAction"/>
         </group>
         <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
             <reference ref="$ShowTranslationDialogAction"/>
