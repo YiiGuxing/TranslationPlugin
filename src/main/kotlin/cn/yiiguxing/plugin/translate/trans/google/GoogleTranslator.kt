@@ -156,6 +156,10 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     ): Translation {
         logger.i("Translate result: $translation")
 
+        if (translation.isBlank()) {
+            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
+        }
+
         return gson.fromJson(translation, GoogleTranslation::class.java).apply {
             this.original = original
             target = targetLang
@@ -169,6 +173,10 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         targetLang: Lang,
     ): BaseTranslation {
         logger.i("Translate result: $translation")
+
+        if (translation.isBlank()) {
+            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
+        }
 
         val (translatedText, lang) = gson.fromJson(translation, GDocTranslation::class.java)
         val sLang = lang?.takeIf { srcLang == Lang.AUTO } ?: srcLang

@@ -196,7 +196,8 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             }
     }
 
-    class AliTranslationResultException(code: Int, private val errorMessage: String?) : TranslationResultException(code) {
+    class AliTranslationResultException(code: Int, private val errorMessage: String?) :
+        TranslationResultException(code) {
         override fun getLocalizedMessage(): String {
             return "$message[$errorMessage]"
         }
@@ -209,6 +210,11 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         targetLang: Lang
     ): Translation {
         logger.i("Translate result: $translation")
+
+        if (translation.isBlank()) {
+            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
+        }
+
         return Gson().fromJson(translation, AliTranslation::class.java).apply {
             query = original
             src = srcLang
@@ -235,11 +241,13 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
                     message("error.service.is.down"),
                     ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
                 )
+
                 10011 -> message("error.systemError")
                 10012 -> message("error.systemError")
                 10013 -> message("error.account.has.run.out.of.balance")
                 else -> message("error.unknown") + "[${throwable.code}]"
             }
+
             else -> return super.createErrorInfo(throwable)
         }
 

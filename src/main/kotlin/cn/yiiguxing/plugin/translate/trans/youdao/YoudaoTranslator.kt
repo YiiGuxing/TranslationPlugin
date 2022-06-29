@@ -119,9 +119,12 @@ object YoudaoTranslator : AbstractTranslator() {
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
+
+        if (translation.isBlank()) {
+            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
+        }
 
         return Gson().fromJson(translation, YoudaoTranslation::class.java).apply {
             query = original
