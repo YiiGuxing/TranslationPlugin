@@ -1,27 +1,160 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package cn.yiiguxing.plugin.translate.update
 
+import cn.yiiguxing.plugin.translate.util.Plugin
+import kotlin.math.min
 
-data class Version constructor(val version: String = "v0.0") {
+/**
+ * Semantic versioning -> [semver.org](https://semver.org)
+ */
+class Version constructor(val version: String = "0.0.0") : Comparable<Version> {
 
-    val versionNumbers: Pair<Int, Int> by lazy { version.toVersionParts() }
+    /** The major version number. */
+    val major: Int
 
-    val versionString: String by lazy { "${versionNumbers.first}.${versionNumbers.second}" }
+    /** The minor version number. */
+    val minor: Int
 
-    override fun toString(): String = "Version(version=$version, versionNumbers=$versionNumbers)"
+    /** The patch version number. */
+    val patch: Int
 
-    operator fun compareTo(other: Version): Int {
-        val compare = versionNumbers.first.compareTo(other.versionNumbers.first)
-        return if (compare == 0) versionNumbers.second.compareTo(other.versionNumbers.second) else compare
+    /** The pre-release version number. */
+    val prerelease: String?
+
+    /** The build metadata of this version. */
+    val buildMetadata: String?
+
+
+    init {
+        val matchResult = VERSION_REGEX.matchEntire(version)
+            ?: throw IllegalArgumentException("Invalid version: $version")
+        val matchGroups = matchResult.groups
+        major = matchGroups[MAJOR]!!.value.toInt()
+        minor = matchGroups[MINOR]!!.value.toInt()
+        patch = matchGroups[PATCH]!!.value.toInt()
+        prerelease = matchGroups[PRERELEASE]?.value
+        buildMetadata = matchGroups[BUILD_METADATA]?.value
+    }
+
+
+    private val prereleaseTokens: List<Any> by lazy {
+        prerelease?.split('.')
+            ?.map { if (it[0] !in '0'..'9') it else (it.toIntOrNull() ?: it) }
+            ?: emptyList()
+    }
+
+    /** Returns the version in <[major]>.<[minor]> format. */
+    fun getFeatureUpdateVersion(): String = "$major.$minor"
+
+    /** Returns the version in <[major]>.<[minor]>.<[patch]> format. */
+    fun getStableVersion(): String = "$major.$minor.$patch"
+
+    /** Returns the version in <[major]>.<[minor]>.<[patch]>[-<[prerelease]>] format. */
+    fun getVersionWithoutBuildMetadata(): String = "$major.$minor.$patch${prerelease?.let { "-$it" } ?: ""}"
+
+    /**
+     * Test if this version has feature updates relative to the [other] version
+     * (Compare only [major] and [minor] versions).
+     */
+    fun isFeatureUpdateFor(other: Version): Boolean {
+        if (major > other.major) return true
+        if (major == other.major && minor > other.minor) return true
+
+        return false
+    }
+
+    /**
+     * Tests whether this version is same as the [other] version
+     * ([Build metadata][buildMetadata] is not compared).
+     */
+    fun isSameVersion(other: Version): Boolean {
+        if (major != other.major) return false
+        if (minor != other.minor) return false
+        if (patch != other.patch) return false
+        if (prerelease != other.prerelease) return false
+
+        return true
+    }
+
+    override fun compareTo(other: Version): Int {
+        var result = major.compareTo(other.major)
+        if (result != 0) return result
+        result = minor.compareTo(other.minor)
+        if (result != 0) return result
+        result = patch.compareTo(other.patch)
+        if (result != 0) return result
+
+        return when {
+            prerelease == other.prerelease -> 0
+            prerelease == null -> 1
+            other.prerelease == null -> -1
+            else -> comparePrereleaseTokens(other.prereleaseTokens)
+        }
+    }
+
+    private fun comparePrereleaseTokens(tokens: List<Any>): Int {
+        val myTokens = prereleaseTokens
+
+        for (i in 0 until min(myTokens.size, tokens.size)) {
+            val result = compare(myTokens[i], tokens[i])
+            if (result != 0) {
+                return result
+            }
+        }
+
+        return myTokens.size - tokens.size
+    }
+
+    private fun compare(l: Any, r: Any): Int = when {
+        l is Int && r is Int -> l.compareTo(r)
+        l is String && r is String -> l.compareTo(r)
+        l is String -> 1
+        else -> -1
+    }
+
+    override fun toString(): String = version
+
+    override fun hashCode(): Int {
+        var result = version.hashCode()
+        result = 31 * result + major
+        result = 31 * result + minor
+        result = 31 * result + patch
+        result = 31 * result + (prerelease?.hashCode() ?: 0)
+        result = 31 * result + (buildMetadata?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        return isSameVersion(other as Version)
     }
 
     companion object {
-        private fun String.toVersionParts(): Pair<Int, Int> {
-            val versionString = if (this[0].equals('v', true)) substring(1) else this
-            val versionParts = versionString.split('.', '-').take(2)
-            return when (versionParts.size) {
-                1 -> versionParts[0].toInt() to 0
-                2 -> versionParts[0].toInt() to versionParts[1].toInt()
-                else -> throw IllegalStateException("Invalid version number: $this")
+        private const val MAJOR = "major"
+        private const val MINOR = "minor"
+        private const val PATCH = "patch"
+        private const val PRERELEASE = "prerelease"
+        private const val BUILD_METADATA = "buildMetadata"
+        private val VERSION_REGEX =
+            """^(?<$MAJOR>0|[1-9]\d*)\.(?<$MINOR>0|[1-9]\d*)\.(?<$PATCH>0|[1-9]\d*)(?:-(?<$PRERELEASE>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<$BUILD_METADATA>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?${'$'}""".toRegex()
+
+        /**
+         * Returns current version.
+         */
+        fun current(): Version = Version(Plugin.descriptor.version)
+
+        /**
+         * Returns the version for the given [version string][version],
+         * or the result of the [defaultValue] function if the given
+         * [version string][version] is an invalid version string.
+         */
+        inline fun getOrElse(version: String, defaultValue: () -> Version): Version {
+            return try {
+                Version(version)
+            } catch (e: Exception) {
+                defaultValue()
             }
         }
     }
