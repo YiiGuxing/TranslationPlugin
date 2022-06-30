@@ -47,14 +47,18 @@ class UpdateManager : BaseStartupActivity() {
         val plugin = Plugin.descriptor
         val versionString = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
-        val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0")
+        val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0.0")
         if (versionString == lastVersionString) {
             return
         }
 
         val version = Version(versionString)
-        val lastVersion = Version(lastVersionString)
-        val isFeatureVersion = version > lastVersion
+        val lastVersion = Version.getOrElse(lastVersionString) { Version("0.0.0") }
+        if (version.isSameVersion(lastVersion)) {
+            return
+        }
+
+        val isFeatureVersion = version.isFeatureUpdateFor(lastVersion)
         showUpdateNotification(project, plugin, version, isFeatureVersion)
         properties.setValue(VERSION_PROPERTY, versionString)
     }
@@ -65,7 +69,11 @@ class UpdateManager : BaseStartupActivity() {
         version: Version,
         isFeatureVersion: Boolean
     ) {
-        val title = message("plugin.name.updated.to.version.notification.title", plugin.name, version.version)
+        val title = message(
+            "plugin.name.updated.to.version.notification.title",
+            plugin.name,
+            version.getVersionWithoutBuildMetadata()
+        )
         val color = getBorderColor()
         val partStyle = "margin: ${JBUI.scale(8)}px 0;"
         val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
@@ -73,7 +81,7 @@ class UpdateManager : BaseStartupActivity() {
             "plugin.updated.notification.message",
             Hyperlinks.SUPPORT_DESCRIPTION,
             "$partStyle $refStyle",
-            MILESTONE_URL.format(version.version),
+            MILESTONE_URL.format(version.getStableVersion()),
             plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 
@@ -84,7 +92,6 @@ class UpdateManager : BaseStartupActivity() {
             .setTitle(title)
             .setImportant(true)
             .apply {
-                @Suppress("DEPRECATION", "deprecation")
                 setListener(Notifications.UrlOpeningListener(false))
             }
             .apply {
@@ -96,7 +103,7 @@ class UpdateManager : BaseStartupActivity() {
             .addAction(SupportAction())
             .whenExpired {
                 if (isFeatureVersion && canBrowseWhatsNewHTMLEditor) {
-                    browseWhatsNew(project)
+                    browseWhatsNew(version, project)
                 }
             }
 
@@ -139,13 +146,13 @@ class UpdateManager : BaseStartupActivity() {
         override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
     }
 
-    private class WhatsNewAction(version: Version) :
+    private class WhatsNewAction(private val version: Version) :
         DumbAwareAction(
-            message("action.WhatsNewInTranslationAction.text", version.versionString),
+            message("action.WhatsNewInTranslationAction.text", version.getFeatureUpdateVersion()),
             null,
             AllIcons.General.Web
         ) {
-        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(getWhatsNewUrl(true))
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(version.getWhatsNewUrl(true))
     }
 
     private class GetStartedAction :
@@ -173,9 +180,8 @@ class UpdateManager : BaseStartupActivity() {
             return (color.rgb and 0xffffff).toString(16)
         }
 
-        fun getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
-            val version = Version(Plugin.descriptor.version)
-            val v = version.versionString
+        fun Version.getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {
+            val v = getFeatureUpdateVersion()
             return if (frame) {
                 WebPages.updates(v, locale = locale)
             } else {
@@ -188,25 +194,28 @@ class UpdateManager : BaseStartupActivity() {
             return JBCefApp.isSupported()
         }
 
-        fun browseWhatsNew(project: Project?) {
+        fun browseWhatsNew(version: Version, project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
-                invokeLater(ModalityState.NON_MODAL) {
-                    if (project.isDisposed) {
-                        return@invokeLater
-                    }
-                    HTMLEditorProvider.openEditor(
-                        project,
-                        adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
-                        getWhatsNewUrl(),
-                        //language=HTML
-                        """<div style="text-align: center;padding-top: 3rem">
+                invokeLater(ModalityState.NON_MODAL, expired = project.disposed) {
+                    try {
+                        HTMLEditorProvider.openEditor(
+                            project,
+                            adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
+                            version.getWhatsNewUrl(),
+                            //language=HTML
+                            """<div style="text-align: center;padding-top: 3rem">
                             |<div style="padding-top: 1rem; margin-bottom: 0.8rem;">Failed to load!</div>
-                            |<div><a href="${getWhatsNewUrl(true)}" target="_blank" style="font-size: 2rem">Open in browser</a></div>
+                            |<div><a href="${version.getWhatsNewUrl(true)}" target="_blank"
+                            |        style="font-size: 2rem">Open in browser</a></div>
                             |</div>""".trimMargin()
-                    )
+                        )
+                    } catch (e: Throwable) {
+                        LOG.w("""Failed to load "What's New" page""", e)
+                        BrowserUtil.browse(version.getWhatsNewUrl(true))
+                    }
                 }
             } else {
-                BrowserUtil.browse(getWhatsNewUrl(true))
+                BrowserUtil.browse(version.getWhatsNewUrl(true))
             }
         }
     }
