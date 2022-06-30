@@ -84,7 +84,6 @@ class UpdateManager : BaseStartupActivity() {
             .setTitle(title)
             .setImportant(true)
             .apply {
-                @Suppress("DEPRECATION", "deprecation")
                 setListener(Notifications.UrlOpeningListener(false))
             }
             .apply {
@@ -190,20 +189,22 @@ class UpdateManager : BaseStartupActivity() {
 
         fun browseWhatsNew(project: Project?) {
             if (project != null && canBrowseWhatsNewHTMLEditor()) {
-                invokeLater(ModalityState.NON_MODAL) {
-                    if (project.isDisposed) {
-                        return@invokeLater
-                    }
-                    HTMLEditorProvider.openEditor(
-                        project,
-                        adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
-                        getWhatsNewUrl(),
-                        //language=HTML
-                        """<div style="text-align: center;padding-top: 3rem">
+                invokeLater(ModalityState.NON_MODAL, expired = project.disposed) {
+                    try {
+                        HTMLEditorProvider.openEditor(
+                            project,
+                            adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
+                            getWhatsNewUrl(),
+                            //language=HTML
+                            """<div style="text-align: center;padding-top: 3rem">
                             |<div style="padding-top: 1rem; margin-bottom: 0.8rem;">Failed to load!</div>
                             |<div><a href="${getWhatsNewUrl(true)}" target="_blank" style="font-size: 2rem">Open in browser</a></div>
                             |</div>""".trimMargin()
-                    )
+                        )
+                    } catch (e: Throwable) {
+                        LOG.w("""Failed to load "What's New" page""", e)
+                        BrowserUtil.browse(getWhatsNewUrl(true))
+                    }
                 }
             } else {
                 BrowserUtil.browse(getWhatsNewUrl(true))
