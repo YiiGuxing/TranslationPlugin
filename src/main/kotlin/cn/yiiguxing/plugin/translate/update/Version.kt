@@ -44,13 +44,13 @@ class Version constructor(val version: String = "0.0.0") : Comparable<Version> {
             ?: emptyList()
     }
 
-    /** Returns the version in <[major]>.<[minor]> format. */
+    /** Returns the version in "<[major]>.<[minor]>" form. */
     fun getFeatureUpdateVersion(): String = "$major.$minor"
 
-    /** Returns the version in <[major]>.<[minor]>.<[patch]> format. */
+    /** Returns the version in "<[major]>.<[minor]>.<[patch]>" form. */
     fun getStableVersion(): String = "$major.$minor.$patch"
 
-    /** Returns the version in <[major]>.<[minor]>.<[patch]>[-<[prerelease]>] format. */
+    /** Returns the version in "<[major]>.<[minor]>.<[patch]>[-<[prerelease]>]" form. */
     fun getVersionWithoutBuildMetadata(): String = "$major.$minor.$patch${prerelease?.let { "-$it" } ?: ""}"
 
     /**
