@@ -73,6 +73,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| T | | 10 CNY |
+| 褪去繁华 | | 10 CNY |
 | Owhere | | 10 CNY |
 | 陈 | | 10 CNY |
 | Dominic | | 10 CNY |
@@ -132,6 +134,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Zane | | 6.66 CNY |
+| 背对风 | | 6.66 CNY |
+| 随风飞翔 | | 6.66 CNY |
 | 你看不见的地方 | | 6.66 CNY |
 | 青山改不改 | | 6.66 CNY |
 | 谁言一萌动 | | 6.66 CNY |
