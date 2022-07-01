@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## v3.3.3 (2022/07/01)
 - 已知问题修复
 - 一些优化与改进
 - 新UI标题工具栏添加显示翻译对话框图标
