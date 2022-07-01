@@ -47,13 +47,13 @@ class UpdateManager : BaseStartupActivity() {
         val plugin = Plugin.descriptor
         val versionString = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
-        val lastVersionString = properties.getValue(VERSION_PROPERTY, "0.0.0")
+        val lastVersionString = properties.getValue(VERSION_PROPERTY, Version.INITIAL_VERSION)
         if (versionString == lastVersionString) {
             return
         }
 
         val version = Version(versionString)
-        val lastVersion = Version.getOrElse(lastVersionString) { Version("0.0.0") }
+        val lastVersion = Version.getOrElse(lastVersionString) { Version() }
         if (version.isSameVersion(lastVersion)) {
             return
         }
