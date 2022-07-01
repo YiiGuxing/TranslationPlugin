@@ -8,7 +8,7 @@ import kotlin.math.min
 /**
  * Semantic versioning -> [semver.org](https://semver.org)
  */
-class Version constructor(val version: String = "0.0.0") : Comparable<Version> {
+class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
 
     /** The major version number. */
     val major: Int
@@ -132,6 +132,11 @@ class Version constructor(val version: String = "0.0.0") : Comparable<Version> {
     }
 
     companion object {
+        /**
+         * The initial version: `0.0.0`
+         */
+        const val INITIAL_VERSION = "0.0.0"
+
         private const val MAJOR = "major"
         private const val MINOR = "minor"
         private const val PATCH = "patch"
