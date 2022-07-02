@@ -25,13 +25,13 @@ fun dateValue(pattern: String) = LocalDate.now(ZoneId.of("Asia/Shanghai")).forma
 val pluginMajorVersion: String by project
 val pluginPreReleaseVersion: String by project
 val pluginBuildMetadata: String by project
-val preReleaseVersionVersion = pluginPreReleaseVersion
+val preReleaseVersion = pluginPreReleaseVersion
     .takeIf { it.isNotBlank() }
     ?: "SNAPSHOT.${dateValue("yyMMdd")}".takeIf {
         properties("autoSnapshotVersion").toBoolean()
                 && !"false".equals(System.getenv("AUTO_SNAPSHOT_VERSION"), ignoreCase = true)
     }
-val preReleaseVersionPart = preReleaseVersionVersion?.let { "-$it" } ?: ""
+val preReleaseVersionPart = preReleaseVersion?.let { "-$it" } ?: ""
 val buildMetadataPart = pluginBuildMetadata.takeIf { it.isNotBlank() }?.let { "+$it" } ?: ""
 val pluginVersion = pluginMajorVersion + preReleaseVersionPart
 val fullPluginVersion = pluginVersion + buildMetadataPart
@@ -42,7 +42,7 @@ if (!versionRegex.matches("v$fullPluginVersion")) {
     throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
 }
 
-val publishChannel = preReleaseVersionVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"
+val publishChannel = preReleaseVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"
 
 extra["pluginVersion"] = pluginVersion
 extra["fullPluginVersion"] = fullPluginVersion
