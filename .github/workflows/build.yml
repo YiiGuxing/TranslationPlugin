@@ -19,7 +19,7 @@ on:
   push:
     branches:
       - master
-      - 'compat/*'
+      - '**/compat/*'
 
   # Trigger the workflow on any pull request
   pull_request:

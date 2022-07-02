@@ -42,9 +42,11 @@ if (!versionRegex.matches("v$fullPluginVersion")) {
     throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
 }
 
+val publishChannel = preReleaseVersionVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"
 
 extra["pluginVersion"] = pluginVersion
 extra["fullPluginVersion"] = fullPluginVersion
+extra["publishChannel"] = publishChannel
 
 group = properties("pluginGroup")
 version = fullPluginVersion
@@ -140,7 +142,7 @@ tasks {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(listOf(preReleaseVersionVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"))
+        channels.set(listOf(publishChannel))
     }
 
     wrapper {
