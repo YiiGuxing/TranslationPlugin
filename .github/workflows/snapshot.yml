@@ -44,7 +44,7 @@ jobs:
 
       # Publish the plugin to the Marketplace
       - name: Publish Plugin
-        if: steps.properties.outputs.changelog == 'snapshot'
+        if: steps.properties.outputs.publishChannel == 'snapshot'
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         run: ./gradlew publishPlugin
@@ -52,6 +52,7 @@ jobs:
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
         id: artifact
+        if: steps.properties.outputs.publishChannel == 'snapshot'
         shell: bash
         run: |
           cd ${{ github.workspace }}/build/distributions
@@ -61,6 +62,7 @@ jobs:
 
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
+        if: steps.properties.outputs.publishChannel == 'snapshot'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.artifact.outputs.filename }}
