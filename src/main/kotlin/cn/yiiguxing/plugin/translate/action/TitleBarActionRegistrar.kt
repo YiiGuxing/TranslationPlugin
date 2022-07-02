@@ -22,7 +22,9 @@ class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
         val actionManager = ActionManager.getInstance() as ActionManagerImpl
         val group = actionManager.getAction(TITLE_BAR_ACTION_GROUP_ID) as? DefaultActionGroup ?: return
         val action = actionManager.getAction(TRANSLATION_TITLE_BAR_ACTION_ID) ?: return
-        actionManager.addToGroup(group, action, Constraints.FIRST)
+        if (!group.containsAction(action)) {
+            actionManager.addToGroup(group, action, Constraints.FIRST)
+        }
     }
 
     companion object {
