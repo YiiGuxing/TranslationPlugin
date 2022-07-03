@@ -48,7 +48,7 @@ class WordBookView {
     val wordTags: Set<String> get() = groupedWords.keys
 
     private val windows: MutableMap<Project, ToolWindow> = ContainerUtil.createWeakMap()
-    private val components: MutableSet<WordBookWindowComponent> = ContainerUtil.createWeakSet()
+    private val components: MutableMap<Project, WordBookWindowComponent> = ContainerUtil.createWeakMap()
 
     fun setup(project: Project, toolWindow: ToolWindow) {
         assertIsDispatchThread()
@@ -80,6 +80,7 @@ class WordBookView {
 
         Disposer.register(TranslationUIManager.disposable(project)) {
             windows.remove(project)
+            components.remove(project)
         }
 
         subscribeWordBookTopic()
@@ -92,17 +93,16 @@ class WordBookView {
         tabName: String? = null,
         displayName: String? = null
     ): Content {
-        val disposable = Disposer.newDisposable(contentManager, "Wordbook Window Component")
-        val windowComponent = createWordBookWindowComponent(project, disposable)
-        val content = contentManager.factory.createContent(windowComponent, displayName, false).apply {
-            this.tabName = tabName
+        val windowComponent = components.getOrPut(project) {
+            createWordBookWindowComponent(project, contentManager)
         }
-        Disposer.register(content, disposable)
-        return content
+        return contentManager.factory
+            .createContent(windowComponent, displayName, false)
+            .also { it.tabName = tabName }
     }
 
     private fun createWordBookWindowComponent(project: Project, disposable: Disposable): WordBookWindowComponent {
-        val component = WordBookWindowComponent(disposable).apply {
+        return WordBookWindowComponent(disposable).apply {
             bindLoading(observableLoading.asReadOnly(), false)
             bindState(WordBookService.stateBinding)
             onRetryInitialization { WordBookService.asyncInitialize() }
@@ -115,10 +115,6 @@ class WordBookView {
             onViewWordDetail { word -> openWordDetails(project, word) }
             onDeleteWords { words -> deleteWord(project, words) }
         }
-
-        components += component
-        Disposer.register(disposable) { components -= component }
-        return component
     }
 
 
