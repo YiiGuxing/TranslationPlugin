@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 优化单词本服务及交互体验
 
 ## v3.3.3 (2022/07/01)
 - 已知问题修复
