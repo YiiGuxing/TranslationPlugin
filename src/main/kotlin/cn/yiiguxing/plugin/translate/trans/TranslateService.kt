@@ -11,6 +11,7 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
+import cn.yiiguxing.plugin.translate.wordbook.WordBookViewListener
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
@@ -35,6 +36,7 @@ class TranslateService private constructor() : Disposable {
             .connect(this)
             .subscribeSettingsTopic()
             .subscribeWordBookTopic()
+            .subscribeWordBookViewTopic()
     }
 
     fun setTranslator(newTranslator: TranslationEngine) {
@@ -106,17 +108,29 @@ class TranslateService private constructor() : Disposable {
         remove(key)?.forEach { it.action() }
     }
 
-    private fun notifyFavoriteAdded(words: List<WordBookItem>) {
+    private fun Translation.updateFavoriteState(favorites: List<WordBookItem>) {
+        favorites.find { favorite ->
+            srcLang == favorite.sourceLanguage
+                    && targetLang == favorite.targetLanguage
+                    && original.equals(favorite.word, true)
+        }?.let { favorite ->
+            favoriteId = favorite.id
+        }
+    }
+
+    private fun updateFavorites(favorites: List<WordBookItem>) {
+        checkThread()
+        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+            translation.favoriteId = null
+            translation.updateFavoriteState(favorites)
+        }
+    }
+
+    private fun notifyFavoriteAdded(favorites: List<WordBookItem>) {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
             if (translation.favoriteId == null) {
-                words.find {
-                    translation.srcLang == it.sourceLanguage
-                            && translation.targetLang == it.targetLanguage
-                            && translation.original.equals(it.word, true)
-                }?.let {
-                    translation.favoriteId = it.id
-                }
+                translation.updateFavoriteState(favorites)
             }
         }
     }
@@ -140,11 +154,14 @@ class TranslateService private constructor() : Disposable {
 
     private fun MessageBusConnection.subscribeWordBookTopic() = apply {
         subscribe(WordBookListener.TOPIC, object : WordBookListener {
-            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) {
-                notifyFavoriteAdded(words)
-            }
-
+            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) = notifyFavoriteAdded(words)
             override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) = notifyFavoriteRemoved(wordIds)
+        })
+    }
+
+    private fun MessageBusConnection.subscribeWordBookViewTopic() = apply {
+        subscribe(WordBookViewListener.TOPIC, object : WordBookViewListener {
+            override fun onWordBookRefreshed(words: List<WordBookItem>) = updateFavorites(words)
         })
     }
 

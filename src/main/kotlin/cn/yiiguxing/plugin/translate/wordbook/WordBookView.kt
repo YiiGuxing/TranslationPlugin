@@ -39,7 +39,9 @@ class WordBookView {
 
     private var isInitialized: Boolean = false
 
-    private val observableLoading = ObservableValue(false)
+    private val publisher: WordBookViewListener = Application.messageBus.syncPublisher(WordBookViewListener.TOPIC)
+
+    private val observableLoading: ObservableValue<Boolean> = ObservableValue(false)
     private var isLoading: Boolean by observableLoading
 
     private val words: MutableList<WordBookItem> = ArrayList()
@@ -195,6 +197,7 @@ class WordBookView {
                     words.clear()
                     words.addAll(newWords)
                     notifyWordsChanged()
+                    publisher.onWordBookRefreshed(newWords)
                 }
             }
             .onProcessed {
