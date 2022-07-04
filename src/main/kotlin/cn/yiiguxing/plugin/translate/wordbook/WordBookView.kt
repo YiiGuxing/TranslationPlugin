@@ -160,7 +160,7 @@ class WordBookView {
                         assertIsDispatchThread()
                         this@WordBookView.words.addAll(words)
                         notifyWordsChanged()
-                        selectWord(words.first())
+                        selectWord(words.first(), true)
                     }
 
                     override fun onWordsUpdated(service: WordBookService, words: List<WordBookItem>) {
@@ -222,14 +222,18 @@ class WordBookView {
         groupedWords = newGroupedWords.toSortedMap()
     }
 
-    private fun selectWord(wordBookItem: WordBookItem) {
+    private fun selectWord(wordBookItem: WordBookItem, resetContentSelection: Boolean = false) {
         for ((_, toolWindow) in windows) {
             val contentManager = toolWindow.contentManager
-            val allContent = contentManager.contents.find { it.tabName == TAB_NAME_ALL } ?: continue
-            if (contentManager.selectedContent != allContent) {
-                contentManager.setSelectedContent(allContent)
+            val content = if (resetContentSelection) {
+                contentManager.contents.find { it.tabName == TAB_NAME_ALL }
+            } else {
+                contentManager.selectedContent
+            } ?: continue
+            if (contentManager.selectedContent != content) {
+                contentManager.setSelectedContent(content)
             }
-            allContent.wordBookWindowComponent.selectWord(wordBookItem)
+            content.wordBookWindowComponent.selectWord(wordBookItem)
         }
     }
 
