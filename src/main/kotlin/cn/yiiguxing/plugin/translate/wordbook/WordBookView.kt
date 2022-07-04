@@ -156,27 +156,24 @@ class WordBookView {
             Application.messageBus
                 .connect(TranslationUIManager.disposable())
                 .subscribe(WordBookListener.TOPIC, object : WordBookListener {
-                    override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
+                    override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) {
                         assertIsDispatchThread()
-                        words.add(wordBookItem)
+                        this@WordBookView.words.addAll(words)
                         notifyWordsChanged()
-                        selectWord(wordBookItem)
+                        selectWord(words.first())
                     }
 
-                    override fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {
+                    override fun onWordsUpdated(service: WordBookService, words: List<WordBookItem>) {
                         assertIsDispatchThread()
-                        val index = words.indexOfFirst { it.id == wordBookItem.id }
-                        if (index >= 0) {
-                            words[index] = wordBookItem
-                            notifyWordsChanged()
-                        }
+                        val wordsMap = words.asSequence().map { it.id to it }.toMap()
+                        this@WordBookView.words.replaceAll { wordsMap[it.id] ?: it }
+                        notifyWordsChanged()
+                        selectWord(words.first())
                     }
 
-                    override fun onWordRemoved(service: WordBookService, id: Long) {
+                    override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) {
                         assertIsDispatchThread()
-                        val index = words.indexOfFirst { it.id == id }
-                        if (index >= 0) {
-                            words.removeAt(index)
+                        if (words.removeIf { it.id in wordIds }) {
                             notifyWordsChanged()
                         }
                     }

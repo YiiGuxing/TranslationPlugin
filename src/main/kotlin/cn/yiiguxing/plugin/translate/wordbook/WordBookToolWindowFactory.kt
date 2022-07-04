@@ -46,11 +46,11 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             }
         })
         messageBusConnection.subscribe(WordBookListener.TOPIC, object : WordBookListener {
-            override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
+            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) {
                 toolWindowRef.get()?.runIfSurvive { isAvailable = true }
             }
 
-            override fun onWordRemoved(service: WordBookService, id: Long) {
+            override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) {
                 Application.executeOnPooledThread {
                     val available = WordBookService.instance.hasAnyWords()
                     toolWindowRef.get()?.runIfSurvive { isAvailable = available }

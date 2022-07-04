@@ -106,23 +106,25 @@ class TranslateService private constructor() : Disposable {
         remove(key)?.forEach { it.action() }
     }
 
-    private fun notifyFavoriteAdded(item: WordBookItem) {
+    private fun notifyFavoriteAdded(words: List<WordBookItem>) {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == null &&
-                translation.srcLang == item.sourceLanguage &&
-                translation.targetLang == item.targetLanguage &&
-                translation.original.equals(item.word, true)
-            ) {
-                translation.favoriteId = item.id
+            if (translation.favoriteId == null) {
+                words.find {
+                    translation.srcLang == it.sourceLanguage
+                            && translation.targetLang == it.targetLanguage
+                            && translation.original.equals(it.word, true)
+                }?.let {
+                    translation.favoriteId = it.id
+                }
             }
         }
     }
 
-    private fun notifyFavoriteRemoved(favoriteId: Long) {
+    private fun notifyFavoriteRemoved(favoriteIds: List<Long>) {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == favoriteId) {
+            if (translation.favoriteId in favoriteIds) {
                 translation.favoriteId = null
             }
         }
@@ -138,11 +140,11 @@ class TranslateService private constructor() : Disposable {
 
     private fun MessageBusConnection.subscribeWordBookTopic() = apply {
         subscribe(WordBookListener.TOPIC, object : WordBookListener {
-            override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
-                notifyFavoriteAdded(wordBookItem)
+            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) {
+                notifyFavoriteAdded(words)
             }
 
-            override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
+            override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) = notifyFavoriteRemoved(wordIds)
         })
     }
 

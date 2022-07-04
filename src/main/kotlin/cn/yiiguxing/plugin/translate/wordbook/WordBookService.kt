@@ -237,9 +237,9 @@ class WordBookService {
     }
 
     /**
-     * Adds the specified word to the word book and returns id if word is inserted.
+     * Adds the specified [word] to the word book and returns id if [word] is inserted.
      */
-    fun addWord(item: WordBookItem, notifyOnFailed: Boolean = true): Long? {
+    fun addWord(word: WordBookItem, notifyOnFailed: Boolean = true): Long? {
         checkIsInitialized()
 
         val sql = """
@@ -257,17 +257,17 @@ class WordBookService {
             queryRunner.insert(
                 sql,
                 WordIdHandler,
-                item.word,
-                item.sourceLanguage.code,
-                item.targetLanguage.code,
-                item.phonetic,
-                item.explanation,
-                item.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
-                item.createdAt
+                word.word,
+                word.sourceLanguage.code,
+                word.targetLanguage.code,
+                word.phonetic,
+                word.explanation,
+                word.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
+                word.createdAt
             )
         } catch (e: SQLException) {
             if (e.errorCode == SQLITE_CONSTRAINT) {
-                findWordId(item.word, item.sourceLanguage, item.targetLanguage)
+                findWordId(word.word, word.sourceLanguage, word.targetLanguage)
             } else {
                 LOGGER.w("Insert word", e)
                 if (notifyOnFailed) {
@@ -279,9 +279,9 @@ class WordBookService {
                 null
             }
         }?.also {
-            item.id = it
+            word.id = it
             invokeAndWait(ModalityState.any()) {
-                wordBookPublisher.onWordAdded(this@WordBookService, item)
+                wordBookPublisher.onWordsAdded(this@WordBookService, listOf(word))
             }
         }
     }
@@ -308,7 +308,7 @@ class WordBookService {
 
         if (updated) {
             invokeAndWait(ModalityState.any()) {
-                wordBookPublisher.onWordUpdated(this@WordBookService, word)
+                wordBookPublisher.onWordsUpdated(this@WordBookService, listOf(word))
             }
         }
 
@@ -345,7 +345,7 @@ class WordBookService {
 
         if (removed) {
             invokeAndWait(ModalityState.any()) {
-                wordBookPublisher.onWordRemoved(this@WordBookService, id)
+                wordBookPublisher.onWordsRemoved(this@WordBookService, listOf(id))
             }
         }
 
@@ -366,9 +366,7 @@ class WordBookService {
 
         if (removed) {
             invokeAndWait(ModalityState.any()) {
-                for (id in ids) {
-                    wordBookPublisher.onWordRemoved(this@WordBookService, id)
-                }
+                wordBookPublisher.onWordsRemoved(this@WordBookService, ids)
             }
         }
 
