@@ -73,6 +73,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 乔峰 | | 10 CNY |
+| 张伟눈_눈 | | 10 CNY |
 | T | | 10 CNY |
 | 褪去繁华 | | 10 CNY |
 | Owhere | | 10 CNY |
@@ -134,6 +136,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Curtain°落幕 | | 6.66 CNY |
+| 哈哈哈 | | 6.66 CNY |
+| 飞天葫芦 | | 6.66 CNY |
 | 阿巴阿巴阿巴 | | 6.66 CNY |
 | Zane | | 6.66 CNY |
 | 背对风 | | 6.66 CNY |
