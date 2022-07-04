@@ -108,7 +108,7 @@ class TranslateService private constructor() : Disposable {
         remove(key)?.forEach { it.action() }
     }
 
-    private fun Translation.updateFavoriteState(favorites: List<WordBookItem>) {
+    private fun Translation.updateFavoriteStateIfNeed(favorites: List<WordBookItem>) {
         favorites.find { favorite ->
             srcLang == favorite.sourceLanguage
                     && targetLang == favorite.targetLanguage
@@ -122,16 +122,14 @@ class TranslateService private constructor() : Disposable {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
             translation.favoriteId = null
-            translation.updateFavoriteState(favorites)
+            translation.updateFavoriteStateIfNeed(favorites)
         }
     }
 
     private fun notifyFavoriteAdded(favorites: List<WordBookItem>) {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == null) {
-                translation.updateFavoriteState(favorites)
-            }
+            translation.updateFavoriteStateIfNeed(favorites)
         }
     }
 

@@ -243,7 +243,7 @@ class WordBookService {
         checkIsInitialized()
 
         val sql = """
-            INSERT INTO wordbook (
+            REPLACE INTO wordbook (
                 $COLUMN_WORD,
                 $COLUMN_SOURCE_LANGUAGE,
                 $COLUMN_TARGET_LANGUAGE,
@@ -266,18 +266,14 @@ class WordBookService {
                 word.createdAt
             )
         } catch (e: SQLException) {
-            if (e.errorCode == SQLITE_CONSTRAINT) {
-                findWordId(word.word, word.sourceLanguage, word.targetLanguage)
-            } else {
-                LOGGER.w("Insert word", e)
-                if (notifyOnFailed) {
-                    Notifications.showErrorNotification(
-                        message("wordbook.notification.title"),
-                        message("wordbook.notification.content.addFailed")
-                    )
-                }
-                null
+            LOGGER.w("Insert word", e)
+            if (notifyOnFailed) {
+                Notifications.showErrorNotification(
+                    message("wordbook.notification.title"),
+                    message("wordbook.notification.content.addFailed")
+                )
             }
+            null
         }?.also {
             word.id = it
             invokeAndWait(ModalityState.any()) {
@@ -334,43 +330,35 @@ class WordBookService {
     /**
      * Removes the word by the specified [id].
      */
-    fun removeWord(id: Long): Boolean {
+    fun removeWord(id: Long) {
         checkIsInitialized()
 
         val sql = """
             DELETE FROM wordbook
             WHERE $COLUMN_ID = $id
         """.trimIndent()
-        val removed = queryRunner.update(sql) > 0
+        queryRunner.update(sql)
 
-        if (removed) {
-            invokeAndWait(ModalityState.any()) {
-                wordBookPublisher.onWordsRemoved(this@WordBookService, listOf(id))
-            }
+        invokeAndWait(ModalityState.any()) {
+            wordBookPublisher.onWordsRemoved(this@WordBookService, listOf(id))
         }
-
-        return removed
     }
 
     /**
      * Removes words by the specified [ids].
      */
-    fun removeWords(ids: List<Long>): Boolean {
+    fun removeWords(ids: List<Long>) {
         checkIsInitialized()
 
         val sql = """
             DELETE FROM wordbook
             WHERE $COLUMN_ID IN (${ids.joinToString()})
         """.trimIndent()
-        val removed = queryRunner.update(sql) > 0
+        queryRunner.update(sql)
 
-        if (removed) {
-            invokeAndWait(ModalityState.any()) {
-                wordBookPublisher.onWordsRemoved(this@WordBookService, ids)
-            }
+        invokeAndWait(ModalityState.any()) {
+            wordBookPublisher.onWordsRemoved(this@WordBookService, ids)
         }
-
-        return removed
     }
 
     /**
@@ -465,9 +453,6 @@ class WordBookService {
         private const val QUERY_TIMEOUT = 5 // timeout in seconds
         private const val CONNECTION_FACTORY_CLASS =
             "cn.yiiguxing.plugin.translate.wordbook.WordBookDriverConnectionFactory"
-
-        // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
-        private const val SQLITE_CONSTRAINT = 19
 
         private const val COLUMN_ID = "_id"
         private const val COLUMN_WORD = "word"
