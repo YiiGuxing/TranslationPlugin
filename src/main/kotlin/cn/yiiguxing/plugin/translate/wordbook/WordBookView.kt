@@ -376,7 +376,7 @@ class WordBookView {
             e.presentation.isEnabled = WordBookService.isInitialized
         }
 
-        override fun doAction(e: AnActionEvent) = importWordBook(e.project)
+        override fun doAction(e: AnActionEvent) = importWordBook(e.project) { refresh() }
     }
 
     private inner class ExportAction(private val exporter: WordBookExporter) :

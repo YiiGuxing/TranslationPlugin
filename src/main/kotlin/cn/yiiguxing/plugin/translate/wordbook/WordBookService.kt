@@ -241,11 +241,38 @@ class WordBookService {
      *
      * @see WordBookListener.onWordsAdded
      */
-    fun addWord(word: WordBookItem, notifyOnFailed: Boolean = true): Long? {
+    fun addWord(word: WordBookItem): Long? {
+        checkIsInitialized()
+
+        return try {
+            insertWord(word)
+        } catch (e: SQLException) {
+            if (e.errorCode == SQLITE_CONSTRAINT) {
+                findWordId(word.word, word.sourceLanguage, word.targetLanguage)
+            } else {
+                LOGGER.w("Insert word", e)
+                Notifications.showErrorNotification(
+                    message("wordbook.notification.title"),
+                    message("wordbook.notification.content.addFailed")
+                )
+                null
+            }
+        }?.also {
+            word.id = it
+            invokeAndWait(ModalityState.any()) {
+                wordBookPublisher.onWordsAdded(this@WordBookService, listOf(word))
+            }
+        }
+    }
+
+    /**
+     * Inserts the specified [word] to the word book and returns the id if the [word] is inserted.
+     */
+    internal fun insertWord(word: WordBookItem): Long? {
         checkIsInitialized()
 
         val sql = """
-            REPLACE INTO wordbook (
+            INSERT INTO wordbook (
                 $COLUMN_WORD,
                 $COLUMN_SOURCE_LANGUAGE,
                 $COLUMN_TARGET_LANGUAGE,
@@ -255,33 +282,18 @@ class WordBookService {
                 $COLUMN_CREATED_AT
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
-        return try {
-            queryRunner.insert(
-                sql,
-                WordIdHandler,
-                word.word,
-                word.sourceLanguage.code,
-                word.targetLanguage.code,
-                word.phonetic,
-                word.explanation,
-                word.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
-                word.createdAt
-            )
-        } catch (e: SQLException) {
-            LOGGER.w("Insert word", e)
-            if (notifyOnFailed) {
-                Notifications.showErrorNotification(
-                    message("wordbook.notification.title"),
-                    message("wordbook.notification.content.addFailed")
-                )
-            }
-            null
-        }?.also {
-            word.id = it
-            invokeAndWait(ModalityState.any()) {
-                wordBookPublisher.onWordsAdded(this@WordBookService, listOf(word))
-            }
-        }
+
+        return queryRunner.insert(
+            sql,
+            WordIdHandler,
+            word.word,
+            word.sourceLanguage.code,
+            word.targetLanguage.code,
+            word.phonetic,
+            word.explanation,
+            word.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
+            word.createdAt
+        )?.also { word.id = it }
     }
 
     /**
@@ -448,6 +460,9 @@ class WordBookService {
         private const val QUERY_TIMEOUT = 5 // timeout in seconds
         private const val CONNECTION_FACTORY_CLASS =
             "cn.yiiguxing.plugin.translate.wordbook.WordBookDriverConnectionFactory"
+
+        // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
+        private const val SQLITE_CONSTRAINT = 19
 
         private const val COLUMN_ID = "_id"
         private const val COLUMN_WORD = "word"
