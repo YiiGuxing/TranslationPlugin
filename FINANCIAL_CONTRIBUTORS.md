@@ -136,6 +136,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 狼图腾 | | 6.66 CNY |
 | Curtain°落幕 | | 6.66 CNY |
 | 哈哈哈 | | 6.66 CNY |
 | 飞天葫芦 | | 6.66 CNY |
