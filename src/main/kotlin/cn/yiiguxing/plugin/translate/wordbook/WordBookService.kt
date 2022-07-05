@@ -237,7 +237,9 @@ class WordBookService {
     }
 
     /**
-     * Adds the specified [word] to the word book and returns id if [word] is inserted.
+     * Adds the specified [word] to the word book and returns the id if the [word] is inserted.
+     *
+     * @see WordBookListener.onWordsAdded
      */
     fun addWord(word: WordBookItem, notifyOnFailed: Boolean = true): Long? {
         checkIsInitialized()
@@ -282,6 +284,11 @@ class WordBookService {
         }
     }
 
+    /**
+     * Update the specified word to the word book.
+     *
+     * @see WordBookListener.onWordsUpdated
+     */
     fun updateWord(word: WordBookItem): Boolean {
         checkIsInitialized()
 
@@ -312,7 +319,7 @@ class WordBookService {
     }
 
     /**
-     * Updates the [tags] of the word by the specified [id].
+     * Update the [tags] of the word by the specified [id].
      */
     @Suppress("unused")
     fun updateTags(id: Long, tags: List<String>): Boolean {
@@ -329,6 +336,8 @@ class WordBookService {
 
     /**
      * Removes the word by the specified [id].
+     *
+     * @see WordBookListener.onWordsRemoved
      */
     fun removeWord(id: Long) {
         checkIsInitialized()
@@ -346,6 +355,8 @@ class WordBookService {
 
     /**
      * Removes words by the specified [ids].
+     *
+     * @see WordBookListener.onWordsRemoved
      */
     fun removeWords(ids: List<Long>) {
         checkIsInitialized()
