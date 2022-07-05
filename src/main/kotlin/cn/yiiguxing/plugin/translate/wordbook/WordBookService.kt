@@ -319,22 +319,6 @@ class WordBookService {
     }
 
     /**
-     * Update the [tags] of the word by the specified [id].
-     */
-    @Suppress("unused")
-    fun updateTags(id: Long, tags: List<String>): Boolean {
-        checkIsInitialized()
-
-        val sql = """
-            UPDATE wordbook
-            SET
-                $COLUMN_TAGS = ?
-            WHERE $COLUMN_ID = ?
-        """.trimIndent()
-        return queryRunner.update(sql, tags.joinToString(","), id) > 0
-    }
-
-    /**
      * Removes the word by the specified [id].
      *
      * @see WordBookListener.onWordsRemoved
