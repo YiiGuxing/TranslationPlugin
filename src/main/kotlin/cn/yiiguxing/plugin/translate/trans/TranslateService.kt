@@ -11,6 +11,7 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
+import cn.yiiguxing.plugin.translate.wordbook.WordBookViewListener
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
@@ -35,6 +36,7 @@ class TranslateService private constructor() : Disposable {
             .connect(this)
             .subscribeSettingsTopic()
             .subscribeWordBookTopic()
+            .subscribeWordBookViewTopic()
     }
 
     fun setTranslator(newTranslator: TranslationEngine) {
@@ -72,10 +74,7 @@ class TranslateService private constructor() : Disposable {
             try {
                 with(translator) {
                     translate(text, srcLang, targetLang).let { translation ->
-                        translation.favoriteId = WordBookService.instance
-                            .takeIf { it.isInitialized && it.canAddToWordbook(text) }
-                            // 这里的`sourceLanguage`参数不能直接使用`srcLang`，因为`srcLang`的值可能为`Lang.AUTO`
-                            ?.getWordId(text, translation.srcLang, translation.targetLang)
+                        translation.favoriteId = getFavoriteId(translation)
                         CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
                         invokeLater(modalityState) { listeners.run(key) { onSuccess(translation) } }
                     }
@@ -93,6 +92,17 @@ class TranslateService private constructor() : Disposable {
         }
     }
 
+    private fun getFavoriteId(translation: Translation): Long? {
+        return try {
+            WordBookService.instance
+                .takeIf { it.isInitialized && it.canAddToWordbook(translation.original) }
+                ?.getWordId(translation.original, translation.srcLang, translation.targetLang)
+        } catch (e: Throwable) {
+            LOG.w("Failed to get favorite id", e)
+            null
+        }
+    }
+
     private fun investigate(requestText: String, srcLang: Lang, targetLang: Lang, error: Throwable) {
         val requestAttachment = TranslationAttachmentFactory
             .createRequestAttachment(translator, requestText, srcLang, targetLang)
@@ -106,23 +116,35 @@ class TranslateService private constructor() : Disposable {
         remove(key)?.forEach { it.action() }
     }
 
-    private fun notifyFavoriteAdded(item: WordBookItem) {
-        checkThread()
-        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == null &&
-                translation.srcLang == item.sourceLanguage &&
-                translation.targetLang == item.targetLanguage &&
-                translation.original.equals(item.word, true)
-            ) {
-                translation.favoriteId = item.id
-            }
+    private fun Translation.updateFavoriteStateIfNeed(favorites: List<WordBookItem>) {
+        favorites.find { favorite ->
+            srcLang == favorite.sourceLanguage
+                    && targetLang == favorite.targetLanguage
+                    && original.equals(favorite.word, true)
+        }?.let { favorite ->
+            favoriteId = favorite.id
         }
     }
 
-    private fun notifyFavoriteRemoved(favoriteId: Long) {
+    private fun updateFavorites(favorites: List<WordBookItem>) {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == favoriteId) {
+            translation.favoriteId = null
+            translation.updateFavoriteStateIfNeed(favorites)
+        }
+    }
+
+    private fun notifyFavoriteAdded(favorites: List<WordBookItem>) {
+        checkThread()
+        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+            translation.updateFavoriteStateIfNeed(favorites)
+        }
+    }
+
+    private fun notifyFavoriteRemoved(favoriteIds: List<Long>) {
+        checkThread()
+        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+            if (translation.favoriteId in favoriteIds) {
                 translation.favoriteId = null
             }
         }
@@ -138,11 +160,14 @@ class TranslateService private constructor() : Disposable {
 
     private fun MessageBusConnection.subscribeWordBookTopic() = apply {
         subscribe(WordBookListener.TOPIC, object : WordBookListener {
-            override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
-                notifyFavoriteAdded(wordBookItem)
-            }
+            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) = notifyFavoriteAdded(words)
+            override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) = notifyFavoriteRemoved(wordIds)
+        })
+    }
 
-            override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
+    private fun MessageBusConnection.subscribeWordBookViewTopic() = apply {
+        subscribe(WordBookViewListener.TOPIC, object : WordBookViewListener {
+            override fun onWordBookRefreshed(words: List<WordBookItem>) = updateFavorites(words)
         })
     }
 

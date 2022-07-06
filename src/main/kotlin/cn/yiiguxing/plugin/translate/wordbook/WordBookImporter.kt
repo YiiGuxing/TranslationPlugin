@@ -40,9 +40,9 @@ interface WordBookImporter {
                 try {
                     service.isInitialized
                             && service.canAddToWordbook(word.word)
-                            && service.addWord(words[i], notifyOnFailed = false) != null
+                            && service.insertWord(word) != null
                 } catch (e: Throwable) {
-                    LOG.w("Failed to import word", e)
+                    LOG.w("Failed to import word: ${word.word}", e)
                     false
                 }
             }

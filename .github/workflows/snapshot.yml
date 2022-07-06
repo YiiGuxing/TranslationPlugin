@@ -1,0 +1,69 @@
+# GitHub Actions Workflow created for handling the release process based on the draft release prepared
+# with the Build workflow. Running the publishPlugin task requires the PUBLISH_TOKEN secret provided.
+
+name: Snapshot
+
+on:
+  # Trigger the workflow on pushes to only the 'master' branch (this avoids duplicate checks being run e.g. for dependabot pull requests)
+  push:
+    branches:
+      - '**/snapshot/*'
+
+env:
+  AUTO_SNAPSHOT_VERSION: true
+
+jobs:
+
+  # Prepare and publish the plugin to the snapshot channel of the Marketplace repository
+  release:
+    name: Publish Plugin Snapshot
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+
+      # Setup Java 11 environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+          cache: gradle
+
+      # Set environment variables
+      - name: Export Properties
+        id: properties
+        shell: bash
+        run: |
+          PROPERTIES="$(./gradlew properties --console=plain -q)"
+          PUBLISH_CHANNEL="$(echo "$PROPERTIES" | grep "^publishChannel:" | cut -f2- -d ' ')"
+
+          echo "::set-output name=publishChannel::$PUBLISH_CHANNEL"
+
+      # Publish the plugin to the Marketplace
+      - name: Publish Plugin
+        if: steps.properties.outputs.publishChannel == 'snapshot'
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: ./gradlew publishPlugin
+
+      # Prepare plugin archive content for creating artifact
+      - name: Prepare Plugin Artifact
+        id: artifact
+        if: steps.properties.outputs.publishChannel == 'snapshot'
+        shell: bash
+        run: |
+          cd ${{ github.workspace }}/build/distributions
+          FILENAME=`ls *.zip`
+          unzip "$FILENAME" -d content
+          echo "::set-output name=filename::${FILENAME:0:-4}"
+
+      # Store already-built plugin as an artifact for downloading
+      - name: Upload artifact
+        if: steps.properties.outputs.publishChannel == 'snapshot'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.artifact.outputs.filename }}
+          path: ./build/distributions/content/*/*

@@ -32,9 +32,6 @@ object TranslationIcons {
     val GrayStarOff: Icon = load("/icons/grayStarOff.svg")
 
     @JvmField
-    val Detail: Icon = load("/icons/detail.svg")
-
-    @JvmField
     val AudioDisabled: Icon = load("/icons/audioDisabled.svg")
 
     @JvmField

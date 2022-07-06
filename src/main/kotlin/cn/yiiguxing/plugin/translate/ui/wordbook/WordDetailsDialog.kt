@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.REGEX_TAGS_SEPARATOR
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import cn.yiiguxing.plugin.translate.wordbook.WordBookView
 import cn.yiiguxing.plugin.translate.wordbook.toTagSet
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionType
@@ -32,14 +33,13 @@ import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
  */
 class WordDetailsDialog(
     project: Project?,
-    private var word: WordBookItem,
-    private val tags: Set<String>
+    private var word: WordBookItem
 ) : WordDetailsDialogForm(project) {
 
     private var tagsString: String = ""
 
     private val tagsField: TextFieldWithAutoCompletion<String> = object : TextFieldWithAutoCompletion<String>(
-        project, StringsCompletionProvider(tags, null), false, null
+        project, StringsCompletionProvider(WordBookView.instance.wordTags, null), false, null
     ) {
         init {
             font = phoneticField.font
