@@ -19,6 +19,8 @@ import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
 import org.jetbrains.concurrency.runAsync
+import org.sqlite.SQLiteErrorCode
+import org.sqlite.SQLiteException
 import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
@@ -240,6 +242,7 @@ class WordBookService {
      * Adds the specified [word] to the word book and returns the id if the [word] is inserted.
      *
      * @see WordBookListener.onWordsAdded
+     * @throws WordBookException if a wordbook access error occurs
      */
     fun addWord(word: WordBookItem): Long? {
         checkIsInitialized()
@@ -247,15 +250,10 @@ class WordBookService {
         return try {
             insertWord(word)
         } catch (e: SQLException) {
-            if (e.errorCode == SQLITE_CONSTRAINT) {
+            if (e.errorCode == SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
                 findWordId(word.word, word.sourceLanguage, word.targetLanguage)
             } else {
-                LOGGER.w("Insert word", e)
-                Notifications.showErrorNotification(
-                    message("wordbook.notification.title"),
-                    message("wordbook.notification.content.addFailed")
-                )
-                null
+                e.rethrow("Unable to add word: ${word.word}")
             }
         }?.also {
             word.id = it
@@ -300,6 +298,7 @@ class WordBookService {
      * Update the specified word to the word book.
      *
      * @see WordBookListener.onWordsUpdated
+     * @throws WordBookException if a wordbook access error occurs
      */
     fun updateWord(word: WordBookItem): Boolean {
         checkIsInitialized()
@@ -313,13 +312,17 @@ class WordBookService {
                 $COLUMN_TAGS = ?
             WHERE $COLUMN_ID = ?
         """.trimIndent()
-        val updated = queryRunner.update(
-            sql,
-            word.phonetic,
-            word.explanation,
-            word.tags.joinToString(","),
-            id
-        ) > 0
+        val updated = try {
+            queryRunner.update(
+                sql,
+                word.phonetic,
+                word.explanation,
+                word.tags.joinToString(","),
+                id
+            ) > 0
+        } catch (e: SQLException) {
+            e.rethrow("Unable to update word: ${word.word}")
+        }
 
         if (updated) {
             invokeAndWait(ModalityState.any()) {
@@ -334,6 +337,7 @@ class WordBookService {
      * Removes the word by the specified [id].
      *
      * @see WordBookListener.onWordsRemoved
+     * @throws WordBookException if a wordbook access error occurs
      */
     fun removeWord(id: Long) {
         checkIsInitialized()
@@ -342,7 +346,11 @@ class WordBookService {
             DELETE FROM wordbook
             WHERE $COLUMN_ID = $id
         """.trimIndent()
-        queryRunner.update(sql)
+        try {
+            queryRunner.update(sql)
+        } catch (e: SQLException) {
+            e.rethrow("Unable to remove word: $id")
+        }
 
         invokeAndWait(ModalityState.any()) {
             wordBookPublisher.onWordsRemoved(this@WordBookService, listOf(id))
@@ -353,6 +361,7 @@ class WordBookService {
      * Removes words by the specified [ids].
      *
      * @see WordBookListener.onWordsRemoved
+     * @throws WordBookException if a wordbook access error occurs
      */
     fun removeWords(ids: List<Long>) {
         checkIsInitialized()
@@ -361,7 +370,11 @@ class WordBookService {
             DELETE FROM wordbook
             WHERE $COLUMN_ID IN (${ids.joinToString()})
         """.trimIndent()
-        queryRunner.update(sql)
+        try {
+            queryRunner.update(sql)
+        } catch (e: SQLException) {
+            e.rethrow("Unable to remove words: $ids")
+        }
 
         invokeAndWait(ModalityState.any()) {
             wordBookPublisher.onWordsRemoved(this@WordBookService, ids)
@@ -461,9 +474,6 @@ class WordBookService {
         private const val CONNECTION_FACTORY_CLASS =
             "cn.yiiguxing.plugin.translate.wordbook.WordBookDriverConnectionFactory"
 
-        // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
-        private const val SQLITE_CONSTRAINT = 19
-
         private const val COLUMN_ID = "_id"
         private const val COLUMN_WORD = "word"
         private const val COLUMN_SOURCE_LANGUAGE = "source_language"
@@ -514,6 +524,12 @@ class WordBookService {
                 getString(COLUMN_TAGS),
                 getDate(COLUMN_CREATED_AT)
             )
+        }
+
+        private fun SQLException.rethrow(message: String): Nothing {
+            val sqliteException = this as? SQLiteException ?: nextException as? SQLiteException
+            val sqliteErrorCode = sqliteException?.resultCode ?: SQLiteErrorCode.UNKNOWN_ERROR
+            throw WordBookException(sqliteErrorCode.code, sqliteErrorCode.name, message, this)
         }
     }
 }

@@ -1,29 +1,35 @@
 package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.Popups
 import cn.yiiguxing.plugin.translate.ui.form.WordDetailsDialogForm
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.WordBookService
+import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.wordbook.REGEX_TAGS_SEPARATOR
-import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
-import cn.yiiguxing.plugin.translate.wordbook.WordBookView
-import cn.yiiguxing.plugin.translate.wordbook.toTagSet
+import cn.yiiguxing.plugin.translate.wordbook.*
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.hint.HintManager
+import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.ui.popup.Balloon
+import com.intellij.openapi.util.Condition
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.TextFieldWithAutoCompletion
+import org.jetbrains.concurrency.runAsync
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
+import java.lang.ref.WeakReference
 import javax.swing.Action
 import javax.swing.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
@@ -32,7 +38,7 @@ import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
  * Word details dialog.
  */
 class WordDetailsDialog(
-    project: Project?,
+    private val project: Project?,
     private var word: WordBookItem
 ) : WordDetailsDialogForm(project) {
 
@@ -160,17 +166,53 @@ class WordDetailsDialog(
     }
 
     private fun saveEditing() {
-        if (isModified) {
-            val newWord = word.copy(
-                phonetic = phoneticField.text,
-                explanation = explanationView.text,
-                tags = tagsField.text.toTagSet()
-            )
-            if (WordBookService.updateWord(newWord)) {
-                setWord(newWord)
-                IdeFocusManager.findInstance().requestFocus(closeButton, true)
+        if (!isModified) {
+            return
+        }
+
+        val newWord = word.copy(
+            phonetic = phoneticField.text,
+            explanation = explanationView.text,
+            tags = tagsField.text.toTagSet()
+        )
+
+        saveEditingButton.isEnabled = false
+        val modalityState = ModalityState.current()
+        val dialogRef = WeakReference(this)
+        val expired = Condition<Any?> { dialogRef.get()?.isDisposed ?: true }
+        runAsync { WordBookService.updateWord(newWord) }
+            .onSuccess { updated ->
+                if (updated) invokeLater(modalityState, expired) {
+                    dialogRef.get()?.onEditingSaved(newWord)
+                }
+            }
+            .onError { error ->
+                invokeLater(modalityState, expired) {
+                    dialogRef.get()?.onEditError(error)
+                }
+            }
+            .onProcessed {
+                invokeLater(modalityState, expired) {
+                    dialogRef.get()?.saveEditingButton?.isEnabled = true
+                }
+            }
+    }
+
+    private fun onEditingSaved(newWord: WordBookItem) {
+        setWord(newWord)
+        IdeFocusManager.findInstance().requestFocus(closeButton, true)
+    }
+
+    private fun onEditError(error: Throwable) {
+        val reason = when (error) {
+            is WordBookException -> error.reason
+            else -> {
+                LOG.e("Failed to update word", error)
+                "UNKNOWN_ERROR"
             }
         }
+        val message = message("wordbook.notification.message.operation.failed", reason)
+        Popups.showBalloonForComponent(saveEditingButton, message, MessageType.ERROR, project, Balloon.Position.above)
     }
 
     companion object {
@@ -179,6 +221,8 @@ class WordDetailsDialog(
         private val TRIM_CHARS = charArrayOf(',', '，', ' ', ' ' /* 0xA0 */)
 
         private val REGEX_WHITESPACE = Regex("[\\s ]+")
+
+        private val LOG: Logger = Logger.getInstance(WordDetailsDialog::class.java)
 
         private fun Document.fixSeparator() {
             setText(text.replace(REGEX_WHITESPACE, " ").replace(REGEX_TAGS_SEPARATOR, TAG_SEPARATOR).trim(*TRIM_CHARS))
