@@ -22,7 +22,6 @@ import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.AsyncProcessIcon
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import java.awt.BorderLayout
 import java.awt.datatransfer.StringSelection
 import java.awt.event.ActionEvent
@@ -78,7 +77,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
         val table = tableView
         table.onWordDoubleClick { word -> onViewWordDetailHandler?.invoke(word) }
         table.popupMenu = JBPopupMenu().also { menu ->
-            val detailItem = createMenuItem(message("wordbook.window.menu.detail"), TranslationIcons.Detail) {
+            val detailItem = createMenuItem(message("wordbook.window.menu.detail"), AllIcons.Actions.Highlighting) {
                 table.selectedWord?.let { word -> onViewWordDetailHandler?.invoke(word) }
             }
             val copyItem = createMenuItem(message("wordbook.window.menu.copy"), AllIcons.Actions.Copy) {
@@ -86,7 +85,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
                     CopyPasteManager.getInstance().setContents(StringSelection(word.word))
                 }
             }
-            val deleteItem = createMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.Cancel) {
+            val deleteItem = createMenuItem(message("wordbook.window.menu.delete"), AllIcons.Actions.GC) {
                 performWordsDelete()
             }
             menu.add(deleteItem)
