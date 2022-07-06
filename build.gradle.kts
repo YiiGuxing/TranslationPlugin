@@ -25,13 +25,13 @@ fun dateValue(pattern: String) = LocalDate.now(ZoneId.of("Asia/Shanghai")).forma
 val pluginMajorVersion: String by project
 val pluginPreReleaseVersion: String by project
 val pluginBuildMetadata: String by project
-val preReleaseVersionVersion = pluginPreReleaseVersion
+val preReleaseVersion = pluginPreReleaseVersion
     .takeIf { it.isNotBlank() }
     ?: "SNAPSHOT.${dateValue("yyMMdd")}".takeIf {
         properties("autoSnapshotVersion").toBoolean()
                 && !"false".equals(System.getenv("AUTO_SNAPSHOT_VERSION"), ignoreCase = true)
     }
-val preReleaseVersionPart = preReleaseVersionVersion?.let { "-$it" } ?: ""
+val preReleaseVersionPart = preReleaseVersion?.let { "-$it" } ?: ""
 val buildMetadataPart = pluginBuildMetadata.takeIf { it.isNotBlank() }?.let { "+$it" } ?: ""
 val pluginVersion = pluginMajorVersion + preReleaseVersionPart
 val fullPluginVersion = pluginVersion + buildMetadataPart
@@ -42,9 +42,12 @@ if (!versionRegex.matches("v$fullPluginVersion")) {
     throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
 }
 
+val publishChannel = preReleaseVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"
 
 extra["pluginVersion"] = pluginVersion
+extra["pluginPreReleaseVersion"] = preReleaseVersion
 extra["fullPluginVersion"] = fullPluginVersion
+extra["publishChannel"] = publishChannel
 
 group = properties("pluginGroup")
 version = fullPluginVersion
@@ -61,7 +64,7 @@ repositories {
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
-    implementation("org.jsoup:jsoup:1.15.1")
+    implementation("org.jsoup:jsoup:1.15.2")
     implementation("org.apache.commons:commons-dbcp2:2.9.0")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
@@ -140,7 +143,7 @@ tasks {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(listOf(preReleaseVersionVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"))
+        channels.set(listOf(publishChannel))
     }
 
     wrapper {

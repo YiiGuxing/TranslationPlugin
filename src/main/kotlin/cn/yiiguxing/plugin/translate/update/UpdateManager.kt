@@ -75,13 +75,21 @@ class UpdateManager : BaseStartupActivity() {
             version.getVersionWithoutBuildMetadata()
         )
         val color = getBorderColor()
-        val partStyle = "margin: ${JBUI.scale(8)}px 0;"
-        val refStyle = "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
+        val partStyle = "margin-top: ${JBUI.scale(8)}px;"
+        val milestone = if (!version.isRreRelease) {
+            val refStyle =
+                "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
+            message(
+                "plugin.updated.notification.message.milestone",
+                "$partStyle $refStyle",
+                MILESTONE_URL.format(version.getStableVersion())
+            )
+        } else ""
         val content = message(
             "plugin.updated.notification.message",
             Hyperlinks.SUPPORT_DESCRIPTION,
-            "$partStyle $refStyle",
-            MILESTONE_URL.format(version.getStableVersion()),
+            milestone,
+            partStyle,
             plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 

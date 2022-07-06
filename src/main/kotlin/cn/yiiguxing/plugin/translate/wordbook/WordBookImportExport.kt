@@ -115,7 +115,10 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
     }
 }
 
-fun importWordBook(project: Project?) {
+/**
+ * Imports wordbook, the [onFinished] callback will be invoked on AWT dispatch thread when the task is finished.
+ */
+fun importWordBook(project: Project?, onFinished: () -> Unit) {
     val selectFile = selectImportSource(project) ?: return
     val title = message("wordbook.window.import.notification.title")
 
@@ -144,6 +147,10 @@ fun importWordBook(project: Project?) {
                     project,
                     NOTIFICATION_GROUP_ID
                 )
+            }
+
+            override fun onFinished() {
+                onFinished()
             }
 
             override fun onThrowable(error: Throwable) {

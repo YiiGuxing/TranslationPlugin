@@ -18,11 +18,11 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Condition
+import org.jetbrains.kotlin.idea.slicer.KotlinSliceUsageCellRenderer.action
 import java.util.concurrent.Future
 
 object Plugin {
 
-    @Suppress("SpellCheckingInspection")
     const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
 
     val descriptor: IdeaPluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))!!
@@ -74,17 +74,36 @@ inline fun executeOnPooledThread(crossinline action: () -> Unit)
 /**
  * Asynchronously execute the [action] on the AWT event dispatching thread.
  */
-inline fun invokeLaterIfNeeded(
+fun invokeLaterIfNeeded(
     state: ModalityState = ModalityState.defaultModalityState(),
-    crossinline action: () -> Unit
+    runnable: Runnable
 ) {
     with(Application) {
         if (isDispatchThread) {
-            action()
+            runnable.run()
         } else {
-            invokeLater(state) { action() }
+            Application.invokeLater(runnable, state)
         }
     }
+}
+
+/**
+ * Causes `runnable()` to be executed synchronously on the AWT event dispatching
+ * thread under Write Intent lock, when the IDE is in the specified modality
+ * state (or a state with less modal dialogs open). This call blocks until all
+ * pending AWT events have been processed and (then) `runnable()` returns.
+ *
+ * If current thread is an event dispatch thread then `runnable()`
+ * is executed immediately regardless of the modality state.
+ *
+ * @param modalityState the state in which the runnable will be executed.
+ * @param runnable      the runnable to execute.
+ */
+inline fun invokeAndWait(
+    modalityState: ModalityState = ModalityState.defaultModalityState(),
+    crossinline runnable: () -> Unit
+) {
+    Application.invokeAndWait({ runnable() }, modalityState)
 }
 
 /**

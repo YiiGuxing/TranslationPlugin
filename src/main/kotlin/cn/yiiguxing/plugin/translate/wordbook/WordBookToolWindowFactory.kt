@@ -11,6 +11,7 @@ import com.intellij.openapi.util.Ref
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ex.ToolWindowEx
+import org.jetbrains.concurrency.runAsync
 
 /**
  * Word book tool window factory
@@ -45,11 +46,11 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             }
         })
         messageBusConnection.subscribe(WordBookListener.TOPIC, object : WordBookListener {
-            override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
+            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) {
                 toolWindowRef.get()?.runIfSurvive { isAvailable = true }
             }
 
-            override fun onWordRemoved(service: WordBookService, id: Long) {
+            override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) {
                 Application.executeOnPooledThread {
                     val available = WordBookService.instance.hasAnyWords()
                     toolWindowRef.get()?.runIfSurvive { isAvailable = available }
@@ -57,12 +58,24 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             }
         })
 
-        Application.executeOnPooledThread {
-            val available = WordBookService.instance.let { service ->
-                service.isInitialized && service.hasAnyWords()
+        val disposable = Disposer.newDisposable(toolWindow.disposable, "Wordbook tool window availability state")
+        WordBookService.instance.stateBinding.observe(disposable) { state, _ ->
+            if (state == WordBookState.RUNNING) {
+                Disposer.dispose(disposable)
+                updateAvailable(toolWindowRef)
             }
-            toolWindowRef.get()?.runIfSurvive { isAvailable = available }
         }
+        if (WordBookService.instance.isInitialized) {
+            Disposer.dispose(disposable)
+            updateAvailable(toolWindowRef)
+        }
+    }
+
+    private fun updateAvailable(toolWindowRef: Ref<ToolWindow?>) {
+        runAsync { with(WordBookService.instance) { isInitialized && hasAnyWords() } }
+            .onSuccess { available ->
+                toolWindowRef.get()?.runIfSurvive { isAvailable = available }
+            }
     }
 
     override fun shouldBeAvailable(project: Project): Boolean = false
