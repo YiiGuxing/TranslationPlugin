@@ -6,7 +6,7 @@
 
 package cn.yiiguxing.plugin.translate.ui
 
-import com.intellij.openapi.application.ApplicationManager
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.textarea.TextComponentEditor
@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.*
+import com.intellij.openapi.ui.popup.Balloon.Position.*
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.WindowManager
@@ -58,16 +59,32 @@ object Popups {
         message: String,
         type: MessageType,
         project: Project?,
+        position: Balloon.Position = below,
         offsetX: Int = 0,
         offsetY: Int = 0
     ) {
         val balloon = JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(message, type, null)
-            .setDisposable(project ?: ApplicationManager.getApplication())
+            .setDisposable(TranslationUIManager.disposable(project))
             .createBalloon()
-        val (point, position) = component.size?.let { size ->
-            Point(size.width / 2 + offsetX, size.height + offsetY) to Balloon.Position.below
-        } ?: (Point(offsetX, offsetY) to Balloon.Position.above)
+        val point = component.size?.let { size ->
+            var x = 0
+            var y = 0
+            if (position == atRight) {
+                x = size.width
+            }
+            if (position == below) {
+                y = size.height
+            }
+            if (position == below || position == above) {
+                x = size.width / 2
+            }
+            if (position == atLeft || position == atRight) {
+                y = size.height / 2
+            }
+
+            Point(x + offsetX, y + offsetY)
+        } ?: Point(offsetX, offsetY)
         balloon.show(RelativePoint(component, point), position)
     }
 }
@@ -134,6 +151,7 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
                 val y = visibleRect.height + if (insets.bottom + margin.bottom <= 0) JBUI.scale(2) else 0
                 Point(x, y)
             }
+
             component.hasSelection -> {
                 @Suppress("deprecation")
                 val startRect = component.modelToView(component.selectionStart)
@@ -144,6 +162,7 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
                 val y = maxOf(startRect.y, endRect.y) + endRect.height
                 Point(x, y)
             }
+
             else -> {
                 val caretPosition = component.caret.magicCaretPosition
 
