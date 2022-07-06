@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Plugin
 import com.intellij.ide.AppLifecycleListener
 import com.intellij.ide.plugins.DynamicPluginListener
@@ -12,11 +13,13 @@ import com.intellij.openapi.actionSystem.impl.ActionManagerImpl
 class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
 
     override fun appFrameCreated(commandLineArgs: MutableList<String>) {
-        registerAction()
+        if (IdeVersion >= IdeVersion.IDE2022_2) {
+            registerAction()
+        }
     }
 
     override fun pluginLoaded(pluginDescriptor: IdeaPluginDescriptor) {
-        if (pluginDescriptor.pluginId.idString == Plugin.PLUGIN_ID) {
+        if (IdeVersion >= IdeVersion.IDE2022_2 && pluginDescriptor.pluginId.idString == Plugin.PLUGIN_ID) {
             registerAction()
         }
     }
