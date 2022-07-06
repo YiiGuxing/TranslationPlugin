@@ -111,7 +111,7 @@ class WordBookView {
             onDownloadDriver {
                 if (!WordBookService.downloadDriverAndInitService()) {
                     val message = message("wordbook.window.message.in.download")
-                    Popups.showBalloonForComponent(it, message, MessageType.INFO, project, JBUI.scale(10))
+                    Popups.showBalloonForComponent(it, message, MessageType.INFO, project, offsetX = JBUI.scale(10))
                 }
             }
             onViewWordDetail { word -> openWordDetails(project, word) }
