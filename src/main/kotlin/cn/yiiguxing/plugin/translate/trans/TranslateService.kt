@@ -74,10 +74,7 @@ class TranslateService private constructor() : Disposable {
             try {
                 with(translator) {
                     translate(text, srcLang, targetLang).let { translation ->
-                        translation.favoriteId = WordBookService.instance
-                            .takeIf { it.isInitialized && it.canAddToWordbook(text) }
-                            // 这里的`sourceLanguage`参数不能直接使用`srcLang`，因为`srcLang`的值可能为`Lang.AUTO`
-                            ?.getWordId(text, translation.srcLang, translation.targetLang)
+                        translation.favoriteId = getFavoriteId(translation)
                         CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
                         invokeLater(modalityState) { listeners.run(key) { onSuccess(translation) } }
                     }
@@ -92,6 +89,17 @@ class TranslateService private constructor() : Disposable {
                 }
                 invokeLater(modalityState) { listeners.run(key) { onError(error) } }
             }
+        }
+    }
+
+    private fun getFavoriteId(translation: Translation): Long? {
+        return try {
+            WordBookService.instance
+                .takeIf { it.isInitialized && it.canAddToWordbook(translation.original) }
+                ?.getWordId(translation.original, translation.srcLang, translation.targetLang)
+        } catch (e: Throwable) {
+            LOG.w("Failed to get favorite id", e)
+            null
         }
     }
 
