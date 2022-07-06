@@ -131,7 +131,7 @@ class WordBookWindowComponent(private val parentDisposable: Disposable) :
         downloadLinkLabel.iconTextGap = JBUIScale.scale(5)
 
         downloadPanel.apply {
-            layout = HorizontalLayout(JBUIScale.scale(5))
+            layout = HorizontalLayout(JBUIScale.scale(5), SwingConstants.CENTER)
             add(downloadingIcon, HorizontalLayout.CENTER)
             add(downloadLinkLabel, HorizontalLayout.CENTER)
             add(JBLabel(message("wordbook.window.message.driver.files")), HorizontalLayout.CENTER)

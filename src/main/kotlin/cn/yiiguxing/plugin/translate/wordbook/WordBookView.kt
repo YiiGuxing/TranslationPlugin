@@ -27,8 +27,8 @@ import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentManager
 import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.ui.content.ContentManagerListener
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.containers.ContainerUtil
-import com.intellij.util.ui.JBUI
 import org.jetbrains.concurrency.runAsync
 import javax.swing.Icon
 
@@ -111,7 +111,7 @@ class WordBookView {
             onDownloadDriver {
                 if (!WordBookService.downloadDriverAndInitService()) {
                     val message = message("wordbook.window.message.in.download")
-                    Popups.showBalloonForComponent(it, message, MessageType.INFO, project, offsetX = JBUI.scale(10))
+                    Popups.showBalloonForComponent(it, message, MessageType.INFO, project, offsetY = JBUIScale.scale(2))
                 }
             }
             onViewWordDetail { word -> openWordDetails(project, word) }
