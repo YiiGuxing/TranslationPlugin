@@ -70,8 +70,6 @@ dependencies {
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
     }
-
-    compileOnly("org.xerial:sqlite-jdbc:3.36.0.3")
 }
 
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3

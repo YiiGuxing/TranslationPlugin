@@ -205,7 +205,7 @@ class WordDetailsDialog(
 
     private fun onEditError(error: Throwable) {
         val reason = when (error) {
-            is WordBookException -> error.reason
+            is WordBookException -> error.errorCode.reason
             else -> {
                 LOG.e("Failed to update word", error)
                 "UNKNOWN_ERROR"

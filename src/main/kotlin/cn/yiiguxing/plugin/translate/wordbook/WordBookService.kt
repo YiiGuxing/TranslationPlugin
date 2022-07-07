@@ -19,8 +19,6 @@ import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
 import org.jetbrains.concurrency.runAsync
-import org.sqlite.SQLiteErrorCode
-import org.sqlite.SQLiteException
 import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
@@ -112,7 +110,6 @@ class WordBookService {
             url = DATABASE_URL
             driverClassLoader = classLoader
             driverClassName = DATABASE_DRIVER
-            connectionFactoryClassName = CONNECTION_FACTORY_CLASS
             defaultQueryTimeout = QUERY_TIMEOUT
         }
         queryRunner = QueryRunner(dataSource)
@@ -169,10 +166,13 @@ class WordBookService {
                     }
 
                     if (state == NO_DRIVER) {
+                        LOGGER.w("Failed to download the driver file", error)
                         Notifications.showErrorNotification(
                             message("wordbook.notification.title"),
                             message("wordbook.window.message.driver.download.failed", error.message.toString())
                         )
+                    } else {
+                        LOGGER.w("Wordbook initialization failed", error)
                     }
                 }
             })
@@ -262,7 +262,7 @@ class WordBookService {
         return try {
             insertWord(word)
         } catch (e: SQLException) {
-            if (e.errorCode == SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
+            if (e.errorCode == SQLITE_CONSTRAINT) {
                 findWordId(word.word, word.sourceLanguage, word.targetLanguage)
             } else {
                 e.rethrow("Unable to add word: ${word.word}")
@@ -488,8 +488,9 @@ class WordBookService {
         private val DATABASE_URL = "jdbc:sqlite:${TRANSLATION_DIRECTORY.resolve("wordbook.db")}"
 
         private const val QUERY_TIMEOUT = 5 // timeout in seconds
-        private const val CONNECTION_FACTORY_CLASS =
-            "cn.yiiguxing.plugin.translate.wordbook.WordBookDriverConnectionFactory"
+
+        // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
+        private const val SQLITE_CONSTRAINT = 19
 
         private const val COLUMN_ID = "_id"
         private const val COLUMN_WORD = "word"
@@ -553,9 +554,7 @@ class WordBookService {
         }
 
         private fun SQLException.rethrow(message: String): Nothing {
-            val sqliteException = this as? SQLiteException ?: nextException as? SQLiteException
-            val sqliteErrorCode = sqliteException?.resultCode ?: SQLiteErrorCode.UNKNOWN_ERROR
-            throw WordBookException(sqliteErrorCode.code, sqliteErrorCode.name, message, this)
+            throw WordBookException(WordBookErrorCode[errorCode], message, this)
         }
     }
 }

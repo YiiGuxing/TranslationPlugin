@@ -57,12 +57,11 @@ object StarButtons {
     }
 
     private fun addToWordBook(translation: Translation) = try {
-        throw WordBookException(0,"EEE","aaa")
         WordBookService.addWord(translation.toWordBookItem())
     } catch (e: WordBookException) {
         Notifications.showErrorNotification(
             message("wordbook.notification.title"),
-            message("wordbook.notification.message.word.addition.failed", e.reason)
+            message("wordbook.notification.message.word.addition.failed", e.errorCode.reason)
         )
         null
     }
@@ -72,7 +71,7 @@ object StarButtons {
     } catch (e: WordBookException) {
         Notifications.showErrorNotification(
             message("wordbook.notification.title"),
-            message("wordbook.notification.message.operation.failed", e.reason)
+            message("wordbook.notification.message.operation.failed", e.errorCode.reason)
         )
     }
 }
