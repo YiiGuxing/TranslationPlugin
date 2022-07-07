@@ -262,11 +262,10 @@ class WordBookService {
         return try {
             insertWord(word)
         } catch (e: SQLException) {
-            if (e.errorCode == SQLITE_CONSTRAINT) {
+            val id = if (e.errorCode == SQLITE_CONSTRAINT) {
                 findWordId(word.word, word.sourceLanguage, word.targetLanguage)
-            } else {
-                e.rethrow("Unable to add word: ${word.word}")
-            }
+            } else null
+            id ?: e.rethrow("Unable to add word: ${word.word}")
         }?.also {
             word.id = it
             invokeAndWait(ModalityState.any()) {
