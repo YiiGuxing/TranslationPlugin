@@ -126,7 +126,7 @@ class WordBookService {
         }
 
         return driverLock {
-            if (!Files.exists(DRIVER_JAR)) {
+            if (!checkDriverFile()) {
                 return@driverLock null
             }
 
@@ -183,6 +183,14 @@ class WordBookService {
     private fun downloadDriverFile(indicator: ProgressIndicator) {
         indicator.text = message("word.book.progress.downloading")
         indicator.checkCanceled()
+
+        driverLock {
+            if (checkDriverFile()) {
+                return
+            }
+            Files.deleteIfExists(DRIVER_JAR)
+        }
+
         var downloadedFile: Path? = null
         try {
             val tempFile = Files.createTempFile(TRANSLATION_DIRECTORY, "download.", ".tmp")
@@ -190,14 +198,18 @@ class WordBookService {
 
             HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
             indicator.checkCanceled()
+            indicator.fraction = 1.0
+            indicator.isIndeterminate = true
 
             driverLock {
-                if (!Files.exists(DRIVER_JAR) || Files.size(DRIVER_JAR) != Files.size(tempFile)) {
+                if (!checkDriverFile()) {
                     Files.move(tempFile, DRIVER_JAR, StandardCopyOption.REPLACE_EXISTING)
+
+                    if (!checkDriverFile()) {
+                        Files.deleteIfExists(DRIVER_JAR)
+                    }
                 }
             }
-
-            indicator.fraction = 1.0
         } finally {
             try {
                 downloadedFile?.let { Files.deleteIfExists(it) }
@@ -461,11 +473,16 @@ class WordBookService {
     companion object {
         private const val DRIVER_VERSION = "3.36.0.3"
 
-        private const val DRIVER_FILE_URL =
-            "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
         private const val DRIVER_FILE_NAME = "driver-v$DRIVER_VERSION.jar"
         private const val DRIVER_LOCK_FILE = "driver-v$DRIVER_VERSION.jar.lock"
         private val DRIVER_JAR = TRANSLATION_DIRECTORY.resolve(DRIVER_FILE_NAME)
+
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/
+        private const val DRIVER_FILE_URL =
+            "https://maven.aliyun.com/repository/public/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
+
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar.sha1
+        private const val DRIVER_FILE_SHA1 = "7fa71c4dfab806490cb909714fb41373ec552c29"
 
         private const val DATABASE_DRIVER = "org.sqlite.JDBC"
         private val DATABASE_URL = "jdbc:sqlite:${TRANSLATION_DIRECTORY.resolve("wordbook.db")}"
@@ -496,6 +513,15 @@ class WordBookService {
                 } finally {
                     lock.release()
                 }
+            }
+        }
+
+        private fun checkDriverFile(): Boolean {
+            return try {
+                Files.exists(DRIVER_JAR) && DRIVER_FILE_SHA1.equals(DRIVER_JAR.sha1(), true)
+            } catch (e: Throwable) {
+                LOGGER.w("Failed to check driver file.", e)
+                false
             }
         }
 

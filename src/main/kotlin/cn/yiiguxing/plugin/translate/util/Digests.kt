@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.util.io.DigestUtil
+import java.nio.file.Path
 import java.security.MessageDigest
 import java.util.*
 import javax.crypto.Mac
@@ -43,4 +44,13 @@ fun String.hmacSha1(key: String): String {
     val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
     mac.init(secretKeySpec)
     return Base64.getEncoder().encodeToString(mac.doFinal(toByteArray()))
+}
+
+/**
+ * 生成SHA-1摘要
+ */
+fun Path.sha1(): String {
+    val digest = DigestUtil.sha1()
+    DigestUtil.updateContentHash(digest, this)
+    return DigestUtil.digestToHash(digest)
 }
