@@ -437,7 +437,7 @@ class WordBookService {
         return try {
             queryRunner.query(sql, WordListHandler)
         } catch (e: SQLException) {
-            LOGGER.w("Failed to get all words", e)
+            LOGGER.w("Failed to get words", e)
             emptyList()
         }
     }
@@ -554,6 +554,7 @@ class WordBookService {
         }
 
         private fun SQLException.rethrow(message: String): Nothing {
+            LOGGER.w(message, this)
             throw WordBookException(WordBookErrorCode[errorCode], message, this)
         }
     }
