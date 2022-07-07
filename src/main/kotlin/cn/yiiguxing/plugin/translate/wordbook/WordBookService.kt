@@ -19,8 +19,6 @@ import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
 import org.jetbrains.concurrency.runAsync
-import org.sqlite.SQLiteErrorCode
-import org.sqlite.SQLiteException
 import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
@@ -112,7 +110,6 @@ class WordBookService {
             url = DATABASE_URL
             driverClassLoader = classLoader
             driverClassName = DATABASE_DRIVER
-            connectionFactoryClassName = CONNECTION_FACTORY_CLASS
             defaultQueryTimeout = QUERY_TIMEOUT
         }
         queryRunner = QueryRunner(dataSource)
@@ -126,7 +123,7 @@ class WordBookService {
         }
 
         return driverLock {
-            if (!Files.exists(DRIVER_JAR)) {
+            if (!checkDriverFile()) {
                 return@driverLock null
             }
 
@@ -169,10 +166,13 @@ class WordBookService {
                     }
 
                     if (state == NO_DRIVER) {
+                        LOGGER.w("Failed to download the driver file", error)
                         Notifications.showErrorNotification(
                             message("wordbook.notification.title"),
                             message("wordbook.window.message.driver.download.failed", error.message.toString())
                         )
+                    } else {
+                        LOGGER.w("Wordbook initialization failed", error)
                     }
                 }
             })
@@ -183,6 +183,14 @@ class WordBookService {
     private fun downloadDriverFile(indicator: ProgressIndicator) {
         indicator.text = message("word.book.progress.downloading")
         indicator.checkCanceled()
+
+        driverLock {
+            if (checkDriverFile()) {
+                return
+            }
+            Files.deleteIfExists(DRIVER_JAR)
+        }
+
         var downloadedFile: Path? = null
         try {
             val tempFile = Files.createTempFile(TRANSLATION_DIRECTORY, "download.", ".tmp")
@@ -190,14 +198,18 @@ class WordBookService {
 
             HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
             indicator.checkCanceled()
+            indicator.fraction = 1.0
+            indicator.isIndeterminate = true
 
             driverLock {
-                if (!Files.exists(DRIVER_JAR) || Files.size(DRIVER_JAR) != Files.size(tempFile)) {
+                if (!checkDriverFile()) {
                     Files.move(tempFile, DRIVER_JAR, StandardCopyOption.REPLACE_EXISTING)
+
+                    if (!checkDriverFile()) {
+                        Files.deleteIfExists(DRIVER_JAR)
+                    }
                 }
             }
-
-            indicator.fraction = 1.0
         } finally {
             try {
                 downloadedFile?.let { Files.deleteIfExists(it) }
@@ -250,7 +262,7 @@ class WordBookService {
         return try {
             insertWord(word)
         } catch (e: SQLException) {
-            if (e.errorCode == SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
+            if (e.errorCode == SQLITE_CONSTRAINT) {
                 findWordId(word.word, word.sourceLanguage, word.targetLanguage)
             } else {
                 e.rethrow("Unable to add word: ${word.word}")
@@ -425,7 +437,7 @@ class WordBookService {
         return try {
             queryRunner.query(sql, WordListHandler)
         } catch (e: SQLException) {
-            LOGGER.w("Failed to get all words", e)
+            LOGGER.w("Failed to get words", e)
             emptyList()
         }
     }
@@ -461,18 +473,24 @@ class WordBookService {
     companion object {
         private const val DRIVER_VERSION = "3.36.0.3"
 
-        private const val DRIVER_FILE_URL =
-            "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
         private const val DRIVER_FILE_NAME = "driver-v$DRIVER_VERSION.jar"
         private const val DRIVER_LOCK_FILE = "driver-v$DRIVER_VERSION.jar.lock"
         private val DRIVER_JAR = TRANSLATION_DIRECTORY.resolve(DRIVER_FILE_NAME)
+
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/
+        private const val DRIVER_FILE_URL =
+            "https://maven.aliyun.com/repository/public/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
+
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar.sha1
+        private const val DRIVER_FILE_SHA1 = "7fa71c4dfab806490cb909714fb41373ec552c29"
 
         private const val DATABASE_DRIVER = "org.sqlite.JDBC"
         private val DATABASE_URL = "jdbc:sqlite:${TRANSLATION_DIRECTORY.resolve("wordbook.db")}"
 
         private const val QUERY_TIMEOUT = 5 // timeout in seconds
-        private const val CONNECTION_FACTORY_CLASS =
-            "cn.yiiguxing.plugin.translate.wordbook.WordBookDriverConnectionFactory"
+
+        // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
+        private const val SQLITE_CONSTRAINT = 19
 
         private const val COLUMN_ID = "_id"
         private const val COLUMN_WORD = "word"
@@ -496,6 +514,15 @@ class WordBookService {
                 } finally {
                     lock.release()
                 }
+            }
+        }
+
+        private fun checkDriverFile(): Boolean {
+            return try {
+                Files.exists(DRIVER_JAR) && DRIVER_FILE_SHA1.equals(DRIVER_JAR.sha1(), true)
+            } catch (e: Throwable) {
+                LOGGER.w("Failed to check driver file.", e)
+                false
             }
         }
 
@@ -527,9 +554,8 @@ class WordBookService {
         }
 
         private fun SQLException.rethrow(message: String): Nothing {
-            val sqliteException = this as? SQLiteException ?: nextException as? SQLiteException
-            val sqliteErrorCode = sqliteException?.resultCode ?: SQLiteErrorCode.UNKNOWN_ERROR
-            throw WordBookException(sqliteErrorCode.code, sqliteErrorCode.name, message, this)
+            LOGGER.w(message, this)
+            throw WordBookException(WordBookErrorCode[errorCode], message, this)
         }
     }
 }

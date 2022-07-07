@@ -3,10 +3,7 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
 class WordBookException(
-    /** @see org.sqlite.SQLiteErrorCode.code */
-    val errorCode: Int,
-    /** @see org.sqlite.SQLiteErrorCode.name */
-    val reason: String,
+    val errorCode: WordBookErrorCode,
     message: String,
     cause: Throwable? = null
-) : Exception("[$reason] $message", cause)
+) : Exception("$errorCode $message", cause)
