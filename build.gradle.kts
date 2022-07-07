@@ -70,8 +70,6 @@ dependencies {
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
     }
-
-    compileOnly("org.xerial:sqlite-jdbc:3.36.0.3")
 }
 
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
@@ -145,6 +143,12 @@ tasks {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        // When using a non-default release channel, IntelliJ Platform Based IDEs users will need to add a
+        // new custom plugin repository to install your plugin from the specified channel. For example, if
+        // specified 'snapshot' as a release channel, then users will need to add the
+        // https://plugins.jetbrains.com/plugins/snapshot/list repository to install the plugin and receive updates.
+        // These channels are treated as separate repositories for all intents and purposes. Read more:
+        // https://plugins.jetbrains.com/docs/marketplace/custom-release-channels.html
         channels.set(listOf(publishChannel))
     }
 
