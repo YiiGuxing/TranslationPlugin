@@ -1,6 +1,7 @@
-package cn.yiiguxing.plugin.translate.wordbook
+package cn.yiiguxing.plugin.translate.wordbook.exports
 
 import cn.yiiguxing.plugin.translate.util.registerDefaultTypeAdapter
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.google.gson.GsonBuilder
 import java.io.OutputStream
 import java.io.OutputStreamWriter

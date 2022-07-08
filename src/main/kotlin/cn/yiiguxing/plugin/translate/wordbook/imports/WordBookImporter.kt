@@ -1,8 +1,9 @@
-package cn.yiiguxing.plugin.translate.wordbook
+package cn.yiiguxing.plugin.translate.wordbook.imports
 
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.d
 import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import java.io.InputStream

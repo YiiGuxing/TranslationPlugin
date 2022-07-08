@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.ui.wordbook.WordBookWindowComponent
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordDetailsDialog
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.WordBookService
+import cn.yiiguxing.plugin.translate.wordbook.exports.WordBookExporter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
