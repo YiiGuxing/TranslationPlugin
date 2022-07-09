@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.codeInsight.documentation.render.DocRenderManager
 import com.intellij.codeInsight.documentation.render.DocRenderPassFactory
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.Toggleable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.Logger
@@ -53,7 +54,8 @@ internal class TranslateRenderedDocAction(
                 if (it != null) {
                     DocRenderPassFactory.applyItemsToRender(editor, project, it, false)
                 } else {
-                    TranslatedDocComments.setTranslated(docComment, false)
+                    TranslatedDocComments.setTranslated(docComment, !value)
+                    Toggleable.setSelected(event.presentation, !value)
                 }
             }
             .submit(AppExecutorUtil.getAppExecutorService())

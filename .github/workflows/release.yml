@@ -39,6 +39,8 @@ jobs:
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           PLUGIN_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
+          PLUGIN_PRERELEASE_VERSION="$(echo "$PROPERTIES" | grep "^pluginPreReleaseVersion:" | cut -f2- -d ' ')"
+          PLUGIN_BUILD_METADATA="$(echo "$PROPERTIES" | grep "^pluginBuildMetadata:" | cut -f2- -d ' ')"
           CHANGELOG="$(cat << 'EOM' | sed -e "/## What's Changed/d" -e 's/^[[:space:]]*$//g' -e '/./,$!d'
           ${{ github.event.release.body }}
           EOM
@@ -49,11 +51,13 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
+          echo "::set-output name=pluginPrereleaseVersion::$PLUGIN_PRERELEASE_VERSION"
+          echo "::set-output name=pluginBuildMetadata::$PLUGIN_BUILD_METADATA"
           echo "::set-output name=changelog::$CHANGELOG"
 
       # Update Unreleased section with the current release note
       - name: Patch Changelog
-        if: github.event.release.target_commitish == 'master' && steps.properties.outputs.changelog != ''
+        if: steps.properties.outputs.pluginBuildMetadata == '' && steps.properties.outputs.changelog != ''
         env:
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
@@ -73,7 +77,7 @@ jobs:
 
       # Create pull request
       - name: Create Pull Request
-        if: github.event.release.target_commitish == 'master' && steps.properties.outputs.changelog != ''
+        if: steps.properties.outputs.pluginBuildMetadata == '' && steps.properties.outputs.changelog != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -95,7 +99,7 @@ jobs:
 
       # Close the milestone
       - name: Close Milestone
-        if: github.event.release.target_commitish == 'master'
+        if: steps.properties.outputs.pluginPrereleaseVersion == '' && steps.properties.outputs.pluginBuildMetadata == ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -105,7 +109,7 @@ jobs:
 
       # Delete the release if not master branch
       - name: Delete Release
-        if: github.event.release.target_commitish != 'master'
+        if: steps.properties.outputs.pluginBuildMetadata == ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
