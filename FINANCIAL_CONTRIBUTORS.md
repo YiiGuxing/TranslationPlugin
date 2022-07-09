@@ -69,6 +69,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Stan Chen | [github.com/stan-chen](https://github.com/stan-chen) | 20 CNY |
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
+| 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
@@ -85,7 +86,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 古乐 | | 10 CNY |
 | XMJC | | 10 CNY |
 | 蒙奇D路飞 | | 10 CNY |
-| 姜巍 | | 10 CNY |
 | 庞** | | 10 CNY |
 | 晨 | | 10 CNY |
 | Gohobo | | 10 CNY |
@@ -136,6 +136,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 文须 | | 6.66 CNY |
+| xxk | | 6.66 CNY |
 | 狼图腾 | | 6.66 CNY |
 | Curtain°落幕 | | 6.66 CNY |
 | 哈哈哈 | | 6.66 CNY |
