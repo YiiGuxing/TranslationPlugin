@@ -38,6 +38,9 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
     }
 
 
+    /** True if the version is a pre-release. */
+    val isRreRelease: Boolean = prerelease != null
+
     private val prereleaseTokens: List<Any> by lazy {
         prerelease?.split('.')
             ?.map { if (it[0] !in '0'..'9') it else (it.toIntOrNull() ?: it) }
