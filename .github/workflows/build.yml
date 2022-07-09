@@ -10,8 +10,6 @@
 # Docs:
 # - GitHub Actions: https://help.github.com/en/actions
 # - IntelliJ Plugin Verifier GitHub Action: https://github.com/ChrisCarini/intellij-platform-plugin-verifier-action
-#
-## JBIJPPTPL
 
 name: Build
 on:
@@ -20,6 +18,14 @@ on:
     branches:
       - master
       - '**/compat/*'
+    paths-ignore:
+      - '.idea/**'
+      - '.run/**'
+      - 'art/**'
+      - 'images/**'
+      - '.gitignore'
+      - 'README.md'
+      - 'FINANCIAL_CONTRIBUTORS.md'
 
   # Trigger the workflow on any pull request
   pull_request:
