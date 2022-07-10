@@ -107,9 +107,9 @@ jobs:
             --jq '.[] | select(.title == "${{ github.event.release.tag_name }}") | .number' \
             | xargs -I '{}' gh api -X PATCH repos/{owner}/{repo}/milestones/{} -F state='closed'
 
-      # Delete the release if not master branch
+      # Delete the release if the version has build metadata
       - name: Delete Release
-        if: steps.properties.outputs.pluginBuildMetadata == ''
+        if: steps.properties.outputs.pluginBuildMetadata != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
