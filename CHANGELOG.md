@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## v3.3.4 (2022/07/10)
 - 已知问题修复
 - 文档渲染视图上下文菜单项在翻译失败时重置状态
 
