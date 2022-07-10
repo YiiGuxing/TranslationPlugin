@@ -29,6 +29,14 @@ on:
 
   # Trigger the workflow on any pull request
   pull_request:
+    paths-ignore:
+      - '.idea/**'
+      - '.run/**'
+      - 'art/**'
+      - 'images/**'
+      - '.gitignore'
+      - 'README.md'
+      - 'FINANCIAL_CONTRIBUTORS.md'
 
 jobs:
 
