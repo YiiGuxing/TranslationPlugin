@@ -3,17 +3,16 @@ package cn.yiiguxing.plugin.translate.ui.wordbook
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.Popups
 import cn.yiiguxing.plugin.translate.ui.form.WordDetailsDialogForm
-import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.wordbook.*
-import com.intellij.codeInsight.AutoPopupController
-import com.intellij.codeInsight.completion.CompletionType
+import cn.yiiguxing.plugin.translate.wordbook.WordBookException
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
+import cn.yiiguxing.plugin.translate.wordbook.WordBookView
+import cn.yiiguxing.plugin.translate.wordbook.WordTags
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
@@ -30,6 +29,7 @@ import org.jetbrains.concurrency.runAsync
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.lang.ref.WeakReference
+import java.util.*
 import javax.swing.Action
 import javax.swing.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
@@ -38,14 +38,17 @@ import com.intellij.openapi.editor.event.DocumentEvent as EditorDocumentEvent
  * Word details dialog.
  */
 class WordDetailsDialog(
-    private val project: Project?,
+    private val project: Project,
     private var word: WordBookItem
 ) : WordDetailsDialogForm(project) {
 
-    private var tagsString: String = ""
+    private val tags: MutableSet<String> = TreeSet()
 
+    private val tagCompletionProvider = TagsCompletionProvider(WordBookView.instance.wordTags) { tag ->
+        synchronized(tags) { tag !in tags }
+    }
     private val tagsField: TextFieldWithAutoCompletion<String> = object : TextFieldWithAutoCompletion<String>(
-        project, StringsCompletionProvider(WordBookView.instance.wordTags, null), false, null
+        project, tagCompletionProvider, false, null
     ) {
         init {
             font = phoneticField.font
@@ -68,9 +71,9 @@ class WordDetailsDialog(
     }
 
     private val isModified: Boolean
-        get() = phoneticField.text != (word.phonetic ?: "") ||
-                (explanationView.text ?: "") != (word.explanation ?: "") ||
-                tagsField.text.replace(REGEX_WHITESPACE, " ").trim(*TRIM_CHARS) != tagsString
+        get() = phoneticField.text != (word.phonetic ?: "")
+                || (explanationView.text ?: "") != (word.explanation ?: "")
+                || tags != word.tags
 
     override fun createActions(): Array<Action> = emptyArray()
 
@@ -87,7 +90,7 @@ class WordDetailsDialog(
         cancelEditingButton.addActionListener {
             phoneticField.text = word.phonetic ?: ""
             explanationView.text = word.explanation
-            tagsField.text = tagsString
+            tagsField.text = WordTags.getTagsString(word.tags)
             IdeFocusManager.findInstance().requestFocus(closeButton, true)
         }
 
@@ -115,33 +118,39 @@ class WordDetailsDialog(
 
     private fun EditorEx.install() {
         var toShowHint = true
+
         document.addDocumentListener(object : DocumentListener {
-            override fun documentChanged(e: EditorDocumentEvent) {
-                if (e.newFragment.toString() == " ") {
-                    AutoPopupController
-                        .getInstance(project!!)
-                        .autoPopupMemberLookup(this@install, CompletionType.SMART, null)
-                }
-                checkModification()
+            override fun documentChanged(event: EditorDocumentEvent) {
+                updateTagSet(event.document.immutableCharSequence.toString())
                 toShowHint = false
             }
         })
 
         addFocusListener(object : FocusChangeListener {
             override fun focusLost(editor: Editor) {
-                Application.runWriteAction {
-                    document.fixSeparator()
-                }
+                updateTagSet(editor.document.text)
+                tagsField.text = WordTags.getTagsString(tags)
             }
 
             override fun focusGained(editor: Editor) {
-                if (toShowHint && editor.document.text.isEmpty()) {
+                if (toShowHint && editor.document.textLength == 0) {
                     invokeLater(expired = { editor.isDisposed }) {
                         HintManager.getInstance().showInformationHint(editor, message("word.details.tags.hit"))
                     }
                 }
             }
         })
+    }
+
+    private fun updateTagSet(tagsString: String) {
+        synchronized(tags) {
+            tags.clear()
+            if (tagsString.isNotEmpty()) {
+                WordTags.toTagSet(tagsString, tags)
+            }
+        }
+
+        checkModification()
     }
 
     private fun checkModification() {
@@ -160,9 +169,7 @@ class WordDetailsDialog(
         explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
         explanationView.text = word.explanation
         explanationView.caretPosition = 0
-
-        tagsString = word.tags.joinToString(", ")
-        tagsField.text = tagsString
+        tagsField.text = WordTags.getTagsString(word.tags)
     }
 
     private fun saveEditing() {
@@ -173,7 +180,7 @@ class WordDetailsDialog(
         val newWord = word.copy(
             phonetic = phoneticField.text,
             explanation = explanationView.text,
-            tags = tagsField.text.toTagSet()
+            tags = TreeSet(tags)
         )
 
         saveEditingButton.isEnabled = false
@@ -200,6 +207,7 @@ class WordDetailsDialog(
 
     private fun onEditingSaved(newWord: WordBookItem) {
         setWord(newWord)
+        tagCompletionProvider.appendTags(newWord.tags)
         IdeFocusManager.findInstance().requestFocus(closeButton, true)
     }
 
@@ -216,16 +224,6 @@ class WordDetailsDialog(
     }
 
     companion object {
-        private const val TAG_SEPARATOR = ", "
-
-        private val TRIM_CHARS = charArrayOf(',', '，', ' ', ' ' /* 0xA0 */)
-
-        private val REGEX_WHITESPACE = Regex("[\\s ]+")
-
         private val LOG: Logger = Logger.getInstance(WordDetailsDialog::class.java)
-
-        private fun Document.fixSeparator() {
-            setText(text.replace(REGEX_WHITESPACE, " ").replace(REGEX_TAGS_SEPARATOR, TAG_SEPARATOR).trim(*TRIM_CHARS))
-        }
     }
 }

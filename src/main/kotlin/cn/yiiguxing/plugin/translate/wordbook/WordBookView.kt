@@ -310,7 +310,7 @@ class WordBookView {
         }
     }
 
-    private fun openWordDetails(project: Project?, word: WordBookItem) {
+    private fun openWordDetails(project: Project, word: WordBookItem) {
         WordDetailsDialog(project, word).show()
     }
 
