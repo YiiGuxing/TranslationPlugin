@@ -49,6 +49,12 @@ jobs:
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          
+          echo "pluginVersion: $PLUGIN_VERSION"
+          echo "pluginPrereleaseVersion: $PLUGIN_PRERELEASE_VERSION"
+          echo "pluginBuildMetadata: $PLUGIN_BUILD_METADATA"
+          echo "changelog:"
+          echo "$CHANGELOG"
 
           echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
           echo "::set-output name=pluginPrereleaseVersion::$PLUGIN_PRERELEASE_VERSION"
