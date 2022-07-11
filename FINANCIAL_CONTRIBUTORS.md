@@ -128,6 +128,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 梅少锋 | | 10 CNY |
 | 李志豪 | | 9.99 CNY |
 | 洪晓波 | | 9.9 CNY |
+| Auzn | [github.com/JinXinAuzn](https://github.com/JinXinAuzn) | 8.88 CNY |
 | 老绵牛 | [tongfun.com](https://tongfun.com/) | 8.88 CNY |
 | MaybeMirracle | [gitee.com/MaybeMirracle](https://gitee.com/MaybeMirracle) | 8.88 CNY |
 | 刘十年 | [www.l1ub0w3n.cn](https://www.l1ub0w3n.cn) | 8.8 CNY |
@@ -136,6 +137,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 周从全 | | 6.66 CNY |
 | 文须 | | 6.66 CNY |
 | xxk | | 6.66 CNY |
 | 狼图腾 | | 6.66 CNY |
