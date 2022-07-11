@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.LoadingPanel
 import cn.yiiguxing.plugin.translate.util.Observable
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
@@ -14,7 +15,6 @@ import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.JBLabel
-import com.intellij.ui.components.JBLoadingPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
@@ -30,9 +30,8 @@ import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 
-@Suppress("UnstableApiUsage")
 class WordBookWindowComponent(private val parentDisposable: Disposable) :
-    JBLoadingPanel(BorderLayout(), WordBookWindowLoadingDecorator.Creator(parentDisposable)) {
+    LoadingPanel(BorderLayout(), { parent -> WordBookWindowLoadingDecorator(parent, parentDisposable) }) {
 
     private val emptyPanel = JPanel()
 
