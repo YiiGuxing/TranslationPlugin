@@ -4,6 +4,10 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.wordbook.exports.*
+import cn.yiiguxing.plugin.translate.wordbook.imports.JsonWordBookImporter
+import cn.yiiguxing.plugin.translate.wordbook.imports.WordBookImporter
+import cn.yiiguxing.plugin.translate.wordbook.imports.XmlWordBookImporter
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileChooser.FileChooserDescriptor

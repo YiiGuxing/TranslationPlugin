@@ -262,11 +262,10 @@ class WordBookService {
         return try {
             insertWord(word)
         } catch (e: SQLException) {
-            if (e.errorCode == SQLITE_CONSTRAINT) {
+            val id = if (e.errorCode == SQLITE_CONSTRAINT) {
                 findWordId(word.word, word.sourceLanguage, word.targetLanguage)
-            } else {
-                e.rethrow("Unable to add word: ${word.word}")
-            }
+            } else null
+            id ?: e.rethrow("Unable to add word: ${word.word}")
         }?.also {
             word.id = it
             invokeAndWait(ModalityState.any()) {
@@ -437,7 +436,7 @@ class WordBookService {
         return try {
             queryRunner.query(sql, WordListHandler)
         } catch (e: SQLException) {
-            LOGGER.w("Failed to get all words", e)
+            LOGGER.w("Failed to get words", e)
             emptyList()
         }
     }
@@ -554,6 +553,7 @@ class WordBookService {
         }
 
         private fun SQLException.rethrow(message: String): Nothing {
+            LOGGER.w(message, this)
             throw WordBookException(WordBookErrorCode[errorCode], message, this)
         }
     }

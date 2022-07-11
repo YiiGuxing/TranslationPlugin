@@ -103,14 +103,14 @@ class UpdateManager : BaseStartupActivity() {
                 setListener(Notifications.UrlOpeningListener(false))
             }
             .apply {
-                if (isFeatureVersion && !canBrowseWhatsNewHTMLEditor) {
+                if (!version.isRreRelease && isFeatureVersion && !canBrowseWhatsNewHTMLEditor) {
                     addAction(WhatsNewAction(version))
                 }
             }
             .addAction(GetStartedAction())
             .addAction(SupportAction())
             .whenExpired {
-                if (isFeatureVersion && canBrowseWhatsNewHTMLEditor) {
+                if (!version.isRreRelease && isFeatureVersion && canBrowseWhatsNewHTMLEditor) {
                     browseWhatsNew(version, project)
                 }
             }
