@@ -44,13 +44,34 @@ internal class TagsCompletionProvider(
     companion object {
         private const val TAG_SEPARATOR = ','
 
+        /**
+         * Returns the tag at the current cursor offset.
+         *
+         * ```
+         *   "Tag1, Ta|g2, Tag3, ..."
+         *            ^ the cursor
+         *   ==> Tag2
+         * ```
+         */
         private fun getTagAtCurrentOffset(parameters: CompletionParameters): String? {
             val text = parameters.originalFile.text
             val offset = parameters.offset
+            /*
+             *  "Tag1, Ta|g2, Tag3, ..."
+             *        ^  ^  ^
+             *        i  |  j
+             *           the cursor
+             *  ==> " Tag2" => "Tag2"
+             */
             val i = text.lastIndexOf(TAG_SEPARATOR, offset - 1) + 1
             var j = text.indexOf(TAG_SEPARATOR, offset)
-            if (j < i) j = text.length
-            return text.substring(i, j).trim().takeIf { it.isNotEmpty() }
+            if (j < i) {
+                j = text.length
+            }
+
+            return if (j > i) {
+                text.substring(i, j).trim().takeIf { it.isNotEmpty() }
+            } else null
         }
     }
 
