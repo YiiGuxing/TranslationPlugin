@@ -5,12 +5,10 @@ import com.intellij.openapi.ui.LoadingDecorator
 import com.intellij.ui.ColorUtil
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.components.panels.VerticalLayout
-import com.intellij.util.NotNullFunction
 import com.intellij.util.ui.AsyncProcessIcon
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.GridBagLayout
-import java.util.function.Function
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -33,17 +31,6 @@ internal class WordBookWindowLoadingDecorator(content: JComponent, parent: Dispo
         parent.add(result)
 
         return result
-    }
-
-    class Creator(private val parentDisposable: Disposable) : Function<JPanel, LoadingDecorator>,
-        NotNullFunction<JPanel, LoadingDecorator> {
-
-        override fun apply(parent: JPanel): LoadingDecorator {
-            return WordBookWindowLoadingDecorator(parent, parentDisposable)
-        }
-
-        override fun `fun`(parent: JPanel): LoadingDecorator = apply(parent)
-
     }
 
 }
