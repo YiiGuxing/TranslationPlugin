@@ -49,7 +49,7 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
         }
     }
 
-    translatedDocumentation.body().attributes().remove(TRANSLATED_ATTR)
+    translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, true)
 
     return translatedDocumentation.outerHtml().fixHtml()
 }
