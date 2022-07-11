@@ -10,8 +10,6 @@
 # Docs:
 # - GitHub Actions: https://help.github.com/en/actions
 # - IntelliJ Plugin Verifier GitHub Action: https://github.com/ChrisCarini/intellij-platform-plugin-verifier-action
-#
-## JBIJPPTPL
 
 name: Build
 on:
@@ -20,9 +18,25 @@ on:
     branches:
       - master
       - '**/compat/*'
+    paths-ignore:
+      - '.idea/**'
+      - '.run/**'
+      - 'art/**'
+      - 'images/**'
+      - '.gitignore'
+      - 'README.md'
+      - 'FINANCIAL_CONTRIBUTORS.md'
 
   # Trigger the workflow on any pull request
   pull_request:
+    paths-ignore:
+      - '.idea/**'
+      - '.run/**'
+      - 'art/**'
+      - 'images/**'
+      - '.gitignore'
+      - 'README.md'
+      - 'FINANCIAL_CONTRIBUTORS.md'
 
 jobs:
 
@@ -62,16 +76,17 @@ jobs:
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
-          PLUGIN_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
-          NAME="$(echo "$PROPERTIES" | grep "^pluginName:" | cut -f2- -d ' ')"
           CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
+          
+          echo "version: $VERSION"
+          echo "changelog:"
+          echo "$CHANGELOG"
+          
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "::set-output name=version::$VERSION"
-          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
-          echo "::set-output name=name::$NAME"
           echo "::set-output name=changelog::$CHANGELOG"
           echo "::set-output name=pluginVerifierHomeDir::~/.pluginVerifier"
 

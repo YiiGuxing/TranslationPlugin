@@ -26,20 +26,16 @@ data class WordBookItem(
         explanation: String?,
         tags: String? = null,
         createdAt: Date = Date(System.currentTimeMillis())
-    ) : this(id, word, sourceLanguage, targetLanguage, phonetic, explanation, tags.toTagSet(), createdAt)
-}
-
-val REGEX_TAGS_SEPARATOR = Regex("(\\s*[,，]\\s*)+")
-private val REGEX_WHITESPACE = Regex("[\\s ]+")
-
-fun String?.toTagSet(): Set<String> {
-    return this?.trim(' ', ',', '，', ' ' /* 0xA0 */)
-        ?.takeIf { it.isNotEmpty() }
-        ?.replace(REGEX_WHITESPACE, " ")
-        ?.split(REGEX_TAGS_SEPARATOR)
-        ?.filter { it.isNotEmpty() }
-        ?.toSet()
-        ?: emptySet()
+    ) : this(
+        id,
+        word,
+        sourceLanguage,
+        targetLanguage,
+        phonetic,
+        explanation,
+        tags?.let { WordTags.getTagSet(it) } ?: emptySet(),
+        createdAt
+    )
 }
 
 fun Translation.toWordBookItem(): WordBookItem {

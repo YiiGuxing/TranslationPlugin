@@ -1,6 +1,7 @@
-package cn.yiiguxing.plugin.translate.wordbook
+package cn.yiiguxing.plugin.translate.wordbook.imports
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.util.JDOMUtil
 import org.jdom.Element
 import java.io.InputStream

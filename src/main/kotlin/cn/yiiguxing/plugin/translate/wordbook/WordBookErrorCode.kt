@@ -36,6 +36,9 @@ enum class WordBookErrorCode(
     // SQLiteErrorCode.SQLITE_CANTOPEN
     CANT_OPEN(14, "CANT_OPEN"),
 
+    // SQLiteErrorCode.SQLITE_CONSTRAINT
+    CONSTRAINT(19, "CONSTRAINT"),
+
     // SQLiteErrorCode.SQLITE_NOTADB
     NOT_A_DB(26, "NOT_A_DB");
 
@@ -54,6 +57,7 @@ enum class WordBookErrorCode(
             CORRUPT.code -> CORRUPT
             FULL.code -> FULL
             CANT_OPEN.code -> CANT_OPEN
+            CONSTRAINT.code -> CONSTRAINT
             NOT_A_DB.code -> NOT_A_DB
             else -> UNKNOWN_ERROR
         }

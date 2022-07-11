@@ -8,9 +8,9 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    id("org.jetbrains.kotlin.jvm") version "1.7.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.6.0"
+    id("org.jetbrains.intellij") version "1.7.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -25,7 +25,7 @@ fun dateValue(pattern: String) = LocalDate.now(ZoneId.of("Asia/Shanghai")).forma
 val pluginMajorVersion: String by project
 val pluginPreReleaseVersion: String by project
 val pluginBuildMetadata: String by project
-val preReleaseVersion = pluginPreReleaseVersion
+val preReleaseVersion: String? = pluginPreReleaseVersion
     .takeIf { it.isNotBlank() }
     ?: "SNAPSHOT.${dateValue("yyMMdd")}".takeIf {
         properties("autoSnapshotVersion").toBoolean()
@@ -45,7 +45,7 @@ if (!versionRegex.matches("v$fullPluginVersion")) {
 val publishChannel = preReleaseVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"
 
 extra["pluginVersion"] = pluginVersion
-extra["pluginPreReleaseVersion"] = preReleaseVersion
+extra["pluginPreReleaseVersion"] = preReleaseVersion ?: ""
 extra["fullPluginVersion"] = fullPluginVersion
 extra["publishChannel"] = publishChannel
 

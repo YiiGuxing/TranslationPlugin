@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate.wordbook
+package cn.yiiguxing.plugin.translate.wordbook.exports
 
+import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import org.jdom.CDATA
 import org.jdom.Element
 import org.jdom.output.Format
