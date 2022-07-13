@@ -41,6 +41,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 贺小五 | | 66.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
+| 昊天 | | 50 CNY |
 | BruceCheung | [github.com/bruuuces](https://github.com/bruuuces) | 50 CNY |
 | 白开水 | | 50 CNY |
 | 王者之师 | | 50 CNY |
@@ -57,6 +58,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| Doki23 | [github.com/doki23](https://github.com/doki23) | 20 CNY |
 | 🎱 | | 20 CNY |
 | Imagin | | 20 CNY |
 | 凯 | | 20 CNY |
@@ -74,6 +76,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 哲湖 | | 10 CNY |
 | 乔峰 | | 10 CNY |
 | 张伟눈_눈 | | 10 CNY |
 | T | | 10 CNY |
@@ -137,6 +140,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 星空 | | 6.66 CNY |
+| 谢朴欢 | | 6.66 CNY |
+| 张端 | | 6.66 CNY |
 | 周从全 | | 6.66 CNY |
 | 文须 | | 6.66 CNY |
 | xxk | | 6.66 CNY |
