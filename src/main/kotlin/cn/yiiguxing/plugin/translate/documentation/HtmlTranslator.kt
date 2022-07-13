@@ -28,7 +28,9 @@ private val HTML_KIT = HTMLEditorKit()
 
 
 fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
-    val document: Document = Jsoup.parse(documentation)
+    val document: Document = Jsoup.parse(documentation).apply {
+        outputSettings().prettyPrint(false)
+    }
     if (document.body().hasAttr(TRANSLATED_ATTR)) {
         return documentation
     }
@@ -49,7 +51,7 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
         }
     }
 
-    translatedDocumentation.body().attributes().remove(TRANSLATED_ATTR)
+    translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, true)
 
     return translatedDocumentation.outerHtml().fixHtml()
 }
