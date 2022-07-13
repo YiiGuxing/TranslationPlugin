@@ -89,7 +89,6 @@ class TranslationDialog(
     private inline val sourceLang: Lang get() = sourceLangComboBox.selected!!
     private inline val targetLang: Lang get() = targetLangComboBox.selected!!
 
-    private lateinit var awtActivityListener: AWTEventListener
 
     init {
         setUndecorated(true)
@@ -124,11 +123,12 @@ class TranslationDialog(
             }
         }
 
-        awtActivityListener = AWTEventListener { event ->
+        val awtEventListener = AWTEventListener { event ->
             val needCloseDialog = when (event) {
                 is MouseEvent -> event.id == MouseEvent.MOUSE_PRESSED &&
                         !AppStorage.pinTranslationDialog &&
                         !isInside(event)
+
                 is KeyEvent -> event.keyCode == KeyEvent.VK_ESCAPE &&
                         !PopupUtil.handleEscKeyEvent() &&
                         !win.isFocused // close the displayed popup window first
@@ -140,7 +140,10 @@ class TranslationDialog(
         }
 
         val eventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
-        Toolkit.getDefaultToolkit().addAWTEventListener(awtActivityListener, eventMask)
+        Toolkit.getDefaultToolkit().addAWTEventListener(awtEventListener, eventMask)
+        Disposer.register(this) {
+            Toolkit.getDefaultToolkit().removeAWTEventListener(awtEventListener)
+        }
     }
 
     private fun registerShortcuts() {
@@ -654,11 +657,9 @@ class TranslationDialog(
             return
         }
 
+        Disposer.dispose(this)
         super.dispose()
         _disposed = true
-
-        Toolkit.getDefaultToolkit().removeAWTEventListener(awtActivityListener)
-        Disposer.dispose(this)
     }
 
     /**
