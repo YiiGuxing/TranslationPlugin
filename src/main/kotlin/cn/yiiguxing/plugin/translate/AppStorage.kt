@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
 /**
  * 应用数据存储
  */
-@State(name = "AppStorage", storages = [(Storage(STORAGE_NAME))])
+@State(name = "AppStorage", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
 class AppStorage : PersistentStateComponent<AppStorage> {
 
     @CollectionBean
@@ -127,8 +127,6 @@ class AppStorage : PersistentStateComponent<AppStorage> {
         }
     }
 
-    override fun toString(): String = "AppStorage(histories=$histories, dataChangePublisher=$dataChangePublisher)"
-
     companion object {
         private const val DEFAULT_HISTORY_SIZE = 50
 
@@ -150,6 +148,7 @@ interface HistoriesChangedListener {
     fun onHistoryItemChanged(newHistory: String)
 
     companion object {
+        @Topic.AppLevel
         val TOPIC: Topic<HistoriesChangedListener> =
             Topic.create("TranslateHistoriesChanged", HistoriesChangedListener::class.java)
     }

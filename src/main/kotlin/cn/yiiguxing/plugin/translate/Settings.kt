@@ -25,7 +25,7 @@ import kotlin.properties.Delegates
 /**
  * Settings
  */
-@State(name = "Settings", storages = [(Storage(STORAGE_NAME))])
+@State(name = "Settings", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
 class Settings : PersistentStateComponent<Settings> {
 
     /**
