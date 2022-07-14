@@ -18,8 +18,8 @@ import kotlin.properties.Delegates
 /**
  * 应用数据存储
  */
-@State(name = "AppStorage", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
-class AppStorage : PersistentStateComponent<AppStorage> {
+@State(name = "States", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
+class TranslationStates : PersistentStateComponent<TranslationStates> {
 
     @CollectionBean
     private val histories: MutableList<String> = ArrayList(DEFAULT_HISTORY_SIZE)
@@ -54,9 +54,9 @@ class AppStorage : PersistentStateComponent<AppStorage> {
     private val dataChangePublisher: HistoriesChangedListener =
         ApplicationManager.getApplication().messageBus.syncPublisher(HistoriesChangedListener.TOPIC)
 
-    override fun getState(): AppStorage = this
+    override fun getState(): TranslationStates = this
 
-    override fun loadState(state: AppStorage) {
+    override fun loadState(state: TranslationStates) {
         XmlSerializerUtil.copyBean(state, this)
     }
 
@@ -133,10 +133,10 @@ class AppStorage : PersistentStateComponent<AppStorage> {
         /**
          * Get the instance of this service.
          *
-         * @return the unique [AppStorage] instance.
+         * @return the unique [TranslationStates] instance.
          */
-        val instance: AppStorage
-            get() = ApplicationManager.getApplication().getService(AppStorage::class.java)
+        val instance: TranslationStates
+            get() = ApplicationManager.getApplication().getService(TranslationStates::class.java)
     }
 
 }
