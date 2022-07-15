@@ -2,8 +2,8 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import cn.yiiguxing.plugin.translate.AppStorage
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
@@ -34,7 +34,7 @@ object Plugin {
 
 inline val Application: Application get() = ApplicationManager.getApplication()
 
-inline val AppStorage: AppStorage get() = AppStorage.instance
+inline val TranslationStates: TranslationStates get() = TranslationStates.instance
 inline val Settings: Settings get() = Settings.instance
 inline val TranslateService: TranslateService get() = TranslateService.instance
 inline val CacheService: CacheService get() = CacheService.instance

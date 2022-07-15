@@ -28,7 +28,10 @@ import kotlin.math.max
 /**
  * SettingsPanel
  */
-class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : SettingsForm(), ConfigurablePanel {
+class SettingsPanel(
+    private val settings: Settings,
+    private val states: TranslationStates
+) : SettingsForm(), ConfigurablePanel {
 
     private var validRegExp = true
 
@@ -93,7 +96,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             phoneticFontComboBox.fontName = UI.defaultFont.fontName
         }
         clearHistoriesButton.addActionListener {
-            appStorage.clearHistories()
+            states.clearHistories()
         }
 
         checkIgnoreRegExpButton.addActionListener {
@@ -169,13 +172,13 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
                     || settings.showReplacementActionInContextMenu != showReplacementActionCheckBox.isSelected
                     || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
-                    || appStorage.maxHistorySize != maxHistoriesSizeComboBox.item
+                    || states.maxHistorySize != maxHistoriesSizeComboBox.item
         }
 
 
     override fun apply() {
 
-        appStorage.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
+        states.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
 
         @Suppress("Duplicates")
         with(settings) {
@@ -236,7 +239,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         primaryFontPreview.previewFont(settings.primaryFontFamily)
         primaryFontPreview.text = settings.primaryFontPreviewText
         phoneticFontPreview.previewFont(settings.phoneticFontFamily)
-        maxHistoriesSizeComboBox.item = appStorage.maxHistorySize
+        maxHistoriesSizeComboBox.item = states.maxHistorySize
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation

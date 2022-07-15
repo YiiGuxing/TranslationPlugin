@@ -8,7 +8,7 @@ import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.icon.Spinner
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.AppStorage
+import cn.yiiguxing.plugin.translate.util.TranslationStates
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
@@ -215,7 +215,7 @@ class TranslationBalloon(
         val readyTranslation = translationPane.translation ?: return
         hide()
 
-        AppStorage.pinTranslationDialog = true
+        TranslationStates.pinTranslationDialog = true
         TranslationUIManager.showDialog(editor.project)
             .applyTranslation(readyTranslation)
     }
@@ -223,7 +223,7 @@ class TranslationBalloon(
     private fun showOnTranslationDialog(text: String, srcLang: Lang, targetLang: Lang) {
         hide()
 
-        AppStorage.pinTranslationDialog = true
+        TranslationStates.pinTranslationDialog = true
         TranslationUIManager.showDialog(editor.project)
             .translate(text, srcLang, targetLang)
     }

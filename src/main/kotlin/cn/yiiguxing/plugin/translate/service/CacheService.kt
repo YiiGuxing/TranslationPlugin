@@ -1,26 +1,29 @@
 package cn.yiiguxing.plugin.translate.service
 
-import cn.yiiguxing.plugin.translate.STORAGE_NAME
-import cn.yiiguxing.plugin.translate.TRANSLATION_DIRECTORY
+import cn.yiiguxing.plugin.translate.TranslationStorage
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.LruCache
+import cn.yiiguxing.plugin.translate.util.d
+import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.util.writeSafe
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.util.io.createDirectories
 import com.intellij.util.io.delete
 import com.intellij.util.io.readText
+import org.jetbrains.kotlin.idea.util.application.executeOnPooledThread
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 
 @Service
-@State(name = "Cache", storages = [(Storage(STORAGE_NAME))])
+@State(name = "Cache", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
 class CacheService : PersistentStateComponent<CacheService.State> {
 
     private val state = State()
@@ -59,8 +62,8 @@ class CacheService : PersistentStateComponent<CacheService.State> {
 
     fun putDiskCache(key: String, translation: String) {
         try {
-            CACHE_DIR.createDirectories()
-            CACHE_DIR.resolve(key).writeSafe { it.write(translation.toByteArray()) }
+            TranslationStorage.createCacheDirectoriesIfNotExists()
+            getCacheFilePath(key).writeSafe { it.write(translation.toByteArray()) }
             println("DEBUG - Puts disk cache: $key")
             trimDiskCachesIfNeed()
         } catch (e: Exception) {
@@ -70,7 +73,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
 
     fun getDiskCache(key: String): String? {
         return try {
-            CACHE_DIR.resolve(key).takeIf { Files.isRegularFile(it) }?.readText()?.apply {
+            getCacheFilePath(key).takeIf { Files.isRegularFile(it) }?.readText()?.apply {
                 println("DEBUG - Disk cache hit: $key")
             }
         } catch (e: Exception) {
@@ -96,14 +99,14 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     }
 
     private fun trimDiskCaches() {
-        val names = CACHE_DIR
+        val names = TranslationStorage.CACHE_DIRECTORY
             .toFile()
             .list { _, name -> !name.endsWith(".tmp") }
             ?.takeIf { it.size > MAX_DISK_CACHE_SIZE }
             ?: return
 
         names.asSequence()
-            .map { name -> CACHE_DIR.resolve(name) }
+            .map { name -> getCacheFilePath(name) }
             .sortedBy { file ->
                 try {
                     Files.readAttributes(file, BasicFileAttributes::class.java).lastAccessTime().toMillis()
@@ -124,7 +127,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     }
 
     fun getDiskCacheSize(): Long {
-        val names = CACHE_DIR
+        val names = TranslationStorage.CACHE_DIRECTORY
             .toFile()
             .list { _, name -> !name.endsWith(".tmp") }
             ?: return 0
@@ -132,7 +135,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         return names.asSequence()
             .map { name ->
                 try {
-                    Files.size(CACHE_DIR.resolve(name))
+                    Files.size(getCacheFilePath(name))
                 } catch (e: IOException) {
                     0L
                 }
@@ -142,7 +145,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
 
     fun evictAllDiskCaches() {
         try {
-            CACHE_DIR.delete(true)
+            TranslationStorage.CACHE_DIRECTORY.delete(true)
         } catch (e: Throwable) {
             // ignore
         }
@@ -165,11 +168,11 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         private const val MAX_DISK_CACHE_SIZE = 1024
         private const val TRIM_INTERVAL = 5 * 24 * 60 * 60 * 1000 // 5 days
 
-        private val CACHE_DIR = TRANSLATION_DIRECTORY.resolve("caches")
-
         private val LOG = Logger.getInstance(CacheService::class.java)
 
         val instance: CacheService
             get() = ApplicationManager.getApplication().getService(CacheService::class.java)
+
+        fun getCacheFilePath(key: String): Path = TranslationStorage.CACHE_DIRECTORY.resolve(key)
     }
 }

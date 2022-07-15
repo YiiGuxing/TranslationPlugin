@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.util.AppStorage
+import cn.yiiguxing.plugin.translate.util.TranslationStates
 import javax.swing.AbstractListModel
 import javax.swing.ComboBoxModel
 
@@ -38,7 +38,7 @@ private class SimpleLanguageListModel(private val languages: List<Lang>) : Langu
 private class SortedLanguageListModel(languages: Collection<Lang>, selection: Lang? = null)
     : LanguageListModel() {
 
-    private val appStorage = AppStorage
+    private val states = TranslationStates
 
     private val languageList: MutableList<Lang> = ArrayList(languages).apply { sort() }
 
@@ -52,10 +52,10 @@ private class SortedLanguageListModel(languages: Collection<Lang>, selection: La
         }
 
     private var Lang.score: Int
-        get() = if (this == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(this)
+        get() = if (this == Lang.AUTO) Int.MAX_VALUE else states.getLanguageScore(this)
         set(value) {
             if (this != Lang.AUTO) {
-                appStorage.setLanguageScore(this, value)
+                states.setLanguageScore(this, value)
             }
         }
 
