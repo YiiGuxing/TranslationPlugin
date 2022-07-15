@@ -207,18 +207,18 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         fun String.fixWhitespace() = replace(SPACES, " ")
 
         fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
-            val appStorage = AppStorage
+            val states = TranslationStates
             val languages = TranslateService.translator.supportedTargetLanguages.sortedByDescending {
-                if (it == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(it)
+                if (it == Lang.AUTO) Int.MAX_VALUE else states.getLanguageScore(it)
             }
-            val index = languages.indexOf(appStorage.lastReplacementTargetLanguage)
+            val index = languages.indexOf(states.lastReplacementTargetLanguage)
 
             val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
                 override fun getTextFor(value: Lang): String = value.langName
                 override fun onChosen(selectedValue: Lang, finalChoice: Boolean): PopupStep<*>? {
                     onChosen(selectedValue)
-                    appStorage.accumulateLanguageScore(selectedValue)
-                    appStorage.lastReplacementTargetLanguage = selectedValue
+                    states.accumulateLanguageScore(selectedValue)
+                    states.lastReplacementTargetLanguage = selectedValue
                     return super.onChosen(selectedValue, true)
                 }
             }

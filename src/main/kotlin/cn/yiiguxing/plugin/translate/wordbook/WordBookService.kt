@@ -2,7 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.plugin.translate.TRANSLATION_DIRECTORY
+import cn.yiiguxing.plugin.translate.TranslationStorage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
@@ -23,6 +23,7 @@ import java.io.RandomAccessFile
 import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -79,10 +80,8 @@ class WordBookService {
                 return@runAsync
             }
 
-            if (!Files.exists(TRANSLATION_DIRECTORY)) {
-                Files.createDirectories(TRANSLATION_DIRECTORY)
-            }
-
+            TranslationStorage.createDataDirectoriesIfNotExists()
+            lock { migrateDatabaseIfNeed() }
             initService()
         }.onError {
             LOGGER.w("Wordbook initialization failed", it)
@@ -122,13 +121,13 @@ class WordBookService {
             return defaultClassLoader
         }
 
-        return driverLock {
+        return lock {
             if (!checkDriverFile()) {
-                return@driverLock null
+                return@lock null
             }
 
             val urlClassLoader = URLClassLoader(arrayOf(DRIVER_JAR.toUri().toURL()), defaultClassLoader)
-            return@driverLock if (urlClassLoader.canDriveService(false)) {
+            return@lock if (urlClassLoader.canDriveService(false)) {
                 urlClassLoader
             } else {
                 Files.delete(DRIVER_JAR)
@@ -184,7 +183,7 @@ class WordBookService {
         indicator.text = message("word.book.progress.downloading")
         indicator.checkCanceled()
 
-        driverLock {
+        lock {
             if (checkDriverFile()) {
                 return
             }
@@ -193,7 +192,7 @@ class WordBookService {
 
         var downloadedFile: Path? = null
         try {
-            val tempFile = Files.createTempFile(TRANSLATION_DIRECTORY, "download.", ".tmp")
+            val tempFile = Files.createTempFile(TranslationStorage.DATA_DIRECTORY, "download.", ".tmp")
             downloadedFile = tempFile
 
             HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
@@ -201,7 +200,7 @@ class WordBookService {
             indicator.fraction = 1.0
             indicator.isIndeterminate = true
 
-            driverLock {
+            lock {
                 if (!checkDriverFile()) {
                     Files.move(tempFile, DRIVER_JAR, StandardCopyOption.REPLACE_EXISTING)
 
@@ -472,9 +471,9 @@ class WordBookService {
     companion object {
         private const val DRIVER_VERSION = "3.36.0.3"
 
-        private const val DRIVER_FILE_NAME = "driver-v$DRIVER_VERSION.jar"
-        private const val DRIVER_LOCK_FILE = "driver-v$DRIVER_VERSION.jar.lock"
-        private val DRIVER_JAR = TRANSLATION_DIRECTORY.resolve(DRIVER_FILE_NAME)
+        private val LOCK_FILE = TranslationStorage.DATA_DIRECTORY.resolve(".lock")
+        private val DB_FILE = TranslationStorage.DATA_DIRECTORY.resolve("wordbook.db")
+        private val DRIVER_JAR = TranslationStorage.DATA_DIRECTORY.resolve("driver-v$DRIVER_VERSION.jar")
 
         // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/
         private const val DRIVER_FILE_URL =
@@ -484,7 +483,7 @@ class WordBookService {
         private const val DRIVER_FILE_SHA1 = "7fa71c4dfab806490cb909714fb41373ec552c29"
 
         private const val DATABASE_DRIVER = "org.sqlite.JDBC"
-        private val DATABASE_URL = "jdbc:sqlite:${TRANSLATION_DIRECTORY.resolve("wordbook.db")}"
+        private val DATABASE_URL = "jdbc:sqlite:$DB_FILE"
 
         private const val QUERY_TIMEOUT = 5 // timeout in seconds
 
@@ -505,8 +504,8 @@ class WordBookService {
         val instance: WordBookService
             get() = ApplicationManager.getApplication().getService(WordBookService::class.java)
 
-        private inline fun <T> driverLock(block: () -> T): T {
-            return RandomAccessFile(TRANSLATION_DIRECTORY.resolve(DRIVER_LOCK_FILE).toFile(), "rw").use { lockFile ->
+        private inline fun <T> lock(block: () -> T): T {
+            return RandomAccessFile(LOCK_FILE.toFile(), "rw").use { lockFile ->
                 val lock = lockFile.channel.lock()
                 try {
                     block()
@@ -555,6 +554,53 @@ class WordBookService {
         private fun SQLException.rethrow(message: String): Nothing {
             LOGGER.w(message, this)
             throw WordBookException(WordBookErrorCode[errorCode], message, this)
+        }
+
+        // Will be removed on v4.0
+        private fun migrateDatabaseIfNeed() {
+            LOGGER.i("Start migrating the wordbook database file.")
+            try {
+                if (Files.exists(DB_FILE)) {
+                    LOGGER.i("The wordbook database file has been migrated.")
+                    return
+                }
+
+                val userHomePath = System.getProperty("user.home")
+                val defaultDir = Paths.get(userHomePath, ".translation")
+                val oldDir = if (SystemInfo.isLinux && !Files.exists(defaultDir)) {
+                    System.getenv("XDG_DATA_HOME")
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.let { Paths.get(it, ".translation") }
+                        ?: defaultDir
+                } else defaultDir
+
+                val oldDbFile = oldDir.resolve("wordbook.db")
+                if (!Files.exists(oldDbFile)) {
+                    LOGGER.i("No wordbook database file to migrate.")
+                    return
+                }
+
+                try {
+                    RandomAccessFile(oldDir.resolve(".lock").toFile(), "rw").use { lockFile ->
+                        val lock = lockFile.channel.lock()
+                        try {
+                            Files.copy(oldDbFile, DB_FILE)
+                        } finally {
+                            lock.release()
+                        }
+                    }
+                } catch (e: Throwable) {
+                    LOGGER.w(
+                        "Cannot migrate the wordbook database file securely, directly through non-secure migration.",
+                        e
+                    )
+                    Files.copy(oldDbFile, DB_FILE)
+                }
+
+                LOGGER.i("The wordbook database file has been successfully migrated.")
+            } catch (e: Throwable) {
+                LOGGER.w("Failed to migrate the wordbook database.", e)
+            }
         }
     }
 }

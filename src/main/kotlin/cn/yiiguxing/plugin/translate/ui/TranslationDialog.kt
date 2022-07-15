@@ -126,7 +126,7 @@ class TranslationDialog(
         val awtEventListener = AWTEventListener { event ->
             val needCloseDialog = when (event) {
                 is MouseEvent -> event.id == MouseEvent.MOUSE_PRESSED &&
-                        !AppStorage.pinTranslationDialog &&
+                        !TranslationStates.pinTranslationDialog &&
                         !isInside(event)
 
                 is KeyEvent -> event.keyCode == KeyEvent.VK_ESCAPE &&
@@ -282,7 +282,7 @@ class TranslationDialog(
                     unequivocalTargetLang = true
                 }
 
-                AppStorage.lastLanguages.let { pair ->
+                TranslationStates.lastLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
                 }
@@ -430,12 +430,12 @@ class TranslationDialog(
         }
         expandDictViewerButton.setListener({ _, _ ->
             expandDictViewer()
-            AppStorage.newTranslationDialogCollapseDictViewer = false
+            TranslationStates.newTranslationDialogCollapseDictViewer = false
             fixWindowHeight()
         }, null)
         collapseDictViewerButton.setListener({ _, _ ->
             collapseDictViewer()
-            AppStorage.newTranslationDialogCollapseDictViewer = true
+            TranslationStates.newTranslationDialogCollapseDictViewer = true
             fixWindowHeight()
         }, null)
     }
@@ -496,7 +496,7 @@ class TranslationDialog(
         }
 
         val hasContent = dictDocument != null || extraDocuments.isNotEmpty()
-        if (hasContent && AppStorage.newTranslationDialogCollapseDictViewer)
+        if (hasContent && TranslationStates.newTranslationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)
             expandDictViewer()
@@ -753,19 +753,19 @@ class TranslationDialog(
     }
 
     private fun storeWindowLocationAndSize() {
-        AppStorage.newTranslationDialogX = window.location.x
-        AppStorage.newTranslationDialogY = window.location.y
-        AppStorage.newTranslationDialogWidth = translationPanel.width
-        AppStorage.newTranslationDialogHeight = translationPanel.height
+        TranslationStates.newTranslationDialogX = window.location.x
+        TranslationStates.newTranslationDialogY = window.location.y
+        TranslationStates.newTranslationDialogWidth = translationPanel.width
+        TranslationStates.newTranslationDialogHeight = translationPanel.height
 
         translationPanel.preferredSize = translationPanel.size
     }
 
     private fun restoreWindowLocationAndSize() {
-        val savedX = AppStorage.newTranslationDialogX
-        val savedY = AppStorage.newTranslationDialogY
-        val savedWidth = AppStorage.newTranslationDialogWidth
-        val savedHeight = AppStorage.newTranslationDialogHeight
+        val savedX = TranslationStates.newTranslationDialogX
+        val savedY = TranslationStates.newTranslationDialogY
+        val savedWidth = TranslationStates.newTranslationDialogWidth
+        val savedHeight = TranslationStates.newTranslationDialogHeight
         if (savedX != null && savedY != null) {
             val intersectWithScreen = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
@@ -781,8 +781,8 @@ class TranslationDialog(
             if (intersectWithScreen) {
                 window.location = Point(savedX, savedY)
             } else {
-                AppStorage.newTranslationDialogX = null
-                AppStorage.newTranslationDialogY = null
+                TranslationStates.newTranslationDialogX = null
+                TranslationStates.newTranslationDialogY = null
             }
         }
         val savedSize = Dimension(savedWidth, savedHeight)
@@ -815,11 +815,11 @@ class TranslationDialog(
         }
 
         override fun isSelected(e: AnActionEvent): Boolean {
-            return AppStorage.pinTranslationDialog
+            return TranslationStates.pinTranslationDialog
         }
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
-            AppStorage.pinTranslationDialog = state
+            TranslationStates.pinTranslationDialog = state
         }
     }
 

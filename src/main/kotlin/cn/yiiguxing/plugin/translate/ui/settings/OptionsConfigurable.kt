@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.util.AppStorage
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.TranslationStates
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.options.ShowSettingsUtil
@@ -27,7 +27,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     override fun getHelpTopic(): String = HelpTopic.DEFAULT.id
 
-    override fun createComponent(): JComponent = SettingsPanel(Settings, AppStorage).let {
+    override fun createComponent(): JComponent = SettingsPanel(Settings, TranslationStates).let {
         configurablePanel = it
         it.component
     }

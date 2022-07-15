@@ -55,7 +55,7 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationStates"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
