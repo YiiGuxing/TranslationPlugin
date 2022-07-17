@@ -17,7 +17,7 @@ enum class HelpTopic(id: String, val url: String) {
     YOUDAO("youdao", "https://ai.youdao.com/product-fanyi-text.s"),
 
     /** DeepL */
-    DEEPL("deepl", "https://www.deepl.com/docs-api");
+    DEEPL("deepl", "https://www.deepl.com/pro-api");
 
     val id: String = "${Plugin.PLUGIN_ID}.$id"
 
