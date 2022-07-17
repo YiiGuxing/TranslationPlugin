@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
@@ -58,6 +59,11 @@ class Settings : PersistentStateComponent<Settings> {
      * 阿里云翻译选项
      */
     var aliTranslateSettings: AliTranslateSettings = AliTranslateSettings()
+
+    /**
+     * DEEPL 翻译选项
+     */
+    var deeplTranslateSettings: DeeplTranslateSettings = DeeplTranslateSettings()
 
     /**
      * 是否覆盖默认字体
@@ -235,6 +241,8 @@ private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
+private const val DEEPL_SERVICE_NAME = "YIIGUXING.TRANSLATION.DEEPL"
+private const val DEEPL_APP_KEY = "DEEPL_APP_KEY"
 
 private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", Plugin.PLUGIN_ID)
 
@@ -296,6 +304,15 @@ class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY, BaiduTranslator.def
  * 阿里云翻译选项
  */
 class AliTranslateSettings : AppKeySettings(ALI_APP_KEY, AliTranslator.defaultLangForLocale)
+
+/**
+ * DeepL 翻译选项
+ */
+class DeeplTranslateSettings : AppKeySettings(
+    DeeplTranslator.defaultLangForLocale,
+    securityName = DEEPL_SERVICE_NAME,
+    securityKey = DEEPL_APP_KEY,
+)
 
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),
