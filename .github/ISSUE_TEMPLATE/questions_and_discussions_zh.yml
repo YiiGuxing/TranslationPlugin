@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 提问与讨论
+    url: https://github.com/YiiGuxing/TranslationPlugin/discussions
+    about: 如果您需要提问或者开始一场讨论，请使用 GitHub Discussions。
