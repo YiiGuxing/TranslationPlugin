@@ -7,11 +7,13 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
+import cn.yiiguxing.plugin.translate.ui.DeeplConfigurationDialog
 import cn.yiiguxing.plugin.translate.util.Settings
 import icons.TranslationIcons
 import javax.swing.Icon
@@ -37,7 +39,7 @@ enum class TranslationEngine(
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage
                 ALI -> Settings.aliTranslateSettings.primaryLanguage
-                DEEPL -> Settings.deeplTranslateSettings.primaryLanguage
+                DEEPL -> Lang.UNKNOWN // FIXME
             }
         }
         set(value) {
@@ -46,7 +48,7 @@ enum class TranslationEngine(
                 YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage = value
                 BAIDU -> Settings.baiduTranslateSettings.primaryLanguage = value
                 ALI -> Settings.aliTranslateSettings.primaryLanguage = value
-                DEEPL -> Settings.deeplTranslateSettings.primaryLanguage = value
+                DEEPL -> {} // FIXME
             }
         }
 
@@ -69,7 +71,7 @@ enum class TranslationEngine(
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
-            DEEPL -> isConfigured(Settings.deeplTranslateSettings)
+            DEEPL -> DeeplCredentials.instance.isAuthKeySet
         }
     }
 
@@ -87,6 +89,7 @@ enum class TranslationEngine(
                 ),
                 HelpTopic.YOUDAO
             ).showAndGet()
+
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
                 AppKeySettingsPanel(
@@ -96,6 +99,7 @@ enum class TranslationEngine(
                 ),
                 HelpTopic.BAIDU
             ).showAndGet()
+
             ALI -> AppKeySettingsDialog(
                 message("settings.ali.title"),
                 AppKeySettingsPanel(
@@ -105,15 +109,9 @@ enum class TranslationEngine(
                 ),
                 HelpTopic.ALI
             ).showAndGet()
-            DEEPL -> AppKeySettingsDialog(
-                message("settings.deepl.title"),
-                AppKeySettingsPanel(
-                    TranslationIcons.load("/image/deepl_translate_logo.png"),
-                    "https://www.deepl.com/pro-api?cta=header-pro-api",
-                    Settings.deeplTranslateSettings
-                ),
-                HelpTopic.DEEPL
-            ).showAndGet()
+
+            DEEPL -> DeeplConfigurationDialog().showAndGet()
+
             else -> true
         }
     }

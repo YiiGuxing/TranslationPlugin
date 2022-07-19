@@ -6,18 +6,12 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.DEEPL
 import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
-import io.netty.handler.codec.http.HttpResponseStatus
 import org.jsoup.nodes.Document
-import java.net.ConnectException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
 import javax.swing.Icon
 
 /**
@@ -109,7 +103,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.deeplTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+        if (force || !DeeplCredentials.instance.isAuthKeySet) {
             return DEEPL.showConfigurationDialog()
         }
 
@@ -119,18 +113,17 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         return SimpleTranslateClient(
             this,
-            { _, _, _ ->call(text, srcLang, targetLang, false) },
+            { _, _, _ -> call(text, srcLang, targetLang, false) },
             DeeplTranslator::parseTranslation
         ).execute(text, srcLang, targetLang)
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
-        val settings = Settings.deeplTranslateSettings
-        val privateKey = settings.getAppKey()
-        val isFree = privateKey.endsWith(":fx")
-        val requestURL = if (isFree) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
+        val authKey = DeeplCredentials.instance.authKey ?: ""
+        val isFreeApi = authKey.endsWith(":fx")
+        val requestURL = if (isFreeApi) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
         val postData: LinkedHashMap<String, String> = linkedMapOf(
-            "auth_key" to privateKey,
+            "auth_key" to authKey,
             "target_lang" to targetLang.deeplLanguageCode,
             "text" to text
         )
@@ -164,7 +157,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
         return checkError {
-                processAndTranslateDocumentation(documentation) {
+            processAndTranslateDocumentation(documentation) {
                 translateDocumentation(it, srcLang, targetLang)
             }
         }
@@ -190,7 +183,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
         val client = SimpleTranslateClient(
             this,
-            { _, _, _ ->call(documentation, srcLang, targetLang, true) },
+            { _, _, _ -> call(documentation, srcLang, targetLang, true) },
             DeeplTranslator::parseTranslation
         )
         client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
@@ -198,29 +191,28 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
-        val errorMessage = when (throwable) {
-            is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
-            is ConnectException, is UnknownHostException -> message("error.network.connection")
-            is SocketException, is SSLHandshakeException -> message("error.network")
-            is SocketTimeoutException -> message("error.network.timeout")
-            is ContentLengthLimitException -> message("error.text.too.long")
-            is HttpRequests.HttpStatusException -> when (throwable.statusCode) {
-                HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
-                HttpResponseStatus.FORBIDDEN.code() -> message("error.invalidAccount")
-                HttpResponseStatus.BAD_REQUEST.code() -> message("error.bad.request")
-                HttpResponseStatus.NOT_FOUND.code() -> message("error.request.not.found")
-                HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE.code() -> message("error.text.too.long")
-                HttpResponseStatus.REQUEST_URI_TOO_LONG.code() -> message("error.request.uri.too.long")
-                HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
-                HttpResponseStatus.SERVICE_UNAVAILABLE.code() -> message("error.service.unavailable")
-                HttpResponseStatus.INTERNAL_SERVER_ERROR.code() -> message("error.systemError")
-                456 -> message("error.access.limited") // Quota exceeded. The character limit has been reached.
-                529 -> message("error.too.many.requests") // Too many requests. Please wait and resend your request.
-                else -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
+        if (throwable is HttpRequests.HttpStatusException) {
+            when (throwable.statusCode) {
+                403,
+                456 -> {
+                    val message = if (throwable.statusCode == 403) {
+                        message("error.invalidAccount")
+                    } else {
+                        message("error.quota.exceeded")
+                    }
+                    val action = ErrorInfo.continueAction(
+                        message("action.check.configuration"),
+                        icon = AllIcons.General.Settings
+                    ) {
+                        DEEPL.showConfigurationDialog()
+                    }
+                    return ErrorInfo(message, action)
+                }
+
+                529 -> return ErrorInfo(message("error.too.many.requests"))
             }
-            else -> return null
         }
 
-        return ErrorInfo(errorMessage)
+        return super.createErrorInfo(throwable)
     }
 }
