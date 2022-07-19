@@ -33,22 +33,12 @@ enum class TranslationEngine(
     DEEPL("translate.deepl", message("translator.name.deepl"), TranslationIcons.Deepl, 131072, 1000);
 
     var primaryLanguage: Lang
-        get() {
-            return when (this) {
-                GOOGLE -> Settings.googleTranslateSettings.primaryLanguage
-                YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage
-                BAIDU -> Settings.baiduTranslateSettings.primaryLanguage
-                ALI -> Settings.aliTranslateSettings.primaryLanguage
-                DEEPL -> Lang.UNKNOWN // FIXME
-            }
-        }
+        get() = Settings.primaryLanguage ?: translator.defaultLangForLocale
         set(value) {
-            when (this) {
-                GOOGLE -> Settings.googleTranslateSettings.primaryLanguage = value
-                YOUDAO -> Settings.youdaoTranslateSettings.primaryLanguage = value
-                BAIDU -> Settings.baiduTranslateSettings.primaryLanguage = value
-                ALI -> Settings.aliTranslateSettings.primaryLanguage = value
-                DEEPL -> {} // FIXME
+            Settings.primaryLanguage = if (value in supportedTargetLanguages()) {
+                value
+            } else {
+                translator.defaultLangForLocale
             }
         }
 

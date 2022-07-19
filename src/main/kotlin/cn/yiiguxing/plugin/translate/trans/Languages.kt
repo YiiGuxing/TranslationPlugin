@@ -400,7 +400,8 @@ enum class Lang(
                         else -> CHINESE
                     }
 
-                    else -> values().find { it.code.equals(localeLanguage, ignoreCase = true) } ?: ENGLISH
+                    else -> values().find { Locale(it.code).language.equals(localeLanguage, ignoreCase = true) }
+                        ?: ENGLISH
                 }
             }
 
@@ -412,6 +413,7 @@ enum class Lang(
         fun sortedValues(): List<Lang> = when (Locale.getDefault()) {
             Locale.CHINESE,
             Locale.CHINA -> values().filter { it != UNKNOWN }
+
             else -> cachedValues
         }
     }

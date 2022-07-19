@@ -75,10 +75,11 @@ class SettingsPanel(
     private fun setListeners() {
         translationEngineComboBox.addItemListener { e ->
             val engine = e.item as TranslationEngine
-            primaryLanguageComboBox.model = CollectionComboBoxModel(engine.supportedTargetLanguages())
+            val supportedTargetLanguages = engine.supportedTargetLanguages()
+            primaryLanguageComboBox.model = CollectionComboBoxModel(supportedTargetLanguages)
             val selectedLang = primaryLanguageComboBox.selected
-            if (!engine.supportedTargetLanguages().contains(selectedLang)) {
-                primaryLanguageComboBox.selected = engine.primaryLanguage
+            if (!supportedTargetLanguages.contains(selectedLang)) {
+                primaryLanguageComboBox.selected = engine.translator.defaultLangForLocale
             }
         }
         primaryFontComboBox.addItemListener {
