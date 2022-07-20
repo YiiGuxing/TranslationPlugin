@@ -123,23 +123,23 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
         val isFreeApi = authKey.endsWith(":fx")
         val requestURL = if (isFreeApi) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
         val postData: LinkedHashMap<String, String> = linkedMapOf(
-            "auth_key" to authKey,
             "target_lang" to targetLang.deeplLanguageCode,
             "text" to text
         )
 
+        if (srcLang !== Lang.AUTO) {
+            postData["source_lang"] = srcLang.deeplLanguageCode
+        }
         if (isDocument) {
             postData["tag_handling"] = "html"
         }
 
-        if (srcLang !== Lang.AUTO) {
-            postData["source_lang"] = srcLang.deeplLanguageCode
+        return Http.post(requestURL, postData) {
+            userAgent(Http.PLUGIN_USER_AGENT)
+            // Authentication method should be header-based authentication,
+            // auth-key will leak into the log file if it is authenticated as a parameter.
+            tuner { it.setRequestProperty("Authorization", "DeepL-Auth-Key $authKey") }
         }
-
-        return Http.post(
-            requestURL,
-            postData
-        )
     }
 
     @Suppress("UNUSED_PARAMETER")
