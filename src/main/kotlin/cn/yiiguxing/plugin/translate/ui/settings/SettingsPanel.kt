@@ -40,7 +40,7 @@ class SettingsPanel(
     init {
         primaryFontComboBox.fixFontComboBoxSize()
         phoneticFontComboBox.fixFontComboBoxSize()
-        primaryLanguageComboBox.model = CollectionComboBoxModel(Settings.instance.translator.supportedTargetLanguages())
+        resetPrimaryLanguageComboBox(settings.translator)
         ignoreRegExp = createRegexEditorField()
         doLayout()
         setListeners()
@@ -77,13 +77,7 @@ class SettingsPanel(
             if (event.stateChange != ItemEvent.SELECTED) {
                 return@addItemListener
             }
-            val engine = event.item as TranslationEngine
-            val oldLang = settings.primaryLanguage
-            val supportedTargetLanguages = engine.supportedTargetLanguages()
-            primaryLanguageComboBox.model = CollectionComboBoxModel(supportedTargetLanguages)
-            if (oldLang == null || oldLang !in supportedTargetLanguages) {
-                primaryLanguageComboBox.selected = engine.translator.defaultLangForLocale
-            }
+            resetPrimaryLanguageComboBox(event.item as TranslationEngine)
         }
         primaryFontComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
@@ -145,6 +139,14 @@ class SettingsPanel(
         ProjectManager.getInstance().defaultProject,
         RegExpLanguage.INSTANCE.associatedFileType
     )
+
+    private fun resetPrimaryLanguageComboBox(engine: TranslationEngine) {
+        val supportedTargetLanguages = engine.supportedTargetLanguages()
+        primaryLanguageComboBox.model = CollectionComboBoxModel(supportedTargetLanguages)
+        primaryLanguageComboBox.selected = settings.primaryLanguage
+            ?.takeIf { it in supportedTargetLanguages }
+            ?: engine.translator.defaultLangForLocale
+    }
 
     override val isModified: Boolean
         get() {
@@ -225,8 +227,9 @@ class SettingsPanel(
 
     @Suppress("Duplicates")
     override fun reset() {
+        resetPrimaryLanguageComboBox(settings.translator)
+
         translationEngineComboBox.selected = settings.translator
-        primaryLanguageComboBox.selected = settings.translator.primaryLanguage
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ignoreRegExp.text = settings.ignoreRegex
         separatorsTextField.text = settings.separators
