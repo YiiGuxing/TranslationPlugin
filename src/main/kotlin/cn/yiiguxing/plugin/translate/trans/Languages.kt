@@ -40,10 +40,10 @@ enum class Lang(
     /** 英语 */
     ENGLISH("english", "en"),
 
-    /** 英语 */
+    /** 英语(美国) */
     ENGLISH_AMERICAN("english.american", "en-US"),
 
-    /** 英语 */
+    /** 英语(英国) */
     ENGLISH_BRITISH("english.british", "en-GB"),
 
     /** 中文(繁体) */
@@ -244,11 +244,11 @@ enum class Lang(
     /** 葡萄牙语 */
     PORTUGUESE("portuguese", "pt"),
 
-    /** 葡萄牙语 */
+    /** 葡萄牙语(巴西) */
     PORTUGUESE_BRAZILIAN("portuguese.brazilian", "pt-BR"),
 
-    /** 葡萄牙语 */
-    PORTUGUESE_PORTUGUESE("portuguese.portuguese", "pt-PT"),
+    /** 葡萄牙语(葡萄牙) */
+    PORTUGUESE_PORTUGUESE("portuguese.portugal", "pt-PT"),
 
     /** 普什图语 */
     PASHTO("pashto", "ps"),
