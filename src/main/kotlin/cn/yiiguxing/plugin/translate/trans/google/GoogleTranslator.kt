@@ -52,7 +52,14 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = GOOGLE.primaryLanguage
 
-    private val notSupportedLanguages = listOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
+    private val notSupportedLanguages = listOf(
+        Lang.CHINESE_CANTONESE,
+        Lang.CHINESE_CLASSICAL,
+        Lang.ENGLISH_AMERICAN,
+        Lang.ENGLISH_BRITISH,
+        Lang.PORTUGUESE_BRAZILIAN,
+        Lang.PORTUGUESE_PORTUGUESE,
+    )
 
     override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - notSupportedLanguages).toList()
     override val supportedTargetLanguages: List<Lang> =
