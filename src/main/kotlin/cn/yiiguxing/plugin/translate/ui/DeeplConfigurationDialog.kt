@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.util.SystemInfo
 import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.scale.JBUIScale
@@ -37,28 +36,27 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         authKey = DeeplCredentials.instance.authKey
     }
 
-    override fun createCenterPanel(): JComponent = JPanel(UI.migLayout()).apply root@{
-        minimumSize = JBUI.size(300, 0)
+    override fun createCenterPanel(): JComponent = JPanel(UI.migLayout("${JBUIScale.scale(8)}!")).apply root@{
+        preferredSize = JBUI.size(300, -1)
 
         val logo = JLabel(TranslationIcons.load("/image/deepl_translate_logo.svg"))
         logo.border = JBUI.Borders.empty(10, 0, 18, 0)
         add(logo, UI.wrap().span(2).alignX("50%"))
 
-        val gap = JBUIScale.scale(8).toString()
         add(JLabel(message("deepl.config.dialog.label.auth.key")))
-        add(authKeyField, UI.fillX().gapLeft(gap).wrap())
+        add(authKeyField, UI.fillX().wrap())
 
         val hintPane: JEditorPane = JEditorPane().apply {
             isEditable = false
             isFocusable = false
             background = this@root.background
             foreground = JBUI.CurrentTheme.Label.disabledForeground()
-            font = font.deriveFont((font.size - if (SystemInfo.isWindows) 2 else 1).toFloat())
+            font = font.deriveFont((font.size - 1).toFloat())
             editorKit = UIUtil.getHTMLEditorKit()
-            border = JBUI.Borders.empty(10, 0, 0, 0)
-            addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
-
+            border = JBUI.Borders.empty(2, 0, 0, 0)
             text = message("deepl.config.dialog.hint")
+
+            addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
         }
         add(hintPane, UI.fillX().cell(1, 2))
     }

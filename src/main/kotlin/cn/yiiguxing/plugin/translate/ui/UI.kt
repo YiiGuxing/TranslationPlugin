@@ -77,8 +77,8 @@ object UI {
         setHoveringIcon(IconUtil.darker(baseIcon, 3))
     }
 
-    fun migLayout() =
-        MigLayout(LC().fill().gridGap("0!", "0!").insets("0"))
+    fun migLayout(gapX: String = "0!", gapY: String = "0!") =
+        MigLayout(LC().fill().gridGap(gapX, gapY).insets("0"))
 
     fun migLayoutVertical() =
         MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
