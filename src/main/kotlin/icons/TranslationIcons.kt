@@ -58,6 +58,9 @@ object TranslationIcons {
     val Ali: Icon = load("/icons/ali.svg")
 
     @JvmField
+    val Deepl: Icon = load("/icons/deepl.svg")
+
+    @JvmField
     val Support: Icon = load("/icons/support.svg")
 
     @JvmField

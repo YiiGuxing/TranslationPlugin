@@ -9,6 +9,8 @@ import java.net.HttpURLConnection
 
 object Http {
 
+    const val PLUGIN_USER_AGENT = "${Plugin.PLUGIN_ID}.TranslationPlugin"
+
     private val logger = Logger.getInstance(Http::class.java)
 
     val defaultGson = Gson()
