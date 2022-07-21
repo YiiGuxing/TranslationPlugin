@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.*
@@ -31,7 +30,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private const val TAG_SPAN = "span"
 
 
-    private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
     @Suppress("SpellCheckingInspection")
@@ -52,13 +50,20 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     override val contentLengthLimit: Int = GOOGLE.contentLengthLimit
 
     override val primaryLanguage: Lang
-        get() = settings.primaryLanguage
+        get() = GOOGLE.primaryLanguage
 
-    private val notSupportedLanguages = listOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
+    private val unsupportedLanguages = listOf(
+        Lang.CHINESE_CANTONESE,
+        Lang.CHINESE_CLASSICAL,
+        Lang.ENGLISH_AMERICAN,
+        Lang.ENGLISH_BRITISH,
+        Lang.PORTUGUESE_BRAZILIAN,
+        Lang.PORTUGUESE_PORTUGUESE,
+    )
 
-    override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - notSupportedLanguages).toList()
+    override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - unsupportedLanguages).toList()
     override val supportedTargetLanguages: List<Lang> =
-        (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
+        (Lang.sortedValues() - unsupportedLanguages - Lang.AUTO).toList()
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
@@ -224,9 +229,11 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
                 jsonObject.has("trans") -> {
                     context.deserialize<GTransSentence>(jsonElement, GTransSentence::class.java)
                 }
+
                 jsonObject.has("translit") || jsonObject.has("src_translit") -> {
                     context.deserialize<GTranslitSentence>(jsonElement, GTranslitSentence::class.java)
                 }
+
                 else -> throw JsonParseException("Cannot deserialize to type GSentence: $jsonElement")
             }
         }

@@ -15,6 +15,10 @@ import javax.net.ssl.SSLHandshakeException
  */
 abstract class AbstractTranslator : Translator {
 
+    override val defaultLangForLocale: Lang by lazy {
+        Lang.default.takeIf { it in supportedTargetLanguages } ?: Lang.ENGLISH
+    }
+
     final override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = checkError {
         checkContentLength(text, contentLengthLimit)
         doTranslate(text, srcLang, targetLang)
@@ -37,8 +41,14 @@ abstract class AbstractTranslator : Translator {
             is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> when (throwable.statusCode) {
                 HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
+                HttpResponseStatus.FORBIDDEN.code() -> message("error.invalidAccount")
+                HttpResponseStatus.BAD_REQUEST.code() -> message("error.bad.request")
+                HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE.code() -> message("error.text.too.long")
+                HttpResponseStatus.SERVICE_UNAVAILABLE.code() -> message("error.service.unavailable")
+                HttpResponseStatus.INTERNAL_SERVER_ERROR.code() -> message("error.systemError")
                 else -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
             }
+
             is IOException -> message("error.io.exception", throwable.message ?: "")
             else -> return null
         }

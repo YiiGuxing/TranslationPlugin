@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 新增DeepL翻译引擎
 - 优化单词本服务及交互体验
 
 ## v3.3.4 (2022/07/10)
