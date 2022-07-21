@@ -30,7 +30,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
     init {
         title = message("deepl.config.dialog.title")
-        setResizable(false)
+        isResizable = false
         init()
 
         authKey = DeeplCredentials.instance.authKey
