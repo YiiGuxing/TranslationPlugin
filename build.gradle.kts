@@ -149,6 +149,9 @@ tasks {
         // https://plugins.jetbrains.com/plugins/snapshot/list repository to install the plugin and receive updates.
         // These channels are treated as separate repositories for all intents and purposes. Read more:
         // https://plugins.jetbrains.com/docs/marketplace/custom-release-channels.html
+        // Snapshot repositories:
+        // https://plugins.jetbrains.com/plugins/snapshot/list
+        // https://plugins.jetbrains.com/plugins/snapshot/8579
         channels.set(listOf(publishChannel))
     }
 
