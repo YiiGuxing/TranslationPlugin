@@ -63,9 +63,10 @@ interface WordDetailsUI : Disposable {
                 root.minimumSize = size
                 root.preferredSize = size
             }
+            root.border = JBUI.Borders.empty(16)
 
             wordView.apply {
-                border = JBUI.Borders.empty(gap, 0, JBUIScale.scale(12), 0)
+                border = JBUI.Borders.empty(0, 0, 16, 0)
                 font = primaryFont.biggerOn(5f).asBold()
             }
             root.add(wordView, UI.fillX().wrap())

@@ -74,6 +74,8 @@ class WordDetailsDialog(
 
     override fun createCenterPanel(): JComponent = ui.contentComponent
 
+    override fun getStyle(): DialogStyle = DialogStyle.COMPACT
+
     private fun setupUi() {
         setupTagsField()
         ui.phoneticField.addDocumentListener(object : DocumentListener {
