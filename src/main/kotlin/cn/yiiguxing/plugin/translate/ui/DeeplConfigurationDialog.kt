@@ -37,8 +37,6 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
     }
 
     override fun createCenterPanel(): JComponent = JPanel(UI.migLayout("${JBUIScale.scale(8)}!")).apply root@{
-        preferredSize = JBUI.size(300, -1)
-
         val logo = JLabel(TranslationIcons.load("/image/deepl_translate_logo.svg"))
         logo.border = JBUI.Borders.empty(10, 0, 18, 0)
         add(logo, UI.wrap().span(2).alignX("50%"))
@@ -55,6 +53,9 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
             editorKit = UIUtil.getHTMLEditorKit()
             border = JBUI.Borders.empty(2, 0, 0, 0)
             text = message("deepl.config.dialog.hint")
+            preferredSize = JBUI.size(300, -1)
+            minimumSize = JBUI.size(300, 40)
+            maximumSize = JBUI.size(300, Int.MAX_VALUE)
 
             addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
         }
