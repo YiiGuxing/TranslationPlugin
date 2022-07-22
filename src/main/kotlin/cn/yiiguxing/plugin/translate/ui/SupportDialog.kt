@@ -61,8 +61,14 @@ class SupportDialog private constructor() : DialogWrapper(null) {
         background = UIManager.getColor("TextArea.background")
 
         add(JBLabel(message("support.contribution")))
+        add(createItemsPanel())
+        add(createDonatePanel())
+        add(NonOpaquePanel(FlowLayout(FlowLayout.LEFT), donateNoteLink))
+    }
 
-        val listPanel = NonOpaquePanel(MigLayout(LC().gridGap("0!", "0!").insets("0"))).apply {
+    private fun createItemsPanel(): JPanel {
+        val layout = MigLayout(LC().gridGap("0!", "0!").insets("0"))
+        return NonOpaquePanel(layout).apply {
             var i = 1
             for (item in arrayOf(
                 starLink,
@@ -76,12 +82,13 @@ class SupportDialog private constructor() : DialogWrapper(null) {
                 add(item, UI.wrap())
             }
         }
-        add(listPanel)
+    }
 
+    private fun createDonatePanel(): JPanel {
         val gap = "${JBUIScale.scale(8)}!"
         val padding = "${JBUIScale.scale(4)} ${JBUIScale.scale(12)}"
         val layout = MigLayout(LC().gridGap(gap, gap).insets(padding))
-        val donatePanel = NonOpaquePanel(layout).apply {
+        return NonOpaquePanel(layout).apply {
             weChatPayLabel.apply {
                 horizontalTextPosition = SwingConstants.CENTER
                 verticalTextPosition = SwingConstants.BOTTOM
@@ -99,9 +106,8 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             add(weChatPayLabel)
             add(aliPayLabel, UI.wrap())
         }
-        add(donatePanel)
-        add(NonOpaquePanel(FlowLayout(FlowLayout.LEFT), donateNoteLink))
     }
+
 
     override fun getStyle(): DialogStyle = DialogStyle.COMPACT
 
