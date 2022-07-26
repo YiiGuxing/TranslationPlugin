@@ -141,6 +141,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 语道 | | 6.66 CNY |
 | 毛毛呀🥺 | | 6.66 CNY |
 | 许永龙 | | 6.66 CNY |
 | 捕鱼达人 | | 6.66 CNY |
