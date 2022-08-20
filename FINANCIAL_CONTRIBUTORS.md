@@ -144,6 +144,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 邘叔 | | 6.66 CNY |
 | Bany | | 6.66 CNY |
 | Edwardcc | | 6.66 CNY |
 | 黄兴坤 | | 6.66 CNY |
