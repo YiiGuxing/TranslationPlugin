@@ -3,14 +3,10 @@ package cn.yiiguxing.plugin.translate.trans.ali
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.hmacSha1
-import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.md5Base64
+import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.util.io.HttpRequests
 import org.jsoup.nodes.Document
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -23,8 +19,7 @@ import javax.swing.Icon
 // Product description: https://www.aliyun.com/product/ai/base_alimt
 object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
-    @Suppress("HttpUrlsUsage")
-    private const val ALI_TRANSLATE_API_URL = "http://mt.aliyuncs.com/api/translate/web/general"
+    private const val ALI_TRANSLATE_API_URL = "https://mt.aliyuncs.com/api/translate/web/general"
     private const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"
 
 
@@ -158,11 +153,12 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
         val realUrl = URL(url)
         val accept = "application/json"
-        val contentType = "application/json"
+        val contentType = "application/json; charset=utf-8"
         val date: String = toGMTString(Date())
         val bodyMd5: String = body.md5Base64()
         val uuid = UUID.randomUUID().toString()
-        val stringToSign = """
+        val version = "2019-01-02"
+        val dataToSign = """
             POST
             $accept
             $bodyMd5
@@ -170,30 +166,27 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             $date
             x-acs-signature-method:HMAC-SHA1
             x-acs-signature-nonce:$uuid
-            x-acs-version:2019-01-02
+            x-acs-version:$version
             ${realUrl.file}
-            """.trimIndent()
+        """.trimIndent()
 
+        logger.i("Data to sign: $dataToSign")
         val settings = Settings.aliTranslateSettings
 
-        return HttpRequests
-            .post(url, contentType)
-            .tuner { conn ->
+        return Http.post(url, contentType, body) {
+            tuner { conn ->
                 conn.setRequestProperty("Accept", accept)
                 conn.setRequestProperty("Content-MD5", bodyMd5)
                 conn.setRequestProperty("Date", date)
                 conn.setRequestProperty("Host", realUrl.host)
                 settings.getAppKey().takeIf { it.isNotEmpty() }?.let { key ->
-                    conn.setRequestProperty("Authorization", "acs ${settings.appId}:${stringToSign.hmacSha1(key)}")
+                    conn.setRequestProperty("Authorization", "acs ${settings.appId}:${dataToSign.hmacSha1(key)}")
                 }
                 conn.setRequestProperty("x-acs-signature-nonce", uuid)
                 conn.setRequestProperty("x-acs-signature-method", "HMAC-SHA1")
-                conn.setRequestProperty("x-acs-version", "2019-01-02") // 版本可选
+                conn.setRequestProperty("x-acs-version", version)
             }
-            .connect {
-                it.write(body)
-                it.readString()
-            }
+        }
     }
 
     class AliTranslationResultException(code: Int, private val errorMessage: String?) :
@@ -255,7 +248,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun toGMTString(date: Date): String {
-        val df = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.UK)
+        val df = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.US)
         df.timeZone = SimpleTimeZone(0, "GMT")
         return df.format(date)
     }
