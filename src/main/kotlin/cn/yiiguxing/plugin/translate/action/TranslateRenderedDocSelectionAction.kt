@@ -78,10 +78,10 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
             val positionStartInEditor = getSelectionPositionInEditor(editorPane) as Point?
                 ?: return lastPosition
 
-            @Suppress("deprecation")
+            @Suppress("DEPRECATION")
             val positionStartInPane = editorPane.modelToView(editorPane.selectionStart)
 
-            @Suppress("deprecation")
+            @Suppress("DEPRECATION")
             val positionEndInPane = editorPane.modelToView(editorPane.selectionEnd)
             val positionEndXInEditor = positionEndInPane.x + positionStartInEditor.x - positionStartInPane.x
             val positionEndYInEditor = positionEndInPane.y + positionStartInEditor.y - positionStartInPane.y

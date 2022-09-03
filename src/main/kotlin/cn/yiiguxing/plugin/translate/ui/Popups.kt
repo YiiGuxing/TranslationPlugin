@@ -134,20 +134,22 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
                 val y = visibleRect.height + if (insets.bottom + margin.bottom <= 0) JBUI.scale(2) else 0
                 Point(x, y)
             }
+
             component.hasSelection -> {
-                @Suppress("deprecation")
+                @Suppress("DEPRECATION")
                 val startRect = component.modelToView(component.selectionStart)
 
-                @Suppress("deprecation")
+                @Suppress("DEPRECATION")
                 val endRect = component.modelToView(component.selectionEnd)
                 val x = minOf(startRect.x, endRect.x)
                 val y = maxOf(startRect.y, endRect.y) + endRect.height
                 Point(x, y)
             }
+
             else -> {
                 val caretPosition = component.caret.magicCaretPosition
 
-                @Suppress("deprecation")
+                @Suppress("DEPRECATION")
                 val modelRect = component.modelToView(component.caret.dot)
                 Point(caretPosition.x, caretPosition.y + modelRect.height)
             }
