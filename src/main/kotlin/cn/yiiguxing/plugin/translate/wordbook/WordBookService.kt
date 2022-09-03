@@ -48,7 +48,7 @@ class WordBookService {
             Files.createDirectories(TRANSLATION_DIRECTORY)
         }
         try {
-            lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw".substring(12))
+            lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
             findDriverClassLoader()?.let { initialize(it) }
         } catch (e: Throwable) {
             LOGGER.e("Unable to initialize wordbook service.", e)
