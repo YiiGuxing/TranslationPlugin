@@ -34,7 +34,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
-    @Suppress("SpellCheckingInspection")
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
         .registerTypeAdapter(GDocTranslation::class.java, GDocTranslationDeserializer)
@@ -147,7 +146,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun parseTranslation(
         translation: String,
         original: String,
@@ -224,9 +222,11 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
                 jsonObject.has("trans") -> {
                     context.deserialize<GTransSentence>(jsonElement, GTransSentence::class.java)
                 }
+
                 jsonObject.has("translit") || jsonObject.has("src_translit") -> {
                     context.deserialize<GTranslitSentence>(jsonElement, GTranslitSentence::class.java)
                 }
+
                 else -> throw JsonParseException("Cannot deserialize to type GSentence: $jsonElement")
             }
         }

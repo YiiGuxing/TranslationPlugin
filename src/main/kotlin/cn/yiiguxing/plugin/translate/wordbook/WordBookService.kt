@@ -39,7 +39,7 @@ class WordBookService {
 
     private val isDownloading: AtomicBoolean = AtomicBoolean()
 
-    private val lockFile: RandomAccessFile
+    private var lockFile: RandomAccessFile? = null
     private lateinit var queryRunner: QueryRunner
     private val wordBookPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
 
@@ -47,9 +47,8 @@ class WordBookService {
         if (!Files.exists(TRANSLATION_DIRECTORY)) {
             Files.createDirectories(TRANSLATION_DIRECTORY)
         }
-
-        lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
         try {
+            lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
             findDriverClassLoader()?.let { initialize(it) }
         } catch (e: Throwable) {
             LOGGER.e("Unable to initialize wordbook service.", e)
@@ -194,7 +193,7 @@ class WordBookService {
     }
 
     private inline fun <T> lock(action: () -> T): T? {
-        val fileLock = lockFile.channel.lock(0L, Long.MAX_VALUE, true)
+        val fileLock = lockFile?.channel?.lock(0L, Long.MAX_VALUE, true)
         return try {
             action()
         } catch (e: Throwable) {
@@ -205,7 +204,7 @@ class WordBookService {
             }
             null
         } finally {
-            fileLock.release()
+            fileLock?.release()
         }
     }
 
@@ -213,7 +212,7 @@ class WordBookService {
      * Test if the specified [word] can be added to the wordbook
      */
     fun canAddToWordbook(word: String?): Boolean {
-        return word != null && word.isNotBlank() && word.length <= 60 && '\n' !in word
+        return !word.isNullOrBlank() && word.length <= 60 && '\n' !in word
     }
 
     private fun checkIsInitialized() = check(isInitialized) { "Word book not initialized" }

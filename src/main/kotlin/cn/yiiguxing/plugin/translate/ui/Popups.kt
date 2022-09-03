@@ -23,6 +23,7 @@ import com.intellij.util.ui.JBUI
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Point
+import java.awt.geom.Rectangle2D
 import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JTextField
@@ -134,22 +135,20 @@ val TextComponentEditor.guessBestPopupLocation: RelativePoint
                 val y = visibleRect.height + if (insets.bottom + margin.bottom <= 0) JBUI.scale(2) else 0
                 Point(x, y)
             }
-            component.hasSelection -> {
-                @Suppress("deprecation")
-                val startRect = component.modelToView(component.selectionStart)
 
-                @Suppress("deprecation")
-                val endRect = component.modelToView(component.selectionEnd)
+            component.hasSelection -> {
+                val emptyRect = Rectangle2D.Float()
+                val startRect = component.modelToView2D(component.selectionStart) ?: emptyRect
+                val endRect = component.modelToView2D(component.selectionEnd) ?: emptyRect
                 val x = minOf(startRect.x, endRect.x)
                 val y = maxOf(startRect.y, endRect.y) + endRect.height
-                Point(x, y)
+                Point(x.toInt(), y.toInt())
             }
-            else -> {
-                val caretPosition = component.caret.magicCaretPosition
 
-                @Suppress("deprecation")
-                val modelRect = component.modelToView(component.caret.dot)
-                Point(caretPosition.x, caretPosition.y + modelRect.height)
+            else -> {
+                val caretPosition = component.caret.magicCaretPosition ?: Point()
+                val modelRect = component.modelToView2D(component.caret.dot) ?: Rectangle2D.Float()
+                Point(caretPosition.x, caretPosition.y + modelRect.height.toInt())
             }
         }
         popupMenuPoint.translate(visibleRect.x, visibleRect.y)

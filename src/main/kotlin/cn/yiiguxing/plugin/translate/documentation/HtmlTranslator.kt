@@ -28,7 +28,9 @@ private val HTML_KIT = HTMLEditorKit()
 
 
 fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
-    val document: Document = Jsoup.parse(documentation)
+    val document: Document = Jsoup.parse(documentation).apply {
+        outputSettings().prettyPrint(false)
+    }
     if (document.body().hasAttr(TRANSLATED_ATTR)) {
         return documentation
     }
@@ -49,14 +51,13 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
         }
     }
 
-    translatedDocumentation.body().attributes().remove(TRANSLATED_ATTR)
+    translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, true)
 
     return translatedDocumentation.outerHtml().fixHtml()
 }
 
 private fun Document.addLimitHint(): Document {
     val hintColor = ColorUtil.toHex(JBUI.CurrentTheme.Label.disabledForeground())
-    @Suppress("UNNECESSARY_SAFE_CALL")
     body().selectFirst(CSS_QUERY_CONTENT)?.insertChildren(
         0,
         Element("div")
@@ -83,10 +84,8 @@ private fun String.fixHtml(): String = replace(
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
 
-    @Suppress("UNNECESSARY_SAFE_CALL")
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
-    @Suppress("UNNECESSARY_SAFE_CALL")
     // 删除多余的 `p` 标签。
     body.selectFirst(CSS_QUERY_CONTENT)
         ?.nextElementSibling()
@@ -104,7 +103,6 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
 
-    @Suppress("UNNECESSARY_SAFE_CALL")
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
@@ -120,7 +118,6 @@ private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) &&
 private fun Translator.getTranslatedDocumentation(document: Document): Document {
     val body = document.body()
 
-    @Suppress("UNNECESSARY_SAFE_CALL")
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
