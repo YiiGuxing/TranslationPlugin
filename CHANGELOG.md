@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- 修复阿里翻译IO错误的问题
+- 其他已知问题修复
 
 ## v3.3.4 (2022/07/10)
 - 已知问题修复
