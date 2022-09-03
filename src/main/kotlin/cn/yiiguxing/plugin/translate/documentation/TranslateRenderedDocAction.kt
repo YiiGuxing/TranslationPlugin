@@ -11,14 +11,13 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.util.concurrency.AppExecutorUtil
 import icons.TranslationIcons
 
 internal class TranslateRenderedDocAction(
-    val editor: Editor,
+    private val editor: Editor,
     private val docComment: PsiDocCommentBase
 ) : FixedIconToggleAction(
     TranslationIcons.Documentation,
@@ -30,12 +29,12 @@ internal class TranslateRenderedDocAction(
     }
 
     override fun setSelected(event: AnActionEvent, value: Boolean) {
+        val editor = editor.takeUnless { it.isDisposed } ?: return
         val file = docComment.containingFile ?: return
+        val project = file.project
 
         TranslatedDocComments.setTranslated(docComment, value)
 
-        val project = file.project
-        val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
         ReadAction
             .nonBlocking<DocRenderPassFactory.Items?> {
                 try {

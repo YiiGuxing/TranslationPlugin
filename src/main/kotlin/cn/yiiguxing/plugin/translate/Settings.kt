@@ -46,7 +46,6 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 有道翻译选项
      */
-    @Suppress("SpellCheckingInspection")
     var youdaoTranslateSettings: YoudaoTranslateSettings = YoudaoTranslateSettings()
 
     /**
@@ -283,7 +282,6 @@ abstract class AppKeySettings(serviceKey: String, var primaryLanguage: Lang) {
 /**
  * 有道翻译选项
  */
-@Suppress("SpellCheckingInspection")
 @Tag("youdao-translate")
 class YoudaoTranslateSettings : AppKeySettings(YOUDAO_APP_KEY, YoudaoTranslator.defaultLangForLocale)
 
