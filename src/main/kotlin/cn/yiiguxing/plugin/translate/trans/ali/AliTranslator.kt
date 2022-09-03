@@ -189,7 +189,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         }
     }
 
-    class AliTranslationResultException(code: Int, private val errorMessage: String?) :
+    class AliTranslationResultException(code: Int, val errorMessage: String?) :
         TranslationResultException(code) {
         override fun getLocalizedMessage(): String {
             return "$message[$errorMessage]"
@@ -213,14 +213,14 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             src = srcLang
             target = targetLang
             if (!isSuccessful) {
-                throw AliTranslationResultException(code, errorMessage)
+                throw AliTranslationResultException(intCode, errorMessage)
             }
         }.toTranslation()
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         val errorMessage = when (throwable) {
-            is TranslationResultException -> when (throwable.code) {
+            is AliTranslationResultException -> when (throwable.code) {
                 10001 -> message("error.request.timeout")
                 10002 -> message("error.systemError")
                 10003 -> message("error.bad.request")
@@ -230,15 +230,17 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
                 10007 -> message("error.systemError")
                 10008 -> message("error.text.too.long")
                 10009 -> message("error.ali.permission.denied")
+
                 10010 -> return ErrorInfo(
                     message("error.service.is.down"),
                     ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
                 )
 
-                10011 -> message("error.systemError")
+                10011,
                 10012 -> message("error.systemError")
+
                 10013 -> message("error.account.has.run.out.of.balance")
-                else -> message("error.unknown") + "[${throwable.code}]"
+                else -> message("error.unknown") + "[${throwable.code}] ${throwable.errorMessage}"
             }
 
             else -> return super.createErrorInfo(throwable)

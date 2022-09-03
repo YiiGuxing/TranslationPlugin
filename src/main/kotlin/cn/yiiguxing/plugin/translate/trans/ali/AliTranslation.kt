@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
 import com.google.gson.annotations.SerializedName
 
-@Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")
+@Suppress("MemberVisibilityCanBePrivate")
 data class AliTranslation(
     var query: String = "",
     var src: Lang,
@@ -13,13 +13,15 @@ data class AliTranslation(
     @SerializedName("RequestId")
     val requestId: String,
     @SerializedName("Code")
-    val code: Int = 0,
+    val code: String = "-1",
     @SerializedName("Data")
     val data: AliTranslationData,
     @SerializedName("Message")
     val errorMessage: String? = null,
 ) : TranslationAdapter {
-    val isSuccessful get() = code == 200
+    val isSuccessful get() = code == "200"
+
+    val intCode get() = code.toIntOrNull() ?: -1
 
     override fun toTranslation(): Translation {
         check(isSuccessful) { "Cannot convert to Translation: errorCode=${code}" }
