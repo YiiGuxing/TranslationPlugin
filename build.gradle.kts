@@ -10,7 +10,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.7.0"
+    id("org.jetbrains.intellij") version "1.9.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -64,7 +64,7 @@ repositories {
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
-    implementation("org.jsoup:jsoup:1.15.2")
+    implementation("org.jsoup:jsoup:1.15.3")
     implementation("org.apache.commons:commons-dbcp2:2.9.0")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
@@ -149,6 +149,9 @@ tasks {
         // https://plugins.jetbrains.com/plugins/snapshot/list repository to install the plugin and receive updates.
         // These channels are treated as separate repositories for all intents and purposes. Read more:
         // https://plugins.jetbrains.com/docs/marketplace/custom-release-channels.html
+        // Snapshot repositories:
+        // https://plugins.jetbrains.com/plugins/snapshot/list
+        // https://plugins.jetbrains.com/plugins/snapshot/8579
         channels.set(listOf(publishChannel))
     }
 

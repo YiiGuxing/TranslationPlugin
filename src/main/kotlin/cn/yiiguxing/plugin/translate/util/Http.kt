@@ -73,7 +73,7 @@ object Http {
         return post(url, "application/json", json, init)
     }
 
-    private fun post(
+    fun post(
         url: String,
         contentType: String,
         data: String,

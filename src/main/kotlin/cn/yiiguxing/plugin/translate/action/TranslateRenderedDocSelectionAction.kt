@@ -75,14 +75,9 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
                 return lastPosition
             }
 
-            val positionStartInEditor = getSelectionPositionInEditor(editorPane) as Point?
-                ?: return lastPosition
-
-            @Suppress("deprecation")
-            val positionStartInPane = editorPane.modelToView(editorPane.selectionStart)
-
-            @Suppress("deprecation")
-            val positionEndInPane = editorPane.modelToView(editorPane.selectionEnd)
+            val positionStartInEditor = getSelectionPositionInEditor(editorPane) as Point? ?: return lastPosition
+            val positionStartInPane = editorPane.modelToView2D(editorPane.selectionStart)
+            val positionEndInPane = editorPane.modelToView2D(editorPane.selectionEnd)
             val positionEndXInEditor = positionEndInPane.x + positionStartInEditor.x - positionStartInPane.x
             val positionEndYInEditor = positionEndInPane.y + positionStartInEditor.y - positionStartInPane.y
             val lineHeight = editorPane.getFontMetrics(editorPane.font).height
@@ -94,11 +89,11 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
             (balloon as? BalloonImpl)?.setLostPointer(!isInVisibleArea)
 
             return if (isInVisibleArea) {
-                RelativePoint(editor.contentComponent, Point(x, y))
+                RelativePoint(editor.contentComponent, Point(x.toInt(), y.toInt()))
             } else {
                 lastPosition ?: RelativePoint(
                     editor.contentComponent,
-                    with(visibleArea) { Point(x + width / 3, y + height / 2) })
+                    with(visibleArea) { Point((x + width / 3).toInt(), (y + height / 2).toInt()) })
             }.also { lastPosition = it }
         }
     }

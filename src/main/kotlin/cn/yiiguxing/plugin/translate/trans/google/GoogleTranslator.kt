@@ -32,7 +32,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
-    @Suppress("SpellCheckingInspection")
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
         .registerTypeAdapter(GDocTranslation::class.java, GDocTranslationDeserializer)
@@ -152,7 +151,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun parseTranslation(
         translation: String,
         original: String,

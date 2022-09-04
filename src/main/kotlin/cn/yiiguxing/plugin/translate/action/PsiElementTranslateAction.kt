@@ -17,7 +17,7 @@ abstract class PsiElementTranslateAction : AnAction() {
             val dataContext = e.dataContext
             val element = try {
                 pickPsiElement(editor, psiFile, dataContext)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 LOG.w("Failed to pick PSI element", e)
                 null
             }
@@ -39,7 +39,7 @@ abstract class PsiElementTranslateAction : AnAction() {
         val dataContext = e.dataContext
         val element = try {
             pickPsiElement(editor, psiFile, dataContext) ?: return
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             LOG.w("Failed to pick PSI element", e)
             return
         }
