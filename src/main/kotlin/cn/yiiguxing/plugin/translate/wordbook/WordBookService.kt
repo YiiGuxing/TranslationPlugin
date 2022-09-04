@@ -72,7 +72,7 @@ class WordBookService {
             return defaultClassLoader
         }
 
-        return lock {
+        return lock() {
             if (!Files.exists(DRIVER_JAR)) {
                 return@lock null
             }
@@ -192,8 +192,8 @@ class WordBookService {
         }
     }
 
-    private inline fun <T> lock(action: () -> T): T? {
-        val fileLock = lockFile?.channel?.lock(0L, Long.MAX_VALUE, true)
+    private inline fun <T> lock(shared: Boolean = false, action: () -> T): T? {
+        val fileLock = lockFile?.channel?.lock(0L, Long.MAX_VALUE, shared)
         return try {
             action()
         } catch (e: Throwable) {
@@ -354,11 +354,8 @@ class WordBookService {
                 SELECT $COLUMN_ID FROM wordbook 
                     WHERE $COLUMN_WORD = ? AND $COLUMN_SOURCE_LANGUAGE = ? AND $COLUMN_TARGET_LANGUAGE = ?
             """.trimIndent()
-        return try {
+        return lock(true) {
             queryRunner.query(sql, WordIdHandler, wordToQuery, sourceLanguage.code, targetLanguage.code)
-        } catch (e: SQLException) {
-            LOGGER.e(e.message ?: "", e)
-            null
         }
     }
 
@@ -367,22 +364,16 @@ class WordBookService {
      */
     fun getWords(): List<WordBookItem> {
         checkIsInitialized()
-        return try {
+        return lock(true) {
             queryRunner.query("SELECT * FROM wordbook ORDER BY $COLUMN_CREATED_AT DESC", WordListHandler)
-        } catch (e: SQLException) {
-            LOGGER.e(e.message ?: "", e)
-            emptyList()
-        }
+        } ?: emptyList()
     }
 
     fun hasAnyWords(): Boolean {
         checkIsInitialized()
-        return try {
+        return lock(true) {
             queryRunner.query("SELECT COUNT(*) FROM wordbook", BooleanHandler)
-        } catch (e: SQLException) {
-            LOGGER.e(e.message ?: "", e)
-            false
-        }
+        } ?: false
     }
 
 
