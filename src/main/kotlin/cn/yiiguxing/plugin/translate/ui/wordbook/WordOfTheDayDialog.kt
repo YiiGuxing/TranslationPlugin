@@ -1,64 +1,101 @@
 package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.ui.FixedSizeCardLayout
-import cn.yiiguxing.plugin.translate.ui.form.WordDialogForm
+import cn.yiiguxing.plugin.translate.ui.TTSButton
+import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.ui.Viewer
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
+import com.intellij.ui.JBColor
+import com.intellij.ui.components.JBLabel
+import com.intellij.ui.components.JBScrollPane
+import com.intellij.ui.components.panels.VerticalLayout
+import com.intellij.util.ui.JBDimension
+import com.intellij.util.ui.JBUI
+import java.awt.CardLayout
 import java.awt.event.ActionEvent
 import java.lang.Boolean.TRUE
-import javax.swing.Action
+import javax.swing.*
 
 /**
  * Word of the day dialog
  */
-class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDialogForm(project) {
+class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : DialogWrapper(project) {
 
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
-    private val layout = FixedSizeCardLayout()
 
     private var words: List<WordBookItem> = emptyList()
     private var currentWordIndex: Int = -1
+
+    private val wordView: Viewer = Viewer()
+    private val ttsButton: TTSButton = TTSButton()
+    private val explanationLayout = CardLayout()
+    private val explainsCard: JPanel = JPanel(explanationLayout)
+    private val explanationLabel: JBLabel = JBLabel()
+    private val explanationView: Viewer = Viewer()
+    private val maskPanel: JPanel = JPanel(VerticalLayout(0, SwingConstants.CENTER))
+    private val showExplanationButton: JButton = JButton(message("word.of.the.day.show.explanation"))
 
     private val nextWordAction: Action = NextWordAction()
     private val previousWordAction: Action = PreviousWordAction()
 
     init {
-        initViews()
-        setWords(words)
-
-        Disposer.register(disposable, ttsButton)
-        init()
-    }
-
-    private fun initViews() {
         isModal = false
         title = message("word.of.the.day.title")
-        horizontalStretch = 1.33f
-        verticalStretch = 1.25f
         setCancelButtonText(message("word.dialog.close"))
+        Disposer.register(disposable, ttsButton)
 
-        explainsCard.apply {
-            removeAll()
-            layout = this@WordOfTheDayDialog.layout
-            add(maskPanel, CARD_MASK)
-            add(
-                explanationView,
-                CARD_EXPLAINS_VIEW
-            )
-        }
-
-        showExplanationButton.addActionListener {
-            layout.show(
-                explainsCard,
-                CARD_EXPLAINS_VIEW
-            )
-        }
+        init()
+        setWords(words)
     }
+
+    override fun createCenterPanel() = JPanel(UI.migLayout()).apply {
+        border = JBUI.Borders.empty(16)
+        background = UIManager.getColor("TextArea.background")
+
+        JBDimension(550, 400).let {
+            minimumSize = it
+            preferredSize = it
+        }
+
+        val (primaryFont, phoneticFont) = UI.getFonts(15, 14)
+        wordView.apply {
+            border = JBUI.Borders.empty(0, 0, 16, 0)
+            font = primaryFont.biggerOn(5f).asBold()
+        }
+        add(wordView, UI.fillX().wrap())
+
+        ttsButton.font = phoneticFont
+        add(ttsButton, UI.wrap())
+
+        explanationLabel.border = JBUI.Borders.empty(8, 0, 4, 0)
+        add(explanationLabel, UI.wrap())
+
+        maskPanel.add(showExplanationButton, VerticalLayout.CENTER)
+        explanationView.apply {
+            font = primaryFont
+            margin = JBUI.insets(6)
+        }
+        explainsCard.apply {
+            border = JBUI.Borders.customLine(UI.getBordersColor(JBColor.GRAY), 1)
+            add(maskPanel, CARD_MASK)
+            val scrollPane = JBScrollPane(explanationView).apply {
+                border = JBUI.Borders.empty()
+            }
+            add(scrollPane, CARD_EXPLAINS_VIEW)
+        }
+        showExplanationButton.addActionListener {
+            explanationLayout.show(explainsCard, CARD_EXPLAINS_VIEW)
+        }
+        add(explainsCard, UI.fill())
+    }
+
+    override fun getStyle(): DialogStyle = DialogStyle.COMPACT
 
     override fun createActions(): Array<Action> = arrayOf(previousWordAction, nextWordAction, cancelAction)
 
@@ -97,7 +134,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : WordDia
         explanationView.caretPosition = 0
         explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
 
-        layout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)
+        explanationLayout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)
     }
 
     override fun show() {

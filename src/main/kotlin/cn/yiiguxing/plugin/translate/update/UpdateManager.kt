@@ -59,8 +59,9 @@ class UpdateManager : BaseStartupActivity() {
         }
 
         val isFeatureVersion = version.isFeatureUpdateFor(lastVersion)
-        showUpdateNotification(project, plugin, version, isFeatureVersion)
-        properties.setValue(VERSION_PROPERTY, versionString)
+        if (showUpdateNotification(project, plugin, version, isFeatureVersion)) {
+            properties.setValue(VERSION_PROPERTY, versionString)
+        }
     }
 
     private fun showUpdateNotification(
@@ -68,7 +69,7 @@ class UpdateManager : BaseStartupActivity() {
         plugin: IdeaPluginDescriptor,
         version: Version,
         isFeatureVersion: Boolean
-    ) {
+    ): Boolean {
         val title = message(
             "plugin.name.updated.to.version.notification.title",
             plugin.name,
@@ -94,8 +95,9 @@ class UpdateManager : BaseStartupActivity() {
         )
 
         val canBrowseWhatsNewHTMLEditor = canBrowseWhatsNewHTMLEditor()
-        val notification = NotificationGroupManager.getInstance()
-            .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
+        val notificationGroup = NotificationGroupManager.getInstance()
+            .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID) ?: return false
+        val notification = notificationGroup
             .createNotification(content, NotificationType.INFORMATION)
             .setTitle(title)
             .setImportant(true)
@@ -118,6 +120,8 @@ class UpdateManager : BaseStartupActivity() {
         if (!notification.notifyByBalloon(project)) {
             notification.show(project)
         }
+
+        return true
     }
 
     private fun Notification.notifyByBalloon(project: Project): Boolean {
