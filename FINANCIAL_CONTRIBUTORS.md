@@ -78,6 +78,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| RazeSoldier | [www.razesoldier.cn](https://www.razesoldier.cn) | 10 CNY |
+| Yiyi | | 10 CNY |
 | 小庄 | | 10 CNY |
 | DF | | 10 CNY |
 | 张双羊 | | 10 CNY |
@@ -145,6 +147,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| . | | 6.66 CNY |
+| 独坐嵩山 | | 6.66 CNY |
 | Kinoz | | 6.66 CNY |
 | 谈笑 | | 6.66 CNY |
 | 泰山 | | 6.66 CNY |
