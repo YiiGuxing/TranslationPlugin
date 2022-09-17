@@ -148,6 +148,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 意动 | [github.com/tangyb828](https://github.com/tangyb828) | 6.66 CNY |
+| Zengling | | 6.66 CNY |
+| Sxf | | 6.66 CNY |
 | 给岁月以文明 | | 6.66 CNY |
 | 脑后有反骨 | | 6.66 CNY |
 | 叶 | | 6.66 CNY |
