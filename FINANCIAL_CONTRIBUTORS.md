@@ -78,6 +78,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 小路🎈路俊维 | | 10 CNY |
 | 啊聪 | | 10 CNY |
 | RazeSoldier | [www.razesoldier.cn](https://www.razesoldier.cn) | 10 CNY |
 | Yiyi | | 10 CNY |
