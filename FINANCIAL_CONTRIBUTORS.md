@@ -148,6 +148,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| otto | | 6.66 CNY |
 | 莽 | | 6.66 CNY |
 | 葱 | | 6.66 CNY |
 | 意动 | [github.com/tangyb828](https://github.com/tangyb828) | 6.66 CNY |
