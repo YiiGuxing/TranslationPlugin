@@ -42,6 +42,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 贺小五 | | 66.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
+| 波浪线 | | 50 CNY |
 | 昊天 | | 50 CNY |
 | BruceCheung | [github.com/bruuuces](https://github.com/bruuuces) | 50 CNY |
 | 白开水 | | 50 CNY |
