@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
 /**
  * Persistent plugin states.
  */
-@State(name = "States", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
+@State(name = "Translation.States", storages = [(Storage(TranslationStorages.PREFERENCES_STORAGE_NAME))])
 class TranslationStates : PersistentStateComponent<TranslationStates> {
 
     @CollectionBean

@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.MyDynamicBundle
+import cn.yiiguxing.plugin.translate.TranslationDynamicBundle
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
@@ -8,7 +8,7 @@ import java.util.*
 
 private const val LANGUAGE_BUNDLE = "messages.LanguageBundle"
 
-private object LanguageBundle : MyDynamicBundle(LANGUAGE_BUNDLE)
+private object LanguageBundle : TranslationDynamicBundle(LANGUAGE_BUNDLE)
 
 
 @Tag("language-pair")
@@ -389,7 +389,7 @@ enum class Lang(
 
         val default: Lang
             get() {
-                val dynamicBundleLanguage = (MyDynamicBundle.dynamicLocale ?: Locale.ENGLISH).language
+                val dynamicBundleLanguage = (TranslationDynamicBundle.dynamicLocale ?: Locale.ENGLISH).language
                 val localeLanguage =
                     if (dynamicBundleLanguage != Locale.ENGLISH.language) dynamicBundleLanguage
                     else Locale.getDefault().language

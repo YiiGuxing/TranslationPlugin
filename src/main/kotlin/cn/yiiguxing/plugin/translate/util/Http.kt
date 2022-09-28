@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
@@ -9,7 +10,7 @@ import java.net.HttpURLConnection
 
 object Http {
 
-    const val PLUGIN_USER_AGENT = "${Plugin.PLUGIN_ID}.TranslationPlugin"
+    const val PLUGIN_USER_AGENT = "${TranslationPlugin.PLUGIN_ID}.TranslationPlugin"
 
     private val logger = Logger.getInstance(Http::class.java)
 
