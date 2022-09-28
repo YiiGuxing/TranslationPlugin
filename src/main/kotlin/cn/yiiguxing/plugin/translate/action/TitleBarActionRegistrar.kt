@@ -7,6 +7,7 @@ import com.intellij.ide.AppLifecycleListener
 import com.intellij.ide.plugins.DynamicPluginListener
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.Anchor
 import com.intellij.openapi.actionSystem.Constraints
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl
@@ -28,11 +29,16 @@ class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
 
     private fun registerAction() {
         try {
+            val (targetGroupId, constraints) = if (IdeVersion >= IdeVersion.IDE2022_3) {
+                MAIN_TOOLBAR_RIGHT_GROUP_ID to Constraints(Anchor.BEFORE, SEARCH_EVERYWHERE_ACTION_ID)
+            } else {
+                TITLE_BAR_ACTION_GROUP_ID to Constraints.FIRST
+            }
             val actionManager = ActionManager.getInstance() as ActionManagerImpl
-            val group = actionManager.getAction(TITLE_BAR_ACTION_GROUP_ID) as? DefaultActionGroup ?: return
+            val group = actionManager.getAction(targetGroupId) as? DefaultActionGroup ?: return
             val action = actionManager.getAction(TRANSLATION_TITLE_BAR_ACTION_ID) ?: return
             if (!group.containsAction(action)) {
-                actionManager.addToGroup(group, action, Constraints.FIRST)
+                actionManager.addToGroup(group, action, constraints)
             }
         } catch (e: Throwable) {
             LOG.w(e)
@@ -42,6 +48,8 @@ class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
     companion object {
         private const val TRANSLATION_TITLE_BAR_ACTION_ID = "TranslationTitleBar"
         private const val TITLE_BAR_ACTION_GROUP_ID = "ExperimentalToolbarActions"
+        private const val MAIN_TOOLBAR_RIGHT_GROUP_ID = "MainToolbarRight"
+        private const val SEARCH_EVERYWHERE_ACTION_ID = "SearchEverywhere"
 
         private val LOG: Logger = Logger.getInstance(TitleBarActionRegistrar::class.java)
     }

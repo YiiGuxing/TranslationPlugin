@@ -9,7 +9,8 @@ import com.intellij.openapi.util.BuildNumber
 enum class IdeVersion(val buildNumber: Int) {
     IDE2020_3(203),
     IDE2022_1(221),
-    IDE2022_2(222);
+    IDE2022_2(222),
+    IDE2022_3(223);
 
     companion object {
         val buildNumber: BuildNumber get() = ApplicationInfo.getInstance().build
