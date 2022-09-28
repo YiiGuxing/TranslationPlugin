@@ -1,6 +1,5 @@
 name: "🐛 Bug报告"
 description: 报告错误或异常行为.
-title: "[Bug]: "
 labels: ["bug :bug:"]
 body:
   - type: markdown
