@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.Logger
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
 
-open class MyDynamicBundle(private val pathToBundle: String) : AbstractBundle(pathToBundle) {
+open class TranslationDynamicBundle(private val pathToBundle: String) : AbstractBundle(pathToBundle) {
 
     private val adaptedControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES)
 
@@ -40,7 +40,7 @@ open class MyDynamicBundle(private val pathToBundle: String) : AbstractBundle(pa
     }
 
     companion object {
-        private val LOGGER = Logger.getInstance(MyDynamicBundle::class.java)
+        private val LOGGER = Logger.getInstance(TranslationDynamicBundle::class.java)
 
         val dynamicLocale: Locale? by lazy {
             try {

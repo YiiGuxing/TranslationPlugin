@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.update
 
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.WebPages
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.adaptedMessage
@@ -44,7 +45,7 @@ class UpdateManager : BaseStartupActivity() {
     }
 
     private fun checkUpdate(project: Project) {
-        val plugin = Plugin.descriptor
+        val plugin = TranslationPlugin.descriptor
         val versionString = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersionString = properties.getValue(VERSION_PROPERTY, Version.INITIAL_VERSION)
@@ -176,7 +177,7 @@ class UpdateManager : BaseStartupActivity() {
     companion object {
         const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin Updates"
 
-        private const val VERSION_PROPERTY = "${Plugin.PLUGIN_ID}.version"
+        private const val VERSION_PROPERTY = "${TranslationPlugin.PLUGIN_ID}.version"
 
         private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 

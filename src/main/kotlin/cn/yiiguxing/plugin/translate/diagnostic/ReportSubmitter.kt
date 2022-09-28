@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.diagnostic
 
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.action.BrowseUrlAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.diagnostic.github.TranslationGitHubAppException
@@ -271,7 +272,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
 
     private fun StringBuilder.appendEnvironments() = apply {
         appendLine("## Environments")
-        append("> **Plugin version: ", Plugin.version, "**", "\n\n")
+        append("> **Plugin version: ", TranslationPlugin.version, "**", "\n\n")
 
         val appInfo = ApplicationInfoEx.getInstanceEx()
         val edition = ApplicationNamesInfo.getInstance().editionName
