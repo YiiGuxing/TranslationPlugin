@@ -22,6 +22,8 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     private const val ALI_TRANSLATE_API_URL = "https://mt.aliyuncs.com/api/translate/web/general"
     private const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"
 
+    private val EMPTY_RESPONSE_REGEX = "\\{\\s*}".toRegex()
+
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
         Lang.CHINESE,
@@ -204,7 +206,8 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     ): Translation {
         logger.i("Translate result: $translation")
 
-        if (translation.isBlank()) {
+        // 阿里翻译会返回一个空JSON对象：`{}`
+        if (translation.isBlank() || translation.trim().matches(EMPTY_RESPONSE_REGEX)) {
             return Translation(original, original, srcLang, targetLang, listOf(srcLang))
         }
 
