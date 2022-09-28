@@ -8,7 +8,7 @@ import java.nio.file.Paths
 /**
  * Provides data storage locations.
  */
-object TranslationStorage {
+object TranslationStorages {
     /**
      * Storage name for persistent data such as preferences, state, etc.
      */

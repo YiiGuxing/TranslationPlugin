@@ -2,7 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.plugin.translate.TranslationStorage
+import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
@@ -80,7 +80,7 @@ class WordBookService {
                 return@runAsync
             }
 
-            TranslationStorage.createDataDirectoriesIfNotExists()
+            TranslationStorages.createDataDirectoriesIfNotExists()
             lock { migrateDatabaseIfNeed() }
             initService()
         }.onError {
@@ -192,7 +192,7 @@ class WordBookService {
 
         var downloadedFile: Path? = null
         try {
-            val tempFile = Files.createTempFile(TranslationStorage.DATA_DIRECTORY, "download.", ".tmp")
+            val tempFile = Files.createTempFile(TranslationStorages.DATA_DIRECTORY, "download.", ".tmp")
             downloadedFile = tempFile
 
             HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
@@ -471,9 +471,9 @@ class WordBookService {
     companion object {
         private const val DRIVER_VERSION = "3.36.0.3"
 
-        private val LOCK_FILE = TranslationStorage.DATA_DIRECTORY.resolve(".lock")
-        private val DB_FILE = TranslationStorage.DATA_DIRECTORY.resolve("wordbook.db")
-        private val DRIVER_JAR = TranslationStorage.DATA_DIRECTORY.resolve("driver-v$DRIVER_VERSION.jar")
+        private val LOCK_FILE = TranslationStorages.DATA_DIRECTORY.resolve(".lock")
+        private val DB_FILE = TranslationStorages.DATA_DIRECTORY.resolve("wordbook.db")
+        private val DRIVER_JAR = TranslationStorages.DATA_DIRECTORY.resolve("driver-v$DRIVER_VERSION.jar")
 
         // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/
         private const val DRIVER_FILE_URL =

@@ -22,7 +22,7 @@ import kotlin.properties.Delegates
 /**
  * Settings
  */
-@State(name = "Settings", storages = [(Storage(TranslationStorage.PREFERENCES_STORAGE_NAME))])
+@State(name = "Translation.Settings", storages = [(Storage(TranslationStorages.PREFERENCES_STORAGE_NAME))])
 class Settings : PersistentStateComponent<Settings> {
 
     /**
@@ -184,7 +184,7 @@ class Settings : PersistentStateComponent<Settings> {
 
 
         private const val CURRENT_DATA_VERSION = 1
-        private const val DATA_VERSION_KEY = "${Plugin.PLUGIN_ID}.settings.data.version"
+        private const val DATA_VERSION_KEY = "${TranslationPlugin.PLUGIN_ID}.settings.data.version"
 
         private val LOG = Logger.getInstance(Settings::class.java)
 
@@ -232,7 +232,7 @@ private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
 
-private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", Plugin.PLUGIN_ID)
+private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", TranslationPlugin.PLUGIN_ID)
 
 private val SETTINGS_CHANGE_PUBLISHER: SettingsChangeListener =
     ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)

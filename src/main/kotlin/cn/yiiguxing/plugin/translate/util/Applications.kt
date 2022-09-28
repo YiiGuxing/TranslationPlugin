@@ -8,28 +8,15 @@ import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
-import com.intellij.ide.plugins.IdeaPluginDescriptor
-import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.notification.Notification
 import com.intellij.notification.Notifications
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Condition
 import org.jetbrains.kotlin.idea.slicer.KotlinSliceUsageCellRenderer.action
 import java.util.concurrent.Future
-
-object Plugin {
-
-    const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
-
-    val descriptor: IdeaPluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))!!
-
-    val version: String by lazy { descriptor.version }
-
-}
 
 
 inline val Application: Application get() = ApplicationManager.getApplication()

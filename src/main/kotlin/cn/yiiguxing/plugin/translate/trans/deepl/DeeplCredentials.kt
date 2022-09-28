@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
-import cn.yiiguxing.plugin.translate.util.Plugin
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -10,7 +10,7 @@ import com.intellij.openapi.components.service
 internal class DeeplCredentials private constructor() {
 
     companion object {
-        private val SERVICE_NAME = generateServiceName("DeepL Credentials", "${Plugin.PLUGIN_ID}.DEEPL_AUTH_KEY")
+        private val SERVICE_NAME = generateServiceName("DeepL Credentials", "${TranslationPlugin.PLUGIN_ID}.DEEPL_AUTH_KEY")
 
         val instance: DeeplCredentials get() = service()
     }
