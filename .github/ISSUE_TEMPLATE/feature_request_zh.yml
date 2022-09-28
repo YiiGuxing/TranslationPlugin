@@ -1,6 +1,5 @@
 name: "✨ 功能需求/建议"
 description: 提出新的功能需求或建议.
-title: "[需求/建议]: "
 labels: ["feature request :sparkles:"]
 body:
   - type: markdown
