@@ -8,7 +8,7 @@ import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLException
 
 /**
  * Provides a skeletal implementation of the [Translator] interface.
@@ -36,7 +36,7 @@ abstract class AbstractTranslator : Translator {
         val errorMessage = when (throwable) {
             is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
             is ConnectException, is UnknownHostException -> message("error.network.connection")
-            is SocketException, is SSLHandshakeException -> message("error.network")
+            is SocketException, is SSLException -> message("error.network")
             is SocketTimeoutException -> message("error.network.timeout")
             is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> when (throwable.statusCode) {

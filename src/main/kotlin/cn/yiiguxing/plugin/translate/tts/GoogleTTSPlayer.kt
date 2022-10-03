@@ -26,7 +26,7 @@ import java.lang.StrictMath.round
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLException
 import javax.sound.sampled.*
 
 
@@ -99,7 +99,7 @@ class GoogleTTSPlayer(
                 when (error) {
                     is SocketException,
                     is SocketTimeoutException,
-                    is SSLHandshakeException,
+                    is SSLException,
                     is UnknownHostException -> {
                         Notifications.showErrorNotification(
                             project,
