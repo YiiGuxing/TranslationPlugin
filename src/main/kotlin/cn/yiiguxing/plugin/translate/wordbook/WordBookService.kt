@@ -533,7 +533,7 @@ class WordBookService : Disposable {
 
 
     companion object {
-        private const val DRIVER_VERSION = "3.36.0.3"
+        private const val DRIVER_VERSION = "3.39.3.0"
         private const val STORAGE_FILE_NAME = "wordbook.sqlite"
 
         private val LOCK_FILE = TranslationStorages.DATA_DIRECTORY.resolve(".lock")
@@ -543,13 +543,11 @@ class WordBookService : Disposable {
         private const val DRIVER_FILE_URL =
             "https://maven.aliyun.com/repository/public/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
 
-        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar.sha1
-        private const val DRIVER_FILE_SHA1 = "7fa71c4dfab806490cb909714fb41373ec552c29"
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.39.3.0/sqlite-jdbc-3.39.3.0.jar.sha1
+        private const val DRIVER_FILE_SHA1 = "94166806682e738a5275bd09052fa34b1328eedf"
 
         private const val SQLITE_DATA_SOURCE = "org.sqlite.SQLiteDataSource"
         private const val DATABASE_URL_PREFIX = "jdbc:sqlite:"
-
-        private const val QUERY_TIMEOUT = 5 // timeout in seconds
 
         // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
         private const val SQLITE_CONSTRAINT = 19
