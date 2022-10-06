@@ -23,65 +23,6 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     private const val DEEPL_PRO_TRANSLATE_API_URL = "https://api.deepl.com/v2/translate"
 
 
-    /** 通用版支持的语言列表 */
-    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-        Lang.BULGARIAN,
-        Lang.CHINESE,
-        Lang.CZECH,
-        Lang.DANISH,
-        Lang.DUTCH,
-        Lang.GERMAN,
-        Lang.GREEK,
-        Lang.ENGLISH,
-        Lang.ESTONIAN,
-        Lang.FINNISH,
-        Lang.FRENCH,
-        Lang.HUNGARIAN,
-        Lang.ITALIAN,
-        Lang.JAPANESE,
-        Lang.LATVIAN,
-        Lang.LITHUANIAN,
-        Lang.POLISH,
-        Lang.PORTUGUESE,
-        Lang.ROMANIAN,
-        Lang.RUSSIAN,
-        Lang.SLOVAK,
-        Lang.SLOVENIAN,
-        Lang.SPANISH,
-        Lang.SWEDISH,
-    )
-
-    private val SUPPORTED_TARGET_LANGUAGES: List<Lang> = listOf(
-        Lang.BULGARIAN,
-        Lang.CHINESE,
-        Lang.CZECH,
-        Lang.DANISH,
-        Lang.DUTCH,
-        Lang.GERMAN,
-        Lang.GREEK,
-        Lang.ENGLISH,
-        Lang.ENGLISH_AMERICAN,
-        Lang.ENGLISH_BRITISH,
-        Lang.ESTONIAN,
-        Lang.FINNISH,
-        Lang.FRENCH,
-        Lang.HUNGARIAN,
-        Lang.ITALIAN,
-        Lang.JAPANESE,
-        Lang.LATVIAN,
-        Lang.LITHUANIAN,
-        Lang.POLISH,
-        Lang.PORTUGUESE,
-        Lang.PORTUGUESE_BRAZILIAN,
-        Lang.PORTUGUESE_PORTUGUESE,
-        Lang.ROMANIAN,
-        Lang.RUSSIAN,
-        Lang.SLOVAK,
-        Lang.SLOVENIAN,
-        Lang.SPANISH,
-        Lang.SWEDISH,
-    )
-
     private val logger: Logger = Logger.getInstance(DeeplTranslator::class.java)
 
     override val id: String = DEEPL.id
@@ -97,10 +38,9 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = DEEPL.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
-        .toMutableList()
-        .apply { add(0, Lang.AUTO) }
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
+    override val supportedSourceLanguages: List<Lang> = DeeplLanguageAdapter.supportedSourceLanguages
+
+    override val supportedTargetLanguages: List<Lang> = DeeplLanguageAdapter.supportedTargetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force || !DeeplCredentials.instance.isAuthKeySet) {

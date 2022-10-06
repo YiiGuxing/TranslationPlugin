@@ -19,17 +19,6 @@ object YoudaoTranslator : AbstractTranslator() {
     private const val YOUDAO_API_URL = "https://openapi.youdao.com/api"
 
 
-    private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedValues() - listOf(
-        Lang.CHINESE_TRADITIONAL,
-        Lang.CHINESE_CLASSICAL,
-        Lang.AFRIKAANS,
-        Lang.KYRGYZ,
-        Lang.CATALAN,
-        Lang.HMONG,
-        Lang.SERBIAN,
-        Lang.SLOVENIAN
-    )).toList()
-
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
 
     override val id: String = YOUDAO.id
@@ -51,8 +40,9 @@ object YoudaoTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = YOUDAO.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val supportedSourceLanguages: List<Lang> = YoudaoLanguageAdapter.supportedSourceLanguages
+
+    override val supportedTargetLanguages: List<Lang> = YoudaoLanguageAdapter.supportedTargetLanguages
 
     private val errorMessageMap: Map<Int, String> by lazy {
         mapOf(
@@ -146,6 +136,7 @@ object YoudaoTranslator : AbstractTranslator() {
                 ) {
                     YOUDAO.showConfigurationDialog()
                 }
+
                 else -> null
             }
 
