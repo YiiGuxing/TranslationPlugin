@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.form
 
 import cn.yiiguxing.plugin.translate.TTSSource
 import cn.yiiguxing.plugin.translate.TargetLanguageSelection
+import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.ActionLink
@@ -18,9 +19,14 @@ import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.*
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.components.JBLabel
+import com.intellij.ui.components.JBTextField
 import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.ui.scale.JBUIScale
+import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import net.miginfocom.layout.CC
@@ -91,7 +97,7 @@ abstract class SettingsForm {
         message("settings.font.default.preview.text")
     )
     protected val phoneticFontPreview: JLabel = JLabel(PHONETIC_CHARACTERS)
-    protected val restoreDefaultButton = JButton(message("settings.button.restore.default.fonts"))
+    protected val restoreDefaultButton = JButton(message("settings.button.restore.default"))
 
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
 
@@ -113,6 +119,12 @@ abstract class SettingsForm {
         JBCheckBox(message("settings.options.show.replacement.action"))
     protected val selectTargetLanguageCheckBox: JBCheckBox = JBCheckBox(message("settings.options.selectLanguage"))
     protected val showWordsOnStartupCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordsOnStartup"))
+    protected val wordbookStoragePathField: TextFieldWithBrowseButton = TextFieldWithBrowseButton().apply {
+        isEditable = false
+        textField.isFocusable = false
+        (textField as? JBTextField)?.emptyText?.text = TranslationStorages.DATA_DIRECTORY.toString()
+    }
+    protected val resetWordbookStoragePathButton: JButton = JButton(message("settings.button.restore.default"))
     protected val showExplanationCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showExplanation"))
 
     protected val maxHistoriesSizeComboBox: ComboBox<Int> = comboBox(50, 30, 20, 10, 0).apply {
@@ -217,6 +229,28 @@ abstract class SettingsForm {
             add(showExplanationCheckBox, wrap())
         }
 
+        val wordbookStorePanel = titledPanel(message("settings.panel.title.word.book"), true) {
+            add(JBLabel(message("settings.wordbook.label.storage.path")), CC().gapAfter(JBUIScale.scale(4).toString()))
+            add(wordbookStoragePathField, fillX())
+            add(resetWordbookStoragePathButton, wrap())
+
+
+            val tips = JEditorPane("text/plain", message("settings.wordbook.label.storage.path.tips")).apply {
+                isOpaque = false
+                isEditable = false
+                isEnabled = false
+                disabledTextColor = JBUI.CurrentTheme.Label.disabledForeground()
+                border = JBUI.Borders.empty()
+                maximumSize = JBDimension(500, Int.MAX_VALUE)
+            }
+            val tipsCc = fillX()
+                .gapBefore(JBUIScale.scale(2).toString())
+                .gapTop(JBUIScale.scale(2).toString())
+                .spanX(2)
+                .cell(1, 1)
+            add(tips, tipsCc)
+        }
+
         val cacheAndHistoryPanel = titledPanel(message("settings.panel.title.cacheAndHistory")) {
             add(JPanel(migLayout()).apply {
                 add(JLabel(message("settings.cache.label.diskCache")))
@@ -247,6 +281,7 @@ abstract class SettingsForm {
             translationPopupPanel,
             translateAndReplacePanel,
             wordOfTheDayPanel,
+            wordbookStorePanel,
             cacheAndHistoryPanel,
             otherPanel,
             supportLinkLabel
@@ -279,13 +314,17 @@ abstract class SettingsForm {
         private fun createFontComboBox(filterNonLatin: Boolean): FontComboBox =
             FontComboBox(false, filterNonLatin, false)
 
-        private fun titledPanel(title: String, body: JPanel.() -> Unit): JComponent {
+        private fun titledPanel(title: String, fill: Boolean = false, body: JPanel.() -> Unit): JComponent {
             val innerPanel = JPanel(migLayout())
             innerPanel.body()
             return JPanel(migLayout()).apply {
                 border = IdeBorderFactory.createTitledBorder(title)
-                add(innerPanel)
-                add(JPanel(), fillX())
+                if (fill) {
+                    add(innerPanel, fillX())
+                } else {
+                    add(innerPanel)
+                    add(JPanel(), fillX())
+                }
             }
         }
 

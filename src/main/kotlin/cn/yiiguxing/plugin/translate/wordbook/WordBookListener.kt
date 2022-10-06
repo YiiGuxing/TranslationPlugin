@@ -29,6 +29,11 @@ interface WordBookListener {
      */
     fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) {}
 
+    /**
+     * Called when the wordbook storage path is changed.
+     */
+    fun onStoragePathChanged(service: WordBookService) {}
+
     companion object {
         @Topic.AppLevel
         val TOPIC: Topic<WordBookListener> = Topic.create("WordBookListener", WordBookListener::class.java)

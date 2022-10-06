@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.HelpTopic
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.TranslationStates
@@ -18,8 +19,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     private var configurablePanel: ConfigurablePanel? = null
 
-    @Suppress("SpellCheckingInspection")
-    override fun getId(): String = "yiiguxing.plugin.translate"
+    override fun getId(): String = TranslationPlugin.PLUGIN_ID
 
     override fun enableSearch(option: String?): Runnable? = null
 
@@ -47,6 +47,7 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
     }
 
     override fun dispose() {
+        configurablePanel?.let { Disposer.dispose(it) }
         configurablePanel = null
     }
 
