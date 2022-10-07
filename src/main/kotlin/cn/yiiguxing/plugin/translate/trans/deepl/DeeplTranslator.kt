@@ -5,7 +5,6 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.DEEPL
-import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
@@ -18,10 +17,6 @@ import javax.swing.Icon
  * Deepl translator
  */
 object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
-
-    private const val DEEPL_FREE_TRANSLATE_API_URL = "https://api-free.deepl.com/v2/translate"
-    private const val DEEPL_PRO_TRANSLATE_API_URL = "https://api.deepl.com/v2/translate"
-
 
     private val logger: Logger = Logger.getInstance(DeeplTranslator::class.java)
 
@@ -60,26 +55,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
         val authKey = DeeplCredentials.instance.authKey ?: ""
-        val isFreeApi = authKey.endsWith(":fx")
-        val requestURL = if (isFreeApi) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
-        val postData: LinkedHashMap<String, String> = linkedMapOf(
-            "target_lang" to targetLang.deeplLanguageCode,
-            "text" to text
-        )
-
-        if (srcLang !== Lang.AUTO) {
-            postData["source_lang"] = srcLang.deeplLanguageCode
-        }
-        if (isDocument) {
-            postData["tag_handling"] = "html"
-        }
-
-        return Http.post(requestURL, postData) {
-            userAgent(Http.PLUGIN_USER_AGENT)
-            // Authentication method should be header-based authentication,
-            // auth-key will leak into the log file if it is authenticated as a parameter.
-            tuner { it.setRequestProperty("Authorization", "DeepL-Auth-Key $authKey") }
-        }
+        return DeeplService(authKey).translate(text, srcLang, targetLang, isDocument)
     }
 
     @Suppress("UNUSED_PARAMETER")
