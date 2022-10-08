@@ -41,6 +41,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 弦曲 | | 66.6 CNY |
 | 贺小五 | | 66.6 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
+| 薛定谔的猫 | | 60 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
 | 波浪线 | | 50 CNY |
 | 昊天 | | 50 CNY |
@@ -55,18 +56,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| 薛定谔的猫 | | 30 CNY |
+| 丿初音 | | 40 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
-| 丿初音 | | 20 CNY |
+| Isolated | | 20 CNY |
 | 田坪毛小江 | | 20 CNY |
 | Doki23 | [github.com/doki23](https://github.com/doki23) | 20 CNY |
 | 🎱 | | 20 CNY |
 | Imagin | | 20 CNY |
 | 凯 | | 20 CNY |
-| 丿初音 | | 20 CNY |
 | 包子 | | 20 CNY |
 | 耳朵先生 | [fetter.cn](http://fetter.cn) | 20 CNY |
 | Lubeij | | 20 CNY |
@@ -80,6 +80,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 山河故人 | | 10 CNY |
 | 小路🎈路俊维 | | 10 CNY |
 | 啊聪 | | 10 CNY |
 | RazeSoldier | [www.razesoldier.cn](https://www.razesoldier.cn) | 10 CNY |
@@ -151,6 +152,16 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 小v | [github.com/violinday](https://github.com/violinday) | 6.66 CNY |
+| 贰 | | 6.66 CNY |
+| 俊哥响叮当KS | | 6.66 CNY |
+| Hyewsion | | 6.66 CNY |
+| 林兆孪 | | 6.66 CNY |
+| 李平 | | 6.66 CNY |
+| 清 | | 6.66 CNY |
+| 芝士花栗鼠 | | 6.66 CNY |
+| 2080206402885 | | 6.66 CNY |
+| 林志伟 | | 6.66 CNY |
 | otto | | 6.66 CNY |
 | 莽 | | 6.66 CNY |
 | 葱 | | 6.66 CNY |
