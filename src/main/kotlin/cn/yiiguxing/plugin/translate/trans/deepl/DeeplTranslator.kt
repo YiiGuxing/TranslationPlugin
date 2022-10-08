@@ -107,6 +107,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
+        // https://www.deepl.com/docs-api/api-access/error-handling/
         if (throwable is HttpRequests.HttpStatusException) {
             when (throwable.statusCode) {
                 403,
@@ -124,8 +125,6 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
                     }
                     return ErrorInfo(message, action)
                 }
-
-                529 -> return ErrorInfo(message("error.too.many.requests"))
             }
         }
 

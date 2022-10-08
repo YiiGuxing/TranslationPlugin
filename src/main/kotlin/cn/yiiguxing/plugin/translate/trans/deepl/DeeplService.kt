@@ -12,9 +12,14 @@ import com.intellij.util.io.RequestBuilder
  */
 class DeeplService(var authKey: String) {
 
+    /**
+     * Determines if the given [DeepL Authentication Key][authKey] belongs to an API Free account.
+     */
+    val isFreeAccount: Boolean get() = isFreeAccountAuthKey(authKey)
+
     /** Base URL for DeepL API.  */
     private val serverUrl: String
-        get() = if (isFreeAccountAuthKey(authKey)) DEEPL_SERVER_URL_FREE else DEEPL_SERVER_URL_PRO
+        get() = if (isFreeAccount) DEEPL_SERVER_URL_FREE else DEEPL_SERVER_URL_PRO
 
     /**
      * Sets the Authorization and the User Agent HTTP header.
