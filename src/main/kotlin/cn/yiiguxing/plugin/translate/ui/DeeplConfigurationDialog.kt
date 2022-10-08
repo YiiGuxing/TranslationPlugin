@@ -171,7 +171,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         if (authKey.isNullOrEmpty()) {
             currentService = null
             updateUsageInfo(null)
-            setErrorText(message("error.invalidAccount"), authKeyField)
+            setErrorText(message("deepl.config.dialog.message.enter.auth.key"), authKeyField)
             return
         }
         if (authKey == currentService?.authKey) {
@@ -212,7 +212,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
         if (throwable != null) {
             if (throwable is HttpRequests.HttpStatusException && throwable.statusCode == 403) {
-                setErrorText(message("error.invalidAccount"), authKeyField)
+                setErrorText(message("error.invalid.authentication.key"), authKeyField)
             } else {
                 val message = (throwable as? IOException)
                     ?.getCommonMessage()
