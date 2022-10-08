@@ -180,12 +180,16 @@ class WordBookView {
                             notifyWordsChanged()
                         }
                     }
+
+                    override fun onStoragePathChanged(service: WordBookService) {
+                        refresh()
+                    }
                 })
         }
     }
 
     private fun refresh() {
-        Application.assertIsDispatchThread()
+        assertIsDispatchThread()
         if (isLoading) {
             return
         }
@@ -320,7 +324,7 @@ class WordBookView {
         final override fun actionPerformed(e: AnActionEvent) {
             if (WordBookService.isInitialized) {
                 doAction(e)
-            } else {
+            } else if (WordBookService.state == WordBookState.NO_DRIVER) {
                 Popups.showBalloonForComponent(
                     e.inputEvent.component,
                     message("wordbook.window.message.missing.driver"),

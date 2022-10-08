@@ -1,7 +1,7 @@
 package icons
 
 import cn.yiiguxing.plugin.translate.ui.icon.SuspendIcon
-import com.intellij.ui.IconManager
+import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.JBColor
 import javax.swing.Icon
 
@@ -47,11 +47,9 @@ object TranslationIcons {
     val Google: Icon = load("/icons/google.svg")
 
     @JvmField
-    @Suppress("SpellCheckingInspection")
     val Youdao: Icon = load("/icons/youdao.svg")
 
     @JvmField
-    @Suppress("SpellCheckingInspection")
     val Baidu: Icon = load("/icons/baidu.svg")
 
     @JvmField
@@ -83,6 +81,6 @@ object TranslationIcons {
 
     @JvmStatic
     fun load(path: String): Icon {
-        return IconManager.getInstance().getIcon(path, TranslationIcons::class.java)
+        return IconLoader.getIcon(path, TranslationIcons::class.java)
     }
 }

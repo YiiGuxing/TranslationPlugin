@@ -6,6 +6,16 @@ package cn.yiiguxing.plugin.translate.trans
 interface LanguageAdapter {
 
     /**
+     * List of supported source languages.
+     */
+    val supportedSourceLanguages: List<Lang>
+
+    /**
+     * List of supported target languages.
+     */
+    val supportedTargetLanguages: List<Lang>
+
+    /**
      * Returns the [language][Lang] corresponding to the given [code].
      */
     fun getLanguage(code: String): Lang = Lang[code]

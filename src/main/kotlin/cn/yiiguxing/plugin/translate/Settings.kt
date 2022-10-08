@@ -151,11 +151,20 @@ class Settings : PersistentStateComponent<Settings> {
 
     var translateDocumentation: Boolean = false
 
-    var showReplacementActionInContextMenu: Boolean = false
+    var showReplacementActionInContextMenu: Boolean = true
 
     var showActionsInContextMenuOnlyWithSelection: Boolean = true
 
     var primaryFontPreviewText = message("settings.font.default.preview.text")
+
+    /**
+     * 单词本存储路径
+     */
+    var wordbookStoragePath: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
+        if (oldValue != newValue) {
+            SETTINGS_CHANGE_PUBLISHER.onWordbookStoragePathChanged(this)
+        }
+    }
 
     override fun getState(): Settings = this
 
@@ -299,6 +308,8 @@ interface SettingsChangeListener {
     fun onTranslatorConfigurationChanged() {}
 
     fun onOverrideFontChanged(settings: Settings) {}
+
+    fun onWordbookStoragePathChanged(settings: Settings) {}
 
     companion object {
         val TOPIC: Topic<SettingsChangeListener> =

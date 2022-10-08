@@ -22,45 +22,8 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     private const val ALI_TRANSLATE_API_URL = "https://mt.aliyuncs.com/api/translate/web/general"
     private const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"
 
+    private val EMPTY_RESPONSE_REGEX = "\\{\\s*}".toRegex()
 
-    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-        Lang.CHINESE,
-        Lang.CHINESE_TRADITIONAL,
-        Lang.ENGLISH,
-        Lang.JAPANESE,
-        Lang.KOREAN,
-        Lang.FRENCH,
-        Lang.SPANISH,
-        Lang.ITALIAN,
-        Lang.GERMAN,
-        Lang.TURKISH,
-        Lang.RUSSIAN,
-        Lang.PORTUGUESE,
-        Lang.VIETNAMESE,
-        Lang.INDONESIAN,
-        Lang.THAI,
-        Lang.MALAY,
-        Lang.ARABIC,
-        Lang.HINDI
-    )
-
-    private val SUPPORTED_TARGET_LANGUAGES: List<Lang> = listOf(
-        Lang.CHINESE,
-        Lang.ENGLISH,
-        Lang.JAPANESE,
-        Lang.KOREAN,
-        Lang.FRENCH,
-        Lang.SPANISH,
-        Lang.ITALIAN,
-        Lang.GERMAN,
-        Lang.TURKISH,
-        Lang.RUSSIAN,
-        Lang.PORTUGUESE,
-        Lang.VIETNAMESE,
-        Lang.INDONESIAN,
-        Lang.THAI,
-        Lang.MALAY
-    )
 
     private val logger: Logger = Logger.getInstance(AliTranslator::class.java)
 
@@ -77,10 +40,9 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = ALI.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
-        .toMutableList()
-        .apply { add(0, Lang.AUTO) }
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
+    override val supportedSourceLanguages: List<Lang> = AliLanguageAdapter.supportedSourceLanguages
+
+    override val supportedTargetLanguages: List<Lang> = AliLanguageAdapter.supportedTargetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force || Settings.aliTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
@@ -204,7 +166,8 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     ): Translation {
         logger.i("Translate result: $translation")
 
-        if (translation.isBlank()) {
+        // 阿里翻译会返回一个空JSON对象：`{}`
+        if (translation.isBlank() || translation.trim().matches(EMPTY_RESPONSE_REGEX)) {
             return Translation(original, original, srcLang, targetLang, listOf(srcLang))
         }
 
