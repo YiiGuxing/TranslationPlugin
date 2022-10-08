@@ -56,6 +56,10 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
                     toolWindowRef.get()?.runIfSurvive { isAvailable = available }
                 }
             }
+
+            override fun onStoragePathChanged(service: WordBookService) {
+                updateAvailable(toolWindowRef)
+            }
         })
 
         val disposable = Disposer.newDisposable(toolWindow.disposable, "Wordbook tool window availability state")

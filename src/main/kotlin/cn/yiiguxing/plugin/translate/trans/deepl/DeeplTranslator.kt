@@ -5,7 +5,6 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.DEEPL
-import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
@@ -18,69 +17,6 @@ import javax.swing.Icon
  * Deepl translator
  */
 object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
-
-    private const val DEEPL_FREE_TRANSLATE_API_URL = "https://api-free.deepl.com/v2/translate"
-    private const val DEEPL_PRO_TRANSLATE_API_URL = "https://api.deepl.com/v2/translate"
-
-
-    /** 通用版支持的语言列表 */
-    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-        Lang.BULGARIAN,
-        Lang.CHINESE,
-        Lang.CZECH,
-        Lang.DANISH,
-        Lang.DUTCH,
-        Lang.GERMAN,
-        Lang.GREEK,
-        Lang.ENGLISH,
-        Lang.ESTONIAN,
-        Lang.FINNISH,
-        Lang.FRENCH,
-        Lang.HUNGARIAN,
-        Lang.ITALIAN,
-        Lang.JAPANESE,
-        Lang.LATVIAN,
-        Lang.LITHUANIAN,
-        Lang.POLISH,
-        Lang.PORTUGUESE,
-        Lang.ROMANIAN,
-        Lang.RUSSIAN,
-        Lang.SLOVAK,
-        Lang.SLOVENIAN,
-        Lang.SPANISH,
-        Lang.SWEDISH,
-    )
-
-    private val SUPPORTED_TARGET_LANGUAGES: List<Lang> = listOf(
-        Lang.BULGARIAN,
-        Lang.CHINESE,
-        Lang.CZECH,
-        Lang.DANISH,
-        Lang.DUTCH,
-        Lang.GERMAN,
-        Lang.GREEK,
-        Lang.ENGLISH,
-        Lang.ENGLISH_AMERICAN,
-        Lang.ENGLISH_BRITISH,
-        Lang.ESTONIAN,
-        Lang.FINNISH,
-        Lang.FRENCH,
-        Lang.HUNGARIAN,
-        Lang.ITALIAN,
-        Lang.JAPANESE,
-        Lang.LATVIAN,
-        Lang.LITHUANIAN,
-        Lang.POLISH,
-        Lang.PORTUGUESE,
-        Lang.PORTUGUESE_BRAZILIAN,
-        Lang.PORTUGUESE_PORTUGUESE,
-        Lang.ROMANIAN,
-        Lang.RUSSIAN,
-        Lang.SLOVAK,
-        Lang.SLOVENIAN,
-        Lang.SPANISH,
-        Lang.SWEDISH,
-    )
 
     private val logger: Logger = Logger.getInstance(DeeplTranslator::class.java)
 
@@ -97,10 +33,9 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = DEEPL.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
-        .toMutableList()
-        .apply { add(0, Lang.AUTO) }
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_TARGET_LANGUAGES
+    override val supportedSourceLanguages: List<Lang> = DeeplLanguageAdapter.supportedSourceLanguages
+
+    override val supportedTargetLanguages: List<Lang> = DeeplLanguageAdapter.supportedTargetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force || !DeeplCredentials.instance.isAuthKeySet) {
@@ -120,26 +55,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
         val authKey = DeeplCredentials.instance.authKey ?: ""
-        val isFreeApi = authKey.endsWith(":fx")
-        val requestURL = if (isFreeApi) DEEPL_FREE_TRANSLATE_API_URL else DEEPL_PRO_TRANSLATE_API_URL
-        val postData: LinkedHashMap<String, String> = linkedMapOf(
-            "target_lang" to targetLang.deeplLanguageCode,
-            "text" to text
-        )
-
-        if (srcLang !== Lang.AUTO) {
-            postData["source_lang"] = srcLang.deeplLanguageCode
-        }
-        if (isDocument) {
-            postData["tag_handling"] = "html"
-        }
-
-        return Http.post(requestURL, postData) {
-            userAgent(Http.PLUGIN_USER_AGENT)
-            // Authentication method should be header-based authentication,
-            // auth-key will leak into the log file if it is authenticated as a parameter.
-            tuner { it.setRequestProperty("Authorization", "DeepL-Auth-Key $authKey") }
-        }
+        return DeeplService(authKey).translate(text, srcLang, targetLang, isDocument)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -191,6 +107,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
+        // https://www.deepl.com/docs-api/api-access/error-handling/
         if (throwable is HttpRequests.HttpStatusException) {
             when (throwable.statusCode) {
                 403,
@@ -208,8 +125,6 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
                     }
                     return ErrorInfo(message, action)
                 }
-
-                529 -> return ErrorInfo(message("error.too.many.requests"))
             }
         }
 

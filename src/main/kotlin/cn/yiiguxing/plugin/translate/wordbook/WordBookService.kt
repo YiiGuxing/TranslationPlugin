@@ -2,11 +2,14 @@
 
 package cn.yiiguxing.plugin.translate.wordbook
 
+import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
@@ -15,7 +18,6 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.io.HttpRequests
-import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
 import org.jetbrains.concurrency.runAsync
@@ -27,13 +29,20 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.ResultSet
 import java.sql.SQLException
+import javax.sql.DataSource
 
 /**
  * Word book service.
  */
-class WordBookService {
+class WordBookService : Disposable {
 
     private lateinit var queryRunner: QueryRunner
+
+    @Volatile
+    private var classLoader: ClassLoader? = null
+        set(value) {
+            field = requireNotNull(value) { "Cannot set a null value" }
+        }
 
     private val wordBookPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
 
@@ -64,6 +73,13 @@ class WordBookService {
 
     init {
         asyncInitialize()
+        Application.messageBus
+            .connect(this)
+            .subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+                override fun onWordbookStoragePathChanged(settings: Settings) {
+                    onStoragePathChanged(settings.wordbookStoragePath)
+                }
+            })
     }
 
     @Synchronized
@@ -74,15 +90,55 @@ class WordBookService {
         } else false
     }
 
+    private fun onStoragePathChanged(newPath: String?) {
+        runAsync {
+            synchronized(this@WordBookService) {
+                check(isStableState(state))
+                if (state != RUNNING) {
+                    asyncInitialize()
+                    return@runAsync
+                }
+            }
+
+            val newDbFile = newPath?.takeIf { it.isNotBlank() }
+                ?.let { getStorageFile(Paths.get(it)) }
+                ?: getStorageFile(TranslationStorages.DATA_DIRECTORY)
+            Files.createDirectories(newDbFile.parent)
+
+            val runner = createRunner(newDbFile)
+            synchronized(this@WordBookService) {
+                queryRunner = runner
+            }
+
+            invokeLater { wordBookPublisher.onStoragePathChanged(this@WordBookService) }
+        }.onError { error ->
+            nextState(INITIALIZATION_ERROR)
+            val errorMsg = (error as? SQLException)
+                ?.let { WordBookErrorCode[it.errorCode].reason }
+                ?: error.message ?: ""
+            val title = message("wordbook.service.notification.title")
+            val message =
+                message("wordbook.service.notification.message.failed.to.switch.storage.path", errorMsg)
+            invokeLater(ModalityState.NON_MODAL) {
+                LOGGER.w("Failed to switch storage path", error)
+                Notifications.showErrorNotification(title, message)
+            }
+        }
+    }
+
     fun asyncInitialize() {
         runAsync {
             if (!nextState(INITIALIZING, UNINITIALIZED, INITIALIZATION_ERROR)) {
                 return@runAsync
             }
-
-            TranslationStorages.createDataDirectoriesIfNotExists()
-            lock { migrateDatabaseIfNeed() }
-            initService()
+            if (classLoader == null) {
+                findDriverClassLoader()?.let { classLoader = it }
+            }
+            if (classLoader != null) {
+                initService()
+            } else {
+                nextState(NO_DRIVER)
+            }
         }.onError {
             LOGGER.w("Wordbook initialization failed", it)
             nextState(INITIALIZATION_ERROR)
@@ -90,29 +146,28 @@ class WordBookService {
     }
 
     private fun initService() {
-        if (initQueryRunner()) {
-            initTable()
+        val dbFile = Settings.instance.wordbookStoragePath
+            ?.takeIf { it.isNotBlank() }
+            ?.let { getStorageFile(Paths.get(it)) }
+            ?: getStorageFile(TranslationStorages.DATA_DIRECTORY).also { dbFile ->
+                TranslationStorages.createDataDirectoriesIfNotExists()
+                lock { migrateDatabaseIfNeed(dbFile) }
+            }
+
+        val runner = createRunner(dbFile)
+        synchronized(this) {
+            queryRunner = runner
             nextState(RUNNING)
-        } else {
-            nextState(NO_DRIVER)
         }
     }
 
-    @Synchronized
-    private fun initQueryRunner(): Boolean {
-        if (::queryRunner.isInitialized) {
-            return true
-        }
+    private fun createRunner(dbFile: Path): QueryRunner {
+        val clazz = Class.forName(SQLITE_DATA_SOURCE, true, classLoader)
+        val dataSource: DataSource = clazz.getConstructor().newInstance() as DataSource
+        val setUrlMethod = clazz.getMethod("setUrl", String::class.java)
+        setUrlMethod.invoke(dataSource, DATABASE_URL_PREFIX + dbFile)
 
-        val classLoader = findDriverClassLoader() ?: return false
-        val dataSource = BasicDataSource().apply {
-            url = DATABASE_URL
-            driverClassLoader = classLoader
-            driverClassName = DATABASE_DRIVER
-            defaultQueryTimeout = QUERY_TIMEOUT
-        }
-        queryRunner = QueryRunner(dataSource)
-        return true
+        return QueryRunner(dataSource).apply { initTable() }
     }
 
     private fun findDriverClassLoader(): ClassLoader? {
@@ -150,7 +205,13 @@ class WordBookService {
                     nextState(INITIALIZING)
                     indicator.isIndeterminate = true
                     indicator.text = message("word.book.progress.initializing.service")
-                    initService()
+
+                    findDriverClassLoader()?.let { classLoader = it }
+                    if (classLoader != null) {
+                        initService()
+                    } else {
+                        nextState(NO_DRIVER)
+                    }
                 }
 
                 override fun onCancel() {
@@ -159,7 +220,7 @@ class WordBookService {
 
                 override fun onThrowable(error: Throwable) {
                     val state = synchronized(this@WordBookService) {
-                        val nextState = if (state == INITIALIZING) INITIALIZATION_ERROR else NO_DRIVER
+                        val nextState = if (classLoader != null) INITIALIZATION_ERROR else NO_DRIVER
                         nextState(nextState)
                         nextState
                     }
@@ -227,7 +288,7 @@ class WordBookService {
 
     private fun checkIsInitialized() = check(isInitialized) { "Word book not initialized" }
 
-    private fun initTable() {
+    private fun QueryRunner.initTable() {
         val createTableSQL = """
             CREATE TABLE IF NOT EXISTS wordbook (
                 "$COLUMN_ID"            INTEGER  PRIMARY KEY,
@@ -240,13 +301,13 @@ class WordBookService {
                 $COLUMN_CREATED_AT      DATETIME                NOT NULL
             )
         """.trimIndent()
-        queryRunner.update(createTableSQL)
+        update(createTableSQL)
 
         val createIndexSQL = """
             CREATE UNIQUE INDEX IF NOT EXISTS wordbook_unique_index
                 ON wordbook ($COLUMN_WORD, $COLUMN_SOURCE_LANGUAGE, $COLUMN_TARGET_LANGUAGE)
         """.trimIndent()
-        queryRunner.update(createIndexSQL)
+        update(createIndexSQL)
     }
 
     /**
@@ -452,6 +513,9 @@ class WordBookService {
         }
     }
 
+    override fun dispose() {
+    }
+
 
     private object BooleanHandler : ResultSetHandler<Boolean> {
         override fun handle(rs: ResultSet): Boolean = rs.takeIf { it.next() }?.getBoolean(1) ?: false
@@ -469,23 +533,21 @@ class WordBookService {
 
 
     companion object {
-        private const val DRIVER_VERSION = "3.36.0.3"
+        private const val DRIVER_VERSION = "3.39.3.0"
+        private const val STORAGE_FILE_NAME = "wordbook.sqlite"
 
         private val LOCK_FILE = TranslationStorages.DATA_DIRECTORY.resolve(".lock")
-        private val DB_FILE = TranslationStorages.DATA_DIRECTORY.resolve("wordbook.db")
         private val DRIVER_JAR = TranslationStorages.DATA_DIRECTORY.resolve("driver-v$DRIVER_VERSION.jar")
 
         // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/
         private const val DRIVER_FILE_URL =
             "https://maven.aliyun.com/repository/public/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
 
-        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar.sha1
-        private const val DRIVER_FILE_SHA1 = "7fa71c4dfab806490cb909714fb41373ec552c29"
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.39.3.0/sqlite-jdbc-3.39.3.0.jar.sha1
+        private const val DRIVER_FILE_SHA1 = "94166806682e738a5275bd09052fa34b1328eedf"
 
-        private const val DATABASE_DRIVER = "org.sqlite.JDBC"
-        private val DATABASE_URL = "jdbc:sqlite:$DB_FILE"
-
-        private const val QUERY_TIMEOUT = 5 // timeout in seconds
+        private const val SQLITE_DATA_SOURCE = "org.sqlite.SQLiteDataSource"
+        private const val DATABASE_URL_PREFIX = "jdbc:sqlite:"
 
         // org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT.code = 19
         private const val SQLITE_CONSTRAINT = 19
@@ -503,6 +565,12 @@ class WordBookService {
 
         val instance: WordBookService
             get() = ApplicationManager.getApplication().getService(WordBookService::class.java)
+
+        fun isStableState(state: WordBookState): Boolean {
+            return state == NO_DRIVER || state == INITIALIZATION_ERROR || state == RUNNING
+        }
+
+        fun getStorageFile(dir: Path = TranslationStorages.DATA_DIRECTORY): Path = dir.resolve(STORAGE_FILE_NAME)
 
         private inline fun <T> lock(block: () -> T): T {
             return RandomAccessFile(LOCK_FILE.toFile(), "rw").use { lockFile ->
@@ -531,7 +599,7 @@ class WordBookService {
             }
 
             return try {
-                Class.forName(DATABASE_DRIVER, false, this)
+                Class.forName(SQLITE_DATA_SOURCE, false, this)
                 true
             } catch (e: Throwable) {
                 false
@@ -557,10 +625,10 @@ class WordBookService {
         }
 
         // Will be removed on v4.0
-        private fun migrateDatabaseIfNeed() {
+        private fun migrateDatabaseIfNeed(dbFile: Path) {
             LOGGER.i("Start migrating the wordbook database file.")
             try {
-                if (Files.exists(DB_FILE)) {
+                if (Files.exists(dbFile)) {
                     LOGGER.i("The wordbook database file has been migrated.")
                     return
                 }
@@ -584,7 +652,7 @@ class WordBookService {
                     RandomAccessFile(oldDir.resolve(".lock").toFile(), "rw").use { lockFile ->
                         val lock = lockFile.channel.lock()
                         try {
-                            Files.copy(oldDbFile, DB_FILE)
+                            Files.copy(oldDbFile, dbFile)
                         } finally {
                             lock.release()
                         }
@@ -594,7 +662,7 @@ class WordBookService {
                         "Cannot migrate the wordbook database file securely, directly through non-secure migration.",
                         e
                     )
-                    Files.copy(oldDbFile, DB_FILE)
+                    Files.copy(oldDbFile, dbFile)
                 }
 
                 LOGGER.i("The wordbook database file has been successfully migrated.")

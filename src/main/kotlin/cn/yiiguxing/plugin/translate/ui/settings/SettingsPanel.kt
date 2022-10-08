@@ -10,6 +10,8 @@ import cn.yiiguxing.plugin.translate.util.ByteSize
 import cn.yiiguxing.plugin.translate.util.CacheService
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
+import cn.yiiguxing.plugin.translate.wordbook.WordBookState
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.options.ConfigurationException
@@ -44,8 +46,28 @@ class SettingsPanel(
         ignoreRegExp = createRegexEditorField()
         doLayout()
         setListeners()
+        initWordbookStorageComponents()
         initCache()
         initSupport()
+    }
+
+    private fun initWordbookStorageComponents() {
+        wordbookStoragePathField.addBrowseFolderListener(WordbookStoragePathBrowser(settings))
+        resetWordbookStoragePathButton.addActionListener {
+            WordbookStoragePathBrowser.restoreDefaultWordbookStorage(settings)
+            wordbookStoragePathField.text = ""
+        }
+
+        fun updateEnabled(state: WordBookState) {
+            val enabled = WordBookService.isStableState(state)
+            wordbookStoragePathField.isEnabled = enabled
+            resetWordbookStoragePathButton.isEnabled = enabled
+        }
+
+        updateEnabled(WordBookService.instance.state)
+        WordBookService.instance.stateBinding.observe(this) { state, _ ->
+            updateEnabled(state)
+        }
     }
 
     private fun initCache() {
@@ -254,6 +276,7 @@ class SettingsPanel(
         showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected =
             settings.showActionsInContextMenuOnlyWithSelection
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
+        wordbookStoragePathField.text = settings.wordbookStoragePath ?: ""
     }
 
     companion object {

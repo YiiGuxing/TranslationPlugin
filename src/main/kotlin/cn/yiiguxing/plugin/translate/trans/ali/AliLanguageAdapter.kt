@@ -5,6 +5,46 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 
 object AliLanguageAdapter : BaseLanguageAdapter() {
 
+    override val supportedSourceLanguages: List<Lang> = listOf(
+        Lang.AUTO,
+        Lang.CHINESE,
+        Lang.CHINESE_TRADITIONAL,
+        Lang.ENGLISH,
+        Lang.JAPANESE,
+        Lang.KOREAN,
+        Lang.FRENCH,
+        Lang.SPANISH,
+        Lang.ITALIAN,
+        Lang.GERMAN,
+        Lang.TURKISH,
+        Lang.RUSSIAN,
+        Lang.PORTUGUESE,
+        Lang.VIETNAMESE,
+        Lang.INDONESIAN,
+        Lang.THAI,
+        Lang.MALAY,
+        Lang.ARABIC,
+        Lang.HINDI
+    )
+
+    override val supportedTargetLanguages: List<Lang> = listOf(
+        Lang.CHINESE,
+        Lang.ENGLISH,
+        Lang.JAPANESE,
+        Lang.KOREAN,
+        Lang.FRENCH,
+        Lang.SPANISH,
+        Lang.ITALIAN,
+        Lang.GERMAN,
+        Lang.TURKISH,
+        Lang.RUSSIAN,
+        Lang.PORTUGUESE,
+        Lang.VIETNAMESE,
+        Lang.INDONESIAN,
+        Lang.THAI,
+        Lang.MALAY
+    )
+
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "zh" to Lang.CHINESE,
         "zh-tw" to Lang.CHINESE_TRADITIONAL,

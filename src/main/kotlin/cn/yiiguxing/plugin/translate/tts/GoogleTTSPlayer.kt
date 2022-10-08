@@ -20,13 +20,10 @@ import javazoom.spi.mpeg.sampled.convert.DecodedMpegAudioInputStream
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
 import java.io.ByteArrayInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.SequenceInputStream
 import java.lang.StrictMath.round
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
 import javax.sound.sampled.*
 
 
@@ -97,16 +94,7 @@ class GoogleTTSPlayer(
                 )
             } else {
                 when (error) {
-                    is SocketException,
-                    is SocketTimeoutException,
-                    is SSLHandshakeException,
-                    is UnknownHostException -> {
-                        Notifications.showErrorNotification(
-                            project,
-                            "TTS",
-                            message("error.network")
-                        )
-                    }
+                    is IOException -> Notifications.showErrorNotification(project, "TTS", error.getCommonMessage())
                     else -> LOGGER.e("TTS Error", error)
                 }
             }
