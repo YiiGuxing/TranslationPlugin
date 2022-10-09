@@ -145,7 +145,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
             charactersCount.foreground = when {
                 usage.limitReached -> ERROR_FOREGROUND_COLOR
-                (usage.characterCount.toFloat() / usage.characterLimit.toFloat()) >= 0.9f -> WARNING_FOREGROUND_COLOR
+                (usage.characterCount.toFloat() / usage.characterLimit.toFloat()) >= 0.8f -> WARNING_FOREGROUND_COLOR
                 else -> JBUI.CurrentTheme.Label.foreground()
             }
             charactersLimit.foreground = JBUI.CurrentTheme.Label.foreground()
