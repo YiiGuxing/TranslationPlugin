@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.ui
 import com.intellij.ide.ui.laf.IntelliJLaf
 import com.intellij.ide.ui.laf.darcula.DarculaLaf
 import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.IconManager
 import com.intellij.util.ui.JBDimension
 import java.awt.Container
 import javax.swing.JFrame
@@ -17,8 +16,6 @@ internal fun uiTest(
     uiProvider: (() -> Container)
 ) {
     IconLoader.activate()
-    @Suppress("UnstableApiUsage")
-    IconManager.activate()
     val laf = if (darcula) DarculaLaf() else IntelliJLaf()
     UIManager.setLookAndFeel(laf)
 
