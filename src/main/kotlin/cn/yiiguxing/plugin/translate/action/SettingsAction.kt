@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -17,7 +17,7 @@ class SettingsAction(
 ) : AnAction(text, description, icon), DumbAware {
 
     override fun actionPerformed(e: AnActionEvent) {
-        OptionsConfigurable.showSettingsDialog(e.project)
+        TranslationConfigurable.showSettingsDialog(e.project)
     }
 
 }

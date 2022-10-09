@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
-import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.ByteSize
 import cn.yiiguxing.plugin.translate.util.CacheService
@@ -33,11 +32,13 @@ import kotlin.math.max
 class SettingsPanel(
     private val settings: Settings,
     private val states: TranslationStates
-) : SettingsForm(), ConfigurablePanel {
+) : SettingsUi(), ConfigurableUi {
 
     private var validRegExp = true
 
     override val component: JComponent = wholePanel
+
+    override val preferredFocusedComponent: JComponent = translationEngineComboBox
 
     init {
         primaryFontComboBox.fixFontComboBoxSize()

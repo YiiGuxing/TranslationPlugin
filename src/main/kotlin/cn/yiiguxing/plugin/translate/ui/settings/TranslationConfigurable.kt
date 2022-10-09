@@ -5,55 +5,50 @@ import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.TranslationStates
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.ClearableLazyValue
 import com.intellij.openapi.util.Disposer
 import javax.swing.JComponent
 
 /**
  * 选项配置
  */
-class OptionsConfigurable : SearchableConfigurable, Disposable {
+class TranslationConfigurable : SearchableConfigurable {
 
-    private var configurablePanel: ConfigurablePanel? = null
+    private val ui: ClearableLazyValue<ConfigurableUi> = ClearableLazyValue.create {
+        SettingsPanel(Settings, TranslationStates)
+    }
 
     override fun getId(): String = TranslationPlugin.PLUGIN_ID
-
-    override fun enableSearch(option: String?): Runnable? = null
 
     override fun getDisplayName(): String = adaptedMessage("settings.page.name")
 
     override fun getHelpTopic(): String = HelpTopic.DEFAULT.id
 
-    override fun createComponent(): JComponent = SettingsPanel(Settings, TranslationStates).let {
-        configurablePanel = it
-        it.component
-    }
+    override fun createComponent(): JComponent = ui.value.component
 
-    override fun isModified(): Boolean = configurablePanel?.isModified ?: false
+    override fun getPreferredFocusedComponent(): JComponent = ui.value.preferredFocusedComponent
+
+    override fun isModified(): Boolean = ui.value.isModified
 
     override fun apply() {
-        configurablePanel?.apply()
+        ui.value.apply()
     }
 
     override fun reset() {
-        configurablePanel?.reset()
+        ui.value.reset()
     }
 
     override fun disposeUIResources() {
-        Disposer.dispose(this)
-    }
-
-    override fun dispose() {
-        configurablePanel?.let { Disposer.dispose(it) }
-        configurablePanel = null
+        ui.value.let { Disposer.dispose(it) }
+        ui.drop()
     }
 
     companion object {
         fun showSettingsDialog(project: Project? = null) {
-            ShowSettingsUtil.getInstance().showSettingsDialog(project, OptionsConfigurable::class.java)
+            ShowSettingsUtil.getInstance().showSettingsDialog(project, TranslationConfigurable::class.java)
         }
     }
 }

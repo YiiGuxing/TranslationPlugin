@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui.form
+package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.TTSSource
 import cn.yiiguxing.plugin.translate.TargetLanguageSelection
@@ -15,7 +15,6 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
@@ -36,7 +35,7 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
-abstract class SettingsForm {
+abstract class SettingsUi {
     protected val wholePanel: JPanel = JPanel()
 
     protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
