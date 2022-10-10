@@ -39,6 +39,7 @@
 
 - Multiple Translation Engines
     - Google Translate
+    - DeepL Translate
     - Youdao Translate
     - Baidu Translate
     - Alibaba Translate

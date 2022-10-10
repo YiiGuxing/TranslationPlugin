@@ -14,6 +14,7 @@
     <li>Multiple translation engines.
         <ul>
             <li>Google translate.</li>
+            <li>DeepL translate.</li>
             <li>Youdao translate.</li>
             <li>Alibaba translate.</li>
             <li>Baidu translate.</li>
