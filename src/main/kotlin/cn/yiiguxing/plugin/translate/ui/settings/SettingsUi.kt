@@ -96,7 +96,10 @@ abstract class SettingsUi {
         "text/plain",
         message("settings.font.default.preview.text")
     )
-    protected val phoneticFontPreview: JLabel = JLabel(PHONETIC_CHARACTERS)
+
+    protected val phoneticFontPreview: JLabel = ComponentPanelBuilder.createCommentComponent(
+        PHONETIC_CHARACTERS, true, 50, true
+    )
     protected val restoreDefaultButton = JButton(message("settings.button.restore.default"))
 
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
@@ -204,12 +207,12 @@ abstract class SettingsUi {
             add(phoneticFontComboBox, wrap())
 
             val primaryPreviewPanel = JPanel(migLayout()).apply {
-                add(primaryFontPreview, fillX())
+                add(primaryFontPreview, fill())
             }
             val phoneticPreviewPanel = JPanel(migLayout()).apply {
-                add(phoneticFontPreview, fillX().dockNorth())
+                add(phoneticFontPreview, fill())
             }
-            add(primaryPreviewPanel, fillX())
+            add(primaryPreviewPanel, fill())
             add(phoneticPreviewPanel, fill().wrap())
 
             add(restoreDefaultButton)
@@ -308,7 +311,8 @@ abstract class SettingsUi {
     }
 
     companion object {
-        private const val PHONETIC_CHARACTERS = "ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw"
+        private const val PHONETIC_CHARACTERS =
+            "iː əː ɔː uː aː i ə ɔ u æ e ʌ aɪ eɪ ɔɪ ɪə ɛə uə əu au p t k f s θ ʃ tʃ tr ts b d g v z ð ʒ dʒ dr dz m n ŋ h r l w j"
 
         private const val MIN_ELEMENT_WIDTH = 80
 
