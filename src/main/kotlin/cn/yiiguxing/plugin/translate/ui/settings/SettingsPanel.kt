@@ -5,12 +5,10 @@ import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.util.ByteSize
-import cn.yiiguxing.plugin.translate.util.CacheService
-import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.options.ConfigurationException
@@ -21,8 +19,8 @@ import com.intellij.ui.FontComboBox
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import org.intellij.lang.regexp.RegExpLanguage
+import org.jetbrains.concurrency.runAsync
 import java.awt.event.ItemEvent
-import java.lang.ref.WeakReference
 import javax.swing.JComponent
 import kotlin.math.max
 
@@ -72,23 +70,33 @@ class SettingsPanel(
     }
 
     private fun initCache() {
+        var isClearing = false
+        val labelRef = DisposableRef.create(this, cacheSizeLabel)
         clearCacheButton.addActionListener {
-            clearCacheButton.isEnabled = false
-            val buttonRef = WeakReference(clearCacheButton)
-            val labelRef = WeakReference(cacheSizeLabel)
-            executeOnPooledThread {
+            if (isClearing) {
+                return@addActionListener
+            }
+            isClearing = true
+
+            val modalityState = ModalityState.current()
+            runAsync {
                 CacheService.evictAllDiskCaches()
-                val size = CacheService.getDiskCacheSize()
-                labelRef.get()?.text = ByteSize.format(size)
-                buttonRef.get()?.isEnabled = true
+                CacheService.getDiskCacheSize()
+            }.onProcessed {
+                invokeLater(modalityState) {
+                    isClearing = false
+                    labelRef.get()?.text = ByteSize.format(it ?: 0L)
+                }
             }
         }
 
-        val labelRef = WeakReference(cacheSizeLabel)
-        executeOnPooledThread {
-            val size = CacheService.getDiskCacheSize()
-            labelRef.get()?.text = ByteSize.format(size)
-        }
+        val modalityState = ModalityState.current()
+        runAsync { CacheService.getDiskCacheSize() }
+            .onProcessed {
+                invokeLater(modalityState) {
+                    labelRef.get()?.text = ByteSize.format(it ?: 0L)
+                }
+            }
     }
 
     private fun initSupport() {
