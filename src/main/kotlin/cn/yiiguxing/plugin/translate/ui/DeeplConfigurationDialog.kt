@@ -145,7 +145,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
             charactersCount.foreground = when {
                 usage.limitReached -> ERROR_FOREGROUND_COLOR
-                (usage.characterCount.toFloat() / usage.characterLimit.toFloat()) >= 0.9f -> WARNING_FOREGROUND_COLOR
+                (usage.characterCount.toFloat() / usage.characterLimit.toFloat()) >= 0.8f -> WARNING_FOREGROUND_COLOR
                 else -> JBUI.CurrentTheme.Label.foreground()
             }
             charactersLimit.foreground = JBUI.CurrentTheme.Label.foreground()
@@ -171,7 +171,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         if (authKey.isNullOrEmpty()) {
             currentService = null
             updateUsageInfo(null)
-            setErrorText(message("error.invalidAccount"), authKeyField)
+            setErrorText(message("deepl.config.dialog.message.enter.auth.key"), authKeyField)
             return
         }
         if (authKey == currentService?.authKey) {
@@ -212,7 +212,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
         if (throwable != null) {
             if (throwable is HttpRequests.HttpStatusException && throwable.statusCode == 403) {
-                setErrorText(message("error.invalidAccount"), authKeyField)
+                setErrorText(message("error.invalid.authentication.key"), authKeyField)
             } else {
                 val message = (throwable as? IOException)
                     ?.getCommonMessage()

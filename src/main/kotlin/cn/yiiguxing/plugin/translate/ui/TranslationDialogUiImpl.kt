@@ -11,7 +11,6 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
-import com.intellij.ui.PopupBorder
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
@@ -99,10 +98,6 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         setButtonIcons()
 
         return mRoot
-    }
-
-    override fun setActive(active: Boolean) {
-        mRoot.border = PopupBorder.Factory.create(active, true)
     }
 
     override fun initFonts(pair: UI.FontPair) {
@@ -217,7 +212,6 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         }
 
         mRoot.apply {
-            border = PopupBorder.Factory.create(true, true)
             layout = BoxLayout(mRoot, BoxLayout.Y_AXIS)
 
             add(translationPanel)

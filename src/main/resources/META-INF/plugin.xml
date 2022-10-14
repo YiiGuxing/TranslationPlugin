@@ -64,7 +64,7 @@
                 serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
 
         <applicationConfigurable groupId="tools"
-                                 instance="cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable"/>
+                                 instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
         <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslatorWidgetFactory"/>
         <toolWindow id="Word Book"
