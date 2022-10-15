@@ -10,7 +10,6 @@ import com.intellij.openapi.fileTypes.FileTypes
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.EditorTextField
-import com.intellij.ui.JBColor
 import com.intellij.ui.TextFieldWithAutoCompletion
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
@@ -80,7 +79,7 @@ interface WordDetailsUI : Disposable {
             phoneticField.font = phoneticFont
             tagsField.font = phoneticFont
             val phoneticAndTagPanel = JPanel(UI.migLayout("$gap!", insets = "$gap 0 $gap 0")).apply {
-                border = JBUI.Borders.customLine(JBColor.GRAY, 1, 0, 0, 0)
+                border = JBUI.Borders.customLine(UI.getBordersColor(), 1, 0, 0, 0)
                 add(JBLabel(message("word.details.phonetic")))
                 add(phoneticField, UI.fillX().wrap())
                 add(JBLabel(message("word.details.tags")))

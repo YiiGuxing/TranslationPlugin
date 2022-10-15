@@ -182,6 +182,8 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
             }
             val rightPanel = JPanel(UI.migLayout()).apply {
                 background = translationTextArea.background
+                val borderColor = JBUI.CurrentTheme.Popup.borderColor(false)
+                border = JBUI.Borders.customLine(borderColor, 0, 1, 0, 0)
 
                 add(rightPanelWrapper, UI.fill().wrap())
                 add(

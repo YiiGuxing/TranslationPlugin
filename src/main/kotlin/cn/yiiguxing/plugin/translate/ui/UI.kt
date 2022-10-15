@@ -14,7 +14,6 @@ import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.image.RGBImageFilter
 import javax.swing.Icon
-import javax.swing.UIManager
 import javax.swing.border.Border
 
 /**
@@ -65,11 +64,7 @@ object UI {
 
     @JvmStatic
     @JvmOverloads
-    fun getColor(key: String, default: Color? = null): Color? = UIManager.getColor(key) ?: default
-
-    @JvmStatic
-    @JvmOverloads
-    fun getBordersColor(default: Color? = null): Color? = UIManager.getColor("Borders.color") ?: default
+    fun getBordersColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
 
     fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
         icon = baseIcon
