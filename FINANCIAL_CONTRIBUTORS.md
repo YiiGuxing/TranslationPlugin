@@ -80,6 +80,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 依依东望 | | 10 CNY |
 | 山河故人 | | 10 CNY |
 | 小路🎈路俊维 | | 10 CNY |
 | 啊聪 | | 10 CNY |
@@ -152,6 +153,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 恩佐 | | 6.66 CNY |
 | 小v | [github.com/violinday](https://github.com/violinday) | 6.66 CNY |
 | 贰 | | 6.66 CNY |
 | 俊哥响叮当KS | | 6.66 CNY |
