@@ -124,6 +124,34 @@ inline fun invokeLater(
 }
 
 /**
+ * Use this method when access any PSI, VirtualFiles, project/module model or other project settings, otherwise using
+ * a corresponding method from UiUtil is allowed.
+ *
+ * Causes `runnable.run()` to be executed asynchronously on the
+ * AWT event dispatching thread under Write Intent lock, when IDE is in the specified modality
+ * state(or a state with less modal dialogs open) - unless the expiration condition is fulfilled.
+ * This will happen after all pending AWT events have been processed.
+ *
+ * Please use this method instead of [javax.swing.SwingUtilities.invokeLater] or [com.intellij.util.ui.UIUtil] methods
+ * for the reasons described in [ModalityState] documentation.
+ * @param modalityState    the state in which the runnable will be executed.
+ * @param expired  condition to check before execution.
+ * @param action the action to execute.
+ */
+fun invokeLaterIfNeeded(
+    modalityState: ModalityState = ModalityState.defaultModalityState(),
+    expired: Condition<*>,
+    action: () -> Unit
+) {
+    val app = Application
+    if (app.isDispatchThread) {
+        action()
+    } else {
+        app.invokeLater(action, modalityState, expired)
+    }
+}
+
+/**
  * Shows the notification[Notification].
  */
 fun Notification.show(project: Project? = null) {

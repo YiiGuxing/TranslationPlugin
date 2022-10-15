@@ -4,11 +4,7 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplService
-import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.getCommonMessage
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.w
-import com.intellij.openapi.application.ModalityState
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.BrowserHyperlinkListener
@@ -180,21 +176,16 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         currentService = service
         postUsageInfo(service, null)
 
-        val thisRef = DisposableRef.create(disposable, this)
-        val modalityState = ModalityState.current()
+        val dialogRef = DisposableRef.create(disposable, this)
         runAsync { service.getUsage() }
-            .onSuccess {
-                invokeLater(modalityState) {
-                    thisRef.get()?.postUsageInfo(service, it)
-                    thisRef.disposeSelf()
-                }
+            .successOnUiThread(dialogRef) { dialog, usage ->
+                dialog.postUsageInfo(service, usage)
+                dialogRef.disposeSelf()
             }
-            .onError {
-                logger.w("Failed to get usage info.", it)
-                invokeLater(modalityState) {
-                    thisRef.get()?.postUsageInfo(service, null, it)
-                    thisRef.disposeSelf()
-                }
+            .errorOnUiThread(dialogRef) { dialog, error ->
+                logger.w("Failed to get usage info.", error)
+                dialog.postUsageInfo(service, null, error)
+                dialogRef.disposeSelf()
             }
     }
 

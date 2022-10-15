@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
-import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.options.ConfigurationException
@@ -78,24 +77,18 @@ class SettingsPanel(
             }
             isClearing = true
 
-            val modalityState = ModalityState.current()
             runAsync {
                 CacheService.evictAllDiskCaches()
                 CacheService.getDiskCacheSize()
-            }.onProcessed {
-                invokeLater(modalityState) {
-                    isClearing = false
-                    labelRef.get()?.text = ByteSize.format(it ?: 0L)
-                }
+            }.finishOnUiThread(labelRef) { label, size ->
+                isClearing = false
+                label.text = ByteSize.format(size ?: 0L)
             }
         }
 
-        val modalityState = ModalityState.current()
         runAsync { CacheService.getDiskCacheSize() }
-            .onProcessed {
-                invokeLater(modalityState) {
-                    labelRef.get()?.text = ByteSize.format(it ?: 0L)
-                }
+            .successOnUiThread(labelRef) { label, size ->
+                label.text = ByteSize.format(size)
             }
     }
 
