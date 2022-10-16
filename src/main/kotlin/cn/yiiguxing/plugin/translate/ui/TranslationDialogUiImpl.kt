@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
@@ -10,6 +11,7 @@ import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.GotItTooltip
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
@@ -96,6 +98,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         layoutTopPanel()
         layoutMainPanel()
         setButtonIcons()
+        setTooltips()
 
         return mRoot
     }
@@ -287,6 +290,17 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
         starButton.setIcons(TranslationIcons.GrayStarOff)
+    }
+
+    private fun setTooltips() {
+        GotItTooltip(
+            "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engine.deepl",
+            message("tooltip.text.new.translation.engine.deepl"),
+            this
+        )
+            .withHeader(message("tooltip.title.new.translation.engine"))
+            .withIcon(TranslationIcons.Deepl)
+            .show(settingsButton, GotItTooltip.BOTTOM_MIDDLE)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =
