@@ -12,7 +12,6 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import org.tritonus.share.ArraySet
 import java.awt.Color
 import java.util.*
 import javax.swing.JComponent
@@ -116,16 +115,17 @@ class YoudaoDictDocument private constructor(
             val explanations = basicExplain.explains?.takeIf { it.isNotEmpty() } ?: return null
             val variantStrings = getVariantStrings(basicExplain.wordForms)
 
-            val wordStrings = LinkedList<CharSequence>()
-            val translations = ArraySet<String>()
+            val wordStrings = ArrayList<CharSequence>()
+            val translations = LinkedHashSet<String>()
             val newWordsStringBuilder = StringBuilder()
+            val annotationMap = HashMap<String, String>()
             for (i in explanations.indices) {
+                annotationMap.clear()
                 if (i > 0) {
                     wordStrings += "\n"
                 }
 
                 val explanation = explanations[i]
-                val annotationMap = HashMap<String, String>()
                 val matchResult = REGEX_EXPLANATION.find(explanation)
                 val wordsString = if (matchResult != null) {
                     wordStrings += StyledString(matchResult.groups[GROUP_PART_OF_SPEECH]!!.value, POS_STYLE)
@@ -176,11 +176,11 @@ class YoudaoDictDocument private constructor(
                 }
             }
 
-            return YoudaoDictDocument(wordStrings.toList(), variantStrings, translations.toSet())
+            return YoudaoDictDocument(wordStrings, variantStrings, translations)
         }
 
         private fun getVariantStrings(wordForms: Array<out YWordFormWrapper>?): List<CharSequence> {
-            val variantStrings = LinkedList<CharSequence>()
+            val variantStrings = ArrayList<CharSequence>()
             wordForms?.takeIf { it.isNotEmpty() }
                 ?.map { it.wordForm }
                 ?.sortedBy { it.name.length }
@@ -198,7 +198,7 @@ class YoudaoDictDocument private constructor(
                     }
                 }
 
-            return variantStrings.toList()
+            return variantStrings
         }
 
         private fun String.blocks(regex: Regex, onBlock: (block: String, isMatched: Boolean) -> Unit) {
