@@ -5,6 +5,8 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
+import cn.yiiguxing.plugin.translate.ui.compat.GotItTooltipPosition
+import cn.yiiguxing.plugin.translate.ui.compat.show
 import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
@@ -300,7 +302,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         )
             .withHeader(message("tooltip.title.new.translation.engine"))
             .withIcon(TranslationIcons.Deepl)
-            .show(settingsButton, GotItTooltip.BOTTOM_MIDDLE)
+            .show(settingsButton, GotItTooltipPosition.BOTTOM)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =
