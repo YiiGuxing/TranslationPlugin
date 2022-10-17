@@ -11,7 +11,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
-import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.panels.VerticalLayout
@@ -82,7 +81,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : DialogW
             margin = JBUI.insets(6)
         }
         explainsCard.apply {
-            border = JBUI.Borders.customLine(UI.getBordersColor(JBColor.GRAY), 1)
+            border = JBUI.Borders.customLine(UI.getBordersColor(), 1)
             add(maskPanel, CARD_MASK)
             val scrollPane = JBScrollPane(explanationView).apply {
                 border = JBUI.Borders.empty()

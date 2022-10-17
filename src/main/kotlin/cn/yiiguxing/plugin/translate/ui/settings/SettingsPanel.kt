@@ -5,10 +5,7 @@ import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.util.ByteSize
-import cn.yiiguxing.plugin.translate.util.CacheService
-import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
 import com.intellij.openapi.editor.event.DocumentEvent
@@ -21,8 +18,8 @@ import com.intellij.ui.FontComboBox
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import org.intellij.lang.regexp.RegExpLanguage
+import org.jetbrains.concurrency.runAsync
 import java.awt.event.ItemEvent
-import java.lang.ref.WeakReference
 import javax.swing.JComponent
 import kotlin.math.max
 
@@ -72,23 +69,27 @@ class SettingsPanel(
     }
 
     private fun initCache() {
+        var isClearing = false
+        val labelRef = DisposableRef.create(this, cacheSizeLabel)
         clearCacheButton.addActionListener {
-            clearCacheButton.isEnabled = false
-            val buttonRef = WeakReference(clearCacheButton)
-            val labelRef = WeakReference(cacheSizeLabel)
-            executeOnPooledThread {
+            if (isClearing) {
+                return@addActionListener
+            }
+            isClearing = true
+
+            runAsync {
                 CacheService.evictAllDiskCaches()
-                val size = CacheService.getDiskCacheSize()
-                labelRef.get()?.text = ByteSize.format(size)
-                buttonRef.get()?.isEnabled = true
+                CacheService.getDiskCacheSize()
+            }.finishOnUiThread(labelRef) { label, size ->
+                isClearing = false
+                label.text = ByteSize.format(size ?: 0L)
             }
         }
 
-        val labelRef = WeakReference(cacheSizeLabel)
-        executeOnPooledThread {
-            val size = CacheService.getDiskCacheSize()
-            labelRef.get()?.text = ByteSize.format(size)
-        }
+        runAsync { CacheService.getDiskCacheSize() }
+            .successOnUiThread(labelRef) { label, size ->
+                label.text = ByteSize.format(size)
+            }
     }
 
     private fun initSupport() {

@@ -4,15 +4,9 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplService
-import cn.yiiguxing.plugin.translate.util.getCommonMessage
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.w
-import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ModalityState
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.util.Disposer
-import com.intellij.openapi.util.Ref
 import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.IdeBorderFactory
@@ -182,24 +176,16 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         currentService = service
         postUsageInfo(service, null)
 
-        val thisRef = Ref.create(this)
-        val newDisposable = Disposable { thisRef.set(null) }
-        Disposer.register(disposable, newDisposable)
-
-        val modalityState = ModalityState.current()
+        val dialogRef = DisposableRef.create(disposable, this)
         runAsync { service.getUsage() }
-            .onSuccess {
-                invokeLater(modalityState) {
-                    thisRef.get()?.postUsageInfo(service, it)
-                    Disposer.dispose(newDisposable)
-                }
+            .successOnUiThread(dialogRef) { dialog, usage ->
+                dialog.postUsageInfo(service, usage)
+                dialogRef.disposeSelf()
             }
-            .onError {
-                logger.w("Failed to get usage info.", it)
-                invokeLater(modalityState) {
-                    thisRef.get()?.postUsageInfo(service, null, it)
-                    Disposer.dispose(newDisposable)
-                }
+            .errorOnUiThread(dialogRef) { dialog, error ->
+                logger.w("Failed to get usage info.", error)
+                dialog.postUsageInfo(service, null, error)
+                dialogRef.disposeSelf()
             }
     }
 

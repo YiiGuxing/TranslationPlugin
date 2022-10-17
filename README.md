@@ -259,7 +259,7 @@ You can contribute and support this project by doing any of the following:
 * Commit PR
 * Contribute your ideas/suggestions
 * Share the plugin with your friends/colleagues
-* If you like the plugin, please consider making a donation to keep the plugin active:
+* If you love this plugin, please consider donating. It will inspire me to continue development on the project:
 
   <table>
     <thead align="center">
