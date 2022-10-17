@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui.compat
+package cn.yiiguxing.plugin.translate.compat.ui
 
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.w
@@ -24,7 +24,7 @@ private val RIGHT_COMPAT_212: (JComponent, Any) -> Point = { it, _ -> Point(it.w
 private val BOTTOM_COMPAT_212: (JComponent, Any) -> Point = { it, _ -> Point(it.width / 2, it.height) }
 private val LEFT_COMPAT_212: (JComponent, Any) -> Point = { it, _ -> Point(0, it.height / 2) }
 
-private val LOG: Logger = Logger.getInstance("cn.yiiguxing.plugin.translate.ui.compat.GotItTooltipCompatKt")
+private val LOG: Logger = Logger.getInstance("cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipCompatKt")
 
 private val SHOW_METHOD: Method? by lazy {
     try {
