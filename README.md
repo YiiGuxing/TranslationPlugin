@@ -344,6 +344,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name** | **Website**                                                | **Amount** |
 |----------|------------------------------------------------------------|------------|
+| Sunlife95 |                                                          | 100 CNY |
 | 马强@咔丘互娱 |                                                          | 100 CNY |
 | Rrtt_2323 |                                                            | 100 CNY    |
 | 唐嘉       | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY    |
@@ -353,7 +354,6 @@ website. [[Become a sponsor][open-collective-contribute]]
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt)         | 76.6 CNY   |
 | 弦曲       |                                                            | 66.6 CNY   |
 | 贺小五      |                                                            | 66.6 CNY   |
-| Him188   | [github.com/him188](https://github.com/him188)             | 66 CNY     |
 
 [More donors][file:financial-contributors]
 
