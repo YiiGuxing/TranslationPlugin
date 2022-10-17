@@ -31,6 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| Sunlife95 | | 100 CNY |
 | 马强@咔丘互娱 | | 100 CNY |
 | Rrtt_2323 | | 100 CNY |
 | 唐嘉 | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY |
