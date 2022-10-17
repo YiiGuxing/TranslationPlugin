@@ -1,12 +1,12 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
+import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
+import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
-import cn.yiiguxing.plugin.translate.compat.GotItTooltipPosition
-import cn.yiiguxing.plugin.translate.compat.show
 import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
