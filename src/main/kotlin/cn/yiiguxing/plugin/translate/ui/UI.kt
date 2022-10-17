@@ -63,7 +63,6 @@ object UI {
     }
 
     @JvmStatic
-    @JvmOverloads
     fun getBordersColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
 
     fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
