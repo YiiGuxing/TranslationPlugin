@@ -67,7 +67,7 @@
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
         <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslatorWidgetFactory"/>
-        <toolWindow id="Word Book"
+        <toolWindow id="Translation.Wordbook"
                     icon="TranslationIcons.Wordbook"
                     anchor="right"
                     secondary="true"
