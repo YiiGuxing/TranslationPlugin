@@ -2,17 +2,19 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationListener
-import com.intellij.notification.NotificationType
+import cn.yiiguxing.plugin.translate.message
+import com.intellij.ide.util.PropertiesComponent
+import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
 
 object Notifications {
 
     const val DEFAULT_NOTIFICATION_GROUP_ID = "Translation Plugin"
+
+    private const val KEY_PREFIX = "translation.notification.do.not.show.again"
 
     fun showErrorNotification(
         project: Project?,
@@ -80,6 +82,14 @@ object Notifications {
         showNotification(title, message, NotificationType.ERROR, project, groupId)
     }
 
+    fun isDoNotShowAgain(key: String): Boolean {
+        return PropertiesComponent.getInstance().getBoolean("$KEY_PREFIX.$key", false)
+    }
+
+    fun setDoNotShowAgain(key: String, value: Boolean) {
+        PropertiesComponent.getInstance().setValue("$KEY_PREFIX.$key", value)
+    }
+
     open class UrlOpeningListener(expireNotification: Boolean = true) :
         NotificationListener.UrlOpeningListener(expireNotification) {
 
@@ -90,4 +100,12 @@ object Notifications {
         }
     }
 
+    class DoNotShowAgainAction(private val key: String) :
+        NotificationAction(message("notification.do.not.show.again")) {
+
+        override fun actionPerformed(e: AnActionEvent, notification: Notification) {
+            notification.expire()
+            setDoNotShowAgain(key, true)
+        }
+    }
 }
