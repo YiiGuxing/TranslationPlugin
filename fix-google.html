@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>TranslationPlugin</title>
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="IntelliJ-based IDEs/Android Studio 翻译插件，支持多语言互译、文档翻译、语音朗读...">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?996c7e61" media="screen">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-RMH8BJ3BGP');
+    </script>
+
+    <style>
+        h1 {
+            text-align: center;
+            color: #333333;
+            font-weight: 500;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .column_title {
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .column_item_title {
+            font-size: 20px;
+            font-weight: 400;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<header class="frame_head">
+    <a href="index.html" class="primary">TranslationPlugin</a>
+    <a href="start.html">开始使用</a>
+    <a href="updates.html">更新</a>
+    <a href="support.html">支持与捐赠</a>
+    <a class="github-icon-wrap" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img class="github-icon" src="images/github.svg" alt="GitHub"></a>
+</header>
+<div class="frame_wrapper">
+    <div class="frame_content">
+        <h1>谷歌翻译和语音朗读网络错误的解决办法</h1>
+
+        <div class="column">
+            <h2 class="column_title">问题原因</h2>
+            <p class="column_tip">疑是谷歌关停了国内的翻译服务，导致相关API无法使用。</p>
+        </div>
+
+        <div class="column">
+            <h2 class="column_title">解决办法</h2>
+            <p class="column_tip">如果您有梯子，您可以通过梯子正常使用。如果没有，则可将以下<b>IP域名映射</b>添加到系统
+                hosts
+                文件中以暂时解决此问题，恢复谷歌翻译和语音朗读功能的正常使用：</p>
+            <div class="column_item_info_code">
+                203.208.40.66 translate.googleapis.com
+            </div>
+
+            <h3 class="column_item_title">1. Windows 系统</h3>
+            <p class="column_tip">您可以直接<a href="./downloads/fix_google_translate.zip"
+                                               download="fix_google_translate.zip">点击这里</a>下载并解压缩后得到一个批处理文件，鼠标右键“以管理员身份运行”即可。当然，您也可以按以下操作手动修改。
+            </p>
+            <p class="column_tip">使用记事本程序（须以管理员身份运行）打开 hosts 文件，文件位置：</p>
+            <div class="column_item_info_code">
+                C:\Windows\system32\drivers\etc\hosts
+            </div>
+            <p class="column_tip">然后将上面的IP域名映射添加到文件末尾并保存即可。如果未立即生效，尝试在 CMD
+                运行下面的命运即可：</p>
+            <div class="column_item_info_code">
+                ipconfig /flushdns
+            </div>
+
+            <h3 class="column_item_title">2. macOS</h3>
+            <p class="column_tip">在终端执行以下命令：</p>
+            <div class="column_item_info_code">
+                sudo echo -e '\n\n203.208.40.66 translate.googleapis.com' >> /etc/hosts<br/>
+                sudo killall -HUP mDNSResponder
+            </div>
+
+            <h3 class="column_item_title">3. Linux 系统</h3>
+            <p class="column_tip">在终端执行以下命令：</p>
+            <div class="column_item_info_code">
+                sudo echo -e '\n\n203.208.40.66 translate.googleapis.com' >> /etc/hosts<br/>
+                sudo nscd restart
+            </div>
+        </div>
+
+        <div class="column">
+            <h2 class="column_title">补充</h2>
+            <p class="column_tip">如果上面提供的IP不可用，访问<a href="https://ping.chinaz.com/translate.google.cn" target="_blank">此网站</a>可以获取其他的IP，选择国内离自己位置较近或响应时间较短的IP即可（国外IP可能是不可用的）。</p>
+            <p class="column_tip"><i>注意：应用新IP之前要将之前设置的删除掉，否则新设置的将无效。</i></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
