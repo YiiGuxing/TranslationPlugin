@@ -40,6 +40,11 @@
             font-weight: 400;
             margin-top: 2rem;
         }
+
+        .tip {
+            color: #666666;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -62,22 +67,27 @@
 
         <div class="column">
             <h2 class="column_title">解决办法</h2>
-            <p class="column_tip">如果您有梯子，您可以通过梯子正常使用。如果没有，则可将以下<b>IP域名映射</b>添加到系统
-                hosts
-                文件中以暂时解决此问题，恢复谷歌翻译和语音朗读功能的正常使用：</p>
+            <p class="column_tip">如果您有梯子，您可以通过梯子正常使用。如果没有，则可以通过添加 <b>IP-域名映射</b> 到系统
+                hosts 以暂时解决此问题，恢复谷歌翻译和语音朗读功能的正常使用。</p>
+
+            <p class="column_tip tip"><i><b>提示：</b>添加 IP-域名映射
+                的方式似乎并不是很稳定，有一定的失败概率，且不能保证此方法会一直有效，所以开发者建议使用百度、阿里或有道这些翻译引擎。目前开发者正在积极寻找一个稳定的、免费的、好用的、开箱即用的替代方案，如果您有什么好的建议，请告诉我。</i>
+            </p>
+
+            <p class="column_tip">下文是 <b>IP-域名映射</b> 的添加方法，<b>IP-域名映射</b> 如下：</p>
             <div class="column_item_info_code">
                 203.208.40.66 translate.googleapis.com
             </div>
 
             <h3 class="column_item_title">1. Windows 系统</h3>
             <p class="column_tip">您可以直接<a href="./downloads/fix_google_translate.zip"
-                                               download="fix_google_translate.zip">点击这里</a>下载并解压缩后得到一个批处理文件，鼠标右键“以管理员身份运行”即可。当然，您也可以按以下操作手动修改。
+                                               download="fix_google_translate.zip">点击这里</a>下载并解压缩得到一个批处理文件，鼠标右键“以管理员身份运行”即可。当然，您也可以按以下操作手动修改。
             </p>
             <p class="column_tip">使用记事本程序（须以管理员身份运行）打开 hosts 文件，文件位置：</p>
             <div class="column_item_info_code">
                 C:\Windows\system32\drivers\etc\hosts
             </div>
-            <p class="column_tip">然后将上面的IP域名映射添加到文件末尾并保存即可。如果未立即生效，尝试在 CMD
+            <p class="column_tip">然后将上面的 IP-域名映射 添加到文件末尾并保存即可。如果未立即生效，尝试在 CMD
                 运行下面的命运即可：</p>
             <div class="column_item_info_code">
                 ipconfig /flushdns
@@ -100,7 +110,9 @@
 
         <div class="column">
             <h2 class="column_title">补充</h2>
-            <p class="column_tip">如果上面提供的IP不可用，访问<a href="https://ping.chinaz.com/translate.google.cn" target="_blank">此网站</a>可以获取其他的IP，选择国内离自己位置较近或响应时间较短的IP即可（国外IP可能是不可用的）。</p>
+            <p class="column_tip">如果上面提供的IP不可用，访问<a href="https://ping.chinaz.com/translate.google.cn"
+                                                                target="_blank">此网站</a>可以获取其他的IP，选择国内离自己位置较近或响应时间较短的IP即可（国外IP可能是不可用的）。
+            </p>
             <p class="column_tip"><i>注意：应用新IP之前要将之前设置的删除掉，否则新设置的将无效。</i></p>
         </div>
     </div>
