@@ -63,6 +63,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
                 is ExternalDocumentationProvider -> nullIfError {
                     providerFromElement.fetchExternalDocumentation(project, element, docUrls, onHover)
                 }
+
                 else -> null
             }
 
@@ -134,9 +135,13 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             val lastTask = lastTranslationTask
             val translator = TranslateService.translator
 
-            val task =
-                if (lastTask != null && lastTask.translator.id == translator.id && lastTask.text == text) lastTask
-                else TranslateDocumentationTask(text, language, translator)
+            val task = if (
+                lastTask != null &&
+                lastTask.translator.id == translator.id &&
+                lastTask.text == text &&
+                (lastTask.isSucceeded || !lastTask.isFinished)
+            ) lastTask
+            else TranslateDocumentationTask(text, language, translator)
 
             lastTranslationTask = task
 
