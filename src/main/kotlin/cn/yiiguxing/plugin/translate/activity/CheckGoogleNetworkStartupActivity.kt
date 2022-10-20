@@ -52,7 +52,8 @@ class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
 
         private fun showNotification(project: Project) {
             Notifications.showNotification(
-                TranslationPlugin.descriptor.name, "当前的翻译引擎似乎不可用？",
+                TranslationPlugin.descriptor.name,
+                "当前的翻译引擎似乎不可用？",
                 NotificationType.INFORMATION,
                 project,
                 notificationCustomizer = {
