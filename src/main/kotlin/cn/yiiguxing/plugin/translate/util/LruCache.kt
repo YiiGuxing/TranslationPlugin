@@ -110,6 +110,13 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
+     * Returns `true` if this cache contains a mapping for the specified [key].
+     */
+    fun containsKey(key: K & Any): Boolean = synchronized(this) {
+        map.containsKey(key)
+    }
+
+    /**
      * Returns the value for [key] if it exists in the cache or can be
      * created by [create]. If a value was returned, it is moved to the
      * head of the queue. This returns null if a value is not cached and cannot
@@ -219,6 +226,33 @@ open class LruCache<K, V>(maxSize: Int) {
         return previous?.apply {
             entryRemoved(false, key, this@apply, null)
         }
+    }
+
+    /**
+     * Removes and returns all the entries of this cache that satisfy the given [predicate].
+     */
+    fun removeIf(predicate: (K & Any, V & Any) -> Boolean): Set<Map.Entry<K & Any, V & Any>> {
+        val removed = LinkedHashSet<Map.Entry<K & Any, V & Any>>()
+        synchronized(this) {
+            var removedSize = 0
+            map.entries.removeIf { entry ->
+                predicate(entry.key, entry.value).also { remove ->
+                    if (remove) {
+                        removed.add(entry)
+                        removedSize += safeSizeOf(entry.key, entry.value)
+                    }
+                }
+            }
+            size -= removedSize
+        }
+
+        if (removed.isNotEmpty()) {
+            removed.forEach {
+                entryRemoved(false, it.key, it.value, null)
+            }
+        }
+
+        return removed
     }
 
     /**
