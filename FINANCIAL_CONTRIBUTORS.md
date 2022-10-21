@@ -154,6 +154,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 田坪毛小江 | | 6.66 CNY |
+| A-😉 | | 6.66 CNY |
+| Crab | | 6.66 CNY |
+| Ψ | | 6.66 CNY |
 | 恩佐 | | 6.66 CNY |
 | 小v | [github.com/violinday](https://github.com/violinday) | 6.66 CNY |
 | 贰 | | 6.66 CNY |
