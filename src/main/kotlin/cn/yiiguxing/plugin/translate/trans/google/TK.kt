@@ -3,14 +3,14 @@
  */
 package cn.yiiguxing.plugin.translate.trans.google
 
-import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.io.HttpRequests
+import com.intellij.util.io.RequestBuilder
 import java.lang.StrictMath.abs
-import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import java.util.regex.Pattern
 
 
@@ -23,17 +23,18 @@ object TKK {
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
-    private val generator = Random()
-
     private val tkkPattern = Pattern.compile("tkk='(\\d+).(-?\\d+)'")
 
     private var innerValue: Pair<Long, Long>? = null
 
 
-    val value get() = update()
+    val value: Pair<Long, Long>
+        @RequiresBackgroundThread
+        get() = update() ?: generate()
 
 
-    fun update(): Pair<Long, Long> {
+    @RequiresBackgroundThread
+    fun update(): Pair<Long, Long>? {
         synchronized(this) {
             innerValue?.let { tkk ->
                 val now = System.currentTimeMillis() / MIM
@@ -46,24 +47,32 @@ object TKK {
         val newTKK = updateFromGoogle()
 
         synchronized(this) {
-            val now = System.currentTimeMillis() / MIM
             val oldTKK = innerValue
-            if (oldTKK == null || (newTKK != null && newTKK.first > oldTKK.first)) {
+            if (oldTKK == null || (newTKK != null && newTKK.first >= oldTKK.first)) {
                 innerValue = newTKK
             }
-
-            // 取不到就胡乱生成一个，乱生成的对普通翻译有效，对文档翻译无效。。。
-            return innerValue ?: (now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong()))
+            return innerValue
         }
     }
 
+    /**
+     * 本地生成一个TKK值，该值对普通翻译有效，而对文档翻译是无效。
+     */
+    private fun generate(): Pair<Long, Long> {
+        val now = System.currentTimeMillis() / MIM
+        val generator = ThreadLocalRandom.current()
+        return now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
+    }
+
+    private fun getElementJsRequest(): RequestBuilder = HttpRequests.request(ELEMENT_URL)
+        .userAgent()
+        .googleReferer()
+        .connectTimeout(5000)
+        .throwStatusCodeException(true)
+
     private fun updateFromGoogle(): Pair<Long, Long>? {
         return try {
-            val elementJS = HttpRequests.request(ELEMENT_URL)
-                .userAgent()
-                .googleReferer()
-                .connectTimeout(5000)
-                .readString(null)
+            val elementJS = getElementJsRequest().readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {
                 val value1 = matcher.group(1).toLong()
@@ -74,26 +83,29 @@ object TKK {
                 value1 to value2
             } else {
                 logger.w("TKK update failed: TKK not found.")
-                Notifications.showWarningNotification("TKK", "TKK update failed: TKK not found.")
-
                 null
             }
         } catch (error: Throwable) {
             logger.w("TKK update failed", error)
-            Notifications.showErrorNotification(
-                null,
-                "TKK",
-                message("notification.ttk.update.failed"),
-            )
-
             null
         }
+    }
+
+    internal fun testConnection(): Boolean = try {
+        getElementJsRequest().tryConnect() != -1
+    } catch (e: HttpRequests.HttpStatusException) {
+        true
+    } catch (e: Throwable) {
+        false
+    }.also {
+        logger.i("TKK connection test: ${if (it) "OK" else "FAILURE"}")
     }
 }
 
 /**
  * 计算tk值.
  */
+@RequiresBackgroundThread
 fun String.tk(tkk: Pair<Long, Long> = TKK.value): String {
     val a = mutableListOf<Long>()
     var b = 0

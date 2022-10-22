@@ -16,8 +16,6 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import java.util.*
-
 
 /**
  * LruCache
@@ -28,7 +26,7 @@ import java.util.*
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class LruCache<K, V>(maxSize: Int) {
-    private val map: LinkedHashMap<K, V>
+    private val map: LinkedHashMap<K & Any, V & Any>
 
     /**
      * Size of this cache in units. Not necessarily the number of elements.
@@ -89,7 +87,7 @@ open class LruCache<K, V>(maxSize: Int) {
      * A copy of the current contents of the cache, ordered from least
      * recently accessed to most recently accessed.
      */
-    val snapshot: Map<K, V>
+    val snapshot: Map<K & Any, V & Any>
         @Synchronized get() = LinkedHashMap(map)
 
     init {
@@ -112,12 +110,19 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
-     * Returns the value for `key` if it exists in the cache or can be
-     * created by `#create`. If a value was returned, it is moved to the
+     * Returns `true` if this cache contains a mapping for the specified [key].
+     */
+    fun containsKey(key: K & Any): Boolean = synchronized(this) {
+        map.containsKey(key)
+    }
+
+    /**
+     * Returns the value for [key] if it exists in the cache or can be
+     * created by [create]. If a value was returned, it is moved to the
      * head of the queue. This returns null if a value is not cached and cannot
      * be created.
      */
-    operator fun get(key: K): V? {
+    operator fun get(key: K & Any): V? {
         synchronized(this) {
             map[key]?.let {
                 hitCount++
@@ -156,12 +161,12 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
-     * Caches `value` for `key`. The value is moved to the head of
+     * Caches [value] for [key]. The value is moved to the head of
      * the queue.
      *
-     * @return the previous value mapped by `key`.
+     * @return the previous value mapped by [key].
      */
-    fun put(key: K, value: V): V? {
+    fun put(key: K & Any, value: V & Any): V? {
         val previous: V? = synchronized(this) {
             putCount++
             size += safeSizeOf(key, value)
@@ -207,11 +212,11 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
-     * Removes the entry for `key` if it exists.
+     * Removes the entry for [key] if it exists.
      *
-     * @return the previous value mapped by `key`.
+     * @return the previous value mapped by [key].
      */
-    fun remove(key: K): V? {
+    fun remove(key: K & Any): V? {
         val previous: V? = synchronized(this) {
             map.remove(key)?.apply {
                 size -= safeSizeOf(key, this@apply)
@@ -224,21 +229,48 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
+     * Removes and returns all the entries of this cache that satisfy the given [predicate].
+     */
+    fun removeIf(predicate: (K & Any, V & Any) -> Boolean): Set<Map.Entry<K & Any, V & Any>> {
+        val removed = LinkedHashSet<Map.Entry<K & Any, V & Any>>()
+        synchronized(this) {
+            var removedSize = 0
+            map.entries.removeIf { entry ->
+                predicate(entry.key, entry.value).also { remove ->
+                    if (remove) {
+                        removed.add(entry)
+                        removedSize += safeSizeOf(entry.key, entry.value)
+                    }
+                }
+            }
+            size -= removedSize
+        }
+
+        if (removed.isNotEmpty()) {
+            removed.forEach {
+                entryRemoved(false, it.key, it.value, null)
+            }
+        }
+
+        return removed
+    }
+
+    /**
      * Called for entries that have been evicted or removed. This method is
      * invoked when a value is evicted to make space, removed by a call to
-     * [.remove], or replaced by a call to [.put]. The default
+     * [.remove][remove], or replaced by a call to [.put][put]. The default
      * implementation does nothing.
      *
      * The method is called without synchronization: other threads may
      * access the cache while this method is executing.
      *
      * @param evicted  true if the entry is being removed to make space, false
-     * if the removal was caused by a [.put] or [.remove].
-     * @param newValue the new value for `key`, if it exists. If non-null,
-     * this removal was caused by a [.put]. Otherwise it was caused by
-     * an eviction or a [.remove].
+     * if the removal was caused by a [.put][put] or [.remove][remove].
+     * @param newValue the new value for [key], if it exists. If non-null,
+     * this removal was caused by a [.put][put]. Otherwise, it was caused by
+     * an eviction or a [.remove][remove].
      */
-    protected open fun entryRemoved(evicted: Boolean, key: K, oldValue: V, newValue: V?) {}
+    protected open fun entryRemoved(evicted: Boolean, key: K & Any, oldValue: V & Any, newValue: V?) {}
 
     /**
      * Called after a cache miss to compute a value for the corresponding key.
@@ -248,39 +280,36 @@ open class LruCache<K, V>(maxSize: Int) {
      * The method is called without synchronization: other threads may
      * access the cache while this method is executing.
      *
-     * If a value for `key` exists in the cache when this method
-     * returns, the created value will be released with [.entryRemoved]
+     * If a value for [key] exists in the cache when this method
+     * returns, the created value will be released with [.entryRemoved][entryRemoved]
      * and discarded. This can occur when multiple threads request the same key
      * at the same time (causing multiple values to be created), or when one
-     * thread calls [.put] while another is creating a value for the same
+     * thread calls [.put][put] while another is creating a value for the same
      * key.
      */
-    protected open fun create(key: K): V? {
-        return null
-    }
+    protected open fun create(key: K & Any): V? = null
 
-    private fun safeSizeOf(key: K, value: V): Int {
+    private fun safeSizeOf(key: K & Any, value: V & Any): Int {
         val result = sizeOf(key, value)
         check(result >= 0) { "Negative size: $key=$value" }
         return result
     }
 
     /**
-     * Returns the size of the entry for `key` and `value` in
+     * Returns the size of the entry for [key] and [value] in
      * user-defined units.  The default implementation returns 1 so that size
      * is the number of entries and max size is the maximum number of entries.
      *
      * An entry's size must not change while it is in the cache.
      */
-    protected open fun sizeOf(key: K, value: V): Int {
-        return 1
-    }
+    protected open fun sizeOf(key: K & Any, value: V & Any): Int = 1
 
     /**
-     * Clear the cache, calling [.entryRemoved] on each removed entry.
+     * Clear the cache, calling [.entryRemoved][entryRemoved] on each removed entry.
      */
     fun evictAll() {
-        trimToSize(-1) // -1 will evict 0-sized elements
+        // -1 will evict 0-sized elements
+        trimToSize(-1)
     }
 
     @Synchronized

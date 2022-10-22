@@ -84,19 +84,9 @@ class GoogleTTSPlayer(
         }
 
         override fun onThrowable(error: Throwable) {
-            if (error is HttpRequests.HttpStatusException && error.statusCode == 404) {
-                LOGGER.w("TTS Error: Unsupported language: ${lang.code}.")
-
-                Notifications.showWarningNotification(
-                    "TTS",
-                    message("error.unsupportedLanguage", lang.langName),
-                    project
-                )
-            } else {
-                when (error) {
-                    is IOException -> Notifications.showErrorNotification(project, "TTS", error.getCommonMessage())
-                    else -> LOGGER.e("TTS Error", error)
-                }
+            when (error) {
+                is IOException -> Notifications.showErrorNotification(project, "TTS", error.getCommonMessage())
+                else -> LOGGER.e("TTS Error", error)
             }
         }
 
@@ -169,7 +159,7 @@ class GoogleTTSPlayer(
         this as DecodedMpegAudioInputStream
         format.openLine()?.run {
             start()
-            @Suppress("ConvertTryFinallyToUseCall") try {
+            try {
                 val data = ByteArray(2048)
                 var bytesRead: Int
                 while (!indicator.isCanceled) {
@@ -219,7 +209,6 @@ class GoogleTTSPlayer(
 
         private fun InputStream.getAudioDuration(dataLength: Int): Int {
             return try {
-                @Suppress("SpellCheckingInspection")
                 round(Bitstream(this).readFrame().total_ms(dataLength))
             } catch (e: Throwable) {
                 LOGGER.error(e)

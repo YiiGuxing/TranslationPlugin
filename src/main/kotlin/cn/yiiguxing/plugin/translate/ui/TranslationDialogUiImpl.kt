@@ -297,10 +297,10 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     private fun setTooltips() {
         GotItTooltip(
             "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engine.deepl",
-            message("tooltip.text.new.translation.engine.deepl"),
+            message("got.it.tooltip.text.new.translation.engine.deepl"),
             this
         )
-            .withHeader(message("tooltip.title.new.translation.engine"))
+            .withHeader(message("got.it.tooltip.title.new.translation.engine"))
             .withIcon(TranslationIcons.Deepl)
             .show(settingsButton, GotItTooltipPosition.BOTTOM)
     }

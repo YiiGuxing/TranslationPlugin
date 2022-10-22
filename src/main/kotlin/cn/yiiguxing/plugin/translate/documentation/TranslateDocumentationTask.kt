@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.progress.ProgressManager
+import org.jetbrains.concurrency.isPending
 import org.jetbrains.concurrency.runAsync
 import java.util.concurrent.TimeoutException
 
@@ -26,6 +27,10 @@ class TranslateDocumentationTask(
     }.onError { e ->
         invokeLater(ModalityState.NON_MODAL) { DocNotifications.showWarning(e, null) }
     }
+
+    val isFinished: Boolean get() = !promise.isPending || tries <= 0
+
+    val isSucceeded: Boolean get() = promise.isSucceeded
 
     fun onSuccess(callback: (String) -> Unit) {
         promise.onSuccess(callback)
