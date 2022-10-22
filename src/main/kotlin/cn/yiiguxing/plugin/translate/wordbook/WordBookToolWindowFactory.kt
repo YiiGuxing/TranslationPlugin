@@ -3,22 +3,19 @@ package cn.yiiguxing.plugin.translate.wordbook
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.ide.util.PropertiesComponent
+import com.intellij.notification.NotificationAction
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ToolWindowBalloonShowOptions
 import com.intellij.openapi.wm.ToolWindowFactory
-import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.openapi.wm.ex.ToolWindowEx
-import com.intellij.ui.HyperlinkAdapter
-import com.intellij.ui.scale.JBUIScale
 import org.jetbrains.concurrency.runAsync
-import javax.swing.event.HyperlinkEvent
 
 /**
  * Word book tool window factory
@@ -100,41 +97,32 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
     }
 
     private fun ToolWindowEx.showGotItTooltipIfNeed() {
-        if (isGotItTooltipDisplayed || PropertiesComponent.getInstance().getBoolean(GOT_IT_TOOLTIP_KEY, false)) {
-            isGotItTooltipDisplayed = true
-            return
-        }
-
-        val toolWindowManager = ToolWindowManager.getInstance(project)
-        if (!toolWindowManager.canShowNotification(TOOL_WINDOW_ID)) {
+        if (PropertiesComponent.getInstance().getBoolean(GOT_IT_KEY, false)) {
             return
         }
 
         if (Settings.wordbookStoragePath.isNullOrEmpty()) {
-            val balloonLifeCycleDisposable = Disposer.newDisposable(disposable, "Wordbook tool window got it tooltip")
-            val options = ToolWindowBalloonShowOptions(
-                TOOL_WINDOW_ID,
-                MessageType.INFO,
-                message("got.it.tooltip.text.wordbook.storage.path", JBUIScale.scale(200)),
-                listener = object : HyperlinkAdapter() {
-                    override fun hyperlinkActivated(e: HyperlinkEvent) {
-                        Disposer.dispose(balloonLifeCycleDisposable)
-                        Hyperlinks.handleDefaultHyperlinkActivated(e)
-                    }
-                },
-                balloonCustomizer = {
-                    it.setDisposable(balloonLifeCycleDisposable)
-                        .setHideOnLinkClick(true)
-                        .setCloseButtonEnabled(false)
-                        .setAnimationCycle(0)
-                        .setFadeoutTime(0)
-                }
-            )
-            toolWindowManager.notifyByBalloon(options)
+            Notifications.showNotification(
+                message("wordbook.window.title"),
+                message("got.it.notification.text.wordbook.storage.path"),
+                NotificationType.INFORMATION,
+                project,
+                notificationCustomizer = {
+                    it.addAction(
+                        NotificationAction.createSimpleExpiring(message("action.got.it.text")) {
+                            PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
+                        }
+                    ).addAction(
+                        NotificationAction.create(message("action.configure.text")) { _, notification ->
+                            notification.expire()
+                            PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
+                            TranslationConfigurable.showSettingsDialog(project)
+                        }
+                    )
+                })
+        } else {
+            PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
         }
-
-        PropertiesComponent.getInstance().setValue(GOT_IT_TOOLTIP_KEY, true)
-        isGotItTooltipDisplayed = true
     }
 
     private fun DisposableRef<ToolWindowEx>.showStripeButton() {
@@ -155,13 +143,11 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
     companion object {
         const val TOOL_WINDOW_ID = "Translation.Wordbook"
 
-        private const val GOT_IT_TOOLTIP_KEY = "${TranslationPlugin.PLUGIN_ID}.got.it.tooltip.wordbook.storage.path"
+        private const val GOT_IT_KEY = "${TranslationPlugin.PLUGIN_ID}.got.it.wordbook.storage.path"
 
         private val requirePublisher: RequireWordBookListener by lazy {
             Application.messageBus.syncPublisher(RequireWordBookListener.TOPIC)
         }
-
-        private var isGotItTooltipDisplayed: Boolean = false
 
         fun requireWordBook() {
             checkDispatchThread { "Must only be invoked from the Event Dispatch Thread." }
