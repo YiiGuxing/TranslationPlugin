@@ -301,7 +301,7 @@ You can contribute and support this project by doing any of the following:
   Payment Platform: Alipay/WeChat Pay
   Payment Number (last 5 digits): <number>
   ```
-  Email address: [yii.guxing@gmail.com][mailto] (click to send email)
+  Email address: [yii.guxing@outlook.com][mailto] (click to send email)
 
   The name, website and total donation amount you provide will be added to the [donor list][file:financial-contributors].
 
@@ -399,5 +399,5 @@ website. [[Become a sponsor][open-collective-contribute]]
 [baidu-translate]: https://fanyi-api.baidu.com/manage/developer
 [ali-mt]: https://www.aliyun.com/product/ai/base_alimt
 
-[mailto]: mailto:yii.guxing@gmail.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Pay%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D
+[mailto]: mailto:yii.guxing@outlook.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Pay%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D
 
