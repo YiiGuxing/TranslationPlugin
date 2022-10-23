@@ -148,7 +148,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
                     "Payment Platform: Alipay/WeChat Pay\n" +
                     "Payment Number (last 5 digits): <number>\n\n"
         }
-        val uri = UrlBuilder("mailto:yii.guxing@gmail.com")
+        val uri = UrlBuilder("mailto:yii.guxing@outlook.com")
             .addQueryParameter("subject", "Donate")
             .addQueryParameter("body", content)
             .build()
