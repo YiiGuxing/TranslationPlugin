@@ -1,7 +1,7 @@
 <idea-plugin url="https://yiiguxing.github.io/TranslationPlugin">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
+    <vendor email="yii.guxing@outlook.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <resource-bundle>messages.LanguageBundle</resource-bundle>
     <resource-bundle>messages.TranslationBundle</resource-bundle>
