@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.message
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
-import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.notification.impl.NotificationFullContent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
@@ -17,30 +17,7 @@ object Notifications {
 
     private const val DO_NOT_SHOW_AGAIN_KEY_PREFIX = "translation.notification.do.not.show.again"
 
-    fun showErrorNotification(
-        project: Project?,
-        title: String,
-        content: String,
-        vararg actions: AnAction
-    ) {
-        showErrorNotification(DEFAULT_NOTIFICATION_GROUP_ID, project, title, content, actions = actions)
-    }
-
-    fun showErrorNotification(
-        groupId: String,
-        project: Project?,
-        title: String,
-        content: String,
-        vararg actions: AnAction
-    ) {
-        NotificationGroupManager.getInstance()
-            .getNotificationGroup(groupId)
-            .createNotification(content, NotificationType.ERROR)
-            .setTitle(title)
-            // actions的折叠是从左往右折叠的
-            .apply { addActions(actions.toList()) }
-            .show(project)
-    }
+    private val DEFAULT_NOTIFICATION_CUSTOMIZER: (Notification) -> Unit = { }
 
     fun showNotification(
         title: String,
@@ -48,7 +25,7 @@ object Notifications {
         type: NotificationType,
         project: Project? = null,
         groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
-        notificationCustomizer: (Notification) -> Unit = { }
+        notificationCustomizer: (Notification) -> Unit = DEFAULT_NOTIFICATION_CUSTOMIZER
     ) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup(groupId)
@@ -58,31 +35,48 @@ object Notifications {
             .show(project)
     }
 
+    fun showFullContentNotification(
+        title: String,
+        message: String,
+        type: NotificationType = NotificationType.INFORMATION,
+        project: Project? = null,
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
+        notificationCustomizer: (Notification) -> Unit = DEFAULT_NOTIFICATION_CUSTOMIZER
+    ) {
+        val group = NotificationGroupManager.getInstance().getNotificationGroup(groupId)
+        val notification = FullContentNotification(group.displayId, title, message, type)
+        notificationCustomizer(notification)
+        notification.show(project)
+    }
+
     fun showInfoNotification(
         title: String,
         message: String,
         project: Project? = null,
-        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
+        notificationCustomizer: (Notification) -> Unit = DEFAULT_NOTIFICATION_CUSTOMIZER
     ) {
-        showNotification(title, message, NotificationType.INFORMATION, project, groupId)
+        showNotification(title, message, NotificationType.INFORMATION, project, groupId, notificationCustomizer)
     }
 
     fun showWarningNotification(
         title: String,
         message: String,
         project: Project? = null,
-        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
+        notificationCustomizer: (Notification) -> Unit = DEFAULT_NOTIFICATION_CUSTOMIZER
     ) {
-        showNotification(title, message, NotificationType.WARNING, project, groupId)
+        showNotification(title, message, NotificationType.WARNING, project, groupId, notificationCustomizer)
     }
 
     fun showErrorNotification(
         title: String,
         message: String,
         project: Project? = null,
-        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
+        notificationCustomizer: (Notification) -> Unit = DEFAULT_NOTIFICATION_CUSTOMIZER
     ) {
-        showNotification(title, message, NotificationType.ERROR, project, groupId = groupId)
+        showNotification(title, message, NotificationType.ERROR, project, groupId = groupId, notificationCustomizer)
     }
 
     fun isDoNotShowAgain(key: String): Boolean {
@@ -92,6 +86,10 @@ object Notifications {
     fun setDoNotShowAgain(key: String, value: Boolean) {
         PropertiesComponent.getInstance().setValue("$DO_NOT_SHOW_AGAIN_KEY_PREFIX.$key", value)
     }
+
+
+    private class FullContentNotification(displayId: String, title: String, content: String, type: NotificationType) :
+        Notification(displayId, title, content, type), NotificationFullContent
 
     open class UrlOpeningListener(expireNotification: Boolean = true) :
         NotificationListener.UrlOpeningListener(expireNotification) {

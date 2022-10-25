@@ -96,10 +96,10 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
         } catch (e: Throwable) {
             LOG.w("Failed to export word book", e)
             Notifications.showErrorNotification(
-                NOTIFICATION_GROUP_ID,
-                project,
                 title,
-                message("wordbook.window.export.notification.failed", e.message ?: "")
+                message("wordbook.window.export.notification.failed", e.message ?: ""),
+                project,
+                NOTIFICATION_GROUP_ID,
             )
             return
         }

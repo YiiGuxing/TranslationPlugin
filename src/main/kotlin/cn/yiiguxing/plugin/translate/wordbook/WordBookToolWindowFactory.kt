@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.NotificationAction
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -102,24 +101,23 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
         }
 
         if (Settings.wordbookStoragePath.isNullOrEmpty()) {
-            Notifications.showNotification(
+            Notifications.showFullContentNotification(
                 message("wordbook.window.title"),
                 message("got.it.notification.text.wordbook.storage.path"),
-                NotificationType.INFORMATION,
-                project,
-                notificationCustomizer = {
-                    it.addAction(
-                        NotificationAction.createSimpleExpiring(message("action.got.it.text")) {
-                            PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
-                        }
-                    ).addAction(
-                        NotificationAction.create(message("action.configure.text")) { _, notification ->
-                            notification.expire()
-                            PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
-                            TranslationConfigurable.showSettingsDialog(project)
-                        }
-                    )
-                })
+                project = project
+            ) {
+                it.addAction(
+                    NotificationAction.createSimpleExpiring(message("action.got.it.text")) {
+                        PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
+                    }
+                ).addAction(
+                    NotificationAction.create(message("action.configure.text")) { _, notification ->
+                        notification.expire()
+                        PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
+                        TranslationConfigurable.showSettingsDialog(project)
+                    }
+                )
+            }
         } else {
             PropertiesComponent.getInstance().setValue(GOT_IT_KEY, true)
         }
