@@ -1,8 +1,10 @@
 package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.documentation.HtmlTranslator
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.documentation.TranslatedDocComments
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.codeInsight.documentation.DocumentationManager
@@ -13,6 +15,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
+import com.intellij.util.ui.JBUI
 
 /**
  * Translates documentation computed by another documentation provider. It should have
@@ -30,7 +33,8 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
             val originalDoc = nullIfError { providerFromElement.generateDoc(element, originalElement) }
-            translate(originalDoc, element?.language)
+            val translatedDoc = translate(originalDoc, element?.language)
+            translatedDoc ?: addTranslationFailureMessage(originalDoc)
         }
     }
 
@@ -76,7 +80,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
                 else -> null
             }
 
-            translate(originalDoc, language)
+            translate(originalDoc, language) ?: addTranslationFailureMessage(originalDoc)
         }
     }
 
@@ -155,6 +159,14 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             lastTranslationTask = task
 
             return task.nonBlockingGet()
+        }
+
+        private fun addTranslationFailureMessage(doc: String?): String? {
+            doc ?: return null
+
+            val message = message("doc.message.translation.failure.please.try.again")
+            val color = JBUI.CurrentTheme.Label.disabledForeground()
+            return HtmlTranslator.addMessage(doc, message, color)
         }
     }
 }

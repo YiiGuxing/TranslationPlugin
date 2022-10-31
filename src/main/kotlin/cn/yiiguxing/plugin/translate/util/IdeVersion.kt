@@ -9,6 +9,7 @@ import com.intellij.openapi.util.BuildNumber
 enum class IdeVersion(val buildNumber: Int) {
     IDE2020_3(203),
     IDE2021_2(212),
+    IDE2021_3(213),
     IDE2022_1(221);
 
     companion object {
