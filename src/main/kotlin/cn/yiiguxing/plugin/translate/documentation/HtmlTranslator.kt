@@ -11,6 +11,7 @@ import com.intellij.util.ui.JBUI
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.awt.Color
 import java.io.StringReader
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
@@ -26,6 +27,39 @@ private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
 
 private val HTML_KIT = HTMLEditorKit()
 
+
+internal object HtmlTranslator {
+    fun addMessage(documentation: String, message: String, color: Color): String {
+        return Jsoup.parse(documentation)
+            .apply { outputSettings().prettyPrint(false) }
+            .addMessage(message, color)
+            .outerHtml()
+            .fixHtml()
+    }
+}
+
+private fun Document.addMessage(message: String, color: Color): Document = apply {
+    val colorHex = ColorUtil.toHex(color)
+    val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
+    val messageEl = Element("div")
+        .attr(
+            "style",
+            "color: $colorHex;" +
+                    "margin-bottom: ${JBUIScale.scale(4)}px;" +
+                    "padding: ${JBUIScale.scale(1)}px ${JBUIScale.scale(6)}px;" +
+                    "border-left: ${JBUIScale.scale(3)}px $colorHex solid;"
+        )
+
+//    TranslationIcons.getTranslationIconUrl()?.let { iconUrl ->
+//        val iconEl = Element("img")
+//            .attr("src", iconUrl)
+//            .attr("align", "middle")
+//        messageEl.appendChild(iconEl)
+//    }
+
+    messageEl.appendText(message)
+    contentEl.insertChildren(0, messageEl)
+}
 
 fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
     val document: Document = Jsoup.parse(documentation).apply {
@@ -57,20 +91,8 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
 }
 
 private fun Document.addLimitHint(): Document {
-    val hintColor = ColorUtil.toHex(JBUI.CurrentTheme.Label.disabledForeground())
-    body().selectFirst(CSS_QUERY_CONTENT)?.insertChildren(
-        0,
-        Element("div")
-            .attr(
-                "style",
-                "color: $hintColor;" +
-                        "margin-bottom: ${JBUIScale.scale(4)}px;" +
-                        "padding: ${JBUIScale.scale(1)}px ${JBUIScale.scale(6)}px;" +
-                        "border-left: ${JBUIScale.scale(3)}px $hintColor solid;"
-            )
-            .text(message("translate.documentation.limitHint"))
-    )
-    return this
+    val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
+    return addMessage(message("translate.documentation.limitHint"), hintColor)
 }
 
 /**
