@@ -92,8 +92,7 @@ object TKK {
     }
 
     internal fun testConnection(): Boolean = try {
-        getElementJsRequest().tryConnect() != -1
-    } catch (e: HttpRequests.HttpStatusException) {
+        getElementJsRequest().tryConnect()
         true
     } catch (e: Throwable) {
         false

@@ -36,13 +36,22 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
     @Suppress("UnstableApiUsage")
     override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
-        if (!TranslatedDocComments.isTranslated(docComment))
-            return null
+        val translatedDoc = TranslatedDocComments.getTranslatedDoc(docComment) ?: return null
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
             val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
-            translate(originalDoc, docComment.language)
+
+            if (translatedDoc.original == originalDoc) {
+                return@nullIfRecursive translatedDoc.translation
+            }
+
+            translate(originalDoc, docComment.language).also { translation ->
+                TranslatedDocComments.updateTranslatedDoc(
+                    docComment,
+                    translation?.let { TranslatedDocComments.TranslatedDoc(originalDoc, it) }
+                )
+            }
         }
     }
 
@@ -139,7 +148,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
                 lastTask != null &&
                 lastTask.translator.id == translator.id &&
                 lastTask.text == text &&
-                (lastTask.isSucceeded || !lastTask.isFinished)
+                (lastTask.isSucceeded || !lastTask.isProcessed)
             ) lastTask
             else TranslateDocumentationTask(text, language, translator)
 

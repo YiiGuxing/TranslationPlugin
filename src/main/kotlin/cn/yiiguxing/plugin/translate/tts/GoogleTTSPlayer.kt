@@ -85,7 +85,7 @@ class GoogleTTSPlayer(
 
         override fun onThrowable(error: Throwable) {
             when (error) {
-                is IOException -> Notifications.showErrorNotification(project, "TTS", error.getCommonMessage())
+                is IOException -> Notifications.showErrorNotification("TTS", error.getCommonMessage(), project)
                 else -> LOGGER.e("TTS Error", error)
             }
         }

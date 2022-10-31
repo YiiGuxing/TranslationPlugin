@@ -48,7 +48,8 @@ class TranslationConfigurable : SearchableConfigurable {
 
     companion object {
         fun showSettingsDialog(project: Project? = null) {
-            ShowSettingsUtil.getInstance().showSettingsDialog(project, TranslationConfigurable::class.java)
+            ShowSettingsUtil.getInstance()
+                .showSettingsDialog(project?.takeUnless { it.isDisposed }, TranslationConfigurable::class.java)
         }
     }
 }

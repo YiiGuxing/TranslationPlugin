@@ -8,44 +8,83 @@ import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.util.concurrency.AppExecutorUtil
-import com.intellij.util.containers.ContainerUtil
+import java.util.concurrent.ConcurrentHashMap
 
 @Service
-internal class TranslatedDocComments: Disposable {
+internal class TranslatedDocComments : Disposable {
 
     //use SmartPsiElementPointer to survive reparse
-    private val translatedDocs: MutableSet<SmartPsiElementPointer<PsiDocCommentBase>> = ContainerUtil.newConcurrentSet()
+    private val translatedDocs: MutableMap<SmartPsiElementPointer<PsiDocCommentBase>, TranslatedDoc> =
+        ConcurrentHashMap()
 
     override fun dispose() {
         translatedDocs.clear()
     }
 
     companion object {
-        fun isTranslated(docComment: PsiDocCommentBase): Boolean {
-            val translatedDocs = translatedDocs(docComment.project)
-            return translatedDocs.contains(SmartPointerManager.createPointer(docComment))
-        }
-
-        fun setTranslated(docComment: PsiDocCommentBase, value: Boolean) {
-            val translatedDocs = translatedDocs(docComment.project)
-
-            val pointer = SmartPointerManager.createPointer(docComment)
-
-            if (value) translatedDocs.add(pointer)
-            else translatedDocs.remove(pointer)
-
-            translatedDocs.scheduleCleanup()
-        }
+        private val EMPTY = TranslatedDoc()
 
         private fun service(project: Project) = project.getService(TranslatedDocComments::class.java)
 
         private fun translatedDocs(project: Project) = service(project).translatedDocs
 
-        private fun MutableSet<SmartPsiElementPointer<PsiDocCommentBase>>.scheduleCleanup() {
+        /**
+         * Returns `true` if the specified [doc comment][docComment] is in translated status.
+         */
+        fun isTranslated(docComment: PsiDocCommentBase): Boolean {
+            return SmartPointerManager.createPointer(docComment) in translatedDocs(docComment.project)
+        }
+
+        /**
+         * Sets Sets the translation status of the specified [doc comment][docComment].
+         */
+        fun setTranslated(docComment: PsiDocCommentBase, value: Boolean) {
+            val translatedDocs = translatedDocs(docComment.project)
+            val pointer = SmartPointerManager.createPointer(docComment)
+
+            if (value) {
+                translatedDocs[pointer] = translatedDocs[pointer] ?: EMPTY
+            } else {
+                translatedDocs.remove(pointer)
+            }
+
+            translatedDocs.scheduleCleanup()
+        }
+
+        /**
+         * Returns the [TranslatedDoc] of the specified [doc comment][docComment],
+         * or `null` if the comment is not in the translated status,
+         * or an empty [TranslatedDoc] if the translation is not ready.
+         */
+        fun getTranslatedDoc(docComment: PsiDocCommentBase): TranslatedDoc? {
+            val translatedDocs = translatedDocs(docComment.project)
+            val pointer = SmartPointerManager.createPointer(docComment)
+            return translatedDocs[pointer]
+        }
+
+        /**
+         * Update the [translatedDoc] of the specified [doc comment][docComment],
+         * clear the translation status of the comment if the [translatedDoc] is `null`.
+         */
+        fun updateTranslatedDoc(docComment: PsiDocCommentBase, translatedDoc: TranslatedDoc?) {
+            val translatedDocs = translatedDocs(docComment.project)
+            val pointer = SmartPointerManager.createPointer(docComment)
+            if (translatedDoc != null) {
+                translatedDocs[pointer] = translatedDoc
+            } else {
+                translatedDocs.remove(pointer)
+            }
+
+            translatedDocs.scheduleCleanup()
+        }
+
+        private fun MutableMap<SmartPsiElementPointer<PsiDocCommentBase>, *>.scheduleCleanup() {
             ReadAction.nonBlocking {
-                removeIf { it.element == null }
+                keys.removeIf { it.element == null }
             }.submit(AppExecutorUtil.getAppExecutorService())
         }
     }
+
+    data class TranslatedDoc(val original: String? = null, val translation: String? = null)
 
 }
