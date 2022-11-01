@@ -11,7 +11,7 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-internal class TranslatedDocComments : Disposable {
+internal class TranslatedInlayDocumentations : Disposable {
 
     //use SmartPsiElementPointer to survive reparse
     private val translatedDocs: MutableMap<SmartPsiElementPointer<PsiDocCommentBase>, TranslatedDoc> =
@@ -24,7 +24,7 @@ internal class TranslatedDocComments : Disposable {
     companion object {
         private val EMPTY = TranslatedDoc()
 
-        private fun service(project: Project) = project.getService(TranslatedDocComments::class.java)
+        private fun service(project: Project) = project.getService(TranslatedInlayDocumentations::class.java)
 
         private fun translatedDocs(project: Project) = service(project).translatedDocs
 
@@ -36,7 +36,7 @@ internal class TranslatedDocComments : Disposable {
         }
 
         /**
-         * Sets Sets the translation status of the specified [doc comment][docComment].
+         * Sets the translation status of the specified [doc comment][docComment].
          */
         fun setTranslated(docComment: PsiDocCommentBase, value: Boolean) {
             val translatedDocs = translatedDocs(docComment.project)

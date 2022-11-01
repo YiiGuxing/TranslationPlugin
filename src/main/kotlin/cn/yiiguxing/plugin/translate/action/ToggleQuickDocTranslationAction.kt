@@ -1,7 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.documentation.DocTranslations
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -51,50 +52,45 @@ open class ToggleQuickDocTranslationAction :
     }
 
     override fun isSelected(e: AnActionEvent): Boolean {
-        return Settings.translateDocumentation
+        val project = e.project ?: return false
+        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return false
+
+        return DocTranslations.getTranslationState(activeDocComponent.element) ?: Settings.translateDocumentation
     }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {
-        Settings.translateDocumentation = state
-
         val project = e.project ?: return
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
+
+        DocTranslations.setTranslationState(activeDocComponent.element, state)
         toggleTranslation(project, activeDocComponent)
     }
 
     private fun toggleTranslation(project: Project, docComponent: DocumentationComponent) {
         val currentText = docComponent.text
+        val element = docComponent.element ?: return
+        val originalElement = DocumentationManager.getOriginalElement(element)
 
-        if (Settings.translateDocumentation) {
-            TranslateDocumentationTask(currentText, docComponent.element?.language).onSuccess { translation ->
-                replaceActiveComponentText(project, currentText, translation)
-            }
-        } else {
-            val element = docComponent.element ?: return
-            val originalElement = DocumentationManager.getOriginalElement(element)
-
-            val now = System.currentTimeMillis()
-            val replaceComponentAction = ReadAction.nonBlocking {
-                if (element.isValid && originalElement?.isValid != false) {
-                    val originalText = DocumentationManager.getInstance(project)
-                        .generateDocumentation(element, originalElement, false)
-                    if (originalText != null) {
-                        replaceActiveComponentText(project, currentText, originalText)
-                    }
+        val now = System.currentTimeMillis()
+        ReadAction.nonBlocking {
+            if (element.isValid && originalElement?.isValid != false) {
+                val originalText = DocumentationManager.getInstance(project)
+                    .generateDocumentation(element, originalElement, false)
+                if (originalText != null) {
+                    replaceActiveComponentText(project, currentText, originalText)
                 }
             }
-            replaceComponentAction
-                .expireWhen { System.currentTimeMillis() - now > 5000 }
-                .submit(AppExecutorUtil.getAppExecutorService())
-        }
+        }.expireWhen {
+            System.currentTimeMillis() - now > 5000
+        }.expireWith(
+            TranslationUIManager.disposable(project)
+        ).submit(
+            AppExecutorUtil.getAppExecutorService()
+        )
     }
 
-    private fun replaceActiveComponentText(
-        project: Project,
-        currentText: String?,
-        newText: String
-    ) {
-        invokeLater {
+    private fun replaceActiveComponentText(project: Project, currentText: String?, newText: String) {
+        invokeLater(expired = project.disposed) {
             val component = QuickDocUtil.getActiveDocComponent(project)
             if (component?.text == currentText) {
                 component?.replaceText(newText, component.element)

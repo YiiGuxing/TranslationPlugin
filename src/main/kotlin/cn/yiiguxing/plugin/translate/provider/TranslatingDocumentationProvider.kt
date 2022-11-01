@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.documentation.HtmlTranslator
+import cn.yiiguxing.plugin.translate.documentation.DocTranslations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
-import cn.yiiguxing.plugin.translate.documentation.TranslatedDocComments
+import cn.yiiguxing.plugin.translate.documentation.TranslatedInlayDocumentations
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
@@ -27,8 +27,9 @@ import com.intellij.util.ui.JBUI
 class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        if (!Settings.instance.translateDocumentation)
+        if (!isTranslateDocumentation(element)) {
             return null
+        }
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
@@ -38,35 +39,15 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         }
     }
 
-    @Suppress("UnstableApiUsage")
-    override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
-        val translatedDoc = TranslatedDocComments.getTranslatedDoc(docComment) ?: return null
-
-        return nullIfRecursive {
-            val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
-            val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
-
-            if (translatedDoc.original == originalDoc) {
-                return@nullIfRecursive translatedDoc.translation
-            }
-
-            translate(originalDoc, docComment.language).also { translation ->
-                TranslatedDocComments.updateTranslatedDoc(
-                    docComment,
-                    translation?.let { TranslatedDocComments.TranslatedDoc(originalDoc, it) }
-                )
-            }
-        }
-    }
-
     override fun fetchExternalDocumentation(
         project: Project?,
         element: PsiElement?,
         docUrls: MutableList<String>?,
         onHover: Boolean
     ): String? {
-        if (!Settings.instance.translateDocumentation)
+        if (!isTranslateDocumentation(element)) {
             return null
+        }
 
         return nullIfRecursive {
             val (language, providerFromElement) = Application.runReadAction(Computable {
@@ -81,6 +62,27 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             }
 
             translate(originalDoc, language) ?: addTranslationFailureMessage(originalDoc)
+        }
+    }
+
+    @Suppress("UnstableApiUsage")
+    override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
+        val translatedDoc = TranslatedInlayDocumentations.getTranslatedDoc(docComment) ?: return null
+
+        return nullIfRecursive {
+            val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
+            val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
+
+            if (translatedDoc.original == originalDoc) {
+                return@nullIfRecursive translatedDoc.translation
+            }
+
+            translate(originalDoc, docComment.language).also { translation ->
+                TranslatedInlayDocumentations.updateTranslatedDoc(
+                    docComment,
+                    translation?.let { TranslatedInlayDocumentations.TranslatedDoc(originalDoc, it) }
+                )
+            }
         }
     }
 
@@ -101,6 +103,10 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
         // To reuse long-running translation task
         private var lastTranslationTask: TranslateDocumentationTask? = null
+
+        private fun isTranslateDocumentation(element: PsiElement?): Boolean {
+            return DocTranslations.getTranslationState(element) ?: Settings.instance.translateDocumentation
+        }
 
         /**
          * 用于[DocumentationProviderEx]和[ExternalDocumentationProvider]生成文档方法的包装调用，
@@ -166,7 +172,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
             val message = message("doc.message.translation.failure.please.try.again")
             val color = JBUI.CurrentTheme.Label.disabledForeground()
-            return HtmlTranslator.addMessage(doc, message, color)
+            return DocTranslations.addMessage(doc, message, color)
         }
     }
 }

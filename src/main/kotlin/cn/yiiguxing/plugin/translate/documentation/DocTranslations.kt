@@ -7,6 +7,8 @@ import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
+import com.intellij.openapi.util.Key
+import com.intellij.psi.PsiElement
 import com.intellij.ui.ColorUtil
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
@@ -24,13 +26,32 @@ private const val TAG_PRE = "pre"
 
 private const val TRANSLATED_ATTR = "translated"
 
-private val HTML_HEAD_REGEX = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
-private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
-
-private val HTML_KIT = HTMLEditorKit()
+private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
+private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
 
 
-internal object HtmlTranslator {
+internal object DocTranslations {
+
+    private val DOC_TRANSLATION_KEY = Key.create<Boolean>("DOC_TRANSLATION_KEY")
+
+    /**
+     * Sets the [translation state][translationState] of the specified [PSI element][element].
+     */
+    fun setTranslationState(element: PsiElement?, translationState: Boolean) {
+        DOC_TRANSLATION_KEY[element] = translationState
+    }
+
+    /**
+     * Returns the translation state of the specified [PSI element][element],
+     * returns `null` if the translation state is not set.
+     */
+    fun getTranslationState(element: PsiElement?): Boolean? {
+        return DOC_TRANSLATION_KEY[element]
+    }
+
+    /**
+     * Adds the specified inline [message] to the [documentation].
+     */
     fun addMessage(documentation: String, message: String, color: Color): String {
         return Jsoup.parse(documentation)
             .apply { outputSettings().prettyPrint(false) }
@@ -74,7 +95,7 @@ private fun Document.addMessage(message: String, color: Color): Document = apply
     contentEl.insertChildren(0, messageTableEl)
 }
 
-fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
+internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
     val document: Document = Jsoup.parse(documentation).apply {
         outputSettings().prettyPrint(false)
     }
@@ -109,12 +130,10 @@ private fun Document.addLimitHint(): Document {
 }
 
 /**
- * 修复HTML格式。[DocumentationComponent]识别不了`attr="val"`的属性表达形式，只识别`attr='val'`的表达形式，导致样式显示异常。
+ * 修复HTML格式。[DocumentationComponent]识别不了 `class="class"` 的表达形式，
+ * 只识别 `class='class'`，导致样式显示异常。
  */
-private fun String.fixHtml(): String = replace(
-    HTML_HEAD_REGEX,
-    HTML_HEAD_REPLACEMENT
-)
+private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_HTML_CLASS_EXPRESSION_REPLACEMENT)
 
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
@@ -155,7 +174,7 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
 
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
-    val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
+    val htmlDocument = HTMLDocument().also { HTMLEditorKit().read(StringReader(body.html()), it, 0) }
     val formatted = try {
         val content = htmlDocument.getText(0, htmlDocument.length).trim()
         checkContentLength(content, contentLengthLimit)
