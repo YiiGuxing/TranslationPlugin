@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.documentation.DocTranslations
+import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.InlayDocTranslations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.message
@@ -105,7 +105,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         private var lastTranslationTask: TranslateDocumentationTask? = null
 
         private fun isTranslateDocumentation(element: PsiElement?): Boolean {
-            return DocTranslations.getTranslationState(element) ?: Settings.instance.translateDocumentation
+            return Documentations.getTranslationState(element) ?: Settings.instance.translateDocumentation
         }
 
         /**
@@ -172,7 +172,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
             val message = message("doc.message.translation.failure.please.try.again")
             val color = JBUI.CurrentTheme.Label.disabledForeground()
-            return DocTranslations.addMessage(doc, message, color)
+            return Documentations.addMessage(doc, message, color)
         }
     }
 }

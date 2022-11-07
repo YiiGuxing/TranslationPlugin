@@ -30,7 +30,7 @@ private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='$
 private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
 
 
-internal object DocTranslations {
+internal object Documentations {
 
     private val DOC_TRANSLATION_KEY = Key.create<Boolean>("DOC_TRANSLATION_KEY")
 
