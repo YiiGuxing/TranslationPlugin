@@ -44,11 +44,21 @@ open class ToggleQuickDocTranslationAction :
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)
 
         e.presentation.isVisible = e.presentation.isVisible && rdMouseHoverDocComponent == null
-        e.presentation.isEnabled = activeDocComponent != null && (toolWindow == null || toolWindow.isActive)
+
+        // 当Action在ToolWindow的右键菜单上时，点击菜单项会使得ToolWindow失去焦点，
+        // 此时toolWindow.isActive为false，Action将不启用。
+        // 所以Action在右键菜单上时，直接设为启用状态。
+        val isDocToolbarPlace = ActionPlaces.JAVADOC_TOOLBAR == e.place
+        e.presentation.isEnabled =
+            activeDocComponent != null && (isDocToolbarPlace || toolWindow == null || toolWindow.isActive)
     }
 
     override fun getIcon(place: String, selected: Boolean): Icon? {
-        return if (ActionPlaces.JAVADOC_TOOLBAR != place && selected) null else icon
+        return if (ActionPlaces.JAVADOC_TOOLBAR != place && ActionPlaces.TOOLWINDOW_TITLE != place && selected) {
+            null
+        } else {
+            icon
+        }
     }
 
     override fun isSelected(e: AnActionEvent): Boolean {
