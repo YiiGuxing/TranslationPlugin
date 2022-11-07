@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.DocTranslations
+import cn.yiiguxing.plugin.translate.documentation.InlayDocTranslations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
-import cn.yiiguxing.plugin.translate.documentation.TranslatedInlayDocumentations
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
@@ -67,20 +67,20 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
     @Suppress("UnstableApiUsage")
     override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
-        val translatedDoc = TranslatedInlayDocumentations.getTranslatedDoc(docComment) ?: return null
+        val translationResult = InlayDocTranslations.getTranslationResult(docComment) ?: return null
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
             val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
 
-            if (translatedDoc.original == originalDoc) {
-                return@nullIfRecursive translatedDoc.translation
+            if (translationResult.original == originalDoc) {
+                return@nullIfRecursive translationResult.translation
             }
 
             translate(originalDoc, docComment.language).also { translation ->
-                TranslatedInlayDocumentations.updateTranslatedDoc(
+                InlayDocTranslations.updateTranslationResult(
                     docComment,
-                    translation?.let { TranslatedInlayDocumentations.TranslatedDoc(originalDoc, it) }
+                    translation?.let { InlayDocTranslations.TranslationResult(originalDoc, it) }
                 )
             }
         }

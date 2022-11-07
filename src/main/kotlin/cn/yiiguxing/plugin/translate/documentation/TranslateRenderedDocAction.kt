@@ -25,7 +25,7 @@ internal class TranslateRenderedDocAction(
 ) {
 
     override fun isSelected(event: AnActionEvent): Boolean {
-        return TranslatedInlayDocumentations.isTranslated(docComment)
+        return InlayDocTranslations.isTranslated(docComment)
     }
 
     override fun setSelected(event: AnActionEvent, value: Boolean) {
@@ -33,7 +33,7 @@ internal class TranslateRenderedDocAction(
         val file = docComment.containingFile ?: return
         val project = file.project
 
-        TranslatedInlayDocumentations.setTranslated(docComment, value)
+        InlayDocTranslations.setTranslated(docComment, value)
 
         ReadAction
             .nonBlocking<DocRenderPassFactory.Items?> {
@@ -53,7 +53,7 @@ internal class TranslateRenderedDocAction(
                 if (it != null) {
                     DocRenderPassFactory.applyItemsToRender(editor, project, it, false)
                 } else {
-                    TranslatedInlayDocumentations.setTranslated(docComment, !value)
+                    InlayDocTranslations.setTranslated(docComment, !value)
                     Toggleable.setSelected(event.presentation, !value)
                 }
             }
