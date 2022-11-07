@@ -38,7 +38,7 @@ object TranslationNotifications {
             logger.e("Translation error: ${throwable.message}", throwable)
         }
         Notifications.showErrorNotification(title, message, project) {
-            it.addActions(actionList)
+            it.addActions(actionList as Collection<AnAction>)
         }
     }
 

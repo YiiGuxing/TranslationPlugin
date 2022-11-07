@@ -19,6 +19,7 @@ fun <T> Promise<T>.expireWith(parentDisposable: Disposable): Promise<T> {
         return this
     }
 
+    @Suppress("DEPRECATION")
     if (if (parentDisposable is Project) parentDisposable.isDisposed else Disposer.isDisposed(parentDisposable)) {
         cancel()
         return this
@@ -81,6 +82,7 @@ internal inline fun <Ref, T, V> Promise<T>.onUiThread(
 ): Promise<T> {
     return expireWith(disposableRef)
         .fn(Consumer { result ->
+            @Suppress("DEPRECATION")
             if (disposableRef.get() != null && !Disposer.isDisposed(disposableRef)) {
                 invokeAndWait(modalityState) {
                     disposableRef.get()?.let { uiThreadAction(it, result) }
