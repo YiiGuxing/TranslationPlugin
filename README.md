@@ -364,7 +364,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 [badge:plugin-homepage]: https://img.shields.io/badge/plugin%20homepage-translation-4caf50.svg?style=flat-square
 [badge:build]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
 [badge:license]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[badge:release]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square&colorB=0097A7
+[badge:release]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?sort=semver&style=flat-square&colorB=0097A7
 [badge:version]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=2196F3
 [badge:downloads]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square&colorB=5C6BC0
 [badge:open-collective]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&color=d05ce3
