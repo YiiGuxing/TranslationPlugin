@@ -18,28 +18,85 @@ import java.io.StringReader
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 
-private const val CSS_QUERY_DEFINITION = ".definition"
-private const val CSS_QUERY_CONTENT = ".content"
-private const val TAG_PRE = "pre"
-
-private const val TRANSLATED_ATTR = "translated"
-
-private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
-private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
-
-
+/**
+ * Help class that provide document operations.
+ */
 internal object Documentations {
+
+    /**
+     * Parses the specified [documentation] string.
+     */
+    fun parseDocumentation(documentation: String): Document = Jsoup.parse(documentation)
+
+    /**
+     * Returns the documentation string of the specified [documentation] object.
+     *
+     * @param prettyPrint Enable or disable pretty printing.
+     */
+    fun getDocumentationString(documentation: Document, prettyPrint: Boolean = false): String {
+        documentation.outputSettings().prettyPrint(prettyPrint)
+        return documentation.outerHtml().fixHtml()
+    }
 
     /**
      * Adds the specified inline [message] to the [documentation].
      */
     fun addMessage(documentation: String, message: String, color: Color): String {
-        return Jsoup.parse(documentation)
-            .apply { outputSettings().prettyPrint(false) }
+        return parseDocumentation(documentation)
             .addMessage(message, color)
-            .outerHtml()
-            .fixHtml()
+            .documentationString
     }
+
+}
+
+
+private const val CSS_QUERY_DEFINITION = ".definition"
+private const val CSS_QUERY_CONTENT = ".content"
+
+private const val TAG_PRE = "pre"
+private const val ATTR_TRANSLATED = "translated"
+
+private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
+private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
+
+
+/**
+ * Documentation string of this [Document].
+ */
+internal val Document.documentationString: String
+    get() = Documentations.getDocumentationString(this, false)
+
+
+internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
+    val document: Document = Documentations.parseDocumentation(documentation)
+    if (document.body().hasAttr(ATTR_TRANSLATED)) {
+        return documentation
+    }
+
+    val translatedDocumentation = try {
+        if (this is DocumentationTranslator) {
+            getTranslatedDocumentation(document, language)
+        } else {
+            getTranslatedDocumentation(document)
+        }
+    } catch (e: ContentLengthLimitException) {
+        document.addLimitHint()
+    } catch (e: TranslateException) {
+        if (e.cause is ContentLengthLimitException) {
+            document.addLimitHint()
+        } else {
+            throw e
+        }
+    }
+
+    translatedDocumentation.body().attributes().put(ATTR_TRANSLATED, true)
+
+    return translatedDocumentation.documentationString
+}
+
+private fun Document.addLimitHint(): Document {
+    val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
+    return addMessage(message("translate.documentation.limitHint"), hintColor)
 }
 
 private fun Document.addMessage(message: String, color: Color): Document = apply {
@@ -76,40 +133,6 @@ private fun Document.addMessage(message: String, color: Color): Document = apply
     contentEl.insertChildren(0, messageTableEl)
 }
 
-internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
-    val document: Document = Jsoup.parse(documentation).apply {
-        outputSettings().prettyPrint(false)
-    }
-    if (document.body().hasAttr(TRANSLATED_ATTR)) {
-        return documentation
-    }
-
-    val translatedDocumentation = try {
-        if (this is DocumentationTranslator) {
-            getTranslatedDocumentation(document, language)
-        } else {
-            getTranslatedDocumentation(document)
-        }
-    } catch (e: ContentLengthLimitException) {
-        document.addLimitHint()
-    } catch (e: TranslateException) {
-        if (e.cause is ContentLengthLimitException) {
-            document.addLimitHint()
-        } else {
-            throw e
-        }
-    }
-
-    translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, true)
-
-    return translatedDocumentation.outerHtml().fixHtml()
-}
-
-private fun Document.addLimitHint(): Document {
-    val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
-    return addMessage(message("translate.documentation.limitHint"), hintColor)
-}
-
 /**
  * 修复HTML格式。[DocumentationComponent]识别不了 `class="class"` 的表达形式，
  * 只识别 `class='class'`，导致样式显示异常。
@@ -118,7 +141,6 @@ private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_
 
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
-
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     // 删除多余的 `p` 标签。
