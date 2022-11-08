@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.documentation.Documentations
+import cn.yiiguxing.plugin.translate.documentation.DocTranslations
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -54,25 +54,24 @@ open class ToggleQuickDocTranslationAction :
     }
 
     override fun getIcon(place: String, selected: Boolean): Icon? {
-        return if (ActionPlaces.JAVADOC_TOOLBAR != place && ActionPlaces.TOOLWINDOW_TITLE != place && selected) {
-            null
-        } else {
-            icon
-        }
+        val isToolbarPlace = ActionPlaces.JAVADOC_TOOLBAR == place || ActionPlaces.TOOLWINDOW_TITLE == place
+        return if (!isToolbarPlace && selected) null else icon
     }
 
     override fun isSelected(e: AnActionEvent): Boolean {
         val project = e.project ?: return false
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return false
 
-        return Documentations.getTranslationState(activeDocComponent.element) ?: Settings.translateDocumentation
+        return activeDocComponent.element?.let { DocTranslations.getTranslationState(it) }
+            ?: Settings.translateDocumentation
     }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         val project = e.project ?: return
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
+        val element = activeDocComponent.element ?: return
 
-        Documentations.setTranslationState(activeDocComponent.element, state)
+        DocTranslations.setTranslationState(element, state)
         toggleTranslation(project, activeDocComponent)
     }
 

@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.documentation.DocTranslations
 import cn.yiiguxing.plugin.translate.documentation.Documentations
-import cn.yiiguxing.plugin.translate.documentation.InlayDocTranslations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Application
@@ -26,7 +26,7 @@ import com.intellij.util.ui.JBUI
  */
 class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
-    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+    override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
         if (!isTranslateDocumentation(element)) {
             return null
         }
@@ -34,14 +34,14 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
             val originalDoc = nullIfError { providerFromElement.generateDoc(element, originalElement) }
-            val translatedDoc = translate(originalDoc, element?.language)
+            val translatedDoc = translate(originalDoc, element.language)
             translatedDoc ?: addTranslationFailureMessage(originalDoc)
         }
     }
 
     override fun fetchExternalDocumentation(
-        project: Project?,
-        element: PsiElement?,
+        project: Project,
+        element: PsiElement,
         docUrls: MutableList<String>?,
         onHover: Boolean
     ): String? {
@@ -51,7 +51,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
         return nullIfRecursive {
             val (language, providerFromElement) = Application.runReadAction(Computable {
-                element?.takeIf { it.isValid }?.language to DocumentationManager.getProviderFromElement(element, null)
+                element.takeIf { it.isValid }?.language to DocumentationManager.getProviderFromElement(element, null)
             })
             val originalDoc = when (providerFromElement) {
                 is ExternalDocumentationProvider -> nullIfError {
@@ -67,7 +67,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
     @Suppress("UnstableApiUsage")
     override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
-        val translationResult = InlayDocTranslations.getTranslationResult(docComment) ?: return null
+        val translationResult = DocTranslations.getInlayDocTranslation(docComment) ?: return null
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
@@ -78,9 +78,9 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             }
 
             translate(originalDoc, docComment.language).also { translation ->
-                InlayDocTranslations.updateTranslationResult(
+                DocTranslations.updateInlayDocTranslation(
                     docComment,
-                    translation?.let { InlayDocTranslations.TranslationResult(originalDoc, it) }
+                    translation?.let { DocTranslations.TranslationResult(originalDoc, it) }
                 )
             }
         }
@@ -104,8 +104,8 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         // To reuse long-running translation task
         private var lastTranslationTask: TranslateDocumentationTask? = null
 
-        private fun isTranslateDocumentation(element: PsiElement?): Boolean {
-            return Documentations.getTranslationState(element) ?: Settings.instance.translateDocumentation
+        private fun isTranslateDocumentation(element: PsiElement): Boolean {
+            return DocTranslations.getTranslationState(element) ?: Settings.instance.translateDocumentation
         }
 
         /**

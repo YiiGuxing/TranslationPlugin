@@ -7,8 +7,6 @@ import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
-import com.intellij.openapi.util.Key
-import com.intellij.psi.PsiElement
 import com.intellij.ui.ColorUtil
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
@@ -31,23 +29,6 @@ private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>
 
 
 internal object Documentations {
-
-    private val DOC_TRANSLATION_KEY = Key.create<Boolean>("DOC_TRANSLATION_KEY")
-
-    /**
-     * Sets the [translation state][translationState] of the specified [PSI element][element].
-     */
-    fun setTranslationState(element: PsiElement?, translationState: Boolean) {
-        DOC_TRANSLATION_KEY[element] = translationState
-    }
-
-    /**
-     * Returns the translation state of the specified [PSI element][element],
-     * returns `null` if the translation state is not set.
-     */
-    fun getTranslationState(element: PsiElement?): Boolean? {
-        return DOC_TRANSLATION_KEY[element]
-    }
 
     /**
      * Adds the specified inline [message] to the [documentation].
