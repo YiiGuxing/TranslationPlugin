@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.documentation.DocTranslations
+import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.message
@@ -67,7 +67,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
     @Suppress("UnstableApiUsage")
     override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
-        val translationResult = DocTranslations.getInlayDocTranslation(docComment) ?: return null
+        val translationResult = DocTranslationService.getInlayDocTranslation(docComment) ?: return null
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
@@ -78,9 +78,9 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             }
 
             translate(originalDoc, docComment.language).also { translation ->
-                DocTranslations.updateInlayDocTranslation(
+                DocTranslationService.updateInlayDocTranslation(
                     docComment,
-                    translation?.let { DocTranslations.TranslationResult(originalDoc, it) }
+                    translation?.let { DocTranslationService.TranslationResult(originalDoc, it) }
                 )
             }
         }
@@ -105,7 +105,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         private var lastTranslationTask: TranslateDocumentationTask? = null
 
         private fun isTranslateDocumentation(element: PsiElement): Boolean {
-            return DocTranslations.getTranslationState(element) ?: Settings.instance.translateDocumentation
+            return DocTranslationService.getTranslationState(element) ?: Settings.instance.translateDocumentation
         }
 
         /**

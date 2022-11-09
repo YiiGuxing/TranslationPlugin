@@ -13,7 +13,7 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-internal class DocTranslations : Disposable {
+internal class DocTranslationService : Disposable {
 
     // Use SmartPsiElementPointer to survive reparse.
     private val translationStates: LruCache<SmartPsiElementPointer<PsiElement>, Boolean> = LruCache(MAX_STATES_SIZE)
@@ -37,7 +37,7 @@ internal class DocTranslations : Disposable {
         private val <T : PsiElement> T.myPointer: SmartPsiElementPointer<T>
             get() = SmartPointerManager.createPointer(this)
 
-        private fun service(project: Project) = project.getService(DocTranslations::class.java)
+        private fun service(project: Project) = project.getService(DocTranslationService::class.java)
 
         private fun translationStates(project: Project) = service(project).translationStates
 
