@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.documentation.DocTranslations
+import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Settings
@@ -62,7 +62,7 @@ open class ToggleQuickDocTranslationAction :
         val project = e.project ?: return false
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return false
 
-        return activeDocComponent.element?.let { DocTranslations.getTranslationState(it) }
+        return activeDocComponent.element?.let { DocTranslationService.getTranslationState(it) }
             ?: Settings.translateDocumentation
     }
 
@@ -71,7 +71,7 @@ open class ToggleQuickDocTranslationAction :
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
         val element = activeDocComponent.element ?: return
 
-        DocTranslations.setTranslationState(element, state)
+        DocTranslationService.setTranslationState(element, state)
         toggleTranslation(project, activeDocComponent)
     }
 
