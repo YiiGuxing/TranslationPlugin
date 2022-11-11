@@ -34,10 +34,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.IdeGlassPane
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl
-import com.intellij.ui.DocumentAdapter
-import com.intellij.ui.PopupMenuListenerAdapter
-import com.intellij.ui.WindowMoveListener
-import com.intellij.ui.WindowResizeListener
+import com.intellij.ui.*
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.Alarm
 import com.intellij.util.ui.JBDimension
@@ -47,10 +44,7 @@ import icons.TranslationIcons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.*
-import javax.swing.JComponent
-import javax.swing.JTextArea
-import javax.swing.ListSelectionModel
-import javax.swing.SwingUtilities
+import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
@@ -94,6 +88,9 @@ class TranslationDialog(
         setUndecorated(true)
         isModal = false
         window.minimumSize = JBDimension(0, 0)
+        rootPane.windowDecorationStyle = JRootPane.NONE
+        rootPane.border = PopupBorder.Factory.create(true, true)
+
         val panel = createCenterPanel()
         initComponents()
         addWindowListeners()
@@ -257,12 +254,19 @@ class TranslationDialog(
 
     private fun addWindowListeners() {
         val window = peer.window
+        val rootPane = rootPane
         window.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
                 window.addWindowFocusListener(object : WindowAdapter() {
-                    override fun windowGainedFocus(e: WindowEvent) = setActive(true)
-                    override fun windowLostFocus(e: WindowEvent) = setActive(false)
+                    override fun windowGainedFocus(e: WindowEvent) {
+                        rootPane.border = PopupBorder.Factory.create(true, true)
+                    }
+
+                    override fun windowLostFocus(e: WindowEvent) {
+                        rootPane.border = PopupBorder.Factory.create(false, true)
+                    }
                 })
+                window.removeWindowListener(this)
             }
         })
     }

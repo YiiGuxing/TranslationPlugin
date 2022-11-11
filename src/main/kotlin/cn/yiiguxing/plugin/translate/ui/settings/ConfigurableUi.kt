@@ -7,9 +7,11 @@ import javax.swing.JComponent
  * ConfigurablePanel
  *
  */
-interface ConfigurablePanel : Disposable {
+interface ConfigurableUi : Disposable {
 
     val component: JComponent
+
+    val preferredFocusedComponent: JComponent
 
     val isModified: Boolean
 

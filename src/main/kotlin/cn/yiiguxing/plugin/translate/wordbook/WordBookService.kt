@@ -110,7 +110,7 @@ class WordBookService : Disposable {
                 queryRunner = runner
             }
 
-            invokeLater { wordBookPublisher.onStoragePathChanged(this@WordBookService) }
+            invokeLater(ModalityState.any()) { wordBookPublisher.onStoragePathChanged(this@WordBookService) }
         }.onError { error ->
             nextState(INITIALIZATION_ERROR)
             val errorMsg = (error as? SQLException)
@@ -501,7 +501,7 @@ class WordBookService : Disposable {
         }
     }
 
-    fun hasAnyWords(): Boolean {
+    fun hasWords(): Boolean {
         checkIsInitialized()
 
         val sql = "SELECT COUNT(*) FROM wordbook"

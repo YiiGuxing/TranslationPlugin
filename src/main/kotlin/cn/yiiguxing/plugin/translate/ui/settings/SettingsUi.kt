@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.ui.form
+package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.TTSSource
 import cn.yiiguxing.plugin.translate.TargetLanguageSelection
@@ -15,19 +15,19 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
+import com.intellij.openapi.ui.panel.ComponentPanelBuilder
 import com.intellij.ui.*
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.scale.JBUIScale
-import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
 import net.miginfocom.layout.CC
 import java.awt.Dimension
@@ -36,7 +36,7 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
-abstract class SettingsForm {
+abstract class SettingsUi {
     protected val wholePanel: JPanel = JPanel()
 
     protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
@@ -70,7 +70,7 @@ abstract class SettingsForm {
 
     protected lateinit var ignoreRegExp: EditorTextField
     protected val checkIgnoreRegExpButton: JButton = JButton(message("settings.button.check"))
-    protected val ignoreRegExpMsg: JLabel = JLabel()
+    protected val ignoreRegExpMsg: JLabel = JLabel().apply { foreground = ERROR_FOREGROUND_COLOR }
 
     protected val separatorsTextField: JTextField = JTextField().apply {
         document = object : PlainDocument() {
@@ -96,7 +96,10 @@ abstract class SettingsForm {
         "text/plain",
         message("settings.font.default.preview.text")
     )
-    protected val phoneticFontPreview: JLabel = JLabel(PHONETIC_CHARACTERS)
+
+    protected val phoneticFontPreview: JLabel = ComponentPanelBuilder.createCommentComponent(
+        PHONETIC_CHARACTERS, true, 50, true
+    )
     protected val restoreDefaultButton = JButton(message("settings.button.restore.default"))
 
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
@@ -165,7 +168,7 @@ abstract class SettingsForm {
             add(JLabel(message("settings.label.targetLanguage")))
             add(targetLangSelectionComboBox, wrap().sizeGroupX(comboboxGroup))
         }
-        val textSelectionPanel = titledPanel(message("settings.panel.title.text.selection")) {
+        val textSelectionPanel = titledPanel(message("settings.panel.title.text.selection"), true) {
             add(keepFormatCheckBox, wrap().span(4))
             add(takeNearestWordCheckBox, wrap().span(4))
             add(takeWordCheckBox, wrap().span(4))
@@ -176,11 +179,25 @@ abstract class SettingsForm {
                 if (ApplicationManager.getApplication() != null) ignoreRegExp
                 else JTextField()
 
-            add(ignoreRegexComponent)
-            add(checkIgnoreRegExpButton)
-            add(ignoreRegExpMsg, wrap())
+            add(ignoreRegexComponent, fillX())
+            add(checkIgnoreRegExpButton, wrap())
 
-            setMinWidth(ignoreRegexComponent)
+            val msgCC = fillX()
+                .gapBefore(JBUIScale.scale(2).toString())
+                .gapTop(JBUIScale.scale(2).toString())
+                .spanX(2)
+                .cell(1, 4)
+                .wrap()
+            add(ignoreRegExpMsg, msgCC)
+
+            val comment = ComponentPanelBuilder.createCommentComponent(message("settings.comment.ignore"), true)
+            val commentCC = fillX()
+                .gapBefore(JBUIScale.scale(2).toString())
+                .gapTop(JBUIScale.scale(2).toString())
+                .spanX(2)
+                .cell(1, 5)
+                .wrap()
+            add(comment, commentCC)
         }
 
         val fontsPanel = titledPanel(message("settings.panel.title.fonts")) {
@@ -190,12 +207,12 @@ abstract class SettingsForm {
             add(phoneticFontComboBox, wrap())
 
             val primaryPreviewPanel = JPanel(migLayout()).apply {
-                add(primaryFontPreview, fillX())
+                add(primaryFontPreview, fill())
             }
             val phoneticPreviewPanel = JPanel(migLayout()).apply {
-                add(phoneticFontPreview, fillX().dockNorth())
+                add(phoneticFontPreview, fill())
             }
-            add(primaryPreviewPanel, fillX())
+            add(primaryPreviewPanel, fill())
             add(phoneticPreviewPanel, fill().wrap())
 
             add(restoreDefaultButton)
@@ -214,14 +231,14 @@ abstract class SettingsForm {
         }
 
         val translateAndReplacePanel = titledPanel(message("settings.panel.title.translate.and.replace")) {
-            add(showReplacementActionCheckBox, wrap().span(2))
-            add(selectTargetLanguageCheckBox, wrap().span(2))
-            add(autoReplaceCheckBox, wrap().span(2))
-            add(JLabel(message("settings.label.separators")).apply {
-                toolTipText = message("settings.tip.separators")
-            })
-            add(separatorsTextField, wrap())
-            setMinWidth(separatorsTextField)
+            add(showReplacementActionCheckBox, wrap().span(3))
+            add(selectTargetLanguageCheckBox, wrap().span(3))
+            add(autoReplaceCheckBox, wrap().span(3))
+            add(JLabel(message("settings.label.separators")))
+            add(separatorsTextField)
+            add(ContextHelpLabel.create(message("settings.tip.separators")), wrap())
+
+            setMinWidth(separatorsTextField, JBUIScale.scale(250))
         }
 
         val wordOfTheDayPanel = titledPanel(message("settings.panel.title.word.of.the.day")) {
@@ -234,37 +251,28 @@ abstract class SettingsForm {
             add(wordbookStoragePathField, fillX())
             add(resetWordbookStoragePathButton, wrap())
 
-
-            val tips = JEditorPane("text/plain", message("settings.wordbook.label.storage.path.tips")).apply {
-                isOpaque = false
-                isEditable = false
-                isEnabled = false
-                disabledTextColor = JBUI.CurrentTheme.Label.disabledForeground()
-                border = JBUI.Borders.empty()
-                maximumSize = JBDimension(500, Int.MAX_VALUE)
-            }
-            val tipsCc = fillX()
+            val comment = ComponentPanelBuilder.createCommentComponent(
+                message("settings.wordbook.label.storage.path.tips"), true
+            )
+            val commentCC = fillX()
                 .gapBefore(JBUIScale.scale(2).toString())
                 .gapTop(JBUIScale.scale(2).toString())
                 .spanX(2)
                 .cell(1, 1)
-            add(tips, tipsCc)
+            add(comment, commentCC)
         }
 
         val cacheAndHistoryPanel = titledPanel(message("settings.panel.title.cacheAndHistory")) {
             add(JPanel(migLayout()).apply {
                 add(JLabel(message("settings.cache.label.diskCache")))
-                add(cacheSizeLabel)
-                add(clearCacheButton, wrap())
-            }, wrap().span(2))
-            add(JPanel(migLayout()).apply {
-                add(JLabel(message("settings.history.label.maxLength")))
-                add(maxHistoriesSizeComboBox)
-                add(clearHistoriesButton, wrap())
-            }, CC().span(2))
-            setMinWidth(maxHistoriesSizeComboBox)
+                add(cacheSizeLabel, wrap().gapBefore(JBUIScale.scale(2).toString()))
+            })
+            add(clearCacheButton, wrap().span(2))
 
-            cacheSizeLabel.border = JBUI.Borders.empty(0, 2, 0, 10)
+            add(JLabel(message("settings.history.label.maxLength")))
+            add(maxHistoriesSizeComboBox)
+            add(clearHistoriesButton, wrap())
+            setMinWidth(maxHistoriesSizeComboBox)
         }
 
         val otherPanel = titledPanel(message("settings.panel.title.other")) {
@@ -303,19 +311,23 @@ abstract class SettingsForm {
     }
 
     companion object {
-        private const val PHONETIC_CHARACTERS = "ˈ'ˌːiɜɑɔuɪeæʌɒʊəaɛpbtdkgfvszθðʃʒrzmnŋhljw"
+        private const val PHONETIC_CHARACTERS =
+            "iː əː ɔː uː aː i ə ɔ u æ e ʌ aɪ eɪ ɔɪ ɪə ɛə uə əu au p t k f s θ ʃ tʃ tr ts b d g v z ð ʒ dʒ dr dz m n ŋ h r l w j"
 
         private const val MIN_ELEMENT_WIDTH = 80
 
-        private fun setMinWidth(component: JComponent) = component.apply {
-            minimumSize = Dimension(MIN_ELEMENT_WIDTH, height)
-        }
+        private val ERROR_FOREGROUND_COLOR = UIUtil.getErrorForeground()
+
+        private fun setMinWidth(component: JComponent, minWidth: Int = JBUIScale.scale(MIN_ELEMENT_WIDTH)) =
+            component.apply {
+                minimumSize = Dimension(minWidth, height)
+            }
 
         private fun createFontComboBox(filterNonLatin: Boolean): FontComboBox =
             FontComboBox(false, filterNonLatin, false)
 
         private fun titledPanel(title: String, fill: Boolean = false, body: JPanel.() -> Unit): JComponent {
-            val innerPanel = JPanel(migLayout())
+            val innerPanel = JPanel(migLayout(JBUIScale.scale(4).toString()))
             innerPanel.body()
             return JPanel(migLayout()).apply {
                 border = IdeBorderFactory.createTitledBorder(title)

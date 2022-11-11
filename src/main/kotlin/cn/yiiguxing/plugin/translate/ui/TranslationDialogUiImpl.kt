@@ -1,5 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationPlugin
+import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
+import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
@@ -10,8 +13,8 @@ import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.GotItTooltip
 import com.intellij.ui.JBColor
-import com.intellij.ui.PopupBorder
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
@@ -97,12 +100,9 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         layoutTopPanel()
         layoutMainPanel()
         setButtonIcons()
+        setTooltips()
 
         return mRoot
-    }
-
-    override fun setActive(active: Boolean) {
-        mRoot.border = PopupBorder.Factory.create(active, true)
     }
 
     override fun initFonts(pair: UI.FontPair) {
@@ -187,6 +187,8 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
             }
             val rightPanel = JPanel(UI.migLayout()).apply {
                 background = translationTextArea.background
+                val borderColor = JBUI.CurrentTheme.Popup.borderColor(false)
+                border = JBUI.Borders.customLine(borderColor, 0, 1, 0, 0)
 
                 add(rightPanelWrapper, UI.fill().wrap())
                 add(
@@ -217,7 +219,6 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         }
 
         mRoot.apply {
-            border = PopupBorder.Factory.create(true, true)
             layout = BoxLayout(mRoot, BoxLayout.Y_AXIS)
 
             add(translationPanel)
@@ -291,6 +292,17 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
         starButton.setIcons(TranslationIcons.GrayStarOff)
+    }
+
+    private fun setTooltips() {
+        GotItTooltip(
+            "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engine.deepl",
+            message("got.it.tooltip.text.new.translation.engine.deepl"),
+            this
+        )
+            .withHeader(message("got.it.tooltip.title.new.translation.engine"))
+            .withIcon(TranslationIcons.Deepl)
+            .show(settingsButton, GotItTooltipPosition.BOTTOM)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =

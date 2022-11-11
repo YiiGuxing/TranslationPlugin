@@ -3,35 +3,73 @@ package cn.yiiguxing.plugin.translate.documentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.ui.scaled
+import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
 import com.intellij.ui.ColorUtil
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
+import icons.TranslationIcons
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.awt.Color
 import java.io.StringReader
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 
+/**
+ * Help class that provide document operations.
+ */
+internal object Documentations {
+
+    /**
+     * Parses the specified [documentation] string.
+     */
+    fun parseDocumentation(documentation: String): Document = Jsoup.parse(documentation)
+
+    /**
+     * Returns the documentation string of the specified [documentation] object.
+     *
+     * @param prettyPrint Enable or disable pretty printing.
+     */
+    fun getDocumentationString(documentation: Document, prettyPrint: Boolean = false): String {
+        documentation.outputSettings().prettyPrint(prettyPrint)
+        return documentation.outerHtml().fixHtml()
+    }
+
+    /**
+     * Adds the specified inline [message] to the [documentation].
+     */
+    fun addMessage(documentation: String, message: String, color: Color): String {
+        return parseDocumentation(documentation)
+            .addMessage(message, color)
+            .documentationString
+    }
+
+}
+
+
 private const val CSS_QUERY_DEFINITION = ".definition"
 private const val CSS_QUERY_CONTENT = ".content"
+
 private const val TAG_PRE = "pre"
+private const val ATTR_TRANSLATED = "translated"
 
-private const val TRANSLATED_ATTR = "translated"
-
-private val HTML_HEAD_REGEX = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
-private const val HTML_HEAD_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
-
-private val HTML_KIT = HTMLEditorKit()
+private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
+private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
 
 
-fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
-    val document: Document = Jsoup.parse(documentation).apply {
-        outputSettings().prettyPrint(false)
-    }
-    if (document.body().hasAttr(TRANSLATED_ATTR)) {
+/**
+ * Documentation string of this [Document].
+ */
+internal val Document.documentationString: String
+    get() = Documentations.getDocumentationString(this, false)
+
+
+internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
+    val document: Document = Documentations.parseDocumentation(documentation)
+    if (document.body().hasAttr(ATTR_TRANSLATED)) {
         return documentation
     }
 
@@ -51,39 +89,58 @@ fun Translator.getTranslatedDocumentation(documentation: String, language: Langu
         }
     }
 
-    translatedDocumentation.body().attributes().put(TRANSLATED_ATTR, true)
+    translatedDocumentation.body().attributes().put(ATTR_TRANSLATED, true)
 
-    return translatedDocumentation.outerHtml().fixHtml()
+    return translatedDocumentation.documentationString
 }
 
 private fun Document.addLimitHint(): Document {
-    val hintColor = ColorUtil.toHex(JBUI.CurrentTheme.Label.disabledForeground())
-    body().selectFirst(CSS_QUERY_CONTENT)?.insertChildren(
-        0,
-        Element("div")
-            .attr(
-                "style",
-                "color: $hintColor;" +
-                        "margin-bottom: ${JBUIScale.scale(4)}px;" +
-                        "padding: ${JBUIScale.scale(1)}px ${JBUIScale.scale(6)}px;" +
-                        "border-left: ${JBUIScale.scale(3)}px $hintColor solid;"
+    val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
+    return addMessage(message("translate.documentation.limitHint"), hintColor)
+}
+
+private fun Document.addMessage(message: String, color: Color): Document = apply {
+    val colorHex = ColorUtil.toHex(color)
+    val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
+
+    val trEl = Element("tr")
+        .attr("valign", "middle")
+        .attr("style", "color: $colorHex; border-left: ${2.scaled}px $colorHex solid;")
+
+    var hasIcon = false
+    // 在2021.3版本以下图标显示会有问题
+    if (IdeVersion >= IdeVersion.IDE2021_3) {
+        TranslationIcons.translationIconUrl?.let { iconUrl ->
+            hasIcon = true
+            val iconEl = Element("img").attr("src", iconUrl)
+            trEl.appendChild(
+                Element("td")
+                    .attr("style", "margin: 0px ${2.scaled}px 0px ${5.scaled}px;")
+                    .appendChild(iconEl)
             )
-            .text(message("translate.documentation.limitHint"))
+        }
+    }
+    trEl.appendChild(
+        Element("td")
+            .attr("style", "margin: 0px ${if (hasIcon) 0 else 5.scaled}px;")
+            .appendText(message)
     )
-    return this
+
+    val messageTableEl = Element("table")
+        .attr("style", "margin-bottom: ${5.scaled}px;")
+        .appendChild(Element("tbody").appendChild(trEl))
+
+    contentEl.insertChildren(0, messageTableEl)
 }
 
 /**
- * 修复HTML格式。[DocumentationComponent]识别不了`attr="val"`的属性表达形式，只识别`attr='val'`的表达形式，导致样式显示异常。
+ * 修复HTML格式。[DocumentationComponent]识别不了 `class="class"` 的表达形式，
+ * 只识别 `class='class'`，导致样式显示异常。
  */
-private fun String.fixHtml(): String = replace(
-    HTML_HEAD_REGEX,
-    HTML_HEAD_REPLACEMENT
-)
+private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_HTML_CLASS_EXPRESSION_REPLACEMENT)
 
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
-
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     // 删除多余的 `p` 标签。
@@ -120,7 +177,7 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
 
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
-    val htmlDocument = HTMLDocument().also { HTML_KIT.read(StringReader(body.html()), it, 0) }
+    val htmlDocument = HTMLDocument().also { HTMLEditorKit().read(StringReader(body.html()), it, 0) }
     val formatted = try {
         val content = htmlDocument.getText(0, htmlDocument.length).trim()
         checkContentLength(content, contentLengthLimit)

@@ -1,8 +1,10 @@
 package cn.yiiguxing.plugin.translate.provider
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
+import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
-import cn.yiiguxing.plugin.translate.documentation.TranslatedDocComments
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.codeInsight.documentation.DocumentationManager
@@ -13,6 +15,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
+import com.intellij.util.ui.JBUI
 
 /**
  * Translates documentation computed by another documentation provider. It should have
@@ -23,50 +26,63 @@ import com.intellij.psi.PsiElement
  */
 class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
-    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        if (!Settings.instance.translateDocumentation)
+    override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
+        if (!isTranslateDocumentation(element)) {
             return null
+        }
 
         return nullIfRecursive {
             val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
             val originalDoc = nullIfError { providerFromElement.generateDoc(element, originalElement) }
-            translate(originalDoc, element?.language)
-        }
-    }
-
-    @Suppress("UnstableApiUsage")
-    override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
-        if (!TranslatedDocComments.isTranslated(docComment))
-            return null
-
-        return nullIfRecursive {
-            val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
-            val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
-            translate(originalDoc, docComment.language)
+            val translatedDoc = translate(originalDoc, element.language)
+            translatedDoc ?: addTranslationFailureMessage(originalDoc)
         }
     }
 
     override fun fetchExternalDocumentation(
-        project: Project?,
-        element: PsiElement?,
+        project: Project,
+        element: PsiElement,
         docUrls: MutableList<String>?,
         onHover: Boolean
     ): String? {
-        if (!Settings.instance.translateDocumentation)
+        if (!isTranslateDocumentation(element)) {
             return null
+        }
 
         return nullIfRecursive {
             val (language, providerFromElement) = Application.runReadAction(Computable {
-                element?.takeIf { it.isValid }?.language to DocumentationManager.getProviderFromElement(element, null)
+                element.takeIf { it.isValid }?.language to DocumentationManager.getProviderFromElement(element, null)
             })
             val originalDoc = when (providerFromElement) {
                 is ExternalDocumentationProvider -> nullIfError {
                     providerFromElement.fetchExternalDocumentation(project, element, docUrls, onHover)
                 }
+
                 else -> null
             }
 
-            translate(originalDoc, language)
+            translate(originalDoc, language) ?: addTranslationFailureMessage(originalDoc)
+        }
+    }
+
+    @Suppress("UnstableApiUsage")
+    override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
+        val translationResult = DocTranslationService.getInlayDocTranslation(docComment) ?: return null
+
+        return nullIfRecursive {
+            val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
+            val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
+
+            if (translationResult.original == originalDoc) {
+                return@nullIfRecursive translationResult.translation
+            }
+
+            translate(originalDoc, docComment.language).also { translation ->
+                DocTranslationService.updateInlayDocTranslation(
+                    docComment,
+                    translation?.let { DocTranslationService.TranslationResult(originalDoc, it) }
+                )
+            }
         }
     }
 
@@ -87,6 +103,10 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
 
         // To reuse long-running translation task
         private var lastTranslationTask: TranslateDocumentationTask? = null
+
+        private fun isTranslateDocumentation(element: PsiElement): Boolean {
+            return DocTranslationService.getTranslationState(element) ?: Settings.instance.translateDocumentation
+        }
 
         /**
          * 用于[DocumentationProviderEx]和[ExternalDocumentationProvider]生成文档方法的包装调用，
@@ -134,13 +154,25 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
             val lastTask = lastTranslationTask
             val translator = TranslateService.translator
 
-            val task =
-                if (lastTask != null && lastTask.translator.id == translator.id && lastTask.text == text) lastTask
-                else TranslateDocumentationTask(text, language, translator)
+            val task = if (
+                lastTask != null &&
+                lastTask.translator.id == translator.id &&
+                lastTask.text == text &&
+                (lastTask.isSucceeded || !lastTask.isProcessed)
+            ) lastTask
+            else TranslateDocumentationTask(text, language, translator)
 
             lastTranslationTask = task
 
             return task.nonBlockingGet()
+        }
+
+        private fun addTranslationFailureMessage(doc: String?): String? {
+            doc ?: return null
+
+            val message = message("doc.message.translation.failure.please.try.again")
+            val color = JBUI.CurrentTheme.Label.disabledForeground()
+            return Documentations.addMessage(doc, message, color)
         }
     }
 }

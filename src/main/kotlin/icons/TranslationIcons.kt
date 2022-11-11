@@ -3,6 +3,7 @@ package icons
 import cn.yiiguxing.plugin.translate.ui.icon.SuspendIcon
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.JBColor
+import com.intellij.util.ui.UIUtil
 import javax.swing.Icon
 
 object TranslationIcons {
@@ -78,6 +79,15 @@ object TranslationIcons {
 
     @JvmField
     val Quote: Icon = load("/icons/quote.svg")
+
+
+    private val _translationIconUrl: String? by lazy {
+        TranslationIcons::class.java.getResource("/icons/translation.svg")?.toString()
+    }
+    private val _translationDarkIconUrl: String? by lazy {
+        TranslationIcons::class.java.getResource("/icons/translation_dark.svg")?.toString()
+    }
+    val translationIconUrl: String? get() = if (UIUtil.isUnderDarcula()) _translationDarkIconUrl else _translationIconUrl
 
     @JvmStatic
     fun load(path: String): Icon {
