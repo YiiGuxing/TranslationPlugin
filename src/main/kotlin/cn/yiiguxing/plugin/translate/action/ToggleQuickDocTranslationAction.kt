@@ -1,11 +1,13 @@
+@file:Suppress("UnstableApiUsage")
+
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.documentation.QuickDocUtil
 import com.intellij.codeInsight.hint.HintManagerImpl
@@ -20,6 +22,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.psi.PsiElement
 import com.intellij.util.concurrency.AppExecutorUtil
 import icons.TranslationIcons
 import javax.swing.Icon
@@ -33,11 +36,17 @@ open class ToggleQuickDocTranslationAction :
     ImportantTranslationAction {
 
     init {
-        // enable in hovering documentation popup
+        // Enable in hovering documentation popup
         isEnabledInModalContext = true
     }
 
-    @Suppress("UnstableApiUsage")
+    private val isDocumentationV2: Boolean
+        get() = Registry.`is`("documentation.v2")
+
+    private val DocumentationBrowserFacade.targetElement: PsiElement?
+        @Suppress("OverrideOnly")
+        get() = targetPointer.dereference()?.navigatable as? PsiElement
+
     private fun documentationBrowser(dc: DataContext): DocumentationBrowserFacade? = dc.getData(DOCUMENTATION_BROWSER)
 
     final override fun update(e: AnActionEvent) {
@@ -48,8 +57,8 @@ open class ToggleQuickDocTranslationAction :
             return
         }
 
-        if (Registry.`is`("documentation.v2")) {
-            e.presentation.isEnabledAndVisible = documentationBrowser(e.dataContext) != null
+        if (isDocumentationV2) {
+            e.presentation.isEnabledAndVisible = documentationBrowser(e.dataContext)?.targetElement != null
             return
         }
 
@@ -68,60 +77,69 @@ open class ToggleQuickDocTranslationAction :
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)
 
         e.presentation.isVisible = e.presentation.isVisible && rdMouseHoverDocComponent == null
-        e.presentation.isEnabled = activeDocComponent != null && (toolWindow == null || toolWindow.isActive)
+
+        // 当Action在ToolWindow的右键菜单上时，点击菜单项会使得ToolWindow失去焦点，
+        // 此时toolWindow.isActive为false，Action将不启用。
+        // 所以Action在右键菜单上时，直接设为启用状态。
+        val isDocMenuPlace = e.place == ActionPlaces.JAVADOC_TOOLBAR || e.place == "documentation.pane.content.menu"
+        e.presentation.isEnabled =
+            activeDocComponent != null && (isDocMenuPlace || toolWindow == null || toolWindow.isActive)
     }
 
     override fun isSelected(e: AnActionEvent): Boolean {
-        return Settings.translateDocumentation
-    }
-
-
-    override fun setSelected(e: AnActionEvent, state: Boolean) {
-        Settings.translateDocumentation = state
-
-        if (Registry.`is`("documentation.v2")) {
-            @Suppress("UnstableApiUsage")
-            documentationBrowser(e.dataContext)?.reload()
-            return
-        }
-
-        val project = e.project ?: return
-        val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
-        toggleTranslation(project, activeDocComponent)
-    }
-
-    private fun toggleTranslation(project: Project, docComponent: DocumentationComponent) {
-        val currentText = docComponent.text
-
-        if (Settings.translateDocumentation) {
-            TranslateDocumentationTask(currentText, docComponent.element?.language).onSuccess { translation ->
-                replaceActiveComponentText(project, currentText, translation)
+        val project = e.project ?: return false
+        val state = if (isDocumentationV2) {
+            documentationBrowser(e.dataContext)?.targetElement?.let {
+                DocTranslationService.getTranslationState(it)
             }
         } else {
-            val element = docComponent.element ?: return
-            val originalElement = DocumentationManager.getOriginalElement(element)
-
-            val now = System.currentTimeMillis()
-            val replaceComponentAction = ReadAction.nonBlocking {
-                if (element.isValid && originalElement?.isValid != false) {
-                    val originalText = DocumentationManager.getInstance(project)
-                        .generateDocumentation(element, originalElement, false)
-                    if (originalText != null) {
-                        replaceActiveComponentText(project, currentText, originalText)
-                    }
-                }
+            QuickDocUtil.getActiveDocComponent(project)?.element?.let {
+                DocTranslationService.getTranslationState(it)
             }
-            replaceComponentAction
-                .expireWhen { System.currentTimeMillis() - now > 5000 }
-                .submit(AppExecutorUtil.getAppExecutorService())
+        }
+
+        return state ?: Settings.translateDocumentation
+    }
+
+    override fun setSelected(e: AnActionEvent, state: Boolean) {
+        val project = e.project ?: return
+        if (isDocumentationV2) {
+            documentationBrowser(e.dataContext)?.apply {
+                targetElement?.let { DocTranslationService.setTranslationState(it, state) }
+                reload()
+            }
+        } else {
+            toggleTranslation(project, state)
         }
     }
 
-    private fun replaceActiveComponentText(
-        project: Project,
-        currentText: String?,
-        newText: String
-    ) {
+    private fun toggleTranslation(project: Project, state: Boolean) {
+        val docComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
+        val element = docComponent.element ?: return
+        val currentText = docComponent.text
+        val originalElement = DocumentationManager.getOriginalElement(element)
+
+        DocTranslationService.setTranslationState(element, state)
+
+        val now = System.currentTimeMillis()
+        ReadAction.nonBlocking {
+            if (element.isValid && originalElement?.isValid != false) {
+                val originalText = DocumentationManager.getInstance(project)
+                    .generateDocumentation(element, originalElement, false)
+                if (originalText != null) {
+                    replaceActiveComponentText(project, currentText, originalText)
+                }
+            }
+        }.expireWhen {
+            System.currentTimeMillis() - now > 5000
+        }.expireWith(
+            TranslationUIManager.disposable(project)
+        ).submit(
+            AppExecutorUtil.getAppExecutorService()
+        )
+    }
+
+    private fun replaceActiveComponentText(project: Project, currentText: String?, newText: String) {
         invokeLater {
             val component = QuickDocUtil.getActiveDocComponent(project)
             if (component?.text == currentText) {
