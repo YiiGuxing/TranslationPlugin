@@ -2,7 +2,7 @@
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
     <version>3.x</version>
-    <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
+    <vendor email="yii.guxing@outlook.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description>&lt;p&gt;&lt;b&gt;Translation plugin for IntelliJ based IDEs.&lt;/b&gt;&lt;/p&gt;
         &lt;br/&gt;
