@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.activity
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
+import java.util.*
 
 
 /**
@@ -21,11 +22,12 @@ class WordOfTheDayStartupActivity : BaseStartupActivity(true), DumbAware {
                 .takeIf { it.isInitialized }
                 ?.getWords()
                 ?.takeIf { it.isNotEmpty() }
+                ?.toMutableList()
                 ?.let { words ->
-                    val sortedWords = words.sortedBy { Math.random() }
+                    Collections.shuffle(words)
                     invokeLater {
                         if (!project.isDisposed) {
-                            TranslationUIManager.showWordOfTheDayDialog(project, sortedWords)
+                            TranslationUIManager.showWordOfTheDayDialog(project, words)
                         }
                     }
                 }

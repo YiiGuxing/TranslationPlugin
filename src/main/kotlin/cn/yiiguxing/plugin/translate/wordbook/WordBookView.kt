@@ -28,7 +28,10 @@ import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.util.ui.JBUI
 import icons.Icons
 import java.awt.datatransfer.StringSelection
+import java.util.*
 import javax.swing.Icon
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Word book view.
@@ -329,7 +332,10 @@ class WordBookView {
             val project = e.project
             if (words.isNotEmpty()) {
                 windows[project]?.hide {
-                    TranslationUIManager.showWordOfTheDayDialog(project, words.sortedBy { Math.random() })
+                    TranslationUIManager.showWordOfTheDayDialog(
+                        project,
+                        ArrayList(words).apply { Collections.shuffle(this) }
+                    )
                 }
             } else {
                 Popups.showBalloonForComponent(

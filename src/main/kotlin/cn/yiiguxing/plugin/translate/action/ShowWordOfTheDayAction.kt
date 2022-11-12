@@ -12,6 +12,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.wm.ToolWindowManager
+import java.util.*
 
 /**
  * Show word of the day action.
@@ -38,7 +39,7 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
                 return@executeOnPooledThread
             }
 
-            val words = WordBookService.getWords().sortedBy { Math.random() }
+            val words = WordBookService.getWords().toMutableList().apply { Collections.shuffle(this) }
             invokeLater {
                 if (!project.isDisposed) {
                     if (words.isNotEmpty()) {
