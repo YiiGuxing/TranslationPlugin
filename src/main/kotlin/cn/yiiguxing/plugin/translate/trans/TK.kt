@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
+import com.intellij.util.io.RequestBuilder
 import java.lang.StrictMath.abs
 import java.util.*
 import java.util.regex.Pattern
@@ -53,18 +54,19 @@ object TKK {
 
         val newTKK = updateFromGoogle()
         needUpdate = newTKK == null
-        innerValue = newTKK ?: now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
+        innerValue = newTKK ?: (now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong()))
         return innerValue
     }
 
-    private fun updateFromGoogle(): Pair<Long, Long>? {
-        val updateUrl = ELEMENT_URL_FORMAT.format(googleHost)
+    private fun getElementJsRequest(): RequestBuilder = HttpRequests
+        .request(ELEMENT_URL_FORMAT.format(googleHost))
+        .userAgent()
+        .googleReferer()
+        .connectTimeout(5000)
 
+    private fun updateFromGoogle(): Pair<Long, Long>? {
         return try {
-            val elementJS = HttpRequests.request(updateUrl)
-                .userAgent()
-                .googleReferer()
-                .readString(null)
+            val elementJS = getElementJsRequest().readString(null)
             val matcher = tkkPattern.matcher(elementJS)
             if (matcher.find()) {
                 val value1 = matcher.group(1).toLong()
@@ -97,6 +99,14 @@ object TKK {
 
             null
         }
+    }
+
+    internal fun testConnection(): Boolean = try {
+        getElementJsRequest().tryConnect() == 200
+    } catch (e: Throwable) {
+        false
+    }.also {
+        logger.i("TKK connection test: ${if (it) "OK" else "FAILURE"}")
     }
 }
 
