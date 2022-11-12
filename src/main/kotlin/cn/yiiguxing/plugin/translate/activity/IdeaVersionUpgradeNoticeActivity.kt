@@ -29,7 +29,7 @@ class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true), DumbAware {
         private const val DISPLAY_ID = "Outdated IDE Version"
 
         private val DO_NOT_NOTIFY_AGAIN_PROPERTY =
-            "yii.guxing.translate.IdeaVersionUpgradeNotice.${IdeVersion.buildNumber}.disable"
+            "yii.guxing.translate.IdeaVersionUpgradeNotice.${Plugin.version}.${IdeVersion.buildNumber}.disable"
 
         private fun showNotification(project: Project) {
             NotificationGroup(DISPLAY_ID, NotificationDisplayType.BALLOON, false)
