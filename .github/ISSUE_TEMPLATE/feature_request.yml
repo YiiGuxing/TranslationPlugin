@@ -1,6 +1,6 @@
 name: "✨ Feature/enhancement request"
 description: Propose something new.
-labels: ["feature request :sparkles:"]
+labels: ["feature request ✨"]
 body:
   - type: markdown
     attributes:

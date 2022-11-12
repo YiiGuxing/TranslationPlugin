@@ -6,7 +6,7 @@
       "description": "This is an automatically generated report"
     },
     "bug-crash": {
-      "name": "bug/crash :boom:",
+      "name": "bug/crash 💥",
       "colour": "#B60205",
       "description": "Uh-oh!"
     },
@@ -16,7 +16,7 @@
       "description": "This issue is not for this project"
     },
     "dynamic-plugin": {
-      "name": "dynamic plugin :electric_plug:",
+      "name": "dynamic plugin 🔌",
       "colour": "#E0E0E0",
       "description": "Caused by the dynamic loading"
     },
@@ -79,6 +79,18 @@
         {
           "type": "descriptionMatches",
           "pattern": "TranslatingDocumentationProvider\\$Companion\\.nullIfError\\(TranslatingDocumentationProvider\\.kt:\\d+\\)"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at cn\\.yiiguxing\\.plugin\\.translate\\.ui\\.settings\\.OptionsConfigurable\\$Companion\\.showSettingsDialog\\(OptionsConfigurable\\.kt:\\d+\\)/gms"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.openapi\\.actionSystem\\.ActionManager\\.getInstance\\(ActionManager\\.java:\\d+\\)/gms"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.util\\.SVGLoader\\.loadFromClassResource\\(SVGLoader\\.java:\\d+\\)/gms"
         }
       ]
     },

@@ -31,7 +31,7 @@ jobs:
     steps:
 
       - name: Close fixed
-        if: github.event.label.name == 'fixed :hammer:'
+        if: github.event.label.name == 'fixed 🛠'
         uses: YiiGuxing/close-issue@v2.1.0
 
       - name: Close duplicate
@@ -50,7 +50,7 @@ jobs:
             If you think there are something really wrong, please reply this issue. Thanks for your cooperation.
 
       - name: Close dynamic plugin
-        if: github.event.label.name == 'dynamic plugin :electric_plug:'
+        if: github.event.label.name == 'dynamic plugin 🔌'
         uses: YiiGuxing/close-issue@v2.1.0
         with:
           close-reason: not_planned
