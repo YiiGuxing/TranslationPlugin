@@ -91,7 +91,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
     private fun mail() {
         val uri = URIBuilder()
             .setScheme("mailto")
-            .setPath("yii.guxing@outlook.com")
+            .setHost("yii.guxing@outlook.com")
             .setParameter("subject", "Donate")
             .setParameter("body", "名字/昵称<网站>：您的留言\n\n捐赠金额：\n支付平台：支付宝/微信支付\n支付宝用户名/微信用户名/单号（后5位）：\n\n")
             .build()
