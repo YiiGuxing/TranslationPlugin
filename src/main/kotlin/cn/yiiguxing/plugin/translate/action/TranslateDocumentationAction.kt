@@ -86,7 +86,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
             } catch (e: Throwable) {
                 invokeLater {
                     documentationComponentRef.get()?.hint?.cancel()
-                    DocNotifications.showWarning(e, project)
+                    DocNotifications.showError(e, project)
                 }
             }
         }
