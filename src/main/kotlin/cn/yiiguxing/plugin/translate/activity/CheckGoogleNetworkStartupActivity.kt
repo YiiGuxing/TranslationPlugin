@@ -2,10 +2,8 @@ package cn.yiiguxing.plugin.translate.activity
 
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.google.TKK
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.successOnUiThread
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
@@ -14,15 +12,13 @@ import java.util.*
 
 class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
 
-    override fun onRunActivity(project: Project) {
+    override fun onBeforeRunActivity(project: Project): Boolean {
         // 简单判断一下中文环境就可以了...
-        if (Locale.getDefault() != Locale.CHINA ||
-            TranslateService.translator.id != TranslationEngine.GOOGLE.id ||
-            Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY)
-        ) {
-            return
-        }
+        return Locale.getDefault() == Locale.CHINA &&
+                !Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY)
+    }
 
+    override fun onRunActivity(project: Project) {
         val projectRef = DisposableRef.create(TranslationUIManager.disposable(project), project)
         runAsync { TKK.testConnection() }
             .successOnUiThread(projectRef, ModalityState.NON_MODAL) { p, res ->
@@ -39,7 +35,7 @@ class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
 
         private fun showNotification(project: Project) {
             Notifications.showFullContentNotification(
-                "当前翻译引擎似乎不可用？",
+                "Google翻译引擎和语音朗读功能似乎不可用？",
                 "2022年10月1日，Google突然停止了Google翻译在中国大陆的业务，不再向中国大陆区域提供翻译服务，" +
                         "官方给出的理由是“因为使用率低”。这一变化直接不可避免地影响到了插件内置的Google翻译引擎和基于Google翻译的" +
                         "语音朗读（TTS）功能，导致其无法正常使用。因此建议大家换用其他翻译引擎，有道翻译、百度翻译和阿里翻译" +
