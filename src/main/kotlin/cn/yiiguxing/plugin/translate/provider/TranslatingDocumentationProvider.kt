@@ -6,15 +6,14 @@ import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.util.runReadAction
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.Language
 import com.intellij.lang.documentation.DocumentationProviderEx
 import com.intellij.lang.documentation.ExternalDocumentationProvider
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Computable
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.util.ui.JBUI
@@ -47,14 +46,15 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
         docUrls: MutableList<String>?,
         onHover: Boolean
     ): String? {
-        if (!isTranslateDocumentation(element)) {
+        val isTranslated = runReadAction { isTranslateDocumentation(element) }
+        if (!isTranslated) {
             return null
         }
 
         return nullIfRecursive {
-            val (language, providerFromElement) = Application.runReadAction(Computable {
+            val (language, providerFromElement) = runReadAction {
                 element.takeIf { it.isValid }?.language to DocumentationManager.getProviderFromElement(element, null)
-            })
+            }
             val originalDoc = when (providerFromElement) {
                 is ExternalDocumentationProvider -> nullIfError {
                     providerFromElement.fetchExternalDocumentation(project, element, docUrls, onHover)
