@@ -347,6 +347,7 @@ h1:hover > a, h2:hover > a, h3:hover > a {
 
 .translator-logo > img {
     height: 30px;
+    margin-bottom: 1rem;
 }
 
 .translator-logo > img + img {
