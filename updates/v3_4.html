@@ -28,15 +28,16 @@
     <hr/>
     <p>欢迎使用<b>Translation v3.4</b>，希望您会喜欢此版本中的许多更新，其中一些主要亮点包括：</p>
     <ul>
-        <li><a href="#_deepl"><b>DeepL 翻译引擎</b></a> - <i>新增 DeepL 翻译引擎</i></li>
-        <li><b>单词本数据同步</b> - <i>通过同步服务在多设备之间同步数据</i></li>
-        <li><b>独立的文档翻译状态（实验性）</b> - <i>每个文档有着自己的独立的翻译状态</i></li>
-        <li><b>文档翻译错误消息</b> - <i>文档翻译错误时在文档内显示错误消息</i></li>
+        <li><a href="#deepl"><b>DeepL 翻译引擎</b></a> - <i>新增 DeepL 翻译引擎</i></li>
+        <li><a href="#translation-state"><b>独立的文档翻译状态（实验性）</b></a> - <i>每个文档有着自己的独立的翻译状态</i>
+        </li>
+        <li><a href="#doc-msg"><b>文档内嵌消息</b></a> - <i>文档翻译错误时在文档内显示错误消息</i></li>
+        <li><a href="#wordbook-sync"><b>单词本数据同步</b></a> - <i>通过同步服务在多个设备之间同步数据</i></li>
     </ul>
     <div class="reference">如果您想在线阅读此发行说明，请访问<a href="../updates.html" target="_blank">这里</a>。</div>
 
-    <h2 id="_translation">翻译 <a href="#_translation">#</a></h2>
-    <h3 id="_deepl">DeepL翻译引擎 <a href="#_deepl">#</a></h3>
+    <h2 id="translation">翻译 <a href="#translation">#</a></h2>
+    <h3 id="deepl">DeepL翻译引擎 <a href="#deepl">#</a></h3>
     <p><img src="../images/deepl_translate_logo.svg" alt="DeepL 翻译"></p>
     <p>
         DeepL翻译号称是全世界最精准的机器翻译，比最接近它的竞争对手准确三倍以上。它现在已经被集成到插件中，您可以通过它获得高质量的翻译体验。要使用DeepL翻译引擎，您需要有一个DeepL账号，并在DeepL翻译引擎配置对话框中配置您的账号的认证密钥（认证密钥可以在您的
@@ -46,6 +47,27 @@
         API Free认证密钥可以通过后缀 <b>“:fx”</b>
         轻松识别（例如：279a2e9d-83b3-c416-7e2d-f721593e42a0:fx）。另外，您可以在DeepL翻译引擎配置对话框上查看您当前计费周期的翻译使用情况。
     </p>
+
+    <h2 id="doc-translation">文档翻译 <a href="#doc-translation">#</a></h2>
+    <h3 id="translation-state">独立的文档翻译状态（实验性）<a href="#translation-state">#</a></h3>
+    <p>我们为每个文档都添加了一个翻译状态，每个文档有着自己的独立的翻译状态，而不像此前的那样只有一个全局的状态。因此，更改某个文档的翻译状态将不再影响到其它文档：</p>
+
+    <h3 id="doc-msg">文档内嵌消息 <a href="#doc-msg">#</a></h3>
+    <p>当文档翻译发生错误时，将会在文档中内嵌显示一个错误消息，提示当前文档的翻译并未成功：</p>
+
+    <h2 id="wordbook">单词本 <a href="#wordbook">#</a></h2>
+    <h3 id="wordbook-sync">单词本数据同步 <a href="#wordbook-sync">#</a></h3>
+    <p>现在，您可以更改单词本的存储路径，以及使用iCloud Drive、Google Drive、One
+        Drive和Dropbox等同步服务在多个设备之间同步数据。要使用同步服务同步数据，只需要将存储路径设置到相应的同步文件夹内即可。</p>
+
+    <h2 id="thanks">鸣谢 <a href="#thanks">#</a></h2>
+    <p>非常感谢以下对此版本做出贡献的人员：</p>
+    <ul>
+        <li><a href="https://github.com/naoyukik" target="_blank">@naoyukik (Kodama Naoyuki)</a>: Support a new
+            translator API: DeepL <a
+                    href="https://github.com/YiiGuxing/TranslationPlugin/pull/986" target="_blank">PR #986</a>.
+        </li>
+    </ul>
 </div>
 </body>
 </html>
