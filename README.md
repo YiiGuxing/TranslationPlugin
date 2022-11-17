@@ -123,7 +123,6 @@ Restart the **IDE** after installation.
 
    Click the translation engine icon in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>
    S</kbd> (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to quickly switch between translation engines.
-   Currently, Google Translate, Youdao Translate, Baidu Translate and Alibaba Translate are supported.
 
 ## Actions
 
@@ -183,7 +182,7 @@ Restart the **IDE** after installation.
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
     - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
-- **Choose Translator**
+- **Choose Translation Engine**
 
   Quickly toggle between translation engines. Default shortcut:
 
