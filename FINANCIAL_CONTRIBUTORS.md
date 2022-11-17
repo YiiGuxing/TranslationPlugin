@@ -62,6 +62,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 战斗猪 | | 20 CNY |
 | 达 | | 20 CNY |
 | Isolated | | 20 CNY |
 | 田坪毛小江 | | 20 CNY |
@@ -156,6 +157,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 嘿嘿嘿 | | 6.66 CNY |
 | See you | | 6.66 CNY |
 | 振粮 | | 6.66 CNY |
 | 贺敬 | | 6.66 CNY |
