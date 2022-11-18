@@ -10,12 +10,12 @@ import com.intellij.openapi.project.Project
 object DocNotifications {
 
     private val notificationManager = SingletonNotificationManager(
-        Notifications.defaultNotificationGroup,
+        Notifications.DEFAULT_NOTIFICATION_GROUP_ID,
         NotificationType.WARNING
     )
 
     fun showWarning(project: Project?, message: String) {
-        notificationManager.notify(message, project)
+        notificationManager.notify("", message, project) {}
     }
 
     fun showError(e: Throwable, project: Project?) {
