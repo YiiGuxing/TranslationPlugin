@@ -4,12 +4,10 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.scaled
-import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
 import com.intellij.ui.ColorUtil
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -102,35 +100,11 @@ private fun Document.addLimitHint(): Document {
 private fun Document.addMessage(message: String, color: Color): Document = apply {
     val colorHex = ColorUtil.toHex(color)
     val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
-
-    val trEl = Element("tr")
-        .attr("valign", "middle")
-        .attr("style", "color: $colorHex; border-left: ${2.scaled}px $colorHex solid;")
-
-    var hasIcon = false
-    // 在2021.3版本以下图标显示会有问题
-    if (IdeVersion >= IdeVersion.IDE2021_3) {
-        TranslationIcons.translationIconUrl?.let { iconUrl ->
-            hasIcon = true
-            val iconEl = Element("img").attr("src", iconUrl)
-            trEl.appendChild(
-                Element("td")
-                    .attr("style", "margin: 0px ${2.scaled}px 0px ${5.scaled}px;")
-                    .appendChild(iconEl)
-            )
-        }
-    }
-    trEl.appendChild(
-        Element("td")
-            .attr("style", "margin: 0px ${if (hasIcon) 0 else 5.scaled}px;")
-            .appendText(message)
-    )
-
-    val messageTableEl = Element("table")
-        .attr("style", "margin-bottom: ${5.scaled}px;")
-        .appendChild(Element("tbody").appendChild(trEl))
-
-    contentEl.insertChildren(0, messageTableEl)
+    val messageEl = contentEl.prependElement("div")
+        .attr("style", "color: $colorHex; margin: ${3.scaled}px 0px;")
+    messageEl.appendElement("icon")
+        .attr("src", "AllIcons.General.Information")
+    messageEl.append("&nbsp;").appendText(message)
 }
 
 /**
