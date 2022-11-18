@@ -1,4 +1,5 @@
 import org.apache.tools.ant.filters.EscapeUnicode
+import org.jetbrains.changelog.Changelog
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -37,9 +38,9 @@ val pluginVersion = pluginMajorVersion + preReleaseVersionPart
 val fullPluginVersion = pluginVersion + buildMetadataPart
 
 val versionRegex =
-    Regex("""^v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
-if (!versionRegex.matches("v$fullPluginVersion")) {
-    throw GradleException("Plugin version 'v$fullPluginVersion' does not match the pattern '$versionRegex'")
+    Regex("""^((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
+if (!versionRegex.matches(fullPluginVersion)) {
+    throw GradleException("Plugin version '$fullPluginVersion' does not match the pattern '$versionRegex'")
 }
 
 val publishChannel = preReleaseVersion?.split(".")?.firstOrNull()?.toLowerCase() ?: "default"
@@ -91,10 +92,9 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    version.set(pluginVersion)
-    header.set(provider { "v${version.get()} (${dateValue("yyyy/MM/dd")})" })
-    headerParserRegex.set(versionRegex)
+    header.set(provider { "${version.get()} (${dateValue("yyyy/MM/dd")})" })
     groups.set(emptyList())
+    repositoryUrl.set(properties("pluginRepositoryUrl"))
 }
 
 // Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
@@ -125,9 +125,9 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
-            changelog.run {
+            changelog.renderItem(changelog.run {
                 getOrNull(pluginVersion) ?: getUnreleased()
-            }.toHTML()
+            }, Changelog.OutputType.HTML)
         })
     }
 
