@@ -1,4 +1,4 @@
-# GitHub Actions Workflow created for testing and preparing the plugin release in following steps:
+# GitHub Actions Workflow created for testing and preparing the plugin release in the following steps:
 # - validate Gradle Wrapper,
 # - run test and verifyPlugin tasks,
 # - run buildPlugin task and prepare artifact for the further tests,
@@ -94,7 +94,7 @@ jobs:
 
       # Run tests
       - name: Run Tests
-        run: ./gradlew test
+        run: ./gradlew check
 
       # Collect Tests Result of failed tests
       - name: Collect Tests Result
@@ -103,6 +103,12 @@ jobs:
         with:
           name: tests-result
           path: ${{ github.workspace }}/build/reports/tests
+
+      # Upload the Kover report to CodeCov
+      - name: Upload Code Coverage Report
+        uses: codecov/codecov-action@v3
+        with:
+          files: ${{ github.workspace }}/build/reports/kover/xml/report.xml
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
@@ -116,13 +122,21 @@ jobs:
         continue-on-error: true
         run: ./gradlew runPluginVerifier -Pplugin.verifier.home.dir=${{ steps.properties.outputs.pluginVerifierHomeDir }}
 
-      # Collect Plugin Verifier Result
-      - name: Collect Plugin Verifier Result
+      # Collect Plugin Verifier Reports
+      - name: Collect Plugin Verifier Reports
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: pluginVerifier-result
+          name: plugin-verifier-reports
           path: ${{ github.workspace }}/build/reports/pluginVerifier
+
+      # Collect Code Coverage Reports
+      - name: Collect Code Coverage Reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-reports
+          path: ${{ github.workspace }}/build/reports/kover/html
 
       # Run Qodana inspections
       #- name: Qodana - Code Inspection
@@ -158,7 +172,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v3
 
-      # Remove old release drafts by using the curl request for the available releases with draft flag
+      # Remove old release drafts
       - name: Remove Old Release Drafts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
