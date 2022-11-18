@@ -89,6 +89,7 @@ jobs:
         run: |
           VERSION="${{ github.event.release.tag_name }}"
           BRANCH="changelog-update-$VERSION"
+          LABEL="release changelog 📑"
 
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
@@ -96,6 +97,11 @@ jobs:
           git checkout -b $BRANCH
           git commit -am ":rocket: ${VERSION}" -m "[skip ci]"
           git push --set-upstream origin $BRANCH
+          
+          gh label create "$LABEL" \
+            --color B39DDB \
+            --description "Pull requests with release changelog update" \
+            || true
 
           gh pr create \
             --title ":rocket: \`$VERSION\`" \
