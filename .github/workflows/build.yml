@@ -101,7 +101,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
-          name: tests-result
+          name: tests-report
           path: ${{ github.workspace }}/build/reports/tests
 
       # Upload the Kover report to CodeCov
@@ -109,6 +109,14 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ${{ github.workspace }}/build/reports/kover/xml/report.xml
+
+      # Collect Code Coverage Report
+      - name: Collect Code Coverage Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: ${{ github.workspace }}/build/reports/kover/html
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
@@ -122,21 +130,13 @@ jobs:
         continue-on-error: true
         run: ./gradlew runPluginVerifier -Pplugin.verifier.home.dir=${{ steps.properties.outputs.pluginVerifierHomeDir }}
 
-      # Collect Plugin Verifier Reports
-      - name: Collect Plugin Verifier Reports
+      # Collect Plugin Verifier Report
+      - name: Collect Plugin Verifier Report
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: plugin-verifier-reports
+          name: plugin-verifier-report
           path: ${{ github.workspace }}/build/reports/pluginVerifier
-
-      # Collect Code Coverage Reports
-      - name: Collect Code Coverage Reports
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: code-coverage-reports
-          path: ${{ github.workspace }}/build/reports/kover/html
 
       # Run Qodana inspections
       #- name: Qodana - Code Inspection
