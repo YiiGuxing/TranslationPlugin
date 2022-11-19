@@ -60,9 +60,9 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         Lang.PORTUGUESE_PORTUGUESE,
     )
 
-    override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - unsupportedLanguages).toList()
+    override val supportedSourceLanguages: List<Lang> = (Lang.sortedLanguages - unsupportedLanguages).toList()
     override val supportedTargetLanguages: List<Lang> =
-        (Lang.sortedValues() - unsupportedLanguages - Lang.AUTO).toList()
+        (Lang.sortedLanguages - unsupportedLanguages - Lang.AUTO).toList()
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {

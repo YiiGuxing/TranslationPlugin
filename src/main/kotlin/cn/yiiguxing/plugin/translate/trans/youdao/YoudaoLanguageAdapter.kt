@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 
 object YoudaoLanguageAdapter : BaseLanguageAdapter() {
 
-    private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedValues() - listOf(
+    private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedLanguages - listOf(
         Lang.CHINESE_TRADITIONAL,
         Lang.CHINESE_CLASSICAL,
         Lang.AFRIKAANS,
