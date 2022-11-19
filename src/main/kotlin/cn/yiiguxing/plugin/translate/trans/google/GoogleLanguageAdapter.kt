@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
 
 /**
- * Languages adapter for Google Translator.
+ * Language adapter for Google Translator.
  */
 object GoogleLanguageAdapter : BaseLanguageAdapter() {
 

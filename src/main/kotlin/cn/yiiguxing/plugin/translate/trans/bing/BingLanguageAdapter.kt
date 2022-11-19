@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
 
 /**
- * Languages adapter for Bing Translator.
+ * Language adapter for Bing Translator.
  */
 object BingLanguageAdapter : BaseLanguageAdapter() {
 
