@@ -51,8 +51,14 @@ enum class Lang(
     /** 亚美尼亚语 */
     ARMENIAN("armenian", "hy"),
 
+    /** 阿萨姆语 */
+    ASSAMESE("assamese", "as"),
+
     /** 阿塞拜疆语 */
     AZERBAIJANI("azerbaijani", "az"),
+
+    /** 巴什基尔语 */
+    BASHKIR("bashkir", "ba"),
 
     /** 巴斯克语 */
     BASQUE("basque", "eu"),
@@ -102,6 +108,12 @@ enum class Lang(
     /** 丹麦语 */
     DANISH("danish", "da"),
 
+    /** 达里语 */
+    DARI("dari", "prs"),
+
+    /** 迪维希语 */
+    DIVEHI("divehi", "dv"),
+
     /** 荷兰语 */
     DUTCH("dutch", "nl"),
 
@@ -120,6 +132,12 @@ enum class Lang(
     /** 爱沙尼亚语 */
     ESTONIAN("estonian", "et"),
 
+    /** 法罗语 */
+    FAROESE("faroese", "fo"),
+
+    /** 斐济语 */
+    FIJIAN("fijian", "fj"),
+
     /** 菲律宾语 */
     FILIPINO("filipino", "tl"),
 
@@ -128,6 +146,9 @@ enum class Lang(
 
     /** 法语 */
     FRENCH("french", "fr"),
+
+    /** 法语 (加拿大) */
+    FRENCH_CANADA("french.canada", "fr-CA"),
 
     /** 弗里西语 */
     FRISIAN("frisian", "fy"),
@@ -297,6 +318,12 @@ enum class Lang(
     /** 塞尔维亚语 */
     SERBIAN("serbian", "sr"),
 
+    /** 塞尔维亚语 (西里尔文) */
+    SERBIAN_CYRILLIC("serbian.cyrillic", "sr-Cyrl"),
+
+    /** 塞尔维亚语 (拉丁文) */
+    SERBIAN_LATIN("serbian.latin", "sr-Latn"),
+
     /** 塞索托语 */
     SESOTHO("sesotho", "st"),
 
@@ -330,6 +357,9 @@ enum class Lang(
     /** 瑞典语 */
     SWEDISH("swedish", "sv"),
 
+    /** 塔希提语 */
+    TAHITIAN("tahitian", "ty"),
+
     /** 塔吉克语 */
     TAJIK("tajik", "tg"),
 
@@ -345,6 +375,15 @@ enum class Lang(
     /** 泰语 */
     THAI("thai", "th"),
 
+    /** 藏语 */
+    TIBETAN("tibetan", "bo"),
+
+    /** 提格利尼亚语 */
+    TIGRINYA("tigrinya", "ti"),
+
+    /** 汤加语 */
+    TONGAN("tongan", "to"),
+
     /** 土耳其语 */
     TURKISH("turkish", "tr"),
 
@@ -353,6 +392,9 @@ enum class Lang(
 
     /** 乌克兰语 */
     UKRAINIAN("ukrainian", "uk"),
+
+    /** 上索布语 */
+    UPPER_SORBIAN("upperSorbian", "hsb"),
 
     /** 乌尔都语 */
     URDU("urdu", "ur"),
@@ -377,6 +419,9 @@ enum class Lang(
 
     /** 约鲁巴语 */
     YORUBA("yoruba", "yo"),
+
+    /** 尤卡特克玛雅语 */
+    YUCATEC_MAYA("yucatecMaya", "yua"),
 
     /** 南非祖鲁语 */
     ZULU("zulu", "zu"),
