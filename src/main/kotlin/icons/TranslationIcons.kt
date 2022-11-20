@@ -14,7 +14,7 @@ object TranslationIcons {
     val TranslationReplace: Icon = load("/icons/translationReplace.svg")
 
     @JvmField
-    val MicrosoftBing: Icon = load("/icons/microsoftBing.svg")
+    val Microsoft: Icon = load("/icons/microsoft.svg")
 
     @JvmField
     val Google: Icon = load("/icons/google.svg")

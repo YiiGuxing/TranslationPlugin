@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
+import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
@@ -26,6 +27,7 @@ enum class TranslationEngine(
     val intervalLimit: Int = 500
 ) {
 
+    MICROSOFT("translate.microsoft", message("translation.engine.microsoft.name"), TranslationIcons.Microsoft, 50000),
     GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Google),
     YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Baidu, 10000, 1000),
@@ -45,6 +47,7 @@ enum class TranslationEngine(
     val translator: Translator
         get() {
             return when (this) {
+                MICROSOFT -> MicrosoftTranslator
                 GOOGLE -> GoogleTranslator
                 YOUDAO -> YoudaoTranslator
                 BAIDU -> BaiduTranslator
@@ -57,7 +60,7 @@ enum class TranslationEngine(
 
     fun isConfigured(): Boolean {
         return when (this) {
-            GOOGLE -> true
+            MICROSOFT, GOOGLE -> true
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)

@@ -1,12 +1,12 @@
-package cn.yiiguxing.plugin.translate.trans.bing
+package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
 
 /**
- * Language adapter for Bing Translator.
+ * Language adapter for Microsoft Translator.
  */
-object BingLanguageAdapter : BaseLanguageAdapter() {
+object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.BELARUSIAN,
@@ -58,14 +58,14 @@ object BingLanguageAdapter : BaseLanguageAdapter() {
 
 
 /**
- * Language code for Bing Translator.
+ * Language code for Microsoft Translator.
  */
 val Lang.bingLanguageCode: String
-    get() = BingLanguageAdapter.getLanguageCode(this)
+    get() = MicrosoftLanguageAdapter.getLanguageCode(this)
 
 /**
- * Returns the [language][Lang] for the specified Bing Translator language [code].
+ * Returns the [language][Lang] for the specified Microsoft Translator language [code].
  */
 fun Lang.Companion.fromBingLanguageCode(code: String): Lang {
-    return BingLanguageAdapter.getLanguage(code)
+    return MicrosoftLanguageAdapter.getLanguage(code)
 }
