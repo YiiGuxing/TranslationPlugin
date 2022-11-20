@@ -9,12 +9,27 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 object GoogleLanguageAdapter : BaseLanguageAdapter() {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
+        Lang.ASSAMESE,
+        Lang.BASHKIR,
         Lang.CHINESE_CANTONESE,
         Lang.CHINESE_CLASSICAL,
+        Lang.DARI,
+        Lang.DIVEHI,
         Lang.ENGLISH_AMERICAN,
         Lang.ENGLISH_BRITISH,
+        Lang.FAROESE,
+        Lang.FIJIAN,
+        Lang.FRENCH_CANADA,
         Lang.PORTUGUESE_BRAZILIAN,
         Lang.PORTUGUESE_PORTUGUESE,
+        Lang.SERBIAN_CYRILLIC,
+        Lang.SERBIAN_LATIN,
+        Lang.TAHITIAN,
+        Lang.TIBETAN,
+        Lang.TIGRINYA,
+        Lang.TONGAN,
+        Lang.UPPER_SORBIAN,
+        Lang.YUCATEC_MAYA,
     )
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf()
