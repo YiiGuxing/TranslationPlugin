@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.Http.userAgent
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.*

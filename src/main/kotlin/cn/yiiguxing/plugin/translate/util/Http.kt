@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.util
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.util.SystemInfoRt
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import java.lang.reflect.Type
@@ -16,11 +17,19 @@ object Http {
 
     val defaultGson = Gson()
 
+
+    inline fun get(url: String, init: RequestBuilder.() -> Unit = {}): String {
+        return HttpRequests.request(url)
+            .accept("application/json")
+            .apply(init)
+            .readString()
+    }
+
     inline fun <reified T> request(
         url: String,
         gson: Gson = defaultGson,
         typeOfT: Type = T::class.java,
-        noinline init: RequestBuilder.() -> Unit = {}
+        init: RequestBuilder.() -> Unit = {}
     ): T {
         return HttpRequests.request(url)
             .accept("application/json")
@@ -99,4 +108,17 @@ object Http {
         }
     }
 
+
+    private fun getUserAgent(): String {
+        val chrome = "Chrome/107.0.0.0"
+        val edge = "Edg/107.0.1418.52"
+        val safari = "Safari/537.36"
+        val systemInfo = "Windows NT ${SystemInfoRt.OS_VERSION}; Win64; x64"
+        @Suppress("SpellCheckingInspection")
+        return "Mozilla/5.0 ($systemInfo) AppleWebKit/537.36 (KHTML, like Gecko) $chrome $safari $edge"
+    }
+
+    fun RequestBuilder.userAgent(): RequestBuilder = apply { userAgent(getUserAgent()) }
+
+    fun RequestBuilder.pluginUserAgent(): RequestBuilder = apply { userAgent(PLUGIN_USER_AGENT) }
 }
