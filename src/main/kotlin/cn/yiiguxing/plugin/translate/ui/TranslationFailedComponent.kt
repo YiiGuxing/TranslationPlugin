@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction
+import cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateException
 import com.intellij.icons.AllIcons
@@ -26,16 +26,16 @@ class TranslationFailedComponent : JPanel() {
 
     private val errorInfo: JBLabel = JBLabel()
 
-    private val switchTranslatorAction =
-        object : AbstractAction(message("translation.failed.component.action.switch.translator")) {
+    private val switchTranslationEngineAction =
+        object : AbstractAction(message("translation.failed.component.action.switch.translation.engine")) {
             override fun actionPerformed(e: ActionEvent) {
-                doSwitchTranslator()
+                doSwitchTranslationEngine()
             }
         }
 
     private var retryHandler: (() -> Unit)? = null
 
-    private val optionButton: JBOptionButton = JBOptionButton(switchTranslatorAction, emptyArray())
+    private val optionButton: JBOptionButton = JBOptionButton(switchTranslationEngineAction, emptyArray())
 
     init {
         init()
@@ -90,11 +90,11 @@ class TranslationFailedComponent : JPanel() {
         errorInfo.maximumSize = Dimension(width - JBUIScale.scale(INSETS * 10), Int.MAX_VALUE)
     }
 
-    private fun doSwitchTranslator() {
+    private fun doSwitchTranslationEngine() {
         val dataContext = DataManager.getInstance().getDataContext(optionButton)
         val offset = JBUIScale.scale(3)
         val offsetX = if (UIUtil.isUnderDarcula() || optionButton.ui is DarculaOptionButtonUI) offset else 0
-        SwitchTranslatorAction.createTranslatorPopup(dataContext)
+        SwitchTranslationEngineAction.createTranslationEnginesPopup(dataContext)
             .apply { minimumSize = Dimension(optionButton.width - offsetX * 2, 1) }
             .showBelow(optionButton, offsetX, offset)
     }

@@ -26,11 +26,11 @@ enum class TranslationEngine(
     val intervalLimit: Int = 500
 ) {
 
-    GOOGLE("translate.google", message("translator.name.google"), TranslationIcons.Google),
-    YOUDAO("ai.youdao", message("translator.name.youdao"), TranslationIcons.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translator.name.baidu"), TranslationIcons.Baidu, 10000, 1000),
-    ALI("translate.ali", message("translator.name.ali"), TranslationIcons.Ali, 5000),
-    DEEPL("translate.deepl", message("translator.name.deepl"), TranslationIcons.Deepl, 131072, 1000);
+    GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Google),
+    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Youdao, 5000),
+    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Baidu, 10000, 1000),
+    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Ali, 5000),
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Deepl, 131072, 1000);
 
     var primaryLanguage: Lang
         get() = Settings.primaryLanguage ?: translator.defaultLangForLocale
