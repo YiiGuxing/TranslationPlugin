@@ -121,7 +121,7 @@ internal class MicrosoftTranslatorService {
         /**
          * Returns the [MicrosoftTranslatorService] instance.
          */
-        val service: MicrosoftTranslatorService get() = service()
+        private val service: MicrosoftTranslatorService get() = service()
 
         @RequiresBackgroundThread
         fun translate(text: String, from: Lang, to: Lang, textType: TextType = TextType.PLAIN): String {
