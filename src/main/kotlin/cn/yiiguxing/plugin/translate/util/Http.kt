@@ -89,6 +89,20 @@ object Http {
             }
     }
 
+    fun get(
+        url: String,
+        init: RequestBuilder.() -> Unit
+    ): String {
+        logger.d("GET ==> $url\n\t|")
+        return HttpRequests.request(url)
+            .apply(init)
+            .throwStatusCodeException(false)
+            .connect {
+                it.checkResponseCode()
+                it.readString()
+            }
+    }
+
     private fun HttpRequests.Request.checkResponseCode() {
         val responseCode = (connection as HttpURLConnection).responseCode
         if (responseCode >= 400) {

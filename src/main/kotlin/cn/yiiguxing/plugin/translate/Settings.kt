@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.generateServiceName
@@ -32,11 +31,16 @@ class Settings : PersistentStateComponent<Settings> {
      * 翻译API
      */
     var translator: TranslationEngine
-            by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
+            by Delegates.observable(TranslationEngine.EDGE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
                 if (oldValue != newValue) {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
             }
+
+    /**
+     * Edge翻译选项
+     */
+    var edgeTranslateSettings: EdgeTranslateSettings = EdgeTranslateSettings()
 
     /**
      * 谷歌翻译选项
@@ -239,6 +243,14 @@ private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Reposito
 
 private val SETTINGS_CHANGE_PUBLISHER: SettingsChangeListener =
     ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
+
+/**
+ * Edge翻译选项
+ *
+ * @property primaryLanguage 主要语言
+ */
+@Tag("google-translate")
+data class EdgeTranslateSettings(var primaryLanguage: Lang = Lang.default)
 
 /**
  * 谷歌翻译选项

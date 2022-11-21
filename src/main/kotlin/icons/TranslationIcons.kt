@@ -47,6 +47,9 @@ object TranslationIcons {
     val Swap: Icon = load("/icons/swap.svg")
 
     @JvmField
+    val Edge: Icon = load("/icons/edge.svg")
+
+    @JvmField
     val Google: Icon = load("/icons/google.svg")
 
     @JvmField

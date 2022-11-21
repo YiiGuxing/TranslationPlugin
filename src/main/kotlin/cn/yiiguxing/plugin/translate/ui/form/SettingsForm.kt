@@ -259,7 +259,10 @@ abstract class SettingsForm {
     }
 
     private fun fixEngineConfigurationComponent() {
-        configureTranslationEngineLink.isVisible = translationEngineComboBox.selected != TranslationEngine.GOOGLE
+        configureTranslationEngineLink.isVisible = when (translationEngineComboBox.selected) {
+            TranslationEngine.GOOGLE, TranslationEngine.EDGE -> false
+            else -> true
+        }
     }
 
     open fun isSupportDocumentTranslation(): Boolean {

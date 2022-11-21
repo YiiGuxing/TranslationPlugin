@@ -31,7 +31,11 @@ class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
             val actionManager = ActionManager.getInstance() as ActionManagerImpl
             val group = actionManager.getAction(TITLE_BAR_ACTION_GROUP_ID) as? DefaultActionGroup ?: return
             val action = actionManager.getAction(TRANSLATION_TITLE_BAR_ACTION_ID) ?: return
-            if (!group.containsAction(action)) {
+            val clazz = group::class.java
+            val method = clazz.getMethod("containsAction")
+            method.isAccessible = true
+            val isExist = method.invoke(group, action) as? Boolean ?: false
+            if (!isExist) {
                 actionManager.addToGroup(group, action, Constraints.FIRST)
             }
         } catch (e: Throwable) {
