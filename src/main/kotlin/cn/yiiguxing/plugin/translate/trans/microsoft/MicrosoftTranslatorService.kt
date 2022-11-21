@@ -76,13 +76,13 @@ internal class MicrosoftTranslatorService {
         val token = try {
             promise.blockingGet(TIMEOUT)
         } catch (e: TimeoutException) {
-            throw AuthenticationException("Authentication failed: timeout", e)
+            throw MicrosoftAuthenticationException("Authentication failed: timeout", e)
         } catch (e: Throwable) {
             clearTokenPromise(promise)
 
             val ex = if (e is ExecutionException) e.cause ?: e else e
             val message = if (ex is IOException) ex.getCommonMessage() else ex.message
-            throw AuthenticationException(
+            throw MicrosoftAuthenticationException(
                 "Authentication failed${if (message.isNullOrEmpty()) "" else ": $message"}",
                 ex
             )
@@ -90,7 +90,7 @@ internal class MicrosoftTranslatorService {
 
         if (token == null) {
             clearTokenPromise(promise)
-            throw AuthenticationException("Authentication failed: cannot get access token")
+            throw MicrosoftAuthenticationException("Authentication failed: cannot get access token")
         }
 
         return token
@@ -139,7 +139,5 @@ internal class MicrosoftTranslatorService {
         }
 
     }
-
-    class AuthenticationException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
 }
