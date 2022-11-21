@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.google.gson.Gson
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.SystemInfoRt
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
@@ -12,8 +11,6 @@ import java.net.HttpURLConnection
 object Http {
 
     const val PLUGIN_USER_AGENT = "${TranslationPlugin.PLUGIN_ID}.TranslationPlugin"
-
-    private val logger = Logger.getInstance(Http::class.java)
 
     val defaultGson = Gson()
 
@@ -89,7 +86,6 @@ object Http {
         data: String,
         init: RequestBuilder.() -> Unit
     ): String {
-        logger.d("POST ==> $url\n\t|==> $data")
         return HttpRequests.post(url, contentType)
             .accept("application/json")
             .apply(init)
