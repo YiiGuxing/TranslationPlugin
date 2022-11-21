@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.trans.microsoft
+package cn.yiiguxing.plugin.translate.trans.microsoft.data
 
 data class MicrosoftErrorMessage(
     val code: Int,

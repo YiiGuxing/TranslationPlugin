@@ -1,8 +1,9 @@
-package cn.yiiguxing.plugin.translate.trans.microsoft
+package cn.yiiguxing.plugin.translate.trans.microsoft.data
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
+import cn.yiiguxing.plugin.translate.trans.microsoft.fromMicrosoftLanguageCode
 
 data class MicrosoftTranslation(
     var sourceText: String,

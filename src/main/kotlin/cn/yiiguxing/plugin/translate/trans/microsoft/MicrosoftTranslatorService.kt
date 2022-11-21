@@ -1,6 +1,8 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftTranslationSource
+import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Http.userAgent
 import cn.yiiguxing.plugin.translate.util.UrlBuilder

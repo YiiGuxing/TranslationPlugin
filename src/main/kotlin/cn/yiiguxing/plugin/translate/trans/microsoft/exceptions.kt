@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
+import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftErrorMessage
 import java.io.IOException
 
 class MicrosoftAuthenticationException(
