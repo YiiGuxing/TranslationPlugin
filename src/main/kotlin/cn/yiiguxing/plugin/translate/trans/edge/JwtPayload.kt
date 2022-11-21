@@ -10,7 +10,7 @@ data class JwtPayload(
     @SerializedName("cognitive-services-endpoint")
     val cognitiveServicesEndpoint: String,
     @SerializedName("exp")
-    val exp: Int,
+    val exp: Long,
     @SerializedName("iss")
     val iss: String,
     @SerializedName("product-id")
