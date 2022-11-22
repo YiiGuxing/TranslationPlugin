@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftErrorMessage
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
+import cn.yiiguxing.plugin.translate.util.d
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.intellij.openapi.diagnostic.Logger
@@ -39,10 +40,10 @@ internal object MicrosoftHttp {
 
         val statusLine = "$responseCode ${connection.responseMessage}"
         val errorText = getErrorText(connection)
-        LOG.debug("Request: ${connection.requestMethod} ${connection.url} : Error $statusLine body:\n$errorText")
+        LOG.d("Request: ${connection.requestMethod} ${connection.url} : Error $statusLine body:\n$errorText")
 
         val jsonError = errorText?.let { getJsonError(connection, it) }
-        jsonError ?: LOG.debug("Request: ${connection.requestMethod} ${connection.url} : Unable to parse JSON error")
+        jsonError ?: LOG.d("Request: ${connection.requestMethod} ${connection.url} : Unable to parse JSON error")
 
         if (jsonError != null) {
             MicrosoftStatusCodeException(

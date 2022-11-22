@@ -35,7 +35,7 @@ internal class MicrosoftTranslatorService {
 
     private fun updateAccessToken(token: String) {
         val expirationTime = getExpirationTimeFromToken(token)
-        LOG.debug("Update access token: ********, Expiration time: ${Date(expirationTime)}")
+        LOG.d("Update access token: ********, Expiration time: ${Date(expirationTime)}")
         synchronized(this) {
             accessToken = token
             expireAt = expirationTime - 60000
