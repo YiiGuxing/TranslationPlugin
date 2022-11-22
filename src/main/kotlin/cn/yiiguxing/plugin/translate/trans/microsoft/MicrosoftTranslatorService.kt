@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftTranslationSource
+import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.userAgent
@@ -35,6 +35,7 @@ internal class MicrosoftTranslatorService {
 
     private fun updateAccessToken(token: String) {
         val expirationTime = getExpirationTimeFromToken(token)
+        LOG.debug("Update access token: ********, Expiration time: ${Date(expirationTime)}")
         synchronized(this) {
             accessToken = token
             expireAt = expirationTime - 60000
@@ -137,7 +138,7 @@ internal class MicrosoftTranslatorService {
                 .addQueryParameter("textType", textType.value)
                 .build()
 
-            return Http.postJson(translateUrl, listOf(MicrosoftTranslationSource(text))) { auth() }
+            return MicrosoftHttp.post(translateUrl, listOf(MicrosoftSourceText(text))) { auth() }
         }
 
         private fun RequestBuilder.auth() {
