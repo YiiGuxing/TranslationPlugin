@@ -83,6 +83,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 朱晔 | | 10 CNY |
 | 黄无杰 | | 10 CNY |
 | 依依东望 | | 10 CNY |
 | 山河故人 | | 10 CNY |
@@ -157,6 +158,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 木落雁门秋 | | 6.66 CNY |
+| Libai-m2 | | 6.66 CNY |
 | 嘿嘿嘿 | | 6.66 CNY |
 | See you | | 6.66 CNY |
 | 振粮 | | 6.66 CNY |
