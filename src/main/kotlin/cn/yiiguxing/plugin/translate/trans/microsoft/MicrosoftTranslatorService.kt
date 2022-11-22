@@ -3,17 +3,20 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftTranslationSource
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
-import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.userAgent
-import cn.yiiguxing.plugin.translate.util.UrlBuilder
-import cn.yiiguxing.plugin.translate.util.getCommonMessage
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.io.RequestBuilder
 import org.jetbrains.concurrency.Promise
 import org.jetbrains.concurrency.runAsync
 import java.io.IOException
+import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeoutException
 
@@ -30,11 +33,13 @@ internal class MicrosoftTranslatorService {
 
     private var tokenPromise: Promise<String>? = null
 
-    @Synchronized
     private fun updateAccessToken(token: String) {
-        accessToken = token
-        expireAt = System.currentTimeMillis() + EXPIRATION
-        tokenPromise = null
+        val expirationTime = getExpirationTimeFromToken(token)
+        synchronized(this) {
+            accessToken = token
+            expireAt = expirationTime - 60000
+            tokenPromise = null
+        }
     }
 
     @Synchronized
@@ -78,20 +83,21 @@ internal class MicrosoftTranslatorService {
         val token = try {
             promise.blockingGet(TIMEOUT)
         } catch (e: TimeoutException) {
+            LOG.warn("Authentication failed: timeout", e)
             throw MicrosoftAuthenticationException("Authentication failed: timeout", e)
         } catch (e: Throwable) {
             clearTokenPromise(promise)
 
+            LOG.warn("Authentication failed", e)
             val ex = if (e is ExecutionException) e.cause ?: e else e
-            val message = if (ex is IOException) ex.getCommonMessage() else ex.message
-            throw MicrosoftAuthenticationException(
-                "Authentication failed${if (message.isNullOrEmpty()) "" else ": $message"}",
-                ex
-            )
+            throw if (ex is IOException) {
+                MicrosoftAuthenticationException("Authentication failed: ${ex.getCommonMessage()}", ex)
+            } else ex
         }
 
         if (token == null) {
             clearTokenPromise(promise)
+            LOG.warn("Authentication failed: cannot get access token")
             throw MicrosoftAuthenticationException("Authentication failed: cannot get access token")
         }
 
@@ -108,15 +114,14 @@ internal class MicrosoftTranslatorService {
 
     companion object {
 
-        // 12-minutes expiration time. Actually, the real expiration time is 15 minutes.
-        // Here we use 3 minutes as the error retention time.
-        private const val EXPIRATION = 12 * 60 * 1000
-
         private const val TIMEOUT = 10 * 1000 // 10 seconds
 
         private const val AUTH_URL = "https://edge.microsoft.com/translate/auth"
 
         private const val TRANSLATE_URL = "https://api.cognitive.microsofttranslator.com/translate"
+
+        private val GSON: Gson = Gson()
+        private val LOG: Logger = logger<MicrosoftTranslatorService>()
 
         /**
          * Returns the [MicrosoftTranslatorService] instance.
@@ -140,6 +145,13 @@ internal class MicrosoftTranslatorService {
             tuner { it.setRequestProperty("Authorization", "Bearer $accessToken") }
         }
 
-    }
+        private data class JwtPayload(@SerializedName("exp") val expirationTime: Long)
 
+        private fun getExpirationTimeFromToken(token: String): Long {
+            val payloadChunk = token.split('.')[1]
+            val decoder = Base64.getUrlDecoder()
+            val payload = String(decoder.decode(payloadChunk))
+            return GSON.fromJson(payload, JwtPayload::class.java).expirationTime * 1000
+        }
+    }
 }
