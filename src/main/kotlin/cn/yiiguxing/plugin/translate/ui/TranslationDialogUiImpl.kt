@@ -308,7 +308,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
                 border = UI.emptyBorder(0)
             }
 
-            override fun getFadingEdgeColor(): Color = component.background
+            override fun getFadingEdgeColor(): Color? = component.background
 
             override fun getFadingEdgeSize(): Int = 10
 
