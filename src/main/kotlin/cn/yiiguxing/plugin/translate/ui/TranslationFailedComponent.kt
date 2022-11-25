@@ -87,7 +87,7 @@ class TranslationFailedComponent : JPanel() {
 
     override fun setBounds(x: Int, y: Int, width: Int, height: Int) {
         super.setBounds(x, y, width, height)
-        errorInfo.maximumSize = Dimension(width - JBUIScale.scale(INSETS * 10), Int.MAX_VALUE)
+        errorInfo.maximumSize = Dimension(width - JBUIScale.scale(INSETS * 4), Int.MAX_VALUE)
     }
 
     private fun doSwitchTranslationEngine() {
