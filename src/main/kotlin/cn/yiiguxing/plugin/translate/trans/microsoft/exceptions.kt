@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftErrorMessage
@@ -9,9 +11,9 @@ class MicrosoftAuthenticationException(
 ) : IOException(message, cause)
 
 class MicrosoftStatusCodeException(
-    val message: String?,
+    message: String?,
     val error: MicrosoftErrorMessage?,
     val statusCode: Int
-) {
+) : IOException(message) {
     constructor(message: String?, statusCode: Int) : this(message, null, statusCode)
 }

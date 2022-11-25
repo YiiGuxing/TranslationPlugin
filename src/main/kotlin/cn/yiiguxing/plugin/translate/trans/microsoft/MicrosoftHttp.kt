@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftErrorMessage
+import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftError
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
 import cn.yiiguxing.plugin.translate.util.d
 import com.google.gson.Gson
@@ -42,13 +42,13 @@ internal object MicrosoftHttp {
         val errorText = getErrorText(connection)
         LOG.d("Request: ${connection.requestMethod} ${connection.url} : Error $statusLine body:\n$errorText")
 
-        val jsonError = errorText?.let { getJsonError(connection, it) }
+        val jsonError = errorText?.toJsonError()
         jsonError ?: LOG.d("Request: ${connection.requestMethod} ${connection.url} : Unable to parse JSON error")
 
-        if (jsonError != null) {
+        throw if (jsonError != null) {
             MicrosoftStatusCodeException(
                 "$statusLine - ${jsonError.presentableError}",
-                jsonError,
+                jsonError.error,
                 responseCode
             )
         } else {
@@ -62,14 +62,9 @@ internal object MicrosoftHttp {
         return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
     }
 
-    private fun getJsonError(connection: HttpURLConnection, errorText: String): MicrosoftErrorMessage? {
-        if (!connection.contentType.startsWith(JSON_MIME_TYPE)) {
-            return null
-        }
-        return try {
-            return GSON.fromJson(errorText, MicrosoftErrorMessage::class.java)
-        } catch (jse: JsonParseException) {
-            null
-        }
+    private fun String.toJsonError(): MicrosoftError? = try {
+        GSON.fromJson(this, MicrosoftError::class.java)
+    } catch (jse: JsonParseException) {
+        null
     }
 }
