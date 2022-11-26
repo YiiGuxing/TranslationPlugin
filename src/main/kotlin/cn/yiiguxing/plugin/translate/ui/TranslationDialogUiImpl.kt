@@ -100,7 +100,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         layoutTopPanel()
         layoutMainPanel()
         setButtonIcons()
-        setTooltips()
+        setupTooltips()
 
         return mRoot
     }
@@ -294,14 +294,11 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         starButton.setIcons(TranslationIcons.GrayStarOff)
     }
 
-    private fun setTooltips() {
-        GotItTooltip(
-            "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engine.deepl",
-            message("got.it.tooltip.text.new.translation.engine.deepl"),
-            this
-        )
-            .withHeader(message("got.it.tooltip.title.new.translation.engine"))
-            .withIcon(TranslationIcons.Deepl)
+    private fun setupTooltips() {
+        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.microsoft.deepl"
+        val message = message("got.it.tooltip.text.new.translation.engines")
+        GotItTooltip(id, message, this)
+            .withHeader(message("got.it.tooltip.title.new.translation.engines"))
             .show(settingsButton, GotItTooltipPosition.BOTTOM)
     }
 
@@ -311,7 +308,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
                 border = UI.emptyBorder(0)
             }
 
-            override fun getFadingEdgeColor(): Color = component.background
+            override fun getFadingEdgeColor(): Color? = component.background
 
             override fun getFadingEdgeSize(): Int = 10
 

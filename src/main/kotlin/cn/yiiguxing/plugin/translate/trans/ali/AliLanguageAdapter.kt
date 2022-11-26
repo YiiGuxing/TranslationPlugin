@@ -3,6 +3,9 @@ package cn.yiiguxing.plugin.translate.trans.ali
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
 
+/**
+ * Language adapter for Ali Translator.
+ */
 object AliLanguageAdapter : BaseLanguageAdapter() {
 
     override val supportedSourceLanguages: List<Lang> = listOf(
@@ -56,9 +59,16 @@ object AliLanguageAdapter : BaseLanguageAdapter() {
 
 }
 
+
+/**
+ * Language code for Ali Translator.
+ */
 val Lang.aliLanguageCode: String
     get() = AliLanguageAdapter.getLanguageCode(this)
 
+/**
+ * Returns the [language][Lang] for the specified Ali Translator language [code].
+ */
 @Suppress("unused")
 fun Lang.Companion.fromAliLanguageCode(code: String): Lang {
     return AliLanguageAdapter.getLanguage(code)

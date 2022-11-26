@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
-import cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction
+import cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.ide.DataManager
@@ -19,13 +19,12 @@ import java.awt.event.MouseEvent
 import javax.swing.Icon
 
 /**
- * TranslatorWidget
+ * TranslationWidget
  */
-class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBarWidget.IconPresentation {
+class TranslationWidget(private val project: Project) : StatusBarWidget, StatusBarWidget.IconPresentation {
 
     private var statusBar: StatusBar? = null
 
-    @Suppress("FunctionName")
     override fun ID(): String = ID
 
     override fun getTooltipText(): String = TranslateService.translator.name
@@ -48,7 +47,7 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
 
     private fun getPopupStep(component: Component): ListPopup {
         val context = DataManager.getInstance().getDataContext(component)
-        return SwitchTranslatorAction.createTranslatorPopup(context)
+        return SwitchTranslationEngineAction.createTranslationEnginesPopup(context)
     }
 
     override fun dispose() {
@@ -64,6 +63,6 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
     }
 
     companion object {
-        const val ID = "TranslatorWidget"
+        const val ID = "TranslationWidget"
     }
 }

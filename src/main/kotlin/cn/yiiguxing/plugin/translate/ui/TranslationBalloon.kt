@@ -8,8 +8,8 @@ import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.icon.Spinner
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.TranslationStates
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.TranslationStates
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
@@ -21,10 +21,7 @@ import com.intellij.openapi.wm.WindowManager
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.intellij.util.ui.JBEmptyBorder
-import com.intellij.util.ui.JBUI
-import com.intellij.util.ui.PositionTracker
-import com.intellij.util.ui.UIUtil
+import com.intellij.util.ui.*
 import java.awt.AWTEvent
 import java.awt.Color
 import java.awt.Component.RIGHT_ALIGNMENT
@@ -46,7 +43,9 @@ class TranslationBalloon(
 
     private val layout = FixedSizeCardLayout()
     private val contentPanel = JBPanel<JBPanel<*>>(layout)
-    private val errorPanel = TranslationFailedComponent()
+    private val errorPanel = TranslationFailedComponent().apply {
+        maximumSize = JBDimension(MAX_WIDTH, Int.MAX_VALUE)
+    }
     private val processPane = ProcessComponent(Spinner(), JBUI.insets(INSETS, INSETS * 2))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings, getMaxWidth(project))
@@ -256,6 +255,7 @@ class TranslationBalloon(
     companion object {
 
         private const val MAX_WIDTH = 500
+        private const val MIN_ERROR_PANEL_WIDTH = 300
         private const val INSETS = 20
 
         private const val CARD_PROCESSING = "processing"

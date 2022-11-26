@@ -8,9 +8,9 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.util.Condition
 
 /**
- * TranslatorAction
+ * Translation Engine Action
  */
-class TranslatorAction(private val translator: TranslationEngine) :
+class TranslationEngineAction(private val translator: TranslationEngine) :
     DumbAwareAction(translator.translatorName, null, translator.icon) {
 
     fun isAvailable(): Boolean = translator.isConfigured() || Settings.translator == translator
@@ -24,14 +24,15 @@ class TranslatorAction(private val translator: TranslationEngine) :
     }
 
     companion object {
-        private val ACTIONS: List<TranslatorAction> = TranslationEngine.values().toList().map { TranslatorAction(it) }
+        private val ACTIONS: List<TranslationEngineAction> =
+            TranslationEngine.values().toList().map { TranslationEngineAction(it) }
 
-        fun availableActions(): List<TranslatorAction> = ACTIONS.filter { it.isAvailable() }
+        fun availableActions(): List<TranslationEngineAction> = ACTIONS.filter { it.isAvailable() }
 
-        fun unavailableActions(): List<TranslatorAction> = ACTIONS.filterNot { it.isAvailable() }
+        fun unavailableActions(): List<TranslationEngineAction> = ACTIONS.filterNot { it.isAvailable() }
 
         val PRESELECT_CONDITION: Condition<AnAction> = Condition { action ->
-            (action as? TranslatorAction)?.translator == Settings.translator
+            (action as? TranslationEngineAction)?.translator == Settings.translator
         }
     }
 }

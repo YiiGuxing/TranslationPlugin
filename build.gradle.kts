@@ -84,7 +84,7 @@ intellij {
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
+    // Plugin Dependencies. Use `platformPlugins` property from the gradle.properties file.
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
 }
 
@@ -106,7 +106,8 @@ qodana {
 
 tasks {
     runIde {
-        systemProperties["idea.is.internal"] = true
+        systemProperty("idea.is.internal", true)
+        systemProperty("translation.plugin.log.stdout", true)
 
         // Path to IDE distribution that will be used to run the IDE with the plugin.
         // ideDir.set(File("path to IDE-dependency"))
@@ -141,7 +142,7 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel,
         // When using a non-default release channel, IntelliJ Platform Based IDEs users will need to add a
         // new custom plugin repository to install your plugin from the specified channel. For example, if
         // specified 'snapshot' as a release channel, then users will need to add the

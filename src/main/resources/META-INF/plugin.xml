@@ -66,7 +66,7 @@
         <applicationConfigurable groupId="tools"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
-        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslatorWidgetFactory"/>
+        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
         <toolWindow id="Translation.Wordbook"
                     icon="TranslationIcons.Wordbook"
                     anchor="right"
@@ -105,8 +105,8 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
 
-        <action id="$SwitchTranslatorAction"
-                class="cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction">
+        <action id="$SwitchTranslationEngineAction"
+                class="cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>

@@ -1,38 +1,32 @@
-/*
- * Logs
- */
 @file:Suppress("unused")
 
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.util.SystemProperties
+
+
+private val isStdout: Boolean = SystemProperties.`is`("translation.plugin.log.stdout")
 
 
 fun Logger.d(message: String) {
-    println("DEBUG - $message")
+    if (isStdout) println("DEBUG - $message")
     debug(message)
 }
 
 fun Logger.i(message: String) {
-    println("INFO - $message")
+    if (isStdout) println("INFO - $message")
     info(message)
 }
 
-fun Logger.w(tr: Throwable) {
-    w(tr.message.toString(), tr)
-}
+fun Logger.w(tr: Throwable) = warn(tr)
 
-fun Logger.w(message: String, tr: Throwable? = null) {
-    println("WARN - $message")
-    tr?.printStackTrace()
-    warn(message, tr)
-}
+fun Logger.w(message: String) = warn(message)
 
-fun Logger.e(message: String, tr: Throwable? = null, vararg details: String) {
-    println("ERROR - $message")
-    tr?.printStackTrace()
-    if (details.isNotEmpty()) {
-        println("Details:\n    ${details.joinToString(separator = "\n    ")}")
-    }
-    error(message, tr, *details)
-}
+fun Logger.w(message: String, tr: Throwable) = warn(message, tr)
+
+fun Logger.e(message: String) = error(message)
+
+fun Logger.e(message: String, tr: Throwable) = error(message, tr)
+
+fun Logger.e(message: String, tr: Throwable? = null, vararg details: String) = error(message, tr, *details)

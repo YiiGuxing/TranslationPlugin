@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
+import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
@@ -18,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBusConnection
+import java.util.*
 
 
 /**
@@ -43,11 +45,12 @@ class TranslateService private constructor() : Disposable {
     fun setTranslator(newTranslator: TranslationEngine) {
         if (newTranslator.id != translator.id) {
             translator = when (newTranslator) {
+                TranslationEngine.MICROSOFT -> MicrosoftTranslator
+                TranslationEngine.GOOGLE -> GoogleTranslator
                 TranslationEngine.YOUDAO -> YoudaoTranslator
                 TranslationEngine.BAIDU -> BaiduTranslator
                 TranslationEngine.ALI -> AliTranslator
                 TranslationEngine.DEEPL -> DeeplTranslator
-                else -> DEFAULT_TRANSLATOR
             }
         }
     }
@@ -178,7 +181,9 @@ class TranslateService private constructor() : Disposable {
     private data class ListenerKey(val text: String, val srcLang: Lang, val targetLang: Lang)
 
     companion object {
-        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
+        val DEFAULT_TRANSLATOR: Translator by lazy {
+            if (Locale.getDefault() == Locale.CHINA) MicrosoftTranslator else GoogleTranslator
+        }
 
         val instance: TranslateService
             get() = ApplicationManager.getApplication().getService(TranslateService::class.java)
