@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.util.code
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
@@ -23,7 +24,7 @@ object TKK {
     private const val MIM = 60 * 60 * 1000
     private const val ELEMENT_URL = "https://translate.googleapis.com/translate_a/element.js"
 
-    private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
+    private val log: Logger = logger<TKK>()
 
     private val tkkPattern = Pattern.compile("tkk='(\\d+).(-?\\d+)'")
 
@@ -80,15 +81,15 @@ object TKK {
                 val value1 = matcher.group(1).toLong()
                 val value2 = matcher.group(2).toLong()
 
-                logger.i("TKK Updated: $value1.$value2")
+                log.i("TKK Updated: $value1.$value2")
 
                 value1 to value2
             } else {
-                logger.w("TKK update failed: TKK not found.")
+                log.w("TKK update failed: TKK not found.")
                 null
             }
         } catch (error: Throwable) {
-            logger.w("TKK update failed", error)
+            log.w("TKK update failed", error)
             null
         }
     }
@@ -99,7 +100,7 @@ object TKK {
     } catch (e: Throwable) {
         false
     }.also {
-        logger.i("TKK connection test: ${if (it) "OK" else "FAILURE"}")
+        log.i("TKK connection test: ${if (it) "OK" else "FAILURE"}")
     }
 }
 
