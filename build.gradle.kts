@@ -135,9 +135,9 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
-            changelog.renderItem(changelog.run {
-                getOrNull(pluginVersion) ?: getUnreleased()
-            }, Changelog.OutputType.HTML)
+            with(changelog) {
+                renderItem((getOrNull(pluginVersion) ?: getUnreleased()).withHeader(false), Changelog.OutputType.HTML)
+            }
         })
     }
 

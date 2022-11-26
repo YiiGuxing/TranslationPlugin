@@ -8,8 +8,6 @@
 - Optimized the wordbook service and interaction experience.
 - Fixed the problem that the translation window was displayed abnormally when the new UI was enabled in macOS.
 - Other known bug fixes.
-
-
 - 新增微软翻译引擎（实验性）
 - 新增DeepL翻译引擎
 - 优化文档翻译，为每个文档添加独立的翻译状态（实验性）
