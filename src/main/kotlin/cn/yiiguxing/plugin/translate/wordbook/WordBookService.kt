@@ -40,17 +40,21 @@ class WordBookService {
 
     private val isDownloading: AtomicBoolean = AtomicBoolean()
 
-    private val lockFile: RandomAccessFile
+    private var lockFile: RandomAccessFile? = null
     private lateinit var queryRunner: QueryRunner
     private val wordBookPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
 
     init {
-        if (!Files.exists(TRANSLATION_DIRECTORY)) {
-            Files.createDirectories(TRANSLATION_DIRECTORY)
-        }
+        try {
+            if (!Files.exists(TRANSLATION_DIRECTORY)) {
+                Files.createDirectories(TRANSLATION_DIRECTORY)
+            }
 
-        lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
-        findDriverClassLoader()?.let { initialize(it) }
+            lockFile = RandomAccessFile(TRANSLATION_DIRECTORY.resolve(".lock").toFile(), "rw")
+            findDriverClassLoader()?.let { initialize(it) }
+        } catch (e: Throwable) {
+            LOGGER.w("Failed to initialize wordbook service!", e)
+        }
     }
 
     private fun initialize(classLoader: ClassLoader) {
@@ -150,7 +154,7 @@ class WordBookService {
             indicator.fraction = 1.0
             indicator.isIndeterminate = true
         } catch (e: IOException) {
-            throw  IOException("Failed to download driver file", e)
+            throw IOException("Failed to download driver file", e)
         } finally {
             downloadedFile?.let { Files.deleteIfExists(it) }
         }
@@ -183,7 +187,7 @@ class WordBookService {
     }
 
     private inline fun <T> lock(action: () -> T): T? {
-        val fileLock = lockFile.channel.lock(0L, Long.MAX_VALUE, true)
+        val fileLock = lockFile?.channel?.lock(0L, Long.MAX_VALUE, true)
         return try {
             action()
         } catch (e: Throwable) {
@@ -194,7 +198,7 @@ class WordBookService {
             }
             null
         } finally {
-            fileLock.release()
+            fileLock?.release()
         }
     }
 
