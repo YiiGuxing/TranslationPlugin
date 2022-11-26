@@ -56,10 +56,10 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
-          echo "::set-output name=pluginVersion::$PLUGIN_VERSION"
-          echo "::set-output name=pluginPrereleaseVersion::$PLUGIN_PRERELEASE_VERSION"
-          echo "::set-output name=pluginBuildMetadata::$PLUGIN_BUILD_METADATA"
-          echo "::set-output name=changelog::$CHANGELOG"
+          echo "pluginVersion=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
+          echo "pluginPrereleaseVersion=$PLUGIN_PRERELEASE_VERSION" >> $GITHUB_OUTPUT
+          echo "pluginBuildMetadata=$PLUGIN_BUILD_METADATA" >> $GITHUB_OUTPUT
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
 
       # Update Unreleased section with the current release note
       - name: Patch Changelog
