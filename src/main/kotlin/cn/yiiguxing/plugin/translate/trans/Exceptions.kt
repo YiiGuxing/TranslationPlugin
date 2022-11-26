@@ -11,8 +11,9 @@ class UnsupportedLanguageException(val lang: Lang) : RuntimeException("Unsupport
 
 open class TranslationResultException(val code: Int) : RuntimeException("Translation result code: $code")
 
-class ContentLengthLimitException(limit: Int, actual: Int) :
-    Exception("Content length limit exceeded, limit:$limit, actual:$actual")
+class ContentLengthLimitException(message: String = "Content length limit exceeded") : Exception(message) {
+    constructor(limit: Int, actual: Int) : this("Content length limit exceeded, limit:$limit, actual:$actual")
+}
 
 fun checkContentLength(value: String, limit: Int): String {
     if (limit > 0 && value.length > limit) {

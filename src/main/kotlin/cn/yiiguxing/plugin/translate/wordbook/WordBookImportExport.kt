@@ -5,6 +5,10 @@ import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.lowercase
 import cn.yiiguxing.plugin.translate.util.w
+import cn.yiiguxing.plugin.translate.wordbook.exports.*
+import cn.yiiguxing.plugin.translate.wordbook.imports.JsonWordBookImporter
+import cn.yiiguxing.plugin.translate.wordbook.imports.WordBookImporter
+import cn.yiiguxing.plugin.translate.wordbook.imports.XmlWordBookImporter
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -92,10 +96,10 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
         } catch (e: Throwable) {
             LOG.w("Failed to export word book", e)
             Notifications.showErrorNotification(
-                NOTIFICATION_GROUP_ID,
-                project,
                 title,
-                message("wordbook.window.export.notification.failed", e.message ?: "")
+                message("wordbook.window.export.notification.failed", e.message ?: ""),
+                project,
+                NOTIFICATION_GROUP_ID,
             )
             return
         }
@@ -116,7 +120,10 @@ fun WordBookExporter.export(project: Project?, words: List<WordBookItem>) {
     }
 }
 
-fun importWordBook(project: Project?) {
+/**
+ * Imports wordbook, the [onFinished] callback will be invoked on AWT dispatch thread when the task is finished.
+ */
+fun importWordBook(project: Project?, onFinished: () -> Unit) {
     val selectFile = selectImportSource(project) ?: return
     val title = message("wordbook.window.import.notification.title")
 
@@ -145,6 +152,10 @@ fun importWordBook(project: Project?) {
                     project,
                     NOTIFICATION_GROUP_ID
                 )
+            }
+
+            override fun onFinished() {
+                onFinished()
             }
 
             override fun onThrowable(error: Throwable) {
