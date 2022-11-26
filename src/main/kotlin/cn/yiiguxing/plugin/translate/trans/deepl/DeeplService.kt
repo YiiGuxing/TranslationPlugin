@@ -57,7 +57,7 @@ class DeeplService(var authKey: String) {
     fun getUsage(): Usage = Http.request("$serverUrl/v2/usage") { auth() }
 
     /**
-     * Information about DeepL account usage for the current billing period, for example the number of
+     * Information about DeepL account usage for the current billing period, for example, the number of
      * characters translated.
      *
      * Depending on the account type, some usage types will be omitted. See the

@@ -14,15 +14,15 @@ import javax.swing.JComponent
 /**
  * Switch translator action
  */
-class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
+class SwitchTranslationEngineAction : ComboBoxAction(), DumbAware {
 
     private var lastPopupTitle: String = ""
 
     init {
-        setPopupTitle(message("translator.popup.title"))
+        setPopupTitle(message("translation.engines.popup.title"))
         isEnabledInModalContext = true
-        templatePresentation.text = message("action.SwitchTranslatorAction.text")
-        templatePresentation.description = message("action.SwitchTranslatorAction.description")
+        templatePresentation.text = message("action.SwitchTranslationEngineAction.text")
+        templatePresentation.description = message("action.SwitchTranslationEngineAction.description")
     }
 
     override fun setPopupTitle(popupTitle: String) {
@@ -37,9 +37,9 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
         }
     }
 
-    override fun getPreselectCondition(): Condition<AnAction> = TranslatorAction.PRESELECT_CONDITION
+    override fun getPreselectCondition(): Condition<AnAction> = TranslationEngineAction.PRESELECT_CONDITION
 
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup = TranslatorActionGroup()
+    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup = TranslationEngineActionGroup()
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
         return object : ComboBoxButton(presentation) {
@@ -57,10 +57,10 @@ class SwitchTranslatorAction : ComboBoxAction(), DumbAware {
 
 
     companion object {
-        fun createTranslatorPopup(
+        fun createTranslationEnginesPopup(
             context: DataContext,
-            title: String? = message("translator.popup.title"),
+            title: String? = message("translation.engines.popup.title"),
             disposeCallback: Runnable? = null
-        ): ListPopup = TranslatorActionGroup().createActionPopup(context, title, disposeCallback)
+        ): ListPopup = TranslationEngineActionGroup().createActionPopup(context, title, disposeCallback)
     }
 }

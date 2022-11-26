@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.action.TranslatorActionGroup
+import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.e
@@ -31,7 +31,7 @@ object TranslationNotifications {
         val actionList = LinkedList<AnAction>()
         errorInfo?.continueActions?.let { actionList += it }
         actionList.addAll(actions)
-        actionList.add(TranslatorActionGroup({ message("action.SwitchTranslatorAction.text") }))
+        actionList.add(TranslationEngineActionGroup({ message("action.SwitchTranslationEngineAction.text") }))
 
         if (throwable !is TranslateException) {
             // 将异常写入IDE异常池，以便用户反馈

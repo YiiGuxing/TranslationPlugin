@@ -3,6 +3,9 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
 
+/**
+ * Language adapter for DeepL Translator.
+ */
 object DeeplLanguageAdapter : BaseLanguageAdapter() {
 
     override val supportedSourceLanguages: List<Lang> = listOf(
@@ -96,9 +99,16 @@ object DeeplLanguageAdapter : BaseLanguageAdapter() {
     )
 }
 
+
+/**
+ * Language code for DeepL Translator.
+ */
 val Lang.deeplLanguageCode: String
     get() = DeeplLanguageAdapter.getLanguageCode(this)
 
+/**
+ * Returns the [language][Lang] for the specified DeepL Translator language [code].
+ */
 fun Lang.Companion.fromDeeplLanguageCode(code: String): Lang {
     return DeeplLanguageAdapter.getLanguage(code)
 }

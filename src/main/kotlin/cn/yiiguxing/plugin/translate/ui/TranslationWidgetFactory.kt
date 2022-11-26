@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
-import cn.yiiguxing.plugin.translate.action.TranslatorAction
+import cn.yiiguxing.plugin.translate.action.TranslationEngineAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
@@ -15,17 +15,17 @@ import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidgetFactory
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager
 
-class TranslatorWidgetFactory : StatusBarWidgetFactory {
+class TranslationWidgetFactory : StatusBarWidgetFactory {
     init {
         subscribeToSettingsChange()
     }
 
     override fun getId(): String {
-        return TranslatorWidget.ID
+        return TranslationWidget.ID
     }
 
     override fun getDisplayName(): String {
-        return message("translator.widget.name")
+        return message("translation.widget.name")
     }
 
     override fun disposeWidget(widget: StatusBarWidget) {
@@ -33,11 +33,11 @@ class TranslatorWidgetFactory : StatusBarWidgetFactory {
     }
 
     override fun isAvailable(project: Project): Boolean {
-        return TranslatorAction.availableActions().size > 1
+        return TranslationEngineAction.availableActions().size > 1
     }
 
     override fun createWidget(project: Project): StatusBarWidget {
-        return TranslatorWidget(project)
+        return TranslationWidget(project)
     }
 
     override fun canBeEnabledOn(project: StatusBar): Boolean {
@@ -66,7 +66,7 @@ class TranslatorWidgetFactory : StatusBarWidgetFactory {
                 val projects = ProjectManager.getInstance().openProjects
                 projects.forEach {
                     it.getService(StatusBarWidgetsManager::class.java)
-                        .updateWidget(this@TranslatorWidgetFactory)
+                        .updateWidget(this@TranslationWidgetFactory)
                 }
             }
         }

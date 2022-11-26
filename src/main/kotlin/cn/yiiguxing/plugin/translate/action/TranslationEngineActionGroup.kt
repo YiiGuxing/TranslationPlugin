@@ -11,13 +11,13 @@ import java.util.function.Supplier
 /**
  * TranslatorActionGroup
  */
-open class TranslatorActionGroup(
-    name: Supplier<@NlsActions.ActionText String> = Supplier { message("action.TranslatorActionGroup.name") },
+open class TranslationEngineActionGroup(
+    name: Supplier<@NlsActions.ActionText String> = Supplier { message("action.TranslationEngineActionGroup.name") },
     popup: Boolean = true
 ) : DefaultActionGroup(name, popup) {
 
     init {
-        addAll(translatorGroupActions())
+        addAll(translationEngineGroupActions())
     }
 
     override fun isDumbAware(): Boolean = true
@@ -33,7 +33,7 @@ open class TranslatorActionGroup(
 
     fun createActionPopup(
         context: DataContext,
-        title: String? = message("translator.popup.title"),
+        title: String? = message("translation.engines.popup.title"),
         disposeCallback: Runnable? = null
     ): ListPopup = JBPopupFactory
         .getInstance()
@@ -46,22 +46,22 @@ open class TranslatorActionGroup(
             false,
             disposeCallback,
             10,
-            TranslatorAction.PRESELECT_CONDITION
+            TranslationEngineAction.PRESELECT_CONDITION
         )
 
 
     companion object {
-        private fun translatorGroupActions(): List<AnAction> {
-            val availableActions = TranslatorAction.availableActions()
-            val unavailableActions = TranslatorAction.unavailableActions()
+        private fun translationEngineGroupActions(): List<AnAction> {
+            val availableActions = TranslationEngineAction.availableActions()
+            val unavailableActions = TranslationEngineAction.unavailableActions()
 
             val actions = ArrayList<AnAction>(availableActions.size + unavailableActions.size + 3)
             actions.addAll(availableActions)
             if (unavailableActions.isNotEmpty()) {
-                actions.add(Separator.create(message("action.TranslatorActionGroup.separator.inactivated")))
+                actions.add(Separator.create(message("action.TranslationEngineActionGroup.separator.inactivated")))
                 actions.addAll(unavailableActions)
                 actions.add(Separator.create())
-                actions.add(SettingsAction(message("action.TranslatorActionGroup.manage.translators"), null))
+                actions.add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
             }
 
             return actions

@@ -13,11 +13,12 @@
 <ul>
     <li>Multiple translation engines.
         <ul>
-            <li>Google translate.</li>
-            <li>DeepL translate.</li>
-            <li>Youdao translate.</li>
-            <li>Alibaba translate.</li>
-            <li>Baidu translate.</li>
+            <li>Microsoft Translator.</li>
+            <li>Google Translate.</li>
+            <li>DeepL Translator.</li>
+            <li>Youdao Translate.</li>
+            <li>Alibaba Translate.</li>
+            <li>Baidu Translate.</li>
         </ul>
     </li>
     <li>Multiple languages inter-translation.</li>

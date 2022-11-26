@@ -3,6 +3,9 @@ package cn.yiiguxing.plugin.translate.trans.baidu
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
 
+/**
+ * Language adapter for Baidu Translator.
+ */
 object BaiduLanguageAdapter : BaseLanguageAdapter() {
 
     /** 通用版支持的语言列表 */
@@ -196,9 +199,16 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
 
 }
 
+
+/**
+ * Language code for Baidu Translator.
+ */
 val Lang.baiduLanguageCode: String
     get() = BaiduLanguageAdapter.getLanguageCode(this)
 
+/**
+ * Returns the [language][Lang] for the specified Baidu Translator language [code].
+ */
 fun Lang.Companion.fromBaiduLanguageCode(code: String): Lang {
     return BaiduLanguageAdapter.getLanguage(code)
 }

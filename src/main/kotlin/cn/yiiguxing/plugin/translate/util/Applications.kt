@@ -1,4 +1,4 @@
-@file:Suppress("NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
+@file:Suppress("NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate", "unused")
 
 package cn.yiiguxing.plugin.translate.util
 
@@ -14,6 +14,7 @@ import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.Condition
 import org.jetbrains.kotlin.idea.slicer.KotlinSliceUsageCellRenderer.action
 import java.util.concurrent.Future
@@ -51,6 +52,22 @@ inline fun checkDispatchThread(lazyMessage: () -> Any) {
 inline fun checkDispatchThread(clazz: Class<*>) = checkDispatchThread {
     "${clazz.simpleName} must only be used from the Event Dispatch Thread."
 }
+
+/**
+ * Runs the specified read [action].
+ * Can be called from any thread.
+ * The action is executed immediately if no write action is currently running,
+ * or blocked until the currently running write action completes.
+ */
+inline fun <T> runReadAction(crossinline action: () -> T): T = Application.runReadAction(Computable { action() })
+
+/**
+ * Runs the specified write [action].
+ * Must be called from the Swing dispatch thread.
+ * The action is executed immediately if no read actions are currently running,
+ * or blocked until all read actions are complete.
+ */
+inline fun <T> runWriteAction(crossinline action: () -> T): T = Application.runWriteAction(Computable { action() })
 
 /**
  * Requests pooled thread to execute the [action].

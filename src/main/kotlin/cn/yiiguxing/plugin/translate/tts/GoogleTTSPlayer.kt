@@ -4,8 +4,8 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.google.googleReferer
 import cn.yiiguxing.plugin.translate.trans.google.tk
-import cn.yiiguxing.plugin.translate.trans.google.userAgent
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Http.userAgent
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
