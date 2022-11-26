@@ -38,8 +38,9 @@
 ## Features
 
 - Multiple Translation Engines
+    - Microsoft Translator
     - Google Translate
-    - DeepL Translate
+    - DeepL Translator
     - Youdao Translate
     - Baidu Translate
     - Alibaba Translate
@@ -89,10 +90,10 @@ Restart the **IDE** after installation.
 ## Using The Plugin
 
 1. **Sign up for a translation service (optional)**
-    - Sign up for a translation service ([Youdao Cloud][youdao-cloud],
+    - Sign up for a translation service ([DeepL][deepl], [Youdao Cloud][youdao-cloud],
       [Baidu Translate Open Platform][baidu-translate], [Alibaba Cloud Machine Translation][ali-mt]) account,
-      open up the translation service and obtain the **Application ID** and **Key**.
-    - To bind the **Application ID** and **Key**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
+      open up the translation service and obtain the **Authentication Key** or the **Application ID/Key** Pair.
+    - To bind the **Authentication Key** and the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
    Note: Please protect your **Application Key** to prevent any security breaches. If your account has any outstanding
@@ -394,6 +395,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-contribute]: https://opencollective.com/translation-plugin/contribute
 
+[deepl]: https://www.deepl.com
 [youdao-cloud]: https://ai.youdao.com
 [baidu-translate]: https://fanyi-api.baidu.com/manage/developer
 [ali-mt]: https://www.aliyun.com/product/ai/base_alimt

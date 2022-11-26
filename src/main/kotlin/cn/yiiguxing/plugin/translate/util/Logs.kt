@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.SystemProperties
 
 
-private val isStdout: Boolean = SystemProperties.`is`("translation.plugin.log.stdout")
+private val isStdout: Boolean = SystemProperties.getBooleanProperty("translation.plugin.log.stdout", false)
 
 
 fun Logger.d(message: String) {
