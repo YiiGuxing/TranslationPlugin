@@ -93,7 +93,7 @@ Restart the **IDE** after installation.
     - Sign up for a translation service ([DeepL][deepl], [Youdao Cloud][youdao-cloud],
       [Baidu Translate Open Platform][baidu-translate], [Alibaba Cloud Machine Translation][ali-mt]) account,
       open up the translation service and obtain the **Authentication Key** or the **Application ID/Key** Pair.
-    - To bind the **Authentication Key** or the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
+    - To bind the **Authentication Key** and the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
    Note: Please protect your **Application Key** to prevent any security breaches. If your account has any outstanding
