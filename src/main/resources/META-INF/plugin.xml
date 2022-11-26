@@ -11,19 +11,19 @@
     <depends>com.intellij.modules.platform</depends>
     <depends optional="true" config-file="action-group.xml">com.intellij.modules.lang</depends>
     <depends optional="true" config-file="csharp-doc.xml">com.intellij.modules.rider</depends>
-    <depends optional="true" config-file="oc-doc.xml">com.intellij.modules.cidr.lang</depends>
-    <depends optional="true" config-file="kotlin-doc.xml">org.jetbrains.kotlin</depends>
-    <depends optional="true" config-file="go-doc.xml">org.jetbrains.plugins.go</depends>
-    <depends optional="true" config-file="python-doc.xml">com.intellij.modules.python</depends>
-    <depends optional="true" config-file="dart-doc.xml">Dart</depends>
     <depends optional="true" config-file="css-doc.xml">com.intellij.css</depends>
+    <depends optional="true" config-file="dart-doc.xml">Dart</depends>
+    <depends optional="true" config-file="go-doc.xml">org.jetbrains.plugins.go</depends>
     <depends optional="true" config-file="groovy-doc.xml">org.intellij.groovy</depends>
     <depends optional="true" config-file="java-doc.xml">com.intellij.modules.java</depends>
     <depends optional="true" config-file="javaScript-doc.xml">JavaScript</depends>
     <depends optional="true" config-file="json-doc.xml">com.intellij.modules.json</depends>
     <depends optional="true" config-file="jsp-doc.xml">com.intellij.jsp</depends>
+    <depends optional="true" config-file="kotlin-doc.xml">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="oc-doc.xml">com.intellij.modules.cidr.lang</depends>
     <depends optional="true" config-file="php-doc.xml">com.jetbrains.php</depends>
     <depends optional="true" config-file="properties-doc.xml">com.intellij.properties</depends>
+    <depends optional="true" config-file="python-doc.xml">com.intellij.modules.python</depends>
     <depends optional="true" config-file="rest-doc.xml">com.jetbrains.restClient</depends>
     <depends optional="true" config-file="ruby-doc.xml">com.intellij.modules.ruby</depends>
     <depends optional="true" config-file="rust-doc.xml">org.rust.lang</depends>
