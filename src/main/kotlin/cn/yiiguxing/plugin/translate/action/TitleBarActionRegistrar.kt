@@ -12,17 +12,18 @@ import com.intellij.openapi.actionSystem.Constraints
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.util.registry.Registry
 
 class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
 
     override fun appFrameCreated(commandLineArgs: MutableList<String>) {
-        if (IdeVersion >= IdeVersion.IDE2022_2) {
+        if (isNewUI) {
             registerAction()
         }
     }
 
     override fun pluginLoaded(pluginDescriptor: IdeaPluginDescriptor) {
-        if (IdeVersion >= IdeVersion.IDE2022_2 && pluginDescriptor.pluginId.idString == TranslationPlugin.PLUGIN_ID) {
+        if (isNewUI && pluginDescriptor.pluginId.idString == TranslationPlugin.PLUGIN_ID) {
             registerAction()
         }
     }
@@ -52,6 +53,9 @@ class TitleBarActionRegistrar : AppLifecycleListener, DynamicPluginListener {
         private const val SEARCH_EVERYWHERE_ACTION_ID = "SearchEverywhere"
 
         private val LOG: Logger = Logger.getInstance(TitleBarActionRegistrar::class.java)
+
+        private val isNewUI: Boolean
+            get() = IdeVersion >= IdeVersion.IDE2022_2 && Registry.`is`("ide.experimental.ui", true)
     }
 
 }
