@@ -1,4 +1,4 @@
-# GitHub Actions Workflow created for testing and preparing the plugin release in following steps:
+# GitHub Actions Workflow created for testing and preparing the plugin release in the following steps:
 # - validate Gradle Wrapper,
 # - run test and verifyPlugin tasks,
 # - run buildPlugin task and prepare artifact for the further tests,
@@ -57,7 +57,7 @@ jobs:
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.4
+        uses: gradle/wrapper-validation-action@v1.0.5
 
       # Setup Java 11 environment for the next steps
       - name: Setup Java
@@ -76,7 +76,7 @@ jobs:
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
-          CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
+          CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --no-links --console=plain -q)"
           
           echo "version: $VERSION"
           echo "changelog:"
@@ -86,23 +86,37 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
-          echo "::set-output name=version::$VERSION"
-          echo "::set-output name=changelog::$CHANGELOG"
-          echo "::set-output name=pluginVerifierHomeDir::~/.pluginVerifier"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "pluginVerifierHomeDir=~/.pluginVerifier" >> $GITHUB_OUTPUT
 
           ./gradlew listProductsReleases # prepare list of IDEs for Plugin Verifier
 
       # Run tests
       - name: Run Tests
-        run: ./gradlew test
+        run: ./gradlew check
 
       # Collect Tests Result of failed tests
       - name: Collect Tests Result
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
-          name: tests-result
+          name: tests-report
           path: ${{ github.workspace }}/build/reports/tests
+
+      # Upload the Kover report to CodeCov
+      - name: Upload Code Coverage Report
+        uses: codecov/codecov-action@v3
+        with:
+          files: ${{ github.workspace }}/build/reports/kover/xml/report.xml
+
+      # Collect Code Coverage Report
+      - name: Collect Code Coverage Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: ${{ github.workspace }}/build/reports/kover/html
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
@@ -116,12 +130,12 @@ jobs:
         continue-on-error: true
         run: ./gradlew runPluginVerifier -Pplugin.verifier.home.dir=${{ steps.properties.outputs.pluginVerifierHomeDir }}
 
-      # Collect Plugin Verifier Result
-      - name: Collect Plugin Verifier Result
+      # Collect Plugin Verifier Report
+      - name: Collect Plugin Verifier Report
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: pluginVerifier-result
+          name: plugin-verifier-report
           path: ${{ github.workspace }}/build/reports/pluginVerifier
 
       # Run Qodana inspections
@@ -136,7 +150,7 @@ jobs:
           cd ${{ github.workspace }}/build/distributions
           FILENAME=`ls *.zip`
           unzip "$FILENAME" -d content
-          echo "::set-output name=filename::${FILENAME:0:-4}"
+          echo "filename=${FILENAME:0:-4}" >> $GITHUB_OUTPUT
 
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
@@ -158,7 +172,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v3
 
-      # Remove old release drafts by using the curl request for the available releases with draft flag
+      # Remove old release drafts
       - name: Remove Old Release Drafts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
