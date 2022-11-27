@@ -5,7 +5,7 @@ name: Release
 
 on:
   release:
-    types: [released]
+    types: [ released ]
 
 env:
   AUTO_SNAPSHOT_VERSION: false
@@ -52,22 +52,22 @@ jobs:
           echo "changelog:"
           echo "$CHANGELOG"
           
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-
           echo "pluginVersion=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
           echo "pluginPrereleaseVersion=$PLUGIN_PRERELEASE_VERSION" >> $GITHUB_OUTPUT
           echo "pluginBuildMetadata=$PLUGIN_BUILD_METADATA" >> $GITHUB_OUTPUT
-          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+          
+          echo 'changelog<<EOF' >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
       # Update Unreleased section with the current release note
       - name: Patch Changelog
         if: steps.properties.outputs.pluginBuildMetadata == '' && steps.properties.outputs.changelog != ''
-        env:
-          CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
-          ./gradlew patchChangelog --release-note="$CHANGELOG"
+          ./gradlew patchChangelog --release-note="$(cat << 'EOM'
+          ${{ steps.properties.outputs.changelog }}
+          EOM
+          )"
 
       # Publish the plugin to the Marketplace
       - name: Publish Plugin
@@ -90,10 +90,10 @@ jobs:
           VERSION="${{ github.event.release.tag_name }}"
           BRANCH="changelog-update-$VERSION"
           LABEL="release changelog 📑"
-
+          
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-
+          
           git checkout -b $BRANCH
           git commit -am ":rocket: ${VERSION}" -m "[skip ci]"
           git push --set-upstream origin $BRANCH
@@ -102,11 +102,12 @@ jobs:
             --color B39DDB \
             --description "Pull requests with release changelog update" \
             || true
-
+          
           gh pr create \
             --title ":rocket: \`$VERSION\`" \
             --body "Current pull request contains patched \`CHANGELOG.md\` file for the \`$VERSION\` version." \
             --base "${{ github.event.release.target_commitish }}" \
+            --label "$LABEL" \
             --head $BRANCH
 
       # Close the milestone
