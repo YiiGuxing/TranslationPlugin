@@ -31,6 +31,7 @@ import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
 import net.miginfocom.layout.CC
 import java.awt.Dimension
+import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
@@ -47,7 +48,9 @@ abstract class SettingsUi {
             label.icon = value.icon
         }
         addItemListener {
-            fixEngineConfigurationComponent()
+            if (it.stateChange == ItemEvent.SELECTED) {
+                fixEngineConfigurationComponent()
+            }
         }
     }
 
@@ -302,7 +305,7 @@ abstract class SettingsUi {
     }
 
     private fun fixEngineConfigurationComponent() {
-        configureTranslationEngineLink.isVisible = translationEngineComboBox.selected != TranslationEngine.GOOGLE
+        configureTranslationEngineLink.isVisible = translationEngineComboBox.selected?.hasConfiguration ?: false
     }
 
     open fun isSupportDocumentTranslation(): Boolean {
