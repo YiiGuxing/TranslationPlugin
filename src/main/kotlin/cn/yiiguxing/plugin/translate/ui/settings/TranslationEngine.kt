@@ -56,6 +56,12 @@ enum class TranslationEngine(
             }
         }
 
+    val hasConfiguration: Boolean
+        get() = when (this) {
+            MICROSOFT, GOOGLE -> false
+            else -> true
+        }
+
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
 
     fun isConfigured(): Boolean {
