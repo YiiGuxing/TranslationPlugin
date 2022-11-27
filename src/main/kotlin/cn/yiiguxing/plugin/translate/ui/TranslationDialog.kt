@@ -34,10 +34,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.IdeGlassPane
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl
-import com.intellij.ui.DocumentAdapter
-import com.intellij.ui.PopupMenuListenerAdapter
-import com.intellij.ui.WindowMoveListener
-import com.intellij.ui.WindowResizeListener
+import com.intellij.ui.*
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.Alarm
 import com.intellij.util.ui.JBDimension
@@ -47,10 +44,7 @@ import icons.TranslationIcons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.*
-import javax.swing.JComponent
-import javax.swing.JTextArea
-import javax.swing.ListSelectionModel
-import javax.swing.SwingUtilities
+import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
@@ -94,6 +88,9 @@ class TranslationDialog(
         setUndecorated(true)
         isModal = false
         window.minimumSize = JBDimension(0, 0)
+        rootPane.windowDecorationStyle = JRootPane.NONE
+        rootPane.border = PopupBorder.Factory.create(true, true)
+
         val panel = createCenterPanel()
         initComponents()
         addWindowListeners()
@@ -126,7 +123,7 @@ class TranslationDialog(
         val awtEventListener = AWTEventListener { event ->
             val needCloseDialog = when (event) {
                 is MouseEvent -> event.id == MouseEvent.MOUSE_PRESSED &&
-                        !AppStorage.pinTranslationDialog &&
+                        !TranslationStates.pinTranslationDialog &&
                         !isInside(event)
 
                 is KeyEvent -> event.keyCode == KeyEvent.VK_ESCAPE &&
@@ -257,12 +254,19 @@ class TranslationDialog(
 
     private fun addWindowListeners() {
         val window = peer.window
+        val rootPane = rootPane
         window.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
                 window.addWindowFocusListener(object : WindowAdapter() {
-                    override fun windowGainedFocus(e: WindowEvent) = setActive(true)
-                    override fun windowLostFocus(e: WindowEvent) = setActive(false)
+                    override fun windowGainedFocus(e: WindowEvent) {
+                        rootPane.border = PopupBorder.Factory.create(true, true)
+                    }
+
+                    override fun windowLostFocus(e: WindowEvent) {
+                        rootPane.border = PopupBorder.Factory.create(false, true)
+                    }
                 })
+                window.removeWindowListener(this)
             }
         })
     }
@@ -282,7 +286,7 @@ class TranslationDialog(
                     unequivocalTargetLang = true
                 }
 
-                AppStorage.lastLanguages.let { pair ->
+                TranslationStates.lastLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
                 }
@@ -430,12 +434,12 @@ class TranslationDialog(
         }
         expandDictViewerButton.setListener({ _, _ ->
             expandDictViewer()
-            AppStorage.newTranslationDialogCollapseDictViewer = false
+            TranslationStates.newTranslationDialogCollapseDictViewer = false
             fixWindowHeight()
         }, null)
         collapseDictViewerButton.setListener({ _, _ ->
             collapseDictViewer()
-            AppStorage.newTranslationDialogCollapseDictViewer = true
+            TranslationStates.newTranslationDialogCollapseDictViewer = true
             fixWindowHeight()
         }, null)
     }
@@ -496,7 +500,7 @@ class TranslationDialog(
         }
 
         val hasContent = dictDocument != null || extraDocuments.isNotEmpty()
-        if (hasContent && AppStorage.newTranslationDialogCollapseDictViewer)
+        if (hasContent && TranslationStates.newTranslationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)
             expandDictViewer()
@@ -753,19 +757,19 @@ class TranslationDialog(
     }
 
     private fun storeWindowLocationAndSize() {
-        AppStorage.newTranslationDialogX = window.location.x
-        AppStorage.newTranslationDialogY = window.location.y
-        AppStorage.newTranslationDialogWidth = translationPanel.width
-        AppStorage.newTranslationDialogHeight = translationPanel.height
+        TranslationStates.newTranslationDialogX = window.location.x
+        TranslationStates.newTranslationDialogY = window.location.y
+        TranslationStates.newTranslationDialogWidth = translationPanel.width
+        TranslationStates.newTranslationDialogHeight = translationPanel.height
 
         translationPanel.preferredSize = translationPanel.size
     }
 
     private fun restoreWindowLocationAndSize() {
-        val savedX = AppStorage.newTranslationDialogX
-        val savedY = AppStorage.newTranslationDialogY
-        val savedWidth = AppStorage.newTranslationDialogWidth
-        val savedHeight = AppStorage.newTranslationDialogHeight
+        val savedX = TranslationStates.newTranslationDialogX
+        val savedY = TranslationStates.newTranslationDialogY
+        val savedWidth = TranslationStates.newTranslationDialogWidth
+        val savedHeight = TranslationStates.newTranslationDialogHeight
         if (savedX != null && savedY != null) {
             val intersectWithScreen = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
@@ -781,8 +785,8 @@ class TranslationDialog(
             if (intersectWithScreen) {
                 window.location = Point(savedX, savedY)
             } else {
-                AppStorage.newTranslationDialogX = null
-                AppStorage.newTranslationDialogY = null
+                TranslationStates.newTranslationDialogX = null
+                TranslationStates.newTranslationDialogY = null
             }
         }
         val savedSize = Dimension(savedWidth, savedHeight)
@@ -815,11 +819,11 @@ class TranslationDialog(
         }
 
         override fun isSelected(e: AnActionEvent): Boolean {
-            return AppStorage.pinTranslationDialog
+            return TranslationStates.pinTranslationDialog
         }
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
-            AppStorage.pinTranslationDialog = state
+            TranslationStates.pinTranslationDialog = state
         }
     }
 

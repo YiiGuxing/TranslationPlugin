@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.Http.userAgent
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.*
@@ -31,7 +31,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private const val TAG_SPAN = "span"
 
 
-    private val settings = Settings.googleTranslateSettings
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
     private val gson: Gson = GsonBuilder()
@@ -51,13 +50,11 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     override val contentLengthLimit: Int = GOOGLE.contentLengthLimit
 
     override val primaryLanguage: Lang
-        get() = settings.primaryLanguage
+        get() = GOOGLE.primaryLanguage
 
-    private val notSupportedLanguages = listOf(Lang.CHINESE_CANTONESE, Lang.CHINESE_CLASSICAL)
+    override val supportedSourceLanguages: List<Lang> = GoogleLanguageAdapter.supportedSourceLanguages
 
-    override val supportedSourceLanguages: List<Lang> = (Lang.sortedValues() - notSupportedLanguages).toList()
-    override val supportedTargetLanguages: List<Lang> =
-        (Lang.sortedValues() - notSupportedLanguages - Lang.AUTO).toList()
+    override val supportedTargetLanguages: List<Lang> = GoogleLanguageAdapter.supportedTargetLanguages
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
@@ -119,8 +116,8 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
         val baseUrl = if (isDocumentation) DOCUMENTATION_TRANSLATION_API_URL else TRANSLATE_API_URL
         val urlBuilder = UrlBuilder(baseUrl)
-            .addQueryParameter("sl", srcLang.code)
-            .addQueryParameter("tl", targetLang.code)
+            .addQueryParameter("sl", srcLang.googleLanguageCode)
+            .addQueryParameter("tl", targetLang.googleLanguageCode)
 
         if (isDocumentation) {
             urlBuilder
@@ -133,7 +130,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
                 .addQueryParameter("dj", "1")
                 .addQueryParameter("ie", "UTF-8")
                 .addQueryParameter("oe", "UTF-8")
-                .addQueryParameter("hl", primaryLanguage.code) // 词性的语言
+                .addQueryParameter("hl", primaryLanguage.googleLanguageCode) // 词性的语言
         }
 
         val url = urlBuilder
@@ -204,14 +201,14 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
             }
 
             val translatedText = array.first().asString
-            val lang = if (array.size() > 1) Lang[array[1].asString] else null
+            val lang = if (array.size() > 1) Lang.fromGoogleLanguageCode(array[1].asString) else null
             return GDocTranslation(translatedText, lang)
         }
     }
 
     private object LangDeserializer : JsonDeserializer<Lang> {
         override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext)
-                : Lang = Lang[jsonElement.asString]
+                : Lang = Lang.fromGoogleLanguageCode(jsonElement.asString)
     }
 
     @Suppress("SpellCheckingInspection")

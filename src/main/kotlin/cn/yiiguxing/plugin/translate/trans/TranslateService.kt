@@ -4,18 +4,22 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
+import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
+import cn.yiiguxing.plugin.translate.wordbook.WordBookViewListener
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBusConnection
+import java.util.*
 
 
 /**
@@ -35,15 +39,18 @@ class TranslateService private constructor() : Disposable {
             .connect(this)
             .subscribeSettingsTopic()
             .subscribeWordBookTopic()
+            .subscribeWordBookViewTopic()
     }
 
     fun setTranslator(newTranslator: TranslationEngine) {
         if (newTranslator.id != translator.id) {
             translator = when (newTranslator) {
+                TranslationEngine.MICROSOFT -> MicrosoftTranslator
+                TranslationEngine.GOOGLE -> GoogleTranslator
                 TranslationEngine.YOUDAO -> YoudaoTranslator
                 TranslationEngine.BAIDU -> BaiduTranslator
                 TranslationEngine.ALI -> AliTranslator
-                else -> DEFAULT_TRANSLATOR
+                TranslationEngine.DEEPL -> DeeplTranslator
             }
         }
     }
@@ -114,23 +121,35 @@ class TranslateService private constructor() : Disposable {
         remove(key)?.forEach { it.action() }
     }
 
-    private fun notifyFavoriteAdded(item: WordBookItem) {
-        checkThread()
-        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == null &&
-                translation.srcLang == item.sourceLanguage &&
-                translation.targetLang == item.targetLanguage &&
-                translation.original.equals(item.word, true)
-            ) {
-                translation.favoriteId = item.id
-            }
+    private fun Translation.updateFavoriteStateIfNeed(favorites: List<WordBookItem>) {
+        favorites.find { favorite ->
+            srcLang == favorite.sourceLanguage
+                    && targetLang == favorite.targetLanguage
+                    && original.equals(favorite.word, true)
+        }?.let { favorite ->
+            favoriteId = favorite.id
         }
     }
 
-    private fun notifyFavoriteRemoved(favoriteId: Long) {
+    private fun updateFavorites(favorites: List<WordBookItem>) {
         checkThread()
         for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
-            if (translation.favoriteId == favoriteId) {
+            translation.favoriteId = null
+            translation.updateFavoriteStateIfNeed(favorites)
+        }
+    }
+
+    private fun notifyFavoriteAdded(favorites: List<WordBookItem>) {
+        checkThread()
+        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+            translation.updateFavoriteStateIfNeed(favorites)
+        }
+    }
+
+    private fun notifyFavoriteRemoved(favoriteIds: List<Long>) {
+        checkThread()
+        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+            if (translation.favoriteId in favoriteIds) {
                 translation.favoriteId = null
             }
         }
@@ -146,11 +165,14 @@ class TranslateService private constructor() : Disposable {
 
     private fun MessageBusConnection.subscribeWordBookTopic() = apply {
         subscribe(WordBookListener.TOPIC, object : WordBookListener {
-            override fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {
-                notifyFavoriteAdded(wordBookItem)
-            }
+            override fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) = notifyFavoriteAdded(words)
+            override fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) = notifyFavoriteRemoved(wordIds)
+        })
+    }
 
-            override fun onWordRemoved(service: WordBookService, id: Long) = notifyFavoriteRemoved(id)
+    private fun MessageBusConnection.subscribeWordBookViewTopic() = apply {
+        subscribe(WordBookViewListener.TOPIC, object : WordBookViewListener {
+            override fun onWordBookRefreshed(words: List<WordBookItem>) = updateFavorites(words)
         })
     }
 
@@ -159,7 +181,9 @@ class TranslateService private constructor() : Disposable {
     private data class ListenerKey(val text: String, val srcLang: Lang, val targetLang: Lang)
 
     companion object {
-        val DEFAULT_TRANSLATOR: Translator = GoogleTranslator
+        val DEFAULT_TRANSLATOR: Translator by lazy {
+            if (Locale.getDefault() == Locale.CHINA) MicrosoftTranslator else GoogleTranslator
+        }
 
         val instance: TranslateService
             get() = ApplicationManager.getApplication().getService(TranslateService::class.java)

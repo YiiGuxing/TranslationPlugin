@@ -14,7 +14,6 @@ import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.image.RGBImageFilter
 import javax.swing.Icon
-import javax.swing.UIManager
 import javax.swing.border.Border
 
 /**
@@ -64,12 +63,7 @@ object UI {
     }
 
     @JvmStatic
-    @JvmOverloads
-    fun getColor(key: String, default: Color? = null): Color? = UIManager.getColor(key) ?: default
-
-    @JvmStatic
-    @JvmOverloads
-    fun getBordersColor(default: Color? = null): Color? = UIManager.getColor("Borders.color") ?: default
+    fun getBordersColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
 
     fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
         icon = baseIcon
@@ -77,8 +71,8 @@ object UI {
         setHoveringIcon(IconUtil.darker(baseIcon, 3))
     }
 
-    fun migLayout() =
-        MigLayout(LC().fill().gridGap("0!", "0!").insets("0"))
+    fun migLayout(gapX: String = "0!", gapY: String = "0!", insets: String = "0") =
+        MigLayout(LC().fill().gridGap(gapX, gapY).insets(insets))
 
     fun migLayoutVertical() =
         MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))

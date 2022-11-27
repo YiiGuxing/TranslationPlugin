@@ -1,6 +1,22 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added Microsoft translation engine. (Experimental)
+- Added DeepL translation engine.
+- Optimized documentation translation, added independent translation status for each documentation. (Experimental)
+- The wordbook can set the storage path and supports multi-device synchronization.
+- Optimized the wordbook service and interaction experience.
+- Fixed the problem that the translation window was displayed abnormally when the new UI was enabled in macOS.
+- Other known bug fixes.
+
+
+- 新增微软翻译引擎（实验性）
+- 新增DeepL翻译引擎
+- 优化文档翻译，为每个文档添加独立的翻译状态（实验性）
+- 单词本可以设置存储路径，并支持网盘多设备同步
+- 优化单词本服务及交互体验
+- 修复macOS下启用新UI时翻译窗口显示异常的问题
+- 其他已知问题修复
 
 ## v3.3.5 (2022/09/04)
 - 修复阿里翻译IO错误的问题

@@ -5,7 +5,9 @@ import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressManager
+import org.jetbrains.concurrency.isPending
 import org.jetbrains.concurrency.runAsync
 import java.util.concurrent.TimeoutException
 
@@ -15,37 +17,51 @@ class TranslateDocumentationTask(
     val translator: Translator = TranslateService.translator
 ) {
 
-    private val totalTimeToWaitMs = 3_000
-    private val timeToBlockMs = 100
-
-    private var tries = totalTimeToWaitMs / timeToBlockMs
-
     //execute on a different thread outside read action
     private val promise = runAsync {
         translator.getTranslatedDocumentation(text, language)
     }.onError { e ->
-        invokeLater(ModalityState.NON_MODAL) { DocNotifications.showWarning(e, null) }
+        invokeLater(ModalityState.NON_MODAL) { DocNotifications.showError(e, null) }
     }
+
+    val isProcessed: Boolean get() = !promise.isPending
+
+    val isSucceeded: Boolean get() = promise.isSucceeded
 
     fun onSuccess(callback: (String) -> Unit) {
         promise.onSuccess(callback)
     }
 
+
     fun nonBlockingGet(): String? {
-        //blocking for the whole time can lead to ui freezes, so we need to periodically do `checkCanceled`
+        var tries = DEFAULT_TIMEOUT_IN_MILLIS / TIME_TO_BLOCK_IN_MILLIS
+
+        // Blocking for the whole time can lead to ui freezes, so we need to periodically do `checkCanceled`
         while (tries > 0) {
             tries -= 1
             ProgressManager.checkCanceled()
             try {
-                return promise.blockingGet(timeToBlockMs)
-            } catch (t: TimeoutException) {
-                //ignore
-            } catch (e: Throwable) {
-                return null
+                return promise.blockingGet(TIME_TO_BLOCK_IN_MILLIS)
+            } catch (te: TimeoutException) {
+                // Ignore
             }
         }
 
-        //translation is not ready yet, show original documentation
-        return null
+        // Translation is not ready yet, show original documentation
+        throw TimeoutException("Translation is not ready yet.")
+    }
+
+    inline fun nonBlockingGetOrDefault(default: (Throwable) -> String?): String? = try {
+        nonBlockingGet()
+    } catch (pce: ProcessCanceledException) {
+        throw pce
+    } catch (e: Throwable) {
+        default(e)
+    }
+
+
+    companion object {
+        private const val DEFAULT_TIMEOUT_IN_MILLIS = 3_000
+        private const val TIME_TO_BLOCK_IN_MILLIS = 100
     }
 }

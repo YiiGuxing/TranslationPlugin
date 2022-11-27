@@ -38,7 +38,9 @@
 ## Features
 
 - Multiple Translation Engines
+    - Microsoft Translator
     - Google Translate
+    - DeepL Translator
     - Youdao Translate
     - Baidu Translate
     - Alibaba Translate
@@ -88,10 +90,10 @@ Restart the **IDE** after installation.
 ## Using The Plugin
 
 1. **Sign up for a translation service (optional)**
-    - Sign up for a translation service ([Youdao Cloud][youdao-cloud],
+    - Sign up for a translation service ([DeepL][deepl], [Youdao Cloud][youdao-cloud],
       [Baidu Translate Open Platform][baidu-translate], [Alibaba Cloud Machine Translation][ali-mt]) account,
-      open up the translation service and obtain the **Application ID** and **Key**.
-    - To bind the **Application ID** and **Key**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
+      open up the translation service and obtain the **Authentication Key** or the **Application ID/Key** Pair.
+    - To bind the **Authentication Key** and the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
    Note: Please protect your **Application Key** to prevent any security breaches. If your account has any outstanding
@@ -122,7 +124,6 @@ Restart the **IDE** after installation.
 
    Click the translation engine icon in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>
    S</kbd> (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to quickly switch between translation engines.
-   Currently, Google Translate, Youdao Translate, Baidu Translate and Alibaba Translate are supported.
 
 ## Actions
 
@@ -182,7 +183,7 @@ Restart the **IDE** after installation.
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
     - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
-- **Choose Translator**
+- **Choose Translation Engine**
 
   Quickly toggle between translation engines. Default shortcut:
 
@@ -258,7 +259,7 @@ You can contribute and support this project by doing any of the following:
 * Commit PR
 * Contribute your ideas/suggestions
 * Share the plugin with your friends/colleagues
-* If you like the plugin, please consider making a donation to keep the plugin active:
+* If you love this plugin, please consider donating. It will inspire me to continue development on the project:
 
   <table>
     <thead align="center">
@@ -363,7 +364,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 [badge:plugin-homepage]: https://img.shields.io/badge/plugin%20homepage-translation-4caf50.svg?style=flat-square
 [badge:build]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
 [badge:license]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
-[badge:release]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square&colorB=0097A7
+[badge:release]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?sort=semver&style=flat-square&colorB=0097A7
 [badge:version]: https://img.shields.io/jetbrains/plugin/v/8579.svg?style=flat-square&colorB=2196F3
 [badge:downloads]: https://img.shields.io/jetbrains/plugin/d/8579.svg?style=flat-square&colorB=5C6BC0
 [badge:open-collective]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&color=d05ce3
@@ -394,6 +395,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-contribute]: https://opencollective.com/translation-plugin/contribute
 
+[deepl]: https://www.deepl.com
 [youdao-cloud]: https://ai.youdao.com
 [baidu-translate]: https://fanyi-api.baidu.com/manage/developer
 [ali-mt]: https://www.aliyun.com/product/ai/base_alimt

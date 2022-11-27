@@ -1,19 +1,19 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.getCommonMessage
 import com.intellij.util.io.HttpRequests
 import io.netty.handler.codec.http.HttpResponseStatus
 import java.io.IOException
-import java.net.ConnectException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
 
 /**
  * Provides a skeletal implementation of the [Translator] interface.
  */
 abstract class AbstractTranslator : Translator {
+
+    override val defaultLangForLocale: Lang by lazy {
+        Lang.default.takeIf { it in supportedTargetLanguages } ?: Lang.ENGLISH
+    }
 
     final override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = checkError {
         checkContentLength(text, contentLengthLimit)
@@ -31,15 +31,13 @@ abstract class AbstractTranslator : Translator {
     protected open fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         val errorMessage = when (throwable) {
             is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.langName)
-            is ConnectException, is UnknownHostException -> message("error.network.connection")
-            is SocketException, is SSLHandshakeException -> message("error.network")
-            is SocketTimeoutException -> message("error.network.timeout")
             is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> when (throwable.statusCode) {
-                HttpResponseStatus.TOO_MANY_REQUESTS.code() -> message("error.too.many.requests")
-                else -> HttpResponseStatus.valueOf(throwable.statusCode).reasonPhrase()
+                HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE.code() -> message("error.text.too.long")
+                else -> throwable.getCommonMessage()
             }
-            is IOException -> message("error.io.exception", throwable.message ?: "")
+
+            is IOException -> throwable.getCommonMessage()
             else -> return null
         }
 

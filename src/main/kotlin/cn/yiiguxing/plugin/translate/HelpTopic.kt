@@ -1,7 +1,5 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.util.Plugin
-
 enum class HelpTopic(id: String, val url: String) {
 
     /** Default help */
@@ -14,9 +12,12 @@ enum class HelpTopic(id: String, val url: String) {
     BAIDU("baidu", "https://fanyi-api.baidu.com/"),
 
     /** 有道翻译 */
-    YOUDAO("youdao", "https://ai.youdao.com/product-fanyi-text.s");
+    YOUDAO("youdao", "https://ai.youdao.com/product-fanyi-text.s"),
 
-    val id: String = "${Plugin.PLUGIN_ID}.$id"
+    /** DeepL */
+    DEEPL("deepl", "https://www.deepl.com/pro-api");
+
+    val id: String = "${TranslationPlugin.PLUGIN_ID}.$id"
 
     companion object {
         fun of(helpTopicId: String): HelpTopic {

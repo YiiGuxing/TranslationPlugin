@@ -84,10 +84,12 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     }
 
     override fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {
+        val language = event.getData(LangDataKeys.LANGUAGE)
         val project = editor.project ?: CommonDataKeys.PROJECT.getData(event.dataContext)
         val document = editor.document
-        val isWritable =
-            project?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) } ?: document.isWritable
+        val isWritable = project
+            ?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) }
+            ?: document.isWritable
         if (!isWritable) {
             return
         }
@@ -95,7 +97,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             return
         }
 
-        val language = event.getData(LangDataKeys.LANGUAGE)
+        // 不要在这下面使用`event`，否则将可能会出现 `cannot share data context between Swing events` 错误。
+        // 因为`TranslateService.translator.checkConfiguration()`可能会占用很长的时间并等待，
+        // 之后`event`中的`DataContext`就可能变得不可使用了。详见：
+        // https://intellij-support.jetbrains.com/hc/en-us/community/posts/207379815-AnActionEvent-cannot-share-data-context-between-Swing-events-
+
         val editorRef = WeakReference(editor)
         val text = editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
@@ -207,18 +213,18 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         fun String.fixWhitespace() = replace(SPACES, " ")
 
         fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
-            val appStorage = AppStorage
+            val states = TranslationStates
             val languages = TranslateService.translator.supportedTargetLanguages.sortedByDescending {
-                if (it == Lang.AUTO) Int.MAX_VALUE else appStorage.getLanguageScore(it)
+                if (it == Lang.AUTO) Int.MAX_VALUE else states.getLanguageScore(it)
             }
-            val index = languages.indexOf(appStorage.lastReplacementTargetLanguage)
+            val index = languages.indexOf(states.lastReplacementTargetLanguage)
 
             val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
                 override fun getTextFor(value: Lang): String = value.langName
                 override fun onChosen(selectedValue: Lang, finalChoice: Boolean): PopupStep<*>? {
                     onChosen(selectedValue)
-                    appStorage.accumulateLanguageScore(selectedValue)
-                    appStorage.lastReplacementTargetLanguage = selectedValue
+                    states.accumulateLanguageScore(selectedValue)
+                    states.lastReplacementTargetLanguage = selectedValue
                     return super.onChosen(selectedValue, true)
                 }
             }

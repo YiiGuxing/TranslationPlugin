@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.provider
 
-import cn.yiiguxing.plugin.translate.util.Plugin
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import org.jsoup.nodes.Element
@@ -15,7 +15,7 @@ interface IgnoredDocumentationElementsProvider {
         private val DEFAULT_PROVIDER = object : IgnoredDocumentationElementsProvider {}
 
         private val PROVIDERS = LanguageExtension<IgnoredDocumentationElementsProvider>(
-            "${Plugin.PLUGIN_ID}.ignoredDocumentationElementsProvider",
+            "${TranslationPlugin.PLUGIN_ID}.ignoredDocumentationElementsProvider",
             DEFAULT_PROVIDER
         )
 
