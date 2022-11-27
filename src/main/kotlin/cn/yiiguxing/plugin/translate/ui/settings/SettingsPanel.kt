@@ -4,12 +4,10 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
-import cn.yiiguxing.plugin.translate.ui.form.SettingsForm
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.util.ByteSize
-import cn.yiiguxing.plugin.translate.util.CacheService
-import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
+import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
+import cn.yiiguxing.plugin.translate.wordbook.WordBookState
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.options.ConfigurationException
@@ -20,49 +18,78 @@ import com.intellij.ui.FontComboBox
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import org.intellij.lang.regexp.RegExpLanguage
+import org.jetbrains.concurrency.runAsync
 import java.awt.event.ItemEvent
-import java.lang.ref.WeakReference
 import javax.swing.JComponent
 import kotlin.math.max
 
 /**
  * SettingsPanel
  */
-class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : SettingsForm(), ConfigurablePanel {
+class SettingsPanel(
+    private val settings: Settings,
+    private val states: TranslationStates
+) : SettingsUi(), ConfigurableUi {
 
     private var validRegExp = true
 
     override val component: JComponent = wholePanel
 
+    override val preferredFocusedComponent: JComponent = translationEngineComboBox
+
     init {
         primaryFontComboBox.fixFontComboBoxSize()
         phoneticFontComboBox.fixFontComboBoxSize()
-        primaryLanguageComboBox.model = CollectionComboBoxModel(Settings.instance.translator.supportedTargetLanguages())
+        resetPrimaryLanguageComboBox(settings.translator)
         ignoreRegExp = createRegexEditorField()
         doLayout()
         setListeners()
+        initWordbookStorageComponents()
         initCache()
         initSupport()
     }
 
+    private fun initWordbookStorageComponents() {
+        wordbookStoragePathField.addBrowseFolderListener(WordbookStoragePathBrowser(settings))
+        resetWordbookStoragePathButton.addActionListener {
+            WordbookStoragePathBrowser.restoreDefaultWordbookStorage(settings)
+            wordbookStoragePathField.text = ""
+        }
+
+        fun updateEnabled(state: WordBookState) {
+            val enabled = WordBookService.isStableState(state)
+            wordbookStoragePathField.isEnabled = enabled
+            resetWordbookStoragePathButton.isEnabled = enabled
+        }
+
+        updateEnabled(WordBookService.instance.state)
+        WordBookService.instance.stateBinding.observe(this) { state, _ ->
+            updateEnabled(state)
+        }
+    }
+
     private fun initCache() {
+        var isClearing = false
+        val labelRef = DisposableRef.create(this, cacheSizeLabel)
         clearCacheButton.addActionListener {
-            clearCacheButton.isEnabled = false
-            val buttonRef = WeakReference(clearCacheButton)
-            val labelRef = WeakReference(cacheSizeLabel)
-            executeOnPooledThread {
+            if (isClearing) {
+                return@addActionListener
+            }
+            isClearing = true
+
+            runAsync {
                 CacheService.evictAllDiskCaches()
-                val size = CacheService.getDiskCacheSize()
-                labelRef.get()?.text = ByteSize.format(size)
-                buttonRef.get()?.isEnabled = true
+                CacheService.getDiskCacheSize()
+            }.finishOnUiThread(labelRef) { label, size ->
+                isClearing = false
+                label.text = ByteSize.format(size ?: 0L)
             }
         }
 
-        val labelRef = WeakReference(cacheSizeLabel)
-        executeOnPooledThread {
-            val size = CacheService.getDiskCacheSize()
-            labelRef.get()?.text = ByteSize.format(size)
-        }
+        runAsync { CacheService.getDiskCacheSize() }
+            .successOnUiThread(labelRef) { label, size ->
+                label.text = ByteSize.format(size)
+            }
     }
 
     private fun initSupport() {
@@ -70,13 +97,11 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
     }
 
     private fun setListeners() {
-        translationEngineComboBox.addItemListener { e ->
-            val engine = e.item as TranslationEngine
-            primaryLanguageComboBox.model = CollectionComboBoxModel(engine.supportedTargetLanguages())
-            val selectedLang = primaryLanguageComboBox.selected
-            if (!engine.supportedTargetLanguages().contains(selectedLang)) {
-                primaryLanguageComboBox.selected = engine.primaryLanguage
+        translationEngineComboBox.addItemListener { event ->
+            if (event.stateChange != ItemEvent.SELECTED) {
+                return@addItemListener
             }
+            resetPrimaryLanguageComboBox(event.item as TranslationEngine)
         }
         primaryFontComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
@@ -93,7 +118,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
             phoneticFontComboBox.fontName = UI.defaultFont.fontName
         }
         clearHistoriesButton.addActionListener {
-            appStorage.clearHistories()
+            states.clearHistories()
         }
 
         checkIgnoreRegExpButton.addActionListener {
@@ -139,6 +164,14 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         RegExpLanguage.INSTANCE.associatedFileType
     )
 
+    private fun resetPrimaryLanguageComboBox(engine: TranslationEngine) {
+        val supportedTargetLanguages = engine.supportedTargetLanguages()
+        primaryLanguageComboBox.model = CollectionComboBoxModel(supportedTargetLanguages)
+        primaryLanguageComboBox.selected = settings.primaryLanguage
+            ?.takeIf { it in supportedTargetLanguages }
+            ?: engine.translator.defaultLangForLocale
+    }
+
     override val isModified: Boolean
         get() {
             if (!validRegExp) {
@@ -169,13 +202,13 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
                     || settings.showReplacementActionInContextMenu != showReplacementActionCheckBox.isSelected
                     || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
-                    || appStorage.maxHistorySize != maxHistoriesSizeComboBox.item
+                    || states.maxHistorySize != maxHistoriesSizeComboBox.item
         }
 
 
     override fun apply() {
 
-        appStorage.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
+        states.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
 
         @Suppress("Duplicates")
         with(settings) {
@@ -218,8 +251,9 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
 
     @Suppress("Duplicates")
     override fun reset() {
+        resetPrimaryLanguageComboBox(settings.translator)
+
         translationEngineComboBox.selected = settings.translator
-        primaryLanguageComboBox.selected = settings.translator.primaryLanguage
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ignoreRegExp.text = settings.ignoreRegex
         separatorsTextField.text = settings.separators
@@ -236,7 +270,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         primaryFontPreview.previewFont(settings.primaryFontFamily)
         primaryFontPreview.text = settings.primaryFontPreviewText
         phoneticFontPreview.previewFont(settings.phoneticFontFamily)
-        maxHistoriesSizeComboBox.item = appStorage.maxHistorySize
+        maxHistoriesSizeComboBox.item = states.maxHistorySize
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation
@@ -244,6 +278,7 @@ class SettingsPanel(val settings: Settings, val appStorage: AppStorage) : Settin
         showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected =
             settings.showActionsInContextMenuOnlyWithSelection
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
+        wordbookStoragePathField.text = settings.wordbookStoragePath ?: ""
     }
 
     companion object {

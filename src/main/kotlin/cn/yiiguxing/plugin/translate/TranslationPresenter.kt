@@ -13,13 +13,13 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
     private val translateService = TranslateService
     private val settings = Settings.instance
-    private val appStorage = AppStorage.instance
+    private val states = TranslationStates.instance
     private var currentRequest: Presenter.Request? = null
 
     override val translator: Translator
         get() = translateService.translator
 
-    override val histories: List<String> get() = appStorage.getHistories()
+    override val histories: List<String> get() = states.getHistories()
 
     override val primaryLanguage: Lang get() = translator.primaryLanguage
 
@@ -45,12 +45,12 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
             DEFAULT -> Lang.AUTO.takeIf { isSupportedTargetLanguage(it) }
                 ?: if (text.isEmpty() || text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
             PRIMARY_LANGUAGE -> primaryLanguage
-            LAST -> appStorage.lastLanguages.target.takeIf { isSupportedTargetLanguage(it) } ?: primaryLanguage
+            LAST -> states.lastLanguages.target.takeIf { isSupportedTargetLanguage(it) } ?: primaryLanguage
         }
     }
 
     override fun updateLastLanguages(srcLang: Lang, targetLang: Lang) {
-        with(appStorage.lastLanguages) {
+        with(states.lastLanguages) {
             source = srcLang
             target = targetLang
         }
@@ -66,7 +66,7 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
 
         currentRequest = request
         if (recordHistory) {
-            appStorage.addHistory(text)
+            states.addHistory(text)
         }
 
         getCache(text, srcLang, targetLang)?.let { cache ->

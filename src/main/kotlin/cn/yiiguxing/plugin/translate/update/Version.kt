@@ -2,7 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.update
 
-import cn.yiiguxing.plugin.translate.util.Plugin
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import kotlin.math.min
 
 /**
@@ -151,7 +151,7 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
         /**
          * Returns current version.
          */
-        fun current(): Version = Version(Plugin.descriptor.version)
+        fun current(): Version = Version(TranslationPlugin.descriptor.version)
 
         /**
          * Returns the version for the given [version string][version],

@@ -5,12 +5,7 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import com.intellij.util.io.DigestUtil
 import java.net.URLEncoder
-import java.security.MessageDigest
-import java.util.*
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 
 private val REGEX_UNDERLINE = Regex("([A-Za-z])_+([A-Za-z])")
@@ -137,7 +132,7 @@ private fun <C : MutableCollection<String>> String.splitSentenceTo(
     return destination
 }
 
-private fun String.splitByPunctuation() = splitBy(Regex("([?.,;:!][ ]+)|([、。！（），．：；？][ ]?)"))
+private fun String.splitByPunctuation() = splitBy(Regex("([?.,;:!]( +))|([、。！（），．：；？][ 　]?)"))
 private fun String.splitBySpace() = splitBy(Regex(" "))
 
 private fun String.splitBy(regex: Regex): List<String> {
@@ -183,43 +178,3 @@ fun String.ellipsis(n: Int): String {
  * URL编码
  */
 fun String.urlEncode(): String = if (isEmpty()) this else URLEncoder.encode(this, "UTF-8")
-
-private val HEX_DIGITS = charArrayOf(
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-)
-
-fun String.getMessageDigest(messageDigest: MessageDigest): String {
-    return with(messageDigest) {
-        update(toByteArray(Charsets.UTF_8))
-        digest().toHexString()
-    }
-}
-
-/**
- * 生成32位MD5摘要
- * @return MD5摘要
- */
-fun String.md5(): String = getMessageDigest(DigestUtil.md5())
-
-/**
- * 生成SHA-256摘要
- * @return SHA-256摘要
- */
-fun String.sha256(): String = getMessageDigest(DigestUtil.sha256())
-
-/**
- * 生成Base64格式的MD5摘要
- */
-fun String.md5Base64(): String {
-    return with(DigestUtil.md5()) {
-        update(toByteArray())
-        Base64.getEncoder().encodeToString(digest())
-    }
-}
-
-fun String.hmacSha1(key: String): String {
-    val mac: Mac = Mac.getInstance("HMACSha1")
-    val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
-    mac.init(secretKeySpec)
-    return Base64.getEncoder().encodeToString(mac.doFinal(toByteArray()))
-}

@@ -1,7 +1,7 @@
 <idea-plugin url="https://yiiguxing.github.io/TranslationPlugin" require-restart="true">
     <id>cn.yiiguxing.plugin.translate</id>
     <name>Translation</name>
-    <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
+    <vendor email="yii.guxing@outlook.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <resource-bundle>messages.LanguageBundle</resource-bundle>
     <resource-bundle>messages.TranslationBundle</resource-bundle>
@@ -55,7 +55,7 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.AppStorage"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationStates"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
@@ -64,10 +64,10 @@
                 serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
 
         <applicationConfigurable groupId="tools"
-                                 instance="cn.yiiguxing.plugin.translate.ui.settings.OptionsConfigurable"/>
+                                 instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
-        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslatorWidgetFactory"/>
-        <toolWindow id="Word Book"
+        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
+        <toolWindow id="Translation.Wordbook"
                     icon="TranslationIcons.Wordbook"
                     anchor="right"
                     secondary="true"
@@ -75,6 +75,7 @@
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
 
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.CheckGoogleNetworkStartupActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
         <documentationActionProvider
@@ -97,8 +98,8 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
 
-        <action id="$SwitchTranslatorAction"
-                class="cn.yiiguxing.plugin.translate.action.SwitchTranslatorAction">
+        <action id="$SwitchTranslationEngineAction"
+                class="cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>

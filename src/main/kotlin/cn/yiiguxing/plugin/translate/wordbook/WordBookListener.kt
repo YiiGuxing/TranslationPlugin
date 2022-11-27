@@ -8,26 +8,34 @@ import com.intellij.util.messages.Topic
 interface WordBookListener {
 
     /**
-     * Called after the service initialized.
+     * Called when the new [words] are added.
+     *
+     * @see WordBookService.addWord
      */
-    fun onInitialized(service: WordBookService) {}
+    fun onWordsAdded(service: WordBookService, words: List<WordBookItem>) {}
 
     /**
-     * Called when a new [word][wordBookItem] is added.
+     * Called when the [words] are updated.
+     *
+     * @see WordBookService.updateWord
      */
-    fun onWordAdded(service: WordBookService, wordBookItem: WordBookItem) {}
+    fun onWordsUpdated(service: WordBookService, words: List<WordBookItem>) {}
 
     /**
-     * Called when a [word][wordBookItem] is updated.
+     * Called when the words are removed.
+     *
+     * @see WordBookService.removeWord
+     * @see WordBookService.removeWords
      */
-    fun onWordUpdated(service: WordBookService, wordBookItem: WordBookItem) {}
+    fun onWordsRemoved(service: WordBookService, wordIds: List<Long>) {}
 
     /**
-     * Called when a word removed.
+     * Called when the wordbook storage path is changed.
      */
-    fun onWordRemoved(service: WordBookService, id: Long) {}
+    fun onStoragePathChanged(service: WordBookService) {}
 
     companion object {
+        @Topic.AppLevel
         val TOPIC: Topic<WordBookListener> = Topic.create("WordBookListener", WordBookListener::class.java)
     }
 }

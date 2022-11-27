@@ -50,11 +50,11 @@ private fun Throwable.update(
 
     val trace = stackTrace
     val lastIndexWithoutCommonFrames = trace.lastIndexWithoutCommonFrames(enclosingTrace)
-    val lastPluginPackageIndex = trace.indexOfLast { it.className.startsWith(PLUGIN_PACKAGE) }
+    val firstEndEdgeOfPluginFrame = trace.firstEndEdgeOfPluginFrame()
 
     var traceEndIndex = trace.lastIndex
-    if (lastPluginPackageIndex >= 0) {
-        traceEndIndex = lastPluginPackageIndex
+    if (firstEndEdgeOfPluginFrame >= 0) {
+        traceEndIndex = firstEndEdgeOfPluginFrame
     }
     if (lastIndexWithoutCommonFrames in 0 until traceEndIndex) {
         traceEndIndex = lastIndexWithoutCommonFrames
@@ -68,6 +68,19 @@ private fun Throwable.update(
         se.update(md5, trace, SUPPRESSED_CAPTION, dejaVu)
     }
     cause?.update(md5, trace, CAUSE_CAPTION, dejaVu)
+}
+
+private fun Array<out StackTraceElement>.firstEndEdgeOfPluginFrame(): Int {
+    var index = -1
+    for (i in indices) {
+        if (this[i].className.startsWith(PLUGIN_PACKAGE)) {
+            index = i
+        } else if (index >= 0) {
+            break
+        }
+    }
+
+    return index
 }
 
 private fun Array<out StackTraceElement>.lastIndexWithoutCommonFrames(other: Array<out StackTraceElement>): Int {

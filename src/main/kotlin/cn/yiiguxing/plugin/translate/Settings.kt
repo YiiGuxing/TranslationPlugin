@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
-import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
@@ -25,7 +22,7 @@ import kotlin.properties.Delegates
 /**
  * Settings
  */
-@State(name = "Settings", storages = [(Storage(STORAGE_NAME))])
+@State(name = "Translation.Settings", storages = [(Storage(TranslationStorages.PREFERENCES_STORAGE_NAME))])
 class Settings : PersistentStateComponent<Settings> {
 
     /**
@@ -39,9 +36,9 @@ class Settings : PersistentStateComponent<Settings> {
             }
 
     /**
-     * 谷歌翻译选项
+     * 主要语言
      */
-    var googleTranslateSettings: GoogleTranslateSettings = GoogleTranslateSettings()
+    var primaryLanguage: Lang? = null
 
     /**
      * 有道翻译选项
@@ -160,6 +157,15 @@ class Settings : PersistentStateComponent<Settings> {
 
     var primaryFontPreviewText = message("settings.font.default.preview.text")
 
+    /**
+     * 单词本存储路径
+     */
+    var wordbookStoragePath: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
+        if (oldValue != newValue) {
+            SETTINGS_CHANGE_PUBLISHER.onWordbookStoragePathChanged(this)
+        }
+    }
+
     override fun getState(): Settings = this
 
     override fun loadState(state: Settings) {
@@ -187,7 +193,7 @@ class Settings : PersistentStateComponent<Settings> {
 
 
         private const val CURRENT_DATA_VERSION = 1
-        private const val DATA_VERSION_KEY = "${Plugin.PLUGIN_ID}.settings.data.version"
+        private const val DATA_VERSION_KEY = "${TranslationPlugin.PLUGIN_ID}.settings.data.version"
 
         private val LOG = Logger.getInstance(Settings::class.java)
 
@@ -235,25 +241,14 @@ private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
 
-private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", Plugin.PLUGIN_ID)
+private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", TranslationPlugin.PLUGIN_ID)
 
 private val SETTINGS_CHANGE_PUBLISHER: SettingsChangeListener =
     ApplicationManager.getApplication().messageBus.syncPublisher(SettingsChangeListener.TOPIC)
 
-/**
- * 谷歌翻译选项
- *
- * @property primaryLanguage 主要语言
- */
-@Tag("google-translate")
-data class GoogleTranslateSettings(var primaryLanguage: Lang = Lang.default)
 
-/**
- * @property primaryLanguage    主要语言
- * @property appId              应用ID
- */
 @Tag("app-key")
-abstract class AppKeySettings(serviceKey: String, var primaryLanguage: Lang) {
+abstract class AppKeySettings(serviceKey: String) {
     var appId: String by Delegates.observable("") { _, oldValue: String, newValue: String ->
         if (oldValue != newValue) {
             SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
@@ -283,17 +278,17 @@ abstract class AppKeySettings(serviceKey: String, var primaryLanguage: Lang) {
  * 有道翻译选项
  */
 @Tag("youdao-translate")
-class YoudaoTranslateSettings : AppKeySettings(YOUDAO_APP_KEY, YoudaoTranslator.defaultLangForLocale)
+class YoudaoTranslateSettings : AppKeySettings(YOUDAO_APP_KEY)
 
 /**
  * 百度翻译选项
  */
-class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY, BaiduTranslator.defaultLangForLocale)
+class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY)
 
 /**
  * 阿里云翻译选项
  */
-class AliTranslateSettings : AppKeySettings(ALI_APP_KEY, AliTranslator.defaultLangForLocale)
+class AliTranslateSettings : AppKeySettings(ALI_APP_KEY)
 
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),
@@ -313,6 +308,8 @@ interface SettingsChangeListener {
     fun onTranslatorConfigurationChanged() {}
 
     fun onOverrideFontChanged(settings: Settings) {}
+
+    fun onWordbookStoragePathChanged(settings: Settings) {}
 
     companion object {
         val TOPIC: Topic<SettingsChangeListener> =

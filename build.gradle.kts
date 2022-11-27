@@ -8,7 +8,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.7.10"
+    id("org.jetbrains.kotlin.jvm") version "1.7.20"
     // Gradle IntelliJ Plugin
     id("org.jetbrains.intellij") version "1.9.0"
     // Gradle Changelog Plugin
@@ -65,7 +65,6 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation("org.jsoup:jsoup:1.15.3")
-    implementation("org.apache.commons:commons-dbcp2:2.9.0")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
@@ -85,7 +84,7 @@ intellij {
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
+    // Plugin Dependencies. Use `platformPlugins` property from the gradle.properties file.
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
 }
 
@@ -107,7 +106,8 @@ qodana {
 
 tasks {
     runIde {
-        systemProperties["idea.is.internal"] = true
+        systemProperty("idea.is.internal", true)
+        systemProperty("translation.plugin.log.stdout", true)
 
         // Path to IDE distribution that will be used to run the IDE with the plugin.
         // ideDir.set(File("path to IDE-dependency"))
@@ -142,7 +142,16 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel,
+        // When using a non-default release channel, IntelliJ Platform Based IDEs users will need to add a
+        // new custom plugin repository to install your plugin from the specified channel. For example, if
+        // specified 'snapshot' as a release channel, then users will need to add the
+        // https://plugins.jetbrains.com/plugins/snapshot/list repository to install the plugin and receive updates.
+        // These channels are treated as separate repositories for all intents and purposes. Read more:
+        // https://plugins.jetbrains.com/docs/marketplace/custom-release-channels.html
+        // Snapshot repositories:
+        // https://plugins.jetbrains.com/plugins/snapshot/list
+        // https://plugins.jetbrains.com/plugins/snapshot/8579
         channels.set(listOf(publishChannel))
     }
 

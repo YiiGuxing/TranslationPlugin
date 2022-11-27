@@ -4,8 +4,8 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.google.googleReferer
 import cn.yiiguxing.plugin.translate.trans.google.tk
-import cn.yiiguxing.plugin.translate.trans.google.userAgent
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Http.userAgent
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
@@ -20,13 +20,10 @@ import javazoom.spi.mpeg.sampled.convert.DecodedMpegAudioInputStream
 import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
 import java.io.ByteArrayInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.SequenceInputStream
 import java.lang.StrictMath.round
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
 import javax.sound.sampled.*
 
 
@@ -87,28 +84,9 @@ class GoogleTTSPlayer(
         }
 
         override fun onThrowable(error: Throwable) {
-            if (error is HttpRequests.HttpStatusException && error.statusCode == 404) {
-                LOGGER.w("TTS Error: Unsupported language: ${lang.code}.")
-
-                Notifications.showWarningNotification(
-                    "TTS",
-                    message("error.unsupportedLanguage", lang.langName),
-                    project
-                )
-            } else {
-                when (error) {
-                    is SocketException,
-                    is SocketTimeoutException,
-                    is SSLHandshakeException,
-                    is UnknownHostException -> {
-                        Notifications.showErrorNotification(
-                            project,
-                            "TTS",
-                            message("error.network")
-                        )
-                    }
-                    else -> LOGGER.e("TTS Error", error)
-                }
+            when (error) {
+                is IOException -> Notifications.showErrorNotification("TTS", error.getCommonMessage(), project)
+                else -> LOGGER.e("TTS Error", error)
             }
         }
 
@@ -181,7 +159,7 @@ class GoogleTTSPlayer(
         this as DecodedMpegAudioInputStream
         format.openLine()?.run {
             start()
-            @Suppress("ConvertTryFinallyToUseCall") try {
+            try {
                 val data = ByteArray(2048)
                 var bytesRead: Int
                 while (!indicator.isCanceled) {
@@ -231,7 +209,6 @@ class GoogleTTSPlayer(
 
         private fun InputStream.getAudioDuration(dataLength: Int): Int {
             return try {
-                @Suppress("SpellCheckingInspection")
                 round(Bitstream(this).readFrame().total_ms(dataLength))
             } catch (e: Throwable) {
                 LOGGER.error(e)

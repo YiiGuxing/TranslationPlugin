@@ -40,8 +40,6 @@ interface TranslationDialogUI : Disposable {
 
     fun createMainPanel(): JComponent
 
-    fun setActive(active: Boolean)
-
     fun initFonts(pair: UI.FontPair)
 
     fun showProgress()

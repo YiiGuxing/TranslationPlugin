@@ -18,7 +18,7 @@ data class Translation(
     override val translation: String?,
     override val srcLang: Lang,
     override val targetLang: Lang,
-    private val sourceLangs: List<Lang>,
+    private val sourceLangs: List<Lang> = emptyList(),
     val srcTransliteration: String? = null,
     val transliteration: String? = null,
     val spell: String? = null,
