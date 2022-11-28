@@ -3,6 +3,7 @@
 package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
+import java.util.Collections.emptyList
 import kotlin.math.min
 
 /**
@@ -60,9 +61,17 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
      * Test if this version has feature updates relative to the [other] version
      * (Compare only [major] and [minor] versions).
      */
-    fun isFeatureUpdateFor(other: Version): Boolean {
+    fun isFeatureUpdateOf(other: Version): Boolean {
         if (major > other.major) return true
         if (major == other.major && minor > other.minor) return true
+        if (major == other.major &&
+            minor == other.minor &&
+            other.patch == 0 &&
+            !isRreRelease &&
+            other.isRreRelease
+        ) {
+            return true
+        }
 
         return false
     }
@@ -78,6 +87,14 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
         if (prerelease != other.prerelease) return false
 
         return true
+    }
+
+    /**
+     * Tests whether this version is exactly equal to the [other] version,
+     * including [build metadata][buildMetadata].
+     */
+    fun isEqual(other: Version): Boolean {
+        return version == other.version
     }
 
     override fun compareTo(other: Version): Int {

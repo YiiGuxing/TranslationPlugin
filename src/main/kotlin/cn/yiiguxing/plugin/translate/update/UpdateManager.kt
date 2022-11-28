@@ -59,7 +59,7 @@ class UpdateManager : BaseStartupActivity() {
             return
         }
 
-        val isFeatureVersion = version.isFeatureUpdateFor(lastVersion)
+        val isFeatureVersion = version.isFeatureUpdateOf(lastVersion)
         if (showUpdateNotification(project, plugin, version, isFeatureVersion)) {
             properties.setValue(VERSION_PROPERTY, versionString)
         }
