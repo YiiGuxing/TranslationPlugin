@@ -96,9 +96,6 @@ Restart the **IDE** after installation.
     - To bind the **Authentication Key** and the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
-   Note: Please protect your **Application Key** to prevent any security breaches. If your account has any outstanding
-   debts, you will not be able to use it for these services.
-
 2. **Begin translating**
 
    <kbd>Select text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate</kbd>
