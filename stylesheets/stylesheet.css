@@ -587,6 +587,20 @@ kbd {
     box-shadow: inset 0 -1px 0 #959da5;
 }
 
+.prompt {
+    max-width: 700px;
+    padding: 1rem;
+    margin-top: 1.8rem;
+    border-radius: 6px;
+    margin-inline-start: 0;
+    font-style: italic;
+    color: rgba(25, 25, 28, .7);
+}
+
+.prompt.prompt--type-warning {
+    background: rgba(244, 92, 74, .2);
+}
+
 table {
     border-spacing: 0;
     border-collapse: collapse;
