@@ -96,12 +96,9 @@ Restart the **IDE** after installation.
     - To bind the **Authentication Key** and the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
-   Note: Please protect your **Application Key** to prevent any security breaches. If your account has any outstanding
-   debts, you will not be able to use it for these services.
-
 2. **Begin translating**
 
-   <kbd>Select text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate</kbd>
+   <kbd>Select a text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate</kbd>
 
    Or use shortcuts for translation, as detailed in **[Actions](#actions)**.
 
@@ -112,7 +109,7 @@ Restart the **IDE** after installation.
    plugin configuration page: <kbd>Translation Settings</kbd> > <kbd>Translate and replace</kbd> > <kbd>Separator</kbd>)
    and in the **original format**.
 
-   Instructions: <kbd>Select text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate and
+   Instructions: <kbd>Select a text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate and
    Replace...</kbd> (Or use shortcuts for translation, as detailed in **[Actions](#actions)**).
 
 4. **Translate documents**
@@ -123,7 +120,7 @@ Restart the **IDE** after installation.
 5. **Switch translation engines**
 
    Click the translation engine icon in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>
-   S</kbd> (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to quickly switch between translation engines.
+   S</kbd> (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to switch between translation engines quickly.
 
 ## Actions
 
@@ -233,7 +230,7 @@ Restart the **IDE** after installation.
 
 2. **What should I do if the translated content appears garbled?**
 
-   **A:** Garbled code generally appears when there are a lack of corresponding characters in the font. You can go to
+   **A:** Garbled code generally appears when there is a lack of corresponding characters in the font. You can go to
    the Settings page of the plugin to modify the font in order to fix the garbled code (as shown below).
 
    ![screenshots][file:settings-font]
