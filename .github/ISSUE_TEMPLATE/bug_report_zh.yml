@@ -33,10 +33,12 @@ body:
       description: 您使用的是哪些翻译引擎？
       multiple: true
       options:
+        - 微软翻译
         - 谷歌翻译
         - 有道翻译
         - 百度翻译
         - 阿里翻译
+        - DeepL 翻译
     validations:
       required: true
   - type: textarea
