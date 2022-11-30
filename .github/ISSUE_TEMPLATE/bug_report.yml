@@ -34,6 +34,8 @@ body:
       multiple: true
       options:
         - Google Translate
+        - Microsoft Translator
+        - DeepL Translator
         - Youdao Translate
         - Baidu Translate
         - Alibaba Translate
