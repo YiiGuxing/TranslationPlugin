@@ -176,6 +176,7 @@ class WordBookService : Disposable {
             return defaultClassLoader
         }
 
+        TranslationStorages.createDataDirectoriesIfNotExists()
         return lock {
             if (!checkDriverFile()) {
                 return@lock null
@@ -244,6 +245,7 @@ class WordBookService : Disposable {
         indicator.text = message("word.book.progress.downloading")
         indicator.checkCanceled()
 
+        TranslationStorages.createDataDirectoriesIfNotExists()
         lock {
             if (checkDriverFile()) {
                 return
