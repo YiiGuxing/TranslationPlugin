@@ -2,6 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.compat.notification.SingletonNotificationManagerCompat
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.util.PropertiesComponent
@@ -9,7 +10,17 @@ import com.intellij.notification.*
 import com.intellij.notification.impl.NotificationFullContent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
+import java.util.function.Consumer
 import javax.swing.event.HyperlinkEvent
+
+interface SingletonNotificationManager {
+    fun notify(title: String, content: String, project: Project?, customizer: Consumer<Notification>)
+
+    fun notify(title: String, content: String, project: Project?) = notify(title, content, project) { }
+
+    fun clear()
+}
+
 
 object Notifications {
 
@@ -21,6 +32,13 @@ object Notifications {
 
     val defaultNotificationGroup: NotificationGroup = NotificationGroupManager.getInstance()
         .getNotificationGroup(DEFAULT_NOTIFICATION_GROUP_ID)
+
+    fun createSingletonNotificationManager(
+        groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
+        type: NotificationType
+    ): SingletonNotificationManager {
+        return SingletonNotificationManagerCompat.createManager(groupId, type)
+    }
 
     fun showNotification(
         title: String,
