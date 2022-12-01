@@ -30,9 +30,6 @@ object Notifications {
 
     private val DEFAULT_NOTIFICATION_CUSTOMIZER: (Notification) -> Unit = { }
 
-    val defaultNotificationGroup: NotificationGroup = NotificationGroupManager.getInstance()
-        .getNotificationGroup(DEFAULT_NOTIFICATION_GROUP_ID)
-
     fun createSingletonNotificationManager(
         groupId: String = DEFAULT_NOTIFICATION_GROUP_ID,
         type: NotificationType

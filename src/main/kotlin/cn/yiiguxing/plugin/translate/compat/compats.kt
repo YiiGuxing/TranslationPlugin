@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.util
+package cn.yiiguxing.plugin.translate.compat
 
 import java.util.*
 

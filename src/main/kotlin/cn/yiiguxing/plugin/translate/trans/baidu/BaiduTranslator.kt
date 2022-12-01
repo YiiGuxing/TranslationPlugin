@@ -2,6 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.trans.baidu
 
+import cn.yiiguxing.plugin.translate.compat.lowercase
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
