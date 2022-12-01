@@ -342,6 +342,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name** | **Website**                                                | **Amount** |
 |----------|------------------------------------------------------------|------------|
+| DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 |                                                          | 100 CNY |
 | 马强@咔丘互娱 |                                                          | 100 CNY |
 | Rrtt_2323 |                                                            | 100 CNY    |
@@ -351,7 +352,6 @@ website. [[Become a sponsor][open-collective-contribute]]
 | 三分醉      | [www.sanfenzui.com](http://www.sanfenzui.com)              | 88 CNY     |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt)         | 76.6 CNY   |
 | 弦曲       |                                                            | 66.6 CNY   |
-| 贺小五      |                                                            | 66.6 CNY   |
 
 [More donors][file:financial-contributors]
 

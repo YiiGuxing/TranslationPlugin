@@ -31,6 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
 | 马强@咔丘互娱 | | 100 CNY |
 | Rrtt_2323 | | 100 CNY |
@@ -62,6 +63,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 哎呀呀 | | 20 CNY |
 | 战斗猪 | | 20 CNY |
 | 达 | | 20 CNY |
 | Isolated | | 20 CNY |
@@ -83,6 +85,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 汤鹏 | | 10 CNY |
+| Bigging | | 10 CNY |
 | BeyondTheStars丶 | | 10 CNY |
 | 朱晔 | | 10 CNY |
 | 黄无杰 | | 10 CNY |
@@ -150,6 +154,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 梅少锋 | | 10 CNY |
 | 李志豪 | | 9.99 CNY |
 | 洪晓波 | | 9.9 CNY |
+| 大熊同学 | | 8.88 CNY |
 | Auzn | [github.com/JinXinAuzn](https://github.com/JinXinAuzn) | 8.88 CNY |
 | 老绵牛 | [tongfun.com](https://tongfun.com/) | 8.88 CNY |
 | MaybeMirracle | [gitee.com/MaybeMirracle](https://gitee.com/MaybeMirracle) | 8.88 CNY |
@@ -159,6 +164,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| RunnerJiang | | 6.66 CNY |
+| N | | 6.66 CNY |
+| ChenYHong | | 6.66 CNY |
+| 我要睡觉了 | | 6.66 CNY |
+| Youwei | | 6.66 CNY |
 | 李天奇 | | 6.66 CNY |
 | 木落雁门秋 | | 6.66 CNY |
 | Libai-m2 | | 6.66 CNY |
