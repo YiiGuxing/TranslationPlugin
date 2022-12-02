@@ -351,7 +351,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 | Mritd    | [mritd.com](https://mritd.com)                             | 88.88 CNY  |
 | 三分醉      | [www.sanfenzui.com](http://www.sanfenzui.com)              | 88 CNY     |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt)         | 76.6 CNY   |
-| 弦曲       |                                                            | 66.6 CNY   |
+| 丿初音      |                                                            | 70 CNY   |
 
 [More donors][file:financial-contributors]
 

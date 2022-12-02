@@ -40,6 +40,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
+| 丿初音 | | 70 CNY |
 | 弦曲 | | 66.6 CNY |
 | 贺小五 | | 66.6 CNY |
 | LiCheng.忘语 | [licheng1013.github.io](https://licheng1013.github.io) | 66 CNY |
@@ -59,7 +60,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| 丿初音 | | 40 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
@@ -165,6 +165,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 文强 | | 6.66 CNY |
+| 蒲天鹏 | | 6.66 CNY |
+| SukeBan | | 6.66 CNY |
+| Melancholy-feel | | 6.66 CNY |
 | 坚 | | 6.66 CNY |
 | Leop | | 6.66 CNY |
 | RunnerJiang | | 6.66 CNY |
