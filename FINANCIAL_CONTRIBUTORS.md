@@ -64,6 +64,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| Jiayuan Huang | [github.com/oliverh32](https://github.com/oliverh32) | 20 CNY |
 | Zou Yang | | 20 CNY |
 | 哎呀呀 | | 20 CNY |
 | 战斗猪 | | 20 CNY |
@@ -87,6 +88,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Zzz | | 10 CNY |
+| Kit丶铅笔 | | 10 CNY |
+| Hei | | 10 CNY |
 | 汤鹏 | | 10 CNY |
 | Bigging | | 10 CNY |
 | BeyondTheStars丶 | | 10 CNY |
@@ -166,6 +170,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 云开明月 | | 6.66 CNY |
+| Tani | | 6.66 CNY |
+| Max | | 6.66 CNY |
+| 星夜 | | 6.66 CNY |
 | 衡金石 | | 6.66 CNY |
 | 文强 | | 6.66 CNY |
 | 蒲天鹏 | | 6.66 CNY |
