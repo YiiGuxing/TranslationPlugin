@@ -41,11 +41,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
 | 丿初音 | | 70 CNY |
+| 薛定谔的猫 | | 66.66 CNY |
 | 弦曲 | | 66.6 CNY |
 | 贺小五 | | 66.6 CNY |
 | LiCheng.忘语 | [licheng1013.github.io](https://licheng1013.github.io) | 66 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
-| 薛定谔的猫 | | 60 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
 | 波浪线 | | 50 CNY |
 | 昊天 | | 50 CNY |
