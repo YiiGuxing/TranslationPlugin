@@ -88,6 +88,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 曾经是个瘦子 | | 10 CNY |
 | 程序猿 | | 10 CNY |
 | 阳光大大大大大男孩 | | 10 CNY |
 | 斯乌 | | 10 CNY |
