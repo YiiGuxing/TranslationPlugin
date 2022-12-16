@@ -91,6 +91,10 @@
         {
           "type": "descriptionMatches",
           "pattern": "/```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.util\\.SVGLoader\\.loadFromClassResource\\(SVGLoader\\.java:\\d+\\)/gms"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+?```/gms"
         }
       ]
     },
