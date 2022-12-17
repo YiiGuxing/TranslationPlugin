@@ -82,19 +82,19 @@
         },
         {
           "type": "descriptionMatches",
-          "pattern": "/## Stack Trace\n```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at cn\\.yiiguxing\\.plugin\\.translate\\.ui\\.settings\\.OptionsConfigurable\\$Companion\\.showSettingsDialog\\(OptionsConfigurable\\.kt:\\d+\\)/gms"
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at cn\\.yiiguxing\\.plugin\\.translate\\.ui\\.settings\\.OptionsConfigurable\\$Companion\\.showSettingsDialog\\(OptionsConfigurable\\.kt:\\d+\\)/s"
         },
         {
           "type": "descriptionMatches",
-          "pattern": "/## Stack Trace\n```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.openapi\\.actionSystem\\.ActionManager\\.getInstance\\(ActionManager\\.java:\\d+\\)/gms"
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.openapi\\.actionSystem\\.ActionManager\\.getInstance\\(ActionManager\\.java:\\d+\\)/s"
         },
         {
           "type": "descriptionMatches",
-          "pattern": "/## Stack Trace\n```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.util\\.SVGLoader\\.loadFromClassResource\\(SVGLoader\\.java:\\d+\\)/gms"
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.util\\.SVGLoader\\.loadFromClassResource\\(SVGLoader\\.java:\\d+\\)/s"
         },
         {
           "type": "descriptionMatches",
-          "pattern": "/:warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_.+## Stack Trace\n```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+```/gms"
+          "pattern": "/:warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_.+## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+?```/s"
         }
       ]
     },
@@ -107,7 +107,7 @@
         },
         {
           "type": "descriptionMatches",
-          "pattern": "/```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.ide\\.plugins\\.DynamicPlugins\\.loadPlugin\\(DynamicPlugins\\.kt:\\d+\\)/gms"
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.ide\\.plugins\\.DynamicPlugins\\.loadPlugin\\(DynamicPlugins\\.kt:\\d+\\)/s"
         }
       ]
     },
