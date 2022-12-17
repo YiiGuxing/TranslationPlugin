@@ -64,6 +64,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 李富强 | | 20 CNY |
 | Jiayuan Huang | [github.com/oliverh32](https://github.com/oliverh32) | 20 CNY |
 | Zou Yang | | 20 CNY |
 | 哎呀呀 | | 20 CNY |
