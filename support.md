@@ -69,4 +69,4 @@
 
 ### 微信赞赏/支付宝 赞助者 :id=wechat-alipay-donors
 
-<div class="wechat-alipay-donors"><script src="/js/patrons.js" async></script></div>
+<div class="wechat-alipay-donors"><script src="js/patrons.js" async></script></div>

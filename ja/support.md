@@ -70,4 +70,4 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 
 ### WeChat Reward/Alipay 寄付者 :id=wechat-alipay-donors
 
-<div class="wechat-alipay-donors"><script src="/js/patrons.js" async></script></div>
+<div class="wechat-alipay-donors"><script src="js/patrons.js" async></script></div>
