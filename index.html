@@ -1,90 +1,318 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang>
 <head>
     <meta charset="UTF-8">
-    <title>TranslationPlugin by Yii.Guxing</title>
+    <title>TranslationPlugin ❤️ Yii.Guxing</title>
     <link rel="icon" href="favicon.ico">
-    <meta name="description" content="IntelliJ-based IDEs/Android Studio/HUAWEI DevEco Studio 翻译插件，支持多语言互译、文档翻译、语音朗读...">
-    <meta name="keywords" content="IDEA 插件,IDEA 翻译插件,插件">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css?d8f2ad9d" media="screen">
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-
-        gtag('config', 'G-RMH8BJ3BGP');
-    </script>
+    <meta name="description" content="IntelliJ-based IDEs/Android Studio 翻译插件，支持多语言互译、文档翻译、语音朗读...">
+    <meta name="keywords" content="IDEA Plugin,IDEA Translation Plugin,IDEA 插件,IDEA 翻译插件,插件">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="main-background">
-<div class="main-content">
-    <h1 class="project-name">TranslationPlugin</h1>
-    <h2 class="project-tagline">IntelliJ-based IDEs/Android Studio/HUAWEI DevEco Studio 翻译插件，支持多语言互译、文档翻译、语音朗读...</h2>
-    <div class="index_starWrap">
-        <div class="index_star">
-            <a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
-                在 <b>Github</b> 上查看</a>
+<body>
+<nav class="app-nav unselectable">
+    <div class="left">
+        <a id="nav-home" class="nav-logo">
+            <img src="img/logo.svg" width="40" height="40" alt="logo">
+            <span>TranslationPlugin</span>
+        </a>
+        <a id="nav-docs" data-path="docs"><span
+                lang="zh">文档</span><span
+                lang="en">Docs</span><span
+                lang="ja">ドキュメント</span><span
+                lang="ko">문서</span></a>
+        <a id="nav-updates" data-path="updates"><span
+                lang="zh">更新</span><span
+                lang="en">Updates</span><span
+                lang="ja">更新</span><span
+                lang="ko">업데이트</span></a>
+        <a id="nav-support" data-path="support"><span
+                lang="zh">支持与赞助</span><span
+                lang="en">Support/Sponsor</span><span
+                lang="ja">サポートとスポンサー</span><span
+                lang="ko">지원 및 기부</span></a>
+        <a id="nav-faq" data-path="faq"><span
+                lang="zh">FAQ</span><span
+                lang="en">FAQ</span><span
+                lang="ja">FAQ</span><span
+                lang="ko">FAQ</span></a>
+    </div>
+
+    <div class="nav-translation--wrapper">
+        <a id="nav-translation" class="nav-icon-link nav-translations">
+            <img src="img/translation.svg" width="22" height="22" alt="translations">
+        </a>
+        <div class="nav-translations--menu">
+            <ul>
+                <li><a id="translation-zh" lang="zh">简体中文</a></li>
+                <li><a id="translation-en" lang="en">English</a></li>
+                <li><a id="translation-jp" lang="ja">日本語</a></li>
+                <li><a id="translation-ko" lang="ko">한국어</a></li>
+            </ul>
+            <div class="nav-translations--item-help">
+                <a id="help-translate" href="https://github.com/YiiGuxing/TranslationPlugin/tree/pages-staging"
+                   target="_blank">👋
+                    <span lang="zh">帮助我们翻译！</span><span
+                            lang="en">Help Us Translate!</span><span
+                            lang="ja">翻訳にご協力ください！</span><span
+                            lang="ko">번역을 도와주세요!</span></a>
+            </div>
         </div>
     </div>
-    <div class="index_language_links">
-        <a class="index_language_link" href="en/index.html">English</a>
-        <a class="index_language_link" href="ja/index.html">日本語</a>
-        <a class="index_language_link" href="ko/index.html">한국어</a>
-    </div>
-    <a href="https://github.com/YiiGuxing/TranslationPlugin" class="btn" ondragstart="return false;">GitHub</a>
-    <a href="start.html" class="btn" ondragstart="return false;">开始使用</a>
-    <a href="support.html" class="btn" ondragstart="return false;">❤️ 支持/捐赠 ❤️</a>
 
-    <div class="project-version">
-        <a href="https://github.com/YiiGuxing/TranslationPlugin/releases/latest" target="_blank">
-            <img alt="最新版本" src="https://img.shields.io/github/v/release/YiiGuxing/TranslationPlugin?style=flat-square&color=007AC1&sort=semver&label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC">
-        </a>
-        <a href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
-            <img alt="收藏" src="https://img.shields.io/github/stars/YiiGuxing/TranslationPlugin?logo=github&style=flat-square&color=009688&label=%E6%94%B6%E8%97%8F">
-        </a>
-        <a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
-            <img alt="下载" src="https://img.shields.io/jetbrains/plugin/d/8579?style=flat-square&label=%E4%B8%8B%E8%BD%BD">
-        </a>
-    </div>
-
-    <div id="embeddable" style="display: flex;justify-content: center"></div>
-
-    <div class="idea-frame" oncontextmenu="return false;" ondragstart="return false;" style="margin-top: 2.5rem;">
-        <div class="frame-header">TranslationPlugin</div>
-        <img src="images/screenshots.gif?v1.0" width="550" height="545" alt="截图">
-        <div class="frame-footer"></div>
-    </div>
-
-    <div class="translator-logo" oncontextmenu="return false;" ondragstart="return false;">
-        <img src="images/microsoft_translator_logo.svg" alt="Microsoft Translator">
-        <img src="images/google_translate_logo.svg" alt="Google Translate">
-        <img src="images/deepl_translate_logo.svg" alt="DeepL Translator">
-        <img src="images/youdao_translate_logo.png" alt="有道翻译">
-        <img src="images/baidu_translate_logo.png" alt="百度翻译">
-        <img src="images/ali_translate_logo.png" alt="阿里翻译">
-    </div>
-
-    <div class="translator-logo">
-        <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
-            <img src="images/jetbrains.svg" width="150" height="163" alt="JetBrains"
-                 title="开发由 JetBrains 提供支持">
-        </a>
-    </div>
-
-    <div class="developer"><span>开发者</span></div>
-    <div class="developer-item"><a href="https://github.com/YiiGuxing">Yii.Guxing</a></div>
-</div>
-<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+    <a id="nav-github" class="nav-icon-link" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img src="img/github.svg" width="24" height="24" alt="github">
+    </a>
+</nav>
+<div id="app"></div>
 <script>
-    MarketplaceWidget.setupMarketplaceWidget('install', 8579, "#embeddable");
+    LAST_PLUGIN_VERSION = "v3.4";
+
+    function plugin(hook, vm) {
+        hook.init(function () {
+            initPlugin(vm);
+        });
+
+        hook.mounted(function () {
+            if (vm.route.query.compact) {
+                vm.config.topMargin = 0;
+                vm.config.hideSidebar = true;
+                vm.customConfig.compact = true;
+            }
+
+            initNavBar(vm);
+            updateSidebar(vm);
+        });
+
+        hook.afterEach(function (html, next) {
+            var output = resolveImagePathIfNeed(vm, html);
+            output = resolveHeading(output);
+            next(output);
+        });
+
+        hook.doneEach(function () {
+            document.title = "TranslationPlugin ❤️ Yii.Guxing"
+            updateLanguage(vm);
+            updateNavBar(vm);
+            updateSidebar(vm);
+        });
+    }
+
+    function initPlugin(vm) {
+        var pathRegex = /^\/((en|ja|ko)\/)?/;
+        Object.defineProperty(vm.config, "loadSidebar", {
+            get: function () {
+                var path = (vm.route.path || "").replace(pathRegex, "")
+                if (!path || path === "docs" || path.indexOf("updates/") === 0) {
+                    return "_sidebar.md"
+                } else if (path === "updates") {
+                    return "updates/_sidebar.md"
+                }
+                return false;
+            }
+        });
+
+        vm.customConfig = {
+            compact: false
+        };
+    }
+
+    function initNavBar(vm) {
+        var nav = document.querySelector(".app-nav");
+        var cover = document.querySelector(".cover");
+        if (nav && cover && typeof cover.after === "function") {
+            cover.after(nav);
+        }
+
+        if (nav && vm.customConfig.compact) {
+            nav.classList.add("hide")
+        }
+
+        initNavLinks(vm);
+        initNavTranslations(vm);
+    }
+
+    function initNavLinks(vm) {
+        initHomeLink(vm);
+
+        var navLinks = document.querySelectorAll(".app-nav a[data-path]");
+        for (var i = 0; i < navLinks.length; i++) {
+            navLinks[i].onclick = function () {
+                window.location.href = "#" + getLanguagePath(vm) + this.getAttribute("data-path");
+            }
+        }
+    }
+
+    function initHomeLink(vm) {
+        var homeLink = document.querySelector("#nav-home");
+        homeLink.onclick = function () {
+            window.location.href = "#" + getLanguagePath(vm)
+            if (/^\/((en|ja|ko)\/)?$/.test(vm.route.path)) {
+                setTimeout(function () {
+                    document.scrollingElement.scrollTo({top: 0, behavior: "smooth"});
+                }, 0);
+            }
+        }
+        return homeLink;
+    }
+
+    function initNavTranslations(vm) {
+        var translationLink = document.querySelector("#nav-translation");
+        var menu = document.querySelector(".nav-translations--menu");
+        if (translationLink && menu) {
+            translationLink.onmousedown = function (e) {
+                e.stopPropagation();
+            };
+            translationLink.onclick = function (e) {
+                menu.classList.toggle("show");
+            }
+
+            var helpTranslate = document.querySelector("#help-translate");
+            menu.onmousedown = function (e) {
+                e.stopPropagation();
+            };
+            menu.onclick = function (e) {
+                var isHelpTranslate = helpTranslate && helpTranslate.contains(e.target);
+                var isLanguageLink = !isHelpTranslate && e.target.tagName === "A";
+                if ((isHelpTranslate || isLanguageLink) && menu.classList.contains("show")) {
+                    menu.classList.remove("show");
+                }
+                if (isLanguageLink) {
+                    switchLanguage(vm, e.target.lang)
+                }
+            };
+            document.addEventListener("mousedown", function () {
+                if (menu.classList.contains("show")) {
+                    menu.classList.remove("show");
+                }
+            });
+        }
+    }
+
+    function updateNavBar(vm) {
+        var navBar = document.querySelector("nav.app-nav");
+        if (!navBar) {
+            return;
+        }
+
+        var result = /^\/((en|ja|ko)\/)?(docs|updates|support|faq)/.exec(vm.route.path);
+        navBar.setAttribute("data-path", result ? result[3] || "" : "docs");
+    }
+
+    function updateSidebar(vm) {
+        var showSidebar = !vm.customConfig.compact && /^\/((en|ja|ko)\/)?(docs|updates(\/.*)?)?$/.test(vm.route.path);
+        var main = document.querySelector("main");
+        main && main.classList.toggle("hide-sidebar", !showSidebar);
+
+        if (!showSidebar) {
+            return;
+        }
+
+        var matchResults = /^\/((en|ja|ko)\/)?updates(\/(.+))?$/.exec(vm.route.path);
+        if (!matchResults) {
+            return;
+        }
+
+        var version = matchResults[4] || LAST_PLUGIN_VERSION;
+        var versionItems = document.querySelectorAll(".sidebar-nav > ul > li");
+        for (var i = 0; i < versionItems.length; i++) {
+            versionItems[i].classList.toggle("active--imp", versionItems[i].innerText.startsWith(version));
+        }
+    }
+
+    function updateLanguage(vm) {
+        var result = /^\/((en|ja|ko)\/)?(.*)/.exec(vm.route.path);
+        var lang = result && result[2] || "zh"
+        document.documentElement.setAttribute("lang", lang);
+    }
+
+    function getLanguagePath(vm) {
+        var result = /^(\/((en|ja|ko)\/)?)/.exec(vm.route.path);
+        return result && result[0] || "/"
+    }
+
+    function switchLanguage(vm, newLanguage) {
+        if (newLanguage) {
+            var replacement = "/$4";
+            if (newLanguage !== "zh") {
+                replacement = "/" + newLanguage + replacement;
+            }
+            var newPath = vm.route.path.replace(/^(\/((en|ja|ko)\/)?)(.*)/, replacement);
+            var query = ""
+            for (const queryKey in vm.route.query) {
+                if (query) {
+                    query += "&"
+                }
+                query += queryKey + "=" + encodeURI(vm.route.query[queryKey] || "");
+            }
+            if (query) {
+                query = "?" + query;
+            }
+            window.location.href = "#" + newPath + query;
+        }
+    }
+
+    function resolveImagePathIfNeed(vm, html) {
+        if (!html || !/^\/((en|ja|ko)\/)?updates(\/.*)?$/.test(vm.route.path)) {
+            return html;
+        }
+
+        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, '<img src="$3"$2$4>');
+    }
+
+    function resolveHeading(html) {
+        if (!html) {
+            return html;
+        }
+
+        try {
+            var reg = /<(?<tag>h[1-6])(?<ha> .*?)??><a(?<aa> .*?)??>(?<txt>.*?)<\/a><\/\k<tag>>/g;
+            return html.replace(reg, '<$<tag>$<ha>>$<txt><a$<aa>>#</a></$<tag>>');
+        } catch (e) {
+        }
+
+        return html;
+    }
+
+    window.$docsify = {
+        // name: "TranslationPlugin",
+        //onlyCover: true,
+        loadSidebar: false,
+        auto2top: true,
+        relativePath: true,
+        executeScript: true,
+        maxLevel: 3,
+        topMargin: 60,
+        plugins: [plugin],
+        coverpage: ['/', '/en/', '/ja/', '/ko/'],
+        fallbackLanguages: ['en', 'ja', 'ko'],
+        nameLink: {
+            '/en/': '#/en/',
+            '/ja/': '#/ja/',
+            '/ko/': '#/ko/',
+            '/': '#/',
+        },
+        alias: {
+            "((/(en|ja|ko))?)/docs": "$1/",
+            "((/(en|ja|ko))?)/updates(/?)": "$1/updates/" + LAST_PLUGIN_VERSION,
+            "((/(en|ja|ko))?)/updates/updates/_sidebar.md": "$1/updates/_sidebar.md",
+        },
+    };
+
+    (function (hash) {
+        var search = hash.split("?")[1];
+        if (search) {
+            var searchParams = new URLSearchParams(search);
+            if (searchParams.get('compact')) {
+                var nav = document.querySelector(".app-nav");
+                nav && nav.classList.add("hide");
+            }
+        }
+    })(window.location.hash);
 </script>
+<!-- Docsify v4 -->
+<script src="/js/docsify@4.js"></script>
+<script src="/js/external-script.min.js"></script>
 </body>
 </html>
