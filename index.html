@@ -244,7 +244,7 @@
             return html;
         }
 
-        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, '<img src="$3"$2$4>');
+        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, '<img src=".$3"$2$4>');
     }
 
     function resolveHeading(html) {
