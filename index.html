@@ -66,8 +66,31 @@
     </a>
 </nav>
 <div id="app"></div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-RMH8BJ3BGP', {send_page_view: false});
+
+    function gaPageView() {
+        gtag('event', 'page_view', {
+            page_path: window.location.hash,
+        });
+    }
+</script>
 <script>
     LAST_PLUGIN_VERSION = "v3.4";
+
+    function gaPlugin(hook) {
+        hook.beforeEach(gaPageView);
+    }
 
     function plugin(hook, vm) {
         hook.init(function () {
@@ -270,7 +293,7 @@
         loadSidebar: false,
         maxLevel: 3,
         topMargin: 60,
-        plugins: [plugin],
+        plugins: [plugin, gaPlugin],
         coverpage: ['/', '/en/', '/ja/', '/ko/'],
         fallbackLanguages: ['en', 'ja', 'ko'],
         nameLink: {
