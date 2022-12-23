@@ -13,7 +13,7 @@
 <body>
 <nav class="app-nav unselectable">
     <div class="left">
-        <a id="nav-home" class="nav-logo">
+        <a id="nav-home" class="nav-logo" data-path="">
             <img src="img/logo.svg" width="40" height="40" alt="logo">
             <span>TranslationPlugin</span>
         </a>
@@ -119,42 +119,28 @@
     }
 
     function initNavBar(vm) {
-        var nav = document.querySelector(".app-nav");
-        var cover = document.querySelector(".cover");
-        if (nav && cover && typeof cover.after === "function") {
-            cover.after(nav);
-        }
+        initNavLinks(vm);
+        initNavTranslations(vm);
 
+        var nav = document.querySelector(".app-nav");
         if (nav && vm.customConfig.compact) {
             nav.classList.add("hide")
         }
-
-        initNavLinks(vm);
-        initNavTranslations(vm);
     }
 
     function initNavLinks(vm) {
-        initHomeLink(vm);
-
         var navLinks = document.querySelectorAll(".app-nav a[data-path]");
         for (var i = 0; i < navLinks.length; i++) {
             navLinks[i].onclick = function () {
                 window.location.href = "#" + getLanguagePath(vm) + this.getAttribute("data-path");
-            }
-        }
-    }
 
-    function initHomeLink(vm) {
-        var homeLink = document.querySelector("#nav-home");
-        homeLink.onclick = function () {
-            window.location.href = "#" + getLanguagePath(vm)
-            if (/^\/((en|ja|ko)\/)?$/.test(vm.route.path)) {
-                setTimeout(function () {
-                    document.scrollingElement.scrollTo({top: 0, behavior: "smooth"});
-                }, 0);
+                if (this.id === "nav-home") {
+                    setTimeout(function () {
+                        document.scrollingElement.scrollTop = 0;
+                    }, 0);
+                }
             }
         }
-        return homeLink;
     }
 
     function initNavTranslations(vm) {
@@ -197,7 +183,7 @@
         }
 
         var result = /^\/((en|ja|ko)\/)?(docs|updates|support|faq)/.exec(vm.route.path);
-        navBar.setAttribute("data-path", result ? result[3] || "" : "docs");
+        navBar.setAttribute("data-path", result && result[3] || "");
     }
 
     function updateSidebar(vm) {
@@ -277,11 +263,11 @@
 
     window.$docsify = {
         // name: "TranslationPlugin",
-        //onlyCover: true,
-        loadSidebar: false,
+        onlyCover: true,
         auto2top: true,
         relativePath: true,
         executeScript: true,
+        loadSidebar: false,
         maxLevel: 3,
         topMargin: 60,
         plugins: [plugin],

@@ -1,11 +1,3 @@
-<nav>
-
-[简体中文](/)
-[English](/en/)
-[한국어](/ko/)
-
-</nav>
-
 ![logo](../img/logo.svg ':size=96x96 :class=logo')
 
 <h1>Translation Plugin</h1>

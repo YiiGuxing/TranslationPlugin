@@ -28,17 +28,13 @@ section.cover {
 }
 
 section.cover .cover-main {
-    padding: 60px 0 100px;
+    padding: 120px 0 100px;
 }
 
 section.cover .cover-main nav {
     position: absolute;
     left: 0;
     top: 0;
-}
-
-section.cover .cover-main nav a + a {
-    margin-left: 0.5rem;
 }
 
 section.cover .buttons {
@@ -104,11 +100,13 @@ section.cover .buttons a.github-button:hover > .icon {
     justify-content: space-between;
     align-items: center;
     color: white;
-    top: 0;
     padding: 0 1rem;
     margin: 0;
     height: 60px;
-    position: sticky !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    position: fixed !important;
     background-color: #2c2c32;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     z-index: 32;
@@ -243,14 +241,6 @@ html:lang(ko) .nav-translations--menu > ul > li > a:lang(ko) {
 .nav-translations--menu > .nav-translations--item-help {
     padding: 0.65em 1em 0.75em;
     border-top: 1px solid rgba(0, 0, 0, .2);
-}
-
-main {
-    width: auto;
-    min-height: 100vh;
-    margin-top: -60px;
-    padding-top: 30px;
-    box-sizing: border-box;
 }
 
 kbd {
@@ -405,8 +395,12 @@ body[data-page*="/updates/"] .markdown-section h2 {
 }
 
 .sidebar {
-    top: 45px;
+    padding-top: 85px;
     width: 240px;
+}
+
+.sidebar-toggle {
+    width: 224px;
 }
 
 .sidebar .sidebar-nav {
@@ -419,6 +413,7 @@ body[data-page*="/updates/"] .markdown-section h2 {
 }
 
 .content {
+    padding-top: 60px !important;
     position: static;
     transition: transform .25s ease, margin-left .25s ease;
 }
@@ -440,6 +435,10 @@ main:not(.hide-sidebar) .sidebar + .content {
 
 .sidebar-nav h2 {
     font-weight: 100;
+}
+
+body.close .sidebar {
+    transform: translateX(-240px);
 }
 
 body.close .content {
@@ -662,8 +661,21 @@ section.cover .badges > p {
         margin-left: 0;
     }
 
-    .sidebar, .sidebar-toggle {
-        position: absolute;
+    .sidebar {
+        left: -240px;
+        transition: transform .25s ease-out;
+    }
+
+    body.close .sidebar {
+        transform: translateX(240px);
+    }
+
+    body.close .sidebar-toggle {
+        width: 224px;
+    }
+
+    body.close .content{
+        transform: translateX(240px);
     }
 
     .app-nav .nav-logo > span {
