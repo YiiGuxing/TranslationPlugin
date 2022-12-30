@@ -89,6 +89,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 🍊 | | 10 CNY |
+| Sparkle_540 | | 10 CNY |
 | 冬阳 | | 10 CNY |
 | 曾经是个瘦子 | | 10 CNY |
 | 程序猿 | | 10 CNY |
@@ -176,6 +178,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| ~ _ ~ | | 6.66 CNY |
+| 清 晨 | | 6.66 CNY |
+| 青 | | 6.66 CNY |
 | 天空 | | 6.66 CNY |
 | 行走的BUG | | 6.66 CNY |
 | Valhalla_s | | 6.66 CNY |
