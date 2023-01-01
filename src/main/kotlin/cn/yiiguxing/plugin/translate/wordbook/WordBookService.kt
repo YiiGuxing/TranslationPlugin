@@ -29,6 +29,8 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.sql.ResultSet
 import java.sql.SQLException
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.sql.DataSource
 
 /**
@@ -44,12 +46,17 @@ class WordBookService : Disposable {
             field = requireNotNull(value) { "Cannot set a null value" }
         }
 
+    private val isSubscribed = AtomicBoolean(false)
+
     private val wordBookPublisher: WordBookListener = Application.messageBus.syncPublisher(WordBookListener.TOPIC)
 
     private val observableState: ObservableValue<WordBookState> =
         object : ObservableValue<WordBookState>(UNINITIALIZED) {
             override fun notifyChanged(oldValue: WordBookState, newValue: WordBookState) {
                 LOGGER.i("Wordbook service state changed: $oldValue -> $newValue")
+                if (isStableState(newValue)) {
+                    subscribeStoragePathChanges()
+                }
                 invokeLaterIfNeeded(ModalityState.any()) { super.notifyChanged(oldValue, newValue) }
             }
         }
@@ -73,6 +80,13 @@ class WordBookService : Disposable {
 
     init {
         asyncInitialize()
+    }
+
+    private fun subscribeStoragePathChanges() {
+        if (!isSubscribed.compareAndSet(false, true)) {
+            return
+        }
+
         Application.messageBus
             .connect(this)
             .subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
@@ -91,15 +105,15 @@ class WordBookService : Disposable {
     }
 
     private fun onStoragePathChanged(newPath: String?) {
-        runAsync {
-            synchronized(this@WordBookService) {
-                check(isStableState(state))
-                if (state != RUNNING) {
-                    asyncInitialize()
-                    return@runAsync
-                }
+        synchronized(this@WordBookService) {
+            check(isStableState(state))
+            if (state != RUNNING) {
+                asyncInitialize()
+                return
             }
+        }
 
+        runAsync {
             val newDbFile = newPath?.takeIf { it.isNotBlank() }
                 ?.let { getStorageFile(Paths.get(it)) }
                 ?: getStorageFile(TranslationStorages.DATA_DIRECTORY)
@@ -127,21 +141,28 @@ class WordBookService : Disposable {
     }
 
     fun asyncInitialize() {
-        runAsync {
-            if (!nextState(INITIALIZING, UNINITIALIZED, INITIALIZATION_ERROR)) {
-                return@runAsync
+        val latch = CountDownLatch(1)
+        try {
+            runAsync {
+                // 确保外部各种回调都准备好了再执行后台任务
+                latch.await()
+                if (!nextState(INITIALIZING, UNINITIALIZED, INITIALIZATION_ERROR)) {
+                    return@runAsync
+                }
+                if (classLoader == null) {
+                    findDriverClassLoader()?.let { classLoader = it }
+                }
+                if (classLoader != null) {
+                    initService()
+                } else {
+                    nextState(NO_DRIVER)
+                }
+            }.onError {
+                LOGGER.w("Wordbook initialization failed", it)
+                nextState(INITIALIZATION_ERROR)
             }
-            if (classLoader == null) {
-                findDriverClassLoader()?.let { classLoader = it }
-            }
-            if (classLoader != null) {
-                initService()
-            } else {
-                nextState(NO_DRIVER)
-            }
-        }.onError {
-            LOGGER.w("Wordbook initialization failed", it)
-            nextState(INITIALIZATION_ERROR)
+        } finally {
+            latch.countDown()
         }
     }
 
