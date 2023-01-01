@@ -48,6 +48,9 @@ internal class DocTranslationService : Disposable {
          * Sets the [translation state][translationState] of the specified [PSI element][element].
          */
         fun setTranslationState(element: PsiElement, translationState: Boolean) {
+            if (!element.isValid) {
+                return
+            }
             translationStates(element.project).let { translationStates ->
                 translationStates.put(element.myPointer, translationState)
                 translationStates.scheduleCleanup()
@@ -59,6 +62,10 @@ internal class DocTranslationService : Disposable {
          * returns `null` if the translation state is not set.
          */
         fun getTranslationState(element: PsiElement): Boolean? {
+            if (!element.isValid) {
+                return null
+            }
+
             return translationStates(element.project).let { translationStates ->
                 translationStates[element.myPointer].also {
                     translationStates.scheduleCleanup()
