@@ -56,15 +56,6 @@ class Settings : PersistentStateComponent<Settings> {
     var aliTranslateSettings: AliTranslateSettings = AliTranslateSettings()
 
     /**
-     * 是否覆盖默认字体
-     */
-    var isOverrideFont: Boolean by Delegates.observable(false) { _, oldValue: Boolean, newValue: Boolean ->
-        if (oldValue != newValue) {
-            SETTINGS_CHANGE_PUBLISHER.onOverrideFontChanged(this)
-        }
-    }
-
-    /**
      * 主要字体
      */
     var primaryFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
