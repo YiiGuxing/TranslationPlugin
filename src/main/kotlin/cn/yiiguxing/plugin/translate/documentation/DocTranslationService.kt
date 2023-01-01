@@ -11,9 +11,12 @@ import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.util.concurrency.AppExecutorUtil
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 @Service
 internal class DocTranslationService : Disposable {
+
+    private val lastCleanupTime: AtomicLong = AtomicLong(System.currentTimeMillis())
 
     // Use SmartPsiElementPointer to survive reparse.
     private val translationStates: LruCache<SmartPsiElementPointer<PsiElement>, Boolean> = LruCache(MAX_STATES_SIZE)
@@ -21,6 +24,19 @@ internal class DocTranslationService : Disposable {
     private val inlayDocTranslations: MutableMap<SmartPsiElementPointer<PsiDocCommentBase>, TranslationResult> =
         ConcurrentHashMap()
 
+
+    private fun scheduleCleanup() {
+        val now = System.currentTimeMillis()
+        val updated = now != lastCleanupTime.get() && lastCleanupTime.accumulateAndGet(now) { l, n ->
+            if (n - l >= CLEANUP_INTERVAL) n else l
+        } == now
+        if (updated) {
+            ReadAction.nonBlocking {
+                translationStates.removeIf { key, _ -> key.element == null }
+                inlayDocTranslations.keys.removeIf { it.element == null }
+            }.submit(AppExecutorUtil.getAppExecutorService())
+        }
+    }
 
     override fun dispose() {
         translationStates.evictAll()
@@ -31,6 +47,7 @@ internal class DocTranslationService : Disposable {
     companion object {
 
         private const val MAX_STATES_SIZE = 1024
+        private const val CLEANUP_INTERVAL = 60 * 1000L // one minute.
 
         private val EMPTY = TranslationResult()
 
@@ -39,9 +56,25 @@ internal class DocTranslationService : Disposable {
 
         private fun service(project: Project) = project.getService(DocTranslationService::class.java)
 
-        private fun translationStates(project: Project) = service(project).translationStates
+        private inline fun <T> withTranslationStates(
+            project: Project,
+            block: (LruCache<SmartPsiElementPointer<PsiElement>, Boolean>) -> T
+        ): T {
+            val service = service(project)
+            val result = block(service.translationStates)
+            service.scheduleCleanup()
+            return result
+        }
 
-        private fun inlayDocTranslations(project: Project) = service(project).inlayDocTranslations
+        private inline fun <T> withInlayDocTranslations(
+            project: Project,
+            block: (MutableMap<SmartPsiElementPointer<PsiDocCommentBase>, TranslationResult>) -> T
+        ): T {
+            val service = service(project)
+            val result = block(service.inlayDocTranslations)
+            service.scheduleCleanup()
+            return result
+        }
 
 
         /**
@@ -51,9 +84,8 @@ internal class DocTranslationService : Disposable {
             if (!element.isValid) {
                 return
             }
-            translationStates(element.project).let { translationStates ->
+            withTranslationStates(element.project) { translationStates ->
                 translationStates.put(element.myPointer, translationState)
-                translationStates.scheduleCleanup()
             }
         }
 
@@ -66,10 +98,8 @@ internal class DocTranslationService : Disposable {
                 return null
             }
 
-            return translationStates(element.project).let { translationStates ->
-                translationStates[element.myPointer].also {
-                    translationStates.scheduleCleanup()
-                }
+            return withTranslationStates(element.project) { translationStates ->
+                translationStates[element.myPointer]
             }
         }
 
@@ -77,23 +107,24 @@ internal class DocTranslationService : Disposable {
          * Returns `true` if the specified [doc comment element][docComment] is in translated status.
          */
         fun isInlayDocTranslated(docComment: PsiDocCommentBase): Boolean {
-            return docComment.myPointer in inlayDocTranslations(docComment.project)
+            return withInlayDocTranslations(docComment.project) { inlayDocTranslations ->
+                docComment.myPointer in inlayDocTranslations
+            }
         }
 
         /**
          * Sets the translation status of the specified [doc comment element][docComment].
          */
         fun setInlayDocTranslated(docComment: PsiDocCommentBase, value: Boolean) {
-            val inlayDocTranslations = inlayDocTranslations(docComment.project)
-            val pointer = docComment.myPointer
+            withInlayDocTranslations(docComment.project) { inlayDocTranslations ->
+                val pointer = docComment.myPointer
 
-            if (value) {
-                inlayDocTranslations[pointer] = inlayDocTranslations[pointer] ?: EMPTY
-            } else {
-                inlayDocTranslations.remove(pointer)
+                if (value) {
+                    inlayDocTranslations[pointer] = inlayDocTranslations[pointer] ?: EMPTY
+                } else {
+                    inlayDocTranslations.remove(pointer)
+                }
             }
-
-            inlayDocTranslations.scheduleCleanup()
         }
 
         /**
@@ -102,7 +133,9 @@ internal class DocTranslationService : Disposable {
          * or an empty [TranslationResult] if the translation is not ready.
          */
         fun getInlayDocTranslation(docComment: PsiDocCommentBase): TranslationResult? {
-            return inlayDocTranslations(docComment.project)[docComment.myPointer]
+            return withInlayDocTranslations(docComment.project) { inlayDocTranslations ->
+                inlayDocTranslations[docComment.myPointer]
+            }
         }
 
         /**
@@ -110,27 +143,14 @@ internal class DocTranslationService : Disposable {
          * clear the translation status of the element if the [translation result][translationResult] is `null`.
          */
         fun updateInlayDocTranslation(docComment: PsiDocCommentBase, translationResult: TranslationResult?) {
-            val inlayDocTranslations = inlayDocTranslations(docComment.project)
-            val pointer = docComment.myPointer
-            if (translationResult != null) {
-                inlayDocTranslations[pointer] = translationResult
-            } else {
-                inlayDocTranslations.remove(pointer)
+            withInlayDocTranslations(docComment.project) { inlayDocTranslations ->
+                val pointer = docComment.myPointer
+                if (translationResult != null) {
+                    inlayDocTranslations[pointer] = translationResult
+                } else {
+                    inlayDocTranslations.remove(pointer)
+                }
             }
-
-            inlayDocTranslations.scheduleCleanup()
-        }
-
-        private fun LruCache<SmartPsiElementPointer<PsiElement>, *>.scheduleCleanup() {
-            ReadAction.nonBlocking {
-                removeIf { key, _ -> key.element == null }
-            }.submit(AppExecutorUtil.getAppExecutorService())
-        }
-
-        private fun MutableMap<SmartPsiElementPointer<PsiDocCommentBase>, *>.scheduleCleanup() {
-            ReadAction.nonBlocking {
-                keys.removeIf { it.element == null }
-            }.submit(AppExecutorUtil.getAppExecutorService())
         }
     }
 
