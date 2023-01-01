@@ -35,7 +35,7 @@ enum class TranslationEngine(
     DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Deepl, 131072, 1000);
 
     var primaryLanguage: Lang
-        get() = Settings.primaryLanguage ?: translator.defaultLangForLocale
+        get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
         set(value) {
             Settings.primaryLanguage = if (value in supportedTargetLanguages()) {
                 value
