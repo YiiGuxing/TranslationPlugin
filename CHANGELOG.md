@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## [3.4.1] (2023/01/02)
 - Fixed the problem of invalid font settings.
 - Other known bug fixes.
 - 修复了字体设置无效的问题
@@ -316,7 +318,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.1...HEAD
+[3.4.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...v3.4.1
 [3.4.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.5...v3.4.0
 [3.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.4...v3.3.5
 [3.3.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.3...v3.3.4
