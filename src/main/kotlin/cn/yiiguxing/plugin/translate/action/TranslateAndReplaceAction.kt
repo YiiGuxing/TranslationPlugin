@@ -1,8 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.compat.lowercase
-import cn.yiiguxing.plugin.translate.compat.uppercase
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TranslateListener
