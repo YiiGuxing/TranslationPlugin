@@ -4,7 +4,7 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.util.Http.userAgent
-import cn.yiiguxing.plugin.translate.util.code
+import cn.yiiguxing.plugin.translate.compat.code
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger

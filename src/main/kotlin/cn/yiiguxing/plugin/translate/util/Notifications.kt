@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
 
+
 object Notifications {
 
     const val DEFAULT_NOTIFICATION_GROUP_ID = "Translation Plugin"
@@ -19,8 +20,6 @@ object Notifications {
 
     private val DEFAULT_NOTIFICATION_CUSTOMIZER: (Notification) -> Unit = { }
 
-    val defaultNotificationGroup: NotificationGroup = NotificationGroupManager.getInstance()
-        .getNotificationGroup(DEFAULT_NOTIFICATION_GROUP_ID)
 
     fun showNotification(
         title: String,

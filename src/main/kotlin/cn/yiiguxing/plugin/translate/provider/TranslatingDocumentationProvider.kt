@@ -84,10 +84,7 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
                     if (it is TimeoutException) {
                         val project = docComment.project
                         invokeLater(expired = project.disposed) {
-                            DocNotifications.showWarning(
-                                project,
-                                message("doc.message.translation.timeout.please.try.again")
-                            )
+                            DocNotifications.showTranslationTimeoutWarning(project)
                         }
                     }
                     null

@@ -36,6 +36,7 @@ import javax.swing.event.HyperlinkEvent
 class SupportDialog private constructor() : DialogWrapper(null) {
 
     private val starLink: ActionLink = createActionLink("support.star", GITHUB_URL)
+    private val rateLink: ActionLink = createActionLink("support.rate", REVIEWS_URL)
     private val prLink: ActionLink = createActionLink("support.pr", GITHUB_URL)
     private val reportLink: ActionLink = createActionLink("support.report", NEW_ISSUES_URL)
     private val ideaLink: ActionLink = createActionLink("support.feature", IDEA_DISCUSSION_URL)
@@ -72,6 +73,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             var i = 1
             for (item in arrayOf(
                 starLink,
+                rateLink,
                 reportLink,
                 ideaLink,
                 prLink,
@@ -162,6 +164,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
             "https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/ideas"
         private const val SUPPORT_SHARE_URL = "https://plugins.jetbrains.com/plugin/8579-translation"
         private const val OPEN_COLLECTIVE_DONATE_URL = "https://opencollective.com/translation-plugin/donate"
+        private const val REVIEWS_URL = "https://plugins.jetbrains.com/plugin/8579-translation/reviews"
 
         private val BALLOON_FILL_COLOR = JBColor(0xE4E6EB, 0x45494B)
 

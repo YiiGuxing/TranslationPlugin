@@ -17,6 +17,7 @@ import com.intellij.ui.EditorTextField
 import com.intellij.ui.FontComboBox
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import org.intellij.lang.regexp.RegExpLanguage
 import org.jetbrains.concurrency.runAsync
 import java.awt.event.ItemEvent
@@ -114,8 +115,10 @@ class SettingsPanel(
             }
         }
         restoreDefaultButton.addActionListener {
-            primaryFontComboBox.fontName = UI.defaultFont.fontName
-            phoneticFontComboBox.fontName = UI.defaultFont.fontName
+            primaryFontComboBox.fontName = null
+            phoneticFontComboBox.fontName = null
+            primaryFontPreview.previewFont(null)
+            phoneticFontPreview.previewFont(null)
         }
         clearHistoriesButton.addActionListener {
             states.clearHistories()
@@ -155,7 +158,11 @@ class SettingsPanel(
     }
 
     private fun JComponent.previewFont(primary: String?) {
-        font = if (primary.isNullOrBlank()) UI.defaultFont else JBUI.Fonts.create(primary, 14)
+        font = if (primary.isNullOrBlank()) {
+            UI.defaultFont
+        } else {
+            JBUI.Fonts.create(primary, UIUtil.getFontSize(UIUtil.FontSize.NORMAL).toInt())
+        }
     }
 
     private fun createRegexEditorField(): EditorTextField = EditorTextField(

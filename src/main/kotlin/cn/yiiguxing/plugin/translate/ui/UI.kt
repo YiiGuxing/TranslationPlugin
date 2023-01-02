@@ -24,11 +24,8 @@ object UI {
     // 使用`get() = ...`以保证获得实时`ScaledFont`
     val defaultFont: JBFont get() = JBFont.create(UIUtil.getLabelFont(UIUtil.FontSize.NORMAL))
 
-    @Suppress("unused")
-    fun primaryFont(size: Int)
-            : JBFont = getFont(Settings.takeIf { it.isOverrideFont }?.primaryFontFamily, size)
-
-    private fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrEmpty()) {
+    @JvmStatic
+    private fun getFont(fontFamily: String?, size: Int): JBFont = if (!fontFamily.isNullOrBlank()) {
         JBUI.Fonts.create(fontFamily, size)
     } else {
         defaultFont.deriveScaledFont(size.toFloat())
@@ -36,16 +33,9 @@ object UI {
 
     @JvmStatic
     fun getFonts(primaryFontSize: Int, phoneticFontSize: Int): FontPair {
-        var primaryFont: JBFont? = null
-        var phoneticFont: JBFont? = null
-        Settings.takeIf { it.isOverrideFont }?.let { settings ->
-            primaryFont = settings.primaryFontFamily?.let { JBUI.Fonts.create(it, primaryFontSize) }
-            phoneticFont = settings.phoneticFontFamily?.let { JBUI.Fonts.create(it, phoneticFontSize) }
-        }
-
         return FontPair(
-            primaryFont ?: defaultFont.deriveScaledFont(primaryFontSize.toFloat()),
-            phoneticFont ?: defaultFont.deriveScaledFont(phoneticFontSize.toFloat())
+            getFont(Settings.primaryFontFamily, primaryFontSize),
+            getFont(Settings.phoneticFontFamily, phoneticFontSize)
         )
     }
 

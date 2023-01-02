@@ -1,6 +1,12 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Fixed the problem of invalid font settings.
+- Other known bug fixes.
+- 修复了字体设置无效的问题
+- 其他已知问题修复
+
+## [3.4.0] (2022/11/30)
 - Added Microsoft translation engine. (Experimental)
 - Added DeepL translation engine.
 - Optimized documentation translation, added independent translation status for each documentation. (Experimental)
@@ -310,7 +316,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.5...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.5...v3.4.0
 [3.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.4...v3.3.5
 [3.3.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.3...v3.3.4
 [3.3.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.2...v3.3.3
