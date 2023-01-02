@@ -1,6 +1,10 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Fixed the problem of invalid font settings.
+- Other known bug fixes.
+- 修复了字体设置无效的问题
+- 其他已知问题修复
 
 ## [3.4.0] (2022/11/30)
 - Added Microsoft translation engine. (Experimental)
