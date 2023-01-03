@@ -95,7 +95,6 @@
 
     function plugin(hook, vm) {
         hook.init(function () {
-            vm.currentTitle = "TranslationPlugin ❤️ Yii.Guxing";
             vm.titles = {
                 "docs": {
                     "/": "文档",
@@ -123,6 +122,7 @@
                 },
             };
 
+            resetTitle(vm);
             initPlugin(vm);
         });
 
@@ -131,6 +131,10 @@
                 vm.config.topMargin = 0;
                 vm.config.hideSidebar = true;
                 vm.customConfig.compact = true;
+            }
+
+            if (/^\/((en|ja|ko)\/)?$/.test(vm.route.path)) {
+                gaPageView();
             }
 
             initNavBar(vm);
@@ -194,6 +198,12 @@
         return title + "TranslationPlugin ❤️ Yii.Guxing";
     }
 
+    function resetTitle(vm) {
+        var title = "TranslationPlugin ❤️ Yii.Guxing";
+        vm.currentTitle = title;
+        document.title = title;
+    }
+
     function initNavBar(vm) {
         initNavLinks(vm);
         initNavTranslations(vm);
@@ -211,6 +221,7 @@
                 window.location.href = "#" + getLanguagePath(vm) + this.getAttribute("data-path");
 
                 if (this.id === "nav-home") {
+                    resetTitle(vm);
                     setTimeout(function () {
                         document.scrollingElement.scrollTop = 0;
                     }, 0);
