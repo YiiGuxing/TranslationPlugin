@@ -7,7 +7,6 @@ html:lang(ko) span:not(:lang(ko)) {
 }
 
 body {
-    height: auto;
     min-height: 100%;
 }
 
