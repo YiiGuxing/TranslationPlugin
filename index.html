@@ -82,6 +82,7 @@
     function gaPageView() {
         gtag('event', 'page_view', {
             page_path: window.location.hash,
+            page_title: document.title
         });
     }
 </script>
@@ -94,6 +95,34 @@
 
     function plugin(hook, vm) {
         hook.init(function () {
+            vm.currentTitle = "TranslationPlugin ❤️ Yii.Guxing";
+            vm.titles = {
+                "docs": {
+                    "/": "文档",
+                    "/en/": "Documentation",
+                    "/ja/": "ドキュメント",
+                    "/ko/": "문서",
+                },
+                "updates": {
+                    "/": "更新",
+                    "/en/": "Updates",
+                    "/ja/": "更新",
+                    "/ko/": "업데이트",
+                },
+                "support": {
+                    "/": "支持与赞助",
+                    "/en/": "Support/Sponsor",
+                    "/ja/": "サポートとスポンサー",
+                    "/ko/": "지원 및 기부",
+                },
+                "faq": {
+                    "/": "FAQ",
+                    "/en/": "FAQ",
+                    "/ja/": "FAQ",
+                    "/ko/": "FAQ",
+                },
+            };
+
             initPlugin(vm);
         });
 
@@ -108,6 +137,12 @@
             updateSidebar(vm);
         });
 
+        hook.beforeEach(function () {
+            var title = getTitle(vm);
+            vm.currentTitle = title;
+            document.title = title;
+        });
+
         hook.afterEach(function (html, next) {
             var output = resolveImagePathIfNeed(vm, html);
             output = resolveHeading(output);
@@ -115,7 +150,7 @@
         });
 
         hook.doneEach(function () {
-            document.title = "TranslationPlugin ❤️ Yii.Guxing"
+            document.title = vm.currentTitle;
             updateLanguage(vm);
             updateNavBar(vm);
             updateSidebar(vm);
@@ -139,6 +174,24 @@
         vm.customConfig = {
             compact: false
         };
+    }
+
+    function getTitle(vm) {
+        var title = "";
+        var matchResults = /^(\/((en|ja|ko)\/)?)(docs|support|faq|(updates)(\/(v\d+\.\d+)?)?)$/.exec(vm.route.path);
+        if (matchResults) {
+            if (matchResults[5] && matchResults[7]) {
+                title = matchResults[7];
+            } else {
+                title = vm.titles[matchResults[5] || matchResults[4]][matchResults[1]];
+            }
+        }
+
+        if (title) {
+            title += " - ";
+        }
+
+        return title + "TranslationPlugin ❤️ Yii.Guxing";
     }
 
     function initNavBar(vm) {
