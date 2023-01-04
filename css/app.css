@@ -597,6 +597,15 @@ section.cover .badges > p {
     filter: grayscale(0%);
 }
 
+.sponsors.gold > p {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.sponsors.gold > p > a {
+    height: 130px;
+    padding: 15px 25px;
+}
+
 .wechat-alipay-donors {
     margin-top: 1.5rem;
     border: 1px solid #ccc;
@@ -673,7 +682,7 @@ section.cover .badges > p {
         width: 224px;
     }
 
-    body.close .content{
+    body.close .content {
         transform: translateX(240px);
     }
 

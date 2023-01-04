@@ -55,10 +55,14 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 
 ### スポンサー :id=current-sponsors
 
-<div class="sponsors">
+<div class="sponsors gold">
 
 [![New Relic CodeStream](../img/sponsor_new_relic_code_stream.svg ':class=active')](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
 [![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
+
+</div>
+<div class="sponsors">
+
 [![Targeted Web Traffic](../img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
 [![Atom Material Themes & Plugins](../img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
 [![Intellij Rainbow Brackets](../img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
