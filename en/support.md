@@ -65,6 +65,7 @@ Thank you to all our backers! ❤️
 [![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
 [![Targeted Web Traffic](../img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
 [![Atom Material Themes & Plugins](../img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
+[![Intellij Rainbow Brackets](../img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
 
 </div>
 
