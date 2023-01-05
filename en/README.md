@@ -113,7 +113,7 @@ _Editor inlay documentation rendered view:_
 
 ?> _Enable the "**Automatically translate documentation**" option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Other**</kbd> > <kbd>**Automatically translate documentation**</kbd>.
 
-!> *Note:* Editor inlay documentation do not support automatic translation.
+!> *Note:* Editor inlay documentation does not support automatic translation.
 
 #### 5. Switch translation engines :id=usage-switch-translation-engine
 
