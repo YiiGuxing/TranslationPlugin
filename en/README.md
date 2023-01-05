@@ -77,7 +77,9 @@ Select a text or hover the mouse over the text > <kbd>**Right-click**</kbd> > <k
 
 #### 3. Translate and replace :id=usage-translate-and-replace
 
-Translate the target text and replace it. If the target language is English, the output has several formats: `in camel case`, `with a word separator` (when the output contains multiple words) and `in the the original format`.
+Translate the target text and replace it.
+If the target language is English, the output has several formats: `in the camel case`,
+`with a word separator` (when the output contains multiple words) and `in the original format`.
 
 ?> *Instructions:* Select a text or hover the mouse over the text > <kbd>**Right-click**</kbd> > <kbd>**Translate and replace...**</kbd> (editor only, please use shortcuts for Input box, as detailed in [Actions](#translate-and-replace-action)).
 
