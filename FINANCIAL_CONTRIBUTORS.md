@@ -31,6 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| LiMingjun | | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
 | 马强@咔丘互娱 | | 100 CNY |

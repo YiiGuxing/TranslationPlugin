@@ -342,6 +342,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name** | **Website**                                                | **Amount** |
 |----------|------------------------------------------------------------|------------|
+| LiMingjun |                                                          | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 |                                                          | 100 CNY |
 | 马强@咔丘互娱 |                                                          | 100 CNY |
@@ -351,7 +352,6 @@ website. [[Become a sponsor][open-collective-contribute]]
 | Mritd    | [mritd.com](https://mritd.com)                             | 88.88 CNY  |
 | 三分醉      | [www.sanfenzui.com](http://www.sanfenzui.com)              | 88 CNY     |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt)         | 76.6 CNY   |
-| 丿初音      |                                                            | 70 CNY   |
 
 [More donors][file:financial-contributors]
 
