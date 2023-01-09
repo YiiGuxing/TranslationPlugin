@@ -90,6 +90,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 羽辰 | | 10 CNY |
 | SWmachine | | 10 CNY |
 | 。，！ | | 10 CNY |
 | 🍊 | | 10 CNY |
@@ -181,6 +182,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 🐳 | | 6.66 CNY |
+| 闻柏智 | | 6.66 CNY |
+| 李洋 | | 6.66 CNY |
 | 北 | | 6.66 CNY |
 | 哼哼哼 | | 6.66 CNY |
 | ~ _ ~ | | 6.66 CNY |
