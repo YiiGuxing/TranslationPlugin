@@ -393,6 +393,10 @@ body[data-page*="/updates/"] .markdown-section h2 {
     border: none;
 }
 
+body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
+    display: none;
+}
+
 .sidebar {
     padding-top: 85px;
     width: 240px;

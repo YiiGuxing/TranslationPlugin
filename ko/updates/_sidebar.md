@@ -12,3 +12,4 @@
 * [v2.6 (2019-12-05)](/ko/updates/v2.6.md)
 * [v2.5 (2019-10-20)](/ko/updates/v2.5.md)
 * [v2.4 (2019-09-16)](/ko/updates/v2.4.md)
+* [변경 로그](/ko/updates/changelog.md)

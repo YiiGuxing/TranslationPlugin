@@ -1,0 +1,1 @@
+[CHANGELOG](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/CHANGELOG.md ':include')

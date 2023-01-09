@@ -12,3 +12,4 @@
 * [v2.6 (2019-12-05)](/ja/updates/v2.6.md)
 * [v2.5 (2019-10-20)](/ja/updates/v2.5.md)
 * [v2.4 (2019-09-16)](/ja/updates/v2.4.md)
+* [更新ログ](/ja/updates/changelog.md)
