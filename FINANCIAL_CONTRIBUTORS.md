@@ -48,6 +48,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | LiCheng.忘语 | [licheng1013.github.io](https://licheng1013.github.io) | 66 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60 CNY |
+| Yadong | [github.com/yadonglives](https://github.com/yadonglives) | 50 CNY |
 | 波浪线 | | 50 CNY |
 | 昊天 | | 50 CNY |
 | BruceCheung | [github.com/bruuuces](https://github.com/bruuuces) | 50 CNY |
