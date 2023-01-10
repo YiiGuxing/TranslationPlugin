@@ -23,7 +23,11 @@
 
 ## 无法保存翻译引擎的认证密钥怎么办？ :id=faq-save-key
 
-可以尝试将密码保存方式改成 `In KeePass` 的方式 (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>)，原因与细节：
+可以尝试将密码保存方式改成 `In KeePass` 的方式 (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>)。
+
+![](img/ide_passwords.png ':class=round')
+
+原因与细节：
 - macOS，请另阅 [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
 - Linux，请另阅 [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)
 

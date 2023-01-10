@@ -17,7 +17,11 @@ If you don't see an answer to your question here, check our previously [reported
 
 ## What if I can't save the application key? :id=faq-save-key
 
-You can try changing the way passwords are saved to `In KeePass` (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>). For more details:
+You can try changing the way passwords are saved to `In KeePass` (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>). 
+
+![](../img/ide_passwords.png ':class=round')
+
+For more details:
 - For macOS, please refer to [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
 - For Linux, please refer to [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)
 

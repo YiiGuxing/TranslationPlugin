@@ -17,7 +17,11 @@ If you don't see an answer to your question here, check our previously [reported
 
 ## 앱 키를 저장할 수 없는 경우 어떻게 해야 하나요? :id=faq-save-key
 
-암호 저장 방법을 `In KeePass` 방법으로 변경해 보세요 (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>). 원인 및 세부 정보는 다음과 같습니다:
+암호 저장 방법을 `In KeePass` 방법으로 변경해 보세요 (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>).
+
+![](../img/ide_passwords.png ':class=round')
+
+원인 및 세부 정보는 다음과 같습니다:
 - macOS의 경우, [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)을 참조하세요.
 - Linux의 경우, [#115](https://github.com/YiiGuxing/TranslationPlugin/issues/115)를 참조하세요.
 
