@@ -369,14 +369,18 @@ h6:hover > a.anchor {
 .markdown-section p.warn {
     border-radius: 8px;
     background: rgba(66, 185, 131, .1);
-    border-left: solid #42b983 .3rem;
+    border-color: #42b983;
+    border-style: solid;
+    border-width: 0 .3rem;
 }
 
 .markdown-section p.tip {
     border-radius: 8px;
     background: rgba(255, 152, 0, 0.1);
-    border-left: solid #FF9800 .3rem;
     padding: 1rem;
+    border-color: #FF9800;
+    border-style: solid;
+    border-width: 0 .3rem;
 }
 
 .markdown-section p.tip::before {
