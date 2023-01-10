@@ -117,7 +117,7 @@ _Editor inlay documentation rendered view:_
 
 ステータスバーの翻訳エンジンステータスアイコンをクリックするか、ショートカットキーの <kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）を使用して、翻訳エンジンをすばやく切り替えることができます。
 
-![翻訳エンジン](../en/img/translation_engines.png ':size=247x259 :class=round')
+![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259 :class=round')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -205,13 +205,13 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![翻訳エンジン](../en/img/translation_engines.png ':size=247x259 :class=round')
+![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259 :class=round')
 
 #### 9. 今日の単語 :id=word-of-the-day-action
 
 [今日の単語] ダイアログを表示します。デフォルトのショートカットキー：（なし）
 
-![今日の単語](../en/img/word_of_the_day.png ':size=552x478 :class=round')
+![今日の単語](../ja/img/word_of_the_day.png ':size=552x478 :class=round')
 
 #### 10. その他 :id=other-actions
 

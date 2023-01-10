@@ -25,7 +25,7 @@
 
 文字化けは通常、フォントに対応する文字がないことが原因です。プラグインの設定ページでフォントを変更して文字化けの問題を解決できます（次の図を参照）。
 
-![](../en/img/settings_font.png ':class=round')
+![](../ja/img/settings_font.png ':class=round')
 
 ## ショートカットキーが使用できない場合はどうすればいいですか？ :id=faq-shortcuts
 
