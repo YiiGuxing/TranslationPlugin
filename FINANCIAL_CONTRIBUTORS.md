@@ -31,6 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
+| 丿初音 | | 120 CNY |
 | LiMingjun | | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
@@ -41,7 +42,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
-| 丿初音 | | 70 CNY |
 | 薛定谔的猫 | | 66.66 CNY |
 | 弦曲 | | 66.6 CNY |
 | 贺小五 | | 66.6 CNY |
@@ -184,6 +184,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 凯旋者 | | 6.66 CNY |
 | 叫不醒装睡的人 | | 6.66 CNY |
 | 🐳 | | 6.66 CNY |
 | 闻柏智 | | 6.66 CNY |
