@@ -91,6 +91,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 物质-运动 | | 10 CNY |
+| 王俊涛 | | 10 CNY |
 | Joker | | 10 CNY |
 | Wish | | 10 CNY |
 | 连接已断开... | | 10 CNY |
@@ -186,7 +188,15 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
-| 梧桐 | | 6.66 CNY |
+| Zhangshui | | 6.66 CNY |
+| 布利啾啾布利多 | | 6.66 CNY |
+| .orz | | 6.66 CNY |
+| たかさま | | 6.66 CNY |
+| 纸短情长。 | | 6.66 CNY |
+| 困顿 | | 6.66 CNY |
+| 夏泽业 | | 6.66 CNY |
+| Traveling Light | | 6.66 CNY |
+| 究梧桐 | | 6.66 CNY |
 | 紫川 | | 6.66 CNY |
 | Steve | | 6.66 CNY |
 | 凯旋者 | | 6.66 CNY |
