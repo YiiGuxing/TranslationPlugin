@@ -92,6 +92,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Zyc | | 15 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 一夕之言 | | 10 CNY |
 | 尘抟 | | 10 CNY |
 | 剑平 | | 10 CNY |
 | 物质-运动 | | 10 CNY |
