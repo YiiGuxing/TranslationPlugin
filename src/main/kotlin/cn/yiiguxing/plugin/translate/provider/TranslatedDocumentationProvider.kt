@@ -26,7 +26,7 @@ import java.util.concurrent.TimeoutException
  *
  * in the extension declaration.
  */
-class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
+class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
         if (!isTranslateDocumentation(element)) {
@@ -132,8 +132,8 @@ class TranslatingDocumentationProvider : DocumentationProviderEx(), ExternalDocu
          * ```
          * 它的作用是：
          * 如果在调用真正的文档提供者生成文档时发生错误的话，屏蔽错误并跳过文档翻译。错误将会在轮到真正的文档提供者
-         * 自己提供文档时的重新发生，此时的错误就和[TranslatingDocumentationProvider]无关了，
-         * 否则原本是属于真正文档提供者的错误将会被IDE误认为是[TranslatingDocumentationProvider]的错误，
+         * 自己提供文档时的重新发生，此时的错误就和[TranslatedDocumentationProvider]无关了，
+         * 否则原本是属于真正文档提供者的错误将会被IDE误认为是[TranslatedDocumentationProvider]的错误，
          * 避免插件自己背黑锅，例如
          * [#1203](https://github.com/YiiGuxing/TranslationPlugin/issues/1203)
          *
