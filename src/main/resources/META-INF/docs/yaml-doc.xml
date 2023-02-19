@@ -1,7 +1,7 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
-                id="Translation.TranslatedDocumentationProvider"
+                id="Translation.TranslatedDocumentationProvider.YAML"
                 order="first"
                 language="yaml"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
