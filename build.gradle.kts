@@ -67,7 +67,7 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     testImplementation("junit:junit:4.13.2")
 
-    implementation("org.jsoup:jsoup:1.15.3")
+    implementation("org.jsoup:jsoup:1.15.4")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
