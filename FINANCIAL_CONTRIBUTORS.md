@@ -63,6 +63,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
+| 包子 | | 26.66 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
@@ -80,7 +81,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 🎱 | | 20 CNY |
 | Imagin | | 20 CNY |
 | 凯 | | 20 CNY |
-| 包子 | | 20 CNY |
 | 耳朵先生 | [fetter.cn](http://fetter.cn) | 20 CNY |
 | Lubeij | | 20 CNY |
 | 封尘 | | 20 CNY |
@@ -91,8 +91,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
+| 王宏杰 | | 13.32 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 本善之初 | | 10 CNY |
 | 一夕之言 | | 10 CNY |
 | 尘抟 | | 10 CNY |
 | 剑平 | | 10 CNY |
@@ -193,6 +195,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 。 | | 10 CNY |
+| , | | 10 CNY |
+| 野性浪痞 | | 6.66 CNY |
+| Joey | | 6.66 CNY |
+| 雁归来 | | 6.66 CNY |
 | 黄小涛 | | 6.66 CNY |
 | 支子伟 | | 6.66 CNY |
 | 林恒煜 | | 6.66 CNY |
