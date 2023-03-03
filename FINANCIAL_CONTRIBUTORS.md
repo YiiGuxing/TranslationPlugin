@@ -92,6 +92,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
 | 王宏杰 | | 13.32 CNY |
+| Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
 | 本善之初 | | 10 CNY |
@@ -197,6 +198,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| Bothic | | 6.66 CNY |
+| Jerry Lu | | 6.66 CNY |
+| 猫的谔定靴啊🐾 | | 6.66 CNY |
 | 野性浪痞 | | 6.66 CNY |
 | Joey | | 6.66 CNY |
 | 雁归来 | | 6.66 CNY |
