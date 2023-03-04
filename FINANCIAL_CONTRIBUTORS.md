@@ -31,7 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| 丿初音 | | 120 CNY |
+| 丿初音 | | 170 CNY |
 | LiMingjun | | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
@@ -198,6 +198,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| 梧桐 | | 6.66 CNY |
 | Bothic | | 6.66 CNY |
 | Jerry Lu | | 6.66 CNY |
 | 猫的谔定靴啊🐾 | | 6.66 CNY |
