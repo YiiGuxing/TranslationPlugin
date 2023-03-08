@@ -198,6 +198,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| 浮筠 | | 6.66 CNY |
 | Complex | | 6.66 CNY |
 | 大鱼海棠 | | 6.66 CNY |
 | Jeremy | | 6.66 CNY |
