@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
@@ -137,6 +138,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             return false
         }
 
+        val modalityState = ModalityState.current()
         fun translate(targetLang: Lang, reTranslate: Boolean = false) {
             if (checkProcessCanceledAndEditorDisposed()) {
                 return
@@ -176,7 +178,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                         project, message("translate.and.replace.notification.title"), null, throwable
                     )
                 }
-            })
+            }, modalityState)
         }
 
         if (Settings.selectTargetLanguageBeforeReplacement) {
