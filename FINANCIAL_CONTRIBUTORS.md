@@ -198,6 +198,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| Try | | 6.66 CNY |
+| 敬亭 | | 6.66 CNY |
+| YuO | | 6.66 CNY |
+| 都说了我的名字实在太长你记不住的 | | 6.66 CNY |
 | 浮筠 | | 6.66 CNY |
 | Complex | | 6.66 CNY |
 | 大鱼海棠 | | 6.66 CNY |
