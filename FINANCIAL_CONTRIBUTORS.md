@@ -95,6 +95,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 小框框 | | 10 CNY |
 | 本善之初 | | 10 CNY |
 | 一夕之言 | | 10 CNY |
 | 尘抟 | | 10 CNY |
@@ -198,6 +199,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| 纪真 | | 6.66 CNY |
+| 小暴龙 | | 6.66 CNY |
+| 王镇涛 | | 6.66 CNY |
+| Bug | | 6.66 CNY |
+| 花生-sniper | | 6.66 CNY |
 | Try | | 6.66 CNY |
 | 敬亭 | | 6.66 CNY |
 | YuO | | 6.66 CNY |
