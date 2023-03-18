@@ -76,7 +76,6 @@ repositories {
 }
 
 dependencies {
-    implementation(fileTree("libs") { include("*.jar") })
     testImplementation("junit:junit:4.13.2")
 
     implementation("org.jsoup:jsoup:1.15.4")
