@@ -41,7 +41,7 @@ abstract class AutoSelectAction(
             if (checkSelection && selectionModel.hasSelection()) {
                 hasValidSelection()
             } else {
-                canSelect()
+                canPreSelectFromCurrentCaret(wordPartCondition)
             }
         } ?: false
         e.presentation.isEnabledAndVisible = active && onUpdate(e)
@@ -58,19 +58,6 @@ abstract class AutoSelectAction(
 
     private fun Editor.hasValidSelection(): Boolean {
         return selectionModel.selectedText?.filterIgnore()?.any(wordPartCondition) ?: false
-    }
-
-    private fun Editor.canSelect(): Boolean {
-        val offset = caretModel.offset
-        val textLength = document.textLength
-        if (textLength == 0) {
-            return false
-        }
-
-        return TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
-            .let { document.getText(it) }
-            .filterIgnore()
-            .any(wordPartCondition)
     }
 
     private fun AnActionEvent.getSelectionRange() = editor?.run {

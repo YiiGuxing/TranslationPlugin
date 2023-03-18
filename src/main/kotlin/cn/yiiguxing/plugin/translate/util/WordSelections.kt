@@ -91,3 +91,19 @@ fun Editor.getSelectionFromCurrentCaret(
         else -> ranges.maxWithOrNull(TextRangeComparator)
     }
 }
+
+/**
+ * 在选择之前的预判
+ */
+fun Editor.canPreSelectFromCurrentCaret(isWordPartCondition: CharCondition = DEFAULT_CONDITION): Boolean {
+    val offset = caretModel.offset
+    val textLength = document.textLength
+    if (textLength == 0) {
+        return false
+    }
+
+    val preSelection = TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
+        .let { document.getText(it) }
+        .filterIgnore()
+    return preSelection.any(isWordPartCondition)
+}

@@ -19,6 +19,14 @@ private val REGEX_SINGLE_LINE = Regex("\\r\\n|\\r|\\n")
 private val REGEX_COMPRESS_WHITESPACE = Regex("\\s{2,}")
 private const val REPLACEMENT_SPLIT_GROUP = "$1 $2"
 
+
+fun String.toRegexOrNull(vararg option: RegexOption): Regex? = try {
+    toRegex(option.toSet())
+} catch (e: Throwable) {
+    null
+}
+
+
 /**
  * 单词拆分
  */
@@ -32,9 +40,7 @@ fun String.splitWords(): String {
 
 fun String.filterIgnore(): String {
     return try {
-        Settings.ignoreRegex
-            .takeIf { it.isNotEmpty() }
-            ?.toRegex(RegexOption.MULTILINE)
+        Settings.ignoreRegexPattern
             ?.let { replace(it, "") }
             ?: this
     } catch (e: Exception) {

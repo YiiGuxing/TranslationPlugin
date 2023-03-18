@@ -76,7 +76,15 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 翻译时需要忽略的内容
      */
-    var ignoreRegex: String = "[\\*/#\$]"
+    var ignoreRegex: String by Delegates.observable("[\\*/#\$]") { _, oldValue: String, newValue: String ->
+        if (oldValue != newValue) {
+            ignoreRegexPattern = newValue.toIgnoreRegex()
+        }
+    }
+
+    @Transient
+    var ignoreRegexPattern: Regex? = ignoreRegex.toIgnoreRegex()
+        private set
 
     /**
      * 分隔符
@@ -187,6 +195,8 @@ class Settings : PersistentStateComponent<Settings> {
         private const val DATA_VERSION_KEY = "${TranslationPlugin.PLUGIN_ID}.settings.data.version"
 
         private val LOG = Logger.getInstance(Settings::class.java)
+
+        private fun String.toIgnoreRegex(): Regex? = takeIf { it.isNotEmpty() }?.toRegexOrNull(RegexOption.MULTILINE)
 
         //region Data Migration - Will be removed on v4.0
         private fun Settings.migrate() {
