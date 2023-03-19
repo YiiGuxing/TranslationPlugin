@@ -24,6 +24,8 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.SystemInfoRt
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.ui.BalloonImpl
 import com.intellij.ui.BalloonLayoutData
@@ -146,7 +148,12 @@ class UpdateManager : BaseStartupActivity() {
             balloon.setShowPointer(false)
             Disposer.register(balloon) { expire() }
 
-            val target = window.component?.let { RelativePoint(it, Point(it.width, 30)) }
+            val offsetY = when {
+                SystemInfoRt.isMac -> 30
+                Registry.`is`("ide.experimental.ui", true) -> 175
+                else -> 165
+            }
+            val target = window.component?.let { RelativePoint(it, Point(it.width, offsetY)) }
             balloon.show(target, Balloon.Position.atLeft)
             true
         } catch (e: Throwable) {
