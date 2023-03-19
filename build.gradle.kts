@@ -51,10 +51,6 @@ val fullPluginVersion = pluginVersion.zip(buildMetadataPart) { pluginVersion, bu
 
 val versionRegex =
     Regex("""^((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
-println("===================")
-println(versionRegex)
-println(fullPluginVersion)
-println("===================")
 if (!versionRegex.matches(fullPluginVersion.get())) {
     throw GradleException("Plugin version '${fullPluginVersion.get()}' does not match the pattern '$versionRegex'")
 }
