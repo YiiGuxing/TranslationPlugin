@@ -60,7 +60,13 @@ class TranslateService private constructor() : Disposable {
         return CacheService.getMemoryCache(text, srcLang, targetLang, translator.id)
     }
 
-    fun translate(text: String, srcLang: Lang, targetLang: Lang, listener: TranslateListener) {
+    fun translate(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        listener: TranslateListener,
+        modalityState: ModalityState = ModalityState.defaultModalityState()
+    ) {
         checkThread()
         CacheService.getMemoryCache(text, srcLang, targetLang, translator.id)?.let {
             listener.onSuccess(it)
@@ -74,7 +80,6 @@ class TranslateService private constructor() : Disposable {
         }
         listeners[key] = mutableSetOf(listener)
 
-        val modalityState = ModalityState.current()
         executeOnPooledThread {
             try {
                 with(translator) {

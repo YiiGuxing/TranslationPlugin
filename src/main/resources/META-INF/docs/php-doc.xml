@@ -7,7 +7,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
-                language="PHP" order="first"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+                id="Translation.TranslatedDocumentationProvider.PHP"
+                order="first"
+                language="PHP"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

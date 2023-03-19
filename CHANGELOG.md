@@ -1,6 +1,12 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Fixed the problem where translating documentation would display HTML tag text as actual HTML elements.
+- Other known bug fixes.
+- 修复了翻译文档会将 HTML 标记文本显示为实际 HTML 元素的问题
+- 其他已知问题修复
+
+## [3.4.1] (2023/01/02)
 - Fixed the problem of invalid font settings.
 - Other known bug fixes.
 - 修复了字体设置无效的问题
@@ -316,7 +322,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.1...HEAD
+[3.4.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...v3.4.1
 [3.4.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.5...v3.4.0
 [3.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.4...v3.3.5
 [3.3.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.3...v3.3.4

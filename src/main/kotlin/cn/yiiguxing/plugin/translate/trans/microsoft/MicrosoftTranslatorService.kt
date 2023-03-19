@@ -55,19 +55,14 @@ internal class MicrosoftTranslatorService {
 
     @Synchronized
     private fun getTokenPromise(): Promise<String> {
-        synchronized(this) {
-            tokenPromise?.let {
-                return@getTokenPromise it
-            }
+        tokenPromise?.let {
+            return it
         }
 
         val promise = runAsync { Http.get(AUTH_URL) { userAgent() } }
             .onError { LOG.w("Failed to get access token", it) }
             .onSuccess(::updateAccessToken)
-
-        synchronized(this) {
-            tokenPromise = promise
-        }
+        tokenPromise = promise
 
         return promise
     }

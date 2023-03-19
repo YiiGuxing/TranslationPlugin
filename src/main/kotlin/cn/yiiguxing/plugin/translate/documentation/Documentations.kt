@@ -165,10 +165,10 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
 
     val newBody = Element("body")
     definition?.let { newBody.appendChild(it) }
-    Element("div")
-        .addClass("content")
-        .append(translation.replace("\n", "<br/>"))
-        .let { newBody.appendChild(it) }
+
+    val contentEl = Element("div").addClass("content")
+    translation.lines().forEach { contentEl.appendElement("p").appendText(it) }
+    newBody.appendChild(contentEl)
 
     body.replaceWith(newBody)
 

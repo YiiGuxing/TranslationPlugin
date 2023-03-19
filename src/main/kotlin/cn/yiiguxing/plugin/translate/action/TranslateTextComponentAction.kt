@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.canPreSelectFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.hint.HintManagerImpl
@@ -46,10 +47,7 @@ class TranslateTextComponentAction :
         public override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =
             when {
                 editor.selectionModel.hasSelection() -> !editor.selectionModel.selectedText.isNullOrBlank()
-                !editor.isViewer -> {
-                    val textRange = editor.getSelectionFromCurrentCaret(settings.autoSelectionMode)
-                    textRange?.let { editor.document.getText(it).isNotBlank() } ?: false
-                }
+                !editor.isViewer -> editor.canPreSelectFromCurrentCaret()
                 else -> false
             }
     }

@@ -23,8 +23,6 @@ import javax.swing.Icon
  */
 class TranslationWidget(private val project: Project) : StatusBarWidget, StatusBarWidget.IconPresentation {
 
-    private var statusBar: StatusBar? = null
-
     override fun ID(): String = ID
 
     override fun getTooltipText(): String = TranslateService.translator.name
@@ -34,8 +32,7 @@ class TranslationWidget(private val project: Project) : StatusBarWidget, StatusB
     override fun getPresentation(): StatusBarWidget.WidgetPresentation = this
 
     override fun install(statusBar: StatusBar) {
-        this.statusBar = statusBar
-        project.messageBus.connect(this).subscribeToSettingsChangeEvents()
+        project.messageBus.connect(this).subscribeToSettingsChangeEvents(statusBar)
     }
 
     override fun getClickConsumer(): Consumer<MouseEvent> = Consumer {
@@ -50,19 +47,17 @@ class TranslationWidget(private val project: Project) : StatusBarWidget, StatusB
         return SwitchTranslationEngineAction.createTranslationEnginesPopup(context)
     }
 
-    override fun dispose() {
-        statusBar = null
-    }
-
-    private fun MessageBusConnection.subscribeToSettingsChangeEvents() {
-        subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-            override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
-                statusBar?.updateWidget(ID())
-            }
-        })
-    }
+    override fun dispose() {}
 
     companion object {
         const val ID = "TranslationWidget"
+
+        private fun MessageBusConnection.subscribeToSettingsChangeEvents(statusBar: StatusBar) {
+            subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+                override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
+                    statusBar.updateWidget(ID)
+                }
+            })
+        }
     }
 }

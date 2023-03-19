@@ -1,0 +1,9 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                id="Translation.TranslatedDocumentationProvider.JSON"
+                order="first"
+                language="JSON"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+    </extensions>
+</idea-plugin>

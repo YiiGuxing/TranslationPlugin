@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
@@ -14,7 +14,7 @@ import com.intellij.openapi.util.TextRange
 abstract class AutoSelectAction(
     private val checkSelection: Boolean,
     private val wordPartCondition: CharCondition = DEFAULT_CONDITION
-) : UpdateInBackgroundCompatAction(), ImportantTranslationAction {
+) : AnAction(), ImportantTranslationAction {
 
     protected abstract val selectionMode: SelectionMode
 
@@ -41,7 +41,7 @@ abstract class AutoSelectAction(
             if (checkSelection && selectionModel.hasSelection()) {
                 hasValidSelection()
             } else {
-                canSelect()
+                canPreSelectFromCurrentCaret(wordPartCondition)
             }
         } ?: false
         e.presentation.isEnabledAndVisible = active && onUpdate(e)
@@ -58,19 +58,6 @@ abstract class AutoSelectAction(
 
     private fun Editor.hasValidSelection(): Boolean {
         return selectionModel.selectedText?.filterIgnore()?.any(wordPartCondition) ?: false
-    }
-
-    private fun Editor.canSelect(): Boolean {
-        val offset = caretModel.offset
-        val textLength = document.textLength
-        if (textLength == 0) {
-            return false
-        }
-
-        return TextRange(maxOf(0, offset - 1), minOf(textLength, offset + 1))
-            .let { document.getText(it) }
-            .filterIgnore()
-            .any(wordPartCondition)
     }
 
     private fun AnActionEvent.getSelectionRange() = editor?.run {
