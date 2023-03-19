@@ -2,6 +2,8 @@
 
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.intellij.compat.DocumentationBrowserCompat
+import cn.yiiguxing.intellij.compat.get
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
@@ -11,8 +13,6 @@ import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.documentation.QuickDocUtil
 import com.intellij.codeInsight.hint.HintManagerImpl
-import com.intellij.lang.documentation.ide.DocumentationBrowserFacade
-import com.intellij.lang.documentation.ide.actions.DOCUMENTATION_BROWSER
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
@@ -22,7 +22,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
-import com.intellij.psi.PsiElement
 import com.intellij.util.concurrency.AppExecutorUtil
 import icons.TranslationIcons
 import javax.swing.Icon
@@ -43,11 +42,7 @@ open class ToggleQuickDocTranslationAction :
     private val isDocumentationV2: Boolean
         get() = Registry.`is`("documentation.v2")
 
-    private val DocumentationBrowserFacade.targetElement: PsiElement?
-        @Suppress("OverrideOnly")
-        get() = targetPointer.dereference()?.navigatable as? PsiElement
-
-    private fun documentationBrowser(dc: DataContext): DocumentationBrowserFacade? = dc.getData(DOCUMENTATION_BROWSER)
+    private fun documentationBrowser(dc: DataContext): DocumentationBrowserCompat? = DocumentationBrowserCompat.get(dc)
 
     final override fun update(e: AnActionEvent) {
         super.update(e)
