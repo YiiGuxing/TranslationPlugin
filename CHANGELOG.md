@@ -1,8 +1,10 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Compatible with IDEA 2023.1+.
 - Fixed the problem where translating documentation would display HTML tag text as actual HTML elements.
 - Other known bug fixes.
+- 兼容 IDEA 2023.1+ 版本
 - 修复了翻译文档会将 HTML 标记文本显示为实际 HTML 元素的问题
 - 其他已知问题修复
 
