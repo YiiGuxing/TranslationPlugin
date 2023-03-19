@@ -72,6 +72,7 @@ repositories {
     maven(url = "https://maven.aliyun.com/repository/public")
     maven(url = "https://maven-central.storage-download.googleapis.com/repos/central/data/")
     maven(url = "https://www.jetbrains.com/intellij-repository/releases")
+    maven(url = "https://jitpack.io")
     mavenCentral()
 }
 
@@ -80,6 +81,7 @@ dependencies {
 
     implementation("org.jsoup:jsoup:1.15.4")
     implementation("commons-dbutils:commons-dbutils:1.7")
+    implementation("com.github.YiiGuxing:intellij-idea-compat:0.0.1")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
     }
