@@ -42,8 +42,8 @@ val buildMetadataPart = properties("pluginBuildMetadata")
     .map { "+$it" }
     .orElse("")
 val pluginVersion = properties("pluginMajorVersion")
-    .zip(preReleaseVersion.map { "-$it" }) { majorVersion, preReleaseVersion ->
-        majorVersion + (preReleaseVersion ?: "")
+    .zip(preReleaseVersion.map { "-$it" }.orElse("")) { majorVersion, preReleaseVersion ->
+        majorVersion + preReleaseVersion
     }
 val fullPluginVersion = pluginVersion.zip(buildMetadataPart) { pluginVersion, buildMetadata ->
     pluginVersion + buildMetadata
