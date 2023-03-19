@@ -199,6 +199,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| 安全小白一枚 | | 6.66 CNY |
 | 纪真 | | 6.66 CNY |
 | 小暴龙 | | 6.66 CNY |
 | 王镇涛 | | 6.66 CNY |
