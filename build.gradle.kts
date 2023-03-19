@@ -133,7 +133,7 @@ tasks {
         systemProperty("translation.plugin.log.stdout", true)
 
         // Enable hotswap, requires JBR 17+ or JBR 11 with DCEVM, and run in debug mode.
-        jvmArgs= listOf("-XX:+AllowEnhancedClassRedefinition")
+        jvmArgs = listOf("-XX:+AllowEnhancedClassRedefinition")
 
         // Path to IDE distribution that will be used to run the IDE with the plugin.
         // ideDir.set(File("path to IDE-dependency"))
