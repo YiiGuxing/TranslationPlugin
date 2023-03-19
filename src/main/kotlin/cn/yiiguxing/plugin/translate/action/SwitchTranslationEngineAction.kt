@@ -14,7 +14,7 @@ import javax.swing.JComponent
 /**
  * Switch translator action
  */
-class SwitchTranslationEngineAction : ComboBoxAction(), DumbAware {
+class SwitchTranslationEngineAction : ComboBoxAction(), DumbAware, PopupAction {
 
     init {
         setPopupTitle(message("translation.engines.popup.title"))

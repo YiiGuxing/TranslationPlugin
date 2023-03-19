@@ -1,0 +1,9 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                id="Translation.TranslatedDocumentationProvider.HTTPRequest"
+                order="first"
+                language="HTTP Request"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+    </extensions>
+</idea-plugin>

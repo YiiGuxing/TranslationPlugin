@@ -7,7 +7,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
-                language="go" order="first"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatingDocumentationProvider"/>
+                id="Translation.TranslatedDocumentationProvider.Go"
+                order="first"
+                language="go"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

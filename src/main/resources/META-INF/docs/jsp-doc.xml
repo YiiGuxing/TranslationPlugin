@@ -1,0 +1,14 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                id="Translation.TranslatedDocumentationProvider.JSP"
+                order="first"
+                language="JSP"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+        <lang.documentationProvider
+                id="Translation.TranslatedDocumentationProvider.JSPX"
+                order="first"
+                language="JSPX"
+                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+    </extensions>
+</idea-plugin>
