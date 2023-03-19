@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.util.createCaretRangeMarker
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.PopupAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.editor.markup.*
@@ -20,7 +21,10 @@ import com.intellij.ui.JBColor
  *
  * @param checkSelection 指定是否检查手动选择的文本。`true` - 如果有手动选择文本, 则忽略`autoSelectionMode`, `false` - 将忽略手动选择的文本。
  */
-open class TranslateAction(checkSelection: Boolean = false) : AutoSelectAction(checkSelection), DumbAware {
+open class TranslateAction(checkSelection: Boolean = false) :
+    AutoSelectAction(checkSelection),
+    PopupAction,
+    DumbAware {
 
     override val selectionMode
         get() = SelectionMode.INCLUSIVE

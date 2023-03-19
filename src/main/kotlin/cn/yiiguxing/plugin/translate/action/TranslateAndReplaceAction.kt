@@ -16,10 +16,7 @@ import com.intellij.codeInsight.lookup.LookupEvent
 import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.lang.Language
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.LangDataKeys
-import com.intellij.openapi.actionSystem.PlatformDataKeys
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.command.WriteCommandAction
@@ -51,7 +48,7 @@ import javax.swing.text.JTextComponent
 /**
  * 翻译并替换
  */
-class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITION) {
+class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITION), PopupAction {
 
     init {
         isEnabledInModalContext = true
