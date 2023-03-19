@@ -1,6 +1,10 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Fixed the problem where translating documentation would display HTML tag text as actual HTML elements.
+- Other known bug fixes.
+- 修复了翻译文档会将 HTML 标记文本显示为实际 HTML 元素的问题
+- 其他已知问题修复
 
 ## [3.4.1] (2023/01/02)
 - Fixed the problem of invalid font settings.
