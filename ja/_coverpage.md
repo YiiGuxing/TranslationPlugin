@@ -4,7 +4,7 @@
 
 > IntelliJ ベースの IDE/Android Studio 翻訳プラグインは
 
-複数の翻訳エンジンを搭載、多言語翻訳、ドキュメントの翻訳、音声読み上げ、...
+![複数の翻訳エンジンを搭載、多言語翻訳、ドキュメントの翻訳、音声読み上げ、...](img/typing_description.svg ':size=200x30')
 
 <div class="badges">
 

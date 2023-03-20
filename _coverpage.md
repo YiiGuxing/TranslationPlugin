@@ -4,7 +4,7 @@
 
 > 一个基于 IntelliJ IDEs/Android Studio 的翻译插件
 
-多翻译引擎，多语言互译，语音朗读，文档翻译，...
+![多翻译引擎，多语言互译，语音朗读，文档翻译，...](img/typing_description.svg ':size=150x30')
 
 <div class="badges">
 

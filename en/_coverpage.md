@@ -4,7 +4,7 @@
 
 > An IntelliJ-based IDEs/Android Studio Translation Plugin.
 
-Multiple translation engines, Multilingual translation, Document translation, Text-to-speech services, ...
+![Multiple translation engines, Multilingual translation, Document translation, Text-to-speech services, ...](img/typing_description.svg ':size=200x30')
 
 <div class="badges">
 

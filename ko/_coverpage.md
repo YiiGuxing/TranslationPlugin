@@ -4,7 +4,7 @@
 
 > IntelliJ 기반 IDE/Android Studio 번역 플러그인.
 
-다중 번역 엔진, 다국어 번역, 문서 번역, 텍스트 음성 변환 서비스, ...
+![다중 번역 엔진, 다국어 번역, 문서 번역, 텍스트 음성 변환 서비스, ...](img/typing_description.svg ':size=200x30')
 
 <div class="badges">
 
