@@ -94,7 +94,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 王宏杰 | | 13.32 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
+| 元芳 | | 10 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Nothing | | 10 CNY |
 | 小框框 | | 10 CNY |
 | 本善之初 | | 10 CNY |
 | 一夕之言 | | 10 CNY |
@@ -199,6 +201,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| 池上残荷净，帘外晚风生 | | 6.66 CNY |
+| 廖捷昕 | | 6.66 CNY |
+| 1998刚 | | 6.66 CNY |
+| 仰望星空 | | 6.66 CNY |
 | 安全小白一枚 | | 6.66 CNY |
 | 纪真 | | 6.66 CNY |
 | 小暴龙 | | 6.66 CNY |
