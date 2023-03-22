@@ -16,7 +16,6 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.Condition
-import org.jetbrains.kotlin.idea.slicer.KotlinSliceUsageCellRenderer.action
 import java.util.concurrent.Future
 
 
@@ -76,7 +75,7 @@ inline fun executeOnPooledThread(crossinline action: () -> Unit)
         : Future<*> = Application.executeOnPooledThread { action() }
 
 /**
- * Asynchronously execute the [action] on the AWT event dispatching thread.
+ * Asynchronously execute the [runnable] on the AWT event dispatching thread.
  */
 fun invokeLaterIfNeeded(
     state: ModalityState = ModalityState.defaultModalityState(),
