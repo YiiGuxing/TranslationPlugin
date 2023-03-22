@@ -201,6 +201,12 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| BaldHead | [gitee.com/baldheads](https://gitee.com/baldheads) | 6.66 CNY |
+| _LA5Uwuu | | 6.66 CNY |
+| 路漫漫其修远兮 | | 6.66 CNY |
+| 湯雙瑜 | | 6.66 CNY |
+| 独行者 | | 6.66 CNY |
+| Singlymaker | | 6.66 CNY |
 | 池上残荷净，帘外晚风生 | | 6.66 CNY |
 | 廖捷昕 | | 6.66 CNY |
 | 1998刚 | | 6.66 CNY |
