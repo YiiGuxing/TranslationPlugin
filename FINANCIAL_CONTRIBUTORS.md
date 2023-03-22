@@ -96,6 +96,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Devwei095 | | 10.24 CNY |
 | 元芳 | | 10 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Word麻鸭 | | 10 CNY |
 | Nothing | | 10 CNY |
 | 小框框 | | 10 CNY |
 | 本善之初 | | 10 CNY |
@@ -201,8 +202,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| 玫瑰送给琳达 | | 6.66 CNY |
+| Lyslys | | 6.66 CNY |
+| 咕噜咕噜 | | 6.66 CNY |
 | BaldHead | [gitee.com/baldheads](https://gitee.com/baldheads) | 6.66 CNY |
-| _LA5Uwuu | | 6.66 CNY |
+| \_LA5Uwuu | | 6.66 CNY |
 | 路漫漫其修远兮 | | 6.66 CNY |
 | 湯雙瑜 | | 6.66 CNY |
 | 独行者 | | 6.66 CNY |
