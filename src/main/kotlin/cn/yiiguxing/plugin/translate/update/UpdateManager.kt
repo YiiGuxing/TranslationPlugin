@@ -31,6 +31,7 @@ import com.intellij.ui.BalloonLayoutData
 import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.jcef.JBCefApp
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
@@ -147,14 +148,33 @@ class UpdateManager : BaseStartupActivity() {
             balloon.setShowPointer(false)
             Disposer.register(balloon) { expire() }
 
-            val offsetY = if (SystemInfoRt.isMac) 30 else 135
-            val target = window.component?.let { RelativePoint(it, Point(it.width, offsetY)) }
-            balloon.show(target, Balloon.Position.atLeft)
-            true
+            balloon.showInIdeFrame(window)
         } catch (e: Throwable) {
             LOG.error(e)
             false
         }
+    }
+
+    private fun BalloonImpl.showInIdeFrame(window: IdeFrame): Boolean {
+        val component = window.component ?: return false
+        val target = if (SystemInfoRt.isMac) {
+            RelativePoint(component, Point(component.width, 0))
+        } else {
+            val layeredPane = component.rootPane?.layeredPane
+            val titleBar = layeredPane?.components?.find {
+                it.x == 0 && it.y == 0 && it.width == layeredPane.width && it.height > 0
+            }
+
+            val insetTop = shadowBorderInsets.top
+            val contentHalfHeight = content.preferredSize.height / 2
+            val titleBarHeight = titleBar?.height ?: defaultTitleBarHeight
+            val offsetY = titleBarHeight + insetTop + contentHalfHeight
+            val relativeComponent = titleBar ?: component
+            RelativePoint(relativeComponent, Point(relativeComponent.width, offsetY))
+        }
+
+        show(target, Balloon.Position.atLeft)
+        return true
     }
 
     private class SupportAction : DumbAwareAction(message("support.notification"), null, TranslationIcons.Support) {
@@ -189,6 +209,8 @@ class UpdateManager : BaseStartupActivity() {
 
         private val LOG = Logger.getInstance(UpdateManager::class.java)
 
+        private val defaultTitleBarHeight: Int
+            get() = JBUIScale.scale(30)
 
         private fun getBorderColor(): String {
             val color = UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR
