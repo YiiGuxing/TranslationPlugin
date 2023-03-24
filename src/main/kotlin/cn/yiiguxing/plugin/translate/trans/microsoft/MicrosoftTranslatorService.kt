@@ -38,7 +38,7 @@ internal class MicrosoftTranslatorService {
         LOG.d("Update access token: ********, Expiration time: ${Date(expirationTime)}")
         synchronized(this) {
             accessToken = token
-            expireAt = expirationTime - 60000
+            expireAt = expirationTime - PRE_EXPIRATION
             tokenPromise = null
         }
     }
@@ -111,7 +111,9 @@ internal class MicrosoftTranslatorService {
 
     companion object {
 
-        private const val TIMEOUT = 10 * 1000 // 10 seconds
+        private const val TIMEOUT = 60 * 1000 // 1 minute
+        private const val PRE_EXPIRATION = 2 * 60 * 1000 // 2 minutes
+        private const val DEFAULT_EXPIRATION = 10 * 60 * 1000 // 10 minutes
 
         private const val AUTH_URL = "https://edge.microsoft.com/translate/auth"
 
@@ -145,10 +147,14 @@ internal class MicrosoftTranslatorService {
         private data class JwtPayload(@SerializedName("exp") val expirationTime: Long)
 
         private fun getExpirationTimeFromToken(token: String): Long {
-            val payloadChunk = token.split('.')[1]
-            val decoder = Base64.getUrlDecoder()
-            val payload = String(decoder.decode(payloadChunk))
-            return GSON.fromJson(payload, JwtPayload::class.java).expirationTime * 1000
+            return try {
+                val payloadChunk = token.split('.')[1]
+                val decoder = Base64.getUrlDecoder()
+                val payload = String(decoder.decode(payloadChunk))
+                GSON.fromJson(payload, JwtPayload::class.java).expirationTime * 1000
+            } catch (e: Throwable) {
+                System.currentTimeMillis() + DEFAULT_EXPIRATION - PRE_EXPIRATION / 2
+            }
         }
     }
 }
