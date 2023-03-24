@@ -33,6 +33,10 @@ internal class MicrosoftTranslatorService {
 
     private var tokenPromise: Promise<String>? = null
 
+    private val validAccessToken: String?
+        @Synchronized
+        get() = accessToken?.takeIf { System.currentTimeMillis() < expireAt }
+
     private fun updateAccessToken(token: String) {
         val expirationTime = getExpirationTimeFromToken(token)
         LOG.d("Update access token: ********, Expiration time: ${Date(expirationTime)}")
@@ -40,16 +44,6 @@ internal class MicrosoftTranslatorService {
             accessToken = token
             expireAt = expirationTime - PRE_EXPIRATION
             tokenPromise = null
-        }
-    }
-
-    @Synchronized
-    private fun getValidAccessToken(): String? {
-        val token = accessToken
-        return if (token != null && System.currentTimeMillis() < expireAt) {
-            token
-        } else {
-            null
         }
     }
 
@@ -72,7 +66,7 @@ internal class MicrosoftTranslatorService {
      */
     @RequiresBackgroundThread
     fun getAccessToken(): String {
-        getValidAccessToken()?.let { token ->
+        validAccessToken?.let { token ->
             return token
         }
 
