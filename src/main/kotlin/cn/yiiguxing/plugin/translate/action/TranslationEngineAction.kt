@@ -1,17 +1,18 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.project.DumbAwareAction
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.util.Condition
 
 /**
  * Translation Engine Action
  */
 class TranslationEngineAction(private val translator: TranslationEngine) :
-    DumbAwareAction(translator.translatorName, null, translator.icon) {
+    UpdateInBackgroundCompatAction(translator.translatorName, null, translator.icon), DumbAware {
 
     fun isAvailable(): Boolean = translator.isConfigured() || Settings.translator == translator
 
