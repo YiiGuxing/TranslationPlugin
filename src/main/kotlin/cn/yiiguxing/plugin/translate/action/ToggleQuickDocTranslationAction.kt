@@ -14,6 +14,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
@@ -27,7 +28,8 @@ open class ToggleQuickDocTranslationAction :
         { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }
     ),
     HintManagerImpl.ActionToIgnore,
-    ImportantTranslationAction {
+    ImportantTranslationAction,
+    DumbAware {
 
     override fun update(e: AnActionEvent) {
         super.update(e)
