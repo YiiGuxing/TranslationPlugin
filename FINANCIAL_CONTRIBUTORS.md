@@ -92,8 +92,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
 | 王宏杰 | | 13.32 CNY |
+| 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
+| 番茄炒蛋 | | 10 CNY |
+| (⊙o⊙) | | 10 CNY |
 | 元芳 | | 10 CNY |
 | Ncayu618 | | 10.24 CNY |
 | Word麻鸭 | | 10 CNY |
@@ -202,6 +205,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| Peapig23 | | 6.66 CNY |
+| 闲潭梦落花 | | 6.66 CNY |
+| FreedomClannad | | 6.66 CNY |
+| 为你千千万万遍 | | 6.66 CNY |
 | 玫瑰送给琳达 | | 6.66 CNY |
 | Lyslys | | 6.66 CNY |
 | 咕噜咕噜 | | 6.66 CNY |
