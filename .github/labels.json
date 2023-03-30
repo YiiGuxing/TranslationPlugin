@@ -78,7 +78,7 @@
         },
         {
           "type": "descriptionMatches",
-          "pattern": "TranslatingDocumentationProvider\\$Companion\\.nullIfError\\(TranslatingDocumentationProvider\\.kt:\\d+\\)"
+          "pattern": "(?<class>TranslatedDocumentationProvider|TranslatingDocumentationProvider)\\$Companion\\.nullIfError\\(\\k<class>\\.kt:\\d+\\)"
         },
         {
           "type": "descriptionMatches",
