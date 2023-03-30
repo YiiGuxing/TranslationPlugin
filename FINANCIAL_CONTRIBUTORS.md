@@ -67,6 +67,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 地下室的猫 | | 20 CNY |
 | 许世豪 | | 20 CNY |
 | Tom | | 20 CNY |
 | 李富强 | | 20 CNY |
@@ -205,6 +206,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| Doe | | 6.66 CNY |
+| 谢云鹏 | | 6.66 CNY |
+| 狂爱柚子茶 | | 6.66 CNY |
+| LakeShen | | 6.66 CNY |
+| 黄强 | | 6.66 CNY |
 | Peapig23 | | 6.66 CNY |
 | 闲潭梦落花 | | 6.66 CNY |
 | FreedomClannad | | 6.66 CNY |
