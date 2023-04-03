@@ -1,9 +1,11 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.util.LruCache
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
@@ -32,8 +34,8 @@ internal class DocTranslationService : Disposable {
         } == now
         if (updated) {
             ReadAction.nonBlocking {
-                translationStates.removeIf { key, _ -> key.element == null }
-                inlayDocTranslations.keys.removeIf { it.element == null }
+                translationStates.removeIf { key, _ -> key.elementOrNull == null }
+                inlayDocTranslations.keys.removeIf { it.elementOrNull == null }
             }.submit(AppExecutorUtil.getAppExecutorService())
         }
     }
@@ -51,8 +53,18 @@ internal class DocTranslationService : Disposable {
 
         private val EMPTY = TranslationResult()
 
+        private val LOG = logger<DocTranslationService>()
+
         private val <T : PsiElement> T.myPointer: SmartPsiElementPointer<T>
             get() = SmartPointerManager.createPointer(this)
+
+        private val <T : PsiElement> SmartPsiElementPointer<T>.elementOrNull: T?
+            get() = try {
+                element
+            } catch (e: Throwable) {
+                LOG.w("Cannot get element from this smart pointer", e)
+                null
+            }
 
         private fun service(project: Project) = project.getService(DocTranslationService::class.java)
 
