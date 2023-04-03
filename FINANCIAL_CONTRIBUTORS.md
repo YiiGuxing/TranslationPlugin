@@ -62,6 +62,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
+| IKUN#1337 | | 35 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | 包子 | | 26.66 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
@@ -206,6 +207,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尼古拉斯 | | 6.67 CNY |
 | 。 | | 10 CNY |
 | , | | 10 CNY |
+| CDra | | 6.66 CNY |
+| LingMoE. | | 6.66 CNY |
+| 李昴志 | | 6.66 CNY |
+| msj | | 6.66 CNY |
 | 橘子树🏸🍊 | | 6.66 CNY |
 | Doe | | 6.66 CNY |
 | 谢云鹏 | | 6.66 CNY |
