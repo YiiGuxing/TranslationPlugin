@@ -7,7 +7,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
@@ -75,7 +75,7 @@ enum class TranslationEngine(
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
-            DEEPL -> DeeplCredentials.instance.isAuthKeySet
+            DEEPL -> DeeplCredential.isAuthKeySet
         }
     }
 

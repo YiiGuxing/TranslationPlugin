@@ -17,7 +17,9 @@ import org.jetbrains.concurrency.Promise
 import org.jetbrains.concurrency.runAsync
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 
@@ -53,9 +55,16 @@ internal class MicrosoftTranslatorService {
             return it
         }
 
-        val promise = runAsync { Http.get(AUTH_URL) { userAgent() } }
+        val countDownLatch = CountDownLatch(1)
+        val promise = runAsync {
+            // Make sure to continue execution only after the error handling program has been successfully registered,
+            // otherwise the default error handling program may cause fatal errors in the IDE.
+            countDownLatch.await(1, TimeUnit.SECONDS)
+            Http.get(AUTH_URL) { userAgent() }
+        }
             .onError { LOG.w("Failed to get access token", it) }
             .onSuccess(::updateAccessToken)
+        countDownLatch.countDown()
         tokenPromise = promise
 
         return promise
