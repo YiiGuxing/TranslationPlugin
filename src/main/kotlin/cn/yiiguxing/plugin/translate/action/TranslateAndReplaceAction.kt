@@ -16,7 +16,7 @@ import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.WriteAction
-import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -339,24 +339,24 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.replaceText(range: TextRange, text: String) {
-            val modalityState = ModalityState.current()
-            WriteAction.run<Throwable> {
-                document.startGuardedBlockChecking()
-                try {
-                    val offset = WriteCommandAction.runWriteCommandAction<Int>(project) {
-                        var offset = 0
-                        invokeAndWait(modalityState) {
-                            offset = document.replaceString(range, text)
+            CommandProcessor.getInstance().executeCommand(
+                project,
+                {
+                    WriteAction.run<Throwable> {
+                        document.startGuardedBlockChecking()
+                        try {
+                            val offset = document.replaceString(range, text)
+                            selectionModel.removeSelection()
+                            caretModel.moveToOffset(offset)
+                            scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+                        } finally {
+                            document.stopGuardedBlockChecking()
                         }
-                        offset
                     }
-                    selectionModel.removeSelection()
-                    caretModel.moveToOffset(offset)
-                    scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
-                } finally {
-                    document.stopGuardedBlockChecking()
-                }
-            }
+                },
+                null,
+                null
+            )
         }
 
         fun Document.replaceString(range: TextRange, text: String): Int {
