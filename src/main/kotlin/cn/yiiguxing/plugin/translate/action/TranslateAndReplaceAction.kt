@@ -339,11 +339,16 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.replaceText(range: TextRange, text: String) {
+            val modalityState = ModalityState.current()
             WriteAction.run<Throwable> {
                 document.startGuardedBlockChecking()
                 try {
                     val offset = WriteCommandAction.runWriteCommandAction<Int>(project) {
-                        document.replaceString(range, text)
+                        var offset = 0
+                        invokeAndWait(modalityState) {
+                            offset = document.replaceString(range, text)
+                        }
+                        offset
                     }
                     selectionModel.removeSelection()
                     caretModel.moveToOffset(offset)
