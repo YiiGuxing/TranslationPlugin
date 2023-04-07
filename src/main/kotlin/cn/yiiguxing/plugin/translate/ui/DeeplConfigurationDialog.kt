@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplService
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.diagnostic.Logger
@@ -56,7 +56,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         init()
 
         updateUsageInfo(null)
-        authKey = DeeplCredentials.instance.authKey
+        authKey = DeeplCredential.authKey
         initListeners()
     }
 
@@ -101,7 +101,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         foreground = JBUI.CurrentTheme.Label.disabledForeground()
         font = font.deriveFont((font.size - 1).toFloat())
         editorKit = UIUtil.getHTMLEditorKit()
-        border = JBUI.Borders.empty(2, 0, 0, 0)
+        border = JBUI.Borders.emptyTop(2)
         text = message("deepl.config.dialog.hint")
         preferredSize = JBUI.size(300, -1)
         minimumSize = JBUI.size(300, 40)
@@ -220,11 +220,11 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
     override fun getHelpId(): String = HelpTopic.DEEPL.id
 
     override fun isOK(): Boolean {
-        return DeeplCredentials.instance.isAuthKeySet
+        return DeeplCredential.isAuthKeySet
     }
 
     override fun doOKAction() {
-        DeeplCredentials.instance.authKey = authKey
+        DeeplCredential.authKey = authKey
         super.doOKAction()
     }
 
