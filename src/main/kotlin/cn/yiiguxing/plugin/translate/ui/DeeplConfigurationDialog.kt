@@ -94,6 +94,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         }
     }
 
+    @Suppress("DuplicatedCode")
     private fun createHintPane(): JComponent = JEditorPane().apply {
         isEditable = false
         isFocusable = false
