@@ -11,6 +11,9 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAIConfigurationDialog
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
@@ -37,7 +40,8 @@ enum class TranslationEngine(
     YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao, 5000),
     BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
     ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
-    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000);
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
+    OPEN_AI("translate.openai", message("translation.engine.openai.name"), TranslationIcons.Engines.OpenAI, 3000);
 
     var primaryLanguage: Lang
         get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
@@ -58,6 +62,7 @@ enum class TranslationEngine(
                 BAIDU -> BaiduTranslator
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
+                OPEN_AI -> OpenAITranslator
             }
         }
 
@@ -76,6 +81,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
+            OPEN_AI -> OpenAICredential.isApiKeySet
         }
     }
 
@@ -115,6 +121,7 @@ enum class TranslationEngine(
             ).showAndGet()
 
             DEEPL -> DeeplConfigurationDialog().showAndGet()
+            OPEN_AI -> OpenAIConfigurationDialog().showAndGet()
 
             else -> true
         }
