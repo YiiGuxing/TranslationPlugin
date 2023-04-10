@@ -3,6 +3,8 @@ package cn.yiiguxing.plugin.translate.trans.openai
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.ui.selected
+import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.BrowserHyperlinkListener
@@ -20,6 +22,8 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 
 class OpenAIConfigurationDialog : DialogWrapper(false) {
+
+    private val settings = service<OpenAISettings>()
 
     private val apiKeyField: JBPasswordField = JBPasswordField()
 
@@ -44,9 +48,8 @@ class OpenAIConfigurationDialog : DialogWrapper(false) {
         setResizable(false)
         init()
 
-        // TODO Get api model from settings
-
         apiKey = OpenAICredential.apiKey
+        apiModelComboBox.selectedItem = settings.model
     }
 
 
@@ -97,9 +100,8 @@ class OpenAIConfigurationDialog : DialogWrapper(false) {
     }
 
     override fun doOKAction() {
-        // TODO Save api model to settings
-
         OpenAICredential.apiKey = apiKey
+        settings.model = apiModelComboBox.selected ?: OpenAIModel.GPT_3_5_TURBO
         super.doOKAction()
     }
 }
