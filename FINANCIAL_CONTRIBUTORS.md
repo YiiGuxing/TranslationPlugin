@@ -91,6 +91,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
 | Joey | | 16.66 CNY |
+| Joker | | 16.66 CNY |
 | 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
@@ -112,7 +113,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 剑平 | | 10 CNY |
 | 物质-运动 | | 10 CNY |
 | 王俊涛 | | 10 CNY |
-| Joker | | 10 CNY |
 | Wish | | 10 CNY |
 | 连接已断开... | | 10 CNY |
 | 羽辰 | | 10 CNY |
@@ -406,7 +406,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 徐志超-Klaus | | 6.66 CNY |
 | Kino | | 6.66 CNY |
 | Kamier.top | [kamier.top](http://kamier.top) | 6.66 CNY |
-| Joker | | 6.66 CNY |
 | Ohio | | 6.66 CNY |
 | Valhalla_s | | 6.66 CNY |
 | 木头人小站 | [blog.itmtr.cn](https://blog.itmtr.cn) | 6.66 CNY |
