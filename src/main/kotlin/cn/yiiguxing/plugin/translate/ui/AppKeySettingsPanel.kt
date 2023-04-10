@@ -39,7 +39,7 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
         add(JLabel(message("settings.label.appPrivateKey")))
         add(appKeyField, fillX().gapLeft(gap).wrap())
 
-        getApiKeyLink.border = JBUI.Borders.empty(10, 0, 0, 0)
+        getApiKeyLink.border = JBUI.Borders.emptyTop(10)
         add(getApiKeyLink, wrap().span(2))
     }
 

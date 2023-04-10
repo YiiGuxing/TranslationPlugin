@@ -65,7 +65,7 @@ interface WordDetailsUI : Disposable {
             root.border = JBUI.Borders.empty(16)
 
             wordView.apply {
-                border = JBUI.Borders.empty(0, 0, 16, 0)
+                border = JBUI.Borders.emptyBottom(16)
                 font = primaryFont.biggerOn(5f).asBold()
             }
             root.add(wordView, UI.fillX().wrap())

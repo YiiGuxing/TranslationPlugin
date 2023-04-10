@@ -64,7 +64,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : DialogW
 
         val (primaryFont, phoneticFont) = UI.getFonts(15, 14)
         wordView.apply {
-            border = JBUI.Borders.empty(0, 0, 16, 0)
+            border = JBUI.Borders.emptyBottom(16)
             font = primaryFont.biggerOn(5f).asBold()
         }
         add(wordView, UI.fillX().wrap())
