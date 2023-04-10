@@ -90,6 +90,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Stan Chen | [github.com/stan-chen](https://github.com/stan-chen) | 20 CNY |
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
+| Joey | | 16.66 CNY |
 | 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
@@ -97,6 +98,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
+| 不想做韭菜的小爱 | | 10 CNY |
 | 番茄炒蛋 | | 10 CNY |
 | (⊙o⊙) | | 10 CNY |
 | 元芳 | | 10 CNY |
@@ -205,8 +207,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
-| 。 | | 10 CNY |
-| , | | 10 CNY |
+| 太空喜之郎 | | 6.66 CNY |
+| 樱灵空 | | 6.66 CNY |
+| 池塘边的青蛙 | | 6.66 CNY |
+| 影子 | | 6.66 CNY |
 | CDra | | 6.66 CNY |
 | LingMoE. | | 6.66 CNY |
 | 李昴志 | | 6.66 CNY |
@@ -252,8 +256,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Bothic | | 6.66 CNY |
 | Jerry Lu | | 6.66 CNY |
 | 猫的谔定靴啊🐾 | | 6.66 CNY |
+| 。 | | 6.66 CNY |
+| , | | 6.66 CNY |
 | 野性浪痞 | | 6.66 CNY |
-| Joey | | 6.66 CNY |
 | 雁归来 | | 6.66 CNY |
 | 黄小涛 | | 6.66 CNY |
 | 支子伟 | | 6.66 CNY |
