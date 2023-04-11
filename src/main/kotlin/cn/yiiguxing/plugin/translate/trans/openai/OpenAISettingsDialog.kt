@@ -44,7 +44,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
 
     init {
-        title = message("openai.config.dialog.title")
+        title = message("openai.settings.dialog.title")
         setResizable(false)
         init()
 
@@ -68,9 +68,9 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private fun createConfigPanel(): JPanel {
         return JPanel(UI.migLayout("${JBUIScale.scale(8)}")).apply {
-            add(JLabel(message("openai.config.dialog.label.model")))
+            add(JLabel(message("openai.settings.dialog.label.model")))
             add(apiModelComboBox, UI.wrap())
-            add(JLabel(message("openai.config.dialog.label.api.key")))
+            add(JLabel(message("openai.settings.dialog.label.api.key")))
             add(apiKeyField, UI.fillX().wrap())
             add(createHintPane(), UI.fillX().cell(1, 2).wrap())
         }
@@ -85,7 +85,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         font = font.deriveFont((font.size - 1).toFloat())
         editorKit = UIUtil.getHTMLEditorKit()
         border = JBUI.Borders.emptyTop(2)
-        text = message("openai.config.dialog.hint")
+        text = message("openai.settings.dialog.hint")
         preferredSize = JBUI.size(300, -1)
         minimumSize = JBUI.size(300, 40)
         maximumSize = JBUI.size(300, Int.MAX_VALUE)
