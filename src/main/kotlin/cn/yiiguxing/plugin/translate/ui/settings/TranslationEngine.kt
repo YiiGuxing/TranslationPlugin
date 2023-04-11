@@ -11,8 +11,8 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAIConfigurationDialog
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
@@ -121,7 +121,7 @@ enum class TranslationEngine(
             ).showAndGet()
 
             DEEPL -> DeeplConfigurationDialog().showAndGet()
-            OPEN_AI -> OpenAIConfigurationDialog().showAndGet()
+            OPEN_AI -> OpenAISettingsDialog().showAndGet()
 
             else -> true
         }

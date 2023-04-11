@@ -21,7 +21,7 @@ import javax.swing.JEditorPane
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-class OpenAIConfigurationDialog : DialogWrapper(false) {
+class OpenAISettingsDialog : DialogWrapper(false) {
 
     private val settings = service<OpenAISettings>()
 
