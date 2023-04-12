@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class ChatCompletionRequest(
     /**
-     * ID of the model to use.
+     * The model to use.
      */
     @SerializedName("model") val model: OpenAIModel,
 
@@ -29,7 +29,7 @@ fun chatCompletionRequest(block: ChatCompletionRequestBuilder.() -> Unit): ChatC
  */
 class ChatCompletionRequestBuilder {
     /**
-     * ID of the model to use.
+     * The model to use.
      */
     var model: OpenAIModel = OpenAIModel.GPT_3_5_TURBO
 
