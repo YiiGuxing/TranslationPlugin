@@ -2,68 +2,44 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftError
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
+import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.Http.sendJson
 import cn.yiiguxing.plugin.translate.util.d
-import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.util.zip.GZIPInputStream
 
 internal object MicrosoftHttp {
 
-    private const val JSON_MIME_TYPE = "application/json"
-
-    private val GSON: Gson = Gson()
     private val LOG: Logger = logger<MicrosoftHttp>()
 
     fun post(url: String, data: Any, init: RequestBuilder.() -> Unit): String {
-        return HttpRequests.post(url, JSON_MIME_TYPE)
-            .accept(JSON_MIME_TYPE)
+        val response = HttpRequests.post(url, Http.MIME_TYPE_JSON)
+            .accept(Http.MIME_TYPE_JSON)
             .apply(init)
-            .throwStatusCodeException(false)
-            .connect {
-                it.write(GSON.toJson(data))
-                checkResponseCode(it.connection as HttpURLConnection)
-                it.readString()
-            }
+            .sendJson(data)
+        return when (response) {
+            is Http.Response.Success -> response.body
+            is Http.Response.Error -> throwStatusCodeException(url, response)
+        }
     }
 
-    private fun checkResponseCode(connection: HttpURLConnection) {
-        val responseCode = connection.responseCode
-        if (responseCode < 400) {
-            return
-        }
-
-        val statusLine = "$responseCode ${connection.responseMessage}"
-        val errorText = getErrorText(connection)
-        LOG.d("Request: ${connection.requestMethod} ${connection.url} : Error $statusLine body:\n$errorText")
+    private fun throwStatusCodeException(url: String, response: Http.Response.Error): Nothing {
+        val statusLine = "${response.code} ${response.message}"
+        val errorText = response.body
+        LOG.d("Request: $url : Error $statusLine body:\n$errorText")
 
         val jsonError = errorText?.toJsonError()
-        jsonError ?: LOG.d("Request: ${connection.requestMethod} ${connection.url} : Unable to parse JSON error")
+        jsonError ?: LOG.d("Request: $url : Unable to parse JSON error")
 
-        throw if (jsonError != null) {
-            MicrosoftStatusCodeException(
-                "$statusLine - ${jsonError.presentableError}",
-                jsonError.error,
-                responseCode
-            )
-        } else {
-            MicrosoftStatusCodeException("$statusLine - $errorText", responseCode)
-        }
-    }
-
-    private fun getErrorText(connection: HttpURLConnection): String? {
-        val errorStream = connection.errorStream ?: return null
-        val stream = if (connection.contentEncoding == "gzip") GZIPInputStream(errorStream) else errorStream
-        return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
+        val message = "$statusLine - ${jsonError?.presentableError ?: errorText}"
+        throw MicrosoftStatusCodeException(message, jsonError?.error, response.code)
     }
 
     private fun String.toJsonError(): MicrosoftError? = try {
-        GSON.fromJson(this, MicrosoftError::class.java)
+        Http.defaultGson.fromJson(this, MicrosoftError::class.java)
     } catch (jse: JsonParseException) {
         null
     }
