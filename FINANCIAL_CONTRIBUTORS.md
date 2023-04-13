@@ -31,7 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| 丿初音 | | 170 CNY |
+| 丿初音 | | 220 CNY |
 | LiMingjun | | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
@@ -207,6 +207,12 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 摇曳 | | 6.66 CNY |
+| EvanHe | | 6.66 CNY |
+| HONGT | | 6.66 CNY |
+| 苏伊士& | | 6.66 CNY |
+| So far away | | 6.66 CNY |
+| Cinker | | 6.66 CNY |
 | 太空喜之郎 | | 6.66 CNY |
 | 樱灵空 | | 6.66 CNY |
 | 池塘边的青蛙 | | 6.66 CNY |
