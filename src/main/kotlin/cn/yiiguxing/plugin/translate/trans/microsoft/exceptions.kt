@@ -11,7 +11,7 @@ class MicrosoftAuthenticationException(
     cause: Throwable? = null
 ) : IOException(message, cause)
 
-class MicrosoftStatusCodeException(
+class MicrosoftStatusException(
     message: String,
     statusCode: Int,
     url: String,

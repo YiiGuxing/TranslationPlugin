@@ -35,7 +35,7 @@ internal object MicrosoftHttp {
         jsonError ?: LOG.d("Request: $url : Unable to parse JSON error")
 
         val message = "$statusLine - ${jsonError?.presentableError ?: errorText}"
-        throw MicrosoftStatusCodeException(message, response.code, url, jsonError?.error)
+        throw MicrosoftStatusException(message, response.code, url, jsonError?.error)
     }
 
     private fun String.toJsonError(): MicrosoftError? = try {
