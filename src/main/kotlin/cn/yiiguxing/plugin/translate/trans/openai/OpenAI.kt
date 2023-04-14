@@ -2,18 +2,21 @@ package cn.yiiguxing.plugin.translate.trans.openai
 
 import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatCompletion
 import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatCompletionRequest
+import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
+import com.intellij.util.io.RequestBuilder
 
-class OpenAI(
-    private val apiKey: String,
-    private val model: OpenAIModel = OpenAIModel.GPT_3_5_TURBO
-) {
+object OpenAI {
 
-    companion object {
-        private const val API_URL = "https://api.openai.com/v1/chat/completions"
+    private const val API_URL = "https://api.openai.com/v1/chat/completions"
+
+    private fun RequestBuilder.auth() {
+        val apiKey = OpenAICredential.apiKey
+        tuner { it.setRequestProperty("Authorization", "Bearer $apiKey") }
     }
 
+    @RequiresBackgroundThread
     fun chatCompletion(request: ChatCompletionRequest): ChatCompletion {
-        TODO("Not yet implemented")
+        return OpenAIHttp.post<ChatCompletion>(API_URL, request) { auth() }
     }
 
 }

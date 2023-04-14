@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans.openai.chat
 
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAIModel
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -10,7 +9,7 @@ data class ChatCompletionRequest(
     /**
      * The model to use.
      */
-    @SerializedName("model") val model: OpenAIModel,
+    @SerializedName("model") val model: String,
 
     /**
      * The messages to generate chat completions for.
@@ -31,7 +30,7 @@ class ChatCompletionRequestBuilder {
     /**
      * The model to use.
      */
-    var model: OpenAIModel = OpenAIModel.GPT_3_5_TURBO
+    var model: String? = null
 
     /**
      * The messages to generate chat completions for.
@@ -49,7 +48,7 @@ class ChatCompletionRequestBuilder {
      * Builder of [ChatCompletionRequest] instances.
      */
     fun build(): ChatCompletionRequest = ChatCompletionRequest(
-        model = model,
+        model = requireNotNull(model) { "model is required" },
         messages = requireNotNull(messages) { "messages is required" },
     )
 }
