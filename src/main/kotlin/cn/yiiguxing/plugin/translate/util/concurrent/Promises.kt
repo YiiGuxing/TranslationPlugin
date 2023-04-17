@@ -1,7 +1,9 @@
 @file:Suppress("unused")
 
-package cn.yiiguxing.plugin.translate.util
+package cn.yiiguxing.plugin.translate.util.concurrent
 
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.invokeAndWait
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
