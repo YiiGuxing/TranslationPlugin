@@ -37,26 +37,52 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        val translation = translate(text, srcLang, targetLang, false)
+        return Translation(text, translation, srcLang, targetLang)
+    }
+
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document = checkError {
+        val body = documentation.body()
+        val content = body.html()
+        if (content.isBlank()) {
+            return documentation
+        }
+
+        checkContentLength(content, contentLengthLimit)
+        val translation = translate(content, srcLang, targetLang, true)
+
+        body.html(translation)
+
+        return documentation
+    }
+
+    private fun translate(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        isFofDocumentation: Boolean
+    ): String {
         val model = openAIModel
         val cacheService = service<CacheService>()
         val cacheKey = getCacheKey(model, text, srcLang, targetLang)
         val cache = cacheService.getDiskCache(cacheKey)
-        val translation = if (cache.isNullOrEmpty()) {
-            val request = getChatCompletionRequest(model, text, srcLang, targetLang)
-            val chatCompletion = OpenAI.chatCompletion(request)
-            chatCompletion.choices.first().message!!.content.trim('"').also {
-                cacheService.putDiskCache(cacheKey, it)
-            }
-        } else {
-            cache
+        if (!cache.isNullOrEmpty()) {
+            return cache
         }
 
-        return Translation(text, translation, srcLang, targetLang)
-    }
+        val request = getChatCompletionRequest(model, text, srcLang, targetLang, isFofDocumentation)
+        val chatCompletion = OpenAI.chatCompletion(request)
+        var result = chatCompletion.choices.first().message!!.content
+        if (!isFofDocumentation && result.length > 1 && result.first() == '"' && result.last() == '"') {
+            result = result.substring(1, result.lastIndex)
+        }
+        cacheService.putDiskCache(cacheKey, result)
 
-    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
-        // TODO Call OpenAI API for translation.
-        return documentation
+        return result
     }
 
     private fun getChatCompletionRequest(
@@ -68,12 +94,14 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
     ) =
         chatCompletionRequest {
             model = openAIModel.value
-
-            // TODO 配置文档翻译
             messages {
                 message {
                     role = ChatRole.SYSTEM
-                    content = "You are a translation engine that can only translate text and cannot interpret it."
+                    content = "You are a translation engine that can " + if (isFofDocumentation) {
+                        "translate HTML document."
+                    } else {
+                        "only translate text and cannot interpret it."
+                    }
                 }
                 message {
                     role = ChatRole.USER
@@ -82,7 +110,7 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
                 }
                 message {
                     role = ChatRole.USER
-                    content = '"' + text + '"'
+                    content = if (isFofDocumentation) text else """"$text""""
                 }
             }
         }
