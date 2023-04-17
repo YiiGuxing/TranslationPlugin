@@ -14,6 +14,31 @@ import java.util.function.Consumer
 
 
 /**
+ * Usage example:
+ * ```
+ * asyncLatch { latch ->
+ *   runAsync {
+ *     // Make sure to continue execution only
+ *     // after the error handler has been successfully registered,
+ *     // otherwise the default error handler may cause fatal errors in the IDE.
+ *     latch.await()
+ *     // ...
+ *   }.onError { e ->
+ *     // ...
+ *   }
+ * }
+ * ```
+ */
+inline fun <T> asyncLatch(block: (Latch) -> Promise<T>): Promise<T> {
+    val latch = AsyncLatch()
+    return try {
+        block(latch)
+    } finally {
+        latch.done()
+    }
+}
+
+/**
  * Has no effect if the [Promise] is not a [CancellablePromise].
  */
 fun <T> Promise<T>.expireWith(parentDisposable: Disposable): Promise<T> {
