@@ -2,13 +2,16 @@ package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressManager
+import org.jetbrains.concurrency.Promise
 import org.jetbrains.concurrency.isPending
 import org.jetbrains.concurrency.runAsync
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class TranslateDocumentationTask(
@@ -17,21 +20,27 @@ class TranslateDocumentationTask(
     val translator: Translator = TranslateService.translator
 ) {
 
-    //execute on a different thread outside read action
-    private val promise = runAsync {
-        translator.getTranslatedDocumentation(text, language)
-    }.onError { e ->
-        invokeLater(ModalityState.NON_MODAL) { DocNotifications.showError(e, null) }
-    }
+    // Execute on a different thread outside read action
+    private val promise = asyncTranslate()
 
     val isProcessed: Boolean get() = !promise.isPending
 
     val isSucceeded: Boolean get() = promise.isSucceeded
 
+    private fun asyncTranslate(): Promise<String> {
+        return asyncLatch { latch ->
+            runAsync {
+                latch.await(TIME_TO_BLOCK_IN_MILLIS.toLong(), TimeUnit.MILLISECONDS)
+                translator.getTranslatedDocumentation(text, language)
+            }.onError { e ->
+                invokeLater(ModalityState.NON_MODAL) { DocNotifications.showError(e, null) }
+            }
+        }
+    }
+
     fun onSuccess(callback: (String) -> Unit) {
         promise.onSuccess(callback)
     }
-
 
     fun nonBlockingGet(): String? {
         var tries = DEFAULT_TIMEOUT_IN_MILLIS / TIME_TO_BLOCK_IN_MILLIS

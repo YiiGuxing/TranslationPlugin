@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.userAgent
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.components.Service
@@ -17,7 +18,6 @@ import org.jetbrains.concurrency.Promise
 import org.jetbrains.concurrency.runAsync
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -55,16 +55,15 @@ internal class MicrosoftTranslatorService {
             return it
         }
 
-        val countDownLatch = CountDownLatch(1)
-        val promise = runAsync {
-            // Make sure to continue execution only after the error handling program has been successfully registered,
-            // otherwise the default error handling program may cause fatal errors in the IDE.
-            countDownLatch.await(1, TimeUnit.SECONDS)
-            Http.get(AUTH_URL) { userAgent() }
+        val promise = asyncLatch { latch ->
+            runAsync {
+                latch.await(100, TimeUnit.MILLISECONDS)
+                Http.get(AUTH_URL) { userAgent() }
+            }
+                .onError { LOG.w("Failed to get access token", it) }
+                .onSuccess(::updateAccessToken)
         }
-            .onError { LOG.w("Failed to get access token", it) }
-            .onSuccess(::updateAccessToken)
-        countDownLatch.countDown()
+
         tokenPromise = promise
 
         return promise

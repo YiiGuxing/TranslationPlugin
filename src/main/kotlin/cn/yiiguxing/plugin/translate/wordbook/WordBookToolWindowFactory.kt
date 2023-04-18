@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.NotificationAction
 import com.intellij.openapi.application.ModalityState

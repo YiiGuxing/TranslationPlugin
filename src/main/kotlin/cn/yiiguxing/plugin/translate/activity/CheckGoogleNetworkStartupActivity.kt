@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.google.TKK
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.successOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
 import org.jetbrains.concurrency.runAsync

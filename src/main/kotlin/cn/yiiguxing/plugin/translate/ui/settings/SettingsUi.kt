@@ -150,7 +150,7 @@ abstract class SettingsUi {
 
     protected val supportLinkLabel: LinkLabel<*> =
         LinkLabel<Any>(message("support.or.donate"), TranslationIcons.Support).apply {
-            border = JBUI.Borders.empty(20, 0, 0, 0)
+            border = JBUI.Borders.emptyTop(20)
         }
 
     protected fun doLayout() {

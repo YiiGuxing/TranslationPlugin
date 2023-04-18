@@ -6,6 +6,8 @@ import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
 import com.intellij.openapi.editor.event.DocumentEvent

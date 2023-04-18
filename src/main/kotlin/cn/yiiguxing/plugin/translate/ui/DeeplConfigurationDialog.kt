@@ -5,6 +5,8 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplService
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.BrowserHyperlinkListener
