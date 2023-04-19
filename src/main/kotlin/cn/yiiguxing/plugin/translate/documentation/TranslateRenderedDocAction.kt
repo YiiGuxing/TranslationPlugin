@@ -24,7 +24,7 @@ internal class TranslateRenderedDocAction(
     { adaptedMessage("action.TranslateRenderedDocAction.text") }
 ) {
 
-    private val isEnabled: Boolean by lazy { DocTranslationService.isSupportedForElement(docComment) }
+    private val isEnabled: Boolean by lazy { DocTranslationService.isSupportedForPsiElement(docComment) }
 
     override fun update(e: AnActionEvent) {
         super.update(e)

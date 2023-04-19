@@ -170,9 +170,10 @@ internal class DocTranslationService : Disposable {
         }
 
         /**
-         * Returns `true` if the specified [element] supports documentation translation, otherwise returns `false`.
+         * Returns `true` if the specified [PSI element][element] supports
+         * documentation translation, otherwise returns `false`.
          */
-        fun isSupportedForElement(element: PsiElement): Boolean {
+        fun isSupportedForPsiElement(element: PsiElement): Boolean {
             if (!element.isValid) {
                 return false
             }
