@@ -1,7 +1,11 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider
 import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.w
+import com.intellij.codeInsight.documentation.DocumentationManager
+import com.intellij.lang.documentation.CompositeDocumentationProvider
+import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
@@ -162,6 +166,39 @@ internal class DocTranslationService : Disposable {
                 } else {
                     inlayDocTranslations.remove(pointer)
                 }
+            }
+        }
+
+        /**
+         * Returns `true` if the specified [element] supports documentation translation, otherwise returns `false`.
+         */
+        fun isSupportedForElement(element: PsiElement): Boolean {
+            if (!element.isValid) {
+                return false
+            }
+
+            val originalElement = DocumentationManager.getOriginalElement(element)
+            val provider = try {
+                ReadAction.compute<DocumentationProvider, Throwable> {
+                    DocumentationManager.getProviderFromElement(element, originalElement)
+                }
+            } catch (e: Throwable) {
+                LOG.w("Cannot get documentation provider from element", e)
+                return false
+            }
+
+            return includesTranslatedDocumentationProvider(provider)
+        }
+
+        /**
+         * Returns `true` if the specified [provider] or any of
+         * its sub-providers is a [TranslatedDocumentationProvider].
+         */
+        private fun includesTranslatedDocumentationProvider(provider: DocumentationProvider): Boolean {
+            return when (provider) {
+                is TranslatedDocumentationProvider -> true
+                is CompositeDocumentationProvider -> provider.providers.any { includesTranslatedDocumentationProvider(it) }
+                else -> false
             }
         }
     }

@@ -46,6 +46,7 @@ open class ToggleQuickDocTranslationAction :
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)
 
         e.presentation.isVisible = e.presentation.isVisible && rdMouseHoverDocComponent == null
+                && activeDocComponent?.element.let { it != null && DocTranslationService.isSupportedForElement(it) }
 
         // 当Action在ToolWindow的右键菜单上时，点击菜单项会使得ToolWindow失去焦点，
         // 此时toolWindow.isActive为false，Action将不启用。
@@ -127,5 +128,6 @@ private class ToggleQuickDocTranslationActionWithShortcut : ToggleQuickDocTransl
             ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)?.isActive ?: true
 
         e.presentation.isEnabled = docComponentExists && !hasSelection && toolWindowIsActiveIfShown
+                && activeDocComponent?.element.let { it != null && DocTranslationService.isSupportedForElement(it) }
     }
 }
