@@ -99,6 +99,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
+| 傅友华 | | 10 CNY |
+| 大伙子🇦🇷 | | 10 CNY |
 | 不想做韭菜的小爱 | | 10 CNY |
 | 番茄炒蛋 | | 10 CNY |
 | (⊙o⊙) | | 10 CNY |
@@ -207,6 +209,15 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 小猪 | | 6.66 CNY |
+| 长行 | | 6.66 CNY |
+| Curtain°落幕 | | 6.66 CNY |
+| 早睡早起 | | 6.66 CNY |
+| 泓 | | 6.66 CNY |
+| Coffee | | 6.66 CNY |
+| Laplace | | 6.66 CNY |
+| Zhao_shuofeng | | 6.66 CNY |
+| 王二 | | 6.66 CNY |
 | 摇曳 | | 6.66 CNY |
 | EvanHe | | 6.66 CNY |
 | HONGT | | 6.66 CNY |
