@@ -68,6 +68,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 王俊涛 | | 20 CNY |
 | 地下室的猫 | | 20 CNY |
 | 许世豪 | | 20 CNY |
 | Tom | | 20 CNY |
@@ -99,6 +100,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
+| Read&write | | 10 CNY |
+| 飞行员。 | | 10 CNY |
+| ZDQ | | 10 CNY |
 | 傅友华 | | 10 CNY |
 | 大伙子🇦🇷 | | 10 CNY |
 | 不想做韭菜的小爱 | | 10 CNY |
@@ -114,7 +118,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 尘抟 | | 10 CNY |
 | 剑平 | | 10 CNY |
 | 物质-运动 | | 10 CNY |
-| 王俊涛 | | 10 CNY |
 | Wish | | 10 CNY |
 | 连接已断开... | | 10 CNY |
 | 羽辰 | | 10 CNY |
@@ -209,6 +212,12 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 靈 | | 6.66 CNY |
+| 展翅高飞 | | 6.66 CNY |
+| 康 | | 6.66 CNY |
+| Sean。 | | 6.66 CNY |
+| 昌文 | | 6.66 CNY |
+| 星夜 | | 6.66 CNY |
 | 小猪 | | 6.66 CNY |
 | 长行 | | 6.66 CNY |
 | Curtain°落幕 | | 6.66 CNY |
