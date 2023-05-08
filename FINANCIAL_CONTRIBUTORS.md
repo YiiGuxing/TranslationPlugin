@@ -42,6 +42,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
+| Castig | | 66.66 CNY |
 | 薛定谔的猫 | | 66.66 CNY |
 | 弦曲 | | 66.6 CNY |
 | 贺小五 | | 66.6 CNY |
@@ -100,6 +101,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
+| Ncayu618 | | 10.24 CNY |
+| 我行我素 | | 10 CNY |
+| 外号:大聪明 | | 10 CNY |
 | Read&write | | 10 CNY |
 | 飞行员。 | | 10 CNY |
 | ZDQ | | 10 CNY |
@@ -109,7 +113,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 番茄炒蛋 | | 10 CNY |
 | (⊙o⊙) | | 10 CNY |
 | 元芳 | | 10 CNY |
-| Ncayu618 | | 10.24 CNY |
 | Word麻鸭 | | 10 CNY |
 | Nothing | | 10 CNY |
 | 小框框 | | 10 CNY |
@@ -212,6 +215,14 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Duktig | | 6.66 CNY |
+| Mu Nan | | 6.66 CNY |
+| 栗悟饭与龟波功 | | 6.66 CNY |
+| 止戈 | | 6.66 CNY |
+| Late\_ | | 6.66 CNY |
+| @@@@@ | | 6.66 CNY |
+| 厌鱼不厌菜 | | 6.66 CNY |
+| Joseph\_Li | | 6.66 CNY |
 | 靈 | | 6.66 CNY |
 | 展翅高飞 | | 6.66 CNY |
 | 康 | | 6.66 CNY |
