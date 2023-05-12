@@ -215,6 +215,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Fitz\_dev | | 6.66 CNY |
+| Kim | | 6.66 CNY |
+| 阳 | | 6.66 CNY |
+| 歌 | | 6.66 CNY |
+| 乔木 | | 6.66 CNY |
 | Duktig | | 6.66 CNY |
 | Mu Nan | | 6.66 CNY |
 | 栗悟饭与龟波功 | | 6.66 CNY |
