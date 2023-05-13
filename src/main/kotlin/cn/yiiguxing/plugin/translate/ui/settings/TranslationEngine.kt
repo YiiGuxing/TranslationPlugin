@@ -17,7 +17,7 @@ import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
-import cn.yiiguxing.plugin.translate.ui.DeeplConfigurationDialog
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplSettingsDialog
 import cn.yiiguxing.plugin.translate.util.Settings
 import icons.TranslationIcons
 import javax.swing.Icon
@@ -120,7 +120,7 @@ enum class TranslationEngine(
                 HelpTopic.ALI
             ).showAndGet()
 
-            DEEPL -> DeeplConfigurationDialog().showAndGet()
+            DEEPL -> DeeplSettingsDialog().showAndGet()
             OPEN_AI -> OpenAISettingsDialog().showAndGet()
 
             else -> true

@@ -1,13 +1,14 @@
-package cn.yiiguxing.plugin.translate.ui
+package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
-import cn.yiiguxing.plugin.translate.trans.deepl.DeeplService
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
-import com.intellij.openapi.diagnostic.Logger
+import cn.yiiguxing.plugin.translate.util.getCommonMessage
+import cn.yiiguxing.plugin.translate.util.w
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.DocumentAdapter
@@ -28,20 +29,17 @@ import java.io.IOException
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 
-class DeeplConfigurationDialog : DialogWrapper(false) {
+class DeeplSettingsDialog : DialogWrapper(false) {
 
     private val authKeyField: JBPasswordField = JBPasswordField()
 
     private val charactersCount: JBLabel = JBLabel("-")
-    private val charactersCountUnit: JBLabel = JBLabel("")
-    private val charactersLimit: JBLabel = JBLabel("-")
-    private val charactersLimitUnit: JBLabel = JBLabel("")
+    private val characterLimit: JBLabel = JBLabel("-")
     private val usageInfoPanel: JPanel = createUsageInfoPanel()
 
     private var currentService: DeeplService? = null
     private val alarm: Alarm = Alarm(disposable)
 
-    private val logger = Logger.getInstance(DeeplConfigurationDialog::class.java)
 
     private var authKey: String?
         get() = authKeyField.password
@@ -53,7 +51,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
 
     init {
-        title = message("deepl.config.dialog.title")
+        title = message("deepl.settings.dialog.title")
         setResizable(false)
         init()
 
@@ -90,7 +88,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
 
     private fun createAuthPanel(): JPanel {
         return JPanel(UI.migLayout("${JBUIScale.scale(8)}")).apply {
-            add(JLabel(message("deepl.config.dialog.label.auth.key")))
+            add(JLabel(message("deepl.settings.dialog.label.auth.key")))
             add(authKeyField, UI.fillX().wrap())
             add(createHintPane(), UI.fillX().cell(1, 1).wrap())
         }
@@ -105,7 +103,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         font = font.deriveFont((font.size - 1).toFloat())
         editorKit = UIUtil.getHTMLEditorKit()
         border = JBUI.Borders.emptyTop(2)
-        text = message("deepl.config.dialog.hint")
+        text = message("deepl.settings.dialog.hint")
         preferredSize = JBUI.size(300, -1)
         minimumSize = JBUI.size(300, 40)
         maximumSize = JBUI.size(300, Int.MAX_VALUE)
@@ -117,25 +115,23 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         val gapX = JBUIScale.scale(8).toString()
         val gapY = JBUIScale.scale(4).toString()
         return JPanel(UI.migLayout(gapX, gapY)).apply {
-            border = IdeBorderFactory.createTitledBorder(message("deepl.config.dialog.label.usage.information"))
+            border = IdeBorderFactory.createTitledBorder(message("deepl.settings.dialog.label.usage.information"))
 
-            add(JBLabel(message("deepl.config.dialog.label.translated")))
+            add(JBLabel(message("deepl.settings.dialog.label.translated")))
             add(charactersCount)
-            add(charactersCountUnit, UI.fillX().wrap())
+            add(JBLabel(message("deepl.settings.dialog.label.characters")), UI.fillX().wrap())
 
-            add(JBLabel(message("deepl.config.dialog.label.quota")))
-            add(charactersLimit)
-            add(charactersLimitUnit, UI.fillX().wrap())
+            add(JBLabel(message("deepl.settings.dialog.label.quota")))
+            add(characterLimit)
+            add(JBLabel(message("deepl.settings.dialog.label.characters")), UI.fillX().wrap())
         }
     }
 
     private fun updateUsageInfo(usage: DeeplService.Usage?, isFreeAccount: Boolean = false) {
         charactersCount.text = usage?.characterCount?.toString() ?: "-"
-        charactersLimit.text = usage?.characterLimit?.toString() ?: "-"
-        charactersCountUnit.text = getCharUnit(usage?.characterCount)
-        charactersLimitUnit.text = getCharUnit(usage?.characterLimit)
+        characterLimit.text = usage?.characterLimit?.toString() ?: "-"
 
-        val title = message("deepl.config.dialog.label.usage.information")
+        val title = message("deepl.settings.dialog.label.usage.information")
         if (usage != null) {
             val accountType = if (isFreeAccount) "FREE" else "PRO"
             usageInfoPanel.border = IdeBorderFactory.createTitledBorder("$title - $accountType")
@@ -145,21 +141,13 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
                 (usage.characterCount.toFloat() / usage.characterLimit.toFloat()) >= 0.8f -> WARNING_FOREGROUND_COLOR
                 else -> JBUI.CurrentTheme.Label.foreground()
             }
-            charactersLimit.foreground = JBUI.CurrentTheme.Label.foreground()
+            characterLimit.foreground = JBUI.CurrentTheme.Label.foreground()
         } else {
             usageInfoPanel.border = IdeBorderFactory.createTitledBorder(title)
 
             val foreground = JBUI.CurrentTheme.Label.disabledForeground()
             charactersCount.foreground = foreground
-            charactersLimit.foreground = foreground
-        }
-    }
-
-    private fun getCharUnit(value: Int?): String {
-        return if (value != null && value > 1) {
-            message("deepl.config.dialog.label.characters")
-        } else {
-            message("deepl.config.dialog.label.character")
+            characterLimit.foreground = foreground
         }
     }
 
@@ -168,7 +156,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
         if (authKey.isNullOrEmpty()) {
             currentService = null
             updateUsageInfo(null)
-            setErrorText(message("deepl.config.dialog.message.enter.auth.key"), authKeyField)
+            setErrorText(message("deepl.settings.dialog.message.enter.auth.key"), authKeyField)
             return
         }
         if (authKey == currentService?.authKey) {
@@ -186,7 +174,7 @@ class DeeplConfigurationDialog : DialogWrapper(false) {
                 dialogRef.disposeSelf()
             }
             .errorOnUiThread(dialogRef) { dialog, error ->
-                logger.w("Failed to get usage info.", error)
+                thisLogger().w("Failed to get usage info.", error)
                 dialog.postUsageInfo(service, null, error)
                 dialogRef.disposeSelf()
             }
