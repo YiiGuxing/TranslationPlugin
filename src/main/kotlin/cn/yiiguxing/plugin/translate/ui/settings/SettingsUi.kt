@@ -158,7 +158,7 @@ abstract class SettingsUi {
             val comboboxGroup = "combobox"
 
             add(JLabel(message("settings.label.translation.engine")))
-            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup))
+            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth("${JBUIScale.scale(200)}px"))
             val configurePanel = Box.createHorizontalBox().apply {
                 add(configureTranslationEngineLink)
                 fixEngineConfigurationComponent()
