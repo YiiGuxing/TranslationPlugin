@@ -11,6 +11,9 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
@@ -27,12 +30,18 @@ enum class TranslationEngine(
     val intervalLimit: Int = 500
 ) {
 
-    MICROSOFT("translate.microsoft", message("translation.engine.microsoft.name"), TranslationIcons.Microsoft, 50000),
-    GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Google),
-    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Baidu, 10000, 1000),
-    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Ali, 5000),
-    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Deepl, 131072, 1000);
+    MICROSOFT(
+        "translate.microsoft",
+        message("translation.engine.microsoft.name"),
+        TranslationIcons.Engines.Microsoft,
+        50000
+    ),
+    GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Engines.Google),
+    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao, 5000),
+    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
+    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
+    OPEN_AI("translate.openai", message("translation.engine.openai.name"), TranslationIcons.Engines.OpenAI, 2000, 1000);
 
     var primaryLanguage: Lang
         get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
@@ -53,6 +62,7 @@ enum class TranslationEngine(
                 BAIDU -> BaiduTranslator
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
+                OPEN_AI -> OpenAITranslator
             }
         }
 
@@ -71,6 +81,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
+            OPEN_AI -> OpenAICredential.isApiKeySet
         }
     }
 
@@ -110,6 +121,7 @@ enum class TranslationEngine(
             ).showAndGet()
 
             DEEPL -> DeeplConfigurationDialog().showAndGet()
+            OPEN_AI -> OpenAISettingsDialog().showAndGet()
 
             else -> true
         }

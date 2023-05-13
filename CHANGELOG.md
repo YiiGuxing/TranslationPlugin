@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added OpenAI translation engine. (Experimental)
+- 新增 OpenAI 翻译引擎（实验性）
 
 ## [3.4.2] (2023/03/20)
 - Compatible with IDEA 2023.1+.

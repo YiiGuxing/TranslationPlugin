@@ -91,7 +91,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         // https://learn.microsoft.com/zh-cn/azure/cognitive-services/translator/reference/v3-0-reference#errors
         when (throwable) {
             is MicrosoftAuthenticationException -> return ErrorInfo(throwable.message ?: "Authentication failed")
-            is MicrosoftStatusCodeException -> return if (throwable.error?.code == 400050) {
+            is MicrosoftStatusException -> return if (throwable.error?.code == 400050) {
                 onError(ContentLengthLimitException())
             } else {
                 ErrorInfo(throwable.error?.presentableError ?: throwable.message ?: message("error.unknown"))

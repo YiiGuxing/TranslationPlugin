@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
@@ -5,19 +7,23 @@ import com.google.gson.Gson
 import com.intellij.openapi.util.SystemInfoRt
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
+import java.io.InputStreamReader
 import java.lang.reflect.Type
 import java.net.HttpURLConnection
+import java.util.zip.GZIPInputStream
 
 object Http {
 
     const val PLUGIN_USER_AGENT = "${TranslationPlugin.PLUGIN_ID}.TranslationPlugin"
+
+    const val MIME_TYPE_JSON = "application/json"
 
     val defaultGson = Gson()
 
 
     inline fun get(url: String, init: RequestBuilder.() -> Unit = {}): String {
         return HttpRequests.request(url)
-            .accept("application/json")
+            .accept(MIME_TYPE_JSON)
             .apply(init)
             .readString()
     }
@@ -29,7 +35,7 @@ object Http {
         init: RequestBuilder.() -> Unit = {}
     ): T {
         return HttpRequests.request(url)
-            .accept("application/json")
+            .accept(MIME_TYPE_JSON)
             .apply(init)
             .connect { gson.fromJson(it.reader, typeOfT) }
     }
@@ -77,7 +83,7 @@ object Http {
 
     fun postJson(url: String, data: Any, gson: Gson = defaultGson, init: RequestBuilder.() -> Unit = {}): String {
         val json = gson.toJson(data)
-        return post(url, "application/json", json, init)
+        return post(url, MIME_TYPE_JSON, json, init)
     }
 
     fun post(
@@ -87,7 +93,7 @@ object Http {
         init: RequestBuilder.() -> Unit
     ): String {
         return HttpRequests.post(url, contentType)
-            .accept("application/json")
+            .accept(MIME_TYPE_JSON)
             .apply(init)
             .throwStatusCodeException(false)
             .connect {
@@ -104,10 +110,63 @@ object Http {
         }
     }
 
+    /**
+     * A simple Http response.
+     */
+    sealed class Response private constructor(val code: Int, val message: String, open val body: Any?) {
+        /**
+         * Successful response.
+         */
+        class Success(code: Int, message: String, override val body: String) : Response(code, message, body)
+
+        /**
+         * Error response.
+         */
+        class Error(code: Int, message: String, override val body: String?) : Response(code, message, body)
+
+        override fun toString(): String {
+            return "Response - ${javaClass.simpleName}\n" +
+                    "\tcode: $code\n" +
+                    "\tmessage: $message\n" +
+                    "\tbody: $body"
+        }
+    }
+
+    /**
+     * Sends a request and returns a [Response].
+     */
+    fun RequestBuilder.send(data: String): Response {
+        throwStatusCodeException(false)
+        return connect {
+            it.write(data)
+
+            val connection = it.connection as HttpURLConnection
+            val responseCode = connection.responseCode
+            val message = connection.responseMessage
+            if (responseCode < 400) {
+                Response.Success(responseCode, message, it.readString())
+            } else {
+                Response.Error(responseCode, message, connection.getErrorText())
+            }
+        }
+    }
+
+    /**
+     * Sends a request with the specified [data] in JSON format and returns a [Response].
+     */
+    fun RequestBuilder.sendJson(data: Any): Response {
+        return send(defaultGson.toJson(data))
+    }
+
+    private fun HttpURLConnection.getErrorText(): String? {
+        val errorStream = errorStream ?: return null
+        val stream = if (contentEncoding == "gzip") GZIPInputStream(errorStream) else errorStream
+        return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
+    }
 
     private fun getUserAgent(): String {
-        val chrome = "Chrome/107.0.0.0"
-        val edge = "Edg/107.0.1418.52"
+        val chrome = "Chrome/112.0.0.0"
+        val edge = "Edg/112.0.1722.39"
         val safari = "Safari/537.36"
         val systemInfo = "Windows NT ${SystemInfoRt.OS_VERSION}; Win64; x64"
         @Suppress("SpellCheckingInspection")
