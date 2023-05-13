@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 - Added OpenAI translation engine. (Experimental)
+- Google Translate Engine supports custom translation service address.
+- Optimize "Translate and Replace" operation.
+- Bug fixes.
 - 新增 OpenAI 翻译引擎（实验性）
+- Google 翻译引擎支持自定义翻译服务地址
+- 优化“翻译并替换”操作
+- 已知问题修复
 
 ## [3.4.2] (2023/03/20)
 - Compatible with IDEA 2023.1+.
