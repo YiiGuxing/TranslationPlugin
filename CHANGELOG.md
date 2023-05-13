@@ -6,7 +6,7 @@
 - Optimize "Translate and Replace" operation.
 - Bug fixes.
 - 新增 OpenAI 翻译引擎（实验性）
-- Google 翻译引擎支持自定义翻译服务地址
+- Google 翻译引擎支持自定义翻译服务器地址
 - 优化“翻译并替换”操作
 - 已知问题修复
 
