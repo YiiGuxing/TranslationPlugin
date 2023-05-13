@@ -67,8 +67,8 @@ object TKK {
         return now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
     }
 
-    private fun getElementJsRequest(serviceUrl: String): RequestBuilder =
-        HttpRequests.request("${serviceUrl.trimEnd('/')}$ELEMENT_URL_PATH")
+    private fun getElementJsRequest(serverUrl: String): RequestBuilder =
+        HttpRequests.request("${serverUrl.trimEnd('/')}$ELEMENT_URL_PATH")
             .userAgent()
             .googleReferer()
             .connectTimeout(5000)
@@ -76,7 +76,7 @@ object TKK {
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
         return try {
-            fetchTKK(googleApiServiceUrl).also { (v1, v2) ->
+            fetchTKK(googleApiServerUrl).also { (v1, v2) ->
                 log.i("TKK Updated: $v1.$v2")
             }
         } catch (error: Throwable) {
@@ -89,8 +89,8 @@ object TKK {
      * 从谷歌翻译的网页中获取TKK值。
      * @throws IllegalStateException 当TKK值无法从网页中获取时。
      */
-    internal fun fetchTKK(serviceUrl: String = googleApiServiceUrl): Pair<Long, Long> {
-        val elementJS = getElementJsRequest(serviceUrl).readString(null)
+    internal fun fetchTKK(serverUrl: String = googleApiServerUrl): Pair<Long, Long> {
+        val elementJS = getElementJsRequest(serverUrl).readString(null)
         val matcher = tkkPattern.matcher(elementJS)
 
         if (!matcher.find()) {
@@ -104,7 +104,7 @@ object TKK {
     }
 
     internal fun testConnection(): Boolean = try {
-        getElementJsRequest(googleApiServiceUrl).tryConnect()
+        getElementJsRequest(googleApiServerUrl).tryConnect()
         true
     } catch (e: Throwable) {
         false

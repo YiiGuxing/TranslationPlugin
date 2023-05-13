@@ -12,11 +12,11 @@ import com.intellij.util.xmlb.annotations.OptionTag
 @State(name = "Translation.GoogleSettings", storages = [Storage(TranslationStorages.PREFERENCES_STORAGE_NAME)])
 class GoogleSettings : BaseState(), PersistentStateComponent<GoogleSettings> {
 
-    @get:OptionTag("USE_MIRROR")
-    var useMirror: Boolean by property(false)
+    @get:OptionTag("CUSTOM_SERVER")
+    var customServer: Boolean by property(false)
 
-    @get:OptionTag("MIRROR_URL")
-    var mirrorUrl: String? by string(null)
+    @get:OptionTag("SERVER_URL")
+    var serverUrl: String? by string(null)
 
     override fun getState(): GoogleSettings = this
 

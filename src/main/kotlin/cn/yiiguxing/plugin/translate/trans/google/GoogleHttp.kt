@@ -4,25 +4,25 @@ import com.intellij.openapi.components.service
 import com.intellij.util.io.RequestBuilder
 
 
-internal const val GOOGLE_APIS_URL = "https://translate.googleapis.com"
+private const val DEFAULT_GOOGLE_API_SERVER_URL = "https://translate.googleapis.com"
 
 private const val GOOGLE_REFERER = "https://translate.google.com/"
 
-internal val googleApiServiceUrl: String
+internal val googleApiServerUrl: String
     get() = service<GoogleSettings>().let { settings ->
-        if (settings.useMirror) {
-            settings.mirrorUrl ?: GOOGLE_APIS_URL
+        if (settings.customServer) {
+            settings.serverUrl ?: DEFAULT_GOOGLE_API_SERVER_URL
         } else {
-            GOOGLE_APIS_URL
+            DEFAULT_GOOGLE_API_SERVER_URL
         }
     }
 
 internal fun googleApiUrl(path: String): String {
-    val serviceUrl = googleApiServiceUrl.let {
+    val serverUrl = googleApiServerUrl.let {
         if (it.endsWith('/')) it.trimEnd('/') else it
     }
     val apiPath = if (path.startsWith('/')) path.trimStart('/') else path
-    return "$serviceUrl/$apiPath"
+    return "$serverUrl/$apiPath"
 }
 
 

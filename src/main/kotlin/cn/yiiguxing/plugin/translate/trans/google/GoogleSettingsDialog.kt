@@ -30,18 +30,20 @@ class GoogleSettingsDialog : DialogWrapper(true) {
 
     private val settings = service<GoogleSettings>()
 
-    private val useMirrorCheckBox = JBCheckBox(message("google.settings.dialog.label.mirror.url"))
-    private val mirrorUrlField = JBTextField()
+    private val customServerCheckBox = JBCheckBox(message("google.settings.dialog.label.server"))
+    private val serverUrlField = JBTextField().apply {
+        emptyText.text = message("google.settings.dialog.tip.enter.server.url")
+    }
     private val testButton = JButton(message("action.test.text"))
 
     private val alarm: Alarm = Alarm(disposable)
 
     private val updateAction = Runnable { update() }
 
-    private var mirrorUrl: String?
-        get() = mirrorUrlField.text?.takeIf { it.isNotBlank() }
+    private var serverUrl: String?
+        get() = serverUrlField.text?.takeIf { it.isNotBlank() }
         set(value) {
-            mirrorUrlField.text = value?.trim() ?: ""
+            serverUrlField.text = value?.trim() ?: ""
         }
 
     init {
@@ -51,28 +53,28 @@ class GoogleSettingsDialog : DialogWrapper(true) {
         init()
         initListeners()
 
-        mirrorUrl = settings.mirrorUrl
-        useMirrorCheckBox.isSelected = settings.useMirror
+        serverUrl = settings.serverUrl
+        customServerCheckBox.isSelected = settings.customServer
         update()
     }
 
     private fun initListeners() {
-        useMirrorCheckBox.addChangeListener { update() }
-        mirrorUrlField.document.addDocumentListener(object : DocumentAdapter() {
+        customServerCheckBox.addChangeListener { update() }
+        serverUrlField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
                 alarm.cancelAllRequests()
                 alarm.addRequest(updateAction, 300)
             }
         })
-        testButton.addActionListener { testMirrorUrl() }
+        testButton.addActionListener { testServer() }
     }
 
     private fun update() {
-        val useMirror = useMirrorCheckBox.isSelected
-        mirrorUrlField.isEnabled = useMirror
+        val customServer = customServerCheckBox.isSelected
+        serverUrlField.isEnabled = customServer
 
-        val mirrorUrlVerification = verifyMirrorUrl()
-        testButton.isEnabled = useMirror && mirrorUrlVerification && mirrorUrl != null
+        val serverUrlVerification = verifyServerUrl()
+        testButton.isEnabled = customServer && serverUrlVerification && serverUrl != null
     }
 
     override fun createCenterPanel(): JComponent {
@@ -90,8 +92,8 @@ class GoogleSettingsDialog : DialogWrapper(true) {
 
     private fun createConfigPanel(): JComponent {
         return JPanel(UI.migLayout("${JBUIScale.scale(4)}")).apply {
-            add(useMirrorCheckBox)
-            add(mirrorUrlField, UI.fillX().minWidth("${JBUIScale.scale(400)}px"))
+            add(customServerCheckBox)
+            add(serverUrlField, UI.fillX().minWidth("${JBUIScale.scale(400)}px"))
             add(testButton)
         }
     }
@@ -99,29 +101,29 @@ class GoogleSettingsDialog : DialogWrapper(true) {
     override fun isOK(): Boolean = true
 
     override fun doOKAction() {
-        if (!verifyMirrorUrl()) {
+        if (!verifyServerUrl()) {
             return
         }
 
-        settings.mirrorUrl = mirrorUrl
-        settings.useMirror = mirrorUrl != null && useMirrorCheckBox.isSelected
+        settings.serverUrl = serverUrl
+        settings.customServer = serverUrl != null && customServerCheckBox.isSelected
 
         super.doOKAction()
     }
 
-    private fun verifyMirrorUrl(): Boolean {
-        val url = mirrorUrl
+    private fun verifyServerUrl(): Boolean {
+        val url = serverUrl
         if (url == null || URL_REGEX.matches(url)) {
             setErrorText(null)
             return true
         }
 
-        setErrorText(message("google.settings.dialog.error.invalid.mirror.url"), mirrorUrlField)
+        setErrorText(message("google.settings.dialog.error.invalid.server.url"), serverUrlField)
         return false
     }
 
-    private fun testMirrorUrl() {
-        val url = mirrorUrl ?: return
+    private fun testServer() {
+        val url = serverUrl ?: return
         val title = message("google.settings.test.result.title")
         try {
             TestTask(url).run(rootPane)
@@ -131,18 +133,18 @@ class GoogleSettingsDialog : DialogWrapper(true) {
         } catch (e: ProcessCanceledException) {
             // ignore
         } catch (e: Throwable) {
-            thisLogger().w("Failed to test mirror url: $url", e)
+            thisLogger().w("Failed to test server: $url", e)
             val errorMessage = message("google.settings.test.result.error.message", e.message ?: "")
             Messages.showErrorDialog(rootPane, errorMessage, title)
         }
     }
 
-    private class TestTask(private val mirrorUrl: String) :
+    private class TestTask(private val serverUrl: String) :
         Task.WithResult<Unit, Exception>(null, message("google.settings.test.task.title"), true) {
         override fun compute(indicator: ProgressIndicator) {
             indicator.isIndeterminate = true
             indicator.checkCanceled()
-            TKK.fetchTKK(mirrorUrl)
+            TKK.fetchTKK(serverUrl)
             indicator.checkCanceled()
         }
 
