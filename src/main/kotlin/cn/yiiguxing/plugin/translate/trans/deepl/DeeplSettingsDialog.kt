@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
@@ -10,13 +11,11 @@ import cn.yiiguxing.plugin.translate.util.getCommonMessage
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
-import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.Alarm
 import com.intellij.util.io.HttpRequests
@@ -26,20 +25,26 @@ import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
 import java.awt.Color
 import java.io.IOException
-import javax.swing.*
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
 
 class DeeplSettingsDialog : DialogWrapper(false) {
 
-    private val authKeyField: JBPasswordField = JBPasswordField()
+    companion object {
+        private val ERROR_FOREGROUND_COLOR = UIUtil.getErrorForeground()
+        private val WARNING_FOREGROUND_COLOR = JBColor(Color(0xFB8C00), Color(0xF0A732))
+    }
 
+    private val authKeyField: JBPasswordField = JBPasswordField()
     private val charactersCount: JBLabel = JBLabel("-")
     private val characterLimit: JBLabel = JBLabel("-")
     private val usageInfoPanel: JPanel = createUsageInfoPanel()
 
     private var currentService: DeeplService? = null
     private val alarm: Alarm = Alarm(disposable)
-
 
     private var authKey: String?
         get() = authKeyField.password
@@ -64,25 +69,17 @@ class DeeplSettingsDialog : DialogWrapper(false) {
         val getUsageInfoAction = ::doGetUsageInfo
         authKeyField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(event: DocumentEvent) {
-                alarm.apply {
-                    cancelAllRequests()
-                    addRequest(getUsageInfoAction, 500)
-                }
+                alarm.cancelAllRequests()
+                alarm.addRequest(getUsageInfoAction, 500)
             }
         })
     }
 
     override fun createCenterPanel(): JComponent {
-        return JPanel(VerticalLayout(JBUIScale.scale(4))).apply {
-            add(createLogoPane())
+        val logo = TranslationIcons.load("image/deepl_translate_logo.svg")
+        return LogoHeaderPanel(logo).apply {
             add(createAuthPanel())
             add(usageInfoPanel)
-        }
-    }
-
-    private fun createLogoPane(): JComponent {
-        return JLabel(TranslationIcons.load("/image/deepl_translate_logo.svg")).apply {
-            border = JBUI.Borders.empty(10, 0, 18, 0)
         }
     }
 
@@ -90,25 +87,8 @@ class DeeplSettingsDialog : DialogWrapper(false) {
         return JPanel(UI.migLayout("${JBUIScale.scale(8)}")).apply {
             add(JLabel(message("deepl.settings.dialog.label.auth.key")))
             add(authKeyField, UI.fillX().wrap())
-            add(createHintPane(), UI.fillX().cell(1, 1).wrap())
+            add(UI.createHint(message("deepl.settings.dialog.hint")), UI.cc().cell(1, 1).wrap())
         }
-    }
-
-    @Suppress("DuplicatedCode")
-    private fun createHintPane(): JComponent = JEditorPane().apply {
-        isEditable = false
-        isFocusable = false
-        isOpaque = false
-        foreground = JBUI.CurrentTheme.Label.disabledForeground()
-        font = font.deriveFont((font.size - 1).toFloat())
-        editorKit = UIUtil.getHTMLEditorKit()
-        border = JBUI.Borders.emptyTop(2)
-        text = message("deepl.settings.dialog.hint")
-        preferredSize = JBUI.size(300, -1)
-        minimumSize = JBUI.size(300, 40)
-        maximumSize = JBUI.size(300, Int.MAX_VALUE)
-
-        addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
     }
 
     private fun createUsageInfoPanel(): JPanel {
@@ -187,18 +167,19 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
         updateUsageInfo(usage, service.isFreeAccount)
 
-        if (throwable != null) {
-            if (throwable is HttpRequests.HttpStatusException && throwable.statusCode == 403) {
-                setErrorText(message("error.invalid.authentication.key"), authKeyField)
-            } else {
-                val message = (throwable as? IOException)
-                    ?.getCommonMessage()
-                    ?: throwable.message
-                    ?: message("error.unknown")
-                setErrorText(message)
-            }
-        } else {
+        if (throwable == null) {
             setErrorText(null)
+            return
+        }
+
+        if (throwable is HttpRequests.HttpStatusException && throwable.statusCode == 403) {
+            setErrorText(message("error.invalid.authentication.key"), authKeyField)
+        } else {
+            val message = (throwable as? IOException)
+                ?.getCommonMessage()
+                ?: throwable.message
+                ?: message("error.unknown")
+            setErrorText(message)
         }
     }
 
@@ -210,17 +191,10 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
     override fun getHelpId(): String = HelpTopic.DEEPL.id
 
-    override fun isOK(): Boolean {
-        return DeeplCredential.isAuthKeySet
-    }
+    override fun isOK(): Boolean = DeeplCredential.isAuthKeySet
 
     override fun doOKAction() {
         DeeplCredential.authKey = authKey
         super.doOKAction()
-    }
-
-    companion object {
-        private val ERROR_FOREGROUND_COLOR = UIUtil.getErrorForeground()
-        private val WARNING_FOREGROUND_COLOR = JBColor(Color(0xFB8C00), Color(0xF0A732))
     }
 }
