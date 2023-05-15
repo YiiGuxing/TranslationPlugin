@@ -81,7 +81,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : DialogW
             margin = JBUI.insets(6)
         }
         explainsCard.apply {
-            border = JBUI.Borders.customLine(UI.getBordersColor(), 1)
+            border = JBUI.Borders.customLine(UI.getBorderColor(), 1)
             add(maskPanel, CARD_MASK)
             val scrollPane = JBScrollPane(explanationView).apply {
                 border = JBUI.Borders.empty()

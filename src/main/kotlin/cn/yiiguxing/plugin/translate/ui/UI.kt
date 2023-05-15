@@ -53,7 +53,7 @@ object UI {
     }
 
     @JvmStatic
-    fun getBordersColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
+    fun getBorderColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
 
     fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
         icon = baseIcon
@@ -79,11 +79,11 @@ object UI {
 
     fun emptyBorder(offsets: Int) = JBUI.Borders.empty(offsets)
 
-    fun lineAbove(): Border = JBUI.Borders.customLine(getBordersColor(), 1, 0, 0, 0)
+    fun lineAbove(): Border = JBUI.Borders.customLine(getBorderColor(), 1, 0, 0, 0)
 
-    fun lineBelow(): Border = JBUI.Borders.customLine(getBordersColor(), 0, 0, 1, 0)
+    fun lineBelow(): Border = JBUI.Borders.customLine(getBorderColor(), 0, 0, 1, 0)
 
-    fun lineToRight(): Border = JBUI.Borders.customLine(getBordersColor(), 0, 0, 0, 1)
+    fun lineToRight(): Border = JBUI.Borders.customLine(getBorderColor(), 0, 0, 0, 1)
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 }

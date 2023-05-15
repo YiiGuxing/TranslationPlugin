@@ -79,7 +79,7 @@ interface WordDetailsUI : Disposable {
             phoneticField.font = phoneticFont
             tagsField.font = phoneticFont
             val phoneticAndTagPanel = JPanel(UI.migLayout("$gap!", insets = "$gap 0 $gap 0")).apply {
-                border = JBUI.Borders.customLine(UI.getBordersColor(), 1, 0, 0, 0)
+                border = JBUI.Borders.customLine(UI.getBorderColor(), 1, 0, 0, 0)
                 add(JBLabel(message("word.details.phonetic")))
                 add(phoneticField, UI.fillX().wrap())
                 add(JBLabel(message("word.details.tags")))
@@ -92,7 +92,7 @@ interface WordDetailsUI : Disposable {
                 margin = JBUI.insets(6)
             }
             val scrollPane = JBScrollPane(explanationView).apply {
-                border = JBUI.Borders.customLine(UI.getBordersColor())
+                border = JBUI.Borders.customLine(UI.getBorderColor())
             }
             root.add(explanationLabel, UI.fillX().gapBottom((gap / 2).toString()).wrap())
             root.add(scrollPane, UI.fill().wrap())
