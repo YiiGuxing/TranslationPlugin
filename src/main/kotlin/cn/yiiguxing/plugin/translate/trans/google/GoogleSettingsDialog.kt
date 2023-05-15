@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.components.service
@@ -12,17 +13,15 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.impl.ProgressManagerImpl
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.Alarm
-import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import javax.swing.JButton
 import javax.swing.JComponent
-import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
 
@@ -37,8 +36,6 @@ class GoogleSettingsDialog : DialogWrapper(true) {
     private val testButton = JButton(message("action.test.text"))
 
     private val alarm: Alarm = Alarm(disposable)
-
-    private val updateAction = Runnable { update() }
 
     private var serverUrl: String?
         get() = serverUrlField.text?.takeIf { it.isNotBlank() }
@@ -59,14 +56,21 @@ class GoogleSettingsDialog : DialogWrapper(true) {
     }
 
     private fun initListeners() {
-        customServerCheckBox.addChangeListener { update() }
+        customServerCheckBox.addChangeListener {
+            update()
+            if (customServerCheckBox.isSelected) {
+                IdeFocusManager.getInstance(null).requestFocus(serverUrlField, true)
+            }
+        }
+        testButton.addActionListener { testServer() }
+
+        val updateAction = ::update
         serverUrlField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
                 alarm.cancelAllRequests()
                 alarm.addRequest(updateAction, 300)
             }
         })
-        testButton.addActionListener { testServer() }
     }
 
     private fun update() {
@@ -75,25 +79,19 @@ class GoogleSettingsDialog : DialogWrapper(true) {
 
         val serverUrlVerification = verifyServerUrl()
         testButton.isEnabled = customServer && serverUrlVerification && serverUrl != null
+        okAction.isEnabled = serverUrlVerification
     }
 
     override fun createCenterPanel(): JComponent {
-        return JPanel(VerticalLayout(JBUIScale.scale(4))).apply {
-            add(createLogoPane())
-            add(createConfigPanel())
-        }
+        val logo = TranslationIcons.load("image/google_translate_logo.svg")
+        val content = createConfigurationPanel()
+        return LogoHeaderPanel(logo, content)
     }
 
-    private fun createLogoPane(): JComponent {
-        return JLabel(TranslationIcons.load("image/google_translate_logo.svg")).apply {
-            border = JBUI.Borders.empty(10, 0, 18, 0)
-        }
-    }
-
-    private fun createConfigPanel(): JComponent {
+    private fun createConfigurationPanel(): JComponent {
         return JPanel(UI.migLayout("${JBUIScale.scale(4)}")).apply {
             add(customServerCheckBox)
-            add(serverUrlField, UI.fillX().minWidth("${JBUIScale.scale(400)}px"))
+            add(serverUrlField, UI.cc().width("${JBUIScale.scale(400)}px"))
             add(testButton)
         }
     }
@@ -112,8 +110,7 @@ class GoogleSettingsDialog : DialogWrapper(true) {
     }
 
     private fun verifyServerUrl(): Boolean {
-        val url = serverUrl
-        if (url == null || URL_REGEX.matches(url)) {
+        if (!customServerCheckBox.isSelected || serverUrl.let { it == null || URL_REGEX.matches(it) }) {
             setErrorText(null)
             return true
         }
