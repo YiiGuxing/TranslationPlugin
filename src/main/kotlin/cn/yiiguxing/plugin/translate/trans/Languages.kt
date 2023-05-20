@@ -24,7 +24,7 @@ data class LanguagePair(
 @Suppress("SpellCheckingInspection", "unused")
 enum class Lang(
     @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
-    langNameKey: String,
+    namePropertyKey: String,
     val code: String
 ) {
 
@@ -429,7 +429,7 @@ enum class Lang(
     ; // endregion
 
 
-    val langName: String = LanguageBundle.getMessage(langNameKey)
+    val langName: String by lazy { LanguageBundle.getMessage(namePropertyKey) }
 
     companion object {
         private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
