@@ -75,7 +75,7 @@ abstract class SettingsUi {
     protected val checkIgnoreRegExpButton: JButton = JButton(message("settings.button.check"))
     protected val ignoreRegExpMsg: JLabel = JLabel().apply { foreground = ERROR_FOREGROUND_COLOR }
 
-    protected val separatorsTextField: JTextField = JTextField().apply {
+    protected val separatorTextField: JTextField = JTextField().apply {
         document = object : PlainDocument() {
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
                 val text = getText(0, length)
@@ -119,7 +119,6 @@ abstract class SettingsUi {
         }
     }
 
-    protected val showWordFormsCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordForms"))
     protected val autoReplaceCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoReplace"))
     protected val showReplacementActionCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.show.replacement.action"))
@@ -228,7 +227,6 @@ abstract class SettingsUi {
 
         val translationPopupPanel = titledPanel(message("settings.panel.title.translation.popup")) {
             add(foldOriginalCheckBox, wrap().span(2))
-            add(showWordFormsCheckBox, wrap().span(2))
             add(autoPlayTTSCheckBox)
             add(ttsSourceComboBox, wrap())
         }
@@ -238,10 +236,10 @@ abstract class SettingsUi {
             add(selectTargetLanguageCheckBox, wrap().span(3))
             add(autoReplaceCheckBox, wrap().span(3))
             add(JLabel(message("settings.label.separators")))
-            add(separatorsTextField)
+            add(separatorTextField)
             add(ContextHelpLabel.create(message("settings.tip.separators")), wrap())
 
-            setMinWidth(separatorsTextField, JBUIScale.scale(250))
+            setMinWidth(separatorTextField, JBUIScale.scale(250))
         }
 
         val wordOfTheDayPanel = titledPanel(message("settings.panel.title.word.of.the.day")) {
@@ -353,6 +351,7 @@ abstract class SettingsUi {
 
         private fun <T> comboBox(elements: List<T>): ComboBox<T> = ComboBox(CollectionComboBoxModel(elements))
 
+        @Suppress("SameParameterValue")
         private fun <T> comboBox(vararg elements: T): ComboBox<T> = comboBox(elements.toList())
 
         private inline fun <reified T : Enum<T>> comboBox(): ComboBox<T> = comboBox(enumValues<T>().toList())

@@ -4,16 +4,13 @@ package cn.yiiguxing.plugin.translate.trans.youdao
 
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import cn.yiiguxing.plugin.translate.util.text.*
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
-import java.util.*
 import javax.swing.JComponent
 import javax.swing.text.*
 
@@ -53,17 +50,11 @@ class YoudaoDictDocument private constructor(
             if (wordString.style == POS_STYLE) "\t $wordString\t" else wordString.toString()
         }
 
-        if (variantStrings.isNotEmpty() && showWordForms()) {
+        if (variantStrings.isNotEmpty()) {
             newLine()
             setParagraphStyle(length - 1, 1, SPACE_BELOW_STYLE, false)
             appendStrings(variantStrings)
         }
-    }
-
-    @Suppress("SENSELESS_COMPARISON")
-    private fun showWordForms(): Boolean {
-        // Application may be null in ui tests
-        return ApplicationManager.getApplication() == null || Settings.showWordForms
     }
 
     private inline fun StyledDocument.appendStrings(
@@ -85,10 +76,10 @@ class YoudaoDictDocument private constructor(
             stringBuilder.append(wordString)
         }
 
-        if (variantStrings.isNotEmpty() && Settings.showWordForms) {
+        if (variantStrings.isNotEmpty()) {
             stringBuilder.append("\n\n")
-            for (variantsString in variantStrings) {
-                stringBuilder.append(variantsString)
+            for (variantString in variantStrings) {
+                stringBuilder.append(variantString)
             }
         }
 

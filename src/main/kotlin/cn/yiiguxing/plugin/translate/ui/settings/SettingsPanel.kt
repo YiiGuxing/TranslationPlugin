@@ -5,7 +5,10 @@ import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.ByteSize
+import cn.yiiguxing.plugin.translate.util.CacheService
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
@@ -194,7 +197,7 @@ class SettingsPanel(
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
                     || settings.takeWordWhenDialogOpens != takeWordCheckBox.isSelected
-                    || settings.separators != separatorsTextField.text
+                    || settings.separators != separatorTextField.text
                     || settings.ignoreRegex != ignoreRegExp.text
                     || settings.primaryFontFamily != primaryFontComboBox.fontName
                     || settings.primaryFontPreviewText != primaryFontPreview.text
@@ -203,7 +206,6 @@ class SettingsPanel(
                     || settings.keepFormat != keepFormatCheckBox.isSelected
                     || settings.autoPlayTTS != autoPlayTTSCheckBox.isSelected
                     || settings.ttsSource != ttsSourceComboBox.selected
-                    || settings.showWordForms != showWordFormsCheckBox.isSelected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
                     || settings.selectTargetLanguageBeforeReplacement != selectTargetLanguageCheckBox.isSelected
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
@@ -238,11 +240,10 @@ class SettingsPanel(
             phoneticFontFamily = phoneticFontComboBox.fontName
             autoSelectionMode = SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
             ttsSource = ttsSourceComboBox.selected ?: TTSSource.ORIGINAL
-            separators = separatorsTextField.text
+            separators = separatorTextField.text
             foldOriginal = foldOriginalCheckBox.isSelected
             keepFormat = keepFormatCheckBox.isSelected
             autoPlayTTS = autoPlayTTSCheckBox.isSelected
-            showWordForms = showWordFormsCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
             selectTargetLanguageBeforeReplacement = selectTargetLanguageCheckBox.isSelected
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
@@ -265,11 +266,10 @@ class SettingsPanel(
         translationEngineComboBox.selected = settings.translator
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ignoreRegExp.text = settings.ignoreRegex
-        separatorsTextField.text = settings.separators
+        separatorTextField.text = settings.separators
         foldOriginalCheckBox.isSelected = settings.foldOriginal
         keepFormatCheckBox.isSelected = settings.keepFormat
         autoPlayTTSCheckBox.isSelected = settings.autoPlayTTS
-        showWordFormsCheckBox.isSelected = settings.showWordForms
         autoReplaceCheckBox.isSelected = settings.autoReplace
         selectTargetLanguageCheckBox.isSelected = settings.selectTargetLanguageBeforeReplacement
         showWordsOnStartupCheckBox.isSelected = settings.showWordsOnStartup
