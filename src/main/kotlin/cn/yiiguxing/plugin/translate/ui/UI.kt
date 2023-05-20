@@ -92,7 +92,7 @@ object UI {
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 
-    fun createHint(content: String, minimumWidth: Int = 300): JComponent = JEditorPane().apply {
+    fun createHint(content: String, preferredWidth: Int = 300): JComponent = JEditorPane().apply {
         isEditable = false
         isFocusable = false
         isOpaque = false
@@ -101,9 +101,7 @@ object UI {
         editorKit = UIUtil.getHTMLEditorKit()
         border = JBUI.Borders.emptyTop(2)
         text = content
-        preferredSize = JBUI.size(minimumWidth, -1)
-        minimumSize = JBUI.size(minimumWidth, 40)
-        maximumSize = JBUI.size(minimumWidth, Int.MAX_VALUE)
+        preferredSize = JBUI.size(preferredWidth, 40)
 
         addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
     }

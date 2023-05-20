@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.sha256
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import java.util.*
 import javax.swing.Icon
@@ -17,7 +18,9 @@ import javax.swing.Icon
 object YoudaoTranslator : AbstractTranslator() {
 
     private const val YOUDAO_API_URL = "https://openapi.youdao.com/api"
+    private const val YOUDAO_CONSOLE_URL = "https://ai.youdao.com/console"
 
+    private val settings: YoudaoSettings by lazy { service<YoudaoSettings>() }
 
     private val logger: Logger = Logger.getInstance(YoudaoTranslator::class.java)
 
@@ -76,11 +79,9 @@ object YoudaoTranslator : AbstractTranslator() {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(this, YoudaoTranslator::call, YoudaoTranslator::parseTranslation).execute(
-            text,
-            srcLang,
-            targetLang
-        )
+        return SimpleTranslateClient(this, YoudaoTranslator::call, YoudaoTranslator::parseTranslation)
+            .apply { updateCacheKey { it.update(settings.domain.value.toByteArray()) } }
+            .execute(text, srcLang, targetLang)
     }
 
     private fun call(
@@ -88,9 +89,10 @@ object YoudaoTranslator : AbstractTranslator() {
         srcLang: Lang,
         targetLang: Lang
     ): String {
-        val settings = Settings.youdaoTranslateSettings
-        val appId = settings.appId
-        val privateKey = settings.getAppKey()
+        val credentialSettings = Settings.youdaoTranslateSettings
+
+        val appId = credentialSettings.appId
+        val privateKey = credentialSettings.getAppKey()
         val salt = UUID.randomUUID().toString()
         val curTime = (System.currentTimeMillis() / 1000).toString()
         val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
@@ -105,7 +107,9 @@ object YoudaoTranslator : AbstractTranslator() {
             "sign" to sign,
             "signType" to "v3",
             "curtime" to curTime,
-            "q" to text
+            "q" to text,
+            "domain" to settings.domain.value,
+            "rejectFallback" to true.toString(),
         )
     }
 
@@ -127,7 +131,7 @@ object YoudaoTranslator : AbstractTranslator() {
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         if (throwable is TranslationResultException) {
-            val errorMessage =
+            var errorMessage =
                 errorMessageMap.getOrDefault(throwable.code, message("error.unknown") + "[${throwable.code}]")
             val continueAction = when (throwable.code) {
                 108, 111, 202 -> ErrorInfo.continueAction(
@@ -135,6 +139,13 @@ object YoudaoTranslator : AbstractTranslator() {
                     icon = AllIcons.General.Settings
                 ) {
                     YOUDAO.showConfigurationDialog()
+                }
+
+                302, 310 -> {
+                    if (throwable.code == 310 || settings.domain != YoudaoDomain.GENERAL) {
+                        errorMessage = message("youdao.error.310.message")
+                        ErrorInfo.browseUrlAction(message("youdao.action.enable.service"), YOUDAO_CONSOLE_URL)
+                    } else null
                 }
 
                 else -> null

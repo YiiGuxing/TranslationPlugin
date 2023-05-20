@@ -52,6 +52,12 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         return memoryCache[MemoryCacheKey(text, srcLang, targetLang, translatorId)]
     }
 
+    fun removeMemoryCache(
+        predicate: (MemoryCacheKey, Translation) -> Boolean
+    ): Set<Map.Entry<MemoryCacheKey, Translation>> {
+        return memoryCache.removeIf(predicate)
+    }
+
     fun getMemoryCacheSnapshot(): Map<MemoryCacheKey, Translation> {
         return memoryCache.snapshot
     }

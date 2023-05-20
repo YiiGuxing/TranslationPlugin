@@ -16,6 +16,7 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
@@ -91,15 +92,7 @@ enum class TranslationEngine(
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {
-            YOUDAO -> AppKeySettingsDialog(
-                message("settings.youdao.title"),
-                AppKeySettingsPanel(
-                    TranslationIcons.load("/image/youdao_translate_logo.png"),
-                    "https://ai.youdao.com",
-                    Settings.youdaoTranslateSettings
-                ),
-                HelpTopic.YOUDAO
-            ).showAndGet()
+            YOUDAO -> YoudaoSettingsDialog().showAndGet()
 
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
@@ -121,7 +114,7 @@ enum class TranslationEngine(
                 HelpTopic.ALI
             ).showAndGet()
 
-            GOOGLE-> GoogleSettingsDialog().showAndGet()
+            GOOGLE -> GoogleSettingsDialog().showAndGet()
             DEEPL -> DeeplSettingsDialog().showAndGet()
             OPEN_AI -> OpenAISettingsDialog().showAndGet()
 

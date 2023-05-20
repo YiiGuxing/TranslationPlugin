@@ -44,12 +44,9 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
     }
 
     private var appKey: String?
-        get() = appKeyField.password
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { String(it) }
-            ?: ""
+        get() = appKeyField.password?.let { String(it) }
         set(value) {
-            appKeyField.text = if (value.isNullOrEmpty()) null else value
+            appKeyField.text = value
         }
 
     fun reset() {
@@ -58,7 +55,7 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
     }
 
     fun apply() {
-        appKeySettings.appId = appIdField.text
+        appKeySettings.appId = appIdField.text.trim()
         appKeySettings.setAppKey(appKey)
     }
 }
