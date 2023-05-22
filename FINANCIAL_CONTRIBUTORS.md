@@ -215,6 +215,12 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 嘎纳 | | 6.66 CNY |
+| Camellia | | 6.66 CNY |
+| Freesia🍬 | | 6.66 CNY |
+| 凡人 | | 6.66 CNY |
+| 北Pro | | 6.66 CNY |
+| 瓜瓜 | | 6.66 CNY |
 | Fitz\_dev | | 6.66 CNY |
 | Kim | | 6.66 CNY |
 | 阳 | | 6.66 CNY |
