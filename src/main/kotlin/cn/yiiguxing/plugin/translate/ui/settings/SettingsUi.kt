@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.ActionLink
+import cn.yiiguxing.plugin.translate.ui.TypedComboBoxEditor
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import cn.yiiguxing.plugin.translate.ui.UI.fill
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
@@ -133,6 +134,7 @@ abstract class SettingsUi {
     protected val showExplanationCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showExplanation"))
 
     protected val maxHistoriesSizeComboBox: ComboBox<Int> = comboBox(50, 30, 20, 10, 0).apply {
+        editor = TypedComboBoxEditor { (it.toDoubleOrNull()?.toInt() ?: 50).coerceIn(50, 5000) }
         isEditable = true
     }
 
