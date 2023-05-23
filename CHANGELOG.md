@@ -3,10 +3,12 @@
 ## [Unreleased]
 - Added OpenAI translation engine. (Experimental)
 - Google Translate Engine supports custom translation service address.
+- Add translation domain configuration to Youdao Translate Engine.
 - Optimize "Translate and Replace" operation.
 - Bug fixes.
 - 新增 OpenAI 翻译引擎（实验性）
 - Google 翻译引擎支持自定义翻译服务器地址
+- 有道翻译引擎添加翻译领域配置
 - 优化“翻译并替换”操作
 - 已知问题修复
 
