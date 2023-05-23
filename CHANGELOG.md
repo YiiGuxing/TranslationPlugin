@@ -1,7 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
-- Added OpenAI translation engine. (Experimental)
+- Added OpenAI translation engine (Experimental).
 - Google Translate Engine supports custom translation service address.
 - Youdao Translate Engine supports translation domain configuration.
 - Simplified the list of languages supported by Youdao Translate Engine.
