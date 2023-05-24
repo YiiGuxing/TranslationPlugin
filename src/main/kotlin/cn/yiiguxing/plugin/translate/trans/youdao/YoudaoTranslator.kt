@@ -11,13 +11,16 @@ import com.google.gson.Gson
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
+import org.jsoup.nodes.Document
 import java.util.*
 import javax.swing.Icon
 
 @Suppress("SpellCheckingInspection")
-object YoudaoTranslator : AbstractTranslator() {
+object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
 
-    private const val YOUDAO_API_URL = "https://openapi.youdao.com/api"
+    private const val YOUDAO_API_SERVICE_URL = "https://openapi.youdao.com"
+    private const val YOUDAO_TEXT_TRANSLATION_API_URL = "$YOUDAO_API_SERVICE_URL/api"
+    private const val YOUDAO_HTML_TRANSLATION_API_URL = "$YOUDAO_API_SERVICE_URL/translate_html"
     private const val YOUDAO_CONSOLE_URL = "https://ai.youdao.com/console"
 
     private val settings: YoudaoSettings by lazy { service<YoudaoSettings>() }
@@ -66,6 +69,7 @@ object YoudaoTranslator : AbstractTranslator() {
             301 to message("error.youdao.dictionary"),
             302 to message("error.youdao.translation"),
             303 to message("error.youdao.serverError"),
+            310 to message("youdao.error.message.domain.service.not.enabled"),
             401 to message("error.account.has.run.out.of.balance")
         )
     }
@@ -79,16 +83,20 @@ object YoudaoTranslator : AbstractTranslator() {
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(this, YoudaoTranslator::call, YoudaoTranslator::parseTranslation)
+        return SimpleTranslateClient(this, ::call, ::parseTranslation)
             .apply { updateCacheKey { it.update(settings.domain.value.toByteArray()) } }
             .execute(text, srcLang, targetLang)
     }
 
-    private fun call(
-        text: String,
-        srcLang: Lang,
-        targetLang: Lang
-    ): String {
+    private fun call(text: String, srcLang: Lang, targetLang: Lang): String {
+        val params = getBaseRequestParams(text, srcLang, targetLang)
+        params["domain"] = settings.domain.value
+        params["rejectFallback"] = true.toString()
+
+        return Http.post(YOUDAO_TEXT_TRANSLATION_API_URL, params)
+    }
+
+    private fun getBaseRequestParams(text: String, srcLang: Lang, targetLang: Lang): MutableMap<String, String> {
         val credentialSettings = Settings.youdaoTranslateSettings
 
         val appId = credentialSettings.appId
@@ -98,18 +106,15 @@ object YoudaoTranslator : AbstractTranslator() {
         val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
         val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
 
-        return Http.post(
-            YOUDAO_API_URL,
-            "appKey" to appId,
+        return mutableMapOf(
+            "q" to text,
             "from" to srcLang.youdaoLanguageCode,
             "to" to targetLang.youdaoLanguageCode,
+            "appKey" to appId,
             "salt" to salt,
             "sign" to sign,
             "signType" to "v3",
             "curtime" to curTime,
-            "q" to text,
-            "domain" to settings.domain.value,
-            "rejectFallback" to true.toString(),
         )
     }
 
@@ -129,6 +134,57 @@ object YoudaoTranslator : AbstractTranslator() {
         }.toTranslation()
     }
 
+    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
+        return checkError {
+            processAndTranslateDocumentation(documentation) {
+                translateDocumentation(it, srcLang, targetLang)
+            }
+        }
+    }
+
+    private inline fun processAndTranslateDocumentation(
+        documentation: Document,
+        translate: (String) -> String
+    ): Document {
+        val body = documentation.body()
+        val content = body.html()
+        if (content.isBlank()) {
+            return documentation
+        }
+
+        val translation = translate(content)
+
+        body.html(translation)
+
+        return documentation
+    }
+
+    private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
+        val client = SimpleTranslateClient(this, ::callForDocumentation, ::parseTranslationForDocumentation)
+        client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
+        return client.execute(documentation, srcLang, targetLang).translation ?: ""
+    }
+
+    private fun callForDocumentation(text: String, srcLang: Lang, targetLang: Lang): String {
+        val params = getBaseRequestParams(text, srcLang, targetLang)
+        return Http.post(YOUDAO_HTML_TRANSLATION_API_URL, params)
+    }
+
+    private fun parseTranslationForDocumentation(
+        translation: String,
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang
+    ): BaseTranslation {
+        logger.i("Documentation translation result: $translation")
+        return with(Gson().fromJson(translation, YoudaoHTMLTranslation::class.java)) {
+            if (errorCode != 0) {
+                throw TranslationResultException(errorCode)
+            }
+            BaseTranslation(original, srcLang, targetLang, data?.translation)
+        }
+    }
+
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         if (throwable is TranslationResultException) {
             var errorMessage =
@@ -141,9 +197,11 @@ object YoudaoTranslator : AbstractTranslator() {
                     YOUDAO.showConfigurationDialog()
                 }
 
-                302, 310 -> {
-                    if (throwable.code == 310 || settings.domain != YoudaoDomain.GENERAL) {
-                        errorMessage = message("youdao.error.310.message")
+                110, 310 -> ErrorInfo.browseUrlAction(message("youdao.action.enable.service"), YOUDAO_CONSOLE_URL)
+
+                302 -> {
+                    if (settings.domain != YoudaoDomain.GENERAL) {
+                        errorMessage = message("youdao.error.message.domain.service.not.enabled")
                         ErrorInfo.browseUrlAction(message("youdao.action.enable.service"), YOUDAO_CONSOLE_URL)
                     } else null
                 }
