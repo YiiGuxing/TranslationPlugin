@@ -8,11 +8,13 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.panel.ComponentPanelBuilder
 import com.intellij.ui.CollectionComboBoxModel
+import com.intellij.ui.JBColor
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
@@ -25,6 +27,7 @@ import javax.swing.JPanel
 class YoudaoSettingsDialog : DialogWrapper(true) {
 
     private val settings = service<YoudaoSettings>()
+
     // TODO 迁移到 Credential
     private val credentialSettings = Settings.youdaoTranslateSettings
 
@@ -74,7 +77,7 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
         add(JLabel(message("youdao.settings.dialog.label.app.key")))
         add(appKeyField, UI.fillX().wrap())
         add(
-            UI.createHint(message("youdao.settings.dialog.hint"), 450),
+            UI.createHint(message("youdao.settings.dialog.hint", JBColor(0x7986CB, 0x757DE8).toRGBHex()), 380),
             UI.spanX(2).gapTop("${JBUIScale.scale(20)}px").wrap()
         )
     }
