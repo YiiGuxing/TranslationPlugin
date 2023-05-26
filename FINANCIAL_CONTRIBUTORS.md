@@ -102,6 +102,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| Donkeywon | | 10 CNY |
 | 我行我素 | | 10 CNY |
 | 外号:大聪明 | | 10 CNY |
 | Read&write | | 10 CNY |
@@ -215,6 +216,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 释常悠空 | | 6.66 CNY |
+| 王信 | | 6.66 CNY |
 | 嘎纳 | | 6.66 CNY |
 | Camellia | | 6.66 CNY |
 | Freesia🍬 | | 6.66 CNY |
