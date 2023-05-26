@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.*
-import cn.yiiguxing.plugin.translate.ui.CheckRegExpDialog
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
@@ -15,6 +14,8 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
+import com.intellij.openapi.fileTypes.FileTypeManager
+import com.intellij.openapi.fileTypes.FileTypes
 import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.CollectionComboBoxModel
@@ -23,7 +24,6 @@ import com.intellij.ui.FontComboBox
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import org.intellij.lang.regexp.RegExpLanguage
 import org.jetbrains.concurrency.runAsync
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
@@ -129,14 +129,6 @@ class SettingsPanel(
             states.clearHistories()
         }
 
-        checkIgnoreRegExpButton.addActionListener {
-            val project = ProjectManager.getInstance().defaultProject
-            CheckRegExpDialog(project, ignoreRegExp.text) { newRegExp ->
-                if (newRegExp != ignoreRegExp.text) {
-                    ignoreRegExp.text = newRegExp
-                }
-            }.show()
-        }
         configureTranslationEngineLink.setListener({ _, _ ->
             translationEngineComboBox.selected?.showConfigurationDialog()
         }, null)
@@ -173,7 +165,7 @@ class SettingsPanel(
     private fun createRegexEditorField(): EditorTextField = EditorTextField(
         "",
         ProjectManager.getInstance().defaultProject,
-        RegExpLanguage.INSTANCE.associatedFileType
+        FileTypeManager.getInstance().findFileTypeByName("RegExp") ?: FileTypes.PLAIN_TEXT
     )
 
     private fun resetPrimaryLanguageComboBox(engine: TranslationEngine) {

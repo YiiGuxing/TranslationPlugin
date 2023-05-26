@@ -73,7 +73,6 @@ abstract class SettingsUi {
     protected val keepFormatCheckBox: JBCheckBox = JBCheckBox(message("settings.options.keepFormatting"))
 
     protected lateinit var ignoreRegExp: EditorTextField
-    protected val checkIgnoreRegExpButton: JButton = JButton(message("settings.button.check"))
     protected val ignoreRegExpMsg: JLabel = JLabel().apply { foreground = ERROR_FOREGROUND_COLOR }
 
     protected val separatorTextField: JTextField = JTextField().apply {
@@ -184,12 +183,10 @@ abstract class SettingsUi {
                 else JTextField()
 
             add(ignoreRegexComponent, fillX())
-            add(checkIgnoreRegExpButton, wrap())
 
             val msgCC = fillX()
                 .gapBefore(JBUIScale.scale(2).toString())
                 .gapTop(JBUIScale.scale(2).toString())
-                .spanX(2)
                 .cell(1, 4)
                 .wrap()
             add(ignoreRegExpMsg, msgCC)
@@ -198,7 +195,6 @@ abstract class SettingsUi {
             val commentCC = fillX()
                 .gapBefore(JBUIScale.scale(2).toString())
                 .gapTop(JBUIScale.scale(2).toString())
-                .spanX(2)
                 .cell(1, 5)
                 .wrap()
             add(comment, commentCC)
