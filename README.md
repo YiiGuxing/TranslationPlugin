@@ -41,6 +41,7 @@
     - Microsoft Translator
     - Google Translate
     - DeepL Translator
+    - OpenAI Translator
     - Youdao Translate
     - Baidu Translate
     - Alibaba Translate
@@ -90,10 +91,8 @@ Restart the **IDE** after installation.
 ## Using The Plugin
 
 1. **Sign up for a translation service (optional)**
-    - Sign up for a translation service ([DeepL][deepl], [Youdao Cloud][youdao-cloud],
-      [Baidu Translate Open Platform][baidu-translate], [Alibaba Cloud Machine Translation][ali-mt]) account,
-      open up the translation service and obtain the **Authentication Key** or the **Application ID/Key** Pair.
-    - To bind the **Authentication Key** and the **Application ID/Key** Pair：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
+    - Sign up for a translation service account, open up the translation service and obtain the **Authentication Key**.
+    - To bind the **Authentication Key**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
       Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
 2. **Begin translating**
@@ -391,11 +390,6 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-contribute]: https://opencollective.com/translation-plugin/contribute
-
-[deepl]: https://www.deepl.com
-[youdao-cloud]: https://ai.youdao.com
-[baidu-translate]: https://fanyi-api.baidu.com/manage/developer
-[ali-mt]: https://www.aliyun.com/product/ai/base_alimt
 
 [mailto]: mailto:yii.guxing@outlook.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Pay%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D
 
