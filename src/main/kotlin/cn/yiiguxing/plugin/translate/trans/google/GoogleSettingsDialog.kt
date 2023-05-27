@@ -17,7 +17,6 @@ import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.Alarm
 import icons.TranslationIcons
 import javax.swing.JButton
@@ -89,9 +88,9 @@ class GoogleSettingsDialog : DialogWrapper(true) {
     }
 
     private fun createConfigurationPanel(): JComponent {
-        return JPanel(UI.migLayout("${JBUIScale.scale(4)}")).apply {
+        return JPanel(UI.migLayout(UI.migSize(4))).apply {
             add(customServerCheckBox)
-            add(serverUrlField, UI.cc().width("${JBUIScale.scale(400)}px"))
+            add(serverUrlField, UI.cc().width(UI.migSize(400)))
             add(testButton)
         }
     }
