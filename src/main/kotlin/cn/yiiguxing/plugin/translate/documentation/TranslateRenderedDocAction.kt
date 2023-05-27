@@ -24,6 +24,13 @@ internal class TranslateRenderedDocAction(
     { adaptedMessage("action.TranslateRenderedDocAction.text") }
 ) {
 
+    private val isEnabled: Boolean by lazy { DocTranslationService.isSupportedForPsiElement(docComment) }
+
+    override fun update(e: AnActionEvent) {
+        super.update(e)
+        e.presentation.isEnabledAndVisible = isEnabled
+    }
+
     override fun isSelected(event: AnActionEvent): Boolean {
         return DocTranslationService.isInlayDocTranslated(docComment)
     }

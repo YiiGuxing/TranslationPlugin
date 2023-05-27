@@ -83,7 +83,7 @@ class UpdateManager : BaseStartupActivity() {
         val partStyle = "margin-top: ${JBUI.scale(8)}px;"
         val milestone = if (!version.isRreRelease) {
             val refStyle =
-                "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
+                "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid $color;"
             message(
                 "plugin.updated.notification.message.milestone",
                 "$partStyle $refStyle",
@@ -215,7 +215,7 @@ class UpdateManager : BaseStartupActivity() {
 
         private fun getBorderColor(): String {
             val color = UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR
-            return (color.rgb and 0xffffff).toString(16)
+            return color.toRGBHex()
         }
 
         fun Version.getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {

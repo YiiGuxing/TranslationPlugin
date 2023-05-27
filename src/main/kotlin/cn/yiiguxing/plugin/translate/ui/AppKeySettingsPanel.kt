@@ -39,17 +39,14 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
         add(JLabel(message("settings.label.appPrivateKey")))
         add(appKeyField, fillX().gapLeft(gap).wrap())
 
-        getApiKeyLink.border = JBUI.Borders.empty(10, 0, 0, 0)
+        getApiKeyLink.border = JBUI.Borders.emptyTop(10)
         add(getApiKeyLink, wrap().span(2))
     }
 
     private var appKey: String?
-        get() = appKeyField.password
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { String(it) }
-            ?: ""
+        get() = appKeyField.password?.let { String(it) }
         set(value) {
-            appKeyField.text = if (value.isNullOrEmpty()) null else value
+            appKeyField.text = value
         }
 
     fun reset() {
@@ -58,7 +55,7 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
     }
 
     fun apply() {
-        appKeySettings.appId = appIdField.text
+        appKeySettings.appId = appIdField.text.trim()
         appKeySettings.setAppKey(appKey)
     }
 }

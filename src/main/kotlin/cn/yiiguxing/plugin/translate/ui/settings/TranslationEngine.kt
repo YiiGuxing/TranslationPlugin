@@ -7,14 +7,19 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
-import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredentials
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
+import cn.yiiguxing.plugin.translate.trans.deepl.DeeplSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
+import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
+import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
-import cn.yiiguxing.plugin.translate.ui.DeeplConfigurationDialog
 import cn.yiiguxing.plugin.translate.util.Settings
 import icons.TranslationIcons
 import javax.swing.Icon
@@ -27,12 +32,18 @@ enum class TranslationEngine(
     val intervalLimit: Int = 500
 ) {
 
-    MICROSOFT("translate.microsoft", message("translation.engine.microsoft.name"), TranslationIcons.Microsoft, 50000),
-    GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Google),
-    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Baidu, 10000, 1000),
-    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Ali, 5000),
-    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Deepl, 131072, 1000);
+    MICROSOFT(
+        "translate.microsoft",
+        message("translation.engine.microsoft.name"),
+        TranslationIcons.Engines.Microsoft,
+        50000
+    ),
+    GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Engines.Google),
+    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao, 5000),
+    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
+    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
+    OPEN_AI("translate.openai", message("translation.engine.openai.name"), TranslationIcons.Engines.OpenAI, 2000, 1000);
 
     var primaryLanguage: Lang
         get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
@@ -53,12 +64,13 @@ enum class TranslationEngine(
                 BAIDU -> BaiduTranslator
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
+                OPEN_AI -> OpenAITranslator
             }
         }
 
     val hasConfiguration: Boolean
         get() = when (this) {
-            MICROSOFT, GOOGLE -> false
+            MICROSOFT -> false
             else -> true
         }
 
@@ -70,7 +82,8 @@ enum class TranslationEngine(
             YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
-            DEEPL -> DeeplCredentials.instance.isAuthKeySet
+            DEEPL -> DeeplCredential.isAuthKeySet
+            OPEN_AI -> OpenAICredential.isApiKeySet
         }
     }
 
@@ -79,15 +92,7 @@ enum class TranslationEngine(
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {
-            YOUDAO -> AppKeySettingsDialog(
-                message("settings.youdao.title"),
-                AppKeySettingsPanel(
-                    TranslationIcons.load("/image/youdao_translate_logo.png"),
-                    "https://ai.youdao.com",
-                    Settings.youdaoTranslateSettings
-                ),
-                HelpTopic.YOUDAO
-            ).showAndGet()
+            YOUDAO -> YoudaoSettingsDialog().showAndGet()
 
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
@@ -109,7 +114,9 @@ enum class TranslationEngine(
                 HelpTopic.ALI
             ).showAndGet()
 
-            DEEPL -> DeeplConfigurationDialog().showAndGet()
+            GOOGLE -> GoogleSettingsDialog().showAndGet()
+            DEEPL -> DeeplSettingsDialog().showAndGet()
+            OPEN_AI -> OpenAISettingsDialog().showAndGet()
 
             else -> true
         }

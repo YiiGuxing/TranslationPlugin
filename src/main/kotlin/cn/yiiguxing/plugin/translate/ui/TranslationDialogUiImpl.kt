@@ -295,7 +295,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     }
 
     private fun setupTooltips() {
-        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.microsoft.deepl"
+        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai"
         val message = message("got.it.tooltip.text.new.translation.engines")
         GotItTooltip(id, message, this)
             .withHeader(message("got.it.tooltip.title.new.translation.engines"))

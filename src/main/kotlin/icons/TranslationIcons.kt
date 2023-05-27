@@ -14,24 +14,6 @@ object TranslationIcons {
     val TranslationReplace: Icon = load("/icons/translationReplace.svg")
 
     @JvmField
-    val Microsoft: Icon = load("/icons/microsoft.svg")
-
-    @JvmField
-    val Google: Icon = load("/icons/google.svg")
-
-    @JvmField
-    val Youdao: Icon = load("/icons/youdao.svg")
-
-    @JvmField
-    val Baidu: Icon = load("/icons/baidu.svg")
-
-    @JvmField
-    val Ali: Icon = load("/icons/ali.svg")
-
-    @JvmField
-    val Deepl: Icon = load("/icons/deepl.svg")
-
-    @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")
 
     @JvmField
@@ -81,6 +63,31 @@ object TranslationIcons {
 
     @JvmField
     val Quote: Icon = load("/icons/quote.svg")
+
+
+    /** Translation engine logos. */
+    object Engines {
+        @JvmField
+        val Ali: Icon = load("/icons/engines/ali.svg")
+
+        @JvmField
+        val Baidu: Icon = load("/icons/engines/baidu.svg")
+
+        @JvmField
+        val Deepl: Icon = load("/icons/engines/deepl.svg")
+
+        @JvmField
+        val Google: Icon = load("/icons/engines/google.svg")
+
+        @JvmField
+        val Microsoft: Icon = load("/icons/engines/microsoft.svg")
+
+        @JvmField
+        val OpenAI: Icon = load("/icons/engines/openai.svg")
+
+        @JvmField
+        val Youdao: Icon = load("/icons/engines/youdao.svg")
+    }
 
 
     @JvmStatic

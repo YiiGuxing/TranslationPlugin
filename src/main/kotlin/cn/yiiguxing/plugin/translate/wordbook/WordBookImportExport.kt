@@ -128,7 +128,7 @@ fun importWordBook(project: Project?, onFinished: () -> Unit) {
 
     val importer = WORD_BOOK_IMPORTERS[selectFile.extension?.lowercase(Locale.getDefault())]
     if (importer == null) {
-        LOG.e("Word book import: file extension=${selectFile.extension}")
+        LOG.w("Word book import: file extension=${selectFile.extension}")
         Notifications.showErrorNotification(
             title,
             message("wordbook.window.import.notification.cannot.import"),

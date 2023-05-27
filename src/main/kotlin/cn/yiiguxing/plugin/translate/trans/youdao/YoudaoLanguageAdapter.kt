@@ -8,16 +8,25 @@ import cn.yiiguxing.plugin.translate.trans.Lang
  */
 object YoudaoLanguageAdapter : BaseLanguageAdapter() {
 
-    private val SUPPORTED_LANGUAGES: List<Lang> = (Lang.sortedLanguages - listOf(
+    private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+        Lang.AUTO,
+        Lang.CHINESE,
         Lang.CHINESE_TRADITIONAL,
-        Lang.CHINESE_CLASSICAL,
-        Lang.AFRIKAANS,
-        Lang.KYRGYZ,
-        Lang.CATALAN,
-        Lang.HMONG,
-        Lang.SERBIAN,
-        Lang.SLOVENIAN
-    )).toList()
+        Lang.ENGLISH,
+        Lang.JAPANESE,
+        Lang.KOREAN,
+        Lang.DUTCH,
+        Lang.VIETNAMESE,
+        Lang.RUSSIAN,
+        Lang.PORTUGUESE,
+        Lang.ITALIAN,
+        Lang.INDONESIAN,
+        Lang.FRENCH,
+        Lang.SPANISH,
+        Lang.GERMAN,
+        Lang.THAI,
+        Lang.ARABIC,
+    )
 
     override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
@@ -25,8 +34,7 @@ object YoudaoLanguageAdapter : BaseLanguageAdapter() {
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "zh-CHS" to Lang.CHINESE,
-        "yue" to Lang.CHINESE_CANTONESE,
-        "he" to Lang.HEBREW,
+        "zh-CHT" to Lang.CHINESE_TRADITIONAL,
     )
 
 }

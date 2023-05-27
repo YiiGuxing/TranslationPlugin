@@ -71,7 +71,7 @@ class BalloonTranslationPane(
             }
         }
 
-        viewer.border = JBUI.Borders.empty(0, 0, 0, OFFSET + GAP)
+        viewer.border = JBUI.Borders.emptyRight(OFFSET + GAP)
 
         if (isDictViewer(viewer)) {
             dictViewerScrollWrapper = scrollPane
@@ -83,7 +83,7 @@ class BalloonTranslationPane(
     override fun onRowCreated(row: JComponent) {
         if (row !is ScrollPane) {
             val border = row.border
-            val toMerge = JBUI.Borders.empty(0, 0, 0, OFFSET + GAP)
+            val toMerge = JBUI.Borders.emptyRight(OFFSET + GAP)
             row.border = if (border != null) JBUI.Borders.merge(border, toMerge, false) else toMerge
         }
     }

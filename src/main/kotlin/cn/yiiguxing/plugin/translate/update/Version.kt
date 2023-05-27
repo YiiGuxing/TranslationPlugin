@@ -64,16 +64,11 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
     fun isFeatureUpdateOf(other: Version): Boolean {
         if (major > other.major) return true
         if (major == other.major && minor > other.minor) return true
-        if (major == other.major &&
-            minor == other.minor &&
-            other.patch == 0 &&
-            !isRreRelease &&
-            other.isRreRelease
-        ) {
-            return true
-        }
-
-        return false
+        return major == other.major &&
+                minor == other.minor &&
+                other.patch == 0 &&
+                !isRreRelease &&
+                other.isRreRelease
     }
 
     /**
@@ -84,9 +79,7 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
         if (major != other.major) return false
         if (minor != other.minor) return false
         if (patch != other.patch) return false
-        if (prerelease != other.prerelease) return false
-
-        return true
+        return prerelease == other.prerelease
     }
 
     /**

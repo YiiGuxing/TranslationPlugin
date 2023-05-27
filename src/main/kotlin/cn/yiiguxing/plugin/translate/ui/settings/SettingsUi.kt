@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.ActionLink
+import cn.yiiguxing.plugin.translate.ui.TypedComboBoxEditor
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import cn.yiiguxing.plugin.translate.ui.UI.fill
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
@@ -72,10 +73,9 @@ abstract class SettingsUi {
     protected val keepFormatCheckBox: JBCheckBox = JBCheckBox(message("settings.options.keepFormatting"))
 
     protected lateinit var ignoreRegExp: EditorTextField
-    protected val checkIgnoreRegExpButton: JButton = JButton(message("settings.button.check"))
     protected val ignoreRegExpMsg: JLabel = JLabel().apply { foreground = ERROR_FOREGROUND_COLOR }
 
-    protected val separatorsTextField: JTextField = JTextField().apply {
+    protected val separatorTextField: JTextField = JTextField().apply {
         document = object : PlainDocument() {
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
                 val text = getText(0, length)
@@ -119,7 +119,6 @@ abstract class SettingsUi {
         }
     }
 
-    protected val showWordFormsCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordForms"))
     protected val autoReplaceCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoReplace"))
     protected val showReplacementActionCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.show.replacement.action"))
@@ -134,6 +133,7 @@ abstract class SettingsUi {
     protected val showExplanationCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showExplanation"))
 
     protected val maxHistoriesSizeComboBox: ComboBox<Int> = comboBox(50, 30, 20, 10, 0).apply {
+        editor = TypedComboBoxEditor { (it.toDoubleOrNull()?.toInt() ?: 50).coerceIn(50, 5000) }
         isEditable = true
     }
 
@@ -150,7 +150,7 @@ abstract class SettingsUi {
 
     protected val supportLinkLabel: LinkLabel<*> =
         LinkLabel<Any>(message("support.or.donate"), TranslationIcons.Support).apply {
-            border = JBUI.Borders.empty(20, 0, 0, 0)
+            border = JBUI.Borders.emptyTop(20)
         }
 
     protected fun doLayout() {
@@ -158,7 +158,7 @@ abstract class SettingsUi {
             val comboboxGroup = "combobox"
 
             add(JLabel(message("settings.label.translation.engine")))
-            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup))
+            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth("${JBUIScale.scale(200)}px"))
             val configurePanel = Box.createHorizontalBox().apply {
                 add(configureTranslationEngineLink)
                 fixEngineConfigurationComponent()
@@ -183,12 +183,10 @@ abstract class SettingsUi {
                 else JTextField()
 
             add(ignoreRegexComponent, fillX())
-            add(checkIgnoreRegExpButton, wrap())
 
             val msgCC = fillX()
                 .gapBefore(JBUIScale.scale(2).toString())
                 .gapTop(JBUIScale.scale(2).toString())
-                .spanX(2)
                 .cell(1, 4)
                 .wrap()
             add(ignoreRegExpMsg, msgCC)
@@ -197,7 +195,6 @@ abstract class SettingsUi {
             val commentCC = fillX()
                 .gapBefore(JBUIScale.scale(2).toString())
                 .gapTop(JBUIScale.scale(2).toString())
-                .spanX(2)
                 .cell(1, 5)
                 .wrap()
             add(comment, commentCC)
@@ -228,7 +225,6 @@ abstract class SettingsUi {
 
         val translationPopupPanel = titledPanel(message("settings.panel.title.translation.popup")) {
             add(foldOriginalCheckBox, wrap().span(2))
-            add(showWordFormsCheckBox, wrap().span(2))
             add(autoPlayTTSCheckBox)
             add(ttsSourceComboBox, wrap())
         }
@@ -238,10 +234,10 @@ abstract class SettingsUi {
             add(selectTargetLanguageCheckBox, wrap().span(3))
             add(autoReplaceCheckBox, wrap().span(3))
             add(JLabel(message("settings.label.separators")))
-            add(separatorsTextField)
+            add(separatorTextField)
             add(ContextHelpLabel.create(message("settings.tip.separators")), wrap())
 
-            setMinWidth(separatorsTextField, JBUIScale.scale(250))
+            setMinWidth(separatorTextField, JBUIScale.scale(250))
         }
 
         val wordOfTheDayPanel = titledPanel(message("settings.panel.title.word.of.the.day")) {
@@ -353,6 +349,7 @@ abstract class SettingsUi {
 
         private fun <T> comboBox(elements: List<T>): ComboBox<T> = ComboBox(CollectionComboBoxModel(elements))
 
+        @Suppress("SameParameterValue")
         private fun <T> comboBox(vararg elements: T): ComboBox<T> = comboBox(elements.toList())
 
         private inline fun <reified T : Enum<T>> comboBox(): ComboBox<T> = comboBox(enumValues<T>().toList())

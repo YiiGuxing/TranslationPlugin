@@ -38,7 +38,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = DeeplLanguageAdapter.supportedTargetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || !DeeplCredentials.instance.isAuthKeySet) {
+        if (force || !DeeplCredential.isAuthKeySet) {
             return DEEPL.showConfigurationDialog()
         }
 
@@ -54,7 +54,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
-        val authKey = DeeplCredentials.instance.authKey ?: ""
+        val authKey = DeeplCredential.authKey ?: ""
         return DeeplService(authKey).translate(text, srcLang, targetLang, isDocument)
     }
 

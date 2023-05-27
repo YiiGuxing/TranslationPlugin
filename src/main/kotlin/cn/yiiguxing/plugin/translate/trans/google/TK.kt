@@ -21,7 +21,7 @@ import java.util.regex.Pattern
  */
 object TKK {
     private const val MIM = 60 * 60 * 1000
-    private const val ELEMENT_URL = "https://translate.googleapis.com/translate_a/element.js"
+    private const val ELEMENT_URL_PATH = "/translate_a/element.js"
 
     private val log: Logger = logger<TKK>()
 
@@ -66,26 +66,17 @@ object TKK {
         return now to (abs(generator.nextInt().toLong()) + generator.nextInt().toLong())
     }
 
-    private fun getElementJsRequest(): RequestBuilder = HttpRequests.request(ELEMENT_URL)
-        .userAgent()
-        .googleReferer()
-        .connectTimeout(5000)
-        .throwStatusCodeException(true)
+    private fun getElementJsRequest(serverUrl: String): RequestBuilder =
+        HttpRequests.request("${serverUrl.trimEnd('/')}$ELEMENT_URL_PATH")
+            .userAgent()
+            .googleReferer()
+            .connectTimeout(5000)
+            .throwStatusCodeException(true)
 
     private fun updateFromGoogle(): Pair<Long, Long>? {
         return try {
-            val elementJS = getElementJsRequest().readString(null)
-            val matcher = tkkPattern.matcher(elementJS)
-            if (matcher.find()) {
-                val value1 = matcher.group(1).toLong()
-                val value2 = matcher.group(2).toLong()
-
-                log.i("TKK Updated: $value1.$value2")
-
-                value1 to value2
-            } else {
-                log.w("TKK update failed: TKK not found.")
-                null
+            fetchTKK(googleApiServerUrl).also { (v1, v2) ->
+                log.i("TKK Updated: $v1.$v2")
             }
         } catch (error: Throwable) {
             log.w("TKK update failed", error)
@@ -93,8 +84,26 @@ object TKK {
         }
     }
 
+    /**
+     * 从谷歌翻译的网页中获取TKK值。
+     * @throws IllegalStateException 当TKK值无法从网页中获取时。
+     */
+    internal fun fetchTKK(serverUrl: String = googleApiServerUrl): Pair<Long, Long> {
+        val elementJS = getElementJsRequest(serverUrl).readString(null)
+        val matcher = tkkPattern.matcher(elementJS)
+
+        if (!matcher.find()) {
+            throw IllegalStateException("TKK not found.")
+        }
+
+        val value1 = matcher.group(1).toLong()
+        val value2 = matcher.group(2).toLong()
+
+        return value1 to value2
+    }
+
     internal fun testConnection(): Boolean = try {
-        getElementJsRequest().tryConnect()
+        getElementJsRequest(googleApiServerUrl).tryConnect()
         true
     } catch (e: Throwable) {
         false

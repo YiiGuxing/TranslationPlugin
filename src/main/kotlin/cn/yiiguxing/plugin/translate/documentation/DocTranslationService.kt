@@ -1,9 +1,15 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider
 import cn.yiiguxing.plugin.translate.util.LruCache
+import cn.yiiguxing.plugin.translate.util.w
+import com.intellij.codeInsight.documentation.DocumentationManager
+import com.intellij.lang.documentation.CompositeDocumentationProvider
+import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
@@ -32,8 +38,8 @@ internal class DocTranslationService : Disposable {
         } == now
         if (updated) {
             ReadAction.nonBlocking {
-                translationStates.removeIf { key, _ -> key.element == null }
-                inlayDocTranslations.keys.removeIf { it.element == null }
+                translationStates.removeIf { key, _ -> key.elementOrNull == null }
+                inlayDocTranslations.keys.removeIf { it.elementOrNull == null }
             }.submit(AppExecutorUtil.getAppExecutorService())
         }
     }
@@ -51,8 +57,18 @@ internal class DocTranslationService : Disposable {
 
         private val EMPTY = TranslationResult()
 
+        private val LOG = logger<DocTranslationService>()
+
         private val <T : PsiElement> T.myPointer: SmartPsiElementPointer<T>
             get() = SmartPointerManager.createPointer(this)
+
+        private val <T : PsiElement> SmartPsiElementPointer<T>.elementOrNull: T?
+            get() = try {
+                element
+            } catch (e: Throwable) {
+                LOG.w("Cannot get element from this smart pointer", e)
+                null
+            }
 
         private fun service(project: Project) = project.getService(DocTranslationService::class.java)
 
@@ -150,6 +166,40 @@ internal class DocTranslationService : Disposable {
                 } else {
                     inlayDocTranslations.remove(pointer)
                 }
+            }
+        }
+
+        /**
+         * Returns `true` if the specified [PSI element][element] supports
+         * documentation translation, otherwise returns `false`.
+         */
+        fun isSupportedForPsiElement(element: PsiElement): Boolean {
+            if (!element.isValid) {
+                return false
+            }
+
+            val originalElement = DocumentationManager.getOriginalElement(element)
+            val provider = try {
+                ReadAction.compute<DocumentationProvider, Throwable> {
+                    DocumentationManager.getProviderFromElement(element, originalElement)
+                }
+            } catch (e: Throwable) {
+                LOG.w("Cannot get documentation provider from element", e)
+                return false
+            }
+
+            return includesTranslatedDocumentationProvider(provider)
+        }
+
+        /**
+         * Returns `true` if the specified [provider] or any of
+         * its sub-providers is a [TranslatedDocumentationProvider].
+         */
+        private fun includesTranslatedDocumentationProvider(provider: DocumentationProvider): Boolean {
+            return when (provider) {
+                is TranslatedDocumentationProvider -> true
+                is CompositeDocumentationProvider -> provider.providers.any { includesTranslatedDocumentationProvider(it) }
+                else -> false
             }
         }
     }

@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.PopupAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.PositionTracker
@@ -19,7 +20,7 @@ import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
 
-class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), ImportantTranslationAction, PopupAction {
+class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), ImportantTranslationAction, PopupAction, DumbAware {
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 

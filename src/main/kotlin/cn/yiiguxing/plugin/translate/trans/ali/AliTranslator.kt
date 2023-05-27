@@ -89,7 +89,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
      * 序列化json模型
      */
     @Suppress("MemberVisibilityCanBePrivate")
-    data class AliTranslationRequest constructor(
+    data class AliTranslationRequest(
         @SerializedName("SourceText")
         val sourceText: String,
         @SerializedName("SourceLanguage")

@@ -1,6 +1,20 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added OpenAI translation engine (Experimental).
+- Added Youdao document translation support.
+- Google Translate Engine supports custom translation service address.
+- Youdao Translate Engine supports translation domain configuration.
+- Simplified the list of languages supported by Youdao Translate Engine.
+- Optimized the "Translate and Replace" operation.
+- Bug fixes.
+- 新增 OpenAI 翻译引擎（实验性）
+- 新增有道文档翻译支持
+- Google 翻译引擎支持自定义翻译服务器地址
+- 有道翻译引擎支持翻译领域配置
+- 精简了有道翻译支持的语言列表
+- 优化了“翻译并替换”操作
+- 已知问题修复
 
 ## [3.4.2] (2023/03/20)
 - Compatible with IDEA 2023.1+.

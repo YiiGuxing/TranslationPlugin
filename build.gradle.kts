@@ -9,15 +9,15 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.8.10"
+    id("org.jetbrains.kotlin.jvm") version "1.8.21"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.13.2"
+    id("org.jetbrains.intellij") version "1.13.3"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.0.0"
     // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.13"
     // Gradle Kover Plugin
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
+    id("org.jetbrains.kotlinx.kover") version "0.7.0"
 }
 
 
@@ -79,7 +79,7 @@ repositories {
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
-    implementation("org.jsoup:jsoup:1.15.4")
+    implementation("org.jsoup:jsoup:1.16.1")
     implementation("commons-dbutils:commons-dbutils:1.7")
     implementation("com.github.YiiGuxing:intellij-idea-compat:0.0.1")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
@@ -118,12 +118,10 @@ qodana {
 }
 
 // Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
-kover {
-    xmlReport {
-        onCheck.set(true)
-    }
-    htmlReport {
-        onCheck.set(true)
+koverReport {
+    defaults {
+        xml { onCheck = true }
+        html { onCheck = true }
     }
 }
 

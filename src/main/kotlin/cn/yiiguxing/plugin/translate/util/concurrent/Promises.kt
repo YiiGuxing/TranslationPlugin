@@ -1,7 +1,9 @@
 @file:Suppress("unused")
 
-package cn.yiiguxing.plugin.translate.util
+package cn.yiiguxing.plugin.translate.util.concurrent
 
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.invokeAndWait
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
@@ -10,6 +12,31 @@ import org.jetbrains.concurrency.CancellablePromise
 import org.jetbrains.concurrency.Promise
 import java.util.function.Consumer
 
+
+/**
+ * Usage example:
+ * ```
+ * asyncLatch { latch ->
+ *   runAsync {
+ *     // Make sure to continue execution only
+ *     // after the error handler has been successfully registered,
+ *     // otherwise the default error handler may cause fatal errors in the IDE.
+ *     latch.await()
+ *     // ...
+ *   }.onError { e ->
+ *     // ...
+ *   }
+ * }
+ * ```
+ */
+inline fun <T> asyncLatch(block: (Latch) -> Promise<T>): Promise<T> {
+    val latch = AsyncLatch()
+    return try {
+        block(latch)
+    } finally {
+        latch.done()
+    }
+}
 
 /**
  * Has no effect if the [Promise] is not a [CancellablePromise].
