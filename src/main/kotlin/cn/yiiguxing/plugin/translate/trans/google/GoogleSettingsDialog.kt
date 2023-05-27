@@ -10,7 +10,6 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.intellij.openapi.progress.impl.ProgressManagerImpl
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.IdeFocusManager
@@ -45,7 +44,7 @@ class GoogleSettingsDialog : DialogWrapper(true) {
 
     init {
         title = message("google.settings.dialog.title")
-        setResizable(false)
+        isResizable = false
 
         init()
         initListeners()
@@ -123,7 +122,7 @@ class GoogleSettingsDialog : DialogWrapper(true) {
         val url = serverUrl ?: return
         val title = message("google.settings.test.result.title")
         try {
-            TestTask(url).run(rootPane)
+            TestTask(rootPane, url).run()
 
             val message = message("google.settings.test.result.success.message")
             Messages.showInfoMessage(rootPane, message, title)
@@ -136,8 +135,8 @@ class GoogleSettingsDialog : DialogWrapper(true) {
         }
     }
 
-    private class TestTask(private val serverUrl: String) :
-        Task.WithResult<Unit, Exception>(null, message("google.settings.test.task.title"), true) {
+    private class TestTask(parentComponent: JComponent, private val serverUrl: String) :
+        Task.WithResult<Unit, Exception>(null, parentComponent, message("google.settings.test.task.title"), true) {
         override fun compute(indicator: ProgressIndicator) {
             indicator.isIndeterminate = true
             indicator.checkCanceled()
@@ -145,10 +144,8 @@ class GoogleSettingsDialog : DialogWrapper(true) {
             indicator.checkCanceled()
         }
 
-        fun run(parentComponent: JComponent) {
-            val progressManager = ProgressManager.getInstance() as ProgressManagerImpl
-            progressManager.runProcessWithProgressSynchronously(this, parentComponent)
-            getResult()
+        fun run() {
+            ProgressManager.getInstance().run(this)
         }
     }
 

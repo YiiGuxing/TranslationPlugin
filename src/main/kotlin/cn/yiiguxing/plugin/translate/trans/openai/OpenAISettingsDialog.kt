@@ -40,7 +40,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     init {
         title = message("openai.settings.dialog.title")
-        setResizable(false)
+        isResizable = false
         init()
 
         apiKey = OpenAICredential.apiKey
