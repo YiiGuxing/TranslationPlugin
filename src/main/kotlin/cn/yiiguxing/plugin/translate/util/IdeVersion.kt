@@ -12,7 +12,8 @@ enum class IdeVersion(val buildNumber: Int) {
     IDE2021_3(213),
     IDE2022_1(221),
     IDE2022_2(222),
-    IDE2022_3(223);
+    IDE2022_3(223),
+    IDE2023_2(232);
 
     companion object {
         val buildNumber: BuildNumber get() = ApplicationInfo.getInstance().build

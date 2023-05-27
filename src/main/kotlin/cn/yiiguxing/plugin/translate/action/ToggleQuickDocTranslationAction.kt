@@ -42,7 +42,7 @@ open class ToggleQuickDocTranslationAction :
     }
 
     private val isDocumentationV2: Boolean
-        get() = Registry.`is`("documentation.v2")
+        get() = IdeVersion >= IdeVersion.IDE2023_2 || Registry.`is`("documentation.v2")
 
     private fun documentationBrowser(dc: DataContext): DocumentationBrowserCompat? = DocumentationBrowserCompat.get(dc)
 
