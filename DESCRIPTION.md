@@ -16,6 +16,7 @@
             <li>Microsoft Translator.</li>
             <li>Google Translate.</li>
             <li>DeepL Translator.</li>
+            <li>OpenAI Translator.</li>
             <li>Youdao Translate.</li>
             <li>Alibaba Translate.</li>
             <li>Baidu Translate.</li>
