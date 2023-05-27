@@ -55,7 +55,9 @@ open class ToggleQuickDocTranslationAction :
         }
 
         if (isDocumentationV2) {
-            e.presentation.isEnabledAndVisible = documentationBrowser(e.dataContext)?.targetElement != null
+            e.presentation.isEnabledAndVisible = documentationBrowser(e.dataContext)
+                ?.targetElement
+                .let { it != null && DocTranslationService.isSupportedForPsiElement(it) }
             return
         }
 
