@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler
 import com.intellij.openapi.editor.actions.TextComponentEditorAction
+import com.intellij.openapi.project.DumbAware
 
 /**
  * 文本组件（如文本框、提示气泡、输入框……）翻译
@@ -20,7 +21,8 @@ import com.intellij.openapi.editor.actions.TextComponentEditorAction
 class TranslateTextComponentAction :
     TextComponentEditorAction(Handler()),
     HintManagerImpl.ActionToIgnore,
-    ImportantTranslationAction {
+    ImportantTranslationAction,
+    DumbAware {
 
     init {
         isEnabledInModalContext = true
@@ -38,6 +40,7 @@ class TranslateTextComponentAction :
                 !editor.isViewer -> editor.getSelectionFromCurrentCaret(settings.autoSelectionMode)?.let {
                     editor.document.getText(it)
                 }
+
                 else -> null
             }
 

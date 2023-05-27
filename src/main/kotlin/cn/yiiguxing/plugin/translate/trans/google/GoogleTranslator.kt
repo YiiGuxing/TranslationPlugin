@@ -20,8 +20,8 @@ import javax.swing.Icon
  */
 object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
-    private const val TRANSLATE_API_URL = "https://translate.googleapis.com/translate_a/single"
-    private const val DOCUMENTATION_TRANSLATION_API_URL = "https://translate.googleapis.com/translate_a/t"
+    private const val TRANSLATE_API_PATH = "/translate_a/single"
+    private const val DOCUMENTATION_TRANSLATION_API_PATH = "/translate_a/t"
 
 
     private const val TAG_I = "i"
@@ -114,8 +114,8 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
-        val baseUrl = if (isDocumentation) DOCUMENTATION_TRANSLATION_API_URL else TRANSLATE_API_URL
-        val urlBuilder = UrlBuilder(baseUrl)
+        val apiPath = if (isDocumentation) DOCUMENTATION_TRANSLATION_API_PATH else TRANSLATE_API_PATH
+        val urlBuilder = UrlBuilder(googleApiUrl(apiPath))
             .addQueryParameter("sl", srcLang.googleLanguageCode)
             .addQueryParameter("tl", targetLang.googleLanguageCode)
 

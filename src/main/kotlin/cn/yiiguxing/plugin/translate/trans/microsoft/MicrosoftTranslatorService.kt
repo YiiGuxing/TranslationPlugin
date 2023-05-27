@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.userAgent
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.components.Service
@@ -18,6 +19,7 @@ import org.jetbrains.concurrency.runAsync
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 
@@ -33,23 +35,17 @@ internal class MicrosoftTranslatorService {
 
     private var tokenPromise: Promise<String>? = null
 
+    private val validAccessToken: String?
+        @Synchronized
+        get() = accessToken?.takeIf { System.currentTimeMillis() < expireAt }
+
     private fun updateAccessToken(token: String) {
         val expirationTime = getExpirationTimeFromToken(token)
         LOG.d("Update access token: ********, Expiration time: ${Date(expirationTime)}")
         synchronized(this) {
             accessToken = token
-            expireAt = expirationTime - 60000
+            expireAt = expirationTime - PRE_EXPIRATION
             tokenPromise = null
-        }
-    }
-
-    @Synchronized
-    private fun getValidAccessToken(): String? {
-        val token = accessToken
-        return if (token != null && System.currentTimeMillis() < expireAt) {
-            token
-        } else {
-            null
         }
     }
 
@@ -59,9 +55,15 @@ internal class MicrosoftTranslatorService {
             return it
         }
 
-        val promise = runAsync { Http.get(AUTH_URL) { userAgent() } }
-            .onError { LOG.w("Failed to get access token", it) }
-            .onSuccess(::updateAccessToken)
+        val promise = asyncLatch { latch ->
+            runAsync {
+                latch.await(100, TimeUnit.MILLISECONDS)
+                Http.get(AUTH_URL) { userAgent() }
+            }
+                .onError { LOG.w("Failed to get access token", it) }
+                .onSuccess(::updateAccessToken)
+        }
+
         tokenPromise = promise
 
         return promise
@@ -72,7 +74,7 @@ internal class MicrosoftTranslatorService {
      */
     @RequiresBackgroundThread
     fun getAccessToken(): String {
-        getValidAccessToken()?.let { token ->
+        validAccessToken?.let { token ->
             return token
         }
 
@@ -111,7 +113,9 @@ internal class MicrosoftTranslatorService {
 
     companion object {
 
-        private const val TIMEOUT = 10 * 1000 // 10 seconds
+        private const val TIMEOUT = 60 * 1000 // 1 minute
+        private const val PRE_EXPIRATION = 2 * 60 * 1000 // 2 minutes
+        private const val DEFAULT_EXPIRATION = 10 * 60 * 1000 // 10 minutes
 
         private const val AUTH_URL = "https://edge.microsoft.com/translate/auth"
 
@@ -145,10 +149,14 @@ internal class MicrosoftTranslatorService {
         private data class JwtPayload(@SerializedName("exp") val expirationTime: Long)
 
         private fun getExpirationTimeFromToken(token: String): Long {
-            val payloadChunk = token.split('.')[1]
-            val decoder = Base64.getUrlDecoder()
-            val payload = String(decoder.decode(payloadChunk))
-            return GSON.fromJson(payload, JwtPayload::class.java).expirationTime * 1000
+            return try {
+                val payloadChunk = token.split('.')[1]
+                val decoder = Base64.getUrlDecoder()
+                val payload = String(decoder.decode(payloadChunk))
+                GSON.fromJson(payload, JwtPayload::class.java).expirationTime * 1000
+            } catch (e: Throwable) {
+                System.currentTimeMillis() + DEFAULT_EXPIRATION - PRE_EXPIRATION / 2
+            }
         }
     }
 }

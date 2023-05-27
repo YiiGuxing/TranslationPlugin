@@ -3,10 +3,7 @@ package cn.yiiguxing.plugin.translate.service
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.util.LruCache
-import cn.yiiguxing.plugin.translate.util.d
-import cn.yiiguxing.plugin.translate.util.w
-import cn.yiiguxing.plugin.translate.util.writeSafe
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
@@ -15,7 +12,6 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.delete
 import com.intellij.util.io.readText
-import org.jetbrains.kotlin.idea.util.application.executeOnPooledThread
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
@@ -54,6 +50,12 @@ class CacheService : PersistentStateComponent<CacheService.State> {
 
     fun getMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String): Translation? {
         return memoryCache[MemoryCacheKey(text, srcLang, targetLang, translatorId)]
+    }
+
+    fun removeMemoryCache(
+        predicate: (MemoryCacheKey, Translation) -> Boolean
+    ): Set<Map.Entry<MemoryCacheKey, Translation>> {
+        return memoryCache.removeIf(predicate)
     }
 
     fun getMemoryCacheSnapshot(): Map<MemoryCacheKey, Translation> {
@@ -152,7 +154,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     }
 
     /**
-     * Data class for memory cache key
+     * Memory cache key data class
      */
     data class MemoryCacheKey(
         val text: String,

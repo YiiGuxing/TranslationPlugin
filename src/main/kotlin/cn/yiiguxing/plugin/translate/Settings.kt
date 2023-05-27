@@ -104,11 +104,6 @@ class Settings : PersistentStateComponent<Settings> {
     var ttsSource: TTSSource = TTSSource.ORIGINAL
 
     /**
-     * 显示词形（有道翻译）
-     */
-    var showWordForms: Boolean = true
-
-    /**
      * 启动时显示每日单词
      */
     var showWordsOnStartup: Boolean = false

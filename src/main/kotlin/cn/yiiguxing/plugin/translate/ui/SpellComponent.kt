@@ -34,7 +34,7 @@ class SpellComponent : BorderLayoutPanel() {
         isVisible = false
         addToLeft(spellLabel)
         addToCenter(spellText)
-        spellLabel.border = JBUI.Borders.empty(0, 0, 0, 5)
+        spellLabel.border = JBUI.Borders.emptyRight(5)
     }
 
     fun onSpellFixed(handler: (spell: String) -> Unit) {

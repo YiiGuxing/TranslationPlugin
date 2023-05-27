@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.PositionTracker
@@ -15,7 +16,7 @@ import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
 
-class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationAction, PopupAction {
+class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationAction, PopupAction, DumbAware {
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 

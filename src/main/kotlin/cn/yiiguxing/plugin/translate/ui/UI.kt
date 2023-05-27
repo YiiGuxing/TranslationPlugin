@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.util.IconLoader
+import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.util.IconUtil
 import com.intellij.util.ui.JBFont
@@ -14,6 +15,8 @@ import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.image.RGBImageFilter
 import javax.swing.Icon
+import javax.swing.JComponent
+import javax.swing.JEditorPane
 import javax.swing.border.Border
 
 /**
@@ -53,7 +56,7 @@ object UI {
     }
 
     @JvmStatic
-    fun getBordersColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
+    fun getBorderColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
 
     fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
         icon = baseIcon
@@ -67,6 +70,8 @@ object UI {
     fun migLayoutVertical() =
         MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
 
+    fun cc() = CC()
+
     fun spanX(cells: Int = LayoutUtil.INF): CC = CC().spanX(cells)
 
     fun fill(): CC = CC().grow().push()
@@ -79,11 +84,25 @@ object UI {
 
     fun emptyBorder(offsets: Int) = JBUI.Borders.empty(offsets)
 
-    fun lineAbove(): Border = JBUI.Borders.customLine(getBordersColor(), 1, 0, 0, 0)
+    fun lineAbove(): Border = JBUI.Borders.customLine(getBorderColor(), 1, 0, 0, 0)
 
-    fun lineBelow(): Border = JBUI.Borders.customLine(getBordersColor(), 0, 0, 1, 0)
+    fun lineBelow(): Border = JBUI.Borders.customLine(getBorderColor(), 0, 0, 1, 0)
 
-    fun lineToRight(): Border = JBUI.Borders.customLine(getBordersColor(), 0, 0, 0, 1)
+    fun lineToRight(): Border = JBUI.Borders.customLine(getBorderColor(), 0, 0, 0, 1)
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
+
+    fun createHint(content: String, preferredWidth: Int = 300): JComponent = JEditorPane().apply {
+        isEditable = false
+        isFocusable = false
+        isOpaque = false
+        foreground = JBUI.CurrentTheme.Label.disabledForeground()
+        font = font.deriveFont((font.size - 1).toFloat())
+        editorKit = UIUtil.getHTMLEditorKit()
+        border = JBUI.Borders.emptyTop(2)
+        text = content
+        preferredSize = JBUI.size(preferredWidth, 40)
+
+        addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
+    }
 }

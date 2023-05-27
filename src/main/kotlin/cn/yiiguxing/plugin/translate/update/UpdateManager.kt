@@ -24,12 +24,14 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.SystemInfoRt
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.ui.BalloonImpl
 import com.intellij.ui.BalloonLayoutData
 import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.jcef.JBCefApp
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
@@ -80,7 +82,7 @@ class UpdateManager : BaseStartupActivity() {
         val partStyle = "margin-top: ${JBUI.scale(8)}px;"
         val milestone = if (!version.isRreRelease) {
             val refStyle =
-                "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid #$color;"
+                "padding: ${JBUI.scale(3)}px ${JBUI.scale(6)}px; border-left: ${JBUI.scale(3)}px solid $color;"
             message(
                 "plugin.updated.notification.message.milestone",
                 "$partStyle $refStyle",
@@ -146,13 +148,33 @@ class UpdateManager : BaseStartupActivity() {
             balloon.setShowPointer(false)
             Disposer.register(balloon) { expire() }
 
-            val target = window.component?.let { RelativePoint(it, Point(it.width, 30)) }
-            balloon.show(target, Balloon.Position.atLeft)
-            true
+            balloon.showInIdeFrame(window)
         } catch (e: Throwable) {
             LOG.error(e)
             false
         }
+    }
+
+    private fun BalloonImpl.showInIdeFrame(window: IdeFrame): Boolean {
+        val component = window.component ?: return false
+        val target = if (SystemInfoRt.isMac) {
+            RelativePoint(component, Point(component.width, 0))
+        } else {
+            val layeredPane = component.rootPane?.layeredPane
+            val titleBar = layeredPane?.components?.find {
+                it.x == 0 && it.y == 0 && it.width == layeredPane.width && it.height > 0
+            }
+
+            val insetTop = shadowBorderInsets.top
+            val contentHalfHeight = content.preferredSize.height / 2
+            val titleBarHeight = titleBar?.height ?: defaultTitleBarHeight
+            val offsetY = titleBarHeight + insetTop + contentHalfHeight
+            val relativeComponent = titleBar ?: component
+            RelativePoint(relativeComponent, Point(relativeComponent.width, offsetY))
+        }
+
+        show(target, Balloon.Position.atLeft)
+        return true
     }
 
     private class SupportAction : DumbAwareAction(message("support.notification"), null, TranslationIcons.Support) {
@@ -187,10 +209,12 @@ class UpdateManager : BaseStartupActivity() {
 
         private val LOG = Logger.getInstance(UpdateManager::class.java)
 
+        private val defaultTitleBarHeight: Int
+            get() = JBUIScale.scale(30)
 
         private fun getBorderColor(): String {
             val color = UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR
-            return (color.rgb and 0xffffff).toString(16)
+            return color.toRGBHex()
         }
 
         fun Version.getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {

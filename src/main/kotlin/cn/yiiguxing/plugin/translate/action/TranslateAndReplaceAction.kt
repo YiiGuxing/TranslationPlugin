@@ -11,15 +11,12 @@ import cn.yiiguxing.plugin.translate.trans.TranslationNotifications
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.codeInsight.lookup.LookupEvent
-import com.intellij.codeInsight.lookup.LookupListener
-import com.intellij.codeInsight.lookup.LookupManager
+import com.intellij.codeInsight.lookup.*
 import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.WriteAction
-import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -107,7 +104,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val text = editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?: return
-        val processedText = text.processBeforeTranslate() ?: text
+        val processedText = text.trim().let { if (!it.contains(WHITESPACE)) it.splitWords() else it }
         val primaryLanguage = TranslateService.translator.primaryLanguage
 
         val indicatorTitle = message("action.TranslateAndReplaceAction.description")
@@ -208,10 +205,21 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     }
 
 
+    private class TranslationItemRenderer : LookupElementRenderer<LookupElement>() {
+        override fun renderElement(element: LookupElement, presentation: LookupElementPresentation) {
+            presentation.itemText = element.lookupString.replace(CRLF, "↩")
+        }
+    }
+
+
     private companion object {
 
         /** 谷歌翻译的空格符：`  -   　` */
         val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
+
+        val CRLF = Regex("\r\n|\r|\n")
+
+        val WHITESPACE = Regex("\\s+")
 
         val HIGHLIGHT_ATTRIBUTES = TextAttributes().apply {
             effectType = EffectType.BOXED
@@ -289,10 +297,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             if (tryReplace(selectionRange, elementsToReplace)) {
                 return false
             }
-            if (!checkSelection(selectionRange)) {
-                return false
-            }
-            return true
+            return checkSelection(selectionRange)
         }
 
         fun Editor.showResultsIfNeeds(
@@ -314,7 +319,10 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         fun Editor.showLookup(project: Project, selectionRange: TextRange, elementsToReplace: List<String>) {
             val markupModel = markupModel
-            val lookupElements = elementsToReplace.map(LookupElementBuilder::create).toTypedArray()
+            val renderer = TranslationItemRenderer()
+            val lookupElements = elementsToReplace.map {
+                LookupElementBuilder.create(it).withRenderer(renderer)
+            }.toTypedArray()
             val lookup = LookupManager.getInstance(project).showLookup(this, *lookupElements) ?: return
             val highlighter = markupModel.addHighlight(selectionRange)
 
@@ -331,19 +339,24 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.replaceText(range: TextRange, text: String) {
-            WriteAction.run<Throwable> {
-                document.startGuardedBlockChecking()
-                try {
-                    val offset = WriteCommandAction.runWriteCommandAction<Int>(project) {
-                        document.replaceString(range, text)
+            CommandProcessor.getInstance().executeCommand(
+                project,
+                {
+                    WriteAction.run<Throwable> {
+                        document.startGuardedBlockChecking()
+                        try {
+                            val offset = document.replaceString(range, text)
+                            selectionModel.removeSelection()
+                            caretModel.moveToOffset(offset)
+                            scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+                        } finally {
+                            document.stopGuardedBlockChecking()
+                        }
                     }
-                    selectionModel.removeSelection()
-                    caretModel.moveToOffset(offset)
-                    scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
-                } finally {
-                    document.stopGuardedBlockChecking()
-                }
-            }
+                },
+                null,
+                null
+            )
         }
 
         fun Document.replaceString(range: TextRange, text: String): Int {

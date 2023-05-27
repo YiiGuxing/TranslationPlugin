@@ -1,8 +1,26 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added OpenAI translation engine (Experimental).
+- Added Youdao document translation support.
+- Google Translate Engine supports custom translation service address.
+- Youdao Translate Engine supports translation domain configuration.
+- Simplified the list of languages supported by Youdao Translate Engine.
+- Optimized the "Translate and Replace" operation.
+- Bug fixes.
+- 新增 OpenAI 翻译引擎（实验性）
+- 新增有道文档翻译支持
+- Google 翻译引擎支持自定义翻译服务器地址
+- 有道翻译引擎支持翻译领域配置
+- 精简了有道翻译支持的语言列表
+- 优化了“翻译并替换”操作
+- 已知问题修复
+
+## [3.4.2] (2023/03/20)
+- Compatible with IDEA 2023.1+.
 - Fixed the problem where translating documentation would display HTML tag text as actual HTML elements.
 - Other known bug fixes.
+- 兼容 IDEA 2023.1+ 版本
 - 修复了翻译文档会将 HTML 标记文本显示为实际 HTML 元素的问题
 - 其他已知问题修复
 
@@ -322,7 +340,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.1...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.2...HEAD
+[3.4.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.1...v3.4.2
 [3.4.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...v3.4.1
 [3.4.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.5...v3.4.0
 [3.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.4...v3.3.5

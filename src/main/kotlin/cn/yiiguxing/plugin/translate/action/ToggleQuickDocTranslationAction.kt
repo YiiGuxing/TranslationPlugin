@@ -14,6 +14,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
@@ -27,7 +28,8 @@ open class ToggleQuickDocTranslationAction :
         { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }
     ),
     HintManagerImpl.ActionToIgnore,
-    ImportantTranslationAction {
+    ImportantTranslationAction,
+    DumbAware {
 
     override fun update(e: AnActionEvent) {
         super.update(e)
@@ -44,6 +46,7 @@ open class ToggleQuickDocTranslationAction :
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)
 
         e.presentation.isVisible = e.presentation.isVisible && rdMouseHoverDocComponent == null
+                && activeDocComponent?.element.let { it != null && DocTranslationService.isSupportedForPsiElement(it) }
 
         // 当Action在ToolWindow的右键菜单上时，点击菜单项会使得ToolWindow失去焦点，
         // 此时toolWindow.isActive为false，Action将不启用。
@@ -125,5 +128,6 @@ private class ToggleQuickDocTranslationActionWithShortcut : ToggleQuickDocTransl
             ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION)?.isActive ?: true
 
         e.presentation.isEnabled = docComponentExists && !hasSelection && toolWindowIsActiveIfShown
+                && activeDocComponent?.element.let { it != null && DocTranslationService.isSupportedForPsiElement(it) }
     }
 }

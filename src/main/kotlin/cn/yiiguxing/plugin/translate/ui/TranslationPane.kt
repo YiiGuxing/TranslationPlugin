@@ -566,7 +566,7 @@ abstract class TranslationPane<T : JComponent>(
         private fun flow(vararg components: JComponent): JComponent {
             val gap = JBUI.scale(GAP)
             val panel = NonOpaquePanel(FlowLayout(FlowLayout.LEFT, gap, 0))
-            panel.border = JBUI.Borders.empty(0, -GAP, 0, 0)
+            panel.border = JBUI.Borders.emptyLeft(-GAP)
 
             for (component in components) {
                 panel.add(component)

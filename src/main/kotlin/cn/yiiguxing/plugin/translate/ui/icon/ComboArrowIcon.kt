@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.icon
 
 import com.intellij.openapi.ui.GraphicsConfig
+import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import java.awt.*
 import java.awt.geom.Path2D
@@ -9,7 +10,7 @@ import javax.swing.Icon
 /**
  * ComboArrowIcon
  */
-class ComboArrowIcon(var color: Color = Color.WHITE) : Icon {
+class ComboArrowIcon(var color: Color = JBColor.WHITE) : Icon {
 
     private val shape: Shape
 
