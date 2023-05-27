@@ -32,7 +32,7 @@ class LogoHeaderPanel(logo: Icon) : JBPanel<LogoHeaderPanel>(layout()) {
 
         private fun createLogoPane(logo: Icon): JComponent {
             return JLabel(logo).apply {
-                border = JBUI.Borders.empty(12, 0, 20, 0)
+                border = JBUI.Borders.empty(24, 0, 32, 0)
             }
         }
     }
