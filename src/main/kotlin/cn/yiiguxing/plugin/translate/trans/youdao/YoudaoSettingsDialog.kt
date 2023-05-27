@@ -18,7 +18,6 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.scale.JBUIScale
 import icons.TranslationIcons
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -65,21 +64,25 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
         return LogoHeaderPanel(logo, configurationPanel)
     }
 
-    private fun createConfigurationPanel() = JPanel(UI.migLayout("${JBUIScale.scale(8)}")).apply {
-        add(JLabel(message("youdao.settings.dialog.label.domain")))
-        add(
-            ComponentPanelBuilder(domainComboBox)
-                .withTooltip(message("youdao.settings.dialog.label.domain.tip"))
-                .createPanel(), UI.wrap()
-        )
-        add(JLabel(message("youdao.settings.dialog.label.app.id")))
-        add(appIdField, UI.fillX().wrap())
-        add(JLabel(message("youdao.settings.dialog.label.app.key")))
-        add(appKeyField, UI.fillX().wrap())
-        add(
-            UI.createHint(message("youdao.settings.dialog.hint", JBColor(0x7986CB, 0x757DE8).toRGBHex()), 380),
-            UI.spanX(2).gapTop("${JBUIScale.scale(20)}px").wrap()
-        )
+    private fun createConfigurationPanel(): JPanel {
+        return JPanel(UI.migLayout(UI.migSize(8))).apply {
+            add(JLabel(message("youdao.settings.dialog.label.domain")))
+            add(
+                ComponentPanelBuilder(domainComboBox)
+                    .withTooltip(message("youdao.settings.dialog.label.domain.tip"))
+                    .createPanel(), UI.wrap()
+            )
+            add(JLabel(message("youdao.settings.dialog.label.app.id")))
+            add(appIdField, UI.fillX().wrap())
+            add(JLabel(message("youdao.settings.dialog.label.app.key")))
+            add(appKeyField, UI.fillX().wrap())
+
+            val color = JBColor(0x7986CB, 0x757DE8).toRGBHex()
+            add(
+                UI.createHint(message("youdao.settings.dialog.hint", color), 400),
+                UI.spanX(2).gapTop(UI.migSize(16)).wrap()
+            )
+        }
     }
 
     override fun isOK(): Boolean = credentialSettings.let { credential ->

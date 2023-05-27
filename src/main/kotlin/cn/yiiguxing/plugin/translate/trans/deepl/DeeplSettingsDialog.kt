@@ -16,7 +16,6 @@ import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.Alarm
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.ui.JBUI
@@ -84,17 +83,18 @@ class DeeplSettingsDialog : DialogWrapper(false) {
     }
 
     private fun createAuthPanel(): JPanel {
-        return JPanel(UI.migLayout("${JBUIScale.scale(8)}")).apply {
+        return JPanel(UI.migLayout(UI.migSize(8))).apply {
             add(JLabel(message("deepl.settings.dialog.label.auth.key")))
             add(authKeyField, UI.fillX().wrap())
-            add(UI.createHint(message("deepl.settings.dialog.hint")), UI.cc().cell(1, 1).wrap())
+            add(
+                UI.createHint(message("deepl.settings.dialog.hint")),
+                UI.cc().cell(1, 1).wrap()
+            )
         }
     }
 
     private fun createUsageInfoPanel(): JPanel {
-        val gapX = JBUIScale.scale(8).toString()
-        val gapY = JBUIScale.scale(4).toString()
-        return JPanel(UI.migLayout(gapX, gapY)).apply {
+        return JPanel(UI.migLayout(UI.migSize(8), UI.migSize(4))).apply {
             border = IdeBorderFactory.createTitledBorder(message("deepl.settings.dialog.label.usage.information"))
 
             add(JBLabel(message("deepl.settings.dialog.label.translated")))

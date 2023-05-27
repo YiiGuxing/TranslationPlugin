@@ -7,12 +7,14 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.ActionLink
 import cn.yiiguxing.plugin.translate.ui.TypedComboBoxEditor
+import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import cn.yiiguxing.plugin.translate.ui.UI.fill
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
 import cn.yiiguxing.plugin.translate.ui.UI.fillY
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
+import cn.yiiguxing.plugin.translate.ui.UI.migSize
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import cn.yiiguxing.plugin.translate.ui.selected
@@ -158,7 +160,7 @@ abstract class SettingsUi {
             val comboboxGroup = "combobox"
 
             add(JLabel(message("settings.label.translation.engine")))
-            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth("${JBUIScale.scale(200)}px"))
+            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth(UI.migSize(200)))
             val configurePanel = Box.createHorizontalBox().apply {
                 add(configureTranslationEngineLink)
                 fixEngineConfigurationComponent()
@@ -326,7 +328,7 @@ abstract class SettingsUi {
             FontComboBox(false, filterNonLatin, false)
 
         private fun titledPanel(title: String, fill: Boolean = false, body: JPanel.() -> Unit): JComponent {
-            val innerPanel = JPanel(migLayout(JBUIScale.scale(4).toString()))
+            val innerPanel = JPanel(migLayout(migSize(4)))
             innerPanel.body()
             return JPanel(migLayout()).apply {
                 border = IdeBorderFactory.createTitledBorder(title)

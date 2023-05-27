@@ -11,7 +11,6 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
-import com.intellij.ui.scale.JBUIScale
 import icons.TranslationIcons
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -55,7 +54,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
     }
 
     private fun createConfigurationPanel(): JPanel {
-        return JPanel(UI.migLayout("${JBUIScale.scale(8)}")).apply {
+        return JPanel(UI.migLayout(UI.migSize(8))).apply {
             add(JLabel(message("openai.settings.dialog.label.model")))
             add(apiModelComboBox, UI.wrap())
             add(JLabel(message("openai.settings.dialog.label.api.key")))
