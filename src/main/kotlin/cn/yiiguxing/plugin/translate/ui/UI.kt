@@ -112,12 +112,11 @@ object UI {
         UIUtil.enableEagerSoftWrapping(this)
         text = content
 
-        setSize(
-            JBUIScale.scale(componentWidth),
-            10000000 /* Arbitrary large value, that doesn't lead to overflows and precision loss */
-        )
+        val scaledComponentWidth = componentWidth.scaled
+        /* Arbitrary large height, that doesn't lead to overflows and precision loss */
+        setSize(scaledComponentWidth, 10000000)
         // trigger internal layout and reset preferred size
-        preferredSize = Dimension(JBUIScale.scale(componentWidth), preferredSize.height)
+        preferredSize = Dimension(scaledComponentWidth, preferredSize.height)
 
         addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
     }

@@ -31,7 +31,7 @@
 </ul>
 <h2>Sponsors</h2>
 <a title="JetBrains" href="https://www.jetbrains.com/?from=TranslationPlugin">
-  <img border="0" src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/sponsor_jetbrains.png" width="131" alt="JetBrains">
+  <img border="0" src="https://yiiguxing.gitee.io/translation-plugin/img/ext/sponsor_jetbrains.png" width="131" alt="JetBrains">
 </a>
 <p>Whatever platform or language you work with, JetBrains has a development tool for you.</p>
 <br/>
