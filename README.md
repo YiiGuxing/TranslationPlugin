@@ -9,7 +9,7 @@
 [![Financial Contributors on Open Collective][badge:open-collective]][open-collective]
 
 
-<p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
+<p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio.</b></p>
 <p align="center"><img src="https://yiiguxing.github.io/TranslationPlugin/img/ext/screenshots.gif" alt="screenshots"></p>
 
 <br/><br/><br/>
@@ -23,17 +23,17 @@
 ---
 
 [![Microsoft Translator][logo:microsoft-translator]](https://www.bing.com/translator)
-<span>&nbsp;&nbsp;&nbsp;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![Google Translate][logo:google-translate]](https://translate.google.com)
-<span>&nbsp;&nbsp;&nbsp;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![DeepL Translator][logo:deepl-translator]](https://www.deepl.com)
-<span>&nbsp;&nbsp;&nbsp;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![OpenAI Translator][logo:openai]](https://openai.com/)
-<span>&nbsp;&nbsp;&nbsp;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![Youdao Translate][logo:youdao-translate]](https://ai.youdao.com)
-<span>&nbsp;&nbsp;&nbsp;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![Baidu Translate][logo:baidu-translate]](https://fanyi-api.baidu.com)
-<span>&nbsp;&nbsp;&nbsp;</span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![Alibaba Translate][logo:ali-translate]](https://translate.alibaba.com)
 
 ---
@@ -300,22 +300,24 @@ You can contribute and support this project by doing any of the following:
     </tr>
   </table>
 
-  **Note:** After using Alipay/WeChat to pay for your donation, please provide your name/nickname and website by leaving
-  a message or via email in the following format:
-
-  `Name/Nickname [<website>][: message]` (website and message are optional.)
-
-  Example: `Yii.Guxing <github.com/YiiGuxing>: I like the plugin!`
-
-  If you choose to send an email, please also provide the following information:
-  ```text
-  Donation Amount: <amount>
-  Payment Platform: Alipay/WeChat Pay
-  Payment Number (last 5 digits): <number>
-  ```
-  Email address: [yii.guxing@outlook.com][mailto] (click to send email)
-
-  The name, website and total donation amount you provide will be added to the [donor list][file:financial-contributors].
+  > **Note**
+  > 
+  > After using Alipay/WeChat to pay for your donation, please provide your name/nickname and website by leaving
+  > a message or via email in the following format:
+  >
+  > `Name/Nickname [<website>][: message]` (website and message are optional.)
+  >
+  > Example: `Yii.Guxing <github.com/YiiGuxing>: I like the plugin!`
+  >
+  > If you choose to send an email, please also provide the following information:
+  > ```text
+  > Donation Amount: <amount>
+  > Payment Platform: Alipay/WeChat Pay
+  > Payment Number (last 5 digits): <number>
+  > ```
+  > Email address: [yii.guxing@outlook.com][mailto] (click to send email)
+  >
+  > The name, website and total donation amount you provide will be added to the [donor list][file:financial-contributors].
 
 **Thank you for your support!**
 
