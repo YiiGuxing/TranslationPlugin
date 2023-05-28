@@ -81,7 +81,7 @@ dependencies {
 
     implementation("org.jsoup:jsoup:1.16.1")
     implementation("commons-dbutils:commons-dbutils:1.7")
-    implementation("com.github.YiiGuxing:intellij-idea-compat:0.0.1")
+    implementation("com.github.YiiGuxing:intellij-idea-compat:0.0.2")
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
         exclude("junit")
     }
