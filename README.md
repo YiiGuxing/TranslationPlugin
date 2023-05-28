@@ -10,8 +10,7 @@
 
 
 <p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio/HUAWEI DevEco Studio.</b></p>
-<p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
-
+<p align="center"><img src="https://yiiguxing.github.io/TranslationPlugin/img/ext/screenshots.gif" alt="screenshots"></p>
 
 <br/><br/><br/>
 
@@ -22,6 +21,23 @@
 [![시작하기][badge:get-started-ko]][get-started-ko]
 
 ---
+
+[![Microsoft Translator][logo:microsoft-translator]](https://www.bing.com/translator)
+<span>&nbsp;&nbsp;&nbsp;</span>
+[![Google Translate][logo:google-translate]](https://translate.google.com)
+<span>&nbsp;&nbsp;&nbsp;</span>
+[![DeepL Translator][logo:deepl-translator]](https://www.deepl.com)
+<span>&nbsp;&nbsp;&nbsp;</span>
+[![OpenAI Translator][logo:openai]](https://openai.com/)
+<span>&nbsp;&nbsp;&nbsp;</span>
+[![Youdao Translate][logo:youdao-translate]](https://ai.youdao.com)
+<span>&nbsp;&nbsp;&nbsp;</span>
+[![Baidu Translate][logo:baidu-translate]](https://fanyi-api.baidu.com)
+<span>&nbsp;&nbsp;&nbsp;</span>
+[![Alibaba Translate][logo:ali-translate]](https://translate.alibaba.com)
+
+---
+
 
 - [Features](#features)
 - [Compatibility](#compatibility)
@@ -75,7 +91,7 @@
 ## Installation
 
 <a href="https://plugins.jetbrains.com/plugin/8579-translation" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
+    <img src="https://yiiguxing.github.io/TranslationPlugin/img/ext/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
 </a>
 
 - **Installing from the plugin repository within the IDE:**
@@ -268,17 +284,17 @@ You can contribute and support this project by doing any of the following:
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin/donate" target="_blank">
-          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donate_to_collective.svg" width=298 alt="Donate To Our Collective">
+          <img src="https://yiiguxing.github.io/TranslationPlugin/img/ext/donate_to_collective.svg" width=298 alt="Donate To Our Collective">
         </a>
       </td>
       <td>
         <a href="https://pay.weixin.qq.com/index.php/public/wechatpay_en" target="_blank">
-          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donating_wechat_pay.svg" alt="WeChat Play">
+          <img src="https://yiiguxing.github.io/TranslationPlugin/img/donating_wechat_pay.svg" alt="WeChat Play">
         </a>
       </td>
       <td>
         <a href="https://global.alipay.com" target="_blank">
-          <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/donating_alipay.svg" alt="Alipay">
+          <img src="https://yiiguxing.github.io/TranslationPlugin/img/donating_alipay.svg" alt="Alipay">
         </a>
       </td>
     </tr>
@@ -377,7 +393,17 @@ website. [[Become a sponsor][open-collective-contribute]]
 [gh:#81]: https://github.com/YiiGuxing/TranslationPlugin/issues/81
 [gh:#115]: https://github.com/YiiGuxing/TranslationPlugin/issues/115
 
-[file:settings-font]: https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png
+[logo:ali-translate]: .github/readme/ali_translate_logo.png
+[logo:baidu-translate]: .github/readme/baidu_translate_logo.png
+[logo:deepl-translator]: .github/readme/deepl_translate_logo.svg
+[logo:google-translate]: .github/readme/google_translate_logo.svg
+[logo:microsoft-translator]: .github/readme/microsoft_translator_logo.svg
+[logo:openai]: .github/readme/openai_logo.svg
+[logo:youdao-translate]: .github/readme/youdao_translate_logo.svg
+
+
+
+[file:settings-font]: .github/readme/settings_font.png
 [file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
 [get-started-en]: https://yiiguxing.github.io/TranslationPlugin/en/start.html
