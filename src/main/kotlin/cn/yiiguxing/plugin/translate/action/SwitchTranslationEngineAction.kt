@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatComboBoxAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslateService
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.ListPopup
@@ -14,7 +14,7 @@ import javax.swing.JComponent
 /**
  * Switch translator action
  */
-class SwitchTranslationEngineAction : ComboBoxAction(), DumbAware, PopupAction {
+class SwitchTranslationEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, PopupAction {
 
     init {
         setPopupTitle(message("translation.engines.popup.title"))
