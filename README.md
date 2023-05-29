@@ -61,10 +61,10 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 
 ## 开始使用 :id=usage
 
-#### 1. 注册翻译服务（可选） :id=usage-sing-up
+#### 1. 注册翻译服务帐号（可选） :id=usage-sing-up
 
-- 注册翻译服务（[DeepL][deepl]、[有道智云][youdao-cloud]、[百度翻译开放平台][baidu-dev]、[阿里云机器翻译][ali-mt]）帐号，开通翻译服务并获取其**认证密钥**或者**应用ID-密钥对**。
-- 绑定**认证密钥**和**应用ID-密钥对**：<kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
+大多数翻译服务都需要注册账号才能访问他们的服务（如：OpenAI、DeepL、有道翻译等）。因此您可能需要注册一个帐号，并获取其**认证密钥**，
+然后在插件内绑定**认证密钥**：<kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
   **Translation**</kbd> > <kbd>**常规**</kbd> > <kbd>**翻译引擎**</kbd> > <kbd>**配置...**</kbd>
 
 #### 2. 开始翻译 :id=usage-start-translating
@@ -117,14 +117,10 @@ _编辑器内嵌文档视图：_
 
 点击 **IDE** 状态栏的翻译引擎状态图标或者使用快捷键<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）可以快速切换翻译引擎。
 
-![翻译引擎](/img/translation_engines.png ':size=153x259 :class=round')
+![翻译引擎](/img/translation_engines.png ':size=151x281')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
-[deepl]: https://www.deepl.com
-[youdao-cloud]: https://ai.youdao.com
-[baidu-dev]: https://fanyi-api.baidu.com/manage/developer
-[ali-mt]: https://www.aliyun.com/product/ai/base_alimt
 
 
 # 动作 :id=actions
@@ -205,7 +201,7 @@ _编辑器内嵌文档视图：_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![翻译引擎](/img/translation_engines.png ':size=153x259 :class=round')
+![翻译引擎](/img/translation_engines.png ':size=151x281')
 
 #### 9. 每日一词 :id=word-of-the-day-action
 

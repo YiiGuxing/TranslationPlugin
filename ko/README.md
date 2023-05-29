@@ -63,8 +63,7 @@ TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. I
 
 #### 1. 번역 서비스 가입 (선택 사항) :id=usage-sing-up
 
-- 번역 서비스 가입 ([DeepL][deepl], [Youdao Cloud][youdao-cloud], [Baidu Translate Open Platform][baidu-dev], [Alibaba Cloud Machine Translation][ali-mt]) 계정, 번역 서비스 개설, 앱 ID 및 키 얻기.
-- 앱 ID와 키 쌍으로 등록: <kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
+대부분의 번역 서비스는 서비스 이용을 위해 사용자 등록이 필요합니다 (예: OpenAI, DeepL, Youdao Translate 등). 따라서 계정을 생성하고 인증 키를 획득한 후 플러그인 내에서 인증 키를 바인딩해야 할 수도 있습니다: <kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
   **Translation**</kbd> > <kbd>**일반**</kbd> > <kbd>**번역 엔진**</kbd> > <kbd>**구성...**</kbd>
 
 #### 2. 번역 시작 :id=usage-start-translating

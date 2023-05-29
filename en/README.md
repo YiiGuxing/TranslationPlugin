@@ -63,8 +63,10 @@ Restart the IDE after installation.
 
 #### 1. Sign up for a translation service (optional) :id=usage-sing-up
 
-- Sign up for a translation service ([DeepL][deepl], [Youdao Cloud][youdao-cloud], [Baidu Translate Open Platform][baidu-dev], [Alibaba Cloud Machine Translation][ali-mt]) account, open up the translation service and obtain the **Authentication Key** or the **Application ID/Key** Pair.
-- To bind the **Authentication Key** and the **Application ID/Key** Pair: <kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
+Most translation services require user registration to access their services
+(such as OpenAI, DeepL, Youdao Translate, etc.).
+Therefore, you may need to create an account, obtain an **Authentication Key**,
+and then bind the **Authentication Key** within the plugin: <kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
   **Translation**</kbd> > <kbd>**General**</kbd> > <kbd>**Translation Engine**</kbd> > <kbd>**Configure...**</kbd>
 
 #### 2. Begin translating :id=usage-start-translating
@@ -119,7 +121,7 @@ _Editor inlay documentation rendered view:_
 
 Click the translation engine icon in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between translation engines quickly.
 
-![Translation engines](img/translation_engines.png ':size=247x259 :class=round')
+![Translation engines](img/translation_engines.png ':size=245x281')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -207,7 +209,7 @@ Quickly switch between translation engines. Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![Translation Engines](img/translation_engines.png ':size=247x259 :class=round')
+![Translation Engines](img/translation_engines.png ':size=245x281')
 
 #### 9. Word of the Day :id=word-of-the-day-action
 

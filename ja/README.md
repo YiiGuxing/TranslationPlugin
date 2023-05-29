@@ -63,8 +63,7 @@ TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. I
 
 #### 1. 翻訳サービスへの登録（オプション） :id=usage-sing-up
 
-- 翻訳サービス（[DeepL][deepl]、[有道クラウド][youdao-cloud]、[Baidu 翻訳オープン プラットフォーム][baidu-dev]、[Alibaba 機械翻訳][ali-mt]）アカウントを登録し、翻訳サービスを開始し、**アプリ IDとキーを取得します**。
-- バインド**アプリ IDとキー**：<kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
+多くの翻訳サービスは、利用するためにユーザー登録が必要です（例：OpenAI、DeepL、Youdao Translateなど）。そのため、アカウントを作成し、認証キーを取得し、プラグイン内で認証キーをバインドする必要があります：<kbd>**Preferences(Settings)**</kbd> > <kbd>**Tools**</kbd> > <kbd>
   **Translation**</kbd> > <kbd>**全般**</kbd> > <kbd>**翻訳エンジン**</kbd> > <kbd>**構成...**</kbd>
 
 #### 2. 翻訳の開始 :id=usage-start-translating
@@ -117,7 +116,7 @@ _Editor inlay documentation rendered view:_
 
 ステータスバーの翻訳エンジンステータスアイコンをクリックするか、ショートカットキーの <kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）を使用して、翻訳エンジンをすばやく切り替えることができます。
 
-![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259 :class=round')
+![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -205,7 +204,7 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259 :class=round')
+![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259')
 
 #### 9. 今日の単語 :id=word-of-the-day-action
 
