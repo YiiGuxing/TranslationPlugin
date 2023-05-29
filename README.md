@@ -14,7 +14,6 @@
 
 <br/><br/><br/>
 
-
 [![Getting Started][badge:get-started-en]][get-started-en]
 [![开始使用][badge:get-started-zh]][get-started-zh]
 [![はじめに][badge:get-started-jp]][get-started-ja]
@@ -38,7 +37,6 @@
 
 ---
 
-
 - [Features](#features)
 - [Compatibility](#compatibility)
 - [Installation](#installation)
@@ -47,9 +45,8 @@
 - [FAQ](#faq)
 - [Support and Donations](#support-and-donations)
 - [Contributors](#contributors)
-  - [Code Contributors](#code-contributors)
-  - [Financial Contributors](#financial-contributors)
-
+    - [Code Contributors](#code-contributors)
+    - [Financial Contributors](#financial-contributors)
 
 ## Features
 
@@ -95,10 +92,12 @@
 </a>
 
 - **Installing from the plugin repository within the IDE:**
-    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
+    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"
+      Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
 
 - **Installing manually:**
-    - Download the plugin package on [GitHub Releases][gh:releases] or in the [JetBrains Plugin Repository][plugin-versions].
+    - Download the plugin package on [GitHub Releases][gh:releases] or in
+      the [JetBrains Plugin Repository][plugin-versions].
     - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd> >
       Select the plugin package and install (no need to unzip)
 
@@ -107,9 +106,13 @@ Restart the **IDE** after installation.
 ## Using The Plugin
 
 1. **Sign up for a translation service (optional)**
-    - Sign up for a translation service account, open up the translation service and obtain the **Authentication Key**.
-    - To bind the **Authentication Key**：<kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>
-      Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
+
+   Most translation services require user registration to access their services
+   (such as OpenAI, DeepL, Youdao Translate, etc.).
+   Therefore, you may need to create an account, obtain an **Authentication Key**,
+   and then bind the **Authentication Key** within the plugin：<kbd>Preferences(Settings)</kbd> > <kbd>
+   Tools</kbd> > <kbd>
+   Translation</kbd> > <kbd>General</kbd> > <kbd>Translation Engine</kbd> > <kbd>Configure...</kbd>
 
 2. **Begin translating**
 
@@ -149,7 +152,7 @@ Restart the **IDE** after installation.
 - **Translate**
 
   Extract words and translate them. If you have already selected a text, extract the words from the portion of the text
-  you'd like translate. Otherwise, words are extracted automatically from the maximum range (this extraction can be
+  you'd like to translate. Otherwise, words are extracted automatically from the maximum range (this extraction can be
   configured in Settings). This action is displayed by default in the editor's right-click context menu. Default
   shortcut:
 
@@ -175,8 +178,10 @@ Restart the **IDE** after installation.
 
 - **Translate Documentation**
 
-  Translate the contents of document comments. This option is displayed by default in the editor's context menu (
-  right-click to access) and is available when the cursor is in the document's comment block. Default shortcut: (None)
+  Translate the contents of document comments.
+  This option is displayed by default in the editor's context menu (right-click to access)
+  and is available when the cursor is in the document's comment block.
+  Default shortcut: (None)
 
 - **Toggle Quick Documentation Translation**
 
@@ -189,7 +194,7 @@ Restart the **IDE** after installation.
 
 - **Translate Text Component**
 
-  Translate selected text in some text components (e.g. Quick Docs, popup hints, input boxes……). This does not support
+  Translate selected text in some text components (e.g. Quick Docs, popup hints, input boxes...). This does not support
   automatic word extraction. Default shortcut (same as **translation** shortcut):
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
@@ -230,7 +235,7 @@ Restart the **IDE** after installation.
     - Quick Documentation window shortcuts:
 
         - Enable/disable automatic translation - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> / <kbd>Control</kbd>
-          + <kbd>Meta</kbd> + <kbd>U</kbd>
+            + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 ## FAQ
 
@@ -301,7 +306,7 @@ You can contribute and support this project by doing any of the following:
   </table>
 
   > **Note**
-  > 
+  >
   > After using Alipay/WeChat to pay for your donation, please provide your name/nickname and website by leaving
   > a message or via email in the following format:
   >
@@ -317,7 +322,8 @@ You can contribute and support this project by doing any of the following:
   > ```
   > Email address: [yii.guxing@outlook.com][mailto] (click to send email)
   >
-  > The name, website and total donation amount you provide will be added to the [donor list][file:financial-contributors].
+  > The name, website and total donation amount you provide will be added to
+  > the [donor list][file:financial-contributors].
 
 **Thank you for your support!**
 
@@ -402,8 +408,6 @@ website. [[Become a sponsor][open-collective-contribute]]
 [logo:microsoft-translator]: .github/readme/microsoft_translator_logo.svg
 [logo:openai]: .github/readme/openai_logo.svg
 [logo:youdao-translate]: .github/readme/youdao_translate_logo.svg
-
-
 
 [file:settings-font]: .github/readme/settings_font.png
 [file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md

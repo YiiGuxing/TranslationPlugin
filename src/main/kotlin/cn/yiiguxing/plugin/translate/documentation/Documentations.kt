@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
+import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.scaled
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -115,21 +115,23 @@ private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_
 
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
-    val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
-
-    // 删除多余的 `p` 标签。
-    body.selectFirst(CSS_QUERY_CONTENT)
-        ?.nextElementSibling()
-        ?.takeIf { it.isEmptyParagraph() }
-        ?.remove()
+    val definition = body.selectFirst(CSS_QUERY_DEFINITION)
+    val definitions = definition
+        ?.previousElementSiblings()
+        ?.toMutableList()
+        ?.apply {
+            reverse()
+            add(definition)
+            forEach { it.remove() }
+        }
 
     val preElements = body.select(TAG_PRE)
     preElements.forEachIndexed { index, element ->
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
     }
 
-    val ignoredElementsProvider = language?.let { IgnoredDocumentationElementsProvider.forLanguage(it) }
-    val ignoredElements = ignoredElementsProvider?.ignoreElements(body)
+    val ignoredElementProvider = language?.let { IgnoredDocumentationElementProvider.forLanguage(it) }
+    val ignoredElements = ignoredElementProvider?.ignoreElements(body)
 
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
@@ -137,14 +139,11 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
-    ignoredElements?.let { ignoredElementsProvider.restoreIgnoredElements(translatedBody, it) }
-    definition?.let { translatedBody.prependChild(it) }
+    ignoredElements?.let { ignoredElementProvider.restoreIgnoredElements(translatedBody, it) }
+    definitions?.let { translatedBody.prependChildren(it) }
 
     return translatedDocument
 }
-
-private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
-
 
 private fun Translator.getTranslatedDocumentation(document: Document): Document {
     val body = document.body()

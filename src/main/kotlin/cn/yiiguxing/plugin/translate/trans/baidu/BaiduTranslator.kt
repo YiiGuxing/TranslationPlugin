@@ -96,7 +96,6 @@ object BaiduTranslator : AbstractTranslator() {
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 
