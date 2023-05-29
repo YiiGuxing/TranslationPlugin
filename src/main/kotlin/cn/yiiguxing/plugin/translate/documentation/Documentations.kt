@@ -115,13 +115,15 @@ private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_
 
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
-    val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
-
-    // 删除多余的 `p` 标签。
-    body.selectFirst(CSS_QUERY_CONTENT)
-        ?.nextElementSibling()
-        ?.takeIf { it.isEmptyParagraph() }
-        ?.remove()
+    val definition = body.selectFirst(CSS_QUERY_DEFINITION)
+    val definitions = definition
+        ?.previousElementSiblings()
+        ?.toMutableList()
+        ?.apply {
+            reverse()
+            add(definition)
+            forEach { it.remove() }
+        }
 
     val preElements = body.select(TAG_PRE)
     preElements.forEachIndexed { index, element ->
@@ -138,13 +140,10 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
     ignoredElements?.let { ignoredElementProvider.restoreIgnoredElements(translatedBody, it) }
-    definition?.let { translatedBody.prependChild(it) }
+    definitions?.let { translatedBody.prependChildren(it) }
 
     return translatedDocument
 }
-
-private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
-
 
 private fun Translator.getTranslatedDocumentation(document: Document): Document {
     val body = document.body()
