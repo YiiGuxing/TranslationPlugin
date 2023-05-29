@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.provider
 
 import org.jsoup.nodes.Element
 
-class JavaScriptIgnoredDocumentationElementsProvider : IgnoredDocumentationElementsProvider {
+class JavaScriptIgnoredDocumentationElementProvider : IgnoredDocumentationElementProvider {
 
     override fun ignoreElements(body: Element): List<Element> {
         val ignoredElement = body.selectFirst(CSS_QUERY)

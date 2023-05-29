@@ -1,8 +1,8 @@
 <idea-plugin>
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <ignoredDocumentationElementsProvider
+        <translation.ignoredDocumentationElementProvider
                 language="PHP"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.PhpIgnoredDocumentationElementsProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.provider.PhpIgnoredDocumentationElementProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

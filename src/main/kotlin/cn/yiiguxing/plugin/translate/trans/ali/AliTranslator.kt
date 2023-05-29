@@ -60,28 +60,25 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         ).execute(text, srcLang, targetLang)
     }
 
-    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
-        return checkError {
-            val body = documentation.body()
-            val content = body.html().trim()
-            if (content.isBlank()) {
-                return documentation
-            }
-
-            checkContentLength(content, contentLengthLimit)
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document = checkError {
+        documentation.translateBody { bodyHTML ->
+            checkContentLength(bodyHTML, contentLengthLimit)
 
             val client = SimpleTranslateClient(
                 this,
-                { _, _, _ -> call(content, srcLang, targetLang, true) },
+                { _, _, _ -> call(bodyHTML, srcLang, targetLang, true) },
                 AliTranslator::parseTranslation
             )
             val translation = with(client) {
                 updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
-                execute(content, srcLang, targetLang)
+                execute(bodyHTML, srcLang, targetLang)
             }
 
-            body.html(translation.translation ?: "")
-            documentation
+            translation.translation ?: ""
         }
     }
 
