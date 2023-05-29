@@ -46,18 +46,10 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         srcLang: Lang,
         targetLang: Lang
     ): Document = checkError {
-        val body = documentation.body()
-        val content = body.html()
-        if (content.isBlank()) {
-            return documentation
+        documentation.translateBody { bodyHTML ->
+            checkContentLength(bodyHTML, contentLengthLimit)
+            translate(bodyHTML, srcLang, targetLang, true)
         }
-
-        checkContentLength(content, contentLengthLimit)
-        val translation = translate(content, srcLang, targetLang, true)
-
-        body.html(translation)
-
-        return documentation
     }
 
     private fun translate(

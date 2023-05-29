@@ -71,11 +71,13 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
         }.toTranslation()
     }
 
-    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
-        return checkError {
-            processAndTranslateDocumentation(documentation) {
-                translateDocumentation(it, srcLang, targetLang)
-            }
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document = checkError {
+        documentation.translateBody { bodyHTML ->
+            translateDocumentation(bodyHTML, srcLang, targetLang)
         }
     }
 

@@ -6,7 +6,10 @@ import cn.yiiguxing.plugin.translate.compat.lowercase
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
@@ -94,7 +97,6 @@ object BaiduTranslator : AbstractTranslator() {
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 

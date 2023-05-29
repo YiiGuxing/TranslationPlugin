@@ -134,29 +134,14 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
         }.toTranslation()
     }
 
-    override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
-        return checkError {
-            processAndTranslateDocumentation(documentation) {
-                translateDocumentation(it, srcLang, targetLang)
-            }
-        }
-    }
-
-    private inline fun processAndTranslateDocumentation(
+    override fun translateDocumentation(
         documentation: Document,
-        translate: (String) -> String
-    ): Document {
-        val body = documentation.body()
-        val content = body.html()
-        if (content.isBlank()) {
-            return documentation
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document = checkError {
+        documentation.translateBody { bodyHTML ->
+            translateDocumentation(bodyHTML, srcLang, targetLang)
         }
-
-        val translation = translate(content)
-
-        body.html(translation)
-
-        return documentation
     }
 
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
