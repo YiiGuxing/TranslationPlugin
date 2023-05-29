@@ -160,9 +160,11 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
+        // Youdao does not support auto detection target language for documentation translation
+        val fixedTargetLang = targetLang.takeIf { it != Lang.AUTO } ?: super.defaultLangForLocale
         val client = SimpleTranslateClient(this, ::callForDocumentation, ::parseTranslationForDocumentation)
         client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
-        return client.execute(documentation, srcLang, targetLang).translation ?: ""
+        return client.execute(documentation, srcLang, fixedTargetLang).translation ?: ""
     }
 
     private fun callForDocumentation(text: String, srcLang: Lang, targetLang: Lang): String {
