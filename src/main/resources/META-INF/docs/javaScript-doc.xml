@@ -1,14 +1,14 @@
 <idea-plugin>
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <ignoredDocumentationElementsProvider
+        <translation.ignoredDocumentationElementProvider
                 language="JavaScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementsProvider"/>
-        <ignoredDocumentationElementsProvider
+                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
+        <translation.ignoredDocumentationElementProvider
                 language="TypeScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementsProvider"/>
-        <ignoredDocumentationElementsProvider
+                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
+        <translation.ignoredDocumentationElementProvider
                 language="Flow JS"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementsProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

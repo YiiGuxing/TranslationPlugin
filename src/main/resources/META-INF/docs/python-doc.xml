@@ -1,6 +1,6 @@
 <idea-plugin>
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <docElementProvider
+        <translation.documentationElementProvider
                 language="Python"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.PythonDocumentationElementProvider"/>
     </extensions>

@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementsProvider
+import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.scaled
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -128,8 +128,8 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
     }
 
-    val ignoredElementsProvider = language?.let { IgnoredDocumentationElementsProvider.forLanguage(it) }
-    val ignoredElements = ignoredElementsProvider?.ignoreElements(body)
+    val ignoredElementProvider = language?.let { IgnoredDocumentationElementProvider.forLanguage(it) }
+    val ignoredElements = ignoredElementProvider?.ignoreElements(body)
 
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
@@ -137,7 +137,7 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
-    ignoredElements?.let { ignoredElementsProvider.restoreIgnoredElements(translatedBody, it) }
+    ignoredElements?.let { ignoredElementProvider.restoreIgnoredElements(translatedBody, it) }
     definition?.let { translatedBody.prependChild(it) }
 
     return translatedDocument

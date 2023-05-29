@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.provider
 
-import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.util.findElementOfTypeAt
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
@@ -28,15 +27,8 @@ interface DocumentationElementProvider {
 
     private object DefaultDocumentationElementProvider : DocumentationElementProvider {
 
-        /**
-         * 预先加载类，以避免在运行时加载。类的加载消耗大，运行时加载会导致阻塞UI线程？
-         * 相关ISSUE：[#2183](https://github.com/YiiGuxing/TranslationPlugin/issues/2183)
-         */
-        @JvmStatic
-        private val TARGET_TYPE: Class<PsiDocCommentBase> = PsiDocCommentBase::class.java
-
         override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
-            return psiFile.findElementOfTypeAt(offset, TARGET_TYPE)
+            return psiFile.findElementOfTypeAt(offset, PsiDocCommentBase::class.java)
                 ?.takeIf { it.owner != null }
         }
 
@@ -44,7 +36,7 @@ interface DocumentationElementProvider {
 
     companion object {
         private val PROVIDERS = LanguageExtension<DocumentationElementProvider>(
-            "${TranslationPlugin.PLUGIN_ID}.docElementProvider",
+            "cn.yiiguxing.plugin.translate.translation.documentationElementProvider",
             DefaultDocumentationElementProvider
         )
 
