@@ -194,7 +194,7 @@ Restart the **IDE** after installation.
 
 - **Translate Text Component**
 
-  Translate selected text in some text components (e.g. Quick Docs, popup hints, input boxes……). This does not support
+  Translate selected text in some text components (e.g. Quick Docs, popup hints, input boxes...). This does not support
   automatic word extraction. Default shortcut (same as **translation** shortcut):
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
@@ -365,16 +365,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name** | **Website**                                                | **Amount** |
 |----------|------------------------------------------------------------|------------|
-| 唐嘉       | [github.com/qq1427998646](https://github.com/qq1427998646) | 100 CNY    |
-| 凌高       |                                                            | 100 CNY    |
-| Mritd    | [mritd.com](https://mritd.com)                             | 88.88 CNY  |
-| 三分醉      | [www.sanfenzui.com](http://www.sanfenzui.com)              | 88 CNY     |
-| LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt)         | 76.6 CNY   |
-| 弦曲       |                                                            | 66.6 CNY   |
-| 贺小五      |                                                            | 66.6 CNY   |
-| Him188   | [github.com/him188](https://github.com/him188)             | 66 CNY     |
-| Kagada   | [github.com/kagada](https://github.com/kagada)             | 60 CNY     |
-| 王者之师     |                                                            | 50 CNY     |
+
 
 [More donors][file:financial-contributors]
 
