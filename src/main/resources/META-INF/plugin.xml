@@ -37,13 +37,13 @@
     <depends optional="true" config-file="docs/yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
-        <extensionPoint name="translation.ignoredDocumentationElementProvider"
+        <extensionPoint name="ignoredDocumentationElementProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider"/>
         </extensionPoint>
-        <extensionPoint name="translation.documentationElementProvider"
+        <extensionPoint name="documentationElementProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"

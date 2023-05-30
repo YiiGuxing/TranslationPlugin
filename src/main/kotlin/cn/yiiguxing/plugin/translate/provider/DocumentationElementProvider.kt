@@ -36,7 +36,7 @@ interface DocumentationElementProvider {
 
     companion object {
         private val PROVIDERS = LanguageExtension<DocumentationElementProvider>(
-            "cn.yiiguxing.plugin.translate.translation.documentationElementProvider",
+            "cn.yiiguxing.plugin.translate.documentationElementProvider",
             DefaultDocumentationElementProvider
         )
 
