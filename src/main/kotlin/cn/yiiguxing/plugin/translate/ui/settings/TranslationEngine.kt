@@ -97,7 +97,7 @@ enum class TranslationEngine(
             BAIDU -> AppKeySettingsDialog(
                 message("settings.baidu.title"),
                 AppKeySettingsPanel(
-                    TranslationIcons.load("/image/baidu_translate_logo.png"),
+                    TranslationIcons.load("/image/baidu_translate_logo.svg"),
                     "https://fanyi-api.baidu.com/manage/developer",
                     Settings.baiduTranslateSettings
                 ),
