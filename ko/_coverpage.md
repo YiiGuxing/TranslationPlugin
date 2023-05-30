@@ -37,7 +37,7 @@
 [![Microsoft Translator](../img/microsoft_translator_logo.svg ':size=252x30')](https://www.bing.com/translator 'Microsoft Translator')
 [![Google Translate](../img/google_translate_logo.svg ':size=215x30')](https://translate.google.com 'Google Translate')
 [![DeepL Translator](../img/deepl_translate_logo.svg ':size=86x30')](https://www.deepl.com 'DeepL Translator')
-[![Youdao Translate](../img/youdao_translate_logo.png ':size=149x30')](https://ai.youdao.com 'Youdao Translate')
+[![Youdao Translate](../img/youdao_translate_logo.svg ':size=155x30')](https://ai.youdao.com 'Youdao Translate')
 [![Baidu Translate](../img/baidu_translate_logo.svg ':size=98x30')](https://fanyi-api.baidu.com 'Baidu Translate')
 [![Alibaba Translate](../img/ali_translate_logo.png ':size=124x30')](https://translate.alibaba.com 'Alibaba Translate')
 

@@ -37,7 +37,7 @@
 [![マイクロソフト翻訳](../img/microsoft_translator_logo.svg ':size=252x30')](https://www.bing.com/translator 'マイクロソフト翻訳')
 [![Google 翻訳](../img/google_translate_logo.svg ':size=215x30')](https://translate.google.jp 'Google 翻訳')
 [![DeepL 翻訳ツール](../img/deepl_translate_logo.svg ':size=86x30')](https://www.deepl.com 'DeepL 翻訳ツール')
-[![Youdao 翻訳](../img/youdao_translate_logo.png ':size=149x30')](https://ai.youdao.com 'Youdao 翻訳')
+[![Youdao 翻訳](../img/youdao_translate_logo.svg ':size=155x30')](https://ai.youdao.com 'Youdao 翻訳')
 [![Baidu 翻訳](../img/baidu_translate_logo.svg ':size=98x30')](https://fanyi-api.baidu.com 'Baidu 翻訳')
 [![Alibaba 翻訳](../img/ali_translate_logo.png ':size=124x30')](https://translate.alibaba.com 'Alibaba 翻訳')
 
