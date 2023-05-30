@@ -393,7 +393,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 [gh:#115]: https://github.com/YiiGuxing/TranslationPlugin/issues/115
 
 [logo:ali-translate]: .github/readme/ali_translate_logo.png
-[logo:baidu-translate]: .github/readme/baidu_translate_logo.png
+[logo:baidu-translate]: .github/readme/baidu_translate_logo.svg
 [logo:deepl-translator]: .github/readme/deepl_translate_logo.svg
 [logo:google-translate]: .github/readme/google_translate_logo.svg
 [logo:microsoft-translator]: .github/readme/microsoft_translator_logo.svg
