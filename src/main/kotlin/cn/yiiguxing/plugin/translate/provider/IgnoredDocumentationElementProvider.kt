@@ -14,7 +14,7 @@ interface IgnoredDocumentationElementProvider {
         private val DEFAULT_PROVIDER = object : IgnoredDocumentationElementProvider {}
 
         private val PROVIDERS = LanguageExtension<IgnoredDocumentationElementProvider>(
-            "cn.yiiguxing.plugin.translate.translation.ignoredDocumentationElementProvider",
+            "cn.yiiguxing.plugin.translate.ignoredDocumentationElementProvider",
             DEFAULT_PROVIDER
         )
 

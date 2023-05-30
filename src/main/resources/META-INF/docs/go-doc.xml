@@ -1,6 +1,6 @@
 <idea-plugin>
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <translation.documentationElementProvider
+        <documentationElementProvider
                 language="go"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.GoDocumentationElementProvider"/>
     </extensions>
