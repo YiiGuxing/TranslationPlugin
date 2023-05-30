@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate
 import com.intellij.AbstractBundle
 import com.intellij.DynamicBundle
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.util.registry.Registry
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
 
@@ -31,8 +32,10 @@ open class TranslationDynamicBundle(private val pathToBundle: String) : Abstract
         loader: ClassLoader,
         control: ResourceBundle.Control
     ): ResourceBundle {
-        return dynamicLocale?.let { ResourceBundle.getBundle(pathToBundle, it, loader, control) }
-            ?: super.findBundle(pathToBundle, loader, control)
+        return dynamicLocale?.let { locale ->
+            val controlUsed = if (forceFollowLanguagePack) adaptedControl else control
+            ResourceBundle.getBundle(pathToBundle, locale, loader, controlUsed)
+        } ?: super.findBundle(pathToBundle, loader, control)
     }
 
     fun getAdaptedMessage(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String {
@@ -41,6 +44,10 @@ open class TranslationDynamicBundle(private val pathToBundle: String) : Abstract
 
     companion object {
         private val LOGGER = Logger.getInstance(TranslationDynamicBundle::class.java)
+
+        private val forceFollowLanguagePack: Boolean by lazy {
+            Registry.get("cn.yiiguxing.plugin.translate.bundle.forceFollowLanguagePack").asBoolean()
+        }
 
         val dynamicLocale: Locale? by lazy {
             try {

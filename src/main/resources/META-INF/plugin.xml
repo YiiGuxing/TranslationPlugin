@@ -37,13 +37,13 @@
     <depends optional="true" config-file="docs/yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
-        <extensionPoint name="translation.ignoredDocumentationElementProvider"
+        <extensionPoint name="ignoredDocumentationElementProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider"/>
         </extensionPoint>
-        <extensionPoint name="translation.documentationElementProvider"
+        <extensionPoint name="documentationElementProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
@@ -87,6 +87,10 @@
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Translation Plugin Updates" displayType="STICKY_BALLOON" isLogByDefault="false"/>
+
+        <registryKey key="cn.yiiguxing.plugin.translate.bundle.forceFollowLanguagePack"
+                     defaultValue="false" restartRequired="true"
+                     description="Force translation plugin localization to follow IDE language pack"/>
     </extensions>
 
     <actions>

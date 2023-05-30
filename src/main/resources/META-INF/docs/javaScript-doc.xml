@@ -1,12 +1,12 @@
 <idea-plugin>
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <translation.ignoredDocumentationElementProvider
+        <ignoredDocumentationElementProvider
                 language="JavaScript"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
-        <translation.ignoredDocumentationElementProvider
+        <ignoredDocumentationElementProvider
                 language="TypeScript"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
-        <translation.ignoredDocumentationElementProvider
+        <ignoredDocumentationElementProvider
                 language="Flow JS"
                 implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
     </extensions>
