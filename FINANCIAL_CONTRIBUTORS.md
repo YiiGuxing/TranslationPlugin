@@ -92,16 +92,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Stan Chen | [github.com/stan-chen](https://github.com/stan-chen) | 20 CNY |
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
+| 王宏杰 | | 19.98 CNY |
 | Joey | | 16.66 CNY |
 | Joker | | 16.66 CNY |
 | 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
-| 王宏杰 | | 13.32 CNY |
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 佳波 | | 10 CNY |
 | Donkeywon | | 10 CNY |
 | 我行我素 | | 10 CNY |
 | 外号:大聪明 | | 10 CNY |
