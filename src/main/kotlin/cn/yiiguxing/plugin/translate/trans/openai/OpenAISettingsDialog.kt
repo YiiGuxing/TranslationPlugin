@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.ui.UI.migSize
 import cn.yiiguxing.plugin.translate.ui.selected
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
@@ -54,12 +55,13 @@ class OpenAISettingsDialog : DialogWrapper(false) {
     }
 
     private fun createConfigurationPanel(): JPanel {
-        return JPanel(UI.migLayout(UI.migSize(8))).apply {
+        val apiKeyFieldWidth = 320
+        return JPanel(UI.migLayout(migSize(8))).apply {
             add(JLabel(message("openai.settings.dialog.label.model")))
             add(apiModelComboBox, UI.wrap())
             add(JLabel(message("openai.settings.dialog.label.api.key")))
-            add(apiKeyField, UI.fillX().wrap())
-            add(UI.createHint(message("openai.settings.dialog.hint")), UI.cc().cell(1, 2).wrap())
+            add(apiKeyField, UI.cc().width(migSize(apiKeyFieldWidth)).wrap())
+            add(UI.createHint(message("openai.settings.dialog.hint"), apiKeyFieldWidth), UI.cc().cell(1, 2).wrap())
         }
     }
 
