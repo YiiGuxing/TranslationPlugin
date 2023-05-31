@@ -26,7 +26,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
     private val apiModelComboBox: ComboBox<OpenAIModel> =
         ComboBox(CollectionComboBoxModel(OpenAIModel.values().toList())).apply {
             renderer = SimpleListCellRenderer.create { label, model, _ ->
-                label.text = model.value
+                label.text = model.modelName
             }
         }
 
