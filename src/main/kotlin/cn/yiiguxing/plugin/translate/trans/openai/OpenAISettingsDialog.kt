@@ -2,10 +2,12 @@ package cn.yiiguxing.plugin.translate.trans.openai
 
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.UI.migSize
 import cn.yiiguxing.plugin.translate.ui.selected
+import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
@@ -71,7 +73,15 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     override fun doOKAction() {
         OpenAICredential.apiKey = apiKey
-        settings.model = apiModelComboBox.selected ?: OpenAIModel.GPT_3_5_TURBO
+
+        val oldModel = settings.model
+        val newModel = apiModelComboBox.selected ?: OpenAIModel.GPT_3_5_TURBO
+        if (oldModel != newModel) {
+            settings.model = newModel
+            service<CacheService>().removeMemoryCache { key, _ ->
+                key.translator == TranslationEngine.OPEN_AI.id
+            }
+        }
 
         super.doOKAction()
     }
