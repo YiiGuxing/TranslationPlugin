@@ -25,9 +25,9 @@
 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![Google Translate][logo:google-translate]](https://translate.google.com)
 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-[![DeepL Translator][logo:deepl-translator]](https://www.deepl.com)
-<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![OpenAI Translator][logo:openai]](https://openai.com/)
+<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+[![DeepL Translator][logo:deepl-translator]](https://www.deepl.com)
 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 [![Youdao Translate][logo:youdao-translate]](https://ai.youdao.com)
 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
