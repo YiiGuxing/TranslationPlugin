@@ -18,6 +18,7 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
+import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -65,7 +66,10 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
     }
 
     private fun createConfigurationPanel(): JPanel {
+        val maxWidth = 400
         return JPanel(UI.migLayout(UI.migSize(8))).apply {
+            maximumSize = JBUI.size(maxWidth, Integer.MAX_VALUE)
+
             add(JLabel(message("youdao.settings.dialog.label.domain")))
             add(
                 ComponentPanelBuilder(domainComboBox)
@@ -79,7 +83,7 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
 
             val color = JBColor(0x7986CB, 0x757DE8).toRGBHex()
             add(
-                UI.createHint(message("youdao.settings.dialog.hint", color), 400),
+                UI.createHint(message("youdao.settings.dialog.hint", color), maxWidth),
                 UI.spanX(2).gapTop(UI.migSize(16)).wrap()
             )
         }

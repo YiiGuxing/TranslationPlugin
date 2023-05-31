@@ -83,11 +83,12 @@ class DeeplSettingsDialog : DialogWrapper(false) {
     }
 
     private fun createAuthPanel(): JPanel {
+        val authKeyFieldWidth = 300
         return JPanel(UI.migLayout(UI.migSize(8))).apply {
             add(JLabel(message("deepl.settings.dialog.label.auth.key")))
-            add(authKeyField, UI.fillX().wrap())
+            add(authKeyField, UI.fillX().width(UI.migSize(authKeyFieldWidth)).wrap())
             add(
-                UI.createHint(message("deepl.settings.dialog.hint")),
+                UI.createHint(message("deepl.settings.dialog.hint"), authKeyFieldWidth),
                 UI.cc().cell(1, 1).wrap()
             )
         }
