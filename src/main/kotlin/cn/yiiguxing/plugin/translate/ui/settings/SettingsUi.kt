@@ -7,7 +7,6 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.ActionLink
 import cn.yiiguxing.plugin.translate.ui.TypedComboBoxEditor
-import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import cn.yiiguxing.plugin.translate.ui.UI.fill
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
@@ -160,7 +159,7 @@ abstract class SettingsUi {
             val comboboxGroup = "combobox"
 
             add(JLabel(message("settings.label.translation.engine")))
-            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth(UI.migSize(200)))
+            add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth(migSize(200)))
             val configurePanel = Box.createHorizontalBox().apply {
                 add(configureTranslationEngineLink)
                 fixEngineConfigurationComponent()
