@@ -189,7 +189,6 @@
     function getTitle(vm) {
         var title = "";
         var matchResults = /^(\/((en|ja|ko)\/)?)(docs|support|faq|(updates)(\/(v\d+\.\d+|changelog)?)?)$/.exec(vm.route.path);
-        console.log(matchResults);
         if (matchResults) {
             if (matchResults[7] === "changelog") {
                 title = vm.titles.changelog[matchResults[1]];
