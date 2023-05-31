@@ -368,23 +368,44 @@ h6:hover > a.anchor {
 
 .markdown-section p.warn {
     border-radius: 8px;
+    position: relative;
+    padding: 1rem 1rem 1rem 2.6rem;
     background: rgba(66, 185, 131, .1);
     border-color: #42b983;
     border-style: solid;
     border-width: 0 .3rem;
 }
 
+.markdown-section p.warn::before {
+    width: 1.6rem;
+    height: 1.6rem;
+    display: inline-block;
+    position: absolute;
+    top: unset;
+    left: 0.5rem;
+    background: none;
+    content: url("data:image/svg+xml;base64,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik0yMSAxMmE5IDkgMCAxIDEtOS05IDkgOSAwIDAgMSA5IDl6TTEwLjUgNy41QTEuNSAxLjUgMCAxIDAgMTIgNmExLjUgMS41IDAgMCAwLTEuNSAxLjV6bS0uNSAzLjU0djFoMVYxOGgydi02YS45Ni45NiAwIDAgMC0uOTYtLjk2eiIgZmlsbD0iIzREQkI1RiI+PC9wYXRoPjwvc3ZnPg==");
+}
+
 .markdown-section p.tip {
     border-radius: 8px;
+    position: relative;
     background: rgba(255, 152, 0, 0.1);
-    padding: 1rem;
+    padding: 1rem 1rem 1rem 2.6rem;
     border-color: #FF9800;
     border-style: solid;
     border-width: 0 .3rem;
 }
 
 .markdown-section p.tip::before {
-    display: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: inline-block;
+    position: absolute;
+    top: unset;
+    left: 0.5rem;
+    background: none;
+    content: url("data:image/svg+xml;base64,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik0xMi45NDYgMy41NTJMMjEuNTIgMTguNGMuNDI0LjczNS4zMyAxLjYtLjUxOSAxLjZIMy44NTVjLS44NSAwLTEuODE3LS44NjUtMS4zOTItMS42bDguNTczLTE0Ljg0OGExLjEwMyAxLjEwMyAwIDAgMSAxLjkxIDB6bS41NDUgMTIuOTQ4YTEuNSAxLjUgMCAxIDAtMS41IDEuNSAxLjUgMS41IDAgMCAwIDEuNS0xLjV6TTEzIDhoLTJ2NWgyeiIgZmlsbD0iI0ZGOTgwMCI+PC9wYXRoPjwvc3ZnPg==");
 }
 
 .markdown-section img.round {
