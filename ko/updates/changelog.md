@@ -1,1 +1,1 @@
-[CHANGELOG](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/CHANGELOG.md ':include')
+[CHANGELOG](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/CHANGELOG.md ':include')

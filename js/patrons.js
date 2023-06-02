@@ -103,7 +103,7 @@
                 }
             }
         };
-        xhr.open("GET", "https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/FINANCIAL_CONTRIBUTORS.md?t=" + t, true);
+        xhr.open("GET", "https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/master/FINANCIAL_CONTRIBUTORS.md?t=" + t, true);
         xhr.send();
     }
 
