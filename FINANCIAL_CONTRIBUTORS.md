@@ -63,13 +63,13 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
+| 王俊涛 | | 40 CNY |
 | IKUN#1337 | | 35 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | 包子 | | 26.66 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
-| 王俊涛 | | 20 CNY |
 | 地下室的猫 | | 20 CNY |
 | 许世豪 | | 20 CNY |
 | Tom | | 20 CNY |
@@ -102,6 +102,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 花牌 | [github.com/FlowerCard](https://github.com/FlowerCard) | 10 CNY |
 | LumimYee | | 10 CNY |
 | 🐚大砗磲🐚 | | 10 CNY |
 | 💤 | | 10 CNY |
@@ -221,6 +222,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 故里 | | 6.66 CNY |
+| 丁明威 | | 6.66 CNY |
 | 反方向的虫 | | 6.66 CNY |
 | 名曰蓝兮 | | 6.66 CNY |
 | 星晨大海 | | 6.66 CNY |
