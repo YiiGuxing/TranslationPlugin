@@ -222,6 +222,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 李铎 | [github.com/iamwreckage](https://github.com/iamwreckage) | 6.66 CNY |
+| Yunsheng | | 6.66 CNY |
 | 故里 | | 6.66 CNY |
 | 丁明威 | | 6.66 CNY |
 | 反方向的虫 | | 6.66 CNY |
