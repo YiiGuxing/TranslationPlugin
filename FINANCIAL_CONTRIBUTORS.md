@@ -222,6 +222,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Tim༆²⁰²³ | | 6.66 CNY |
+| Hz | | 6.66 CNY |
+| 我我我是一个小学生 | | 6.66 CNY |
 | 李铎 | [github.com/iamwreckage](https://github.com/iamwreckage) | 6.66 CNY |
 | Yunsheng | | 6.66 CNY |
 | 故里 | | 6.66 CNY |
