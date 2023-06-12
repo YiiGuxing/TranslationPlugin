@@ -42,6 +42,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
+| 王宇 | | 66.66 CNY |
 | Castig | | 66.66 CNY |
 | 薛定谔的猫 | | 66.66 CNY |
 | 弦曲 | | 66.6 CNY |
