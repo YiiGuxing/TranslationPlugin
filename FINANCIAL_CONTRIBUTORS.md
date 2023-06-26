@@ -42,6 +42,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.6 CNY |
+| 隐形人 | | 66.66 CNY |
 | 王宇 | | 66.66 CNY |
 | Castig | | 66.66 CNY |
 | 薛定谔的猫 | | 66.66 CNY |
@@ -94,15 +95,19 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
 | 王宏杰 | | 19.98 CNY |
+| 本善之初 | | 16.66 CNY |
 | Joey | | 16.66 CNY |
 | Joker | | 16.66 CNY |
 | 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
+| 。 | | 13.32 CNY |
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 程应 | | 10 CNY |
+| 龍 | | 10 CNY |
 | 花牌 | [github.com/FlowerCard](https://github.com/FlowerCard) | 10 CNY |
 | LumimYee | | 10 CNY |
 | 🐚大砗磲🐚 | | 10 CNY |
@@ -124,7 +129,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Word麻鸭 | | 10 CNY |
 | Nothing | | 10 CNY |
 | 小框框 | | 10 CNY |
-| 本善之初 | | 10 CNY |
 | 一夕之言 | | 10 CNY |
 | 尘抟 | | 10 CNY |
 | 剑平 | | 10 CNY |
@@ -223,6 +227,13 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 严攀 | | 6.66 CNY |
+| Skyscraper@余 | | 6.66 CNY |
+| 孙博 | | 6.66 CNY |
+| 嘿嘿嘿 | | 6.66 CNY |
+| 滅. | | 6.66 CNY |
+| Xxxxx | | 6.66 CNY |
+| 你眼里带笑意。 | | 6.66 CNY |
 | Tim༆²⁰²³ | | 6.66 CNY |
 | Hz | | 6.66 CNY |
 | 我我我是一个小学生 | | 6.66 CNY |
@@ -333,7 +344,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Bothic | | 6.66 CNY |
 | Jerry Lu | | 6.66 CNY |
 | 猫的谔定靴啊🐾 | | 6.66 CNY |
-| 。 | | 6.66 CNY |
 | , | | 6.66 CNY |
 | 野性浪痞 | | 6.66 CNY |
 | 雁归来 | | 6.66 CNY |
