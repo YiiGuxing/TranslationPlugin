@@ -31,7 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| 丿初音 | | 220 CNY |
+| 丿初音 | | 270 CNY |
 | LiMingjun | | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
@@ -101,6 +101,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 姜巍 | | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15 CNY |
 | Zyc | | 15 CNY |
+| 早睡早起 | | 13.32 CNY |
 | 。 | | 13.32 CNY |
 | 封道ol | | 12 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
@@ -227,6 +228,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 从心 | | 6.66 CNY |
+| 桥段 | | 6.66 CNY |
+| 阿静. 险远 | | 6.66 CNY |
+| 好习惯 | | 6.66 CNY |
+| 🌒 | | 6.66 CNY |
 | 严攀 | | 6.66 CNY |
 | Skyscraper@余 | | 6.66 CNY |
 | 孙博 | | 6.66 CNY |
@@ -283,7 +289,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 小猪 | | 6.66 CNY |
 | 长行 | | 6.66 CNY |
 | Curtain°落幕 | | 6.66 CNY |
-| 早睡早起 | | 6.66 CNY |
 | 泓 | | 6.66 CNY |
 | Coffee | | 6.66 CNY |
 | Laplace | | 6.66 CNY |
