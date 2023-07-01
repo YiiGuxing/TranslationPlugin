@@ -9,7 +9,7 @@ abstract class BaseStartupActivity(private val runOnlyOnce: Boolean = false) : S
     private var veryFirstProjectOpening: Boolean = true
 
     final override fun runActivity(project: Project) {
-        if (Application.isUnitTestMode || (runOnlyOnce && !veryFirstProjectOpening)) {
+        if (Application.isUnitTestMode || (runOnlyOnce && !veryFirstProjectOpening) || project.isDisposed) {
             return
         }
 
