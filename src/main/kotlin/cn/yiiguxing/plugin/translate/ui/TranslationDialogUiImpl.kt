@@ -107,10 +107,10 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
     override fun initFonts(pair: UI.FontPair) {
         pair.let { (primaryFont, phoneticFont) ->
-            val labelsFont = primaryFont.deriveFont(JBFont.label().size.toFloat())
-            sourceLangComboBox.font = labelsFont
-            targetLangComboBox.font = labelsFont
-            detectedLanguageLabel.font = labelsFont
+            val labelFont = primaryFont.deriveFont(JBFont.label().size.toFloat())
+            sourceLangComboBox.font = labelFont
+            targetLangComboBox.font = labelFont
+            detectedLanguageLabel.font = labelFont
             inputTextArea.font = primaryFont
             translationTextArea.font = primaryFont
             srcTransliterationLabel.font = phoneticFont
@@ -177,7 +177,6 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     }
 
     private fun layoutMainPanel(): JComponent {
-
         val centerPanel = JPanel(UI.migLayout()).apply {
             val leftPanel = JPanel(UI.migLayout()).apply {
                 background = inputTextArea.background

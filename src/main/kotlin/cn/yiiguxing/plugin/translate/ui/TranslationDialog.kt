@@ -87,7 +87,7 @@ class TranslationDialog(
     init {
         setUndecorated(true)
         isModal = false
-        window.minimumSize = JBDimension(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+        window.minimumSize = JBDimension(0, 0)
         rootPane.windowDecorationStyle = JRootPane.NONE
         rootPane.border = PopupBorder.Factory.create(true, true)
 
@@ -229,9 +229,9 @@ class TranslationDialog(
         }
 
         val glassPane = rootPane.glassPane as IdeGlassPane
+        translationPanel.minimumSize = JBDimension(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         val resizeListener = object : WindowResizeListener(rootPane, JBUI.insets(6), null) {
             private var myCursor: Cursor? = null
-            private val minSize = JBDimension(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
 
             override fun setCursor(content: Component, cursor: Cursor) {
                 if (myCursor !== cursor || myCursor !== Cursor.getDefaultCursor()) {
@@ -247,10 +247,6 @@ class TranslationDialog(
             override fun mouseReleased(event: MouseEvent?) {
                 super.mouseReleased(event)
                 storeWindowLocationAndSize()
-            }
-
-            override fun getMinimumSize(comp: Component?): Dimension {
-                return minSize
             }
         }
         glassPane.addMouseMotionPreprocessor(resizeListener, this.disposable)
@@ -837,6 +833,6 @@ class TranslationDialog(
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
         private const val MIN_WINDOW_WIDTH = 450
-        private const val MIN_WINDOW_HEIGHT = 250
+        private const val MIN_WINDOW_HEIGHT = 200
     }
 }
