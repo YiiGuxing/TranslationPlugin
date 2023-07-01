@@ -25,12 +25,16 @@ import kotlin.properties.Delegates
 @State(name = "Translation.Settings", storages = [(Storage(TranslationStorages.PREFERENCES_STORAGE_NAME))])
 class Settings : PersistentStateComponent<Settings> {
 
+    @Volatile
+    @Transient
+    private var isInitialized = false
+
     /**
      * 翻译API
      */
     var translator: TranslationEngine
             by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
-                if (oldValue != newValue) {
+                if (isInitialized && oldValue != newValue) {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
             }
@@ -59,7 +63,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 主要字体
      */
     var primaryFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
-        if (oldValue != newValue) {
+        if (isInitialized && oldValue != newValue) {
             SETTINGS_CHANGE_PUBLISHER.onOverrideFontChanged(this)
         }
     }
@@ -68,7 +72,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 音标字体
      */
     var phoneticFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
-        if (oldValue != newValue) {
+        if (isInitialized && oldValue != newValue) {
             SETTINGS_CHANGE_PUBLISHER.onOverrideFontChanged(this)
         }
     }
@@ -77,7 +81,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 翻译时需要忽略的内容
      */
     var ignoreRegex: String by Delegates.observable("[\\*/#\$]") { _, oldValue: String, newValue: String ->
-        if (oldValue != newValue) {
+        if (isInitialized && oldValue != newValue) {
             ignoreRegexPattern = newValue.toIgnoreRegex()
         }
     }
@@ -155,7 +159,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 单词本存储路径
      */
     var wordbookStoragePath: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
-        if (oldValue != newValue) {
+        if (isInitialized && oldValue != newValue) {
             SETTINGS_CHANGE_PUBLISHER.onWordbookStoragePathChanged(this)
         }
     }
@@ -163,15 +167,19 @@ class Settings : PersistentStateComponent<Settings> {
     override fun getState(): Settings = this
 
     override fun loadState(state: Settings) {
-        XmlSerializerUtil.copyBean(state, this)
+        try {
+            XmlSerializerUtil.copyBean(state, this)
 
-        val properties: PropertiesComponent = PropertiesComponent.getInstance()
-        val dataVersion = properties.getInt(DATA_VERSION_KEY, 0)
+            val properties: PropertiesComponent = PropertiesComponent.getInstance()
+            val dataVersion = properties.getInt(DATA_VERSION_KEY, 0)
 
-        LOG.d("===== Settings Data Version: $dataVersion =====")
-        if (dataVersion < CURRENT_DATA_VERSION) {
-            migrate()
-            properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            LOG.d("===== Settings Data Version: $dataVersion =====")
+            if (dataVersion < CURRENT_DATA_VERSION) {
+                migrate()
+                properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            }
+        } finally {
+            isInitialized = true
         }
     }
 
