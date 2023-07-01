@@ -35,14 +35,21 @@ class YoudaoWebTranslationDocument private constructor(private val webTranslatio
         override fun getDocument(input: YoudaoTranslation): YoudaoWebTranslationDocument? {
             val webTranslations = input.webExplains
                 ?.mapNotNull { (key, values) ->
-                    if (key == null || key.isBlank() || values == null || values.isEmpty()) {
+                    val filteredValues = values
+                        ?.filterNotNull()
+                        ?.filter { it.isNotBlank() }
+                        ?.toTypedArray()
+                    if (key.isNullOrBlank() || filteredValues.isNullOrEmpty()) {
                         null
                     } else {
-                        WebTranslation(key.trim(), values)
+                        WebTranslation(key.trim(), filteredValues)
                     }
                 }
                 ?.takeIf { it.isNotEmpty() }
                 ?: return null
+
+            // q: 请翻译为英文：修复指定非空参数为空的问题
+            // a: Fix the problem of specifying a non-null parameter as null
 
             return YoudaoWebTranslationDocument(webTranslations)
         }

@@ -85,7 +85,7 @@ data class YWebExplain(
     @SerializedName(value = "key")
     var key: String? = null,
     @SerializedName(value = "value")
-    var values: Array<out String>? = null
+    var values: Array<out String?>? = null
 )
 
 data class YWordFormWrapper(@SerializedName(value = "wf") val wordForm: YWordForm)
