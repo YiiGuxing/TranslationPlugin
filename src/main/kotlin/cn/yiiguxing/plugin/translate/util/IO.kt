@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.util.io.outputStream
 import java.io.OutputStream
 import java.math.BigInteger
 import java.nio.file.AtomicMoveNotSupportedException
@@ -21,7 +20,7 @@ private fun randomToken(): String {
 
 fun Path.writeSafe(outConsumer: (OutputStream) -> Unit): Path {
     val tempFile = parent.resolve("${fileName}.${randomToken()}.tmp")
-    tempFile.outputStream().use(outConsumer)
+    Files.newOutputStream(tempFile).use(outConsumer)
     try {
         Files.move(tempFile, this, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
     } catch (e: AtomicMoveNotSupportedException) {
