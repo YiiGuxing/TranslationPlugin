@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Bug fixes.
+- Bug 修复
 
 ## [3.5.0] (2023/06/01)
 - Added OpenAI Translator engine (Experimental).
