@@ -113,6 +113,8 @@ private fun Document.addMessage(message: String, color: Color): Document = apply
  */
 private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_HTML_CLASS_EXPRESSION_REPLACEMENT)
 
+private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
+
 private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
     val body = document.body()
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)
@@ -124,6 +126,12 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
             add(definition)
             forEach { it.remove() }
         }
+
+    // 删除多余的 `p` 标签。
+    body.selectFirst(CSS_QUERY_CONTENT)
+        ?.nextElementSibling()
+        ?.takeIf { it.isEmptyParagraph() }
+        ?.remove()
 
     val preElements = body.select(TAG_PRE)
     preElements.forEachIndexed { index, element ->

@@ -154,7 +154,7 @@ class GoogleTTSPlayer(
         indicator.apply {
             checkCanceled()
             fraction = 0.0
-            isIndeterminate = false
+            isIndeterminate = duration <= 0
             text = message("tts.progress.playing")
         }
 
@@ -169,8 +169,10 @@ class GoogleTTSPlayer(
                     if (bytesRead != -1) {
                         write(data, 0, bytesRead)
 
-                        val currentTime = properties()["mp3.position.microseconds"] as Long / 1000
-                        indicator.fraction = currentTime.toDouble() / duration.toDouble()
+                        if (duration > 0) {
+                            val currentTime = properties()["mp3.position.microseconds"] as Long / 1000
+                            indicator.fraction = currentTime.toDouble() / duration.toDouble()
+                        }
                     } else {
                         indicator.fraction = 1.0
                         break
@@ -213,7 +215,7 @@ class GoogleTTSPlayer(
             return try {
                 round(Bitstream(this).readFrame().total_ms(dataLength))
             } catch (e: Throwable) {
-                LOGGER.error(e)
+                LOGGER.warn("Failed to get audio duration.", e)
                 0
             } finally {
                 reset()

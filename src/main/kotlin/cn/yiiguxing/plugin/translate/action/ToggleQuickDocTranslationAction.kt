@@ -18,7 +18,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
-import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
@@ -33,8 +32,7 @@ open class ToggleQuickDocTranslationAction :
         { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }
     ),
     HintManagerImpl.ActionToIgnore,
-    ImportantTranslationAction,
-    DumbAware {
+    ImportantTranslationAction {
 
     init {
         // Enable in hovering documentation popup

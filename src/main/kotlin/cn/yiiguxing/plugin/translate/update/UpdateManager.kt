@@ -193,7 +193,7 @@ class UpdateManager : BaseStartupActivity() {
 
     private class GetStartedAction :
         DumbAwareAction(message("action.GetStartedAction.text"), null, AllIcons.General.Web) {
-        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(WebPages.getStarted())
+        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(WebPages.docs())
     }
 
 

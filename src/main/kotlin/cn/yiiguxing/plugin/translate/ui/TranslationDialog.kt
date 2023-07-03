@@ -72,7 +72,7 @@ class TranslationDialog(
     private var ignoreLanguageEvent: Boolean = false
     private var ignoreInputEvent: Boolean = false
 
-    // If user selects a specific target language, the value is true
+    // If the user selects a specific target language, the value is true
     private var unequivocalTargetLang: Boolean by Delegates.observable(false) { _, _, _ ->
         updateLightningLabel()
     }
@@ -227,10 +227,11 @@ class TranslationDialog(
                 addMouseMotionListener(it)
             }
         }
-        val glassPane = rootPane.glassPane as IdeGlassPane
 
+        val glassPane = rootPane.glassPane as IdeGlassPane
+        translationPanel.minimumSize = JBDimension(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         val resizeListener = object : WindowResizeListener(rootPane, JBUI.insets(6), null) {
-            var myCursor: Cursor? = null
+            private var myCursor: Cursor? = null
 
             override fun setCursor(content: Component, cursor: Cursor) {
                 if (myCursor !== cursor || myCursor !== Cursor.getDefaultCursor()) {
@@ -831,5 +832,7 @@ class TranslationDialog(
     companion object {
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
+        private const val MIN_WINDOW_WIDTH = 450
+        private const val MIN_WINDOW_HEIGHT = 200
     }
 }

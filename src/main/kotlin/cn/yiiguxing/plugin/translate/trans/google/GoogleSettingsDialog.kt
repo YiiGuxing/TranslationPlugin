@@ -29,7 +29,7 @@ class GoogleSettingsDialog : DialogWrapper(true) {
 
     private val customServerCheckBox = JBCheckBox(message("google.settings.dialog.label.server"))
     private val serverUrlField = JBTextField().apply {
-        emptyText.text = message("google.settings.dialog.tip.enter.server.url")
+        emptyText.text = DEFAULT_GOOGLE_API_SERVER_URL
     }
     private val testButton = JButton(message("action.test.text"))
 
@@ -54,7 +54,7 @@ class GoogleSettingsDialog : DialogWrapper(true) {
     }
 
     private fun initListeners() {
-        customServerCheckBox.addChangeListener {
+        customServerCheckBox.addItemListener {
             update()
             if (customServerCheckBox.isSelected) {
                 IdeFocusManager.getInstance(null).requestFocus(serverUrlField, true)
