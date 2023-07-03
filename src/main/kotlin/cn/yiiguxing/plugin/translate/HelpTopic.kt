@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate
 enum class HelpTopic(id: String, val url: String) {
 
     /** Default help */
-    DEFAULT("default", WebPages.getStarted()),
+    DEFAULT("default", WebPages.docs()),
 
     /** 阿里机器翻译通用版 */
     ALI("ali", "https://www.aliyun.com/product/ai/base_alimt"),

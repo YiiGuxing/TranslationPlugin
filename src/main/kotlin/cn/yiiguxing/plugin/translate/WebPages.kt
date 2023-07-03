@@ -20,26 +20,26 @@ object WebPages {
             Locale.KOREAN.language -> "/ko"
             else -> "/en"
         }
-        return "$baseUrl$langPath/${path.joinToString("/")}"
+        return "$baseUrl/#$langPath/${path.joinToString("/")}"
     }
 
-    fun getStarted(locale: Locale = Locale.getDefault()): String = get("start.html", locale = locale)
+    fun docs(locale: Locale = Locale.getDefault()): String = get("docs", locale = locale)
 
     fun updates(version: String = "", locale: Locale = Locale.getDefault()): String {
-        val query = if (version.isEmpty()) "" else "?v=$version"
-        return get("updates.html${query}", locale = locale)
+        val query = if (version.isEmpty()) "" else "?v$version"
+        return get("updates${query}", locale = locale)
     }
 
     fun releaseNote(version: String, dark: Boolean = false, locale: Locale = Locale.getDefault()): String {
         return get(
             "updates",
-            "v${version.replace('.', '_')}.html?editor=true&dark=$dark",
+            "v$version?compact=true&dark=$dark",
             locale = locale
         )
     }
 
-    fun support(locale: Locale = Locale.getDefault()): String = get("support.html", locale = locale)
+    fun support(locale: Locale = Locale.getDefault()): String = get("support", locale = locale)
 
-    fun donors(locale: Locale = Locale.getDefault()): String = get("support.html#patrons", locale = locale)
+    fun donors(locale: Locale = Locale.getDefault()): String = get("support?id=translation-plugin-sponsors", locale = locale)
 
 }

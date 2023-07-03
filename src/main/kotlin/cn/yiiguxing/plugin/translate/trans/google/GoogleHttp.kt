@@ -4,7 +4,7 @@ import com.intellij.openapi.components.service
 import com.intellij.util.io.RequestBuilder
 
 
-private const val DEFAULT_GOOGLE_API_SERVER_URL = "https://translate.googleapis.com"
+const val DEFAULT_GOOGLE_API_SERVER_URL = "https://translate.googleapis.com"
 
 private const val GOOGLE_REFERER = "https://translate.google.com/"
 
