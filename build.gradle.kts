@@ -25,29 +25,21 @@ fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 fun dateValue(pattern: String) = LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
 
-
-val autoSnapshotVersionEnv = environment("AUTO_SNAPSHOT_VERSION").map(String::toBoolean).orElse(true)
-val snapshotVersionPart = properties("autoSnapshotVersion")
+val autoSnapshotVersionEnv: Provider<Boolean> = environment("AUTO_SNAPSHOT_VERSION").map(String::toBoolean).orElse(true)
+val snapshotVersionPart: Provider<String> = properties("autoSnapshotVersion")
     .map(String::toBoolean)
     .orElse(false)
-    .zip(autoSnapshotVersionEnv) { isAutoSnapshotVersion, autoSnapshotVersionEnv ->
-        isAutoSnapshotVersion && autoSnapshotVersionEnv
-    }
-    .map { if (it) "SNAPSHOT.${dateValue("yyMMdd")}" else null }
-val preReleaseVersion = properties("pluginPreReleaseVersion")
-    .map { it.takeIf(String::isNotBlank) }
-    .orElse(snapshotVersionPart)
-val buildMetadataPart = properties("pluginBuildMetadata")
-    .map { it.takeIf(String::isNotBlank) }
-    .map { "+$it" }
-    .orElse("")
-val pluginVersion = properties("pluginMajorVersion")
-    .zip(preReleaseVersion.map { "-$it" }.orElse("")) { majorVersion, preReleaseVersion ->
-        majorVersion + preReleaseVersion
-    }
-val fullPluginVersion = pluginVersion.zip(buildMetadataPart) { pluginVersion, buildMetadata ->
-    pluginVersion + buildMetadata
+    .zip(autoSnapshotVersionEnv, Boolean::and)
+    .map { if (it) "SNAPSHOT.${dateValue("yyMMdd")}" else "" }
+val preReleaseVersion: Provider<String> = properties("pluginPreReleaseVersion")
+    .flatMap { prv -> prv.takeIf(String::isNotBlank)?.let { provider { it } } ?: snapshotVersionPart }
+val preReleaseVersionPart: Provider<String> = preReleaseVersion.map { prv ->
+    prv.takeIf(String::isNotBlank)?.let { "-$it" } ?: ""
 }
+val buildMetadataPart: Provider<String> = properties("pluginBuildMetadata")
+    .map { part -> part.takeIf(String::isNotBlank)?.let { "+$it" } ?: "" }
+val pluginVersion: Provider<String> = properties("pluginMajorVersion").zip(preReleaseVersionPart, String::plus)
+val fullPluginVersion: Provider<String> = pluginVersion.zip(buildMetadataPart, String::plus)
 
 val versionRegex =
     Regex("""^((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
@@ -55,9 +47,9 @@ if (!versionRegex.matches(fullPluginVersion.get())) {
     throw GradleException("Plugin version '${fullPluginVersion.get()}' does not match the pattern '$versionRegex'")
 }
 
-val publishChannel = preReleaseVersion.map { preReleaseVersion: String? ->
-    preReleaseVersion?.split(".")?.firstOrNull()?.lowercase()
-}.orElse("default")
+val publishChannel: Provider<String> = preReleaseVersion.map { preReleaseVersion: String ->
+    preReleaseVersion.takeIf(String::isNotEmpty)?.split(".")?.firstOrNull()?.lowercase() ?: "default"
+}
 
 extra["pluginVersion"] = pluginVersion.get()
 extra["pluginPreReleaseVersion"] = preReleaseVersion.getOrElse("")
