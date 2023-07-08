@@ -6,18 +6,12 @@ import java.time.format.DateTimeFormatter
 
 
 plugins {
-    // Java support
-    id("java")
-    // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
-    // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.15.0"
-    // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "2.1.1"
-    // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.13"
-    // Gradle Kover Plugin
-    id("org.jetbrains.kotlinx.kover") version "0.7.2"
+    id("java") // Java support
+    alias(libs.plugins.kotlin) // Kotlin support
+    alias(libs.plugins.kover) // Gradle Kover Plugin
+    alias(libs.plugins.qodana) // Gradle Qodana Plugin
+    alias(libs.plugins.changelog) // Gradle Changelog Plugin
+    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
 }
 
 
@@ -68,13 +62,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13.2")
-
-    implementation("org.jsoup:jsoup:1.16.1")
-    implementation("commons-dbutils:commons-dbutils:1.7")
-    implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
-        exclude("junit")
-    }
+    implementation(libs.jsoup)
+    implementation(libs.dbutils)
+    implementation(libs.mp3spi) { exclude("junit") }
+    testImplementation(libs.junit)
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

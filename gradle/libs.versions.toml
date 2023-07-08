@@ -1,0 +1,26 @@
+[versions]
+# libraries
+jsoup = "1.16.1"
+dbutils = "1.7"
+mp3spi = "1.9.5.4"
+junit = "4.13.2"
+
+# plugins
+kotlin = "1.9.0"
+kover = "0.7.2"
+qodana = "0.1.13"
+changelog = "2.1.1"
+gradleIntelliJPlugin = "1.15.0"
+
+[libraries]
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
+dbutils = { group = "commons-dbutils", name = "commons-dbutils", version.ref = "dbutils" }
+mp3spi = { group = "com.googlecode.soundlibs", name = "mp3spi", version.ref = "mp3spi" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
