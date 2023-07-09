@@ -7,16 +7,24 @@ import com.intellij.openapi.project.Project
 
 object DocNotifications {
 
+    private const val GROUP_ID = "Documentation translation failed"
+
     fun showTranslationTimeoutWarning(project: Project?) {
-        Notifications.showWarningNotification("", message("doc.message.translation.timeout.please.try.again"), project)
+        Notifications.showWarningNotification(
+            title = "",
+            message = message("doc.message.translation.timeout.please.try.again"),
+            project = project,
+            groupId = GROUP_ID
+        )
     }
 
     fun showError(e: Throwable, project: Project?) {
         TranslationNotifications.showTranslationErrorNotification(
-            project,
-            message("translate.documentation.notification.title"),
-            message("translate.documentation.error"),
-            e
+            project = project,
+            title = message("translate.documentation.notification.title"),
+            content = message("translate.documentation.error"),
+            throwable = e,
+            groupId = GROUP_ID
         )
     }
 

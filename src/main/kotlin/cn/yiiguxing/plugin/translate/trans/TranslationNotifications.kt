@@ -18,6 +18,7 @@ object TranslationNotifications {
         title: String,
         content: String?,
         throwable: Throwable,
+        groupId: String = Notifications.DEFAULT_NOTIFICATION_GROUP_ID,
         vararg actions: AnAction
     ) {
         val errorInfo = (throwable as? TranslateException)?.errorInfo
@@ -37,7 +38,7 @@ object TranslationNotifications {
             // 将异常写入IDE异常池，以便用户反馈
             logger.e("Translation error: ${throwable.message}", throwable)
         }
-        Notifications.showErrorNotification(title, message, project) {
+        Notifications.showErrorNotification(title, message, project, groupId) {
             it.addActions(actionList)
         }
     }
