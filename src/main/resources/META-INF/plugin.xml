@@ -53,15 +53,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationStates"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
-        <applicationService
-                serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
 
         <applicationConfigurable groupId="tools"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
