@@ -197,7 +197,7 @@ class UpdateManager : BaseStartupActivity() {
 
 
     companion object {
-        const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin Updates"
+        const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin updated"
 
         private const val VERSION_PROPERTY = "${TranslationPlugin.PLUGIN_ID}.version"
 

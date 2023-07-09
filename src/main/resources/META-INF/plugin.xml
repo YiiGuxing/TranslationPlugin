@@ -86,7 +86,7 @@
 
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
-        <notificationGroup id="Translation Plugin Updates" displayType="STICKY_BALLOON" isLogByDefault="false"/>
+        <notificationGroup id="Translation Plugin updated" displayType="STICKY_BALLOON" isLogByDefault="false"/>
 
         <registryKey key="cn.yiiguxing.plugin.translate.bundle.forceFollowLanguagePack"
                      defaultValue="false" restartRequired="true"
