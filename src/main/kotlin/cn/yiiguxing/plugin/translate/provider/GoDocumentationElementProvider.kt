@@ -8,6 +8,10 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 
+private val SKIP_WHITE_SPACE_AND_COMMENT: (PsiElement) -> Boolean = {
+    (it is PsiWhiteSpace && it.text.count { char -> char == '\n' } <= 1) || it is PsiComment
+}
+
 class GoDocumentationElementProvider : AbstractDocumentationElementProvider() {
 
     override val PsiComment.isDocComment: Boolean
@@ -33,11 +37,4 @@ class GoDocumentationElementProvider : AbstractDocumentationElementProvider() {
                 element.findChildOfType(type, depth)
             }
         }
-
-    private companion object {
-        val SKIP_WHITE_SPACE_AND_COMMENT: (PsiElement) -> Boolean = {
-            (it is PsiWhiteSpace && it.text.count { char -> char == '\n' } <= 1) || it is PsiComment
-        }
-    }
-
 }

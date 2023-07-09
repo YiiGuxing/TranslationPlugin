@@ -13,6 +13,17 @@ import com.jetbrains.lang.dart.psi.DartComponent
 import com.jetbrains.lang.dart.psi.DartDocComment
 import com.jetbrains.lang.dart.psi.DartVarDeclarationList
 
+private val SKIPPING_CONDITION: (PsiElement) -> Boolean = {
+    it is PsiWhiteSpace || (it is PsiComment && it !is DartDocComment)
+}
+
+/**
+ * 向上检查是否存在多行文档注释
+ */
+private fun PsiComment.checkPreviousComments(): Boolean {
+    return getPrevSiblingSkippingCondition(SKIPPING_CONDITION) !is DartDocComment
+}
+
 class DartDocumentationElementProvider : AbstractDocumentationElementProvider() {
 
     override val PsiComment.isDocComment: Boolean
@@ -35,20 +46,8 @@ class DartDocumentationElementProvider : AbstractDocumentationElementProvider() 
                 is DartComponent -> sibling.componentName
                 is DartClassMembers,
                 is DartVarDeclarationList -> sibling.findChildOfType(DartComponent::class.java)?.componentName
+
                 else -> null
             }
         }
-
-    companion object {
-        private val SKIPPING_CONDITION: (PsiElement) -> Boolean = {
-            it is PsiWhiteSpace || (it is PsiComment && it !is DartDocComment)
-        }
-
-        /**
-         * 向上检查是否存在多行文档注释
-         */
-        private fun PsiComment.checkPreviousComments(): Boolean {
-            return getPrevSiblingSkippingCondition(SKIPPING_CONDITION) !is DartDocComment
-        }
-    }
 }
