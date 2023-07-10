@@ -53,6 +53,6 @@ class TextToSpeech private constructor() {
         val instance: TextToSpeech
             get() = ApplicationManager.getApplication().getService(TextToSpeech::class.java)
 
-        private fun checkThread() = checkDispatchThread(TextToSpeech::class.java)
+        private fun checkThread() = checkDispatchThread<TextToSpeech>()
     }
 }

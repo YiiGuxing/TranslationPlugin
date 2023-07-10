@@ -146,6 +146,6 @@ open class TranslationUIManager private constructor() : Disposable {
         }
 
 
-        private fun checkThread() = checkDispatchThread(TranslationUIManager::class.java)
+        private fun checkThread() = checkDispatchThread<TranslationUIManager>()
     }
 }

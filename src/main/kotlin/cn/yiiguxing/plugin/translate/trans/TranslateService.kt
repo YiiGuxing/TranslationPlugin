@@ -199,6 +199,6 @@ class TranslateService private constructor() : Disposable {
 
         private val LOG = Logger.getInstance(TranslateService::class.java)
 
-        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
+        private fun checkThread() = checkDispatchThread<TranslateService>()
     }
 }
