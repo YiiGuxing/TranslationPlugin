@@ -9,7 +9,7 @@ junit = "4.13.2"
 kotlin = "1.9.0"
 kover = "0.7.2"
 qodana = "0.1.13"
-changelog = "2.1.1"
+changelog = "2.1.2"
 gradleIntelliJPlugin = "1.15.0"
 
 [libraries]
