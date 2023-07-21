@@ -365,7 +365,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name** | **Website**                                                | **Amount** |
 |----------|------------------------------------------------------------|------------|
-| 丿初音     |                                                          | 270 CNY |
+| 丿初音     |                                                          | 325 CNY |
 | LiMingjun |                                                          | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 |                                                          | 100 CNY |

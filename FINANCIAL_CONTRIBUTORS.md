@@ -31,7 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| 丿初音 | | 270 CNY |
+| 丿初音 | | 325 CNY |
 | LiMingjun | | 100 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100 CNY |
 | Sunlife95 | | 100 CNY |
@@ -107,6 +107,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 尤一锋 | | 10 CNY |
+| Kylepeng93 | | 10 CNY |
+| 笨拙之极的上野 | | 10 CNY |
+| AK🛹🔥🎸 | | 10 CNY |
 | 程应 | | 10 CNY |
 | 龍 | | 10 CNY |
 | 花牌 | [github.com/FlowerCard](https://github.com/FlowerCard) | 10 CNY |
@@ -228,6 +232,25 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| 望北 | | 6.66 CNY |
+| Mmjyl | | 6.66 CNY |
+| 锅巴 | | 6.66 CNY |
+| 敬斌 | | 6.66 CNY |
+| 风尘 | | 6.66 CNY |
+| 00:01 | | 6.66 CNY |
+| 梦的延续 | | 6.66 CNY |
+| 暹罗猫 | | 6.66 CNY |
+| FK7075 | | 6.66 CNY |
+| 月小哥 | | 6.66 CNY |
+| 下雨le | | 6.66 CNY |
+| GK(BH6AYL) | | 6.66 CNY |
+| Ark | | 6.66 CNY |
+| 渔 | | 6.66 CNY |
+| 浩 | | 6.66 CNY |
+| 流浪 | | 6.66 CNY |
+| 莫丶叶 | | 6.66 CNY |
+| 天角星 | | 6.66 CNY |
+| Melo | | 6.66 CNY |
 | 从心 | | 6.66 CNY |
 | 桥段 | | 6.66 CNY |
 | 阿静. 险远 | | 6.66 CNY |
