@@ -832,7 +832,7 @@ class TranslationDialog(
     companion object {
         private const val FONT_SIZE_DEFAULT = 14
         private const val FONT_SIZE_PHONETIC = 12
-        private const val MIN_WINDOW_WIDTH = 450
-        private const val MIN_WINDOW_HEIGHT = 200
+        private const val MIN_WINDOW_WIDTH = 520
+        private const val MIN_WINDOW_HEIGHT = 260
     }
 }
