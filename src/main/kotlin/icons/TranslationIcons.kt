@@ -41,6 +41,9 @@ object TranslationIcons {
     val TTSSuspendHovering: Icon = SuspendIcon(JBColor(0x555555, 0x8A8A8A))
 
     @JvmField
+    val Stop: Icon = load("/icons/stop.svg")
+
+    @JvmField
     val Swap: Icon = load("/icons/swap.svg")
 
     @JvmField
