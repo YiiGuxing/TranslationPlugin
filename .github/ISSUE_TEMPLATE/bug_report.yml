@@ -23,7 +23,7 @@ body:
     attributes:
       label: 🏷 Plugin Version
       description: What version of translation plugin are you running?
-      placeholder: e.g. 3.4.0, 3.4.0+222.2
+      placeholder: e.g. 2.2.2, 1.2.2+222.2
     validations:
       required: true
   - type: dropdown
@@ -33,6 +33,7 @@ body:
       description: What translation engines are you using?
       multiple: true
       options:
+        - All
         - Google Translate
         - Microsoft Translator
         - DeepL Translator
