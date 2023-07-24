@@ -23,7 +23,7 @@ body:
     attributes:
       label: 🏷 插件版本
       description: 您正在运行的插件是哪个版本？
-      placeholder: 例如：2.2.2, 1.2.2+222.2
+      placeholder: 例如：2.2.2, 2.2.2+222.2
     validations:
       required: true
   - type: dropdown

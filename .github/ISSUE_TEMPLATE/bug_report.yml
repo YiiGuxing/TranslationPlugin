@@ -23,7 +23,7 @@ body:
     attributes:
       label: 🏷 Plugin Version
       description: What version of translation plugin are you running?
-      placeholder: e.g. 2.2.2, 1.2.2+222.2
+      placeholder: e.g. 2.2.2, 2.2.2+222.2
     validations:
       required: true
   - type: dropdown
