@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.e
+import com.intellij.notification.Notification
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
@@ -19,7 +20,8 @@ object TranslationNotifications {
         content: String?,
         throwable: Throwable,
         groupId: String = Notifications.DEFAULT_NOTIFICATION_GROUP_ID,
-        vararg actions: AnAction
+        vararg actions: AnAction,
+        notificationCustomizer: (Notification) -> Unit = {}
     ) {
         val errorInfo = (throwable as? TranslateException)?.errorInfo
         val errorMessage = errorInfo?.message ?: message("error.unknown")
@@ -40,6 +42,7 @@ object TranslationNotifications {
         }
         Notifications.showErrorNotification(title, message, project, groupId) {
             it.addActions(actionList)
+            notificationCustomizer(it)
         }
     }
 
