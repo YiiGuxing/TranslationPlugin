@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## [3.5.2] (2023/08/16)
 - Bug fixes.
 - Bug 修复
 
@@ -348,7 +350,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.1...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.2...HEAD
+[3.5.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.1...v3.5.2
 [3.5.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.2...v3.5.0
 [3.4.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.1...v3.4.2
