@@ -6,6 +6,10 @@
 - Bug fixes.
 - Bug 修复
 
+## [3.5.1] (2023/07/03)
+- Bug fixes.
+- Bug 修复
+
 ## [3.5.0] (2023/06/01)
 - Added OpenAI Translator engine (Experimental).
 - Added custom translation server configuration for Google Translate engine.

@@ -18,6 +18,7 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookViewListener
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBusConnection
 import java.util.*
@@ -26,6 +27,7 @@ import java.util.*
 /**
  * TranslateService
  */
+@Service
 class TranslateService private constructor() : Disposable {
 
     @Volatile
@@ -197,6 +199,6 @@ class TranslateService private constructor() : Disposable {
 
         private val LOG = Logger.getInstance(TranslateService::class.java)
 
-        private fun checkThread() = checkDispatchThread(TranslateService::class.java)
+        private fun checkThread() = checkDispatchThread<TranslateService>()
     }
 }

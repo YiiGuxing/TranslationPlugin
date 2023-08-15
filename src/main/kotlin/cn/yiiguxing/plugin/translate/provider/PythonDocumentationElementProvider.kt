@@ -9,6 +9,8 @@ import com.jetbrains.python.psi.PyClass
 import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.psi.PyFunction
 
+private val OWNER_CONDITION: (PsiElement) -> Boolean = { it is PyFile || it is PyClass || it is PyFunction }
+
 class PythonDocumentationElementProvider : DocumentationElementProvider {
 
     override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiElement? {
@@ -19,9 +21,4 @@ class PythonDocumentationElementProvider : DocumentationElementProvider {
     override fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
         return documentationElement.findParent(OWNER_CONDITION)
     }
-
-    companion object {
-        private val OWNER_CONDITION: (PsiElement) -> Boolean = { it is PyFile || it is PyClass || it is PyFunction }
-    }
-
 }

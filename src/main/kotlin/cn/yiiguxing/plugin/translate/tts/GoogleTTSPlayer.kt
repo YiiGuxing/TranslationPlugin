@@ -206,7 +206,7 @@ class GoogleTTSPlayer(
             Lang.JAVANESE, Lang.VIETNAMESE
         )
 
-        private fun checkThread() = checkDispatchThread(GoogleTTSPlayer::class.java)
+        private fun checkThread() = checkDispatchThread<GoogleTTSPlayer>()
 
         private fun InputStream.asAudioInputStream(): AudioInputStream =
             MpegAudioFileReader().getAudioInputStream(this)

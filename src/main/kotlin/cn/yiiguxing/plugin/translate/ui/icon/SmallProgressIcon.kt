@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui.icon
 import com.intellij.util.ui.AnimatedIcon
 import icons.TranslationIcons
 
-class SmallProgressIcon : AnimatedIcon("Spinner", ICONS, STEP_PASSIVE, CYCLE_LENGTH) {
+class SmallProgressIcon : AnimatedIcon("SmallProgress", ICONS, STEP_PASSIVE, CYCLE_LENGTH) {
 
     companion object {
         private const val CYCLE_LENGTH = 600

@@ -43,13 +43,13 @@ inline fun checkDispatchThread(lazyMessage: () -> Any) {
 }
 
 /**
- * Throws an [IllegalStateException] with the [class][clazz] name if
+ * Throws an [IllegalStateException] with the [class][T] name if
  * the current thread is not the Swing dispatch thread.
  *
  * @see checkDispatchThread
  */
-inline fun checkDispatchThread(clazz: Class<*>) = checkDispatchThread {
-    "${clazz.simpleName} must only be used from the Event Dispatch Thread."
+inline fun <reified T> checkDispatchThread() = checkDispatchThread {
+    "${T::class.java.simpleName} must only be used from the Event Dispatch Thread."
 }
 
 /**

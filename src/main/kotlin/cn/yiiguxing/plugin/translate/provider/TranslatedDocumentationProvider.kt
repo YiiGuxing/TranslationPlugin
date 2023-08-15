@@ -110,6 +110,7 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         return false
     }
 
+    @Suppress("CompanionObjectInExtension")
     companion object {
         private val recursion = ThreadLocal.withInitial { 0 }
 

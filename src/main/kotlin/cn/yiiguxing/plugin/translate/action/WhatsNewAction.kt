@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.update.UpdateManager
 import cn.yiiguxing.plugin.translate.update.Version
+import cn.yiiguxing.plugin.translate.update.WhatsNew
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 
@@ -13,6 +13,6 @@ class WhatsNewAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        UpdateManager.browseWhatsNew(Version.current(), e.project)
+        WhatsNew.browse(Version.current(), e.project)
     }
 }
