@@ -65,7 +65,7 @@ repositories {
 dependencies {
     implementation(libs.jsoup)
     implementation(libs.dbutils)
-    implementation("com.github.YiiGuxing:intellij-idea-compat:0.0.2")
+    implementation(libs.ideaCompat)
     implementation(libs.mp3spi) { exclude("junit") }
     testImplementation(libs.junit)
 }
