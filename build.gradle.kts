@@ -6,18 +6,12 @@ import java.time.format.DateTimeFormatter
 
 
 plugins {
-    // Java support
-    id("java")
-    // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.8.22"
-    // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.14.2"
-    // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "2.1.0"
-    // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.13"
-    // Gradle Kover Plugin
-    id("org.jetbrains.kotlinx.kover") version "0.7.2"
+    id("java") // Java support
+    alias(libs.plugins.kotlin) // Kotlin support
+    alias(libs.plugins.kover) // Gradle Kover Plugin
+    alias(libs.plugins.qodana) // Gradle Qodana Plugin
+    alias(libs.plugins.changelog) // Gradle Changelog Plugin
+    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
 }
 
 
@@ -25,29 +19,21 @@ fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 fun dateValue(pattern: String) = LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
 
-
-val autoSnapshotVersionEnv = environment("AUTO_SNAPSHOT_VERSION").map(String::toBoolean).orElse(true)
-val snapshotVersionPart = properties("autoSnapshotVersion")
+val autoSnapshotVersionEnv: Provider<Boolean> = environment("AUTO_SNAPSHOT_VERSION").map(String::toBoolean).orElse(true)
+val snapshotVersionPart: Provider<String> = properties("autoSnapshotVersion")
     .map(String::toBoolean)
     .orElse(false)
-    .zip(autoSnapshotVersionEnv) { isAutoSnapshotVersion, autoSnapshotVersionEnv ->
-        isAutoSnapshotVersion && autoSnapshotVersionEnv
-    }
-    .map { if (it) "SNAPSHOT.${dateValue("yyMMdd")}" else null }
-val preReleaseVersion = properties("pluginPreReleaseVersion")
-    .map { it.takeIf(String::isNotBlank) }
-    .orElse(snapshotVersionPart)
-val buildMetadataPart = properties("pluginBuildMetadata")
-    .map { it.takeIf(String::isNotBlank) }
-    .map { "+$it" }
-    .orElse("")
-val pluginVersion = properties("pluginMajorVersion")
-    .zip(preReleaseVersion.map { "-$it" }.orElse("")) { majorVersion, preReleaseVersion ->
-        majorVersion + preReleaseVersion
-    }
-val fullPluginVersion = pluginVersion.zip(buildMetadataPart) { pluginVersion, buildMetadata ->
-    pluginVersion + buildMetadata
+    .zip(autoSnapshotVersionEnv, Boolean::and)
+    .map { if (it) "SNAPSHOT.${dateValue("yyMMdd")}" else "" }
+val preReleaseVersion: Provider<String> = properties("pluginPreReleaseVersion")
+    .flatMap { prv -> prv.takeIf(String::isNotBlank)?.let { provider { it } } ?: snapshotVersionPart }
+val preReleaseVersionPart: Provider<String> = preReleaseVersion.map { prv ->
+    prv.takeIf(String::isNotBlank)?.let { "-$it" } ?: ""
 }
+val buildMetadataPart: Provider<String> = properties("pluginBuildMetadata")
+    .map { part -> part.takeIf(String::isNotBlank)?.let { "+$it" } ?: "" }
+val pluginVersion: Provider<String> = properties("pluginMajorVersion").zip(preReleaseVersionPart, String::plus)
+val fullPluginVersion: Provider<String> = pluginVersion.zip(buildMetadataPart, String::plus)
 
 val versionRegex =
     Regex("""^((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
@@ -55,12 +41,12 @@ if (!versionRegex.matches(fullPluginVersion.get())) {
     throw GradleException("Plugin version '${fullPluginVersion.get()}' does not match the pattern '$versionRegex'")
 }
 
-val publishChannel = preReleaseVersion.map { preReleaseVersion: String? ->
-    preReleaseVersion?.split(".")?.firstOrNull()?.lowercase()
-}.orElse("default")
+val publishChannel: Provider<String> = preReleaseVersion.map { preReleaseVersion: String ->
+    preReleaseVersion.takeIf(String::isNotEmpty)?.split(".")?.firstOrNull()?.lowercase() ?: "default"
+}
 
 extra["pluginVersion"] = pluginVersion.get()
-extra["pluginPreReleaseVersion"] = preReleaseVersion.getOrElse("")
+extra["pluginPreReleaseVersion"] = preReleaseVersion.get()
 extra["fullPluginVersion"] = fullPluginVersion.get()
 extra["publishChannel"] = publishChannel.get()
 
@@ -76,13 +62,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13.2")
-
-    implementation("org.jsoup:jsoup:1.16.1")
-    implementation("commons-dbutils:commons-dbutils:1.7")
-    implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4") {
-        exclude("junit")
-    }
+    implementation(libs.jsoup)
+    implementation(libs.dbutils)
+    implementation(libs.mp3spi) { exclude("junit") }
+    testImplementation(libs.junit)
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
@@ -92,27 +75,27 @@ kotlin {
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
+    pluginName = properties("pluginName")
+    version = properties("platformVersion")
+    type = properties("platformType")
 
     // Plugin Dependencies. Use `platformPlugins` property from the gradle.properties file.
-    plugins.set(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
+    plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    header.set(provider { "${version.get()} (${dateValue("yyyy/MM/dd")})" })
+    header = provider { "${version.get()} (${dateValue("yyyy/MM/dd")})" }
     groups.empty()
-    repositoryUrl.set(properties("pluginRepositoryUrl"))
+    repositoryUrl = properties("pluginRepositoryUrl")
 }
 
 // Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
 qodana {
-    cachePath.set(provider { file(".qodana").canonicalPath })
-    reportPath.set(provider { file("build/reports/inspections").canonicalPath })
-    saveReport.set(true)
-    showReport.set(environment("QODANA_SHOW_REPORT").map(String::toBoolean).getOrElse(false))
+    cachePath = provider { file(".qodana").canonicalPath }
+    reportPath = provider { file("build/reports/inspections").canonicalPath }
+    saveReport = true
+    showReport = environment("QODANA_SHOW_REPORT").map(String::toBoolean).getOrElse(false)
 }
 
 // Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
@@ -128,7 +111,7 @@ tasks {
         systemProperty("idea.is.internal", true)
         systemProperty("translation.plugin.log.stdout", true)
 
-        jbrVariant.set("dcevm")
+        jbrVariant = "dcevm"
         // Enable hotswap, requires JBR 17+ or JBR 11 with DCEVM, and run in debug mode.
         jvmArgs = listOf("-XX:+AllowEnhancedClassRedefinition")
 
@@ -141,15 +124,15 @@ tasks {
     }
 
     patchPluginXml {
-        version.set(fullPluginVersion)
-        sinceBuild.set(properties("pluginSinceBuild"))
-        untilBuild.set(properties("pluginUntilBuild"))
-        pluginDescription.set(projectDir.resolve("DESCRIPTION.md").readText())
+        version = fullPluginVersion
+        sinceBuild = properties("pluginSinceBuild")
+        untilBuild = properties("pluginUntilBuild")
+        pluginDescription = projectDir.resolve("DESCRIPTION.md").readText()
 
         // local variable for configuration cache compatibility
         val changelog = project.changelog
         // Get the latest available change notes from the changelog file
-        changeNotes.set(pluginVersion.map { pluginVersion ->
+        changeNotes = pluginVersion.map { pluginVersion ->
             with(changelog) {
                 renderItem(
                     (getOrNull(pluginVersion) ?: getUnreleased())
@@ -158,22 +141,22 @@ tasks {
                     Changelog.OutputType.HTML
                 )
             }
-        })
+        }
     }
 
     signPlugin {
-        certificateChain.set(environment("CERTIFICATE_CHAIN"))
-        privateKey.set(environment("PRIVATE_KEY"))
-        password.set(environment("PRIVATE_KEY_PASSWORD"))
+        certificateChain = environment("CERTIFICATE_CHAIN")
+        privateKey = environment("PRIVATE_KEY")
+        password = environment("PRIVATE_KEY_PASSWORD")
     }
 
     publishPlugin {
         dependsOn("patchChangelog")
-        token.set(environment("PUBLISH_TOKEN"))
+        token = environment("PUBLISH_TOKEN")
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel,
-        // When using a non-default release channel, IntelliJ Platform Based IDEs users will need to add a
+        // When using a non-default release channel, IntelliJ Platform-Based IDEs users will need to add a
         // new custom plugin repository to install your plugin from the specified channel. For example, if
         // specified 'snapshot' as a release channel, then users will need to add the
         // https://plugins.jetbrains.com/plugins/snapshot/list repository to install the plugin and receive updates.
@@ -182,7 +165,7 @@ tasks {
         // Snapshot repositories:
         // https://plugins.jetbrains.com/plugins/snapshot/list
         // https://plugins.jetbrains.com/plugins/snapshot/8579
-        channels.set(publishChannel.map { listOf(it) })
+        channels = publishChannel.map { listOf(it) }
     }
 
     wrapper {

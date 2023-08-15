@@ -8,7 +8,8 @@ import cn.yiiguxing.plugin.translate.ui.wordbook.WordOfTheDayDialog
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -25,6 +26,7 @@ open class TranslationUIManager private constructor() : Disposable {
     // Issue: #845 (https://github.com/YiiGuxing/TranslationPlugin/issues/845)
     // com.intellij.diagnostic.PluginException: Key cn.yiiguxing.plugin.translate.service.TranslationUIManager
     // duplicated [Plugin: cn.yiiguxing.plugin.translate]
+    @Service
     class AppService : TranslationUIManager()
 
     private var balloonRef: Ref<TranslationBalloon> = Ref.create()
@@ -46,7 +48,7 @@ open class TranslationUIManager private constructor() : Disposable {
 
     fun currentBalloon(): TranslationBalloon? = balloonRef.get()
 
-    fun currentNewTranslationDialog(): TranslationDialog? = translationDialogRef.get()
+    fun currentTranslationDialog(): TranslationDialog? = translationDialogRef.get()
 
     companion object {
 
@@ -68,11 +70,7 @@ open class TranslationUIManager private constructor() : Disposable {
         }
 
         fun instance(project: Project?): TranslationUIManager {
-            return if (project == null) {
-                ApplicationManager.getApplication().getService(AppService::class.java)
-            } else {
-                project.getService(TranslationUIManager::class.java)
-            }
+            return project?.service<AppService>() ?: service<AppService>()
         }
 
         /**
@@ -148,6 +146,6 @@ open class TranslationUIManager private constructor() : Disposable {
         }
 
 
-        private fun checkThread() = checkDispatchThread(TranslationUIManager::class.java)
+        private fun checkThread() = checkDispatchThread<TranslationUIManager>()
     }
 }

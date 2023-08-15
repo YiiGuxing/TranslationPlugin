@@ -4,11 +4,13 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 
 /**
  * Provide text-to-speech conversion.
  */
+@Service
 class TextToSpeech private constructor() {
 
     private var currentPlayer: TTSPlayer? = null
@@ -51,6 +53,6 @@ class TextToSpeech private constructor() {
         val instance: TextToSpeech
             get() = ApplicationManager.getApplication().getService(TextToSpeech::class.java)
 
-        private fun checkThread() = checkDispatchThread(TextToSpeech::class.java)
+        private fun checkThread() = checkDispatchThread<TextToSpeech>()
     }
 }

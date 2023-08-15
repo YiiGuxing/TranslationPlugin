@@ -10,7 +10,6 @@ import com.intellij.psi.util.PsiTreeUtil
 
 abstract class AbstractDocumentationElementProvider : DocumentationElementProvider {
 
-    @Suppress("UNCHECKED_CAST")
     override fun findDocumentationElementAt(psiFile: PsiFile, offset: Int): PsiComment? {
         val offsetElement = psiFile.findElementAt(offset) ?: return null
         val comment = PsiTreeUtil.getParentOfType(offsetElement, PsiComment::class.java, false)
@@ -37,7 +36,6 @@ abstract class AbstractDocumentationElementProvider : DocumentationElementProvid
     protected open val PsiComment.isPickAtEdge: Boolean get() = false
 
     final override fun getDocumentationOwner(documentationElement: PsiElement): PsiElement? {
-        @Suppress("UNCHECKED_CAST")
         return (documentationElement as? PsiComment)?.cachedOwner?.owner
     }
 

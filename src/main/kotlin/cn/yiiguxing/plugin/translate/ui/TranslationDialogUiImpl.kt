@@ -280,6 +280,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     }
 
     private fun createSpellComponent(): SpellComponent = SpellComponent().apply {
+        preferredSize = JBDimension(350, -1)
         spellText.apply {
             font = font.deriveFont(Font.BOLD, spellLabel.font.size.toFloat())
         }

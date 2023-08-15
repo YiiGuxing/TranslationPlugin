@@ -49,7 +49,7 @@ open class TranslateAction(checkSelection: Boolean = false) :
         }
 
         //this logic is also used in ShowTranslationDialogAction
-        val currentNewTD = TranslationUIManager.instance(project).currentNewTranslationDialog()
+        val currentNewTD = TranslationUIManager.instance(project).currentTranslationDialog()
         if (currentNewTD != null) {
             currentNewTD.translate(text)
             return

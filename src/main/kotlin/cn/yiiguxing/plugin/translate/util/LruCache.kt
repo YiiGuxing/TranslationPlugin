@@ -234,16 +234,15 @@ open class LruCache<K, V>(maxSize: Int) {
     fun removeIf(predicate: (K & Any, V & Any) -> Boolean): Set<Map.Entry<K & Any, V & Any>> {
         val removed = LinkedHashSet<Map.Entry<K & Any, V & Any>>()
         synchronized(this) {
-            var removedSize = 0
-            map.entries.removeIf { entry ->
-                predicate(entry.key, entry.value).also { remove ->
-                    if (remove) {
-                        removed.add(entry)
-                        removedSize += safeSizeOf(entry.key, entry.value)
-                    }
+            val each = map.entries.iterator()
+            while (each.hasNext()) {
+                val entry = each.next()
+                if (predicate(entry.key, entry.value)) {
+                    each.remove()
+                    removed.add(entry)
+                    size -= safeSizeOf(entry.key, entry.value)
                 }
             }
-            size -= removedSize
         }
 
         if (removed.isNotEmpty()) {

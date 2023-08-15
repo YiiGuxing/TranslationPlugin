@@ -50,7 +50,7 @@ class TranslationWidget(private val project: Project) : StatusBarWidget, StatusB
     override fun dispose() {}
 
     companion object {
-        const val ID = "TranslationWidget"
+        const val ID = "Translation.Widget"
 
         private fun MessageBusConnection.subscribeToSettingsChangeEvents(statusBar: StatusBar) {
             subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {

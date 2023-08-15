@@ -53,10 +53,10 @@ jobs:
 
       # Free GitHub Actions Environment Disk Space
       - name: Maximize Build Space
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          large-packages: false
 
       # Check out current repository
       - name: Fetch Sources
@@ -64,7 +64,7 @@ jobs:
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.6
+        uses: gradle/wrapper-validation-action@v1.1.0
 
       # Setup Java 11 environment for the next steps
       - name: Setup Java

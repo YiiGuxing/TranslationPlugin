@@ -53,20 +53,17 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.trans.TranslateService"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.tts.TextToSpeech"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationStates"/>
-        <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookService"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
-        <applicationService
-                serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager$AppService"/>
 
         <applicationConfigurable groupId="tools"
+                                 displayName="Translation"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
-        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
+        <statusBarWidgetFactory id="Translation.Widget"
+                                implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
         <toolWindow id="Translation.Wordbook"
                     icon="TranslationIcons.Wordbook"
                     anchor="right"
@@ -85,8 +82,9 @@
         <errorHandler implementation="cn.yiiguxing.plugin.translate.diagnostic.ReportSubmitter"/>
 
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
+        <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
-        <notificationGroup id="Translation Plugin Updates" displayType="STICKY_BALLOON" isLogByDefault="false"/>
+        <notificationGroup id="Translation Plugin updated" displayType="STICKY_BALLOON" isLogByDefault="false"/>
 
         <registryKey key="cn.yiiguxing.plugin.translate.bundle.forceFollowLanguagePack"
                      defaultValue="false" restartRequired="true"
