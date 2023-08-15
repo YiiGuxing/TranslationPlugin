@@ -67,11 +67,14 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
 | 王俊涛 | | 40 CNY |
 | IKUN#1337 | | 35 CNY |
+| 小明 | | 32 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30 CNY |
 | 包子 | | 26.66 CNY |
+| 王宏杰 | | 26.64 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21 CNY |
+| 惑 | | 20 CNY |
 | 地下室的猫 | | 20 CNY |
 | 许世豪 | | 20 CNY |
 | Tom | | 20 CNY |
@@ -94,7 +97,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Stan Chen | [github.com/stan-chen](https://github.com/stan-chen) | 20 CNY |
 | Hanlehua | | 20 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20 CNY |
-| 王宏杰 | | 19.98 CNY |
 | 本善之初 | | 16.66 CNY |
 | Joey | | 16.66 CNY |
 | Joker | | 16.66 CNY |
@@ -107,6 +109,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 | | 10.24 CNY |
 | Ncayu618 | | 10.24 CNY |
+| 没事恰溜溜梅 | | 10 CNY |
+| 旌展 | | 10 CNY |
+| 八十八道湾 | | 10 CNY |
 | 尤一锋 | | 10 CNY |
 | Kylepeng93 | | 10 CNY |
 | 笨拙之极的上野 | | 10 CNY |
@@ -232,6 +237,15 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 | | 8 CNY |
 | 干巴爹 | | 8 CNY |
 | 尼古拉斯 | | 6.67 CNY |
+| Yuewen | | 6.66 CNY |
+| 🛸🍅 | | 6.66 CNY |
+| 原磨豆浆熊 | | 6.66 CNY |
+| Kursuser | | 6.66 CNY |
+| 自然的歌声 | | 6.66 CNY |
+| 月半 | | 6.66 CNY |
+| 七分 | | 6.66 CNY |
+| 牧 | | 6.66 CNY |
+| Neo | | 6.66 CNY |
 | 望北 | | 6.66 CNY |
 | Mmjyl | | 6.66 CNY |
 | 锅巴 | | 6.66 CNY |
