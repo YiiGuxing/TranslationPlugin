@@ -145,6 +145,11 @@ tasks {
         }
     }
 
+    // Validate plugin starting from version 2022.3.3 to save disk space
+    listProductsReleases {
+        sinceVersion = "2022.3.3"
+    }
+
     signPlugin {
         certificateChain = environment("CERTIFICATE_CHAIN")
         privateKey = environment("PRIVATE_KEY")
