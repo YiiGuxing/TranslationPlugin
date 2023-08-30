@@ -118,6 +118,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 初一十五 |  | 10.00 CNY |
 | 禤诚轩 |  | 10.00 CNY |
 | 栗浩 |  | 10.00 CNY |
 | 土地（厚重） |  | 10.00 CNY |
@@ -248,6 +249,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 薛定谔的汪 |  | 6.66 CNY |
 | 苏俗 |  | 6.66 CNY |
 | D圀 |  | 6.66 CNY |
 | 天上有馅饼 |  | 6.66 CNY |
