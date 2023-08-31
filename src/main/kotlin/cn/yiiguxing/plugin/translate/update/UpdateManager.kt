@@ -120,6 +120,7 @@ class UpdateManager : BaseStartupActivity() {
             .createNotification(content, NotificationType.INFORMATION)
             .setTitle(title)
             .setImportant(true)
+            .setIcon(TranslationIcons.Logo)
             .apply {
                 setListener(Notifications.UrlOpeningListener(false))
             }

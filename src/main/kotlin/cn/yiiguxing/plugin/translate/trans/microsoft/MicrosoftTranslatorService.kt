@@ -58,7 +58,10 @@ internal class MicrosoftTranslatorService {
         val promise = asyncLatch { latch ->
             runAsync {
                 latch.await(100, TimeUnit.MILLISECONDS)
-                Http.get(AUTH_URL) { userAgent() }
+                Http.get(AUTH_URL) {
+                    accept("*/*")
+                    userAgent()
+                }
             }
                 .onError { LOG.w("Failed to get access token", it) }
                 .onSuccess(::updateAccessToken)
