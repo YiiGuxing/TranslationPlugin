@@ -9,6 +9,8 @@ import com.intellij.notification.*
 import com.intellij.notification.impl.NotificationFullContent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
+import icons.TranslationIcons
+import javax.swing.Icon
 import javax.swing.event.HyperlinkEvent
 
 
@@ -21,6 +23,11 @@ object Notifications {
     private val DEFAULT_NOTIFICATION_CUSTOMIZER: (Notification) -> Unit = { }
 
 
+    private fun getNotificationIcon(type: NotificationType): Icon? = when (type) {
+        NotificationType.INFORMATION -> TranslationIcons.Logo
+        else -> null
+    }
+
     fun showNotification(
         title: String,
         message: String,
@@ -32,6 +39,7 @@ object Notifications {
         NotificationGroupManager.getInstance()
             .getNotificationGroup(groupId)
             .createNotification(message, type)
+            .setIcon(getNotificationIcon(type))
             .setTitle(title)
             .apply { notificationCustomizer(this) }
             .show(project)
@@ -47,6 +55,7 @@ object Notifications {
     ) {
         val group = NotificationGroupManager.getInstance().getNotificationGroup(groupId)
         val notification = FullContentNotification(group.displayId, title, message, type)
+        notification.setIcon(getNotificationIcon(type))
         notificationCustomizer(notification)
         notification.show(project)
     }

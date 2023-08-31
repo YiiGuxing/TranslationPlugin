@@ -167,20 +167,20 @@ class Settings : PersistentStateComponent<Settings> {
     override fun getState(): Settings = this
 
     override fun loadState(state: Settings) {
-        try {
-            XmlSerializerUtil.copyBean(state, this)
+        XmlSerializerUtil.copyBean(state, this)
 
-            val properties: PropertiesComponent = PropertiesComponent.getInstance()
-            val dataVersion = properties.getInt(DATA_VERSION_KEY, 0)
+        val properties: PropertiesComponent = PropertiesComponent.getInstance()
+        val dataVersion = properties.getInt(DATA_VERSION_KEY, 0)
 
-            LOG.d("===== Settings Data Version: $dataVersion =====")
-            if (dataVersion < CURRENT_DATA_VERSION) {
-                migrate()
-                properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
-            }
-        } finally {
-            isInitialized = true
+        LOG.d("===== Settings Data Version: $dataVersion =====")
+        if (dataVersion < CURRENT_DATA_VERSION) {
+            migrate()
+            properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
         }
+    }
+
+    override fun initializeComponent() {
+        isInitialized = true
     }
 
     companion object {

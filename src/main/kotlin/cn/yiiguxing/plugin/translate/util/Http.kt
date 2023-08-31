@@ -165,8 +165,8 @@ object Http {
     }
 
     private fun getUserAgent(): String {
-        val chrome = "Chrome/112.0.0.0"
-        val edge = "Edg/112.0.1722.39"
+        val chrome = "Chrome/115.0.0.0"
+        val edge = "Edg/115.0.1901.203"
         val safari = "Safari/537.36"
         val systemInfo = "Windows NT ${SystemInfoRt.OS_VERSION}; Win64; x64"
         @Suppress("SpellCheckingInspection")

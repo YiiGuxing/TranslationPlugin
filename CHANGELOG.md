@@ -1,6 +1,10 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Fixed the problem that the translation engine could not be switched when installing the plugin for the first time.
+- Fixed the problem that Alibaba Translate could not parse translations in some cases.
+- 修复了首次安装插件时无法切换翻译引擎的问题
+- 修复了阿里翻译在某些情况下无法解析翻译的问题
 
 ## [3.5.2] (2023/08/16)
 - Bug fixes.
