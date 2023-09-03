@@ -102,6 +102,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua |  | 20.00 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20.00 CNY |
 | Yiyi |  | 20.00 CNY |
+| ZDQ |  | 16.66 CNY |
 | 本善之初 |  | 16.66 CNY |
 | Joey |  | 16.66 CNY |
 | Joker |  | 16.66 CNY |
@@ -145,7 +146,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 外号:大聪明 |  | 10.00 CNY |
 | Read&write |  | 10.00 CNY |
 | 飞行员。 |  | 10.00 CNY |
-| ZDQ |  | 10.00 CNY |
 | 傅友华 |  | 10.00 CNY |
 | 大伙子🇦🇷 |  | 10.00 CNY |
 | 不想做韭菜的小爱 |  | 10.00 CNY |
@@ -249,6 +249,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| Unkiar |  | 6.66 CNY |
+| 感觉不如斯卡蒂 |  | 6.66 CNY |
 | 薛定谔的汪 |  | 6.66 CNY |
 | 苏俗 |  | 6.66 CNY |
 | D圀 |  | 6.66 CNY |
