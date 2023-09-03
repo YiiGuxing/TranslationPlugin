@@ -249,6 +249,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 壮 |  | 6.66 CNY |
 | Unkiar |  | 6.66 CNY |
 | 感觉不如斯卡蒂 |  | 6.66 CNY |
 | 薛定谔的汪 |  | 6.66 CNY |
