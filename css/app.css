@@ -560,22 +560,29 @@ section.cover .badges > p {
 }
 
 .open-collective-donate-button {
-    position: relative;
-    min-height: 3rem;
+    display: inline-block;
+    margin-top: 1rem;
 }
 
-.open-collective-donate-button > span {
-    line-height: 50px;
-    position: absolute;
-    left: 1rem;
-    top: 1rem;
-    z-index: -1;
+.open-collective-donate-button > .button--bg {
+    display: block;
+    width: 300px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-image: url(../img/oc-donate-button.svg);
 }
 
-.open-collective-donate-button > iframe {
-    width: auto;
-    border: none;
-    min-width: unset;
+.open-collective-donate-button > .button--bg:hover {
+    background-position: 0 -50px;
+}
+
+.open-collective-donate-button > .button--bg:active {
+    background-position: 0 -100px;
 }
 
 .donate-qr-code table * {

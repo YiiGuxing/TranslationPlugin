@@ -1,0 +1,68 @@
+<svg width="300" height="150" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="a">
+            <stop stop-color="#52BBF8" offset="0%"/>
+            <stop stop-color="#2FA8EE" offset="100%"/>
+        </linearGradient>
+        <rect id="b" width="298" height="48" rx="24"/>
+        <filter x="-.3%" y="-2.1%" width="100.7%" height="104.2%" filterUnits="objectBoundingBox" id="c">
+            <feOffset dy="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1"
+                         result="shadowInnerInner1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" in="shadowInnerInner1"/>
+        </filter>
+        <linearGradient x1="50%" y1="3.911%" x2="50%" y2="100%" id="d">
+            <stop stop-color="#7ACFFF" offset="0%"/>
+            <stop stop-color="#4CBEFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="1.074%" x2="50%" y2="100%" id="e">
+            <stop stop-color="#52BBF8" offset="0%"/>
+            <stop stop-color="#2FA8EE" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(1 101)">
+            <use fill="url(#a)" xlink:href="#b"/>
+            <use fill="#000" filter="url(#c)" xlink:href="#b"/>
+        </g>
+        <g transform="translate(253 103)">
+            <ellipse fill="#FFF" cx="22" cy="22" rx="22" ry="22"/>
+            <path d="M33.51 14.026C35.08 16.29 36 19.036 36 22c0 2.963-.92 5.71-2.49 7.974l-3.628-3.627C30.595 25.057 31 23.577 31 22c0-1.577-.405-3.058-1.118-4.347l3.627-3.627zm-3.536-3.535l-3.627 3.628C25.057 13.405 23.577 13 22 13c-4.97 0-9 4.03-9 9s4.03 9 9 9c1.577 0 3.058-.405 4.347-1.118l3.627 3.627C27.71 35.08 24.964 36 22 36c-7.732 0-14-6.268-14-14S14.268 8 22 8c2.963 0 5.71.92 7.974 2.49z"
+                  fill="#3FAFF0"/>
+            <path d="M33.51 14.026C35.08 16.29 36 19.036 36 22c0 2.963-.92 5.71-2.49 7.974l-3.628-3.627C30.595 25.057 31 23.577 31 22c0-1.577-.405-3.058-1.118-4.347l3.627-3.627z"
+                  fill="#B8D5E6"/>
+        </g>
+        <text transform="translate(20 118)" font-size="12" font-family="Montserrat-Regular, Montserrat, Arial"
+              letter-spacing="2" fill="#FFF">
+            <tspan x="0" y="12">DONATE TO OUR COLLECTIVE</tspan>
+        </text>
+        <g>
+            <rect width="298" height="48" rx="24" fill="url(#d)" transform="translate(1 51)"/>
+            <g transform="translate(253 53)">
+                <ellipse fill="#FFF" cx="22" cy="22" rx="22" ry="22"/>
+                <path d="M33.51 14.026C35.08 16.29 36 19.036 36 22c0 2.963-.92 5.71-2.49 7.974l-3.628-3.627C30.595 25.057 31 23.577 31 22c0-1.577-.405-3.058-1.118-4.347l3.627-3.627zm-3.536-3.535l-3.627 3.628C25.057 13.405 23.577 13 22 13c-4.97 0-9 4.03-9 9s4.03 9 9 9c1.577 0 3.058-.405 4.347-1.118l3.627 3.627C27.71 35.08 24.964 36 22 36c-7.732 0-14-6.268-14-14S14.268 8 22 8c2.963 0 5.71.92 7.974 2.49z"
+                      fill="#3FAFF0"/>
+                <path d="M33.51 14.026C35.08 16.29 36 19.036 36 22c0 2.963-.92 5.71-2.49 7.974l-3.628-3.627C30.595 25.057 31 23.577 31 22c0-1.577-.405-3.058-1.118-4.347l3.627-3.627z"
+                      fill="#B8D5E6"/>
+            </g>
+            <text transform="translate(20 68)" font-size="12" font-family="Montserrat-Regular, Montserrat, Arial"
+                  letter-spacing="2" fill="#FFF">
+                <tspan x="0" y="12">DONATE TO OUR COLLECTIVE</tspan>
+            </text>
+        </g>
+        <g>
+            <rect width="298" height="48" rx="24" fill="url(#e)" transform="translate(1 1)"/>
+            <g transform="translate(253 3)">
+                <ellipse fill="#FFF" cx="22" cy="22" rx="22" ry="22"/>
+                <path d="M33.51 14.026C35.08 16.29 36 19.036 36 22c0 2.963-.92 5.71-2.49 7.974l-3.628-3.627C30.595 25.057 31 23.577 31 22c0-1.577-.405-3.058-1.118-4.347l3.627-3.627zm-3.536-3.535l-3.627 3.628C25.057 13.405 23.577 13 22 13c-4.97 0-9 4.03-9 9s4.03 9 9 9c1.577 0 3.058-.405 4.347-1.118l3.627 3.627C27.71 35.08 24.964 36 22 36c-7.732 0-14-6.268-14-14S14.268 8 22 8c2.963 0 5.71.92 7.974 2.49z"
+                      fill="#3FAFF0"/>
+                <path d="M33.51 14.026C35.08 16.29 36 19.036 36 22c0 2.963-.92 5.71-2.49 7.974l-3.628-3.627C30.595 25.057 31 23.577 31 22c0-1.577-.405-3.058-1.118-4.347l3.627-3.627z"
+                      fill="#B8D5E6"/>
+            </g>
+            <text transform="translate(20 18)" font-size="12" font-family="Montserrat-Regular, Montserrat, Arial"
+                  letter-spacing="2" fill="#FFF">
+                <tspan x="0" y="12">DONATE TO OUR COLLECTIVE</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
