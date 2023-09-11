@@ -21,18 +21,17 @@
 
 ### OpenCollective 経由で寄付する :id=donate-on-open-collective
 
-<div class="open-collective-donate-button">
-  <span>Loading...</span>
-  <iframe src="https://opencollective.com/translation-plugin/donate/button?color=blue" width="300" height="50" frameborder="0"></iframe>
-</div>
+<a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
+<div class="button--bg"></div>
+</a>
 
 ### WeChat Reward/Alipay 経由で寄付する :id=donate-via-wechat-alipay
 
 <div class="donate-qr-code">
 
-| [![WeChat Reward](../img/donating_wechat_pay.svg)](https://pay.weixin.qq.com/index.php/public/wechatpay_en) | [![Alipay](../img/donating_alipay.svg)](https://global.alipay.com) |
-|:-----------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------:|
-|                [**WeChat Reward**](https://pay.weixin.qq.com/index.php/public/wechatpay_en)                 |              [**Alipay**](https://global.alipay.com)               |
+| [![WeChat Reward](../img/donating_wechat_pay.svg)][wechat-pay] | [![Alipay](../img/donating_alipay.svg)][alipay] |
+|:--------------------------------------------------------------:|:-----------------------------------------------:|
+|                [**WeChat Reward**][wechat-pay]                 |              [**Alipay**][alipay]               |
 
 </div>
 
@@ -46,7 +45,7 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 > Payment Platform: WeChat Reward/Alipay  
 > Payment Number (last 5 digits): \<number>
 
-メールアドレス：[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Reward%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D)📨 (クリックしてメールを送信)  
+メールアドレス：[yii.guxing@outlook.com][mailto] 📨 (クリックしてメールを送信)  
 お送りいただいたお名前とウェブサイト、寄付金額は、[寄付者](#wechat-alipay-donors)のリストに記載されます。
 
 ## 寄付者 :id=translation-plugin-sponsors
@@ -76,3 +75,10 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 ### WeChat Reward/Alipay 寄付者 :id=wechat-alipay-donors
 
 <div class="wechat-alipay-donors"><script src="js/patrons.js" async></script></div>
+
+
+[wechat-pay]: https://pay.weixin.qq.com/index.php/public/wechatpay_en
+
+[alipay]: https://global.alipay.com
+
+[mailto]: mailto:yii.guxing@outlook.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Reward%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D

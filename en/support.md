@@ -1,6 +1,6 @@
 # Become a TranslationPlugin Supporter and Sponsor :id=become-a-supporter
 
-**TranslationPlugin** is an MIT licensed open source project and completely free to use.
+**TranslationPlugin** is an MIT licensed open-source project and completely free to use.
 
 The developer's maintenance of this project and the development of new features for this project requires tremendous
 energy and effort, which can only be sustained with the support of everyone and the generous financial support of
@@ -19,23 +19,22 @@ You can support **TranslationPlugin** by doing any of the following:
 
 ## Sponsor TranslationPlugin❤️ :id=sponsor-translation-plugin
 
-if you think **TranslationPlugin** is helpful to you or that my work is valuable, please consider
+If you think **TranslationPlugin** is helpful to you or that my work is valuable, please consider
 ❤️[sponsoring us](#sponsor-translation-plugin)❤️. It will inspire us to continue development on the project.
 
 ### Donate via OpenCollective :id=donate-on-open-collective
 
-<div class="open-collective-donate-button">
-  <span>Loading...</span>
-  <iframe src="https://opencollective.com/translation-plugin/donate/button?color=blue" width="300" height="50" frameborder="0"></iframe>
-</div>
+<a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
+<div class="button--bg"></div>
+</a>
 
 ### Donate via WeChat Reward/Alipay :id=donate-via-wechat-alipay
 
 <div class="donate-qr-code">
 
-| [![WeChat Reward](../img/donating_wechat_pay.svg)](https://pay.weixin.qq.com/index.php/public/wechatpay_en) | [![Alipay](../img/donating_alipay.svg)](https://global.alipay.com) |
-|:-----------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------:|
-|                [**WeChat Reward**](https://pay.weixin.qq.com/index.php/public/wechatpay_en)                 |              [**Alipay**](https://global.alipay.com)               |
+| [![WeChat Reward](../img/donating_wechat_pay.svg)][wechat-pay] | [![Alipay](../img/donating_alipay.svg)][alipay] |
+|:--------------------------------------------------------------:|:-----------------------------------------------:|
+|                [**WeChat Reward**][wechat-pay]                 |              [**Alipay**][alipay]               |
 
 </div>
 
@@ -50,7 +49,7 @@ If you choose to send an email, please also provide the following information:
 > Payment Platform: WeChat Reward/Alipay  
 > Payment Number (last 5 digits): \<number>
 
-Email address: [yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Reward%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D)📨 (click to send email)  
+Email address: [yii.guxing@outlook.com][mailto]📨 (click to send email)  
 The name, website and total donation amount you provide will be added to the [donor list](#wechat-alipay-donors).
 
 ## Sponsors :id=translation-plugin-sponsors
@@ -80,3 +79,10 @@ Thank you to all our backers! ❤️
 ### WeChat Reward/Alipay Backers :id=wechat-alipay-donors
 
 <div class="wechat-alipay-donors"><script src="js/patrons.js" async></script></div>
+
+
+[wechat-pay]: https://pay.weixin.qq.com/index.php/public/wechatpay_en
+
+[alipay]: https://global.alipay.com
+
+[mailto]: mailto:yii.guxing@outlook.com?subject=Donate&body=Name%2FNickname%3Cwebsite%3E%3A%20%3Cmessage%3E%0D%0DDonation%20Amount%3A%20%3Camount%3E%0DPayment%20Platform%3A%20Alipay%2FWeChat%20Reward%0DPayment%20Number%20%28last%205%20digits%29%3A%20%3Cnumber%3E%0D%0D

@@ -21,10 +21,10 @@
 
 ### 通过 Open Collective 捐赠 :id=donate-on-open-collective
 
-<div class="open-collective-donate-button">
-  <span>Loading...</span>
-  <iframe src="https://opencollective.com/translation-plugin/donate/button?color=blue" width="300" height="50" frameborder="0"></iframe>
-</div>
+<a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
+<div class="button--bg"></div>
+</a>
+
 
 ### 通过 微信赞赏/支付宝 捐赠 :id=donate-via-wechat-alipay
 
@@ -45,7 +45,8 @@
 > 支付平台：支付宝/微信支付  
 > 单号（后5位）：
 
-邮箱地址：[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0D%0D%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0D%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0D%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0D%0D)📨（点击发送邮件）  
+邮箱地址：[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0D%0D%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0D%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0D%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0D%0D)
+📨（点击发送邮件）  
 你提供的名字、网站和捐赠金额将会被添加到[赞助者列表](#wechat-alipay-donors)中。
 
 ## 赞助列表 :id=translation-plugin-sponsors
