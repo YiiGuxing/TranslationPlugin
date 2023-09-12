@@ -80,6 +80,9 @@ object TranslationIcons {
         val Deepl: Icon = load("/icons/engines/deepl.svg")
 
         @JvmField
+        val Deeplx: Icon = load("/icons/engines/deeplx.svg")
+
+        @JvmField
         val Google: Icon = load("/icons/engines/google.svg")
 
         @JvmField

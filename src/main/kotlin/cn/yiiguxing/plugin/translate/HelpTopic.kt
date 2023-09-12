@@ -17,6 +17,9 @@ enum class HelpTopic(id: String, val url: String) {
     /** DeepL */
     DEEPL("deepl", "https://www.deepl.com/pro-api"),
 
+    /** DeepLX */
+    DEEPLX("deeplx", "https://github.com/OwO-Network/DeepLX"),
+
     /** OpenAI */
     OPEN_AI("openai", "https://platform.openai.com");
 
