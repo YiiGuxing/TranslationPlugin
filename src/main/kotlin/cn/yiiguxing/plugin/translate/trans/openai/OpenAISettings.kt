@@ -17,6 +17,9 @@ class OpenAISettings : BaseState(), PersistentStateComponent<OpenAISettings> {
     @get:OptionTag("API_ENDPOINT")
     var apiEndpoint: String? by string(OpenAI.API_URL)
 
+    @get:OptionTag("API_ENDPOINT")
+    var apiEndpoint: String? by string()
+
     override fun getState(): OpenAISettings = this
 
     override fun loadState(state: OpenAISettings) {
