@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- DeepLX
+- OpenAI API Endpoint
 
 ## [3.5.3] (2023/09/01)
 
