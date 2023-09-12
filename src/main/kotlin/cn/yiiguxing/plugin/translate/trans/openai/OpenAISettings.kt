@@ -14,8 +14,6 @@ class OpenAISettings : BaseState(), PersistentStateComponent<OpenAISettings> {
 
     @get:OptionTag("MODEL")
     var model: OpenAIModel by enum(OpenAIModel.GPT_3_5_TURBO)
-    @get:OptionTag("API_ENDPOINT")
-    var apiEndpoint: String? by string(OpenAI.API_URL)
 
     @get:OptionTag("API_ENDPOINT")
     var apiEndpoint: String? by string()
