@@ -10,7 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
-import cn.yiiguxing.plugin.translate.trans.deeplx.DeeplxCredential
+import cn.yiiguxing.plugin.translate.trans.deeplx.DdeeplxSettings
 import cn.yiiguxing.plugin.translate.trans.deeplx.DeeplxSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.deeplx.DeeplxTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
@@ -24,6 +24,7 @@ import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
+import com.intellij.openapi.components.service
 import icons.TranslationIcons
 import javax.swing.Icon
 
@@ -46,7 +47,13 @@ enum class TranslationEngine(
     BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
     ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
     DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
-    DEEPLX("translate.deeplx", message("translation.engine.deeplx.name"), TranslationIcons.Engines.Deeplx, 131072, 1000),
+    DEEPLX(
+        "translate.deeplx",
+        message("translation.engine.deeplx.name"),
+        TranslationIcons.Engines.Deeplx,
+        131072,
+        1000
+    ),
     OPEN_AI("translate.openai", message("translation.engine.openai.name"), TranslationIcons.Engines.OpenAI, 2000, 1000);
 
     var primaryLanguage: Lang
@@ -88,7 +95,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            DEEPLX -> DeeplxCredential.isApiEndpointSet
+            DEEPLX -> !service<DdeeplxSettings>().apiEndpoint.isNullOrEmpty()
             OPEN_AI -> OpenAICredential.isApiKeySet
         }
     }

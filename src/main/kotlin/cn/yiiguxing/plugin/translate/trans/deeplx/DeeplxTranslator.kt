@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.DEEPLX
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.io.HttpRequests
 import org.jsoup.nodes.Document
@@ -19,6 +20,8 @@ import javax.swing.Icon
 object DeeplxTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private val logger: Logger = Logger.getInstance(DeeplxTranslator::class.java)
+
+    private val settings = service<DdeeplxSettings>()
 
     override val id: String = DEEPLX.id
 
@@ -38,7 +41,7 @@ object DeeplxTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = DeeplxLanguageAdapter.supportedTargetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || !DeeplxCredential.isApiEndpointSet) {
+        if (force || !DEEPLX.isConfigured()) {
             return DEEPLX.showConfigurationDialog()
         }
 
@@ -54,11 +57,10 @@ object DeeplxTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocument: Boolean): String {
-        val apiEndpoint = DeeplxCredential.apiEndpoint ?: ""
+        val apiEndpoint = settings.apiEndpoint ?: ""
         return DeeplxService(apiEndpoint).translate(text, srcLang, targetLang, isDocument)
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
         logger.i("Translate result: $translation")
 
@@ -80,23 +82,6 @@ object DeeplxTranslator : AbstractTranslator(), DocumentationTranslator {
         documentation.translateBody { bodyHTML ->
             translateDocumentation(bodyHTML, srcLang, targetLang)
         }
-    }
-
-    private fun processAndTranslateDocumentation(
-        documentation: Document,
-        translate: (String) -> String
-    ): Document {
-        val body = documentation.body()
-        val content = body.html()
-        if (content.isBlank()) {
-            return documentation
-        }
-
-        val translation = translate(content)
-
-        body.html(translation)
-
-        return documentation
     }
 
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {

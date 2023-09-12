@@ -4,9 +4,9 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
+import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.components.JBPasswordField
-import com.intellij.util.Alarm
+import com.intellij.ui.components.JBTextField
 import icons.TranslationIcons
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -14,13 +14,12 @@ import javax.swing.JPanel
 
 class DeeplxSettingsDialog : DialogWrapper(false) {
 
+    private val settings = service<DdeeplxSettings>()
 
-    private val apiEndpointField: JBPasswordField = JBPasswordField()
+    private val apiEndpointField: JBTextField = JBTextField()
 
     private var apiEndpoint: String?
-        get() = apiEndpointField.password
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { String(it) }
+        get() = apiEndpointField.text?.trim()?.takeIf { it.isNotEmpty() }
         set(value) {
             apiEndpointField.text = if (value.isNullOrEmpty()) null else value
         }
@@ -31,8 +30,9 @@ class DeeplxSettingsDialog : DialogWrapper(false) {
         isResizable = false
         init()
 
-        apiEndpoint = DeeplxCredential.apiEndpoint
+        apiEndpoint = settings.apiEndpoint
     }
+
     override fun createCenterPanel(): JComponent {
         val logo = TranslationIcons.load("image/deeplx_translate_logo.svg")
         return LogoHeaderPanel(logo).apply {
@@ -41,12 +41,12 @@ class DeeplxSettingsDialog : DialogWrapper(false) {
     }
 
     private fun createAuthPanel(): JPanel {
-        val authKeyFieldWidth = 300
+        val fieldWidth = 300
         return JPanel(UI.migLayout(UI.migSize(8))).apply {
             add(JLabel(message("deeplx.settings.dialog.label.api.endpoint")))
-            add(apiEndpointField, UI.fillX().width(UI.migSize(authKeyFieldWidth)).wrap())
+            add(apiEndpointField, UI.fillX().width(UI.migSize(fieldWidth)).wrap())
             add(
-                UI.createHint(message("deeplx.settings.dialog.hint"), authKeyFieldWidth),
+                UI.createHint(message("deeplx.settings.dialog.hint"), fieldWidth),
                 UI.cc().cell(1, 1).wrap()
             )
         }
@@ -54,10 +54,10 @@ class DeeplxSettingsDialog : DialogWrapper(false) {
 
     override fun getHelpId(): String = HelpTopic.DEEPLX.id
 
-    override fun isOK(): Boolean = DeeplxCredential.isApiEndpointSet
+    override fun isOK(): Boolean = !settings.apiEndpoint.isNullOrEmpty()
 
     override fun doOKAction() {
-        DeeplxCredential.apiEndpoint = apiEndpoint
+        settings.apiEndpoint = apiEndpoint
         super.doOKAction()
     }
 }
