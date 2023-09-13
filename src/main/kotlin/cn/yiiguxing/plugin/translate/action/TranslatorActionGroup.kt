@@ -10,5 +10,5 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 class TranslatorActionGroup : ActionGroup() {
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> =
-        TranslatorAction.availableActions().toTypedArray()
+        TranslatorAction.ACTIONS.toTypedArray()
 }

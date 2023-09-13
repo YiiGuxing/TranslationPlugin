@@ -57,7 +57,7 @@ class TranslatorWidget(private val project: Project) : StatusBarWidget, StatusBa
                 group,
                 context,
                 false,
-                false,
+                true,
                 false,
                 null,
                 5,

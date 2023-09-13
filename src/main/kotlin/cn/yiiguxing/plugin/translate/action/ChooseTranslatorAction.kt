@@ -27,8 +27,6 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
     }
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isEnabledAndVisible = TranslatorAction.availableActions().size > 1
-
         TranslateService.translator.let {
             e.presentation.text = it.name
             e.presentation.icon = it.icon
@@ -56,7 +54,7 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
                 group,
                 context,
                 false,
-                shouldShowDisabledActions(),
+                true,
                 false,
                 disposeCallback,
                 maxRows,
@@ -68,7 +66,7 @@ class ChooseTranslatorAction : ComboBoxAction(), DumbAware {
     override fun getPreselectCondition(): Condition<AnAction> = TranslatorAction.PRESELECT_CONDITION
 
     override fun createPopupActionGroup(button: JComponent)
-            : DefaultActionGroup = DefaultActionGroup(TranslatorAction.availableActions())
+            : DefaultActionGroup = DefaultActionGroup(TranslatorAction.ACTIONS)
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton =
         object : ComboBoxButton(presentation) {

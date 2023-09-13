@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
-import cn.yiiguxing.plugin.translate.action.TranslatorAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
@@ -33,7 +32,7 @@ class TranslatorWidgetFactory : StatusBarWidgetFactory {
     }
 
     override fun isAvailable(project: Project): Boolean {
-        return TranslatorAction.availableActions().size > 1
+        return true
     }
 
     override fun createWidget(project: Project): StatusBarWidget {
