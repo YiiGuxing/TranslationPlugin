@@ -63,7 +63,10 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             add(apiModelComboBox, UI.wrap())
             add(JLabel(message("openai.settings.dialog.label.api.key")))
             add(apiKeyField, UI.cc().width(migSize(apiKeyFieldWidth)).wrap())
-            add(UI.createHint(message("openai.settings.dialog.hint"), apiKeyFieldWidth), UI.cc().cell(1, 2).wrap())
+            add(
+                UI.createHint(message("openai.settings.dialog.hint"), apiKeyFieldWidth, apiKeyField),
+                UI.cc().cell(1, 2).wrap()
+            )
         }
     }
 

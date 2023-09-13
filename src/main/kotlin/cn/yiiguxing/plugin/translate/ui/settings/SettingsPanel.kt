@@ -203,7 +203,7 @@ class SettingsPanel(
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
                     || settings.showExplanation != showExplanationCheckBox.isSelected
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
-                    || settings.showReplacementActionInContextMenu != showReplacementActionCheckBox.isSelected
+                    || settings.showReplacementAction != showReplacementActionCheckBox.isSelected
                     || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
                     || states.maxHistorySize != maxHistoriesSizeComboBox.item
         }
@@ -241,7 +241,7 @@ class SettingsPanel(
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
             showExplanation = showExplanationCheckBox.isSelected
             translateDocumentation = translateDocumentationCheckBox.isSelected
-            showReplacementActionInContextMenu = showReplacementActionCheckBox.isSelected
+            showReplacementAction = showReplacementActionCheckBox.isSelected
             showActionsInContextMenuOnlyWithSelection = showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
             takeWordWhenDialogOpens = takeWordCheckBox.isSelected
 
@@ -275,7 +275,7 @@ class SettingsPanel(
         takeNearestWordCheckBox.isSelected = settings.autoSelectionMode == SelectionMode.EXCLUSIVE
         ttsSourceComboBox.selected = settings.ttsSource
         translateDocumentationCheckBox.isSelected = settings.translateDocumentation
-        showReplacementActionCheckBox.isSelected = settings.showReplacementActionInContextMenu
+        showReplacementActionCheckBox.isSelected = settings.showReplacementAction
         showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected =
             settings.showActionsInContextMenuOnlyWithSelection
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
