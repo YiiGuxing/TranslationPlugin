@@ -60,7 +60,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
@@ -176,7 +176,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Remove old release drafts
       - name: Remove Old Release Drafts

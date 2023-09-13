@@ -149,7 +149,7 @@ class Settings : PersistentStateComponent<Settings> {
 
     var translateDocumentation: Boolean = false
 
-    var showReplacementActionInContextMenu: Boolean = false
+    var showReplacementAction: Boolean = true
 
     var showActionsInContextMenuOnlyWithSelection: Boolean = true
 
