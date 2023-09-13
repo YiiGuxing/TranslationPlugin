@@ -49,11 +49,11 @@ data class GTranslitSentence(
     @SerializedName("translit") val translit: String?
 ) : GSentence()
 
-data class GDict(val pos: String, val terms: List<String>, val entry: List<GDictEntry>)
+data class GDict(val pos: String, val entry: List<GDictEntry>?)
 data class GDictEntry(
     @SerializedName("word") val word: String,
     @SerializedName("reverse_translation") val reverseTranslation: List<String>?,
-    @SerializedName("score") val score: Float
+    @SerializedName("score") val score: Float?
 )
 
 data class GLDResult(
