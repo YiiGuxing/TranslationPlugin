@@ -4,7 +4,6 @@ TranslationPlugin
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
-[![Build Status][build-img-master]][travis-ci]
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
@@ -169,16 +168,6 @@ FAQ
 
    **答**：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
 
-更新日志
---------
-
-## [v2.9.1](https://github.com/YiiGuxing/TranslationPlugin/tree/v2.9.1-192) (2020-05-18)
-
-- 修复了一些Bug
-
-[完整的更新历史记录](./CHANGELOG.md)
-
-
 Support
 -------
 
@@ -208,15 +197,7 @@ Support
       <td><img src="./images/wechat.png"></td>
     </tr>
   </table>
-  使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
 
-  `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
-
-  您提供的名字、网站和捐赠总额将会被添加到[**Patrons/捐赠者**][financial-contributors]列表中，列表将按捐赠总额列出前50名捐赠者。
-  
-  邮箱地址：[yii.guxing@gmail.com](mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A) (点击发送邮件)
-
-**感谢您的支持！**
 
 其他插件
 ------
@@ -225,8 +206,6 @@ Support
 - [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
 
 
-[build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=flat-square
-[build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=flat-square
 [license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
 [release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
 [plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=flat-square
@@ -239,33 +218,3 @@ Support
 [open-collective]: https://opencollective.com/translation-plugin
 [open-collective-badge]: https://opencollective.com/translation-plugin/all/badge.svg?label=financial+contributors&style=flat-square&&color=D05CE3
 [financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
-
-## Contributors
-
-### Code Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/YiiGuxing/TranslationPlugin/graphs/contributors"><img src="https://opencollective.com/translation-plugin/contributors.svg?width=890&button=false" /></a>
-
-### Financial Contributors
-
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
-
-#### Individuals
-
-<a href="https://opencollective.com/translation-plugin"><img src="https://opencollective.com/translation-plugin/individuals.svg?width=890"></a>
-
-#### Organizations
-
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/translation-plugin/contribute)]
-
-<a href="https://opencollective.com/translation-plugin/organization/0/website"><img src="https://opencollective.com/translation-plugin/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/1/website"><img src="https://opencollective.com/translation-plugin/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/2/website"><img src="https://opencollective.com/translation-plugin/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/3/website"><img src="https://opencollective.com/translation-plugin/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/4/website"><img src="https://opencollective.com/translation-plugin/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/5/website"><img src="https://opencollective.com/translation-plugin/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/6/website"><img src="https://opencollective.com/translation-plugin/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/7/website"><img src="https://opencollective.com/translation-plugin/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
