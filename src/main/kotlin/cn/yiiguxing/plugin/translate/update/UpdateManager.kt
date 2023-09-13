@@ -185,10 +185,10 @@ class UpdateManager : BaseStartupActivity(), DumbAware {
 
             val v = version.versionString
             return if (frame) {
-                "$baseUrl$langPath/updates.html?v=$v"
+                "$baseUrl$langPath/#/updates/v$v"
             } else {
                 val isDark = UIUtil.isUnderDarcula()
-                "$baseUrl$langPath/updates/v${v.replace('.', '_')}.html?editor=true&dark=$isDark"
+                "$baseUrl$langPath/#/updates/v$v?compact=true&dark=$isDark"
             }
         }
 
