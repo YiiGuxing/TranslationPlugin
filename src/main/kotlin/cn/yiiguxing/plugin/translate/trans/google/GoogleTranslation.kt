@@ -85,10 +85,8 @@ data class GTranslitSentence(
 data class GDict(
     @SerializedName("pos")
     val pos: String,
-    @SerializedName("terms")
-    val terms: List<String>,
     @SerializedName("entry")
-    val entry: List<GDictEntry>
+    val entry: List<GDictEntry>?
 )
 
 data class GDictEntry(

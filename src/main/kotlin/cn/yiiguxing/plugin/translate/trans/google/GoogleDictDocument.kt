@@ -13,7 +13,12 @@ import javax.swing.text.*
  */
 class GoogleDictDocument private constructor(private val dictionaries: List<Dict>) : TranslationDocument {
 
-    override val translations: Set<String> = dictionaries.map { it.terms }.flatten().toSet()
+    override val translations: Set<String> = dictionaries.asSequence()
+        .map { it.entries }
+        .flatten()
+        .sortedByDescending { it.score }
+        .map { it.word }
+        .toSet()
 
     override val text: String = dictionaries.toText()
 
@@ -33,20 +38,21 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
      */
     data class Dict(
         val partOfSpeech: String,
-        val terms: List<String> = emptyList(),
         val entries: List<DictEntry> = emptyList()
     )
 
     /**
      * Entry of Dictionary
      */
-    data class DictEntry(val word: String, val reverseTranslation: List<String> = emptyList())
+    data class DictEntry(val word: String, val reverseTranslation: List<String> = emptyList(), val score: Float)
 
     object Factory : TranslationDocument.Factory<GoogleTranslation, GoogleDictDocument> {
         override fun getDocument(input: GoogleTranslation): GoogleDictDocument? {
             val dictionaries = input.dict?.map { gDict ->
-                val entries = gDict.entry.map { DictEntry(it.word, it.reverseTranslation ?: emptyList()) }
-                Dict(gDict.pos, gDict.terms, entries)
+                val entries = gDict.entry?.map {
+                    DictEntry(it.word, it.reverseTranslation ?: emptyList(), it.score)
+                } ?: emptyList()
+                Dict(gDict.pos, entries)
             }?.takeIf { it.isNotEmpty() } ?: return null
 
             return GoogleDictDocument(dictionaries)
@@ -70,7 +76,7 @@ class GoogleDictDocument private constructor(private val dictionaries: List<Dict
                 wordsBuilder.also { builder ->
                     builder.setLength(0)
                     builder.append(dict.partOfSpeech, ": ")
-                    dict.terms.joinTo(builder, "; ")
+                    dict.entries.joinTo(builder, "; ") { it.word }
                 }
             }
         }
