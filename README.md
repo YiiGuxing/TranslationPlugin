@@ -3,14 +3,13 @@
 
 [![Jetbrains Plugins][plugin-img]][plugin]
 [![License][license-img]][license]
-[![Build Status][build-img-master]][travis-ci]
 [![GitHub release][release-img]][latest-release]
 [![Version][version-img]][plugin]
 [![Downloads][downloads-img]][plugin]
 [![Financial Contributors on Open Collective][open-collective-badge]][open-collective]
 
 <p align="center"><b>Translation plugin for IntelliJ based IDEs/Android Studio.</b></p>
-<p align="center"><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/screenshots.gif" alt="screenshots"></p>
+<p align="center"><img src="./images/screenshots.gif" alt="screenshots"></p>
 
 ## Features
 
@@ -46,18 +45,9 @@
 
 ## Sponsors
 
-<table>
-      <td>
-        <a href="https://www.jetbrains.com/?from=TranslationPlugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/jetbrains.svg" alt="JetBrains" title="Development powered by JetBrains.">
-        </a>
-      </td>
-      <td>
-        <a href="https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner" target="_blank">
-            <img src="https://alt-images.codestream.com/codestream_logo_translation.png" alt="CodeStream" title="CodeStream">
-        </a>
-      </td>
-</table>
+[![JetBrains](./images/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin)
+[![CodeStream](https://alt-images.codestream.com/codestream_logo_translation.png)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner)
+
 
 ## Installation
 
@@ -197,8 +187,8 @@
 2. **翻译内容出现乱码怎么办？**
 
    **答**：出现乱码一般是因为字体中没有相应的字符的问题，可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
-   
-   ![screenshots](https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/settings_font.png)
+
+   ![screenshots](./images/settings_font.png)
 
 3. **无法保存应用密钥怎么办?**
 
@@ -209,15 +199,6 @@
 4. **快捷键不能使用怎么办？**
 
    **答**：快捷键不能使用可能是因为被其他插件或者外部应用占用了，可以为相应的操作重新设置新的快捷键。
-
-## Change Notes
-
-## [v3.0.3](https://github.com/YiiGuxing/TranslationPlugin/tree/v3.0.3) (2021-03-24)
-
-- 使用在线发行说明
-- 修复了谷歌文档翻译解析错误的问题
-
-[完整的更新历史记录](./CHANGELOG.md)
 
 
 ## Support
@@ -241,20 +222,13 @@
     <tr align="center">
       <td>
         <a href="https://opencollective.com/translation-plugin" target="_blank">
-            <img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/open-collective.svg" width="171px" alt="OpenCollective">
+            <img src="./images/open-collective.svg" width="171px" alt="OpenCollective">
         </a>
       </td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/alipay.png" alt="Alipay"></td>
-      <td><img src="https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/images/wechat.png" alt="WechatPlay"></td>
+      <td><img src="./images/alipay.png" alt="Alipay"></td>
+      <td><img src="./images/wechat.png" alt="WechatPlay"></td>
     </tr>
   </table>
-  使用支付宝/微信支付捐赠后请留言或者通过邮件提供您的名字/昵称和网站，格式为：
-
-  `名字/昵称 [<网站>][：留言]`（网站与留言为可选部分，例子：`Yii.Guxing <github.com/YiiGuxing>：加油！`）
-
-  您提供的名字、网站和捐赠总额将会被添加到[**捐赠者**][financial-contributors]列表中。
-  
-  邮箱地址：[yii.guxing@gmail.com](mailto:yii.guxing@gmail.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0A%0A%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0A%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0A%E6%94%AF%E4%BB%98%E5%AE%9D%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%BE%AE%E4%BF%A1%E7%94%A8%E6%88%B7%E5%90%8D%2F%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0A%0A) (点击发送邮件)
 
 **感谢您的支持！**
 
@@ -264,8 +238,6 @@
 - [Material Design Color Palette](https://github.com/YiiGuxing/material-design-color-palette)
 
 
-[build-img-dev]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/dev.svg?style=flat-square
-[build-img-master]: https://img.shields.io/travis/YiiGuxing/TranslationPlugin/master.svg?style=flat-square
 [license-img]: https://img.shields.io/github/license/YiiGuxing/TranslationPlugin.svg?style=flat-square
 [release-img]: https://img.shields.io/github/release/YiiGuxing/TranslationPlugin.svg?style=flat-square
 [plugin-img]: https://img.shields.io/badge/JetBrainsPlugin-8579-orange.svg?style=flat-square
@@ -309,19 +281,3 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/translation-plugin/organization/8/website"><img src="https://opencollective.com/translation-plugin/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/translation-plugin/organization/9/website"><img src="https://opencollective.com/translation-plugin/organization/9/avatar.svg"></a>
 
-#### 捐赠者
-
-| **姓名** | **网站** | **捐赠总额** |
-| -------- | -------- | ------------ |
-| 凌高 | | 100 CNY |
-| 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88 CNY |
-| Him188 | [github.com/him188](https://github.com/him188) | 66 CNY |
-| Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50 CNY |
-| 堂哥 | [codertang.com](https://codertang.com) | 50 CNY |
-| 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50 CNY |
-| Zyc | | 15 CNY |
-| Devwei095 | | 10.24 CNY |
-| Ncayu618 | | 10.24 CNY |
-| 心安 | [yuhangma.com](https://www.yuhangma.com/) | 10 CNY |
-
-[更多捐赠者][financial-contributors]
