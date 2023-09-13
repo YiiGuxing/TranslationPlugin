@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- The "Translate and Replace" action is now displayed by default in the context menu.
+- Fixed translation errors caused by changes in Google Translate data structure.
+- “翻译并替换”操作现在默认显示在上下文菜单上
+- 修复了因谷歌翻译数据结构变化所导致的翻译出错的问题
+
 ## [3.5.3] (2023/09/01)
 
 - Fixed the problem that the translation engine could not be switched when installing the plugin for the first time.
