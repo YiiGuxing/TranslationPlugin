@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added support for RustRover IDE and the new Rust plugin.
 
 ## [3.5.4] (2023/09/13)
 
