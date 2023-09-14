@@ -9,47 +9,82 @@ import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
 import com.intellij.ide.DataManager
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.popup.ListPopup
-import com.intellij.openapi.wm.CustomStatusBarWidget
+import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBar
-import com.intellij.openapi.wm.StatusBarWidget
-import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper
+import com.intellij.openapi.wm.impl.status.TextPanel.WithIconAndArrows
+import com.intellij.ui.ClickListener
 import com.intellij.ui.GotItTooltip
 import com.intellij.ui.awt.RelativePoint
-import com.intellij.util.Consumer
-import com.intellij.util.messages.MessageBusConnection
-import java.awt.Component
 import java.awt.Point
 import java.awt.event.MouseEvent
-import javax.swing.Icon
 import javax.swing.JComponent
 
 /**
  * TranslationWidget
  */
-class TranslationWidget(private val project: Project) : StatusBarWidget.IconPresentation, CustomStatusBarWidget {
+class TranslationWidget(private val project: Project) : WithIconAndArrows(), IconLikeCustomStatusBarWidget {
 
-    private val widgetComponent: JComponent by lazy { StatusBarWidgetWrapper.wrap(this) }
+    companion object {
+        const val ID = "Translation.Widget"
+    }
+
+    init {
+        setTextAlignment(CENTER_ALIGNMENT)
+    }
 
     override fun ID(): String = ID
 
-    override fun getTooltipText(): String = TranslateService.translator.name
-
-    override fun getIcon(): Icon = TranslateService.translator.icon
-
-    override fun getPresentation(): StatusBarWidget.WidgetPresentation = this
-
-    override fun getComponent(): JComponent = widgetComponent
+    override fun getComponent(): JComponent = this
 
     override fun install(statusBar: StatusBar) {
         if (project.isDisposed) {
             return
         }
 
-        project.messageBus.connect(this).subscribeToSettingsChangeEvents(statusBar)
+        setupClickListener()
+        subscribeToSettingsChangeEvents(statusBar)
+        update { statusBar.updateWidget(ID) }
+        scheduleGotItTooltip()
+    }
+
+    private fun setupClickListener() {
+        object : ClickListener() {
+            override fun onClick(event: MouseEvent, clickCount: Int): Boolean {
+                if (!project.isDisposed) {
+                    showPopupStep()
+                }
+                return true
+            }
+        }.installOn(this, true)
+    }
+
+    private fun subscribeToSettingsChangeEvents(statusBar: StatusBar) {
+        project.messageBus
+            .connect(this)
+            .subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
+                override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
+                    update { statusBar.updateWidget(ID) }
+                }
+            })
+    }
+
+    private fun update(onUpdated: (() -> Unit)? = null) {
+        if (project.isDisposed) return
+        invokeLaterIfNeeded {
+            if (project.isDisposed) return@invokeLaterIfNeeded
+
+            toolTipText = TranslateService.translator.name
+            icon = TranslateService.translator.icon
+            onUpdated?.invoke()
+            repaint()
+        }
+    }
+
+    private fun scheduleGotItTooltip() {
         DumbService.getInstance(project).smartInvokeLater {
             if (!project.isDisposed) {
                 showGotItTooltipIfNeed()
@@ -62,32 +97,17 @@ class TranslationWidget(private val project: Project) : StatusBarWidget.IconPres
         val message = message("got.it.tooltip.text.new.translation.engines")
         GotItTooltip(id, message, this)
             .withHeader(message("got.it.tooltip.title.new.translation.engines"))
-            .show(widgetComponent, GotItTooltipPosition.TOP)
+            .show(this, GotItTooltipPosition.TOP)
     }
 
-    override fun getClickConsumer(): Consumer<MouseEvent> = Consumer {
-        getPopupStep(it.component).apply {
-            val at = Point(0, -content.preferredSize.height)
-            show(RelativePoint(it.component, at))
+    private fun showPopupStep() {
+        val context = DataManager.getInstance().getDataContext(this)
+        SwitchTranslationEngineAction.createTranslationEnginesPopup(context).let { popup ->
+            val at = Point(0, -popup.content.preferredSize.height)
+            popup.show(RelativePoint(this, at))
         }
-    }
-
-    private fun getPopupStep(component: Component): ListPopup {
-        val context = DataManager.getInstance().getDataContext(component)
-        return SwitchTranslationEngineAction.createTranslationEnginesPopup(context)
     }
 
     override fun dispose() {}
 
-    companion object {
-        const val ID = "Translation.Widget"
-
-        private fun MessageBusConnection.subscribeToSettingsChangeEvents(statusBar: StatusBar) {
-            subscribe(SettingsChangeListener.TOPIC, object : SettingsChangeListener {
-                override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
-                    statusBar.updateWidget(ID)
-                }
-            })
-        }
-    }
 }
