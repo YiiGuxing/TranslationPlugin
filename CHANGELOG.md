@@ -4,6 +4,13 @@
 - DeepLX
 - OpenAI API Endpoint
 
+## [3.5.4] (2023/09/13)
+
+- The "Translate and Replace" action is now displayed by default in the context menu.
+- Fixed translation errors caused by changes in Google Translate data structure.
+- “翻译并替换”操作现在默认显示在上下文菜单上
+- 修复了因谷歌翻译数据结构变化所导致的翻译出错的问题
+
 ## [3.5.3] (2023/09/01)
 
 - Fixed the problem that the translation engine could not be switched when installing the plugin for the first time.
@@ -423,7 +430,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...HEAD
+[3.5.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...v3.5.4
 [3.5.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.1...v3.5.2
 [3.5.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.0...v3.5.1
