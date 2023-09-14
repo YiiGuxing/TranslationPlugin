@@ -64,7 +64,7 @@
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
         <statusBarWidgetFactory id="Translation.Widget"
-                                order="before Position"
+                                order="before LineSeparator, after Position, before lineSeparatorWidget, after positionWidget"
                                 implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
         <toolWindow id="Translation.Wordbook"
                     icon="TranslationIcons.Wordbook"
