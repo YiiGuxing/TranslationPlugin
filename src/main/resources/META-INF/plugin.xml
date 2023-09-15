@@ -91,6 +91,8 @@
         <registryKey key="cn.yiiguxing.plugin.translate.bundle.forceFollowLanguagePack"
                      defaultValue="false" restartRequired="true"
                      description="Force translation plugin localization to follow IDE language pack"/>
+
+        <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
 
     <applicationListeners>
