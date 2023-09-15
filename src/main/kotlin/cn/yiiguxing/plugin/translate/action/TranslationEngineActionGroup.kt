@@ -59,9 +59,9 @@ open class TranslationEngineActionGroup(
             if (unavailableActions.isNotEmpty()) {
                 actions.add(Separator.create(message("action.TranslationEngineActionGroup.separator.inactivated")))
                 actions.addAll(unavailableActions)
-                actions.add(Separator.create())
-                actions.add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
             }
+            actions.add(Separator.create())
+            actions.add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
 
             return actions
         }
