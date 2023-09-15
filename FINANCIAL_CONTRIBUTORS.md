@@ -76,6 +76,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| Hkzbiyx |  | 20.00 CNY |
 | Nice |  | 20.00 CNY |
 | 空 |  | 20.00 CNY |
 | Linger |  | 20.00 CNY |
@@ -120,6 +121,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 向阳 |  | 10.00 CNY |
 | 初一十五 |  | 10.00 CNY |
 | 禤诚轩 |  | 10.00 CNY |
 | 栗浩 |  | 10.00 CNY |
@@ -250,6 +252,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 三生缘 |  | 6.66 CNY |
 | Wind |  | 6.66 CNY |
 | 董林 |  | 6.66 CNY |
 | Fq |  | 6.66 CNY |

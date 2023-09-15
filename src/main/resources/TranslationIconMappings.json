@@ -1,0 +1,9 @@
+{
+  "icons": {
+    "expui": {
+      "toolwindow": {
+        "wordbook.svg": "icons/wordbook.svg"
+      }
+    }
+  }
+}
