@@ -24,6 +24,7 @@ object DeeplLanguageAdapter : BaseLanguageAdapter() {
         Lang.HUNGARIAN,
         Lang.ITALIAN,
         Lang.JAPANESE,
+        Lang.KOREAN,
         Lang.LATVIAN,
         Lang.LITHUANIAN,
         Lang.POLISH,
