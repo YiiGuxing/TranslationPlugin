@@ -121,6 +121,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 爱笑的木头人 |  | 10.00 CNY |
 | 路振振 |  | 10.00 CNY |
 | SLYLnguLuu |  | 10.00 CNY |
 | 向阳 |  | 10.00 CNY |
@@ -254,6 +255,13 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 起风了 |  | 6.66 CNY |
+| 荔呆桃犟 |  | 6.66 CNY |
+| 杰子 |  | 6.66 CNY |
+| 等风来 |  | 6.66 CNY |
+| TYKI |  | 6.66 CNY |
+| 墨染曦.Amadeus |  | 6.66 CNY |
+| 近距离的迷惘 |  | 6.66 CNY |
 | All |  | 6.66 CNY |
 | 三生缘 |  | 6.66 CNY |
 | Wind |  | 6.66 CNY |
