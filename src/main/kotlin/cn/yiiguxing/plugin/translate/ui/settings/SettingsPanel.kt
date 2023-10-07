@@ -222,7 +222,6 @@ class SettingsPanel(
 
         states.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
 
-        @Suppress("Duplicates")
         with(settings) {
             val selectedTranslator = translationEngineComboBox.selected ?: translator
             if (!selectedTranslator.isConfigured()) {
@@ -253,10 +252,7 @@ class SettingsPanel(
             showReplacementAction = showReplacementActionCheckBox.isSelected
             showActionsInContextMenuOnlyWithSelection = showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
             takeWordWhenDialogOpens = takeWordCheckBox.isSelected
-
-            if (validRegExp) {
-                ignoreRegex = this@SettingsPanel.ignoreRegExp.text
-            }
+            ignoreRegex = this@SettingsPanel.ignoreRegExp.text
         }
     }
 
