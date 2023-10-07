@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
@@ -253,29 +254,24 @@ private val SETTINGS_CHANGE_PUBLISHER: SettingsChangeListener =
 
 @Tag("app-key")
 abstract class AppKeySettings(serviceKey: String) {
-    var appId: String by Delegates.observable("") { _, oldValue: String, newValue: String ->
-        if (oldValue != newValue) {
-            SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
-        }
-    }
 
-    private var _appKey: String? by PasswordSafeDelegate("$SETTINGS_REPOSITORY_SERVICE.$serviceKey")
-        @Transient get
-        @Transient set
+    @Transient
+    private val keyManager = SimpleStringCredentialManager("$SETTINGS_REPOSITORY_SERVICE.$serviceKey")
+
+    var appId: String = ""
 
     /** 获取应用密钥. */
     @Transient
-    fun getAppKey(): String = _appKey?.trim() ?: ""
+    fun getAppKey(): String = keyManager.credential?.trim() ?: ""
 
     /** 设置应用密钥. */
     @Transient
     fun setAppKey(value: String?) {
-        _appKey = if (value.isNullOrBlank()) null else value
-        SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
+        keyManager.credential = value
     }
 
     val isAppKeySet: Boolean
-        @Transient get() = getAppKey().isNotEmpty()
+        @Transient get() = keyManager.isCredentialSet
 }
 
 /**
@@ -308,8 +304,6 @@ enum class TargetLanguageSelection(val displayName: String) {
 interface SettingsChangeListener {
 
     fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {}
-
-    fun onTranslatorConfigurationChanged() {}
 
     fun onOverrideFontChanged(settings: Settings) {}
 

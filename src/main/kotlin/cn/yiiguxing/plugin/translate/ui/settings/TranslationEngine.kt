@@ -100,8 +100,7 @@ enum class TranslationEngine(
         }
     }
 
-    private fun isConfigured(settings: AppKeySettings) =
-        settings.appId.isNotEmpty() && settings.getAppKey().isNotEmpty()
+    private fun isConfigured(settings: AppKeySettings) = settings.appId.isNotEmpty() && settings.isAppKeySet
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {

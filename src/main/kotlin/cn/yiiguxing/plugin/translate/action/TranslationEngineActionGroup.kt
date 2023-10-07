@@ -50,15 +50,18 @@ open class TranslationEngineActionGroup(
 
 
     companion object {
-        private fun translationEngineGroupActions(): List<AnAction> {
+        private fun translationEngineGroupActions(): Collection<AnAction> {
             val availableActions = TranslationEngineAction.availableActions()
             val unavailableActions = TranslationEngineAction.unavailableActions()
 
-            val actions = ArrayList<AnAction>(availableActions.size + unavailableActions.size + 3)
+            val actions = LinkedHashSet<AnAction>(availableActions.size + unavailableActions.size + 3)
             actions.addAll(availableActions)
             if (unavailableActions.isNotEmpty()) {
-                actions.add(Separator.create(message("action.TranslationEngineActionGroup.separator.inactivated")))
-                actions.addAll(unavailableActions)
+                val separator = Separator.create(message("action.TranslationEngineActionGroup.separator.inactivated"))
+                actions.add(separator)
+                if (!actions.addAll(unavailableActions)) {
+                    actions.remove(separator)
+                }
             }
             actions.add(Separator.create())
             actions.add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
