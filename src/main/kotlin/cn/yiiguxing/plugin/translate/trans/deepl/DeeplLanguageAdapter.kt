@@ -35,6 +35,7 @@ object DeeplLanguageAdapter : BaseLanguageAdapter() {
         Lang.SLOVENIAN,
         Lang.SPANISH,
         Lang.SWEDISH,
+        Lang.UKRAINIAN,
     )
 
     override val supportedTargetLanguages: List<Lang> = listOf(
@@ -67,6 +68,7 @@ object DeeplLanguageAdapter : BaseLanguageAdapter() {
         Lang.SLOVENIAN,
         Lang.SPANISH,
         Lang.SWEDISH,
+        Lang.UKRAINIAN,
     )
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
@@ -99,6 +101,7 @@ object DeeplLanguageAdapter : BaseLanguageAdapter() {
         "SL" to Lang.SLOVENIAN,
         "ES" to Lang.SPANISH,
         "SV" to Lang.SWEDISH,
+        "UK" to Lang.UKRAINIAN,
     )
 }
 
