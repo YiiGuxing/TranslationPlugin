@@ -76,6 +76,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 心安 | [yuhangma.com](https://www.yuhangma.com/) | 20.00 CNY |
+| 长风 |  | 20.00 CNY |
 | Hkzbiyx |  | 20.00 CNY |
 | Nice |  | 20.00 CNY |
 | 空 |  | 20.00 CNY |
@@ -121,6 +123,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 海风 |  | 10.00 CNY |
+| 一叶之秋 |  | 10.00 CNY |
 | 爱笑的木头人 |  | 10.00 CNY |
 | 路振振 |  | 10.00 CNY |
 | SLYLnguLuu |  | 10.00 CNY |
@@ -229,7 +233,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 凉云 | [nzxy.kim](nzxy.kim) | 10.00 CNY |
 | Shark |  | 10.00 CNY |
 | Evan |  | 10.00 CNY |
-| 心安 | [yuhangma.com](https://www.yuhangma.com/) | 10.00 CNY |
 | 王茂 |  | 10.00 CNY |
 | Wxdongg99 |  | 10.00 CNY |
 | 江涛 Jason | [blog.csdn.net/evane1890](https://blog.csdn.net/evane1890) | 10.00 CNY |
@@ -255,6 +258,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| Wong |  | 6.66 CNY |
+| LiSQ |  | 6.66 CNY |
+| Xiang |  | 6.66 CNY |
 | 起风了 |  | 6.66 CNY |
 | 荔呆桃犟 |  | 6.66 CNY |
 | 杰子 |  | 6.66 CNY |
