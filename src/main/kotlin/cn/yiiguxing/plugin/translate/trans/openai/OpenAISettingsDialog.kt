@@ -8,6 +8,10 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.UI.migSize
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
@@ -20,9 +24,11 @@ import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.ui.components.fields.ExtendableTextField
 import com.intellij.util.Alarm
 import icons.TranslationIcons
+import org.jetbrains.concurrency.runAsync
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
 
 class OpenAISettingsDialog : DialogWrapper(false) {
@@ -72,12 +78,13 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             apiEndpointField.text = if (value.isNullOrEmpty()) null else value
         }
 
+    private var isOK: Boolean = false
+
     init {
         title = message("openai.settings.dialog.title")
         setResizable(false)
         init()
 
-        apiKey = OpenAICredential.apiKey
         apiEndpoint = settings.apiEndpoint
         apiModelComboBox.selectedItem = settings.model
     }
@@ -107,7 +114,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     override fun getHelpId(): String = HelpTopic.OPEN_AI.id
 
-    override fun isOK(): Boolean = OpenAICredential.isApiKeySet
+    override fun isOK(): Boolean = isOK
 
     private fun verifyApiEndpoint(): Boolean {
         if (apiEndpoint.let { it == null || URL_REGEX.matches(it) }) {
@@ -125,6 +132,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         }
 
         OpenAICredential.apiKey = apiKey
+        isOK = OpenAICredential.isApiKeySet
         settings.apiEndpoint = apiEndpoint
 
         val oldModel = settings.model
@@ -137,6 +145,22 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         }
 
         super.doOKAction()
+    }
+
+    override fun show() {
+        // This is a modal dialog, so it needs to be invoked later.
+        SwingUtilities.invokeLater {
+            val dialogRef = DisposableRef.create(disposable, this)
+            runAsync { OpenAICredential.apiKey to OpenAICredential.isApiKeySet }
+                .expireWith(disposable)
+                .successOnUiThread(dialogRef) { dialog, (apiKey, isApiKeySet) ->
+                    dialog.apiKey = apiKey
+                    dialog.isOK = isApiKeySet
+                }
+                .disposeAfterProcessing(dialogRef)
+        }
+
+        super.show()
     }
 
     private companion object {

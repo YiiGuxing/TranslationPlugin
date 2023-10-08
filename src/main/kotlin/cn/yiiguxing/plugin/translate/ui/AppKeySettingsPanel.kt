@@ -5,17 +5,27 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.UI.fillX
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
+import com.intellij.openapi.Disposable
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
+import org.jetbrains.concurrency.runAsync
 import javax.swing.Icon
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySettings: AppKeySettings) : JPanel() {
+class AppKeySettingsPanel(
+    logoImage: Icon,
+    appKeyLink: String,
+    private val appKeySettings: AppKeySettings
+) : JPanel(), Disposable {
     private val appIdField: JBTextField = JBTextField()
     private val appKeyField: JBPasswordField = JBPasswordField()
 
@@ -24,6 +34,10 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
         ActionLink(message("settings.link.getAppKey"), AllIcons.Ide.Link, AllIcons.Ide.Link) {
             BrowserUtil.browse(appKeyLink)
         }
+
+    private var isAppKeySet: Boolean = false
+
+    val isFulfilled: Boolean get() = isAppKeySet && appKeySettings.appId.isNotEmpty()
 
     init {
         layout = migLayout()
@@ -51,11 +65,23 @@ class AppKeySettingsPanel(logoImage: Icon, appKeyLink: String, val appKeySetting
 
     fun reset() {
         appIdField.text = appKeySettings.appId
-        appKey = appKeySettings.getAppKey()
+        appKey = ""
+        val ref = DisposableRef.create(this, this)
+        runAsync { appKeySettings.getAppKey() to appKeySettings.isAppKeySet }
+            .expireWith(this)
+            .successOnUiThread(ref) { panel, (key, isAppKeySet) ->
+                panel.appKey = key
+                panel.isAppKeySet = isAppKeySet
+            }
+            .disposeAfterProcessing(ref)
     }
 
     fun apply() {
         appKeySettings.appId = appIdField.text.trim()
         appKeySettings.setAppKey(appKey)
+        isAppKeySet = appKeySettings.isAppKeySet
+    }
+
+    override fun dispose() {
     }
 }
