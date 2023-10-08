@@ -8,6 +8,10 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.UI.migSize
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
@@ -15,9 +19,11 @@ import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import icons.TranslationIcons
+import org.jetbrains.concurrency.runAsync
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
 class OpenAISettingsDialog : DialogWrapper(false) {
 
@@ -40,12 +46,13 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             apiKeyField.text = if (value.isNullOrEmpty()) null else value
         }
 
+    private var isOK: Boolean = false
+
     init {
         title = message("openai.settings.dialog.title")
         setResizable(false)
         init()
 
-        apiKey = OpenAICredential.apiKey
         apiModelComboBox.selectedItem = settings.model
     }
 
@@ -72,10 +79,11 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     override fun getHelpId(): String = HelpTopic.OPEN_AI.id
 
-    override fun isOK(): Boolean = OpenAICredential.isApiKeySet
+    override fun isOK(): Boolean = isOK
 
     override fun doOKAction() {
         OpenAICredential.apiKey = apiKey
+        isOK = OpenAICredential.isApiKeySet
 
         val oldModel = settings.model
         val newModel = apiModelComboBox.selected ?: OpenAIModel.GPT_3_5_TURBO
@@ -87,5 +95,21 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         }
 
         super.doOKAction()
+    }
+
+    override fun show() {
+        // This is a modal dialog, so it needs to be invoked later.
+        SwingUtilities.invokeLater {
+            val dialogRef = DisposableRef.create(disposable, this)
+            runAsync { OpenAICredential.apiKey to OpenAICredential.isApiKeySet }
+                .expireWith(disposable)
+                .successOnUiThread(dialogRef) { dialog, (apiKey, isApiKeySet) ->
+                    dialog.apiKey = apiKey
+                    dialog.isOK = isApiKeySet
+                }
+                .disposeAfterProcessing(dialogRef)
+        }
+
+        super.show()
     }
 }

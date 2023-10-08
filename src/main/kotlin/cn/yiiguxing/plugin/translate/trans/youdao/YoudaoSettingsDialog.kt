@@ -7,7 +7,11 @@ import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
@@ -20,9 +24,11 @@ import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
+import org.jetbrains.concurrency.runAsync
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
 class YoudaoSettingsDialog : DialogWrapper(true) {
 
@@ -46,13 +52,14 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
             appKeyField.text = value
         }
 
+    private var isAppKeySet: Boolean = false
+
     init {
         title = message("youdao.settings.dialog.title")
         setResizable(false)
 
         init()
 
-        appKey = credentialSettings.getAppKey()
         appIdField.text = credentialSettings.appId
         domainComboBox.selected = settings.domain
     }
@@ -89,13 +96,12 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
         }
     }
 
-    override fun isOK(): Boolean = credentialSettings.let { credential ->
-        credential.appId.isNotEmpty() && credential.getAppKey().isNotEmpty()
-    }
+    override fun isOK(): Boolean = isAppKeySet && credentialSettings.appId.isNotEmpty()
 
     override fun doOKAction() {
         credentialSettings.setAppKey(appKey)
         credentialSettings.appId = appIdField.text.trim()
+        isAppKeySet = credentialSettings.isAppKeySet
 
         updateDomain()
         super.doOKAction()
@@ -110,5 +116,20 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
                 key.translator == TranslationEngine.YOUDAO.id
             }
         }
+    }
+
+    override fun show() {
+        // This is a modal dialog, so it needs to be invoked later.
+        SwingUtilities.invokeLater {
+            val dialogRef = DisposableRef.create(disposable, this)
+            runAsync { credentialSettings.getAppKey() to credentialSettings.isAppKeySet }
+                .expireWith(disposable)
+                .successOnUiThread(dialogRef) { dialog, (appKey, isAppKeySet) ->
+                    dialog.appKey = appKey
+                    dialog.isAppKeySet = isAppKeySet
+                }
+                .disposeAfterProcessing(dialogRef)
+        }
+        super.show()
     }
 }
