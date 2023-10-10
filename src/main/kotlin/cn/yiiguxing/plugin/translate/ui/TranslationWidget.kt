@@ -3,22 +3,31 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction
+import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
 import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
 import com.intellij.ide.DataManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.impl.status.TextPanel.WithIconAndArrows
+import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.ClickListener
 import com.intellij.ui.GotItTooltip
 import com.intellij.ui.awt.RelativePoint
+import org.jetbrains.concurrency.runAsync
 import java.awt.Point
 import java.awt.event.MouseEvent
 import javax.swing.JComponent
@@ -31,6 +40,8 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
     companion object {
         const val ID = "Translation.Widget"
     }
+
+    private var isLoadingTranslationEngines = false
 
     init {
         setTextAlignment(CENTER_ALIGNMENT)
@@ -55,7 +66,7 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
         object : ClickListener() {
             override fun onClick(event: MouseEvent, clickCount: Int): Boolean {
                 if (!project.isDisposed) {
-                    showPopupStep()
+                    showPopup()
                 }
                 return true
             }
@@ -100,12 +111,28 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
             .show(this, GotItTooltipPosition.TOP)
     }
 
-    private fun showPopupStep() {
-        val context = DataManager.getInstance().getDataContext(this)
-        SwitchTranslationEngineAction.createTranslationEnginesPopup(context).let { popup ->
-            val at = Point(0, -popup.content.preferredSize.height)
-            popup.show(RelativePoint(this, at))
+    private fun showPopup() {
+        if (isLoadingTranslationEngines) {
+            return
         }
+
+        isLoadingTranslationEngines = true
+        val widgetRef = DisposableRef.create(this, this)
+        // 加入到下一个事件队列中，避免在切换翻译引擎时，出现闪烁的动画效果
+        invokeLater(ModalityState.any()) { icon = AnimatedIcon.Default.INSTANCE }
+        runAsync { TranslationEngineActionGroup() }
+            .expireWith(this)
+            .successOnUiThread(widgetRef) { widget, group ->
+                val context = DataManager.getInstance().getDataContext(widget)
+                val popup = group.createActionPopup(context)
+                val at = Point(0, -popup.content.preferredSize.height)
+                popup.show(RelativePoint(widget, at))
+            }
+            .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
+                widget.isLoadingTranslationEngines = false
+                widget.icon = TranslateService.translator.icon
+            }
+            .disposeAfterProcessing(widgetRef)
     }
 
     override fun dispose() {}
