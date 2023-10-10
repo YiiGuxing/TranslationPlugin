@@ -1,8 +1,10 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
-import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.actionSystem.PlatformDataKeys.CONTEXT_COMPONENT
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
@@ -11,13 +13,21 @@ import java.util.function.Supplier
 /**
  * TranslatorActionGroup
  */
-open class TranslationEngineActionGroup(
+class TranslationEngineActionGroup(
     name: Supplier<@NlsActions.ActionText String> = Supplier { message("action.TranslationEngineActionGroup.name") },
     popup: Boolean = true
 ) : DefaultActionGroup(name, popup) {
 
     init {
-        addAll(translationEngineGroupActions())
+        val (availableActions, unavailableActions) = TranslationEngineAction.actionsGroupedByAvailability()
+        addAll(availableActions)
+        if (unavailableActions.isNotEmpty()) {
+            addSeparator(message("action.TranslationEngineActionGroup.separator.inactivated"))
+            addAll(unavailableActions)
+        }
+
+        addSeparator()
+        add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
     }
 
     override fun isDumbAware(): Boolean = true
@@ -25,7 +35,7 @@ open class TranslationEngineActionGroup(
     override fun actionPerformed(e: AnActionEvent) {
         val dataContext = e.dataContext
         val popup = createActionPopup(dataContext)
-        CONTEXT_COMPONENT
+        PlatformDataKeys.CONTEXT_COMPONENT
             .getData(dataContext)
             ?.let { component -> popup.showUnderneathOf(component) }
             ?: popup.showInBestPositionFor(dataContext)
@@ -48,27 +58,5 @@ open class TranslationEngineActionGroup(
             10,
             TranslationEngineAction.PRESELECT_CONDITION
         )
-
-
-    companion object {
-        private fun translationEngineGroupActions(): Collection<AnAction> {
-            val availableActions = TranslationEngineAction.availableActions()
-            val unavailableActions = TranslationEngineAction.unavailableActions()
-
-            val actions = LinkedHashSet<AnAction>(availableActions.size + unavailableActions.size + 3)
-            actions.addAll(availableActions)
-            if (unavailableActions.isNotEmpty()) {
-                val separator = Separator.create(message("action.TranslationEngineActionGroup.separator.inactivated"))
-                actions.add(separator)
-                if (!actions.addAll(unavailableActions)) {
-                    actions.remove(separator)
-                }
-            }
-            actions.add(Separator.create())
-            actions.add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
-
-            return actions
-        }
-    }
 
 }
