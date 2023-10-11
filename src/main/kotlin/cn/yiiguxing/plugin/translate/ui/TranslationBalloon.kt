@@ -256,7 +256,6 @@ class TranslationBalloon(
     companion object {
 
         private const val MAX_WIDTH = 500
-        private const val MIN_ERROR_PANEL_WIDTH = 300
         private const val INSETS = 20
 
         private const val CARD_PROCESSING = "processing"
