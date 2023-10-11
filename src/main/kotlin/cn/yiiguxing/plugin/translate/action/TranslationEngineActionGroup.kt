@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
+import com.intellij.openapi.actionSystem.PopupAction
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
@@ -16,7 +17,7 @@ import java.util.function.Supplier
 class TranslationEngineActionGroup(
     name: Supplier<@NlsActions.ActionText String> = Supplier { message("action.TranslationEngineActionGroup.name") },
     popup: Boolean = true
-) : DefaultActionGroup(name, popup) {
+) : DefaultActionGroup(name, popup), PopupAction {
 
     init {
         val (availableActions, unavailableActions) = TranslationEngineAction.actionsGroupedByAvailability()
@@ -33,12 +34,7 @@ class TranslationEngineActionGroup(
     override fun isDumbAware(): Boolean = true
 
     override fun actionPerformed(e: AnActionEvent) {
-        val dataContext = e.dataContext
-        val popup = createActionPopup(dataContext)
-        PlatformDataKeys.CONTEXT_COMPONENT
-            .getData(dataContext)
-            ?.let { component -> popup.showUnderneathOf(component) }
-            ?: popup.showInBestPositionFor(dataContext)
+        showActionPopup(e.dataContext)
     }
 
     fun createActionPopup(
@@ -58,5 +54,12 @@ class TranslationEngineActionGroup(
             10,
             TranslationEngineAction.PRESELECT_CONDITION
         )
+
+    fun showActionPopup(dataContext: DataContext, disposeCallback: Runnable? = null) {
+        val component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext)
+        val title = if (component == null) message("translation.engines.popup.title") else null
+        val popup = createActionPopup(dataContext, title, disposeCallback)
+        component?.let { popup.showUnderneathOf(it) } ?: popup.showInBestPositionFor(dataContext)
+    }
 
 }
