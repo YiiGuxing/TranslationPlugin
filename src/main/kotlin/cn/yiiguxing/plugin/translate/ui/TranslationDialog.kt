@@ -804,7 +804,7 @@ class TranslationDialog(
         private fun actionButton(action: AnAction): ActionButton =
             ActionButton(
                 action,
-                action.templatePresentation,
+                Presentation().apply { copyFrom(action.templatePresentation) },
                 ActionPlaces.UNKNOWN,
                 ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE
             )
