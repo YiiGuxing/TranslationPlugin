@@ -8,11 +8,13 @@ import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.PopupAction
+import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.JBPopup
-import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.AnimatedIcon
 import org.jetbrains.concurrency.runAsync
@@ -123,14 +125,5 @@ class SwitchTranslationEngineAction : UpdateInBackgroundCompatComboBoxAction(), 
                 .errorOnUiThread(ModalityState.any()) { isButtonActionPerforming = false }
                 .finishOnUiThread(ModalityState.any()) { disposable = null }
         }
-    }
-
-
-    companion object {
-        fun createTranslationEnginesPopup(
-            context: DataContext,
-            title: String? = message("translation.engines.popup.title"),
-            disposeCallback: Runnable? = null
-        ): ListPopup = TranslationEngineActionGroup().createActionPopup(context, title, disposeCallback)
     }
 }
