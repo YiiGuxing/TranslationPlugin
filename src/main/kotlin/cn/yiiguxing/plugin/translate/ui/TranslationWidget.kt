@@ -14,7 +14,6 @@ import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
-import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.ModalityState
@@ -23,7 +22,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.impl.status.TextPanel.WithIconAndArrows
-import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.ClickListener
 import com.intellij.ui.GotItTooltip
 import com.intellij.ui.awt.RelativePoint
@@ -118,8 +116,6 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
 
         isLoadingTranslationEngines = true
         val widgetRef = DisposableRef.create(this, this)
-        // 加入到下一个事件队列中，避免在切换翻译引擎时，出现闪烁的动画效果
-        invokeLater(ModalityState.any()) { icon = AnimatedIcon.Default.INSTANCE }
         runAsync { TranslationEngineActionGroup() }
             .expireWith(this)
             .successOnUiThread(widgetRef) { widget, group ->
@@ -130,7 +126,6 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
             }
             .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
                 widget.isLoadingTranslationEngines = false
-                widget.icon = TranslateService.translator.icon
             }
             .disposeAfterProcessing(widgetRef)
     }
