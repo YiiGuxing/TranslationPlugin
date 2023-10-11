@@ -347,6 +347,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
     override fun dispose() {
         Disposer.dispose(progressIcon)
+        Disposer.dispose(translationFailedComponent)
     }
 
     private class TranslationTextArea(background: Color) : JBTextArea(1, 1) {
