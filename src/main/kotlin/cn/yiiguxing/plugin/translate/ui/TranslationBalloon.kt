@@ -81,6 +81,7 @@ class TranslationBalloon(
         Disposer.register(balloon) { Disposer.dispose(this) }
         Disposer.register(this, processPane)
         Disposer.register(this, translationPane)
+        Disposer.register(this, errorPanel)
 
         ApplicationManager
             .getApplication()
