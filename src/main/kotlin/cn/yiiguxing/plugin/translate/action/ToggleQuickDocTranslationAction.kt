@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.intellij.compat.DocumentationBrowserCompat
