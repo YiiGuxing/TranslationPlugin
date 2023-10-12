@@ -4,9 +4,11 @@
 - Added support for RustRover and the new Rust plugin.
 - DeepL Translator now supports Ukrainian and Korean.
 - Compatible with 2023.3.
+- Bug fixes.
 - 添加了对 RustRover 和新 Rust 插件的支持
 - DeepL 翻译现已支持乌克兰语和韩语
 - 兼容 IDE 2023.3 版本
+- Bug 修复
 
 ## [3.5.4] (2023/09/13)
 
