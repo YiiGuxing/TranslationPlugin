@@ -91,6 +91,10 @@ fun <Ref, T> Promise<T>.finishOnUiThread(
 ): Promise<T> = onUiThread(Promise<T>::onProcessed, disposableRef, modalityState, uiThreadAction)
 
 
+fun <T> Promise<T>.disposeAfterProcessing(disposableRef: DisposableRef<*>): Promise<T> {
+    return onProcessed { disposableRef.disposeSelf() }
+}
+
 internal inline fun <T, V> Promise<T>.onUiThread(
     fn: Promise<T>.(Consumer<V>) -> Promise<T>,
     modalityState: ModalityState = ModalityState.defaultModalityState(),

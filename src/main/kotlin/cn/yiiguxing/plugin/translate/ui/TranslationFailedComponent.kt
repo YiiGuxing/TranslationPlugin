@@ -1,28 +1,35 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction
+import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateException
+import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
-import com.intellij.ide.ui.laf.darcula.ui.DarculaOptionButtonUI
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ModalityState
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBOptionButton
 import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
-import com.intellij.util.ui.UIUtil
 import net.miginfocom.layout.CC
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
+import org.jetbrains.concurrency.runAsync
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.JButton
+import javax.swing.JComponent
 import javax.swing.JPanel
 
-class TranslationFailedComponent : JPanel() {
+class TranslationFailedComponent : JPanel(), Disposable {
 
     private val errorInfo: JBLabel = JBLabel()
 
@@ -36,6 +43,8 @@ class TranslationFailedComponent : JPanel() {
     private var retryHandler: (() -> Unit)? = null
 
     private val optionButton: JBOptionButton = JBOptionButton(switchTranslationEngineAction, emptyArray())
+
+    private var isLoadingTranslationEngines = false
 
     init {
         init()
@@ -91,12 +100,42 @@ class TranslationFailedComponent : JPanel() {
     }
 
     private fun doSwitchTranslationEngine() {
-        val dataContext = DataManager.getInstance().getDataContext(optionButton)
-        val offset = JBUIScale.scale(3)
-        val offsetX = if (UIUtil.isUnderDarcula() || optionButton.ui is DarculaOptionButtonUI) offset else 0
-        SwitchTranslationEngineAction.createTranslationEnginesPopup(dataContext)
-            .apply { minimumSize = Dimension(optionButton.width - offsetX * 2, 1) }
-            .showBelow(optionButton, offsetX, offset)
+        if (isLoadingTranslationEngines) {
+            return
+        }
+
+        isLoadingTranslationEngines = true
+        val widgetRef = DisposableRef.create(this, this)
+        runAsync { TranslationEngineActionGroup() }
+            .expireWith(this)
+            .successOnUiThread(widgetRef) { widget, group ->
+                val button = widget.optionButton
+                var offsetLeft: Int
+                var offsetRight: Int
+                var offsetBottom: Int
+                if (button.componentCount > 0) {
+                    val first = (button.getComponent(0) as? JComponent)?.insets ?: button.insets
+                    val last = (button.getComponent(button.componentCount - 1) as? JComponent)?.insets ?: button.insets
+                    offsetLeft = first.left
+                    offsetRight = last.right
+                    offsetBottom = first.right
+                } else {
+                    button.insets.let {
+                        offsetLeft = it.left
+                        offsetRight = it.right
+                        offsetBottom = it.bottom
+                    }
+                }
+
+                val dataContext = DataManager.getInstance().getDataContext(button)
+                group.createActionPopup(dataContext)
+                    .apply { minimumSize = Dimension(button.width - offsetLeft - offsetRight, 1) }
+                    .showBelow(button, offsetLeft, offsetBottom)
+            }
+            .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
+                widget.isLoadingTranslationEngines = false
+            }
+            .disposeAfterProcessing(widgetRef)
     }
 
     fun onRetry(handler: () -> Unit) {
@@ -113,6 +152,9 @@ class TranslationFailedComponent : JPanel() {
         }
 
         optionButton.setOptions(errorInfo?.continueActions)
+    }
+
+    override fun dispose() {
     }
 
 
