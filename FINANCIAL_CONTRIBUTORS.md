@@ -113,6 +113,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 姜巍 |  | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15.00 CNY |
 | Zyc |  | 15.00 CNY |
+| Null |  | 13.32 CNY |
 | 早睡早起 |  | 13.32 CNY |
 | 。 |  | 13.32 CNY |
 | 嘿嘿嘿 |  | 13.32 CNY |
@@ -261,6 +262,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 宁静致远 |  | 6.66 CNY |
+| Cat |  | 6.66 CNY |
 | Wong |  | 6.66 CNY |
 | LiSQ |  | 6.66 CNY |
 | Xiang |  | 6.66 CNY |
@@ -343,7 +346,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | LWL |  | 6.66 CNY |
 | 余 |  | 6.66 CNY |
 | 慵懒の午后 |  | 6.66 CNY |
-| Null |  | 6.66 CNY |
 | 锤子 |  | 6.66 CNY |
 | 修心 |  | 6.66 CNY |
 | 戏子🦈 |  | 6.66 CNY |
