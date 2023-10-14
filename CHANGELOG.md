@@ -12,8 +12,6 @@
 
 ## [3.5.4] (2023/09/13)
 
-## [3.5.4] (2023/09/13)
-
 - The "Translate and Replace" action is now displayed by default in the context menu.
 - Fixed translation errors caused by changes in Google Translate data structure.
 - “翻译并替换”操作现在默认显示在上下文菜单上
