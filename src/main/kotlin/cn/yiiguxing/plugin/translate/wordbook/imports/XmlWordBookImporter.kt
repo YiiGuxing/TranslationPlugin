@@ -5,11 +5,13 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.util.JDOMUtil
 import org.jdom.Element
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.*
 
 class XmlWordBookImporter : WordBookImporter {
     override fun InputStream.readWords(): List<WordBookItem> {
-        val wordBookElement = JDOMUtil.load(this)
+        val reader = InputStreamReader(this, Charsets.UTF_8)
+        val wordBookElement = JDOMUtil.load(reader)
 
         check(wordBookElement.name == "wordbook" && wordBookElement.getAttributeValue("target").isNullOrEmpty()) {
             "Invalid word book"

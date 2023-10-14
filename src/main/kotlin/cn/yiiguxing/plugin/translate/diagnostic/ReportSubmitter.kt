@@ -69,10 +69,11 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             when (choice) {
                 Messages.YES -> reportCredentials.clear()
                 Messages.NO -> {
-                    // Use anonymous account
+                    // Use an anonymous account
                     reportCredentials.clear()
                     return
                 }
+
                 else -> return
             }
         }
@@ -121,11 +122,11 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
             return false
         }
 
-        val credentials = ReportCredentials.instance.credentials
         val project = parentComponent.getProject()
         object : Task.Backgroundable(project, message("title.submitting.error.report"), false) {
             override fun run(indicator: ProgressIndicator) {
                 try {
+                    val credentials = ReportCredentials.instance.credentials
                     doSubmit(project, credentials, event, message, stacktrace, additionalInfo, consumer)
                 } catch (e: Exception) {
                     onError(project, e, events, additionalInfo, parentComponent, consumer)

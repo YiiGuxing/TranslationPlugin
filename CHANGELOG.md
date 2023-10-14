@@ -1,6 +1,16 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added support for RustRover and the new Rust plugin.
+- DeepL Translator now supports Ukrainian and Korean.
+- Compatible with 2023.3.
+- Bug fixes.
+- 添加了对 RustRover 和新 Rust 插件的支持
+- DeepL 翻译现已支持乌克兰语和韩语
+- 兼容 IDE 2023.3 版本
+- Bug 修复
+
+## [3.5.4] (2023/09/13)
 
 - The "Translate and Replace" action is now displayed by default in the context menu.
 - Fixed translation errors caused by changes in Google Translate data structure.
@@ -426,7 +436,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...HEAD
+[3.5.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...v3.5.4
 [3.5.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.1...v3.5.2
 [3.5.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.0...v3.5.1

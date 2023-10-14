@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 
 class JsonWordBookImporter : WordBookImporter {
     override fun InputStream.readWords(): List<WordBookItem> {
-        val reader = InputStreamReader(this)
+        val reader = InputStreamReader(this, Charsets.UTF_8)
         val type = object : TypeToken<List<WordBookItem>>() {}.type
 
         return GsonBuilder()
