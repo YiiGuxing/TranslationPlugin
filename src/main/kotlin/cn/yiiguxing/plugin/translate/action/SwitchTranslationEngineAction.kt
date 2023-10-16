@@ -7,9 +7,11 @@ import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.PopupAction
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.application.ModalityState
@@ -64,12 +66,14 @@ class SwitchTranslationEngineAction : UpdateInBackgroundCompatComboBoxAction(), 
         }
 
         isActionPerforming = true
+        val component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT)
         val expireDisposable = getDisposable()
         runAsync { TranslationEngineActionGroup() }
             .expireWith(expireDisposable)
             .successOnUiThread { group ->
                 if (isActionPerforming && !project.isDisposed) {
-                    group.createActionPopup(e.dataContext).showCenteredInCurrentWindow(project)
+                    val dataContext = DataManager.getInstance().getDataContext(component)
+                    group.createActionPopup(dataContext).showCenteredInCurrentWindow(project)
                 }
             }
             .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }

@@ -6,9 +6,11 @@ import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.util.e
+import com.intellij.ide.DataManager
 import com.intellij.notification.Notification
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.PopupAction
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
@@ -58,12 +60,19 @@ object TranslationNotifications {
         private var isActionPerforming = false
 
         override fun actionPerformed(e: AnActionEvent) {
+            val component = PlatformDataKeys.CONTEXT_COMPONENT.getData(e.dataContext) ?: return
             if (isActionPerforming) {
                 return
             }
             isActionPerforming = true
             runAsync { TranslationEngineActionGroup() }
-                .successOnUiThread { group -> group.showActionPopup(e.dataContext) }
+                .successOnUiThread { group ->
+                    if (component.isShowing) {
+                        // Do not use `e.dataContext` directly because it is not an async data context.
+                        val dataContext = DataManager.getInstance().getDataContext(component)
+                        group.showActionPopup(dataContext)
+                    }
+                }
                 .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }
         }
     }
