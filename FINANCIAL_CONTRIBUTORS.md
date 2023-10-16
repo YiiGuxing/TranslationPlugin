@@ -124,6 +124,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| Aoo |  | 10.00 CNY |
 | 🇳🇺🇱🇱 |  | 10.00 CNY |
 | 阿宣 |  | 10.00 CNY |
 | 张晨 |  | 10.00 CNY |
@@ -251,6 +252,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 王兆强 |  | 10.00 CNY |
 | 梅少锋 |  | 10.00 CNY |
 | 李志豪 |  | 9.99 CNY |
+| Benjamin Shellwe |  | 9.90 CNY |
 | 洪晓波 |  | 9.90 CNY |
 | 大熊同学 |  | 8.88 CNY |
 | Auzn | [github.com/JinXinAuzn](https://github.com/JinXinAuzn) | 8.88 CNY |
