@@ -31,7 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| 丿初音 |  | 325.00 CNY |
+| 丿初音 |  | 375.00 CNY |
 | LiMingjun |  | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100.00 CNY |
 | Sunlife95 |  | 100.00 CNY |
@@ -264,6 +264,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 晓十 |  | 6.66 CNY |
 | 宁静致远 |  | 6.66 CNY |
 | Cat |  | 6.66 CNY |
 | Wong |  | 6.66 CNY |
