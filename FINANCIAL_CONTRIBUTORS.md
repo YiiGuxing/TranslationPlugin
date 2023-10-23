@@ -113,6 +113,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 姜巍 |  | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15.00 CNY |
 | Zyc |  | 15.00 CNY |
+| 小猪 |  | 13.32 CNY |
 | Null |  | 13.32 CNY |
 | 早睡早起 |  | 13.32 CNY |
 | 。 |  | 13.32 CNY |
@@ -124,6 +125,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 🇨🇴🇸🇹🇦 |  | 10.00 CNY |
+| Kay |  | 10.00 CNY |
+| 大鹏 |  | 10.00 CNY |
 | Aoo |  | 10.00 CNY |
 | 🇳🇺🇱🇱 |  | 10.00 CNY |
 | 阿宣 |  | 10.00 CNY |
@@ -264,6 +268,13 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 也就比古天乐帅一点 |  | 6.66 CNY |
+| 萧镰共 |  | 6.66 CNY |
+| 谢金龙 |  | 6.66 CNY |
+| Doley |  | 6.66 CNY |
+| 风语未央 |  | 6.66 CNY |
+| 木子文 |  | 6.66 CNY |
+| ^\_^ |  | 6.66 CNY |
 | 晓十 |  | 6.66 CNY |
 | 宁静致远 |  | 6.66 CNY |
 | Cat |  | 6.66 CNY |
@@ -379,7 +390,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 康 |  | 6.66 CNY |
 | Sean。 |  | 6.66 CNY |
 | 昌文 |  | 6.66 CNY |
-| 小猪 |  | 6.66 CNY |
 | 长行 |  | 6.66 CNY |
 | 泓 |  | 6.66 CNY |
 | Coffee |  | 6.66 CNY |
