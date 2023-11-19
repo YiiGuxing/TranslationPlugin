@@ -41,6 +41,8 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
 
     private var isLoadingTranslationEngines = false
 
+    private var isDisposed = false
+
     init {
         setTextAlignment(CENTER_ALIGNMENT)
     }
@@ -102,7 +104,11 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
     }
 
     private fun showGotItTooltipIfNeed() {
-        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai"
+        if (isDisposed) {
+            return
+        }
+
+        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai000"
         val message = message("got.it.tooltip.text.new.translation.engines")
         GotItTooltip(id, message, this)
             .withHeader(message("got.it.tooltip.title.new.translation.engines"))
@@ -130,6 +136,8 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
             .disposeAfterProcessing(widgetRef)
     }
 
-    override fun dispose() {}
+    override fun dispose() {
+        isDisposed = true
+    }
 
 }
