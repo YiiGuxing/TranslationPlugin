@@ -17,6 +17,7 @@ import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget
@@ -40,6 +41,8 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
     }
 
     private var isLoadingTranslationEngines = false
+
+    private var isDisposed = false
 
     init {
         setTextAlignment(CENTER_ALIGNMENT)
@@ -102,6 +105,10 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
     }
 
     private fun showGotItTooltipIfNeed() {
+        if (isDisposed) {
+            return
+        }
+
         val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai"
         val message = message("got.it.tooltip.text.new.translation.engines")
         GotItTooltip(id, message, this)
@@ -124,12 +131,17 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
                 val at = Point(0, -popup.content.preferredSize.height)
                 popup.show(RelativePoint(widget, at))
             }
+            .onError {
+                logger<TranslationWidget>().warn("Failed to show translation engines popup.", it)
+            }
             .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
                 widget.isLoadingTranslationEngines = false
             }
             .disposeAfterProcessing(widgetRef)
     }
 
-    override fun dispose() {}
+    override fun dispose() {
+        isDisposed = true
+    }
 
 }

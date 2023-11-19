@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
 import com.intellij.credentialStore.CredentialAttributes
@@ -18,6 +17,7 @@ import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
+import org.jetbrains.concurrency.runAsync
 import kotlin.properties.Delegates
 
 /**
@@ -34,7 +34,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 翻译API
      */
     var translator: TranslationEngine
-            by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
+            by Delegates.observable(TranslationEngine.DEFAULT) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
                 if (isInitialized && oldValue != newValue) {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
@@ -175,8 +175,10 @@ class Settings : PersistentStateComponent<Settings> {
 
         LOG.d("===== Settings Data Version: $dataVersion =====")
         if (dataVersion < CURRENT_DATA_VERSION) {
-            migrate()
-            properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            runAsync {
+                migrate()
+                properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            }
         }
     }
 
