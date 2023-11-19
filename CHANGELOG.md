@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.5.6] (2023/11/19)
+
 - Fix the problem of missing required parameters for document translation in the Youdao translation engine.
 - Other known bug fixes.
 - 修复有道翻译引擎文档翻译缺少必需参数的问题
@@ -444,7 +446,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.5...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.6...HEAD
+[3.5.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.5...v3.5.6
 [3.5.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...v3.5.5
 [3.5.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...v3.5.4
 [3.5.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.2...v3.5.3
