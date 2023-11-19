@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Fix the problem of missing required parameters for document translation in the Youdao translation engine.
+- Other known bug fixes.
+- 修复有道翻译引擎文档翻译缺少必需参数的问题
+- 其他已知问题修复
+
 ## [3.5.5] (2023/10/15)
 
 - Added support for RustRover and the new Rust plugin.
