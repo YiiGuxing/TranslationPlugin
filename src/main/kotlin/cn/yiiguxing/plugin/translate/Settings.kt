@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
 import com.intellij.credentialStore.CredentialAttributes
@@ -35,7 +34,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 翻译API
      */
     var translator: TranslationEngine
-            by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
+            by Delegates.observable(TranslationEngine.DEFAULT) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
                 if (isInitialized && oldValue != newValue) {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
