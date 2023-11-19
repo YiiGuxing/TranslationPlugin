@@ -108,7 +108,7 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
             return
         }
 
-        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai000"
+        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai"
         val message = message("got.it.tooltip.text.new.translation.engines")
         GotItTooltip(id, message, this)
             .withHeader(message("got.it.tooltip.title.new.translation.engines"))
