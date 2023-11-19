@@ -34,7 +34,7 @@ class TranslateService private constructor() : Disposable {
     var translator: Translator = DEFAULT_TRANSLATOR
         private set
 
-    private val listeners = mutableMapOf<ListenerKey, MutableSet<TranslateListener>>()
+    private val listeners = mutableMapOf<ListenerKey, MutableSet<ListenerInfo>>()
 
     init {
         setTranslator(Settings.instance.translator)
@@ -78,11 +78,12 @@ class TranslateService private constructor() : Disposable {
         }
 
         val key = ListenerKey(text, srcLang, targetLang)
+        val listenerInfo = ListenerInfo(modalityState, listener)
         listeners[key]?.let {
-            it += listener
+            it += listenerInfo
             return
         }
-        listeners[key] = mutableSetOf(listener)
+        listeners[key] = mutableSetOf(listenerInfo)
 
         executeOnPooledThread {
             try {
@@ -90,7 +91,7 @@ class TranslateService private constructor() : Disposable {
                     translate(text, srcLang, targetLang).let { translation ->
                         translation.favoriteId = getFavoriteId(translation)
                         CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
-                        invokeLater(modalityState) { listeners.run(key) { onSuccess(translation) } }
+                        listeners.run(key) { onSuccess(translation) }
                     }
                 }
             } catch (error: Throwable) {
@@ -101,7 +102,7 @@ class TranslateService private constructor() : Disposable {
                     // 将异常写入IDE异常池，以便用户反馈
                     investigate(text, srcLang, targetLang, error)
                 }
-                invokeLater(modalityState) { listeners.run(key) { onError(error) } }
+                listeners.run(key) { onError(error) }
             }
         }
     }
@@ -123,11 +124,13 @@ class TranslateService private constructor() : Disposable {
         LOG.error("Translation error[${translator.id}]: ${error.message}", error, requestAttachment)
     }
 
-    private inline fun MutableMap<ListenerKey, MutableSet<TranslateListener>>.run(
+    private inline fun MutableMap<ListenerKey, MutableSet<ListenerInfo>>.run(
         key: ListenerKey,
-        action: TranslateListener.() -> Unit
+        crossinline action: TranslateListener.() -> Unit
     ) {
-        remove(key)?.forEach { it.action() }
+        remove(key)?.forEach { info ->
+            invokeLater(info.modalityState) { info.listener.action() }
+        }
     }
 
     private fun Translation.updateFavoriteStateIfNeed(favorites: List<WordBookItem>) {
@@ -188,6 +191,8 @@ class TranslateService private constructor() : Disposable {
     override fun dispose() {}
 
     private data class ListenerKey(val text: String, val srcLang: Lang, val targetLang: Lang)
+
+    private data class ListenerInfo(val modalityState: ModalityState, val listener: TranslateListener)
 
     companion object {
         val DEFAULT_TRANSLATOR: Translator by lazy {

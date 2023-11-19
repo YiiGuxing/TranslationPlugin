@@ -1,12 +1,12 @@
 [versions]
 # libraries
-jsoup = "1.16.1"
+jsoup = "1.16.2"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 junit = "4.13.2"
 
 # plugins
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 kover = "0.7.4"
 qodana = "0.1.13"
 changelog = "2.2.0"

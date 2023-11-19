@@ -18,6 +18,7 @@ import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
+import org.jetbrains.concurrency.runAsync
 import kotlin.properties.Delegates
 
 /**
@@ -175,8 +176,10 @@ class Settings : PersistentStateComponent<Settings> {
 
         LOG.d("===== Settings Data Version: $dataVersion =====")
         if (dataVersion < CURRENT_DATA_VERSION) {
-            migrate()
-            properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            runAsync {
+                migrate()
+                properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            }
         }
     }
 

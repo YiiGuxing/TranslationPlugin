@@ -170,9 +170,7 @@ open class LruCache<K, V>(maxSize: Int) {
         val previous: V? = synchronized(this) {
             putCount++
             size += safeSizeOf(key, value)
-            map.put(key, value)?.apply {
-                size -= safeSizeOf(key, this@apply)
-            }
+            map.put(key, value)?.also { size -= safeSizeOf(key, it) }
         }
         previous?.let {
             entryRemoved(false, key, it, value)
@@ -183,17 +181,15 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
-     * Remove the eldest entries until the total of remaining entries is at or
-     * below the requested size.
+     * Remove the eldest entries until the total of remaining entries is at or below the requested size.
      *
-     * @param maxSize the maximum size of the cache before returning. May be -1
-     * to evict even 0-sized elements.
+     * @param maxSize the maximum size of the cache before returning. Maybe -1 to evict even 0-sized elements.
      */
     fun trimToSize(maxSize: Int) {
         while (true) {
             val toEvict = synchronized(this) {
                 check(!(size < 0 || map.isEmpty() && size != 0)) {
-                    javaClass.name + ".sizeOf() is reporting inconsistent results!"
+                    "${javaClass.name}.sizeOf() is reporting inconsistent results! size=$size."
                 }
 
                 if (size <= maxSize || map.isEmpty()) {
@@ -217,14 +213,10 @@ open class LruCache<K, V>(maxSize: Int) {
      * @return the previous value mapped by [key].
      */
     fun remove(key: K & Any): V? {
-        val previous: V? = synchronized(this) {
-            map.remove(key)?.apply {
-                size -= safeSizeOf(key, this@apply)
-            }
-        }
-
-        return previous?.apply {
-            entryRemoved(false, key, this@apply, null)
+        return synchronized(this) {
+            map.remove(key)?.also { previous -> size -= safeSizeOf(key, previous) }
+        }?.also { previous ->
+            entryRemoved(false, key, previous, null)
         }
     }
 
@@ -246,8 +238,8 @@ open class LruCache<K, V>(maxSize: Int) {
         }
 
         if (removed.isNotEmpty()) {
-            removed.forEach {
-                entryRemoved(false, it.key, it.value, null)
+            removed.forEach { (key, value) ->
+                entryRemoved(false, key, value, null)
             }
         }
 
