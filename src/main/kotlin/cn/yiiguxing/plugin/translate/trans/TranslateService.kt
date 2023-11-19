@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBusConnection
-import java.util.*
 
 
 /**
@@ -31,7 +30,7 @@ import java.util.*
 class TranslateService private constructor() : Disposable {
 
     @Volatile
-    var translator: Translator = DEFAULT_TRANSLATOR
+    var translator: Translator = GoogleTranslator
         private set
 
     private val listeners = mutableMapOf<ListenerKey, MutableSet<ListenerInfo>>()
@@ -195,10 +194,6 @@ class TranslateService private constructor() : Disposable {
     private data class ListenerInfo(val modalityState: ModalityState, val listener: TranslateListener)
 
     companion object {
-        val DEFAULT_TRANSLATOR: Translator by lazy {
-            if (Locale.getDefault() == Locale.CHINA) MicrosoftTranslator else GoogleTranslator
-        }
-
         val instance: TranslateService
             get() = ApplicationManager.getApplication().getService(TranslateService::class.java)
 
