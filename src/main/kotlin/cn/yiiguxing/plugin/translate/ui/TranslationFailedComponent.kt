@@ -109,7 +109,7 @@ class TranslationFailedComponent : JPanel(), Disposable {
         runAsync { TranslationEngineActionGroup() }
             .expireWith(this)
             .successOnUiThread(widgetRef) { widget, group ->
-                val button = widget.optionButton
+                val button = widget.optionButton.takeIf { it.isShowing } ?: return@successOnUiThread
                 var offsetLeft: Int
                 var offsetRight: Int
                 var offsetBottom: Int
