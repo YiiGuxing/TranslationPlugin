@@ -51,6 +51,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 贺小五 |  | 66.60 CNY |
 | LiCheng.忘语 | [licheng1013.github.io](https://licheng1013.github.io) | 66.00 CNY |
 | Him188 | [github.com/him188](https://github.com/him188) | 66.00 CNY |
+| SWmachine |  | 60.00 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60.00 CNY |
 | 王俊涛 |  | 50.00 CNY |
 | Yadong | [github.com/yadonglives](https://github.com/yadonglives) | 50.00 CNY |
@@ -69,7 +70,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50.00 CNY |
 | IKUN#1337 |  | 35.00 CNY |
 | 小明 |  | 32.00 CNY |
-| SWmachine |  | 30.00 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30.00 CNY |
 | 包子 |  | 26.66 CNY |
 | 田坪毛小江 |  | 26.66 CNY |
