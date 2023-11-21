@@ -32,6 +32,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
 | 丿初音 |  | 375.00 CNY |
+| 剑平 |  | 120.00 CNY |
 | LiMingjun |  | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100.00 CNY |
 | Sunlife95 |  | 100.00 CNY |
@@ -76,6 +77,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 河道上迷失的小船 |  | 20.00 CNY |
 | 程序猿 |  | 20.00 CNY |
 | 心安 | [yuhangma.com](https://www.yuhangma.com/) | 20.00 CNY |
 | 长风 |  | 20.00 CNY |
@@ -83,7 +85,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Nice |  | 20.00 CNY |
 | 空 |  | 20.00 CNY |
 | Linger |  | 20.00 CNY |
-| 剑平 |  | 20.00 CNY |
 | 惑 |  | 20.00 CNY |
 | 地下室的猫 |  | 20.00 CNY |
 | 许世豪 |  | 20.00 CNY |
@@ -126,6 +127,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 湛蓝徽章 |  | 10.00 CNY |
 | 恒 |  | 10.00 CNY |
 | 繁星 |  | 10.00 CNY |
 | 虫虫 |  | 10.00 CNY |
@@ -271,6 +273,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 不一样的烟火 |  | 6.66 CNY |
+| Sky |  | 6.66 CNY |
+| 文曲星 |  | 6.66 CNY |
+| 陈先生 |  | 6.66 CNY |
 | 锐.kamon |  | 6.66 CNY |
 | 星海 |  | 6.66 CNY |
 | 宇 |  | 6.66 CNY |

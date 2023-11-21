@@ -366,6 +366,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 | **Name**   | **Website**                                                | **Amount** |
 |------------|------------------------------------------------------------|------------|
 | 丿初音        |                                                            | 375.00 CNY |
+| 剑平         |                                                            | 120.00 CNY |
 | LiMingjun  |                                                            | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm)     | 100.00 CNY |
 | Sunlife95  |                                                            | 100.00 CNY |
@@ -374,7 +375,6 @@ website. [[Become a sponsor][open-collective-contribute]]
 | 唐嘉         | [github.com/qq1427998646](https://github.com/qq1427998646) | 100.00 CNY |
 | 凌高         |                                                            | 100.00 CNY |
 | Mritd      | [mritd.com](https://mritd.com)                             | 88.88 CNY  |
-| 三分醉        | [www.sanfenzui.com](http://www.sanfenzui.com)              | 88.00 CNY  |
 
 
 [More donors][file:financial-contributors]
