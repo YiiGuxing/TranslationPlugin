@@ -43,6 +43,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88.00 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.60 CNY |
+| Joey.Ding | [github.com/dingqianyi2007](https://github.com/dingqianyi2007) | 66.66 CNY |
 | 隐形人 |  | 66.66 CNY |
 | 王宇 |  | 66.66 CNY |
 | Castig |  | 66.66 CNY |
@@ -68,6 +69,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Pandeng | [github.com/jiafeimao-gjf](https://github.com/jiafeimao-gjf) | 50.00 CNY |
 | 堂哥 | [codertang.com](https://codertang.com) | 50.00 CNY |
 | 永夜 | [github.com/cn-src](https://github.com/cn-src) | 50.00 CNY |
+| 战斗猪 |  | 40.00 CNY |
 | IKUN#1337 |  | 35.00 CNY |
 | 小明 |  | 32.00 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30.00 CNY |
@@ -93,7 +95,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jiayuan Huang | [github.com/oliverh32](https://github.com/oliverh32) | 20.00 CNY |
 | Zou Yang |  | 20.00 CNY |
 | 哎呀呀 |  | 20.00 CNY |
-| 战斗猪 |  | 20.00 CNY |
 | 达 |  | 20.00 CNY |
 | Isolated |  | 20.00 CNY |
 | Doki23 | [github.com/doki23](https://github.com/doki23) | 20.00 CNY |
@@ -127,6 +128,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 可达噶 |  | 10.00 CNY |
 | 湛蓝徽章 |  | 10.00 CNY |
 | 恒 |  | 10.00 CNY |
 | 繁星 |  | 10.00 CNY |
