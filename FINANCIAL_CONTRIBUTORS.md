@@ -79,6 +79,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| Edik |  | 20.00 CNY |
+| Jbas |  | 20.00 CNY |
 | 河道上迷失的小船 |  | 20.00 CNY |
 | 程序猿 |  | 20.00 CNY |
 | 心安 | [yuhangma.com](https://www.yuhangma.com/) | 20.00 CNY |
@@ -128,6 +130,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| \*\*\* |  | 10.00 CNY |
+| 🌘 |  | 10.00 CNY |
 | 可达噶 |  | 10.00 CNY |
 | 湛蓝徽章 |  | 10.00 CNY |
 | 恒 |  | 10.00 CNY |
@@ -275,6 +279,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 雨后青衫 |  | 6.66 CNY |
+| 欧阳荭觉， |  | 6.66 CNY |
+| 自在如风 |  | 6.66 CNY |
+| 王成东 |  | 6.66 CNY |
+| A.WB |  | 6.66 CNY |
+| \|\|. |  | 6.66 CNY |
+| UP! |  | 6.66 CNY |
+| №⊙-T |  | 6.66 CNY |
+| 米仓老鼠 |  | 6.66 CNY |
+| 悟过 |  | 6.66 CNY |
+| KLB |  | 6.66 CNY |
 | 不一样的烟火 |  | 6.66 CNY |
 | Sky |  | 6.66 CNY |
 | 文曲星 |  | 6.66 CNY |
