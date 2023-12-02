@@ -42,6 +42,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
 import java.awt.*
+import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 import java.awt.event.*
 import javax.swing.*
@@ -330,6 +331,12 @@ class TranslationDialog(
                     disabledIcon = AllIcons.Actions.Copy.disabled()
                     addActionListener { copy() }
                 }
+                val paste = if (isEditable) {
+                    JBMenuItem(message("menu.item.paste"), AllIcons.Actions.MenuPaste).apply {
+                        disabledIcon = AllIcons.Actions.MenuPaste.disabled()
+                        addActionListener { inputTextArea.paste() }
+                    }
+                } else null
                 val translate = JBMenuItem(message("menu.item.translate"), TranslationIcons.Translation).apply {
                     disabledIcon = TranslationIcons.Translation.disabled()
                     addActionListener {
@@ -344,12 +351,16 @@ class TranslationDialog(
                 }
 
                 add(copy)
+                paste?.let { add(it) }
                 add(translate)
+
                 addPopupMenuListener(object : PopupMenuListenerAdapter() {
                     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
                         val hasSelectedText = !selectedText.isNullOrBlank()
                         copy.isEnabled = hasSelectedText
                         translate.isEnabled = hasSelectedText
+                        paste?.isEnabled =
+                            CopyPasteManager.getInstance().getContents<Any>(DataFlavor.stringFlavor) != null
                     }
                 })
             }
