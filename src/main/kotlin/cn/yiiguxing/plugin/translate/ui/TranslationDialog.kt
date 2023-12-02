@@ -446,12 +446,12 @@ class TranslationDialog(
         }
         expandDictViewerButton.setListener({ _, _ ->
             expandDictViewer()
-            TranslationStates.newTranslationDialogCollapseDictViewer = false
+            TranslationStates.translationDialogCollapseDictViewer = false
             fixWindowHeight()
         }, null)
         collapseDictViewerButton.setListener({ _, _ ->
             collapseDictViewer()
-            TranslationStates.newTranslationDialogCollapseDictViewer = true
+            TranslationStates.translationDialogCollapseDictViewer = true
             fixWindowHeight()
         }, null)
     }
@@ -512,7 +512,7 @@ class TranslationDialog(
         }
 
         val hasContent = dictDocument != null || extraDocuments.isNotEmpty()
-        if (hasContent && TranslationStates.newTranslationDialogCollapseDictViewer)
+        if (hasContent && TranslationStates.translationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)
             expandDictViewer()
@@ -769,19 +769,19 @@ class TranslationDialog(
     }
 
     private fun storeWindowLocationAndSize() {
-        TranslationStates.newTranslationDialogX = window.location.x
-        TranslationStates.newTranslationDialogY = window.location.y
-        TranslationStates.newTranslationDialogWidth = translationPanel.width
-        TranslationStates.newTranslationDialogHeight = translationPanel.height
+        TranslationStates.translationDialogLocationX = window.location.x
+        TranslationStates.translationDialogLocationY = window.location.y
+        TranslationStates.translationDialogWidth = translationPanel.width
+        TranslationStates.translationDialogHeight = translationPanel.height
 
         translationPanel.preferredSize = translationPanel.size
     }
 
     private fun restoreWindowLocationAndSize() {
-        val savedX = TranslationStates.newTranslationDialogX
-        val savedY = TranslationStates.newTranslationDialogY
-        val savedWidth = TranslationStates.newTranslationDialogWidth
-        val savedHeight = TranslationStates.newTranslationDialogHeight
+        val savedX = TranslationStates.translationDialogLocationX
+        val savedY = TranslationStates.translationDialogLocationY
+        val savedWidth = TranslationStates.translationDialogWidth
+        val savedHeight = TranslationStates.translationDialogHeight
         if (savedX != null && savedY != null) {
             val intersectWithScreen = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
@@ -797,8 +797,8 @@ class TranslationDialog(
             if (intersectWithScreen) {
                 window.location = Point(savedX, savedY)
             } else {
-                TranslationStates.newTranslationDialogX = null
-                TranslationStates.newTranslationDialogY = null
+                TranslationStates.translationDialogLocationX = null
+                TranslationStates.translationDialogLocationY = null
             }
         }
         val savedSize = Dimension(savedWidth, savedHeight)
