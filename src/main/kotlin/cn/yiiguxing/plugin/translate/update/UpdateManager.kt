@@ -46,7 +46,7 @@ private val borderColor: String
     get() = (UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR).toRGBHex()
 
 
-class UpdateManager : BaseStartupActivity() {
+class UpdateManager : BaseStartupActivity(true) {
 
     companion object {
         internal const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin updated"
