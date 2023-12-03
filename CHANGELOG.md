@@ -4,6 +4,24 @@
 - OpenAI Translator now supports the GPT-3.5-Turbo-16K model.
 - OpenAI Translator now offers API endpoint configuration.
 
+## [3.5.6] (2023/11/19)
+
+- Fix the problem of missing required parameters for document translation in the Youdao translation engine.
+- Other known bug fixes.
+- 修复有道翻译引擎文档翻译缺少必需参数的问题
+- 其他已知问题修复
+
+## [3.5.5] (2023/10/15)
+
+- Added support for RustRover and the new Rust plugin.
+- DeepL Translator now supports Ukrainian and Korean.
+- Compatible with 2023.3.
+- Bug fixes.
+- 添加了对 RustRover 和新 Rust 插件的支持
+- DeepL 翻译现已支持乌克兰语和韩语
+- 兼容 IDE 2023.3 版本
+- Bug 修复
+
 ## [3.5.4] (2023/09/13)
 
 - The "Translate and Replace" action is now displayed by default in the context menu.
@@ -430,7 +448,9 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.6...HEAD
+[3.5.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.5...v3.5.6
+[3.5.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...v3.5.5
 [3.5.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...v3.5.4
 [3.5.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.1...v3.5.2

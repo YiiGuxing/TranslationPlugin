@@ -20,6 +20,7 @@ object GoogleLanguageAdapter : BaseLanguageAdapter() {
         Lang.FAROESE,
         Lang.FIJIAN,
         Lang.FRENCH_CANADA,
+        Lang.KURDISH, // 己俱体分为 `库尔德语（库尔曼吉语）` 和 `库尔德语（索拉尼）`
         Lang.PORTUGUESE_BRAZILIAN,
         Lang.PORTUGUESE_PORTUGUESE,
         Lang.SERBIAN_CYRILLIC,

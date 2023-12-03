@@ -42,6 +42,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.TranslationIcons
 import java.awt.*
+import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 import java.awt.event.*
 import javax.swing.*
@@ -330,6 +331,12 @@ class TranslationDialog(
                     disabledIcon = AllIcons.Actions.Copy.disabled()
                     addActionListener { copy() }
                 }
+                val paste = if (isEditable) {
+                    JBMenuItem(message("menu.item.paste"), AllIcons.Actions.MenuPaste).apply {
+                        disabledIcon = AllIcons.Actions.MenuPaste.disabled()
+                        addActionListener { inputTextArea.paste() }
+                    }
+                } else null
                 val translate = JBMenuItem(message("menu.item.translate"), TranslationIcons.Translation).apply {
                     disabledIcon = TranslationIcons.Translation.disabled()
                     addActionListener {
@@ -344,12 +351,16 @@ class TranslationDialog(
                 }
 
                 add(copy)
+                paste?.let { add(it) }
                 add(translate)
+
                 addPopupMenuListener(object : PopupMenuListenerAdapter() {
                     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
                         val hasSelectedText = !selectedText.isNullOrBlank()
                         copy.isEnabled = hasSelectedText
                         translate.isEnabled = hasSelectedText
+                        paste?.isEnabled =
+                            CopyPasteManager.getInstance().getContents<Any>(DataFlavor.stringFlavor) != null
                     }
                 })
             }
@@ -435,12 +446,12 @@ class TranslationDialog(
         }
         expandDictViewerButton.setListener({ _, _ ->
             expandDictViewer()
-            TranslationStates.newTranslationDialogCollapseDictViewer = false
+            TranslationStates.translationDialogCollapseDictViewer = false
             fixWindowHeight()
         }, null)
         collapseDictViewerButton.setListener({ _, _ ->
             collapseDictViewer()
-            TranslationStates.newTranslationDialogCollapseDictViewer = true
+            TranslationStates.translationDialogCollapseDictViewer = true
             fixWindowHeight()
         }, null)
     }
@@ -501,7 +512,7 @@ class TranslationDialog(
         }
 
         val hasContent = dictDocument != null || extraDocuments.isNotEmpty()
-        if (hasContent && TranslationStates.newTranslationDialogCollapseDictViewer)
+        if (hasContent && TranslationStates.translationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)
             expandDictViewer()
@@ -758,19 +769,19 @@ class TranslationDialog(
     }
 
     private fun storeWindowLocationAndSize() {
-        TranslationStates.newTranslationDialogX = window.location.x
-        TranslationStates.newTranslationDialogY = window.location.y
-        TranslationStates.newTranslationDialogWidth = translationPanel.width
-        TranslationStates.newTranslationDialogHeight = translationPanel.height
+        TranslationStates.translationDialogLocationX = window.location.x
+        TranslationStates.translationDialogLocationY = window.location.y
+        TranslationStates.translationDialogWidth = translationPanel.width
+        TranslationStates.translationDialogHeight = translationPanel.height
 
         translationPanel.preferredSize = translationPanel.size
     }
 
     private fun restoreWindowLocationAndSize() {
-        val savedX = TranslationStates.newTranslationDialogX
-        val savedY = TranslationStates.newTranslationDialogY
-        val savedWidth = TranslationStates.newTranslationDialogWidth
-        val savedHeight = TranslationStates.newTranslationDialogHeight
+        val savedX = TranslationStates.translationDialogLocationX
+        val savedY = TranslationStates.translationDialogLocationY
+        val savedWidth = TranslationStates.translationDialogWidth
+        val savedHeight = TranslationStates.translationDialogHeight
         if (savedX != null && savedY != null) {
             val intersectWithScreen = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
@@ -786,8 +797,8 @@ class TranslationDialog(
             if (intersectWithScreen) {
                 window.location = Point(savedX, savedY)
             } else {
-                TranslationStates.newTranslationDialogX = null
-                TranslationStates.newTranslationDialogY = null
+                TranslationStates.translationDialogLocationX = null
+                TranslationStates.translationDialogLocationY = null
             }
         }
         val savedSize = Dimension(savedWidth, savedHeight)
@@ -804,7 +815,7 @@ class TranslationDialog(
         private fun actionButton(action: AnAction): ActionButton =
             ActionButton(
                 action,
-                action.templatePresentation,
+                Presentation().apply { copyFrom(action.templatePresentation) },
                 ActionPlaces.UNKNOWN,
                 ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE
             )

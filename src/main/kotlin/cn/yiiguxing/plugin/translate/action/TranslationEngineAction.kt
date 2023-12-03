@@ -13,7 +13,11 @@ import com.intellij.openapi.util.Condition
 class TranslationEngineAction(private val translator: TranslationEngine) :
     DumbAwareAction(translator.translatorName, null, translator.icon) {
 
-    fun isAvailable(): Boolean = translator.isConfigured() || Settings.translator == translator
+    fun isAvailable(): Boolean = Settings.translator == translator || try {
+        translator.isConfigured()
+    } catch (e: Throwable) {
+        false
+    }
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabled = isAvailable()
@@ -27,9 +31,14 @@ class TranslationEngineAction(private val translator: TranslationEngine) :
         private val ACTIONS: List<TranslationEngineAction> =
             TranslationEngine.values().toList().map { TranslationEngineAction(it) }
 
-        fun availableActions(): List<TranslationEngineAction> = ACTIONS.filter { it.isAvailable() }
-
-        fun unavailableActions(): List<TranslationEngineAction> = ACTIONS.filterNot { it.isAvailable() }
+        /**
+         * Returns available - unavailable actions pair.
+         */
+        fun actionsGroupedByAvailability(): Pair<List<TranslationEngineAction>, List<TranslationEngineAction>> {
+            return ACTIONS.groupBy { it.isAvailable() }.let {
+                it.getOrDefault(true, emptyList()) to it.getOrDefault(false, emptyList())
+            }
+        }
 
         val PRESELECT_CONDITION: Condition<AnAction> = Condition { action ->
             (action as? TranslationEngineAction)?.translator == Settings.translator

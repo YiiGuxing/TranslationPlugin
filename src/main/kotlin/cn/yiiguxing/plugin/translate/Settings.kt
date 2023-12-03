@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
@@ -17,6 +17,7 @@ import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
+import org.jetbrains.concurrency.runAsync
 import kotlin.properties.Delegates
 
 /**
@@ -33,7 +34,7 @@ class Settings : PersistentStateComponent<Settings> {
      * 翻译API
      */
     var translator: TranslationEngine
-            by Delegates.observable(GOOGLE) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
+            by Delegates.observable(TranslationEngine.DEFAULT) { _, oldValue: TranslationEngine, newValue: TranslationEngine ->
                 if (isInitialized && oldValue != newValue) {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
@@ -174,8 +175,10 @@ class Settings : PersistentStateComponent<Settings> {
 
         LOG.d("===== Settings Data Version: $dataVersion =====")
         if (dataVersion < CURRENT_DATA_VERSION) {
-            migrate()
-            properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            runAsync {
+                migrate()
+                properties.setValue(DATA_VERSION_KEY, CURRENT_DATA_VERSION, 0)
+            }
         }
     }
 
@@ -253,29 +256,24 @@ private val SETTINGS_CHANGE_PUBLISHER: SettingsChangeListener =
 
 @Tag("app-key")
 abstract class AppKeySettings(serviceKey: String) {
-    var appId: String by Delegates.observable("") { _, oldValue: String, newValue: String ->
-        if (oldValue != newValue) {
-            SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
-        }
-    }
 
-    private var _appKey: String? by PasswordSafeDelegate("$SETTINGS_REPOSITORY_SERVICE.$serviceKey")
-        @Transient get
-        @Transient set
+    @Transient
+    private val keyManager = SimpleStringCredentialManager("$SETTINGS_REPOSITORY_SERVICE.$serviceKey")
+
+    var appId: String = ""
 
     /** 获取应用密钥. */
     @Transient
-    fun getAppKey(): String = _appKey?.trim() ?: ""
+    fun getAppKey(): String = keyManager.credential?.trim() ?: ""
 
     /** 设置应用密钥. */
     @Transient
     fun setAppKey(value: String?) {
-        _appKey = if (value.isNullOrBlank()) null else value
-        SETTINGS_CHANGE_PUBLISHER.onTranslatorConfigurationChanged()
+        keyManager.credential = value
     }
 
     val isAppKeySet: Boolean
-        @Transient get() = getAppKey().isNotEmpty()
+        @Transient get() = keyManager.isCredentialSet
 }
 
 /**
@@ -308,8 +306,6 @@ enum class TargetLanguageSelection(val displayName: String) {
 interface SettingsChangeListener {
 
     fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {}
-
-    fun onTranslatorConfigurationChanged() {}
 
     fun onOverrideFontChanged(settings: Settings) {}
 

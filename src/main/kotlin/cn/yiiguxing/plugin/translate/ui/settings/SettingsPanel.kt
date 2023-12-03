@@ -137,7 +137,7 @@ class SettingsPanel(
         ignoreRegExp.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: DocumentEvent) {
                 try {
-                    e.document.text.takeUnless { it.isBlank() }?.toRegex()
+                    e.document.text.takeUnless { it.isEmpty() }?.toRegex()
 
                     if (!validRegExp) {
                         ignoreRegExp.background = background
@@ -178,13 +178,8 @@ class SettingsPanel(
 
     override val isModified: Boolean
         get() {
-            if (!validRegExp) {
-                return false
-            }
-
             val settings = settings
             return settings.translator != translationEngineComboBox.selected
-                    || !settings.translator.isConfigured()
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
@@ -208,12 +203,25 @@ class SettingsPanel(
                     || states.maxHistorySize != maxHistoriesSizeComboBox.item
         }
 
+    private fun getConfigurationPath(vararg configurations: String): String = configurations.joinToString("|") {
+        it.trim(' ', '\n', ':', '：')
+    }
 
     override fun apply() {
+        if (!validRegExp) {
+            throw ConfigurationException(
+                message(
+                    "settings.invalid.configuration",
+                    getConfigurationPath(
+                        message("settings.panel.title.text.selection"),
+                        message("settings.label.ignore")
+                    )
+                )
+            )
+        }
 
         states.maxHistorySize = max(maxHistoriesSizeComboBox.item, 0)
 
-        @Suppress("Duplicates")
         with(settings) {
             val selectedTranslator = translationEngineComboBox.selected ?: translator
             if (!selectedTranslator.isConfigured()) {
@@ -244,10 +252,7 @@ class SettingsPanel(
             showReplacementAction = showReplacementActionCheckBox.isSelected
             showActionsInContextMenuOnlyWithSelection = showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
             takeWordWhenDialogOpens = takeWordCheckBox.isSelected
-
-            if (validRegExp) {
-                ignoreRegex = this@SettingsPanel.ignoreRegExp.text
-            }
+            ignoreRegex = this@SettingsPanel.ignoreRegExp.text
         }
     }
 
