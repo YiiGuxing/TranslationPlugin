@@ -43,6 +43,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88.00 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.60 CNY |
+| Zzc |  | 66.66 CNY |
 | Joey.Ding | [github.com/dingqianyi2007](https://github.com/dingqianyi2007) | 66.66 CNY |
 | 隐形人 |  | 66.66 CNY |
 | 王宇 |  | 66.66 CNY |
@@ -130,6 +131,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| NullPointer |  | 10.00 CNY |
 | \*\*\* |  | 10.00 CNY |
 | 🌘 |  | 10.00 CNY |
 | 可达噶 |  | 10.00 CNY |
@@ -279,6 +281,12 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 溟 |  | 6.66 CNY |
+| 铭 |  | 6.66 CNY |
+| Sunrise |  | 6.66 CNY |
+| 右耳 |  | 6.66 CNY |
+| 羊习习 |  | 6.66 CNY |
+| 孙宗堂 |  | 6.66 CNY |
 | 雨后青衫 |  | 6.66 CNY |
 | 欧阳荭觉， |  | 6.66 CNY |
 | 自在如风 |  | 6.66 CNY |
