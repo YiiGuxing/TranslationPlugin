@@ -80,6 +80,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 清风 |  | 20.00 CNY |
 | Edik |  | 20.00 CNY |
 | Jbas |  | 20.00 CNY |
 | 河道上迷失的小船 |  | 20.00 CNY |
@@ -131,6 +132,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| Zou yang |  | 10.00 CNY |
+| 半拍 |  | 10.00 CNY |
 | NullPointer |  | 10.00 CNY |
 | \*\*\* |  | 10.00 CNY |
 | 🌘 |  | 10.00 CNY |
@@ -281,6 +284,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| Tinker |  | 6.66 CNY |
+| c-l |  | 6.66 CNY |
+| 修理工 |  | 6.66 CNY |
+| Gavin-gjw |  | 6.66 CNY |
 | 溟 |  | 6.66 CNY |
 | 铭 |  | 6.66 CNY |
 | Sunrise |  | 6.66 CNY |
