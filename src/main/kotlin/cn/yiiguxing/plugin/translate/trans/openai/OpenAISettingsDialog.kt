@@ -19,10 +19,12 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.SimpleListCellRenderer
+import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.ui.components.fields.ExtendableTextField
 import com.intellij.util.Alarm
+import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
 import javax.swing.JComponent
@@ -98,16 +100,22 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private fun createConfigurationPanel(): JPanel {
         val fieldWidth = 320
-        return JPanel(UI.migLayout(migSize(8))).apply {
-            add(JLabel(message("openai.settings.dialog.label.model")))
-            add(apiModelComboBox, UI.wrap())
-            add(JLabel(message("openai.settings.dialog.label.api.endpoint")))
-            add(apiEndpointField, UI.cc().width(migSize(fieldWidth)).wrap())
-            add(JLabel(message("openai.settings.dialog.label.api.key")))
-            add(apiKeyField, UI.cc().width(migSize(fieldWidth)).wrap())
+        val apiPathLabel = JBLabel(OpenAI.API_PATH).apply {
+            border = JBUI.Borders.emptyRight(apiEndpointField.insets.right)
+            isEnabled = false
+        }
+        return JPanel(UI.migLayout()).apply {
+            val gapCC = UI.cc().gapRight(migSize(8))
+            add(JLabel(message("openai.settings.dialog.label.model")), gapCC)
+            add(apiModelComboBox, UI.fillX().wrap())
+            add(JLabel(message("openai.settings.dialog.label.api.endpoint")), gapCC)
+            add(apiEndpointField, UI.fillX())
+            add(apiPathLabel, UI.cc().gapLeft(migSize(2)).wrap())
+            add(JLabel(message("openai.settings.dialog.label.api.key")), gapCC)
+            add(apiKeyField, UI.fillX().spanX(2).minWidth(migSize(fieldWidth)).wrap())
             add(
                 UI.createHint(message("openai.settings.dialog.hint"), fieldWidth, apiKeyField),
-                UI.cc().cell(1, 3).wrap()
+                UI.cc().cell(1, 3).spanX(2).wrap()
             )
         }
     }

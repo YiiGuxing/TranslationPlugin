@@ -8,8 +8,10 @@ import com.intellij.util.io.RequestBuilder
 
 object OpenAI {
 
-    const val DEFAULT_API_ENDPOINT = "https://api.openai.com/v1/chat/completions"
-    private val apiEndpoint: String get() = service<OpenAISettings>().apiEndpoint ?: DEFAULT_API_ENDPOINT
+    const val DEFAULT_API_ENDPOINT = "https://api.openai.com"
+    const val API_PATH = "/v1/chat/completions"
+    private val apiEndpoint: String
+        get() = (service<OpenAISettings>().apiEndpoint ?: DEFAULT_API_ENDPOINT).trimEnd('/') + API_PATH
 
     private fun RequestBuilder.auth() {
         val apiKey = OpenAICredential.apiKey
