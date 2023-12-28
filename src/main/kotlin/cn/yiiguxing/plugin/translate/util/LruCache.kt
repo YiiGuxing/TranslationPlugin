@@ -69,6 +69,12 @@ open class LruCache<K, V>(maxSize: Int) {
         private set
         @Synchronized get
 
+    private var putInCreationCount: Int = 0
+    private var removeCount: Int = 0
+    private var removeInRemoveIfCount: Int = 0
+    private var removeInPutCount: Int = 0
+    private var removeInEvictionCount: Int = 0
+
     /**
      * The number of times [.get][get] returned a value that was already present in the cache.
      */
@@ -147,6 +153,7 @@ open class LruCache<K, V>(maxSize: Int) {
                 map[key] = previous
             } else {
                 size += safeSizeOf(key, createdValue)
+                putInCreationCount++
             }
             previous
         }
@@ -170,7 +177,10 @@ open class LruCache<K, V>(maxSize: Int) {
         val previous: V? = synchronized(this) {
             putCount++
             size += safeSizeOf(key, value)
-            map.put(key, value)?.also { size -= safeSizeOf(key, it) }
+            map.put(key, value)?.also {
+                size -= safeSizeOf(key, it)
+                removeInPutCount++
+            }
         }
         previous?.let {
             entryRemoved(false, key, it, value)
@@ -189,7 +199,10 @@ open class LruCache<K, V>(maxSize: Int) {
         while (true) {
             val toEvict = synchronized(this) {
                 check(!(size < 0 || map.isEmpty() && size != 0)) {
-                    "${javaClass.name}.sizeOf() is reporting inconsistent results! size=$size."
+                    "${javaClass.name}.sizeOf() is reporting inconsistent results! " +
+                            "$this, size=$size, putCount=$putCount, putInCreationCount=$putInCreationCount, " +
+                            "createCount=$createCount, removeCount=$removeCount, removeInPutCount=$removeInPutCount, " +
+                            "removeInRemoveIfCount=$removeInRemoveIfCount, removeInEvictionCount=$removeInEvictionCount."
                 }
 
                 if (size <= maxSize || map.isEmpty()) {
@@ -199,6 +212,7 @@ open class LruCache<K, V>(maxSize: Int) {
                 val toEvict = map.entries.iterator().next()
                 map.remove(toEvict.key)
                 size -= safeSizeOf(toEvict.key, toEvict.value)
+                removeInEvictionCount++
                 evictionCount++
                 toEvict
             }
@@ -214,7 +228,10 @@ open class LruCache<K, V>(maxSize: Int) {
      */
     fun remove(key: K & Any): V? {
         return synchronized(this) {
-            map.remove(key)?.also { previous -> size -= safeSizeOf(key, previous) }
+            map.remove(key)?.also { previous ->
+                size -= safeSizeOf(key, previous)
+                removeCount++
+            }
         }?.also { previous ->
             entryRemoved(false, key, previous, null)
         }
@@ -231,8 +248,9 @@ open class LruCache<K, V>(maxSize: Int) {
                 val entry = each.next()
                 if (predicate(entry.key, entry.value)) {
                     each.remove()
-                    removed.add(entry)
                     size -= safeSizeOf(entry.key, entry.value)
+                    removeInRemoveIfCount++
+                    removed.add(entry)
                 }
             }
         }
