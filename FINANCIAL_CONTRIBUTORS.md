@@ -31,7 +31,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 
 | **名称** | **网站** | **捐赠总额** |
 | -------- | -------- | ------------ |
-| 丿初音 |  | 375.00 CNY |
+| 丿初音 |  | 425.00 CNY |
 | 剑平 |  | 120.00 CNY |
 | LiMingjun |  | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100.00 CNY |
@@ -43,6 +43,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88.00 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.60 CNY |
+| HJC |  | 66.66 CNY |
 | Zzc |  | 66.66 CNY |
 | Joey.Ding | [github.com/dingqianyi2007](https://github.com/dingqianyi2007) | 66.66 CNY |
 | 隐形人 |  | 66.66 CNY |
@@ -132,6 +133,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| Tom Andersen |  | 10.00 CNY |
+| Ray |  | 10.00 CNY |
+| 不吃牛肉 |  | 10.00 CNY |
+| 行首之 |  | 10.00 CNY |
 | Zou yang |  | 10.00 CNY |
 | 半拍 |  | 10.00 CNY |
 | NullPointer |  | 10.00 CNY |
@@ -284,6 +289,16 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 杨+2不加价 |  | 6.66 CNY |
+| CocoPiggy |  | 6.66 CNY |
+| Lyndonwang |  | 6.66 CNY |
+| 紫苑 |  | 6.66 CNY |
+| 天神永恒 |  | 6.66 CNY |
+| 飞龙 |  | 6.66 CNY |
+| 小宇 |  | 6.66 CNY |
+| Z |  | 6.66 CNY |
+| 放牛班的春天 |  | 6.66 CNY |
+| w(ﾟдﾟ)w |  | 6.66 CNY |
 | Tinker |  | 6.66 CNY |
 | c-l |  | 6.66 CNY |
 | 修理工 |  | 6.66 CNY |

@@ -365,7 +365,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name**   | **Website**                                                | **Amount** |
 |------------|------------------------------------------------------------|------------|
-| 丿初音        |                                                            | 375.00 CNY |
+| 丿初音        |                                                            | 425.00 CNY |
 | 剑平         |                                                            | 120.00 CNY |
 | LiMingjun  |                                                            | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm)     | 100.00 CNY |
