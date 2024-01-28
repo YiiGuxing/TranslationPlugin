@@ -13,7 +13,8 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredentials
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettings
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
@@ -21,6 +22,7 @@ import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
+import com.intellij.openapi.components.service
 import icons.TranslationIcons
 import java.util.*
 import javax.swing.Icon
@@ -84,7 +86,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            OPEN_AI -> OpenAICredential.isApiKeySet
+            OPEN_AI -> OpenAICredentials.manager(service<OpenAISettings>().provider).isCredentialSet
         }
     }
 

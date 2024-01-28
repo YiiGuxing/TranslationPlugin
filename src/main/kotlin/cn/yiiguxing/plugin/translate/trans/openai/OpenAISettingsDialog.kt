@@ -40,7 +40,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private val apiKeyField: JBPasswordField = JBPasswordField()
     private val apiEndpointField: ExtendableTextField = ExtendableTextField().apply {
-        emptyText.text = OpenAI.DEFAULT_API_ENDPOINT
+        emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
         val extension = Extension.create(AllIcons.General.Reset, message("set.as.default.action.name")) {
             text = null
             setErrorText(null)
@@ -87,8 +87,8 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         setResizable(false)
         init()
 
-        apiEndpoint = settings.apiEndpoint
-        apiModelComboBox.selectedItem = settings.model
+        apiEndpoint = settings.openAi.endpoint
+        apiModelComboBox.selectedItem = settings.openAi.model
     }
 
 
@@ -100,7 +100,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private fun createConfigurationPanel(): JPanel {
         val fieldWidth = 320
-        val apiPathLabel = JBLabel(OpenAI.API_PATH).apply {
+        val apiPathLabel = JBLabel(OPEN_AI_API_PATH).apply {
             border = JBUI.Borders.emptyRight(apiEndpointField.insets.right)
             isEnabled = false
         }
@@ -139,14 +139,14 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             return
         }
 
-        OpenAICredential.apiKey = apiKey
-        isOK = OpenAICredential.isApiKeySet
-        settings.apiEndpoint = apiEndpoint
+        OpenAICredentials.manager(ServiceProvider.OpenAI).credential = apiKey
+        isOK = OpenAICredentials.manager(ServiceProvider.OpenAI).isCredentialSet
+        settings.openAi.endpoint = apiEndpoint
 
-        val oldModel = settings.model
+        val oldModel = settings.openAi.model
         val newModel = apiModelComboBox.selected ?: OpenAIModel.GPT_3_5_TURBO
         if (oldModel != newModel) {
-            settings.model = newModel
+            settings.openAi.model = newModel
             service<CacheService>().removeMemoryCache { key, _ ->
                 key.translator == TranslationEngine.OPEN_AI.id
             }
@@ -159,7 +159,10 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         // This is a modal dialog, so it needs to be invoked later.
         SwingUtilities.invokeLater {
             val dialogRef = DisposableRef.create(disposable, this)
-            runAsync { OpenAICredential.apiKey to OpenAICredential.isApiKeySet }
+            runAsync {
+                OpenAICredentials.manager(ServiceProvider.OpenAI)
+                    .let { it.credential to it.isCredentialSet }
+            }
                 .expireWith(disposable)
                 .successOnUiThread(dialogRef) { dialog, (apiKey, isApiKeySet) ->
                     dialog.apiKey = apiKey

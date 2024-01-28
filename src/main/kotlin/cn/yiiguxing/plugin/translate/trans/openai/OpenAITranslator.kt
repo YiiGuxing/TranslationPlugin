@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatRole
-import cn.yiiguxing.plugin.translate.trans.openai.chat.chatCompletionRequest
+import cn.yiiguxing.plugin.translate.trans.openai.chat.chatMessages
 import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIStatusException
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.OPEN_AI
 import cn.yiiguxing.plugin.translate.util.md5
@@ -25,11 +25,11 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         OpenAILanguages.languages.toMutableList().apply { add(0, Lang.AUTO) }
     override val supportedTargetLanguages: List<Lang> = OpenAILanguages.languages
 
-    private val openAIModel: OpenAIModel get() = service<OpenAISettings>().model
+    private val settings: OpenAISettings get() = service<OpenAISettings>()
 
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || !OpenAICredential.isApiKeySet) {
+        if (force || !OpenAICredentials.manager(settings.provider).isCredentialSet) {
             return OPEN_AI.showConfigurationDialog()
         }
 
@@ -58,16 +58,15 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         targetLang: Lang,
         isFofDocumentation: Boolean
     ): String {
-        val model = openAIModel
         val cacheService = service<CacheService>()
-        val cacheKey = getCacheKey(model, text, srcLang, targetLang)
+        val cacheKey = getCacheKey(text, srcLang, targetLang)
         val cache = cacheService.getDiskCache(cacheKey)
         if (!cache.isNullOrEmpty()) {
             return cache
         }
 
-        val request = getChatCompletionRequest(model, text, srcLang, targetLang, isFofDocumentation)
-        val chatCompletion = OpenAI.chatCompletion(request)
+        val request = getChatCompletionRequest(text, srcLang, targetLang, isFofDocumentation)
+        val chatCompletion = OpenAIService.get(settings).chatCompletion(request)
         var result = chatCompletion.choices.first().message!!.content
         if (!isFofDocumentation && result.length > 1 && result.first() == '"' && result.last() == '"') {
             result = result.substring(1, result.lastIndex)
@@ -78,36 +77,32 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun getChatCompletionRequest(
-        openAIModel: OpenAIModel,
         text: String,
         srcLang: Lang,
         targetLang: Lang,
         isFofDocumentation: Boolean = false
-    ) =
-        chatCompletionRequest {
-            model = openAIModel.value
-            messages {
-                message {
-                    role = ChatRole.SYSTEM
-                    content = "You are a translation engine that can " + if (isFofDocumentation) {
-                        "translate HTML document."
-                    } else {
-                        "only translate text and cannot interpret it."
-                    }
-                }
-                message {
-                    role = ChatRole.USER
-                    content =
-                        "Translate ${if (srcLang == Lang.AUTO) "" else "from ${srcLang.openAILanguage} "}to ${targetLang.openAILanguage}."
-                }
-                message {
-                    role = ChatRole.USER
-                    content = if (isFofDocumentation) text else """"$text""""
-                }
+    ) = chatMessages {
+        message {
+            role = ChatRole.SYSTEM
+            content = "You are a translation engine that can " + if (isFofDocumentation) {
+                "translate HTML document."
+            } else {
+                "only translate text and cannot interpret it."
             }
         }
+        message {
+            role = ChatRole.USER
+            content =
+                "Translate ${if (srcLang == Lang.AUTO) "" else "from ${srcLang.openAILanguage} "}to ${targetLang.openAILanguage}."
+        }
+        message {
+            role = ChatRole.USER
+            content = if (isFofDocumentation) text else """"$text""""
+        }
+    }
 
-    private fun getCacheKey(model: OpenAIModel, text: String, srcLang: Lang, targetLang: Lang): String {
+    private fun getCacheKey(text: String, srcLang: Lang, targetLang: Lang): String {
+        val model = settings.model
         return "$id$model$text$srcLang$targetLang".md5()
     }
 

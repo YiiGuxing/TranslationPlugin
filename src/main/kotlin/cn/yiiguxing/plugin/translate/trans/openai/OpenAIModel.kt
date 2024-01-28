@@ -3,7 +3,7 @@
 package cn.yiiguxing.plugin.translate.trans.openai
 
 /**
- * See: [OpenAI Models](https://platform.openai.com/docs/models)
+ * See: [OpenAIService Models](https://platform.openai.com/docs/models)
  */
 enum class OpenAIModel(val value: String, val modelName: String) {
     GPT_3_5_TURBO("gpt-3.5-turbo", "GPT-3.5-Turbo"),
