@@ -65,8 +65,8 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
             return cache
         }
 
-        val request = getChatCompletionRequest(text, srcLang, targetLang, isFofDocumentation)
-        val chatCompletion = OpenAIService.get(settings).chatCompletion(request)
+        val messages = getChatCompletionMessages(text, srcLang, targetLang, isFofDocumentation)
+        val chatCompletion = OpenAIService.get(settings).chatCompletion(messages)
         var result = chatCompletion.choices.first().message!!.content
         if (!isFofDocumentation && result.length > 1 && result.first() == '"' && result.last() == '"') {
             result = result.substring(1, result.lastIndex)
@@ -76,7 +76,7 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         return result
     }
 
-    private fun getChatCompletionRequest(
+    private fun getChatCompletionMessages(
         text: String,
         srcLang: Lang,
         targetLang: Lang,
@@ -103,7 +103,8 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
 
     private fun getCacheKey(text: String, srcLang: Lang, targetLang: Lang): String {
         val model = settings.model
-        return "$id$model$text$srcLang$targetLang".md5()
+        val provider = settings.provider
+        return "$id$provider$model$text$srcLang$targetLang".md5()
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
