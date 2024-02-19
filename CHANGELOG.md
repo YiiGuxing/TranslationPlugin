@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- OpenAI Translator now supports Azure OpenAI.
 - OpenAI Translator now supports the GPT-3.5-Turbo-16K model.
 - OpenAI Translator now offers API endpoint configuration.
 
