@@ -23,12 +23,22 @@ class OpenAISettings : BaseState(), PersistentStateComponent<OpenAISettings> {
     @get:OptionTag("AZURE")
     var azure: Azure by property(Azure())
 
+
     @get:Transient
     val model: OpenAIModel
+        get() = getOptions().model
+
+    @get:Transient
+    val isConfigured: Boolean
         get() = when (provider) {
-            ServiceProvider.OpenAI -> openAi.model
-            ServiceProvider.Azure -> azure.model
+            ServiceProvider.Azure -> !azure.endpoint.isNullOrEmpty()
+            else -> true
         }
+
+    fun getOptions(provider: ServiceProvider = this.provider): OpenAIService.Options = when (provider) {
+        ServiceProvider.OpenAI -> openAi
+        ServiceProvider.Azure -> azure
+    }
 
     override fun getState(): OpenAISettings = this
 

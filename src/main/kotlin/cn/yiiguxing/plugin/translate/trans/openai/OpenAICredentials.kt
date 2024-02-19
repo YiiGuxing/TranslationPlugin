@@ -25,5 +25,7 @@ internal class OpenAICredentials private constructor() {
             ServiceProvider.OpenAI -> service.openAi
             ServiceProvider.Azure -> service.azure
         }
+
+        fun isCredentialSet(provider: ServiceProvider): Boolean = manager(provider).isCredentialSet
     }
 }

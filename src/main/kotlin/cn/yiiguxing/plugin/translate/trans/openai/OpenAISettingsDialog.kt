@@ -19,26 +19,34 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.SimpleListCellRenderer
-import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.ui.components.fields.ExtendableTextField
 import com.intellij.util.Alarm
-import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.SwingUtilities
+import java.awt.event.ItemEvent
+import javax.swing.*
 import javax.swing.event.DocumentEvent
+import javax.swing.text.JTextComponent
 
 class OpenAISettingsDialog : DialogWrapper(false) {
 
     private val settings = service<OpenAISettings>()
+    private val openAiState = OpenAISettings.OpenAI().apply { copyFrom(settings.openAi) }
+    private val azureState = OpenAISettings.Azure().apply { copyFrom(settings.azure) }
+    private val apiKeys: ApiKeys = ApiKeys()
+    private var isApiKeySet: Boolean = false
+
     private val alarm: Alarm = Alarm(disposable)
 
-    private val apiKeyField: JBPasswordField = JBPasswordField()
+    private val apiKeyField: JBPasswordField = JBPasswordField().apply {
+        document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                apiKeys[provider] = String(password)
+            }
+        })
+    }
     private val apiEndpointField: ExtendableTextField = ExtendableTextField().apply {
         emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
         val extension = Extension.create(AllIcons.General.Reset, message("set.as.default.action.name")) {
@@ -48,33 +56,68 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         }
         document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                alarm.cancelAllRequests()
-                alarm.addRequest(::verifyApiEndpoint, 300)
+                apiEndpointChanged()
                 if (apiEndpoint.isNullOrEmpty()) {
                     removeExtension(extension)
-                } else {
+                } else if (provider == ServiceProvider.OpenAI) {
                     addExtension(extension)
                 }
             }
         })
     }
 
+    private val apiServiceProviderComboBox: ComboBox<ServiceProvider> =
+        ComboBox(CollectionComboBoxModel(ServiceProvider.values().toList())).apply {
+            renderer = SimpleListCellRenderer.create { label, model, _ ->
+                label.text = model.name
+                label.icon = getProviderIcon(model)
+            }
+            addItemListener { event ->
+                if (event.stateChange == ItemEvent.SELECTED) {
+                    providerUpdated(event.item as ServiceProvider)
+                }
+            }
+        }
     private val apiModelComboBox: ComboBox<OpenAIModel> =
         ComboBox(CollectionComboBoxModel(OpenAIModel.values().toList())).apply {
             renderer = SimpleListCellRenderer.create { label, model, _ ->
                 label.text = model.modelName
             }
+            addItemListener {
+                if (it.stateChange == ItemEvent.SELECTED) {
+                    currentState.model = it.item as OpenAIModel
+                }
+            }
+        }
+    private val azureServiceVersionComboBox: ComboBox<AzureServiceVersion> =
+        ComboBox(CollectionComboBoxModel(AzureServiceVersion.values().toList())).apply {
+            isVisible = false
+            renderer = SimpleListCellRenderer.create { label, model, _ ->
+                label.text = model.value
+            }
+            addItemListener {
+                if (it.stateChange == ItemEvent.SELECTED) {
+                    azureState.apiVersion = it.item as AzureServiceVersion
+                }
+            }
         }
 
-    private var apiKey: String?
-        get() = apiKeyField.password
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { String(it) }
+    private val apiVersionLabel = JLabel(message("openai.settings.dialog.label.api.version")).apply {
+        isVisible = false
+    }
+    private lateinit var hintComponent: JTextComponent
+
+    private var provider: ServiceProvider
+        get() = apiServiceProviderComboBox.selected ?: ServiceProvider.OpenAI
         set(value) {
-            apiKeyField.text = if (value.isNullOrEmpty()) null else value
+            apiServiceProviderComboBox.selectedItem = value
         }
 
-    private var isOK: Boolean = false
+    private val currentState: OpenAISettings.OpenAI
+        get() = when (provider) {
+            ServiceProvider.OpenAI -> openAiState
+            ServiceProvider.Azure -> azureState
+        }
 
     private var apiEndpoint: String?
         get() = apiEndpointField.text?.trim()?.takeIf { it.isNotEmpty() }
@@ -87,8 +130,10 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         setResizable(false)
         init()
 
-        apiEndpoint = settings.openAi.endpoint
-        apiModelComboBox.selectedItem = settings.openAi.model
+        provider = settings.provider
+        azureServiceVersionComboBox.selectedItem = settings.azure.apiVersion
+
+        providerUpdated(settings.provider)
     }
 
 
@@ -100,32 +145,80 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private fun createConfigurationPanel(): JPanel {
         val fieldWidth = 320
-        val apiPathLabel = JBLabel(OPEN_AI_API_PATH).apply {
-            border = JBUI.Borders.emptyRight(apiEndpointField.insets.right)
-            isEnabled = false
-        }
-        return JPanel(UI.migLayout()).apply {
+        hintComponent = UI.createHint("", fieldWidth, apiKeyField)
+        return JPanel(UI.migLayout(lcBuilder = { hideMode(2) })).apply {
             val gapCC = UI.cc().gapRight(migSize(8))
-            add(JLabel(message("openai.settings.dialog.label.model")), gapCC)
-            add(apiModelComboBox, UI.fillX().wrap())
+            val comboBoxCC = UI.cc().width(migSize((fieldWidth * 0.6).toInt())).wrap()
+            add(JLabel(message("openai.settings.dialog.label.api.provider")), gapCC)
+            add(apiServiceProviderComboBox, comboBoxCC)
+            add(JLabel(message("openai.settings.dialog.label.api.model")), gapCC)
+            add(apiModelComboBox, comboBoxCC)
+            add(apiVersionLabel, gapCC)
+            add(azureServiceVersionComboBox, comboBoxCC)
             add(JLabel(message("openai.settings.dialog.label.api.endpoint")), gapCC)
-            add(apiEndpointField, UI.fillX())
-            add(apiPathLabel, UI.cc().gapLeft(migSize(2)).wrap())
+            add(apiEndpointField, UI.fillX().wrap())
             add(JLabel(message("openai.settings.dialog.label.api.key")), gapCC)
-            add(apiKeyField, UI.fillX().spanX(2).minWidth(migSize(fieldWidth)).wrap())
-            add(
-                UI.createHint(message("openai.settings.dialog.hint"), fieldWidth, apiKeyField),
-                UI.cc().cell(1, 3).spanX(2).wrap()
-            )
+            add(apiKeyField, UI.fillX().minWidth(migSize(fieldWidth)).wrap())
+            add(hintComponent, UI.cc().cell(1, 5).wrap())
         }
     }
 
     override fun getHelpId(): String = HelpTopic.OPEN_AI.id
 
-    override fun isOK(): Boolean = isOK
+    override fun isOK(): Boolean {
+        return isApiKeySet && currentState.endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI)
+    }
+
+    private fun getHint(provider: ServiceProvider): String {
+        return when (provider) {
+            ServiceProvider.OpenAI -> message("openai.settings.dialog.hint")
+            ServiceProvider.Azure -> message("openai.settings.dialog.hint.azure")
+        }
+    }
+
+    private fun getProviderIcon(provider: ServiceProvider): Icon {
+        return when (provider) {
+            ServiceProvider.OpenAI -> TranslationIcons.Engines.OpenAI
+            ServiceProvider.Azure -> AllIcons.Providers.Azure
+        }
+    }
+
+    private fun providerUpdated(newProvider: ServiceProvider) {
+        val isAzure = newProvider == ServiceProvider.Azure
+        apiVersionLabel.isVisible = isAzure
+        azureServiceVersionComboBox.isVisible = isAzure
+        hintComponent.text = getHint(newProvider)
+
+        if (isAzure) {
+            apiEndpointField.setExtensions(emptyList())
+            apiEndpointField.emptyText.text = ""
+        } else {
+            apiEndpointField.emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
+        }
+
+        currentState.let {
+            apiModelComboBox.selected = it.model
+            apiEndpoint = it.endpoint
+        }
+        apiKeyField.text = apiKeys[newProvider]
+
+        verifyApiEndpoint()
+    }
+
+    private fun apiEndpointChanged() {
+        alarm.cancelAllRequests()
+        alarm.addRequest(::verifyApiEndpoint, 300)
+
+        val endpoint = apiEndpoint
+        currentState.endpoint = if (endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI)) {
+            endpoint
+        } else {
+            settings.getOptions(provider).endpoint
+        }
+    }
 
     private fun verifyApiEndpoint(): Boolean {
-        if (apiEndpoint.let { it == null || URL_REGEX.matches(it) }) {
+        if (apiEndpoint.isValidEndpoint(provider == ServiceProvider.OpenAI)) {
             setErrorText(null)
             return true
         }
@@ -139,18 +232,24 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             return
         }
 
-        OpenAICredentials.manager(ServiceProvider.OpenAI).credential = apiKey
-        isOK = OpenAICredentials.manager(ServiceProvider.OpenAI).isCredentialSet
-        settings.openAi.endpoint = apiEndpoint
+        OpenAICredentials.manager(ServiceProvider.OpenAI).credential = apiKeys.openAi
+        OpenAICredentials.manager(ServiceProvider.Azure).credential = apiKeys.azure
 
-        val oldModel = settings.openAi.model
-        val newModel = apiModelComboBox.selected ?: OpenAIModel.GPT_3_5_TURBO
-        if (oldModel != newModel) {
-            settings.openAi.model = newModel
+        val oldProvider = settings.provider
+        val newProvider = provider
+        if (oldProvider != newProvider ||
+            openAiState.model != settings.openAi.model ||
+            azureState.model != settings.azure.model
+        ) {
             service<CacheService>().removeMemoryCache { key, _ ->
                 key.translator == TranslationEngine.OPEN_AI.id
             }
         }
+
+        settings.provider = newProvider
+        settings.openAi.copyFrom(openAiState)
+        settings.azure.copyFrom(azureState)
+        isApiKeySet = OpenAICredentials.manager(provider).isCredentialSet
 
         super.doOKAction()
     }
@@ -160,13 +259,16 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         SwingUtilities.invokeLater {
             val dialogRef = DisposableRef.create(disposable, this)
             runAsync {
-                OpenAICredentials.manager(ServiceProvider.OpenAI)
-                    .let { it.credential to it.isCredentialSet }
+                ApiKeys(
+                    OpenAICredentials.manager(ServiceProvider.OpenAI).credential,
+                    OpenAICredentials.manager(ServiceProvider.Azure).credential
+                )
             }
                 .expireWith(disposable)
-                .successOnUiThread(dialogRef) { dialog, (apiKey, isApiKeySet) ->
-                    dialog.apiKey = apiKey
-                    dialog.isOK = isApiKeySet
+                .successOnUiThread(dialogRef) { dialog, apiKeys ->
+                    dialog.apiKeys.copyFrom(apiKeys)
+                    dialog.apiKeyField.text = apiKeys[dialog.provider]
+                    dialog.isApiKeySet = !apiKeys[dialog.provider].isNullOrEmpty()
                 }
                 .disposeAfterProcessing(dialogRef)
         }
@@ -176,5 +278,31 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private companion object {
         val URL_REGEX = "^https?://([^/?#\\s]+)([^?#;\\s]*)$".toRegex()
+
+        fun String?.isValidEndpoint(canBeNull: Boolean = true): Boolean {
+            return this?.let { URL_REGEX.matches(it) } ?: canBeNull
+        }
+    }
+
+    private data class ApiKeys(var openAi: String? = null, var azure: String? = null) {
+
+        operator fun get(provider: ServiceProvider): String? {
+            return when (provider) {
+                ServiceProvider.OpenAI -> openAi
+                ServiceProvider.Azure -> azure
+            }
+        }
+
+        operator fun set(provider: ServiceProvider, value: String?) {
+            when (provider) {
+                ServiceProvider.OpenAI -> openAi = value
+                ServiceProvider.Azure -> azure = value
+            }
+        }
+
+        fun copyFrom(apiKeys: ApiKeys) {
+            openAi = apiKeys.openAi
+            azure = apiKeys.azure
+        }
     }
 }

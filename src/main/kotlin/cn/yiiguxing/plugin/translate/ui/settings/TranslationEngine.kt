@@ -86,7 +86,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            OPEN_AI -> OpenAICredentials.manager(service<OpenAISettings>().provider).isCredentialSet
+            OPEN_AI -> service<OpenAISettings>().let { it.isConfigured && OpenAICredentials.isCredentialSet(it.provider) }
         }
     }
 

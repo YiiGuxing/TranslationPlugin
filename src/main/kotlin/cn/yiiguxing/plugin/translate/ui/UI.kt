@@ -20,6 +20,7 @@ import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JEditorPane
 import javax.swing.border.Border
+import javax.swing.text.JTextComponent
 
 /**
  * UI
@@ -66,8 +67,8 @@ object UI {
         setHoveringIcon(IconUtil.darker(baseIcon, 3))
     }
 
-    fun migLayout(gapX: String = "0!", gapY: String = "0!", insets: String = "0") =
-        MigLayout(LC().fill().gridGap(gapX, gapY).insets(insets))
+    fun migLayout(gapX: String = "0!", gapY: String = "0!", insets: String = "0", lcBuilder: (LC.() -> Unit)? = null) =
+        MigLayout(LC().fill().gridGap(gapX, gapY).insets(insets).also { lcBuilder?.invoke(it) })
 
     fun migLayoutVertical() =
         MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
@@ -101,7 +102,7 @@ object UI {
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 
-    fun createHint(content: String, componentWidth: Int = 300, hintForComponent: JComponent? = null): JComponent =
+    fun createHint(content: String, componentWidth: Int = 300, hintForComponent: JComponent? = null): JTextComponent =
         JEditorPane().apply {
             isEditable = false
             isFocusable = false
