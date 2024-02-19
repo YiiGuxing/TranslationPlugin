@@ -23,6 +23,8 @@ object WebPages {
         return "$baseUrl/#$langPath/${path.joinToString("/")}"
     }
 
+    fun home(locale: Locale = Locale.getDefault()): String = get(locale = locale)
+
     fun docs(locale: Locale = Locale.getDefault()): String = get("docs", locale = locale)
 
     fun updates(version: String = "", locale: Locale = Locale.getDefault()): String {
