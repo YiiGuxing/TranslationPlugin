@@ -66,7 +66,7 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         }
 
         val messages = getChatCompletionMessages(text, srcLang, targetLang, isFofDocumentation)
-        val chatCompletion = OpenAIService.get(settings).chatCompletion(messages)
+        val chatCompletion = OpenAIService.get(settings.getOptions()).chatCompletion(messages)
         var result = chatCompletion.choices.first().message!!.content
         if (!isFofDocumentation && result.length > 1 && result.first() == '"' && result.last() == '"') {
             result = result.substring(1, result.lastIndex)
@@ -102,8 +102,12 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun getCacheKey(text: String, srcLang: Lang, targetLang: Lang): String {
-        val model = settings.model
         val provider = settings.provider
+        val model = when (val options = settings.getOptions(provider)) {
+            is OpenAIService.OpenAIOptions -> options.model.value
+            is OpenAIService.AzureOptions -> options.deploymentId ?: ""
+        }
+
         return "$id$provider$model$text$srcLang$targetLang".md5()
     }
 

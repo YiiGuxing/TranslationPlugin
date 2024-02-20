@@ -15,7 +15,7 @@ import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredentials
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettings
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
+import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
