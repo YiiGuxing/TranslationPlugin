@@ -40,7 +40,7 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
 
     override val apiEndpointField: ExtendableTextField = ExtendableTextField()
 
-    private val apiModelLabel = JLabel(message("openai.settings.dialog.label.api.model"))
+    private val apiModelLabel = JLabel(message("openai.settings.dialog.label.model"))
     override val apiModelComboBox: ComboBox<OpenAIModel> =
         ComboBox(CollectionComboBoxModel(OpenAIModel.values().toList())).apply {
             renderer = SimpleListCellRenderer.create { label, model, _ ->
@@ -72,7 +72,7 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
     private fun layout() {
         val comboboxCC = UI.wrap().width(UI.migSize((MAX_WIDTH * 0.5).toInt()))
         form.maximumSize = JBUI.size(MAX_WIDTH, Integer.MAX_VALUE)
-        form.add(JLabel(message("openai.settings.dialog.label.api.provider")))
+        form.add(JLabel(message("openai.settings.dialog.label.provider")))
         form.add(providerComboBox, comboboxCC)
         form.add(apiModelLabel)
         form.add(apiModelComboBox, comboboxCC)
@@ -82,7 +82,7 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
         val fillX = UI.fillX().wrap()
         form.add(azureDeploymentLabel)
         form.add(azureDeploymentField, fillX)
-        form.add(JLabel(message("openai.settings.dialog.label.api.endpoint")))
+        form.add(JLabel(message("openai.settings.dialog.label.endpoint")))
         form.add(apiEndpointField, fillX)
         form.add(JLabel(message("openai.settings.dialog.label.api.key")))
         form.add(apiKeyField, fillX)

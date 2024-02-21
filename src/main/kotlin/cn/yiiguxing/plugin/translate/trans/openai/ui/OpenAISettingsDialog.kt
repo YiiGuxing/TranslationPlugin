@@ -147,12 +147,12 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             val endpoint = it.text
             when {
                 provider != ServiceProvider.OpenAI && endpoint.isNullOrEmpty() -> ValidationInfo(
-                    message("openai.settings.dialog.error.missing.api.endpoint"),
+                    message("openai.settings.dialog.error.missing.endpoint"),
                     it
                 ).asWarning().withOKEnabled()
 
                 !endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI) -> ValidationInfo(
-                    message("openai.settings.dialog.error.invalid.api.endpoint"),
+                    message("openai.settings.dialog.error.invalid.endpoint"),
                     it
                 )
 
