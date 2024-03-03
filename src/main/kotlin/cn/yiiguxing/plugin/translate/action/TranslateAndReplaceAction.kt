@@ -25,16 +25,13 @@ import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.PerformInBackgroundOption
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.TaskInfo
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.ReadonlyStatusHandler
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx
 import com.intellij.ui.JBColor
 import com.intellij.util.concurrency.EdtScheduledExecutorService
 import java.lang.ref.WeakReference
@@ -107,39 +104,15 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val processedText = text.trim().let { if (!it.contains(WHITESPACE)) it.splitWords() else it }
         val primaryLanguage = TranslateService.translator.primaryLanguage
 
-        val indicatorTitle = message("action.TranslateAndReplaceAction.description")
-        val progressIndicator = BackgroundableProcessIndicator(
-            project, indicatorTitle,
-            PerformInBackgroundOption.ALWAYS_BACKGROUND,
-            null,
-            "",
-            true
-        )
-        progressIndicator.text = message("action.TranslateAndReplaceAction.task.text")
-        progressIndicator.text2 = message("action.TranslateAndReplaceAction.task.text2", processedText)
-        progressIndicator.addStateDelegate(ProcessIndicatorDelegate(progressIndicator))
-
-        fun checkProcessCanceledAndEditorDisposed(): Boolean {
-            if (progressIndicator.isCanceled) {
-                // no need to finish the progress indicator,
-                // because it's already finished in the delegate.
-                return true
-            }
-            if ((project != null && project.isDisposed) || editorRef.get().let { it == null || it.isDisposed }) {
-                progressIndicator.processFinish()
-                return true
-            }
-            return false
-        }
-
+        val indicator = Indicator(project, editorRef).apply { setProgressText(processedText) }
         val modalityState = ModalityState.current()
         fun translate(targetLang: Lang, reTranslate: Boolean = false) {
-            if (checkProcessCanceledAndEditorDisposed()) {
+            if (indicator.checkProcessCanceledAndEditorDisposed()) {
                 return
             }
             TranslateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
                 override fun onSuccess(translation: Translation) {
-                    if (checkProcessCanceledAndEditorDisposed()) {
+                    if (indicator.checkProcessCanceledAndEditorDisposed()) {
                         return
                     }
                     if (reTranslate
@@ -155,18 +128,18 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                                 .schedule({ translate(primaryLanguage) }, delay.toLong(), TimeUnit.MILLISECONDS)
                         }
                     } else {
-                        progressIndicator.processFinish()
+                        indicator.processFinish()
                         val elementsToReplace = createReplaceElements(translation, language)
                         editorRef.get()?.showResultsIfNeeds(selectionRange, text, elementsToReplace)
                     }
                 }
 
                 override fun onError(throwable: Throwable) {
-                    if (checkProcessCanceledAndEditorDisposed()) {
+                    if (indicator.checkProcessCanceledAndEditorDisposed()) {
                         return
                     }
 
-                    progressIndicator.processFinish()
+                    indicator.processFinish()
                     editorRef.get()?.showResultsIfNeeds(selectionRange, text, emptyList())
                     TranslationNotifications.showTranslationErrorNotification(
                         project, message("translate.and.replace.notification.title"), null, throwable
@@ -184,23 +157,49 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     }
 
 
-    private class ProcessIndicatorDelegate(
-        private val progressIndicator: BackgroundableProcessIndicator,
-    ) : AbstractProgressIndicatorBase(), ProgressIndicatorEx {
-        override fun cancel() {
-            // 在用户取消的时候使`progressIndicator`立即结束并且不再显示，否则需要等待任务结束才能跟着结束
-            progressIndicator.processFinish()
+    private class Indicator(
+        val project: Project?,
+        val editorRef: WeakReference<Editor>
+    ) : BackgroundableProcessIndicator(
+        project,
+        message("action.TranslateAndReplaceAction.description"),
+        PerformInBackgroundOption.ALWAYS_BACKGROUND,
+        null,
+        null,
+        true
+    ) {
+
+        init {
+            initDelegate()
+            start()
+            isIndeterminate = true
+            text = message("action.TranslateAndReplaceAction.task.text")
         }
 
-        override fun isCanceled(): Boolean = true
-        override fun finish(task: TaskInfo) = Unit
-        override fun isFinished(task: TaskInfo): Boolean = true
-        override fun wasStarted(): Boolean = false
-        override fun processFinish() = Unit
-        override fun initStateFrom(indicator: ProgressIndicator) = Unit
+        private fun initDelegate() {
+            addStateDelegate(object : AbstractProgressIndicatorExBase() {
+                override fun cancel() {
+                    // 在用户取消的时候使`progressIndicator`立即结束并且不再显示
+                    this@Indicator.processFinish()
+                }
+            })
+        }
 
-        override fun addStateDelegate(delegate: ProgressIndicatorEx) {
-            throw UnsupportedOperationException()
+        fun setProgressText(text: String) {
+            text2 = message("action.TranslateAndReplaceAction.task.text2", text)
+        }
+
+        fun checkProcessCanceledAndEditorDisposed(): Boolean {
+            if (isCanceled) {
+                // no need to finish the progress indicator,
+                // because it's already finished in the delegate.
+                return true
+            }
+            if ((project != null && project.isDisposed) || editorRef.get().let { it == null || it.isDisposed }) {
+                processFinish()
+                return true
+            }
+            return false
         }
     }
 

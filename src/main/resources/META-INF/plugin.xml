@@ -26,7 +26,8 @@
     <depends optional="true" config-file="docs/python-doc.xml">com.intellij.modules.python</depends>
     <depends optional="true" config-file="docs/rest-doc.xml">com.jetbrains.restClient</depends>
     <depends optional="true" config-file="docs/ruby-doc.xml">com.intellij.modules.ruby</depends>
-    <depends optional="true" config-file="docs/rust-doc.xml">org.rust.lang</depends>
+    <depends optional="true" config-file="docs/rust-doc.xml">com.jetbrains.rust</depends>
+    <depends optional="true" config-file="docs/rust-doc2.xml">org.rust.lang</depends>
     <depends optional="true" config-file="docs/scala-doc.xml">org.intellij.scala</depends>
     <depends optional="true" config-file="docs/shell-doc.xml">com.jetbrains.sh</depends>
     <depends optional="true" config-file="docs/sql-doc.xml">com.intellij.modules.sql</depends>
@@ -59,9 +60,12 @@
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
 
         <applicationConfigurable groupId="tools"
+                                 displayName="Translation"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
 
-        <statusBarWidgetFactory implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
+        <statusBarWidgetFactory id="Translation.Widget"
+                                order="before LineSeparator, after Position, before lineSeparatorWidget, after positionWidget"
+                                implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
         <toolWindow id="Translation.Wordbook"
                     icon="TranslationIcons.Wordbook"
                     anchor="right"
@@ -80,7 +84,7 @@
         <errorHandler implementation="cn.yiiguxing.plugin.translate.diagnostic.ReportSubmitter"/>
 
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
-        <notificationGroup id="Documentation translation failed" displayType="NONE" isLogByDefault="true"/>
+        <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Translation Plugin updated" displayType="STICKY_BALLOON" isLogByDefault="false"/>
 

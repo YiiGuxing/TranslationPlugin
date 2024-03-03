@@ -22,6 +22,7 @@ import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
 import icons.TranslationIcons
+import java.util.*
 import javax.swing.Icon
 
 enum class TranslationEngine(
@@ -87,8 +88,7 @@ enum class TranslationEngine(
         }
     }
 
-    private fun isConfigured(settings: AppKeySettings) =
-        settings.appId.isNotEmpty() && settings.getAppKey().isNotEmpty()
+    private fun isConfigured(settings: AppKeySettings) = settings.appId.isNotEmpty() && settings.isAppKeySet
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {
@@ -122,4 +122,9 @@ enum class TranslationEngine(
         }
     }
 
+    companion object {
+        val DEFAULT: TranslationEngine by lazy {
+            if (Locale.getDefault() == Locale.CHINA) MICROSOFT else GOOGLE
+        }
+    }
 }

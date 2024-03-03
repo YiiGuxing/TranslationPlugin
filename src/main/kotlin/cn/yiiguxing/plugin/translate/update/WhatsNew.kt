@@ -23,29 +23,33 @@ internal object WhatsNew {
 
     val canBrowseInHTMLEditor: Boolean get() = JBCefApp.isSupported()
 
-    fun browse(version: Version, project: Project?) {
+    fun browse(project: Project?, url: (Boolean) -> String) {
         if (project != null && canBrowseInHTMLEditor) {
             invokeLater(ModalityState.NON_MODAL, expired = project.disposed) {
                 try {
                     HTMLEditorProvider.openEditor(
                         project,
                         adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation"),
-                        version.getWhatsNewUrl(),
+                        url(false),
                         //language=HTML
                         """<div style="text-align: center;padding-top: 3rem">
                             |<div style="padding-top: 1rem; margin-bottom: 0.8rem;">Failed to load!</div>
-                            |<div><a href="${version.getWhatsNewUrl(true)}" target="_blank"
+                            |<div><a href="${url(true)}" target="_blank"
                             |        style="font-size: 2rem">Open in browser</a></div>
                             |</div>""".trimMargin()
                     )
                 } catch (e: Throwable) {
                     LOG.w("""Failed to load "What's New" page""", e)
-                    BrowserUtil.browse(version.getWhatsNewUrl(true))
+                    BrowserUtil.browse(url(true))
                 }
             }
         } else {
-            BrowserUtil.browse(version.getWhatsNewUrl(true))
+            BrowserUtil.browse(url(true))
         }
+    }
+
+    fun browse(version: Version, project: Project?) {
+        browse(project) { version.getWhatsNewUrl(it) }
     }
 
     private fun Version.getWhatsNewUrl(frame: Boolean = false, locale: Locale = Locale.getDefault()): String {

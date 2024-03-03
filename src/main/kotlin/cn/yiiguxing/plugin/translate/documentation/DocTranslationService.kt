@@ -45,8 +45,8 @@ internal class DocTranslationService : Disposable {
     }
 
     override fun dispose() {
-        translationStates.evictAll()
         inlayDocTranslations.clear()
+        translationStates.evictAll()
     }
 
 

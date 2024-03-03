@@ -29,17 +29,3 @@
     <li>Automatic word division.</li>
     <li>Word book.</li>
 </ul>
-<h2>Sponsors</h2>
-<a title="JetBrains" href="https://www.jetbrains.com/?from=TranslationPlugin">
-  <img border="0" src="https://yiiguxing.gitee.io/translation-plugin/img/ext/sponsor_jetbrains.png" width="131" alt="JetBrains">
-</a>
-<p>Whatever platform or language you work with, JetBrains has a development tool for you.</p>
-<br/>
-<a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">
-  <img border="0" src="https://alt-images.codestream.com/codestream_logo_translation.png" width="198" height="50" alt="CodeStream">
-</a>
-<p>
-Eliminate context switching and costly distractions. Create and merge PRs and perform code reviews from inside your
-IDE while using jump-to-definition, your keybindings, and other IDE favorites.
-<a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=jbmarket&amp;utm_campaign=translation&amp;utm_medium=banner">Learn more</a>.
-</p>

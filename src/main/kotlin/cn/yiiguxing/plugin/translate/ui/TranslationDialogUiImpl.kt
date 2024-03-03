@@ -1,8 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
-import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
@@ -13,7 +10,6 @@ import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
-import com.intellij.ui.GotItTooltip
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.labels.LinkLabel
@@ -100,7 +96,6 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         layoutTopPanel()
         layoutMainPanel()
         setButtonIcons()
-        setupTooltips()
 
         return mRoot
     }
@@ -280,6 +275,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     }
 
     private fun createSpellComponent(): SpellComponent = SpellComponent().apply {
+        preferredSize = JBDimension(350, -1)
         spellText.apply {
             font = font.deriveFont(Font.BOLD, spellLabel.font.size.toFloat())
         }
@@ -291,14 +287,6 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
         starButton.setIcons(TranslationIcons.GrayStarOff)
-    }
-
-    private fun setupTooltips() {
-        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai"
-        val message = message("got.it.tooltip.text.new.translation.engines")
-        GotItTooltip(id, message, this)
-            .withHeader(message("got.it.tooltip.title.new.translation.engines"))
-            .show(settingsButton, GotItTooltipPosition.BOTTOM)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =
@@ -359,6 +347,7 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
 
     override fun dispose() {
         Disposer.dispose(progressIcon)
+        Disposer.dispose(translationFailedComponent)
     }
 
     private class TranslationTextArea(background: Color) : JBTextArea(1, 1) {

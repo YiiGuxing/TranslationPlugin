@@ -69,6 +69,12 @@ open class LruCache<K, V>(maxSize: Int) {
         private set
         @Synchronized get
 
+    private var putInCreationCount: Int = 0
+    private var removeCount: Int = 0
+    private var removeInRemoveIfCount: Int = 0
+    private var removeInPutCount: Int = 0
+    private var removeInEvictionCount: Int = 0
+
     /**
      * The number of times [.get][get] returned a value that was already present in the cache.
      */
@@ -147,6 +153,7 @@ open class LruCache<K, V>(maxSize: Int) {
                 map[key] = previous
             } else {
                 size += safeSizeOf(key, createdValue)
+                putInCreationCount++
             }
             previous
         }
@@ -170,8 +177,9 @@ open class LruCache<K, V>(maxSize: Int) {
         val previous: V? = synchronized(this) {
             putCount++
             size += safeSizeOf(key, value)
-            map.put(key, value)?.apply {
-                size -= safeSizeOf(key, this@apply)
+            map.put(key, value)?.also {
+                size -= safeSizeOf(key, it)
+                removeInPutCount++
             }
         }
         previous?.let {
@@ -183,17 +191,18 @@ open class LruCache<K, V>(maxSize: Int) {
     }
 
     /**
-     * Remove the eldest entries until the total of remaining entries is at or
-     * below the requested size.
+     * Remove the eldest entries until the total of remaining entries is at or below the requested size.
      *
-     * @param maxSize the maximum size of the cache before returning. May be -1
-     * to evict even 0-sized elements.
+     * @param maxSize the maximum size of the cache before returning. Maybe -1 to evict even 0-sized elements.
      */
     fun trimToSize(maxSize: Int) {
         while (true) {
             val toEvict = synchronized(this) {
                 check(!(size < 0 || map.isEmpty() && size != 0)) {
-                    javaClass.name + ".sizeOf() is reporting inconsistent results!"
+                    "${javaClass.name}.sizeOf() is reporting inconsistent results! " +
+                            "$this, size=$size, putCount=$putCount, putInCreationCount=$putInCreationCount, " +
+                            "createCount=$createCount, removeCount=$removeCount, removeInPutCount=$removeInPutCount, " +
+                            "removeInRemoveIfCount=$removeInRemoveIfCount, removeInEvictionCount=$removeInEvictionCount."
                 }
 
                 if (size <= maxSize || map.isEmpty()) {
@@ -203,6 +212,7 @@ open class LruCache<K, V>(maxSize: Int) {
                 val toEvict = map.entries.iterator().next()
                 map.remove(toEvict.key)
                 size -= safeSizeOf(toEvict.key, toEvict.value)
+                removeInEvictionCount++
                 evictionCount++
                 toEvict
             }
@@ -217,14 +227,13 @@ open class LruCache<K, V>(maxSize: Int) {
      * @return the previous value mapped by [key].
      */
     fun remove(key: K & Any): V? {
-        val previous: V? = synchronized(this) {
-            map.remove(key)?.apply {
-                size -= safeSizeOf(key, this@apply)
+        return synchronized(this) {
+            map.remove(key)?.also { previous ->
+                size -= safeSizeOf(key, previous)
+                removeCount++
             }
-        }
-
-        return previous?.apply {
-            entryRemoved(false, key, this@apply, null)
+        }?.also { previous ->
+            entryRemoved(false, key, previous, null)
         }
     }
 
@@ -234,21 +243,21 @@ open class LruCache<K, V>(maxSize: Int) {
     fun removeIf(predicate: (K & Any, V & Any) -> Boolean): Set<Map.Entry<K & Any, V & Any>> {
         val removed = LinkedHashSet<Map.Entry<K & Any, V & Any>>()
         synchronized(this) {
-            var removedSize = 0
-            map.entries.removeIf { entry ->
-                predicate(entry.key, entry.value).also { remove ->
-                    if (remove) {
-                        removed.add(entry)
-                        removedSize += safeSizeOf(entry.key, entry.value)
-                    }
+            val each = map.entries.iterator()
+            while (each.hasNext()) {
+                val entry = each.next()
+                if (predicate(entry.key, entry.value)) {
+                    each.remove()
+                    size -= safeSizeOf(entry.key, entry.value)
+                    removeInRemoveIfCount++
+                    removed.add(entry)
                 }
             }
-            size -= removedSize
         }
 
         if (removed.isNotEmpty()) {
-            removed.forEach {
-                entryRemoved(false, it.key, it.value, null)
+            removed.forEach { (key, value) ->
+                entryRemoved(false, key, value, null)
             }
         }
 

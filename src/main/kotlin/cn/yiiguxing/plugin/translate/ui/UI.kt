@@ -101,23 +101,26 @@ object UI {
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 
-    fun createHint(content: String, componentWidth: Int = 300): JComponent = JEditorPane().apply {
-        isEditable = false
-        isFocusable = false
-        isOpaque = false
-        foreground = JBUI.CurrentTheme.Label.disabledForeground()
-        font = JBFont.label().lessOn(1f)
-        editorKit = UIUtil.getHTMLEditorKit()
-        border = JBUI.Borders.emptyTop(2)
-        UIUtil.enableEagerSoftWrapping(this)
-        text = content
+    fun createHint(content: String, componentWidth: Int = 300, hintForComponent: JComponent? = null): JComponent =
+        JEditorPane().apply {
+            isEditable = false
+            isFocusable = false
+            isOpaque = false
+            foreground = JBUI.CurrentTheme.Label.disabledForeground()
+            font = JBFont.label().lessOn(1f)
+            editorKit = UIUtil.getHTMLEditorKit()
+            border = hintForComponent?.insets.let {
+                JBUI.Borders.empty(2, it?.left ?: 0, 0, it?.right ?: 0)
+            }
+            UIUtil.enableEagerSoftWrapping(this)
+            text = content
 
-        val scaledComponentWidth = componentWidth.scaled
-        /* Arbitrary large height, that doesn't lead to overflows and precision loss */
-        setSize(scaledComponentWidth, 10000000)
-        // trigger internal layout and reset preferred size
-        preferredSize = Dimension(scaledComponentWidth, preferredSize.height)
+            val scaledComponentWidth = componentWidth.scaled
+            /* Arbitrary large height, that doesn't lead to overflows and precision loss */
+            setSize(scaledComponentWidth, 10000000)
+            // trigger internal layout and reset preferred size
+            preferredSize = Dimension(scaledComponentWidth, preferredSize.height)
 
-        addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
-    }
+            addHyperlinkListener(BrowserHyperlinkListener.INSTANCE)
+        }
 }

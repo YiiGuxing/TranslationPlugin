@@ -23,5 +23,5 @@ fun mayTranslateWithNoSelection(e: AnActionEvent): Boolean {
 
 fun showReplacementActionInContextMenu(e: AnActionEvent): Boolean {
     val isContextMenu = e.place == ActionPlaces.EDITOR_POPUP
-    return !isContextMenu || Settings.showReplacementActionInContextMenu
+    return !isContextMenu || Settings.showReplacementAction
 }

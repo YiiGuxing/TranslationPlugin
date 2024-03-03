@@ -46,7 +46,7 @@ private val borderColor: String
     get() = (UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR).toRGBHex()
 
 
-class UpdateManager : BaseStartupActivity() {
+class UpdateManager : BaseStartupActivity(true) {
 
     companion object {
         internal const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin updated"
@@ -78,8 +78,9 @@ class UpdateManager : BaseStartupActivity() {
             return
         }
 
+        val isFirstInstallation = lastVersionString == Version.INITIAL_VERSION
         val isFeatureVersion = version.isFeatureUpdateOf(lastVersion)
-        if (showUpdateNotification(project, plugin, version, isFeatureVersion)) {
+        if (showUpdateNotification(project, plugin, version, isFeatureVersion, isFirstInstallation)) {
             properties.setValue(VERSION_PROPERTY, versionString)
         }
     }
@@ -88,7 +89,8 @@ class UpdateManager : BaseStartupActivity() {
         project: Project,
         plugin: IdeaPluginDescriptor,
         version: Version,
-        isFeatureVersion: Boolean
+        isFeatureVersion: Boolean,
+        isFirstInstallation: Boolean
     ): Boolean {
         val title = message(
             "plugin.name.updated.to.version.notification.title",
@@ -120,6 +122,7 @@ class UpdateManager : BaseStartupActivity() {
             .createNotification(content, NotificationType.INFORMATION)
             .setTitle(title)
             .setImportant(true)
+            .setIcon(TranslationIcons.Logo)
             .apply {
                 setListener(Notifications.UrlOpeningListener(false))
             }
@@ -131,7 +134,12 @@ class UpdateManager : BaseStartupActivity() {
             .addAction(GetStartedAction())
             .addAction(SupportAction())
             .whenExpired {
-                if (!version.isRreRelease && isFeatureVersion && canBrowseWhatsNewInHTMLEditor) {
+                if (!canBrowseWhatsNewInHTMLEditor) {
+                    return@whenExpired
+                }
+                if (isFirstInstallation) {
+                    WhatsNew.browse(project) { WebPages.home() }
+                } else if (!version.isRreRelease && isFeatureVersion) {
                     WhatsNew.browse(version, project)
                 }
             }

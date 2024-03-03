@@ -81,23 +81,6 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
         }
     }
 
-    private fun processAndTranslateDocumentation(
-        documentation: Document,
-        translate: (String) -> String
-    ): Document {
-        val body = documentation.body()
-        val content = body.html()
-        if (content.isBlank()) {
-            return documentation
-        }
-
-        val translation = translate(content)
-
-        body.html(translation)
-
-        return documentation
-    }
-
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
         val client = SimpleTranslateClient(
             this,

@@ -25,9 +25,9 @@ data class AliTranslation(
 
     override fun toTranslation(): Translation {
         check(isSuccessful) { "Cannot convert to Translation: errorCode=${code}" }
-        check(data.translation.isNotEmpty()) { "Cannot convert to Translation: data.translation = null" }
 
-        return Translation(query, data.translation, src, target, listOf(src))
+        val translation = data.translation.takeIf { it.isNotEmpty() } ?: query
+        return Translation(query, translation, src, target, listOf(src))
     }
 }
 

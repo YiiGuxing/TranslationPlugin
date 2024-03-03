@@ -58,7 +58,14 @@ internal class MicrosoftTranslatorService {
         val promise = asyncLatch { latch ->
             runAsync {
                 latch.await(100, TimeUnit.MILLISECONDS)
-                Http.get(AUTH_URL) { userAgent() }
+                Http.get(AUTH_URL) {
+                    accept("*/*")
+                    userAgent()
+                }.also {
+                    if (!it.matches(JWT_REGEX)) {
+                        throw MicrosoftAuthenticationException("Authentication failed: Invalid token.")
+                    }
+                }
             }
                 .onError { LOG.w("Failed to get access token", it) }
                 .onSuccess(::updateAccessToken)
@@ -89,7 +96,7 @@ internal class MicrosoftTranslatorService {
 
             LOG.warn("Authentication failed", e)
             val ex = if (e is ExecutionException) e.cause ?: e else e
-            throw if (ex is IOException) {
+            throw if (ex !is MicrosoftAuthenticationException && ex is IOException) {
                 MicrosoftAuthenticationException("Authentication failed: ${ex.getCommonMessage()}", ex)
             } else ex
         }
@@ -123,6 +130,8 @@ internal class MicrosoftTranslatorService {
 
         private val GSON: Gson = Gson()
         private val LOG: Logger = logger<MicrosoftTranslatorService>()
+
+        private val JWT_REGEX = Regex("""^[a-zA-Z0-9\-_]+(\.[a-zA-Z0-9\-_]+){2}$""")
 
         /**
          * Returns the [MicrosoftTranslatorService] instance.

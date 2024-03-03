@@ -62,7 +62,6 @@ fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
     listOf(
         GDict(
             "noun",
-            listOf("翻译", "翻", "解答"),
             listOf(
                 GDictEntry(
                     "翻译",

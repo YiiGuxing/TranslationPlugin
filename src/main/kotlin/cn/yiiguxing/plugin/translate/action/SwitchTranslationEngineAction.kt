@@ -2,12 +2,21 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
+import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import com.intellij.ide.DataManager
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.JBPopup
-import com.intellij.openapi.ui.popup.ListPopup
-import com.intellij.openapi.util.Condition
+import com.intellij.openapi.util.Disposer
+import com.intellij.ui.AnimatedIcon
+import org.jetbrains.concurrency.runAsync
+import java.awt.event.ActionEvent
 import javax.swing.JComponent
 
 
@@ -16,51 +25,105 @@ import javax.swing.JComponent
  */
 class SwitchTranslationEngineAction : ComboBoxAction(), DumbAware, PopupAction {
 
-    private var lastPopupTitle: String? = null
+    private var disposable: Disposable? = null
+
+    @Volatile
+    private var isActionPerforming = false
+
+    @Volatile
+    private var isButtonActionPerforming = false
 
     init {
-        setPopupTitle(message("translation.engines.popup.title"))
         isEnabledInModalContext = true
         templatePresentation.text = message("action.SwitchTranslationEngineAction.text")
         templatePresentation.description = message("action.SwitchTranslationEngineAction.description")
     }
 
-    override fun setPopupTitle(popupTitle: String?) {
-        super.setPopupTitle(popupTitle)
-        lastPopupTitle = popupTitle
+    private fun getDisposable(): Disposable {
+        disposable?.let { Disposer.dispose(it) }
+        return Disposer.newDisposable("${javaClass.name}#Disposable").also { disposable = it }
     }
 
     override fun update(e: AnActionEvent) {
-        TranslateService.translator.let {
-            e.presentation.text = it.name
-            e.presentation.icon = it.icon
-        }
-    }
-
-    override fun getPreselectCondition(): Condition<AnAction> = TranslationEngineAction.PRESELECT_CONDITION
-
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup = TranslationEngineActionGroup()
-
-    override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
-        return object : ComboBoxButton(presentation) {
-            override fun createPopup(onDispose: Runnable?): JBPopup {
-                val originalPopupTitle = lastPopupTitle
-                setPopupTitle(null)
-                val popup = super.createPopup(onDispose)
-                setPopupTitle(originalPopupTitle)
-                return popup
+        TranslateService.translator.let { translator ->
+            e.presentation.text = translator.name
+            e.presentation.icon = if (isActionPerforming || isButtonActionPerforming) {
+                AnimatedIcon.Default.INSTANCE
+            } else {
+                translator.icon
             }
         }
     }
 
-    override fun shouldShowDisabledActions(): Boolean = true
+    override fun actionPerformed(e: AnActionEvent) {
+        val project = e.project ?: return
+        if (isActionPerforming) {
+            return
+        }
+
+        isActionPerforming = true
+        val component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT)
+        val expireDisposable = getDisposable()
+        runAsync { TranslationEngineActionGroup() }
+            .expireWith(expireDisposable)
+            .successOnUiThread { group ->
+                if (isActionPerforming && !project.isDisposed) {
+                    val dataContext = DataManager.getInstance().getDataContext(component)
+                    group.createActionPopup(dataContext).showCenteredInCurrentWindow(project)
+                }
+            }
+            .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }
+    }
+
+    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
+        throw UnsupportedOperationException()
+    }
+
+    override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
+        return SwitchTranslationEngineComboBoxButton(presentation)
+    }
 
 
-    companion object {
-        fun createTranslationEnginesPopup(
-            context: DataContext,
-            title: String? = message("translation.engines.popup.title"),
-            disposeCallback: Runnable? = null
-        ): ListPopup = TranslationEngineActionGroup().createActionPopup(context, title, disposeCallback)
+    private inner class SwitchTranslationEngineComboBoxButton(presentation: Presentation) :
+        ComboBoxButton(presentation) {
+        private var actionGroup: TranslationEngineActionGroup? = null
+
+        override fun createPopup(onDispose: Runnable?): JBPopup {
+            return checkNotNull(actionGroup) { "Action group is null." }
+                .createActionPopup(dataContext, null, onDispose)
+        }
+
+        override fun showPopup() {
+            try {
+                if (isButtonActionPerforming) {
+                    super.showPopup()
+                }
+            } finally {
+                actionGroup = null
+                isButtonActionPerforming = false
+            }
+        }
+
+        override fun fireActionPerformed(event: ActionEvent) {
+            if (isButtonActionPerforming) {
+                return
+            }
+
+            isButtonActionPerforming = true
+            val expireDisposable = getDisposable()
+            Disposer.register(expireDisposable) { isButtonActionPerforming = false }
+            runAsync { TranslationEngineActionGroup() }
+                .expireWith(expireDisposable)
+                .successOnUiThread { group ->
+                    if (isButtonActionPerforming && isShowing) {
+                        actionGroup = group
+                        super.fireActionPerformed(event)
+                    } else {
+                        isButtonActionPerforming = false
+                    }
+                }
+                .errorOnUiThread(ModalityState.any()) { isButtonActionPerforming = false }
+                .finishOnUiThread(ModalityState.any()) { disposable = null }
+        }
     }
 }

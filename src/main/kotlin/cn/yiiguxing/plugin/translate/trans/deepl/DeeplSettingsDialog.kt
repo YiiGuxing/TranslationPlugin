@@ -5,7 +5,9 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.util.getCommonMessage
 import cn.yiiguxing.plugin.translate.util.w
@@ -45,6 +47,8 @@ class DeeplSettingsDialog : DialogWrapper(false) {
     private var currentService: DeeplService? = null
     private val alarm: Alarm = Alarm(disposable)
 
+    private var isOK: Boolean = false
+
     private var authKey: String?
         get() = authKeyField.password
             ?.takeIf { it.isNotEmpty() }
@@ -58,9 +62,7 @@ class DeeplSettingsDialog : DialogWrapper(false) {
         title = message("deepl.settings.dialog.title")
         setResizable(false)
         init()
-
         updateUsageInfo(null)
-        authKey = DeeplCredential.authKey
         initListeners()
     }
 
@@ -88,7 +90,7 @@ class DeeplSettingsDialog : DialogWrapper(false) {
             add(JLabel(message("deepl.settings.dialog.label.auth.key")))
             add(authKeyField, UI.fillX().width(UI.migSize(authKeyFieldWidth)).wrap())
             add(
-                UI.createHint(message("deepl.settings.dialog.hint"), authKeyFieldWidth),
+                UI.createHint(message("deepl.settings.dialog.hint"), authKeyFieldWidth, authKeyField),
                 UI.cc().cell(1, 1).wrap()
             )
         }
@@ -150,15 +152,15 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
         val dialogRef = DisposableRef.create(disposable, this)
         runAsync { service.getUsage() }
+            .expireWith(disposable)
             .successOnUiThread(dialogRef) { dialog, usage ->
                 dialog.postUsageInfo(service, usage)
-                dialogRef.disposeSelf()
             }
             .errorOnUiThread(dialogRef) { dialog, error ->
                 thisLogger().w("Failed to get usage info.", error)
                 dialog.postUsageInfo(service, null, error)
-                dialogRef.disposeSelf()
             }
+            .disposeAfterProcessing(dialogRef)
     }
 
     private fun postUsageInfo(service: DeeplService, usage: DeeplService.Usage?, throwable: Throwable? = null) {
@@ -186,16 +188,27 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
     override fun show() {
         // This is a modal dialog, so it needs to be invoked later.
-        SwingUtilities.invokeLater { doGetUsageInfo() }
+        SwingUtilities.invokeLater {
+            val dialogRef = DisposableRef.create(disposable, this)
+            runAsync { DeeplCredential.authKey to DeeplCredential.isAuthKeySet }
+                .expireWith(disposable)
+                .successOnUiThread(dialogRef) { dialog, (key, isAuthKeySet) ->
+                    dialog.authKey = key
+                    dialog.isOK = isAuthKeySet
+                    dialog.doGetUsageInfo()
+                }
+                .disposeAfterProcessing(dialogRef)
+        }
         super.show()
     }
 
     override fun getHelpId(): String = HelpTopic.DEEPL.id
 
-    override fun isOK(): Boolean = DeeplCredential.isAuthKeySet
+    override fun isOK(): Boolean = isOK
 
     override fun doOKAction() {
         DeeplCredential.authKey = authKey
+        isOK = DeeplCredential.isAuthKeySet
         super.doOKAction()
     }
 }

@@ -8,6 +8,9 @@ import javax.swing.Icon
 object TranslationIcons {
 
     @JvmField
+    val Logo: Icon = load("/icons/logo.svg")
+
+    @JvmField
     val Translation: Icon = load("/icons/translation.svg")
 
     @JvmField
