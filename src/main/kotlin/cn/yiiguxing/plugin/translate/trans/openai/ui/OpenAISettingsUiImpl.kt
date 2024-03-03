@@ -70,14 +70,14 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
     }
 
     private fun layout() {
-        val comboboxCC = UI.wrap().width(UI.migSize((MAX_WIDTH * 0.5).toInt()))
+        val comboBoxCC = UI.wrap().width(UI.migSize((MAX_WIDTH * 0.5).toInt()))
         form.maximumSize = JBUI.size(MAX_WIDTH, Integer.MAX_VALUE)
         form.add(JLabel(message("openai.settings.dialog.label.provider")))
-        form.add(providerComboBox, comboboxCC)
+        form.add(providerComboBox, comboBoxCC)
         form.add(apiModelLabel)
-        form.add(apiModelComboBox, comboboxCC)
+        form.add(apiModelComboBox, comboBoxCC)
         form.add(azureApiVersionLabel)
-        form.add(azureApiVersionComboBox, comboboxCC)
+        form.add(azureApiVersionComboBox, comboBoxCC)
 
         val fillX = UI.fillX().wrap()
         form.add(azureDeploymentLabel)
