@@ -6,7 +6,7 @@ mp3spi = "1.9.5.4"
 junit = "4.13.2"
 
 # plugins
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 kover = "0.7.6"
 qodana = "0.1.13"
 changelog = "2.2.0"
