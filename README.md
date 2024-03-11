@@ -367,6 +367,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 |------------|------------------------------------------------------------|------------|
 | 丿初音        |                                                            | 425.00 CNY |
 | 剑平         |                                                            | 120.00 CNY |
+| 山有扶苏       | [github.com/fobgochod](https://github.com/fobgochod)       | 110.00 CNY |
 | LiMingjun  |                                                            | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm)     | 100.00 CNY |
 | Sunlife95  |                                                            | 100.00 CNY |
@@ -374,7 +375,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 | Rrtt\_2323 |                                                            | 100.00 CNY |
 | 唐嘉         | [github.com/qq1427998646](https://github.com/qq1427998646) | 100.00 CNY |
 | 凌高         |                                                            | 100.00 CNY |
-| Mritd      | [mritd.com](https://mritd.com)                             | 88.88 CNY  |
+
 
 
 [More donors][file:financial-contributors]

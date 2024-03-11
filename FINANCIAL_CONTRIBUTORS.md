@@ -33,6 +33,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | -------- | -------- | ------------ |
 | 丿初音 |  | 425.00 CNY |
 | 剑平 |  | 120.00 CNY |
+| 山有扶苏 | [github.com/fobgochod](https://github.com/fobgochod) | 110.00 CNY |
 | LiMingjun |  | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100.00 CNY |
 | Sunlife95 |  | 100.00 CNY |
@@ -43,6 +44,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88.00 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.60 CNY |
+| 顺其自然 |  | 66.66 CNY |
 | HJC |  | 66.66 CNY |
 | Zzc |  | 66.66 CNY |
 | Joey.Ding | [github.com/dingqianyi2007](https://github.com/dingqianyi2007) | 66.66 CNY |
@@ -81,6 +83,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 嘎辉 |  | 20.00 CNY |
+| Wis |  | 20.00 CNY |
 | 清风 |  | 20.00 CNY |
 | Edik |  | 20.00 CNY |
 | Jbas |  | 20.00 CNY |
@@ -114,6 +118,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua |  | 20.00 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20.00 CNY |
 | Yiyi |  | 20.00 CNY |
+| 向阳 |  | 16.66 CNY |
 | ZDQ |  | 16.66 CNY |
 | 本善之初 |  | 16.66 CNY |
 | Joey |  | 16.66 CNY |
@@ -133,6 +138,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 刘华强 |  | 10.00 CNY |
+| Rock |  | 10.00 CNY |
+| 达华 |  | 10.00 CNY |
 | Tom Andersen |  | 10.00 CNY |
 | Ray |  | 10.00 CNY |
 | 不吃牛肉 |  | 10.00 CNY |
@@ -159,7 +167,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 爱笑的木头人 |  | 10.00 CNY |
 | 路振振 |  | 10.00 CNY |
 | SLYLnguLuu |  | 10.00 CNY |
-| 向阳 |  | 10.00 CNY |
 | 初一十五 |  | 10.00 CNY |
 | 禤诚轩 |  | 10.00 CNY |
 | 栗浩 |  | 10.00 CNY |
@@ -289,6 +296,28 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| Look |  | 6.66 CNY |
+| WeiWei |  | 6.66 CNY |
+| 彭小少 |  | 6.66 CNY |
+| 如今无心心自宽 |  | 6.66 CNY |
+| 你要知道梨子的... |  | 6.66 CNY |
+| Guo |  | 6.66 CNY |
+| 搬砖道人 |  | 6.66 CNY |
+| 7even |  | 6.66 CNY |
+| Sleeping |  | 6.66 CNY |
+| 刘葛曦 |  | 6.66 CNY |
+| Chen |  | 6.66 CNY |
+| 文件专偷助手 |  | 6.66 CNY |
+| & |  | 6.66 CNY |
+| Leejunfong |  | 6.66 CNY |
+| 小于 |  | 6.66 CNY |
+| 什么林子都有 |  | 6.66 CNY |
+| Ruokui |  | 6.66 CNY |
+| 观雨者 |  | 6.66 CNY |
+| Je |  | 6.66 CNY |
+| 轻舟 |  | 6.66 CNY |
+| 第一个五年计划 |  | 6.66 CNY |
+| 郑智允 |  | 6.66 CNY |
 | 杨+2不加价 |  | 6.66 CNY |
 | CocoPiggy |  | 6.66 CNY |
 | Lyndonwang |  | 6.66 CNY |
