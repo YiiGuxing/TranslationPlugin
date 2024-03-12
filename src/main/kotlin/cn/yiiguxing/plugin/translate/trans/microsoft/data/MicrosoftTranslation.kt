@@ -7,7 +7,8 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.fromMicrosoftLanguageCode
 import com.google.gson.annotations.SerializedName
 
 data class MicrosoftTranslation(
-    var sourceText: String,
+    @SerializedName("sourceText")
+    var sourceText: MicrosoftSourceText,
     var sourceLang: Lang,
 
     @SerializedName("detectedLanguage")
@@ -19,7 +20,7 @@ data class MicrosoftTranslation(
     override fun toTranslation(): Translation {
         val translation = translations.first()
         return Translation(
-            sourceText,
+            sourceText.text,
             translation.text,
             detectedLanguage?.language?.let { Lang.fromMicrosoftLanguageCode(it) } ?: sourceLang,
             Lang.fromMicrosoftLanguageCode(translation.to)
