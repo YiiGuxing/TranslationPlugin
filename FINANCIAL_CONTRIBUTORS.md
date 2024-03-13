@@ -138,6 +138,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 罗林 |  | 10.00 CNY |
 | 刘华强 |  | 10.00 CNY |
 | Rock |  | 10.00 CNY |
 | 达华 |  | 10.00 CNY |
