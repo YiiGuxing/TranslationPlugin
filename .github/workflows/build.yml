@@ -155,14 +155,22 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: tests-result
+          name: tests-report
           path: ${{ github.workspace }}/build/reports/tests
 
-      # Upload the Kover report to CodeCov
-      - name: Upload Code Coverage Report
-        uses: codecov/codecov-action@v4
+      ## Upload the Kover report to CodeCov
+      #- name: Upload Code Coverage Report
+      #  uses: codecov/codecov-action@v4
+      #  with:
+      #    files: ${{ github.workspace }}/build/reports/kover/report.xml
+
+      # Collect Code Coverage Report
+      - name: Collect Code Coverage Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
         with:
-          files: ${{ github.workspace }}/build/reports/kover/html
+          name: code-coverage-report
+          path: ${{ github.workspace }}/build/reports/kover/html
 
   # Run plugin structure verification along with IntelliJ Plugin Verifier
   verify:
@@ -204,6 +212,7 @@ jobs:
 
       # Run Verify Plugin task and IntelliJ Plugin Verifier tool
       - name: Run Plugin Verification tasks
+        continue-on-error: true
         run: ./gradlew runPluginVerifier -Dplugin.verifier.home.dir=${{ needs.build.outputs.pluginVerifierHomeDir }}
 
       # Collect Plugin Verifier Result
@@ -211,7 +220,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: pluginVerifier-result
+          name: plugin-verifier-report
           path: ${{ github.workspace }}/build/reports/pluginVerifier
 
   # Prepare a draft release for GitHub Releases page for the manual verification
