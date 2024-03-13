@@ -26,7 +26,7 @@ jobs:
 
       # Setup Java 11 environment for the next steps
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
@@ -63,7 +63,7 @@ jobs:
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
         if: steps.properties.outputs.publishChannel == 'snapshot'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.artifact.outputs.filename }}
           path: ./build/distributions/content/*/*

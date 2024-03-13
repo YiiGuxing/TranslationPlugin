@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Bug fixes.
+- Bug 修复
+
 ## [3.5.6] (2023/11/19)
 
 - Fix the problem of missing required parameters for document translation in the Youdao translation engine.

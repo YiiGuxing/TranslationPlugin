@@ -228,6 +228,12 @@ enum class Lang(
     /** 库尔德语 */
     KURDISH("kurdish", "ku"),
 
+    /** 库尔德语（库尔曼吉语） */
+    KURDISH_KURMANJI("kurdish.kurmanji", "ku"),
+
+    /** 库尔德语（索拉尼） */
+    KURDISH_SORANI("kurdish.sorani", "ckb"),
+
     /** 吉尔吉斯语 */
     KYRGYZ("kyrgyz", "ky"),
 

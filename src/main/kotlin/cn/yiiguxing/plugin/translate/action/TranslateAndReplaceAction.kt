@@ -15,6 +15,7 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -209,6 +210,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     private companion object {
 
+        val logger = logger<TranslateAndReplaceAction>()
+
         /** 谷歌翻译的空格符：`  -   　` */
         val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
 
@@ -272,7 +275,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 }
             }
 
-            scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+            try {
+                scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+            } catch (e: Exception) {
+                logger.w("Failed to scroll to caret.", e)
+            }
             caretModel.moveToOffset(endOffset)
 
             return true

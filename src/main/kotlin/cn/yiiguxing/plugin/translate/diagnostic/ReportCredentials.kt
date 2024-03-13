@@ -6,6 +6,7 @@ import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import org.jetbrains.concurrency.runAsync
 import java.util.*
 
 @Service
@@ -41,15 +42,17 @@ internal class ReportCredentials private constructor() {
         get() = PasswordSafe.instance.get(CredentialAttributes(SERVICE_NAME)) ?: anonymousCredentials
 
     fun clear() {
-        PasswordSafe.instance.set(CredentialAttributes(SERVICE_NAME), null)
+        runAsync { PasswordSafe.instance.set(CredentialAttributes(SERVICE_NAME), null) }
         lastUserName = ""
     }
 
     fun save(userName: String, token: String) {
         check(userName.isNotBlank()) { "User name must not be blank" }
-        val credentials = Credentials(userName, token)
-        val attributes = CredentialAttributes(SERVICE_NAME, userName)
-        PasswordSafe.instance.set(attributes, credentials)
+        runAsync {
+            val credentials = Credentials(userName, token)
+            val attributes = CredentialAttributes(SERVICE_NAME, userName)
+            PasswordSafe.instance.set(attributes, credentials)
+        }
         lastUserName = userName
     }
 

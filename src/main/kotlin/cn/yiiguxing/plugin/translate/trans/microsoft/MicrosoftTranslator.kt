@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftTranslation
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
@@ -65,7 +66,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         return Gson().fromJson<ArrayList<MicrosoftTranslation>>(translation, type)
             .firstOrNull()
             ?.apply {
-                this.sourceText = original
+                this.sourceText = MicrosoftSourceText(original)
                 this.sourceLang = srcLang
             }
             ?.toTranslation()
