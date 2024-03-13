@@ -32,11 +32,11 @@ class TranslationStates : PersistentStateComponent<TranslationStates> {
     var lastReplacementTargetLanguage: Lang? = null
 
     var pinTranslationDialog: Boolean = false
-    var newTranslationDialogX: Int? = null
-    var newTranslationDialogY: Int? = null
-    var newTranslationDialogWidth: Int = 600
-    var newTranslationDialogHeight: Int = 250
-    var newTranslationDialogCollapseDictViewer = true
+    var translationDialogLocationX: Int? = null
+    var translationDialogLocationY: Int? = null
+    var translationDialogWidth: Int = 600
+    var translationDialogHeight: Int = 250
+    var translationDialogCollapseDictViewer = true
 
     /**
      * 最大历史记录长度

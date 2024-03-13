@@ -22,6 +22,7 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.IGBO,
         Lang.JAVANESE,
         Lang.KINYARWANDA,
+        Lang.KURDISH, // 己俱体分为 `库尔德语（库尔曼吉语）` 和 `库尔德语（索拉尼）`
         Lang.LATIN,
         Lang.LUXEMBOURGISH,
         Lang.PORTUGUESE,
@@ -37,6 +38,7 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.YORUBA,
     )
 
+    @Suppress("SpellCheckingInspection")
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "yue" to Lang.CHINESE_CANTONESE,
         "lzh" to Lang.CHINESE_CLASSICAL,
@@ -47,6 +49,8 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         "mww" to Lang.HMONG,
         "mn-Mong" to Lang.MONGOLIAN,
         "nb" to Lang.NORWEGIAN,
+        "kmr" to Lang.KURDISH_KURMANJI,
+        "ku" to Lang.KURDISH_SORANI,
         "pt" to Lang.PORTUGUESE_BRAZILIAN,
     )
 
