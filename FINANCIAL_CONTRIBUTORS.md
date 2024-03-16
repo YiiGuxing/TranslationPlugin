@@ -44,6 +44,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88.00 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.60 CNY |
+| StarSky |  | 66.66 CNY |
 | 顺其自然 |  | 66.66 CNY |
 | HJC |  | 66.66 CNY |
 | Zzc |  | 66.66 CNY |
@@ -83,6 +84,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 雨点.儿 |  | 20.00 CNY |
 | 嘎辉 |  | 20.00 CNY |
 | Wis |  | 20.00 CNY |
 | 清风 |  | 20.00 CNY |
@@ -118,6 +120,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua |  | 20.00 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20.00 CNY |
 | Yiyi |  | 20.00 CNY |
+| 星夜 |  | 19.98 CNY |
+| 番茄炒蛋 |  | 16.66 CNY |
 | 向阳 |  | 16.66 CNY |
 | ZDQ |  | 16.66 CNY |
 | 本善之初 |  | 16.66 CNY |
@@ -131,13 +135,13 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 早睡早起 |  | 13.32 CNY |
 | 。 |  | 13.32 CNY |
 | 嘿嘿嘿 |  | 13.32 CNY |
-| 星夜 |  | 13.32 CNY |
 | Curtain°落幕 |  | 13.32 CNY |
 | Valhalla\_s |  | 13.32 CNY |
 | 封道ol |  | 12.00 CNY |
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 传说之心 |  | 10.00 CNY |
 | 梦源 |  | 10.00 CNY |
 | 罗林 |  | 10.00 CNY |
 | 刘华强 |  | 10.00 CNY |
@@ -199,7 +203,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 傅友华 |  | 10.00 CNY |
 | 大伙子🇦🇷 |  | 10.00 CNY |
 | 不想做韭菜的小爱 |  | 10.00 CNY |
-| 番茄炒蛋 |  | 10.00 CNY |
 | (⊙o⊙) |  | 10.00 CNY |
 | 元芳 |  | 10.00 CNY |
 | Word麻鸭 |  | 10.00 CNY |
@@ -298,6 +301,18 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 闭关修炼 |  | 6.66 CNY |
+| 辉 |  | 6.66 CNY |
+| Pang |  | 6.66 CNY |
+| %% |  | 6.66 CNY |
+| 剐 |  | 6.66 CNY |
+| 大龙 |  | 6.66 CNY |
+| 乔小竹 |  | 6.66 CNY |
+| Bleibtreu |  | 6.66 CNY |
+| 🌙Moon🌙 |  | 6.66 CNY |
+| XnyuDo |  | 6.66 CNY |
+| 星期五 |  | 6.66 CNY |
+| 南城 |  | 6.66 CNY |
 | Yx |  | 6.66 CNY |
 | Look |  | 6.66 CNY |
 | WeiWei |  | 6.66 CNY |
