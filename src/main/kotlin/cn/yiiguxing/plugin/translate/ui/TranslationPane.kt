@@ -76,7 +76,6 @@ abstract class TranslationPane<T : JComponent>(
 
     private var onSpellFixedHandler: ((String) -> Unit)? = null
 
-    @Suppress("SpellCheckingInspection")
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
 
@@ -184,7 +183,7 @@ abstract class TranslationPane<T : JComponent>(
                 spellLabel.font = primaryFont.lessOn(2f)
                 spellText.font = primaryFont.deriveFont(Font.BOLD, spellLabel.font.size.toFloat())
             }
-            originalViewer.font = primaryFont.deriveScaledFont(Font.ITALIC or Font.BOLD, FONT_SIZE_LARGE)
+            originalViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             translationViewer.font = primaryFont.deriveScaledFont(FONT_SIZE_LARGE)
             extraViewer.font = primaryFont.biggerOn(1f)
             originalTransliterationLabel.font = phoneticFont
@@ -276,7 +275,6 @@ abstract class TranslationPane<T : JComponent>(
         spellComponent.onSpellFixed(handler)
     }
 
-    @Suppress("SpellCheckingInspection")
     fun onRevalidate(handler: () -> Unit) {
         onRevalidateHandler = handler
     }
