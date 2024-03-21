@@ -68,6 +68,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         initValidators()
 
         provider = settings.provider
+        ui.apiModelComboBox.selected = openAiState.model
         ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
         ui.azureDeploymentField.text = settings.azure.deploymentId.orEmpty()
 
