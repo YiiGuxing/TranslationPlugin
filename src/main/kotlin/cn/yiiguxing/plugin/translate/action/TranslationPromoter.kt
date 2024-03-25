@@ -20,8 +20,8 @@ private val COMPARATOR = Comparator.comparingInt { action: AnAction ->
 
 class TranslationPromoter : ActionPromoter {
 
-    override fun promote(actions: MutableList<out AnAction>, context: DataContext): MutableList<AnAction> {
-        return ArrayList(actions).apply { sortWith(COMPARATOR) }
+    override fun promote(actions: MutableList<out AnAction?>, context: DataContext): MutableList<AnAction> {
+        return actions.asSequence().filterNotNull().sortedWith(COMPARATOR).toMutableList()
     }
 
 }
