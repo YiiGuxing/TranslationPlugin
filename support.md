@@ -57,7 +57,7 @@
 
 <div class="sponsors gold">
 
-[![New Relic CodeStream](./img/sponsor_new_relic_code_stream.svg ':class=active')](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
+[![New Relic CodeStream](./img/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
 [![JetBrains](./img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
 
 </div>
