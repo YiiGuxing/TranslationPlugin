@@ -1,14 +1,17 @@
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.util.Disposer
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.function.Supplier
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * An [Observable] is an entity that wraps a value and allows to observe the value for changes.
+ * An [Observable] is an entity that wraps a value
+ * and allows to observe the value for changes.
  */
 interface Observable<T> : ReadOnlyProperty<Any?, T> {
 
@@ -19,21 +22,54 @@ interface Observable<T> : ReadOnlyProperty<Any?, T> {
     /**
      * Tests whether the specified [listener] has been observed.
      */
-    fun isObserved(listener: (newValue: T, oldValue: T) -> Unit): Boolean
+    fun isObserved(listener: ChangeListener<T>): Boolean
 
     /**
      * Observe the change of the value.
      */
-    fun observe(parent: Disposable, listener: (newValue: T, oldValue: T) -> Unit)
+    fun observe(listener: ChangeListener<T>)
+
+    /**
+     * Observe the change of the value.
+     */
+    fun observe(parent: Disposable, listener: ChangeListener<T>)
+
+    /**
+     * Stop observing the change of the value.
+     */
+    fun unobserve(listener: ChangeListener<T>)
+
+    /**
+     * The change listener.
+     */
+    fun interface ChangeListener<T> {
+        fun onChanged(newValue: T, oldValue: T)
+    }
 }
 
-abstract class AbstractObservable<T> : Observable<T> {
+/**
+ * An [WritableObservable] is an entity that wraps a writable
+ * value and allows to observe the value for changes.
+ */
+interface WritableObservable<T> : Observable<T>, ReadWriteProperty<Any?, T> {
 
-    private val listeners: MutableList<(newValue: T, oldValue: T) -> Unit> = CopyOnWriteArrayList()
+    override var value: T
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
 
-    override fun isObserved(listener: (newValue: T, oldValue: T) -> Unit): Boolean {
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        this.value = value
+    }
+
+}
+
+abstract class AbstractObservable<T> : WritableObservable<T> {
+
+    private val listeners: MutableList<Observable.ChangeListener<T>> = CopyOnWriteArrayList()
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
+
+    override fun isObserved(listener: Observable.ChangeListener<T>): Boolean {
         return listener in listeners
     }
 
@@ -42,24 +78,34 @@ abstract class AbstractObservable<T> : Observable<T> {
      */
     protected open fun notifyChanged(oldValue: T, newValue: T) {
         for (listener in listeners) {
-            listener(newValue, oldValue)
+            listener.onChanged(newValue, oldValue)
         }
     }
 
-    override fun observe(parent: Disposable, listener: (newValue: T, oldValue: T) -> Unit) {
+    override fun observe(listener: Observable.ChangeListener<T>) {
         if (!isObserved(listener)) {
             listeners.add(listener)
         }
-        Disposer.register(parent) { listeners.remove(listener) }
+    }
+
+    override fun observe(parent: Disposable, listener: Observable.ChangeListener<T>) {
+        observe(listener)
+        Disposer.register(parent) { unobserve(listener) }
+    }
+
+    override fun unobserve(listener: Observable.ChangeListener<T>) {
+        listeners.remove(listener)
     }
 }
+
+private val DEFAULT_COMPARISON: (Any?, Any?) -> Boolean = { ov, nv -> ov != nv }
 
 /**
  * An [ObservableValue] is an entity that wraps a value and allows to observe the value for changes.
  */
 open class ObservableValue<T>(
     initialValue: T,
-    private val comparison: (oldValue: T, newValue: T) -> Boolean = { ov, nv -> ov != nv }
+    private val comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
 ) : AbstractObservable<T>(), ReadWriteProperty<Any?, T> {
 
     override var value = initialValue
@@ -71,11 +117,30 @@ open class ObservableValue<T>(
             }
         }
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        this.value = value
-    }
-
     fun asReadOnly(): Observable<T> = ReadOnlyWrapper(this)
 
     open class ReadOnlyWrapper<T>(private val wrapped: ObservableValue<T>) : Observable<T> by wrapped
+}
+
+/**
+ * An [NotifyOnEDTObservableValue] is an entity that wraps a value
+ * and allows to observe the value for changes on the EDT.
+ */
+open class NotifyOnEDTObservableValue<T>(
+    initialValue: T,
+    private val modalityState: Supplier<ModalityState>,
+    comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
+) : ObservableValue<T>(initialValue, comparison) {
+
+    constructor(
+        initialValue: T,
+        modalityState: ModalityState,
+        comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
+    ) : this(initialValue, Supplier { modalityState }, comparison)
+
+    override fun notifyChanged(oldValue: T, newValue: T) {
+        invokeLaterIfNeeded(modalityState.get()) {
+            super.notifyChanged(oldValue, newValue)
+        }
+    }
 }
