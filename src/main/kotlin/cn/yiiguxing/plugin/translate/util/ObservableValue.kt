@@ -4,7 +4,6 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.util.Disposer
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.function.Supplier
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -44,6 +43,18 @@ interface Observable<T> : ReadOnlyProperty<Any?, T> {
      */
     fun interface ChangeListener<T> {
         fun onChanged(newValue: T, oldValue: T)
+    }
+
+    open class ChangeOnEDTListener<T>(
+        private val modalityState: ModalityState = ModalityState.defaultModalityState(),
+        private val delegate: ChangeListener<T>
+    ) : ChangeListener<T> {
+
+        override fun onChanged(newValue: T, oldValue: T) {
+            invokeLaterIfNeeded(modalityState) {
+                delegate.onChanged(newValue, oldValue)
+            }
+        }
     }
 }
 
@@ -128,18 +139,12 @@ open class ObservableValue<T>(
  */
 open class NotifyOnEDTObservableValue<T>(
     initialValue: T,
-    private val modalityState: Supplier<ModalityState>,
+    private val modalityState: ModalityState = ModalityState.defaultModalityState(),
     comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
 ) : ObservableValue<T>(initialValue, comparison) {
 
-    constructor(
-        initialValue: T,
-        modalityState: ModalityState,
-        comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
-    ) : this(initialValue, Supplier { modalityState }, comparison)
-
     override fun notifyChanged(oldValue: T, newValue: T) {
-        invokeLaterIfNeeded(modalityState.get()) {
+        invokeLaterIfNeeded(modalityState) {
             super.notifyChanged(oldValue, newValue)
         }
     }
