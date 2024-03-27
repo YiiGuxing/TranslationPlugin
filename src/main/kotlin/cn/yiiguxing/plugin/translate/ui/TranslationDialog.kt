@@ -783,18 +783,29 @@ class TranslationDialog(
         val savedWidth = TranslationStates.translationDialogWidth
         val savedHeight = TranslationStates.translationDialogHeight
         if (savedX != null && savedY != null) {
-            val intersectWithScreen = GraphicsEnvironment
+            val ownerWindow = window.owner
+            val screenDeviceBounds = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
                 .screenDevices
-                .any { gd ->
-                    gd.defaultConfiguration.bounds.intersects(
-                        savedX.toDouble(),
-                        savedY.toDouble(),
-                        savedWidth.toDouble(),
-                        savedHeight.toDouble()
+                .map { sd -> sd.defaultConfiguration.bounds }
+            val isValidArea = screenDeviceBounds
+                .find { it.contains(ownerWindow.location) }
+                ?.let { bounds ->
+                    val offset = 10
+                    Rectangle(
+                        bounds.x + offset,
+                        bounds.y + offset,
+                        bounds.width - offset,
+                        bounds.height - offset
                     )
                 }
-            if (intersectWithScreen) {
+                ?.intersects(
+                    savedX.toDouble(),
+                    savedY.toDouble(),
+                    savedWidth.toDouble(),
+                    savedHeight.toDouble()
+                ) ?: false
+            if (isValidArea) {
                 window.location = Point(savedX, savedY)
             } else {
                 TranslationStates.translationDialogLocationX = null
