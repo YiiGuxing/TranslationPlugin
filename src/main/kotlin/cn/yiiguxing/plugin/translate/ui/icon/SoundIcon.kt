@@ -14,5 +14,8 @@ class SoundIcon : AnimatedIcon(DELAY, *ICONS) {
 
         @JvmField
         val ACTIVE = TranslationIcons.load("/icons/sound/active.svg")
+
+        @JvmField
+        val DISABLED = TranslationIcons.load("/icons/sound/disabled.svg")
     }
 }
