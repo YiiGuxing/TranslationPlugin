@@ -2,11 +2,9 @@
 
 package cn.yiiguxing.plugin.translate.tts.sound
 
-import cn.yiiguxing.plugin.translate.util.NotifyOnEDTObservableValue
 import cn.yiiguxing.plugin.translate.util.Observable
 import cn.yiiguxing.plugin.translate.util.ObservableValue
 import cn.yiiguxing.plugin.translate.util.withPluginContextClassLoader
-import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.util.concurrency.AppExecutorUtil
@@ -29,8 +27,7 @@ import javax.sound.sampled.*
  */
 class AudioPlayer : PlaybackController {
 
-    private val _state: ObservableValue<PlaybackState> =
-        NotifyOnEDTObservableValue(PlaybackState.IDLE, ModalityState.any())
+    private val _state: ObservableValue<PlaybackState> = ObservableValue(PlaybackState.IDLE)
     private var currentState: PlaybackState by _state
     private var playbackList: MutableList<PlaybackSource> = ArrayList()
     private val playWorker: PlayWorker = PlayWorker(this)
@@ -39,11 +36,16 @@ class AudioPlayer : PlaybackController {
     @Volatile
     private var errorHandler: ((Throwable) -> Unit)? = null
 
-    override val stateBinding: Observable<PlaybackState> = _state.asReadOnly()
+    override val stateBinding: Observable<PlaybackState> =
+        object : ObservableValue.ReadOnlyWrapper<PlaybackState>(_state) {
+            override val value: PlaybackState
+                get() = synchronized(this@AudioPlayer) { super.value }
+        }
     override val isPlaying: Boolean
-        get() = synchronized(this) { currentState == PlaybackState.PLAYING }
-    private val isCompleted: Boolean
-        get() = synchronized(this) { currentState.let { it == PlaybackState.STOPPED || it == PlaybackState.ERROR } }
+        get() = synchronized(this) { super.isPlaying }
+    override val isCompleted: Boolean
+        get() = synchronized(this) { super.isCompleted }
+
 
     /**
      * Add an audio source from the specified [file].

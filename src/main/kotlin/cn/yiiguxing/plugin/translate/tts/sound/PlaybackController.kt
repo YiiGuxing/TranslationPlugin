@@ -14,6 +14,9 @@ interface PlaybackController {
     /** Whether the playback is currently playing. */
     val isPlaying: Boolean get() = state == PlaybackState.PLAYING
 
+    /** Whether the playback is currently completed. */
+    val isCompleted: Boolean get() = state.isCompletedState
+
     /** Start the playback. */
     fun start()
 
