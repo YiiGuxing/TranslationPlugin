@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
@@ -26,7 +27,7 @@ import java.awt.Graphics
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
-class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : TranslationDialogUI {
+class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUiProvider) : TranslationDialogUI {
     private val mRoot: JPanel = JPanel()
     override val topPanel: JPanel = JPanel()
     private val bottomPanel: JPanel = JPanel()
@@ -55,8 +56,8 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
         rightPanelWrapper.verticalScrollBar
     )
 
-    override val inputTTSButton: TTSButton = TTSButton()
-    override val translationTTSButton: TTSButton = TTSButton()
+    override val inputTTSButton: TTSButton = TTSButton(project)
+    override val translationTTSButton: TTSButton = TTSButton(project)
     override val clearButton: LinkLabel<Void> = LinkLabel()
     override val copyButton: LinkLabel<Void> = LinkLabel()
     override val starButton: LinkLabel<Translation> = LinkLabel()
@@ -348,6 +349,8 @@ class TranslationDialogUiImpl(uiProvider: TranslationDialogUiProvider) : Transla
     override fun dispose() {
         Disposer.dispose(progressIcon)
         Disposer.dispose(translationFailedComponent)
+        Disposer.dispose(inputTTSButton)
+        Disposer.dispose(translationTTSButton)
     }
 
     private class TranslationTextArea(background: Color) : JBTextArea(1, 1) {

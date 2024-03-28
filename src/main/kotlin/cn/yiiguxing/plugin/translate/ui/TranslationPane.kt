@@ -152,8 +152,7 @@ abstract class TranslationPane<T : JComponent>(
 
     private fun createTTSButton(block: () -> Pair<String, Lang>?): TTSButton {
         val translationPanel = this
-        return TTSButton().apply {
-            project = translationPanel.project
+        return TTSButton(translationPanel.project).apply {
             dataSource(block)
             Disposer.register(translationPanel, this)
         }
@@ -366,7 +365,7 @@ abstract class TranslationPane<T : JComponent>(
                     when (settings.ttsSource) {
                         ORIGINAL -> originalTTSLink
                         TRANSLATION -> transTTSLink
-                    }.play()
+                    }.toggle()
                 }
             } else {
                 resetComponents()
