@@ -8,7 +8,7 @@ import cn.yiiguxing.plugin.translate.tts.sound.AudioPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackState
 import cn.yiiguxing.plugin.translate.util.*
-import cn.yiiguxing.plugin.translate.util.Http.userAgent
+import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.project.Project
@@ -44,7 +44,7 @@ class GoogleTTSPlayer private constructor(
             player.addSource {
                 val url = getTtsUrl(sentence, lang, index, total)
                 HttpRequests.request(url)
-                    .userAgent()
+                    .setUserAgent()
                     .googleReferer()
                     .readBytes(indicator)
             }

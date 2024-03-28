@@ -173,7 +173,7 @@ object Http {
         return "Mozilla/5.0 ($systemInfo) AppleWebKit/537.36 (KHTML, like Gecko) $chrome $safari $edge"
     }
 
-    fun RequestBuilder.userAgent(): RequestBuilder = apply { userAgent(getUserAgent()) }
+    fun RequestBuilder.setUserAgent(): RequestBuilder = apply { userAgent(getUserAgent()) }
 
     fun RequestBuilder.pluginUserAgent(): RequestBuilder = apply { userAgent(PLUGIN_USER_AGENT) }
 }
