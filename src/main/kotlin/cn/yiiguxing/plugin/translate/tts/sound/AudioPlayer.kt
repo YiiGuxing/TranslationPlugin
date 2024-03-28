@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.util.ObservableValue
 import cn.yiiguxing.plugin.translate.util.withPluginContextClassLoader
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.EmptyProgressIndicator
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.util.concurrency.AppExecutorUtil
 import com.intellij.util.io.HttpRequests
 import java.io.ByteArrayInputStream
@@ -118,10 +119,11 @@ class AudioPlayer : PlaybackController {
 
     private fun onError(error: Throwable) {
         val handler = errorHandler
+        val cause = if (error is PlaybackException) error.cause!! else error
         if (handler != null) {
-            handler(error)
+            handler(cause)
         } else {
-            thisLogger().error("Error occurred", error)
+            thisLogger().error("Error occurred", cause)
         }
     }
 
@@ -244,14 +246,18 @@ class AudioPlayer : PlaybackController {
                 val source = player.playbackList[index]
                 var hasPreparing: Boolean
                 try {
-                    if (source.error != null) {
-                        throw IllegalStateException("Error occurred", source.error)
+                    source.error?.let {
+                        throw if (it is ProcessCanceledException) it else PlaybackException("Error occurred", it)
                     }
                     hasPreparing = player.prepare(index + 1)
                     source.use { playLine(it.audioInputStream, buffer) }
                 } catch (e: Throwable) {
-                    player.stop(PlaybackState.ERROR, false)
-                    player.onError(e)
+                    val isCanceled = e is ProcessCanceledException
+                    val state = if (isCanceled) PlaybackState.STOPPED else PlaybackState.ERROR
+                    player.stop(state, false)
+                    if (!isCanceled) {
+                        player.onError(e)
+                    }
                     break
                 }
                 if (!hasPreparing) {
@@ -325,6 +331,8 @@ class AudioPlayer : PlaybackController {
             line = null
         }
     }
+
+    private class PlaybackException(message: String, cause: Throwable) : IllegalStateException(message, cause)
 
     private class PlaybackSource(private val dataSource: Supplier<ByteArray>) : AutoCloseable {
         @Volatile
