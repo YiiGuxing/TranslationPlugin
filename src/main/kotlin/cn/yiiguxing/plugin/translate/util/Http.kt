@@ -165,12 +165,14 @@ object Http {
     }
 
     private fun getUserAgent(): String {
-        val chrome = "Chrome/115.0.0.0"
-        val edge = "Edg/115.0.1901.203"
+        val chrome = "Chrome/122.0.0.0"
+        val edge = "Edg/122.0.0.0"
         val safari = "Safari/537.36"
-        val systemInfo = "Windows NT ${SystemInfoRt.OS_VERSION}; Win64; x64"
+        val appleWebKit = "AppleWebKit/537.36"
+        val mozilla = "Mozilla/5.0"
+        val systemInfo = "Windows NT ${if (SystemInfoRt.isWindows) SystemInfoRt.OS_VERSION else "10.0"}; Win64; x64"
         @Suppress("SpellCheckingInspection")
-        return "Mozilla/5.0 ($systemInfo) AppleWebKit/537.36 (KHTML, like Gecko) $chrome $safari $edge"
+        return "$mozilla ($systemInfo) $appleWebKit (KHTML, like Gecko) $chrome $safari $edge"
     }
 
     fun RequestBuilder.setUserAgent(): RequestBuilder = apply { userAgent(getUserAgent()) }
