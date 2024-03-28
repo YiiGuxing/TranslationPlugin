@@ -34,6 +34,9 @@ class AudioPlayer : PlaybackController {
     private val playWorker: PlayWorker = PlayWorker(this)
     private var playingIndex: Int = -1
 
+    private val playing: Boolean get() = currentState == PlaybackState.PLAYING
+    private val completed: Boolean get() = currentState.isCompletedState
+
     @Volatile
     private var errorHandler: ((Throwable) -> Unit)? = null
 
@@ -42,10 +45,8 @@ class AudioPlayer : PlaybackController {
             override val value: PlaybackState
                 get() = synchronized(this@AudioPlayer) { super.value }
         }
-    override val isPlaying: Boolean
-        get() = synchronized(this) { super.isPlaying }
-    override val isCompleted: Boolean
-        get() = synchronized(this) { super.isCompleted }
+    override val isPlaying: Boolean get() = synchronized(this) { playing }
+    override val isCompleted: Boolean get() = synchronized(this) { completed }
 
 
     /**
@@ -104,10 +105,8 @@ class AudioPlayer : PlaybackController {
     }
 
     private inline fun checkIdleState(message: (actualState: PlaybackState) -> String) {
-        synchronized(this) {
-            val actualState = currentState
-            check(actualState == PlaybackState.IDLE) { message(actualState) }
-        }
+        val actualState = currentState
+        check(actualState == PlaybackState.IDLE) { message(actualState) }
     }
 
     /**
@@ -153,7 +152,7 @@ class AudioPlayer : PlaybackController {
         var needStop = false
         var needRelease = false
         synchronized(this) {
-            if (!isCompleted) {
+            if (!completed) {
                 currentState.let {
                     needStop = immediate && it == PlaybackState.PLAYING
                     needRelease = it == PlaybackState.PREPARING
@@ -194,7 +193,7 @@ class AudioPlayer : PlaybackController {
     private fun onPrepared(sourceIndex: Int) {
         synchronized(this) {
             val source = playbackList[sourceIndex]
-            if (isCompleted) {
+            if (completed) {
                 source.close()
                 return
             }
@@ -214,13 +213,13 @@ class AudioPlayer : PlaybackController {
 
     private fun getPlayingIndex(): Int? {
         return synchronized(this) {
-            playingIndex.takeIf { it in playbackList.indices && isPlaying }
+            playingIndex.takeIf { it in playbackList.indices && playing }
         }
     }
 
     private fun updateNext(sourceIndex: Int): Boolean {
         synchronized(this) {
-            if (isCompleted) {
+            if (completed) {
                 return false
             }
 
