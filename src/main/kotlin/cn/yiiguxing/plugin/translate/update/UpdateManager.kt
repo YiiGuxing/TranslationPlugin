@@ -78,8 +78,9 @@ class UpdateManager : BaseStartupActivity(true) {
             return
         }
 
+        val isFirstInstallation = lastVersionString == Version.INITIAL_VERSION
         val isFeatureVersion = version.isFeatureUpdateOf(lastVersion)
-        if (showUpdateNotification(project, plugin, version, isFeatureVersion)) {
+        if (showUpdateNotification(project, plugin, version, isFeatureVersion, isFirstInstallation)) {
             properties.setValue(VERSION_PROPERTY, versionString)
         }
     }
@@ -88,7 +89,8 @@ class UpdateManager : BaseStartupActivity(true) {
         project: Project,
         plugin: IdeaPluginDescriptor,
         version: Version,
-        isFeatureVersion: Boolean
+        isFeatureVersion: Boolean,
+        isFirstInstallation: Boolean
     ): Boolean {
         val title = message(
             "plugin.name.updated.to.version.notification.title",
@@ -132,7 +134,12 @@ class UpdateManager : BaseStartupActivity(true) {
             .addAction(GetStartedAction())
             .addAction(SupportAction())
             .whenExpired {
-                if (!version.isRreRelease && isFeatureVersion && canBrowseWhatsNewInHTMLEditor) {
+                if (!canBrowseWhatsNewInHTMLEditor) {
+                    return@whenExpired
+                }
+                if (isFirstInstallation) {
+                    WhatsNew.browse(project) { WebPages.home() }
+                } else if (!version.isRreRelease && isFeatureVersion) {
                     WhatsNew.browse(version, project)
                 }
             }

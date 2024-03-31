@@ -52,7 +52,7 @@ import kotlin.properties.Delegates
 
 class TranslationDialog(
     private val project: Project?,
-    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider())
+    val ui: TranslationDialogUI = TranslationDialogUiImpl(project, UIProvider())
 ) :
     DialogWrapper(project),
     TranslationDialogUI by ui,
@@ -166,11 +166,11 @@ class TranslationDialog(
             )
 
         // Toolbar buttons
-        DumbAwareAction.create { inputTTSButton.play() }
+        DumbAwareAction.create { inputTTSButton.toggle() }
             .registerCustomShortcutSet(
                 CustomShortcutSet.fromString("alt ENTER", "meta ENTER"), rootPane, this
             )
-        DumbAwareAction.create { translationTTSButton.play() }
+        DumbAwareAction.create { translationTTSButton.toggle() }
             .registerCustomShortcutSet(
                 CustomShortcutSet.fromString("shift ENTER"), rootPane, this
             )

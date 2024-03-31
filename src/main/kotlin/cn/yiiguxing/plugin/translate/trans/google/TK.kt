@@ -4,7 +4,7 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.compat.code
-import cn.yiiguxing.plugin.translate.util.Http.userAgent
+import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
@@ -69,7 +69,7 @@ object TKK {
 
     private fun getElementJsRequest(serverUrl: String): RequestBuilder =
         HttpRequests.request("${serverUrl.trimEnd('/')}$ELEMENT_URL_PATH")
-            .userAgent()
+            .setUserAgent()
             .googleReferer()
             .connectTimeout(5000)
             .throwStatusCodeException(true)
