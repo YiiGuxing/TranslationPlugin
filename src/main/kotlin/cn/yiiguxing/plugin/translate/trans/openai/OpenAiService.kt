@@ -43,8 +43,9 @@ interface OpenAiService {
 
 
 class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
-    private val apiUrl: String
-        get() = (options.endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + OPEN_AI_API_PATH
+    private fun getApiUrl(path: String): String {
+        return (options.endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + path
+    }
 
     private fun RequestBuilder.auth() {
         val apiKey = OpenAiCredentials.manager(ServiceProvider.OpenAI).credential
@@ -56,7 +57,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             model = options.model.value
             this.messages = messages
         }
-        return OpenAiHttp.post<ChatCompletion>(apiUrl, request) { auth() }
+        return OpenAiHttp.post(getApiUrl(OPEN_AI_API_PATH), request) { auth() }
     }
 }
 
@@ -73,7 +74,7 @@ class Azure(options: OpenAiService.AzureOptions) : OpenAiService {
         val request = chatCompletionRequest(false) {
             this.messages = messages
         }
-        return OpenAiHttp.post<ChatCompletion>(apiUrl, request) { auth() }
+        return OpenAiHttp.post(apiUrl, request) { auth() }
     }
 }
 

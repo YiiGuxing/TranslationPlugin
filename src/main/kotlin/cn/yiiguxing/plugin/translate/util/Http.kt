@@ -104,58 +104,38 @@ object Http {
     }
 
     private fun HttpRequests.Request.checkResponseCode() {
-        val responseCode = (connection as HttpURLConnection).responseCode
+        val connection = connection as HttpURLConnection
+        val responseCode = connection.responseCode
         if (responseCode >= 400) {
-            throw HttpRequests.HttpStatusException("Request failed with status code $responseCode", responseCode, url)
+            throw StatusException(
+                "Request failed with status code $responseCode",
+                responseCode,
+                url,
+                connection.responseMessage,
+                connection.getErrorText()
+            )
         }
     }
 
-    /**
-     * A simple Http response.
-     */
-    sealed class Response private constructor(val code: Int, val message: String, open val body: Any?) {
-        /**
-         * Successful response.
-         */
-        class Success(code: Int, message: String, override val body: String) : Response(code, message, body)
+    class StatusException(
+        message: String,
+        status: Int,
+        url: String,
+        val responseMessage: String?,
+        val errorText: String?
+    ) : HttpRequests.HttpStatusException(message, status, url)
 
-        /**
-         * Error response.
-         */
-        class Error(code: Int, message: String, override val body: String?) : Response(code, message, body)
-
-        override fun toString(): String {
-            return "Response - ${javaClass.simpleName}\n" +
-                    "\tcode: $code\n" +
-                    "\tmessage: $message\n" +
-                    "\tbody: $body"
-        }
-    }
-
-    /**
-     * Sends a request and returns a [Response].
-     */
-    fun RequestBuilder.send(data: String): Response {
+    fun <T> RequestBuilder.send(data: String, dataReader: (HttpRequests.Request) -> T): T {
         throwStatusCodeException(false)
         return connect {
             it.write(data)
-
-            val connection = it.connection as HttpURLConnection
-            val responseCode = connection.responseCode
-            val message = connection.responseMessage
-            if (responseCode < 400) {
-                Response.Success(responseCode, message, it.readString())
-            } else {
-                Response.Error(responseCode, message, connection.getErrorText())
-            }
+            it.checkResponseCode()
+            dataReader(it)
         }
     }
 
-    /**
-     * Sends a request with the specified [data] in JSON format and returns a [Response].
-     */
-    fun RequestBuilder.sendJson(data: Any): Response {
-        return send(defaultGson.toJson(data))
+    fun <T> RequestBuilder.sendJson(data: Any, dataReader: (HttpRequests.Request) -> T): T {
+        return send(defaultGson.toJson(data), dataReader)
     }
 
     private fun HttpURLConnection.getErrorText(): String? {
