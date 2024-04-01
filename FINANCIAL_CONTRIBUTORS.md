@@ -44,6 +44,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Mritd | [mritd.com](https://mritd.com) | 88.88 CNY |
 | 三分醉 | [www.sanfenzui.com](http://www.sanfenzui.com) | 88.00 CNY |
 | LeeWyatt | [github.com/leewyatt](https://github.com/leewyatt) | 76.60 CNY |
+| Skiars | [github.com/skiars](https://github.com/skiars) | 66.66 CNY |
 | StarSky |  | 66.66 CNY |
 | 顺其自然 |  | 66.66 CNY |
 | HJC |  | 66.66 CNY |
@@ -141,6 +142,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| Clear\_T |  | 10.00 CNY |
+| 淅潼 |  | 10.00 CNY |
 | 郭睿 |  | 10.00 CNY |
 | X B.H. |  | 10.00 CNY |
 | 传说之心 |  | 10.00 CNY |
@@ -303,6 +306,14 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 赵哈哈 |  | 6.66 CNY |
+| Echo'sEcho |  | 6.66 CNY |
+| Doflan |  | 6.66 CNY |
+| Deep\_Blue |  | 6.66 CNY |
+| 失语她 |  | 6.66 CNY |
+| 大大 |  | 6.66 CNY |
+| 凌绝顶 |  | 6.66 CNY |
+| JE |  | 6.66 CNY |
 | 闭关修炼 |  | 6.66 CNY |
 | 辉 |  | 6.66 CNY |
 | Pang |  | 6.66 CNY |
