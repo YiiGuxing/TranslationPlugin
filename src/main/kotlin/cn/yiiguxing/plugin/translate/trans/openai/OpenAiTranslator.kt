@@ -13,7 +13,7 @@ import com.intellij.openapi.components.service
 import org.jsoup.nodes.Document
 import javax.swing.Icon
 
-object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
+object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override val id: String = OPEN_AI.id
     override val name: String = OPEN_AI.translatorName
@@ -22,14 +22,14 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
     override val contentLengthLimit: Int = OPEN_AI.contentLengthLimit
     override val primaryLanguage: Lang get() = OPEN_AI.primaryLanguage
     override val supportedSourceLanguages: List<Lang> =
-        OpenAILanguages.languages.toMutableList().apply { add(0, Lang.AUTO) }
-    override val supportedTargetLanguages: List<Lang> = OpenAILanguages.languages
+        OpenAiLanguages.languages.toMutableList().apply { add(0, Lang.AUTO) }
+    override val supportedTargetLanguages: List<Lang> = OpenAiLanguages.languages
 
-    private val settings: OpenAISettings get() = service<OpenAISettings>()
+    private val settings: OpenAiSettings get() = service<OpenAiSettings>()
 
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || !OpenAICredentials.manager(settings.provider).isCredentialSet) {
+        if (force || !OpenAiCredentials.manager(settings.provider).isCredentialSet) {
             return OPEN_AI.showConfigurationDialog()
         }
 
@@ -66,7 +66,7 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         }
 
         val messages = getChatCompletionMessages(text, srcLang, targetLang, isFofDocumentation)
-        val chatCompletion = OpenAIService.get(settings.getOptions()).chatCompletion(messages)
+        val chatCompletion = OpenAiService.get(settings.getOptions()).chatCompletion(messages)
         var result = chatCompletion.choices.first().message!!.content
         if (!isFofDocumentation && result.length > 1 && result.first() == '"' && result.last() == '"') {
             result = result.substring(1, result.lastIndex)
@@ -93,7 +93,7 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
         message {
             role = ChatRole.USER
             content =
-                "Translate ${if (srcLang == Lang.AUTO) "" else "from ${srcLang.openAILanguage} "}to ${targetLang.openAILanguage}."
+                "Translate ${if (srcLang == Lang.AUTO) "" else "from ${srcLang.openAiLanguage} "}to ${targetLang.openAiLanguage}."
         }
         message {
             role = ChatRole.USER
@@ -104,8 +104,8 @@ object OpenAITranslator : AbstractTranslator(), DocumentationTranslator {
     private fun getCacheKey(text: String, srcLang: Lang, targetLang: Lang): String {
         val provider = settings.provider
         val model = when (val options = settings.getOptions(provider)) {
-            is OpenAIService.OpenAIOptions -> options.model.value
-            is OpenAIService.AzureOptions -> options.deploymentId ?: ""
+            is OpenAiService.OpenAIOptions -> options.model.value
+            is OpenAiService.AzureOptions -> options.model ?: ""
         }
 
         return "$id$provider$model$text$srcLang$targetLang".md5()

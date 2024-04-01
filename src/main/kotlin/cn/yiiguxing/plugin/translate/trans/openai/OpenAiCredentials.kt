@@ -8,7 +8,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 
 @Service
-internal class OpenAICredentials private constructor() {
+internal class OpenAiCredentials private constructor() {
 
     val openAi = SimpleStringCredentialManager(OPEN_AI_SERVICE_NAME)
     val azure = SimpleStringCredentialManager(AZURE_SERVICE_NAME)
@@ -19,7 +19,7 @@ internal class OpenAICredentials private constructor() {
         private val AZURE_SERVICE_NAME =
             generateServiceName("OpenAI Credentials", "${TranslationPlugin.PLUGIN_ID}.AZURE_OPENAI_API_KEY")
 
-        private val service: OpenAICredentials get() = service()
+        private val service: OpenAiCredentials get() = service()
 
         fun manager(provider: ServiceProvider): StringCredentialManager = when (provider) {
             ServiceProvider.OpenAI -> service.openAi

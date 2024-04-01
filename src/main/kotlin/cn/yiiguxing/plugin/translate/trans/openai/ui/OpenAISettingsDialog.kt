@@ -16,6 +16,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
+import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.util.containers.orNull
@@ -28,9 +29,9 @@ import javax.swing.event.DocumentEvent
 
 class OpenAISettingsDialog : DialogWrapper(false) {
 
-    private val settings = service<OpenAISettings>()
-    private val openAiState = OpenAISettings.OpenAI().apply { copyFrom(settings.openAi) }
-    private val azureState = OpenAISettings.Azure().apply { copyFrom(settings.azure) }
+    private val settings = service<OpenAiSettings>()
+    private val openAiState = OpenAiSettings.OpenAi().apply { copyFrom(settings.openAi) }
+    private val azureState = OpenAiSettings.Azure().apply { copyFrom(settings.azure) }
     private val apiKeys: ApiKeys = ApiKeys()
     private var isApiKeySet: Boolean = false
 
@@ -68,9 +69,10 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         initValidators()
 
         provider = settings.provider
-        ui.apiModelComboBox.selected = openAiState.model
+        ui.modelComboBox.model = CollectionComboBoxModel(OpenAiModel.gptModels())
+        ui.modelComboBox.selected = openAiState.model
         ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
-        ui.azureDeploymentField.text = settings.azure.deploymentId.orEmpty()
+        ui.azureModelField.text = settings.azure.model.orEmpty()
 
         providerUpdated(settings.provider)
     }
@@ -111,16 +113,16 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             })
         }
 
-        ui.apiModelComboBox.addItemListener {
+        ui.modelComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                openAiState.model = it.item as OpenAIModel
+                openAiState.model = it.item as OpenAiModel
             }
         }
 
-        ui.azureDeploymentField.document.addDocumentListener(object : DocumentAdapter() {
+        ui.azureModelField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                azureState.deploymentId = ui.azureDeploymentField.text.takeUnless { it.isNullOrBlank() }?.trim()
-                verify(ui.azureDeploymentField)
+                azureState.model = ui.azureModelField.text.takeUnless { it.isNullOrBlank() }?.trim()
+                verify(ui.azureModelField)
             }
         })
 
@@ -161,7 +163,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             }
         }
 
-        installValidator(ui.azureDeploymentField) {
+        installValidator(ui.azureModelField) {
             when {
                 it.text.isNullOrBlank() -> ValidationInfo(
                     message("openai.settings.dialog.error.missing.deployment"),
@@ -223,7 +225,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
     private fun verify(): Boolean {
         var valid = true
         var focusTarget: JComponent? = null
-        listOf(ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
+        listOf(ui.apiKeyField, ui.apiEndpointField, ui.azureModelField).forEach {
             verify(it)?.let { info ->
                 // 校验不通过的聚焦优先级最高
                 if (valid && it.isShowing) {
@@ -243,14 +245,14 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             return
         }
 
-        OpenAICredentials.manager(ServiceProvider.OpenAI).credential = apiKeys.openAi
-        OpenAICredentials.manager(ServiceProvider.Azure).credential = apiKeys.azure
+        OpenAiCredentials.manager(ServiceProvider.OpenAI).credential = apiKeys.openAi
+        OpenAiCredentials.manager(ServiceProvider.Azure).credential = apiKeys.azure
 
         val oldProvider = settings.provider
         val newProvider = provider
         if (oldProvider != newProvider ||
             openAiState.model != settings.openAi.model ||
-            azureState.deploymentId != settings.azure.deploymentId
+            azureState.model != settings.azure.model
         ) {
             service<CacheService>().removeMemoryCache { key, _ ->
                 key.translator == TranslationEngine.OPEN_AI.id
@@ -260,7 +262,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         settings.provider = newProvider
         settings.openAi.copyFrom(openAiState)
         settings.azure.copyFrom(azureState)
-        isApiKeySet = OpenAICredentials.manager(provider).isCredentialSet
+        isApiKeySet = OpenAiCredentials.manager(provider).isCredentialSet
 
         super.doOKAction()
     }
@@ -271,8 +273,8 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             val dialogRef = DisposableRef.create(disposable, this)
             runAsync {
                 ApiKeys(
-                    OpenAICredentials.manager(ServiceProvider.OpenAI).credential,
-                    OpenAICredentials.manager(ServiceProvider.Azure).credential
+                    OpenAiCredentials.manager(ServiceProvider.OpenAI).credential,
+                    OpenAiCredentials.manager(ServiceProvider.Azure).credential
                 )
             }
                 .expireWith(disposable)

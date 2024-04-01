@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.openai
 
-import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIError
+import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAiError
 import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIStatusException
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Http.sendJson
@@ -12,9 +12,9 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 
-internal object OpenAIHttp {
+internal object OpenAiHttp {
 
-    private val LOG: Logger = logger<OpenAIHttp>()
+    private val LOG: Logger = logger<OpenAiHttp>()
 
     inline fun <reified T> post(url: String, data: Any, noinline init: RequestBuilder.() -> Unit): T {
         return post(url, data, init).let { Http.defaultGson.fromJson(it, T::class.java) }
@@ -49,6 +49,6 @@ internal object OpenAIHttp {
         null
     }
 
-    internal data class ErrorResponse(@SerializedName("error") val error: OpenAIError?)
+    internal data class ErrorResponse(@SerializedName("error") val error: OpenAiError?)
 
 }

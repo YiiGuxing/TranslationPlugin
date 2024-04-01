@@ -12,26 +12,27 @@ const val OPEN_AI_API_PATH = "/v1/chat/completions"
 
 private const val AZURE_OPEN_AI_API_PATH = "/openai/deployments/%s/chat/completions"
 
-interface OpenAIService {
+interface OpenAiService {
 
     @RequiresBackgroundThread
     fun chatCompletion(messages: List<ChatMessage>): ChatCompletion
 
-    sealed interface Options {
+    sealed interface Options<T> {
         val endpoint: String?
+        val model: T
+        val ttsModel: T
+        val ttsVoice: OpenAiTtsVoice
+        val ttsSpeed: Float
     }
 
-    interface OpenAIOptions : Options {
-        val model: OpenAIModel
-    }
+    interface OpenAIOptions : Options<OpenAiModel>
 
-    interface AzureOptions : Options {
-        val deploymentId: String?
+    interface AzureOptions : Options<String?> {
         val apiVersion: AzureServiceVersion
     }
 
     companion object {
-        fun get(options: Options): OpenAIService {
+        fun get(options: Options<*>): OpenAiService {
             return when (options) {
                 is OpenAIOptions -> OpenAI(options)
                 is AzureOptions -> Azure(options)
@@ -41,12 +42,12 @@ interface OpenAIService {
 }
 
 
-class OpenAI(private val options: OpenAIService.OpenAIOptions) : OpenAIService {
+class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
     private val apiUrl: String
         get() = (options.endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + OPEN_AI_API_PATH
 
     private fun RequestBuilder.auth() {
-        val apiKey = OpenAICredentials.manager(ServiceProvider.OpenAI).credential
+        val apiKey = OpenAiCredentials.manager(ServiceProvider.OpenAI).credential
         tuner { it.setRequestProperty("Authorization", "Bearer $apiKey") }
     }
 
@@ -55,16 +56,16 @@ class OpenAI(private val options: OpenAIService.OpenAIOptions) : OpenAIService {
             model = options.model.value
             this.messages = messages
         }
-        return OpenAIHttp.post<ChatCompletion>(apiUrl, request) { auth() }
+        return OpenAiHttp.post<ChatCompletion>(apiUrl, request) { auth() }
     }
 }
 
-class Azure(options: OpenAIService.AzureOptions) : OpenAIService {
+class Azure(options: OpenAiService.AzureOptions) : OpenAiService {
 
     private val apiUrl: String = options.getApiUrl()
 
     private fun RequestBuilder.auth() {
-        val apiKey = OpenAICredentials.manager(ServiceProvider.Azure).credential
+        val apiKey = OpenAiCredentials.manager(ServiceProvider.Azure).credential
         tuner { it.setRequestProperty("api-key", apiKey) }
     }
 
@@ -72,14 +73,14 @@ class Azure(options: OpenAIService.AzureOptions) : OpenAIService {
         val request = chatCompletionRequest(false) {
             this.messages = messages
         }
-        return OpenAIHttp.post<ChatCompletion>(apiUrl, request) { auth() }
+        return OpenAiHttp.post<ChatCompletion>(apiUrl, request) { auth() }
     }
 }
 
-private fun OpenAIService.AzureOptions.getApiUrl(): String {
-    val baseUrl = requireNotNull(endpoint) { "Azure OpenAI API endpoint is required" }.trimEnd('/')
+private fun OpenAiService.AzureOptions.getApiUrl(): String {
+    val baseUrl = requireNotNull(endpoint) { "Azure OpenAi API endpoint is required" }.trimEnd('/')
     val encodedDeploymentId = URLEncoder.encode(
-        requireNotNull(deploymentId) { "Azure OpenAI deployment id is required" },
+        requireNotNull(model) { "Azure OpenAi model is required" },
         Charsets.UTF_8
     )
     val path = AZURE_OPEN_AI_API_PATH.format(encodedDeploymentId)

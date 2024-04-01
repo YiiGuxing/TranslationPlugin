@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.openai.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.openai.AzureServiceVersion
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAIModel
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiModel
 import cn.yiiguxing.plugin.translate.trans.openai.ServiceProvider
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
@@ -41,12 +41,11 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
     override val apiEndpointField: ExtendableTextField = ExtendableTextField()
 
     private val apiModelLabel = JLabel(message("openai.settings.dialog.label.model"))
-    override val apiModelComboBox: ComboBox<OpenAIModel> =
-        ComboBox(CollectionComboBoxModel(OpenAIModel.values().toList())).apply {
-            renderer = SimpleListCellRenderer.create { label, model, _ ->
-                label.text = model.modelName
-            }
+    override val modelComboBox: ComboBox<OpenAiModel> = ComboBox<OpenAiModel>().apply {
+        renderer = SimpleListCellRenderer.create { label, model, _ ->
+            label.text = model.modelName
         }
+    }
 
     private val azureApiVersionLabel =
         JLabel(message("openai.settings.dialog.label.api.version")).apply { isVisible = false }
@@ -59,10 +58,10 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
 
     private val azureDeploymentLabel =
         JLabel(message("openai.settings.dialog.label.deployment"))
-    override val azureDeploymentField: JBTextField = JBTextField()
+    override val azureModelField: JBTextField = JBTextField()
 
     private val hint: JComponent = UI.createHint(message("openai.settings.dialog.hint"), MAX_WIDTH)
-    private val azureHint: JComponent = UI.createHint( message("openai.settings.dialog.hint.azure"), MAX_WIDTH)
+    private val azureHint: JComponent = UI.createHint(message("openai.settings.dialog.hint.azure"), MAX_WIDTH)
 
 
     init {
@@ -75,13 +74,13 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
         form.add(JLabel(message("openai.settings.dialog.label.provider")))
         form.add(providerComboBox, comboBoxCC)
         form.add(apiModelLabel)
-        form.add(apiModelComboBox, comboBoxCC)
+        form.add(modelComboBox, comboBoxCC)
         form.add(azureApiVersionLabel)
         form.add(azureApiVersionComboBox, comboBoxCC)
 
         val fillX = UI.fillX().wrap()
         form.add(azureDeploymentLabel)
-        form.add(azureDeploymentField, fillX)
+        form.add(azureModelField, fillX)
         form.add(JLabel(message("openai.settings.dialog.label.endpoint")))
         form.add(apiEndpointField, fillX)
         form.add(JLabel(message("openai.settings.dialog.label.api.key")))
@@ -101,13 +100,13 @@ internal class OpenAISettingsUiImpl : OpenAISettingsUI {
 
     override fun setOpenAiFormComponentsVisible(visible: Boolean) {
         apiModelLabel.isVisible = visible
-        apiModelComboBox.isVisible = visible
+        modelComboBox.isVisible = visible
         hint.isVisible = visible
     }
 
     override fun setAzureFormComponentsVisible(visible: Boolean) {
         azureDeploymentLabel.isVisible = visible
-        azureDeploymentField.isVisible = visible
+        azureModelField.isVisible = visible
         azureApiVersionLabel.isVisible = visible
         azureApiVersionComboBox.isVisible = visible
         azureHint.isVisible = visible

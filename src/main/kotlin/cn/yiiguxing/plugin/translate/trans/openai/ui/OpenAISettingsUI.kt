@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.openai.ui
 
 import cn.yiiguxing.plugin.translate.trans.openai.AzureServiceVersion
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAIModel
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiModel
 import cn.yiiguxing.plugin.translate.trans.openai.ServiceProvider
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.components.JBPasswordField
@@ -19,9 +19,9 @@ internal interface OpenAISettingsUI {
 
     val apiEndpointField: ExtendableTextField
 
-    val azureDeploymentField: JBTextField
+    val azureModelField: JBTextField
 
-    val apiModelComboBox: ComboBox<OpenAIModel>
+    val modelComboBox: ComboBox<OpenAiModel>
 
     val azureApiVersionComboBox: ComboBox<AzureServiceVersion>
 

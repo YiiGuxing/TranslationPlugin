@@ -13,9 +13,9 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredentials
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettings
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiTranslator
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
@@ -67,7 +67,7 @@ enum class TranslationEngine(
                 BAIDU -> BaiduTranslator
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
-                OPEN_AI -> OpenAITranslator
+                OPEN_AI -> OpenAiTranslator
             }
         }
 
@@ -86,7 +86,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            OPEN_AI -> service<OpenAISettings>().let { it.isConfigured && OpenAICredentials.isCredentialSet(it.provider) }
+            OPEN_AI -> service<OpenAiSettings>().let { it.isConfigured && OpenAiCredentials.isCredentialSet(it.provider) }
         }
     }
 
