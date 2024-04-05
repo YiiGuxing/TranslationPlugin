@@ -22,9 +22,14 @@
             <li>Baidu Translate.</li>
         </ul>
     </li>
+    <li>Text to speech.
+        <ul>
+            <li>Google TTS.</li>
+            <li>OpenAI TTS.</li>
+        </ul>
+    </li>
     <li>Multiple languages inter-translation.</li>
     <li>Document translation.</li>
-    <li>Text to speech.</li>
     <li>Automatic word selection.</li>
     <li>Automatic word division.</li>
     <li>Word book.</li>
