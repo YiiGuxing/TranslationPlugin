@@ -1,8 +1,11 @@
 package cn.yiiguxing.plugin.translate.tts
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.isCompletedState
+import cn.yiiguxing.plugin.translate.util.Observable
+import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -12,6 +15,8 @@ import com.intellij.openapi.project.Project
  */
 @Service
 class TextToSpeech private constructor() {
+
+    private val settings: Settings by lazy { service<Settings>() }
 
     private var currentPlaying: PlaybackController? = null
 
@@ -23,41 +28,59 @@ class TextToSpeech private constructor() {
      * @param lang the language.
      * @param autoStart `true` to start playing immediately.
      */
-    fun speak(project: Project?, text: String, lang: Lang = Lang.AUTO, autoStart: Boolean = true): PlaybackController {
+    fun speak(
+        project: Project?,
+        text: String,
+        lang: Lang = Lang.AUTO,
+        autoStart: Boolean = true
+    ): PlaybackController {
+        checkThread()
         check(text.isNotBlank()) { "text is blank." }
 
-        val player = GoogleTTSPlayer.create(project, text, lang)
-        if (autoStart) {
-            player.stateBinding.observe { state, _ ->
-                synchronized(this@TextToSpeech) {
-                    if (state.isCompletedState && currentPlaying === player) {
-                        currentPlaying = null
-                    }
-                }
-            }
-            synchronized(this) {
-                currentPlaying?.stop()
-                currentPlaying = player
-                player.start()
-            }
+        val player = getPlayer(project, text, lang)
+        if (!autoStart) {
+            return player
         }
 
+        currentPlaying?.stop()
+        currentPlaying = player
+        player.stateBinding.observe(Observable.ChangeOnEDTListener { state, _ ->
+            if (state.isCompletedState && currentPlaying === player) {
+                currentPlaying = null
+            }
+        })
+        player.start()
+
         return player
+    }
+
+    private fun getPlayer(project: Project?, text: String, lang: Lang): PlaybackController {
+        return when (settings.ttsEngine) {
+            TTSEngine.GOOGLE -> GoogleTTSPlayer.create(project, text, lang)
+            TTSEngine.OPENAI -> OpenAiTTSPlayer.create(project, text)
+        }
     }
 
     /**
      * Returns `true` if the [language][lang] is supported.
      */
-    fun isSupportLanguage(lang: Lang): Boolean = GoogleTTSPlayer.SUPPORTED_LANGUAGES.contains(lang)
+    fun isSupportLanguage(lang: Lang): Boolean {
+        checkThread()
+        return when (settings.ttsEngine) {
+            TTSEngine.GOOGLE -> GoogleTTSPlayer.isSupportLanguage(lang)
+            TTSEngine.OPENAI -> true
+        }
+    }
 
     fun stop() {
-        synchronized(this) {
-            currentPlaying?.stop()
-            currentPlaying = null
-        }
+        checkThread()
+        currentPlaying?.stop()
+        currentPlaying = null
     }
 
     companion object {
         val instance: TextToSpeech get() = service()
+
+        private fun checkThread() = checkDispatchThread<TextToSpeech>()
     }
 }

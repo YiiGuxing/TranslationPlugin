@@ -58,7 +58,7 @@ class GoogleTTSPlayer private constructor(
             }
 
             when (error) {
-                is IOException -> Notifications.showErrorNotification("TTS", error.getCommonMessage(), project)
+                is IOException -> Notifications.showErrorNotification("Google TTS", error.getCommonMessage(), project)
                 else -> LOGGER.e("Google TTS Error", error)
             }
         }
@@ -71,7 +71,7 @@ class GoogleTTSPlayer private constructor(
 
         private const val MAX_TEXT_LENGTH = 200
 
-        val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+        private   val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.CHINESE, Lang.ENGLISH, Lang.CHINESE_TRADITIONAL, Lang.ALBANIAN, Lang.ARABIC, Lang.ESTONIAN,
             Lang.ICELANDIC, Lang.POLISH, Lang.BOSNIAN, Lang.AFRIKAANS, Lang.DANISH, Lang.GERMAN, Lang.RUSSIAN,
             Lang.FRENCH, Lang.FINNISH, Lang.KHMER, Lang.KOREAN, Lang.DUTCH, Lang.CATALAN, Lang.CZECH, Lang.CROATIAN,
@@ -81,6 +81,8 @@ class GoogleTTSPlayer private constructor(
             Lang.HUNGARIAN, Lang.ARMENIAN, Lang.ITALIAN, Lang.HINDI, Lang.SUNDANESE, Lang.INDONESIAN,
             Lang.JAVANESE, Lang.VIETNAMESE
         )
+
+        fun isSupportLanguage(lang: Lang): Boolean = SUPPORTED_LANGUAGES.contains(lang)
 
         fun create(project: Project?, text: String, lang: Lang): GoogleTTSPlayer {
             return GoogleTTSPlayer(project, text, lang)

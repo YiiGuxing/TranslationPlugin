@@ -13,6 +13,7 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
+import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiTranslator
@@ -46,7 +47,13 @@ enum class TranslationEngine(
     BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
     ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
     DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
-    OPEN_AI("translate.openai", message("translation.engine.openai.name"), TranslationIcons.Engines.OpenAI, 10000, 1000);
+    OPEN_AI(
+        "translate.openai",
+        message("translation.engine.openai.name"),
+        TranslationIcons.Engines.OpenAI,
+        10000,
+        1000
+    );
 
     var primaryLanguage: Lang
         get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
@@ -86,7 +93,9 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            OPEN_AI -> service<OpenAiSettings>().let { it.isConfigured && OpenAiCredentials.isCredentialSet(it.provider) }
+            OPEN_AI -> service<OpenAiSettings>().let {
+                it.isConfigured(ConfigType.TRANSLATOR) && OpenAiCredentials.isCredentialSet(it.provider)
+            }
         }
     }
 
@@ -118,7 +127,7 @@ enum class TranslationEngine(
 
             GOOGLE -> GoogleSettingsDialog().showAndGet()
             DEEPL -> DeeplSettingsDialog().showAndGet()
-            OPEN_AI -> OpenAISettingsDialog().showAndGet()
+            OPEN_AI -> OpenAISettingsDialog(ConfigType.TRANSLATOR).showAndGet()
 
             else -> true
         }

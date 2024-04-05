@@ -16,7 +16,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.util.containers.orNull
@@ -27,7 +26,7 @@ import javax.swing.JComponent
 import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
 
-class OpenAISettingsDialog : DialogWrapper(false) {
+class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(false) {
 
     private val settings = service<OpenAiSettings>()
     private val openAiState = OpenAiSettings.OpenAi().apply { copyFrom(settings.openAi) }
@@ -35,7 +34,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
     private val apiKeys: ApiKeys = ApiKeys()
     private var isApiKeySet: Boolean = false
 
-    private val ui: OpenAISettingsUI = OpenAISettingsUiImpl()
+    private val ui: OpenAISettingsUI = OpenAISettingsUiImpl(configType)
 
     private var provider: ServiceProvider
         get() = ui.providerComboBox.selected ?: ServiceProvider.OpenAI
@@ -43,17 +42,13 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             ui.providerComboBox.selected = value
         }
 
-    private var endpointState: String?
+    private val commonStates: OpenAiSettings.CommonState
         get() = when (provider) {
-            ServiceProvider.OpenAI -> openAiState.endpoint
-            ServiceProvider.Azure -> azureState.endpoint
+            ServiceProvider.OpenAI -> openAiState
+            ServiceProvider.Azure -> azureState
         }
-        set(value) {
-            when (provider) {
-                ServiceProvider.OpenAI -> openAiState.endpoint = value
-                ServiceProvider.Azure -> azureState.endpoint = value
-            }
-        }
+
+    private val azureCommonState = AzureCommonState(azureState, configType)
 
     private var apiEndpoint: String?
         get() = ui.apiEndpointField.text?.trim()?.takeIf { it.isNotEmpty() }
@@ -61,20 +56,38 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             ui.apiEndpointField.text = if (value.isNullOrEmpty()) null else value
         }
 
+    private var ttsSpeed: Float
+        get() = ui.ttsSpeedSlicer.value / 100f
+        set(value) {
+            ui.ttsSpeedSlicer.value = (value * 100).toInt()
+        }
+
     init {
-        title = message("openai.settings.dialog.title")
         setResizable(false)
         init()
         initListeners()
         initValidators()
 
+        when (configType) {
+            ConfigType.TRANSLATOR -> initForTranslator()
+            ConfigType.TTS -> initForTTS()
+        }
         provider = settings.provider
-        ui.modelComboBox.model = CollectionComboBoxModel(OpenAiModel.gptModels())
-        ui.modelComboBox.selected = openAiState.model
-        ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
-        ui.azureModelField.text = settings.azure.model.orEmpty()
-
         providerUpdated(settings.provider)
+    }
+
+    private fun initForTranslator() {
+        title = message("openai.settings.dialog.title")
+        ui.modelComboBox.selected = openAiState.model
+        ui.azureDeploymentField.text = settings.azure.deployment.orEmpty()
+        ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
+    }
+
+    private fun initForTTS() {
+        title = message("openai.settings.dialog.title.tts")
+        ui.modelComboBox.selected = commonStates.ttsModel
+        ui.azureDeploymentField.text = settings.azure.ttsDeployment.orEmpty()
+        ui.azureApiVersionComboBox.selected = settings.azure.ttsApiVersion
     }
 
     override fun createCenterPanel(): JComponent = ui.component
@@ -115,20 +128,35 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
         ui.modelComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                openAiState.model = it.item as OpenAiModel
+                val model = it.item as OpenAiModel
+                when (configType) {
+                    ConfigType.TRANSLATOR -> openAiState.model = model
+                    ConfigType.TTS -> commonStates.ttsModel = model
+                }
             }
         }
 
-        ui.azureModelField.document.addDocumentListener(object : DocumentAdapter() {
+        ui.azureDeploymentField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                azureState.model = ui.azureModelField.text.takeUnless { it.isNullOrBlank() }?.trim()
-                verify(ui.azureModelField)
+                azureCommonState.deployment = ui.azureDeploymentField.text.takeUnless { it.isNullOrBlank() }?.trim()
+                verify(ui.azureDeploymentField)
             }
         })
 
         ui.azureApiVersionComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                azureState.apiVersion = it.item as AzureServiceVersion
+                azureCommonState.apiVersion = it.item as AzureServiceVersion
+            }
+        }
+
+        if (configType == ConfigType.TTS) {
+            ui.ttsVoiceComboBox.addItemListener {
+                if (it.stateChange == ItemEvent.SELECTED) {
+                    commonStates.ttsVoice = it.item as OpenAiTtsVoice
+                }
+            }
+            ui.ttsSpeedSlicer.addChangeListener {
+                commonStates.ttsSpeed = ttsSpeed
             }
         }
     }
@@ -163,7 +191,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
             }
         }
 
-        installValidator(ui.azureModelField) {
+        installValidator(ui.azureDeploymentField) {
             when {
                 it.text.isNullOrBlank() -> ValidationInfo(
                     message("openai.settings.dialog.error.missing.deployment"),
@@ -184,7 +212,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         ServiceProvider.Azure -> HelpTopic.AZURE_OPEN_AI.id
     }
 
-    override fun isOK(): Boolean = isApiKeySet && settings.isConfigured
+    override fun isOK(): Boolean = isApiKeySet && settings.isConfigured(configType)
 
     private fun providerUpdated(newProvider: ServiceProvider) {
         val isAzure = newProvider == ServiceProvider.Azure
@@ -197,8 +225,13 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         ui.setOpenAiFormComponentsVisible(!isAzure)
         ui.setAzureFormComponentsVisible(isAzure)
 
-        apiEndpoint = endpointState
+        apiEndpoint = commonStates.endpoint
         ui.apiKeyField.text = apiKeys[newProvider]
+        if (configType == ConfigType.TTS) {
+            ttsSpeed = commonStates.ttsSpeed
+            ui.modelComboBox.selected = commonStates.ttsModel
+            ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
+        }
 
         invokeLater {
             verify()
@@ -208,11 +241,9 @@ class OpenAISettingsDialog : DialogWrapper(false) {
 
     private fun apiEndpointChanged() {
         val endpoint = apiEndpoint
-        endpointState = if (endpoint.isValidEndpoint(true)) {
-            endpoint
-        } else {
-            settings.getOptions(provider).endpoint
-        }
+            ?.takeIf { it.isValidEndpoint(true) }
+            ?: settings.getOptions(provider).endpoint
+        commonStates.endpoint = endpoint
     }
 
     private fun verify(component: JComponent): ValidationInfo? {
@@ -225,7 +256,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
     private fun verify(): Boolean {
         var valid = true
         var focusTarget: JComponent? = null
-        listOf(ui.apiKeyField, ui.apiEndpointField, ui.azureModelField).forEach {
+        listOf(ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
             verify(it)?.let { info ->
                 // 校验不通过的聚焦优先级最高
                 if (valid && it.isShowing) {
@@ -252,7 +283,7 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         val newProvider = provider
         if (oldProvider != newProvider ||
             openAiState.model != settings.openAi.model ||
-            azureState.model != settings.azure.model
+            azureState.deployment != settings.azure.deployment
         ) {
             service<CacheService>().removeMemoryCache { key, _ ->
                 key.translator == TranslationEngine.OPEN_AI.id
@@ -317,6 +348,18 @@ class OpenAISettingsDialog : DialogWrapper(false) {
         fun copyFrom(apiKeys: ApiKeys) {
             openAi = apiKeys.openAi
             azure = apiKeys.azure
+        }
+    }
+
+    private class AzureCommonState(azureState: OpenAiSettings.Azure, configType: ConfigType) {
+        var deployment: String? by when (configType) {
+            ConfigType.TRANSLATOR -> azureState::deployment
+            ConfigType.TTS -> azureState::ttsDeployment
+        }
+
+        var apiVersion: AzureServiceVersion by when (configType) {
+            ConfigType.TRANSLATOR -> azureState::apiVersion
+            ConfigType.TTS -> azureState::ttsApiVersion
         }
     }
 }

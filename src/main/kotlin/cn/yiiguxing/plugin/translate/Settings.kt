@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
@@ -39,6 +40,12 @@ class Settings : PersistentStateComponent<Settings> {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
             }
+
+    var ttsEngine: TTSEngine by Delegates.observable(TTSEngine.GOOGLE) { _, oldValue: TTSEngine, newValue: TTSEngine ->
+        if (isInitialized && oldValue != newValue) {
+            SETTINGS_CHANGE_PUBLISHER.onTTSEngineChanged(this, newValue)
+        }
+    }
 
     /**
      * 主要语言
@@ -306,6 +313,8 @@ enum class TargetLanguageSelection(val displayName: String) {
 interface SettingsChangeListener {
 
     fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {}
+
+    fun onTTSEngineChanged(settings: Settings, ttsEngine: TTSEngine) {}
 
     fun onOverrideFontChanged(settings: Settings) {}
 

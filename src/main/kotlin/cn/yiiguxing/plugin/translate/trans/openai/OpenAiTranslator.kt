@@ -105,7 +105,7 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
         val provider = settings.provider
         val model = when (val options = settings.getOptions(provider)) {
             is OpenAiService.OpenAIOptions -> options.model.value
-            is OpenAiService.AzureOptions -> options.model ?: ""
+            is OpenAiService.AzureOptions -> options.deployment ?: ""
         }
 
         return "$id$provider$model$text$srcLang$targetLang".md5()

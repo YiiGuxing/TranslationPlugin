@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.append
 import cn.yiiguxing.plugin.translate.trans.text.apply
+import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
@@ -637,6 +638,15 @@ class TranslationDialog(
     override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
         updateLanguages()
         requestTranslate(0)
+    }
+
+    override fun onTTSEngineChanged(settings: Settings, ttsEngine: TTSEngine) {
+        inputTTSButton.isEnabled = lastTranslation?.srcLang?.let {
+            TextToSpeech.isSupportLanguage(it)
+        } ?: false
+        translationTTSButton.isEnabled = lastTranslation?.targetLang?.let {
+            TextToSpeech.isSupportLanguage(it)
+        } ?: false
     }
 
     private fun updateLanguages(languagePair: LanguagePair? = null) {

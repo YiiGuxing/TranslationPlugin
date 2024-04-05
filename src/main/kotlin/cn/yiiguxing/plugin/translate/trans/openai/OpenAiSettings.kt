@@ -23,15 +23,17 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
     @get:OptionTag("AZURE")
     var azure: Azure by property(Azure())
 
-    @get:Transient
-    val isConfigured: Boolean
-        get() = when (provider) {
-            ServiceProvider.Azure -> !with(azure) { endpoint.isNullOrBlank() || model.isNullOrBlank() }
-
-            else -> true
+    @Transient
+    fun isConfigured(configType: ConfigType): Boolean = when (provider) {
+        ServiceProvider.Azure -> when (configType) {
+            ConfigType.TRANSLATOR -> !with(azure) { endpoint.isNullOrBlank() || deployment.isNullOrBlank() }
+            ConfigType.TTS -> !with(azure) { endpoint.isNullOrBlank() || ttsDeployment.isNullOrBlank() }
         }
 
-    fun getOptions(provider: ServiceProvider = this.provider): OpenAiService.Options<*> = when (provider) {
+        else -> true
+    }
+
+    fun getOptions(provider: ServiceProvider = this.provider): OpenAiService.Options = when (provider) {
         ServiceProvider.OpenAI -> openAi
         ServiceProvider.Azure -> azure
     }
@@ -42,42 +44,38 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         copyFrom(state)
     }
 
-    @Tag("open-ai")
-    class OpenAi : BaseState(), OpenAiService.OpenAIOptions {
+    open class CommonState : BaseState() {
         @get:OptionTag("ENDPOINT")
-        override var endpoint: String? by string()
-
-        @get:OptionTag("MODEL")
-        override var model: OpenAiModel by enum(OpenAiModel.GPT_3_5_TURBO)
+        var endpoint: String? by string()
 
         @get:OptionTag("TTS_MODEL")
-        override var ttsModel: OpenAiModel by enum(OpenAiModel.TTS_1)
+        var ttsModel: OpenAiModel by enum(OpenAiModel.TTS_1)
 
         @get:OptionTag("TTS_VOICE")
-        override var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
+        var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
 
         @get:OptionTag("TTS_SPEED")
-        override var ttsSpeed: Float by property(1.0f)
+        var ttsSpeed: Float by property(1.0f)
+    }
+
+    @Tag("open-ai")
+    class OpenAi : CommonState(), OpenAiService.OpenAIOptions {
+        @get:OptionTag("MODEL")
+        override var model: OpenAiModel by enum(OpenAiModel.GPT_3_5_TURBO)
     }
 
     @Tag("azure")
-    class Azure : BaseState(), OpenAiService.AzureOptions {
-        @get:OptionTag("ENDPOINT")
-        override var endpoint: String? by string()
-
+    class Azure : CommonState(), OpenAiService.AzureOptions {
         @get:OptionTag("API_VERSION")
-        override var apiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2023_05_15)
+        override var apiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_02_01)
 
-        @get:OptionTag("MODEL")
-        override var model: String? by string()
+        @get:OptionTag("TTS_API_VERSION")
+        override var ttsApiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_03_01_PREVIEW)
 
-        @get:OptionTag("TTS_MODEL")
-        override var ttsModel: String? by string()
+        @get:OptionTag("DEPLOYMENT")
+        override var deployment: String? by string()
 
-        @get:OptionTag("TTS_VOICE")
-        override var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
-
-        @get:OptionTag("TTS_SPEED")
-        override var ttsSpeed: Float by property(1.0f)
+        @get:OptionTag("TTS_DEPLOYMENT")
+        override var ttsDeployment: String? by string()
     }
 }
