@@ -172,7 +172,6 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
             endpointLabel,
             azureApiVersionLabel
         )
-        println(maxWidth)
         val labelCC = UI.cc()
             .sizeGroupX("label")
             .minWidth(UI.migSize(maxWidth, false))
