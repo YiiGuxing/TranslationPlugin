@@ -79,6 +79,9 @@ object UI {
      */
     fun migSize(size: Int, scale: Boolean = true): String = "${if (scale) JBUIScale.scale(size) else size}px"
 
+    fun migInsets(top: Int = 0, left: Int = 0, bottom: Int = 0, right: Int = 0, scale: Boolean = true): String =
+        "${migSize(top, scale)} ${migSize(left, scale)} ${migSize(bottom, scale)} ${migSize(right, scale)}"
+
     fun cc() = CC()
 
     fun spanX(cells: Int = LayoutUtil.INF): CC = CC().spanX(cells)

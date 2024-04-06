@@ -34,6 +34,7 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         UI.migLayout(
             gapX = UI.migSize(8),
             gapY = UI.migSize(2),
+            insets = UI.migInsets(0, 8, 0, 4),
             lcBuilder = { hideMode(3) }
         )
     )
