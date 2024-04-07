@@ -142,6 +142,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 柱子 |  | 10.00 CNY |
 | Clear\_T |  | 10.00 CNY |
 | 淅潼 |  | 10.00 CNY |
 | 郭睿 |  | 10.00 CNY |
@@ -306,6 +307,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 墨离 |  | 6.66 CNY |
 | 赵哈哈 |  | 6.66 CNY |
 | Echo'sEcho |  | 6.66 CNY |
 | Doflan |  | 6.66 CNY |
