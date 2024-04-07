@@ -81,7 +81,7 @@ abstract class SettingsUi {
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
                 val text = getText(0, length)
                 val stringToInsert = str
-                    ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
+                    ?.filter { (it in ' '..'~' || it == '\t') && !Character.isLetterOrDigit(it) && !text.contains(it) }
                     ?.toSet()
                     ?.take(10 - length)
                     ?.joinToString("")
