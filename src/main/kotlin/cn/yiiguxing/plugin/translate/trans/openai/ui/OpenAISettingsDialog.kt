@@ -73,7 +73,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             ConfigType.TTS -> initForTTS()
         }
         provider = settings.provider
-        providerUpdated(settings.provider)
+        providerUpdated(settings.provider, false)
     }
 
     private fun initForTranslator() {
@@ -214,7 +214,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
     override fun isOK(): Boolean = isApiKeySet && settings.isConfigured(configType)
 
-    private fun providerUpdated(newProvider: ServiceProvider) {
+    private fun providerUpdated(newProvider: ServiceProvider, repack: Boolean = true) {
         val isAzure = newProvider == ServiceProvider.Azure
         if (isAzure) {
             ui.apiEndpointField.setExtensions(emptyList())
@@ -233,9 +233,11 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
         }
 
-        invokeLater {
+        invokeLater(expired = { isDisposed }) {
             verify()
-            pack()
+            if (repack) {
+                pack()
+            }
         }
     }
 
