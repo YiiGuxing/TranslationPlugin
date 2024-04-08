@@ -656,8 +656,9 @@ class TranslationDialog(
 
     override fun show() {
         if (!isShowing) {
+            restoreWindowSize()
             super.show()
-            restoreWindowLocationAndSize()
+            restoreWindowLocation()
         }
 
         focusManager.requestFocus(inputTextArea, true)
@@ -777,45 +778,57 @@ class TranslationDialog(
         translationPanel.preferredSize = translationPanel.size
     }
 
-    private fun restoreWindowLocationAndSize() {
-        val savedX = TranslationStates.translationDialogLocationX
-        val savedY = TranslationStates.translationDialogLocationY
+    private fun restoreWindowSize() {
         val savedWidth = TranslationStates.translationDialogWidth
         val savedHeight = TranslationStates.translationDialogHeight
-        if (savedX != null && savedY != null) {
-            val ownerWindow = window.owner
-            val screenDeviceBounds = GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .screenDevices
-                .map { sd -> sd.defaultConfiguration.bounds }
-            val isValidArea = screenDeviceBounds
-                .find { it.contains(ownerWindow.location) }
-                ?.let { bounds ->
-                    val offset = 10
-                    Rectangle(
-                        bounds.x + offset,
-                        bounds.y + offset,
-                        bounds.width - offset,
-                        bounds.height - offset
-                    )
-                }
-                ?.intersects(
-                    savedX.toDouble(),
-                    savedY.toDouble(),
-                    savedWidth.toDouble(),
-                    savedHeight.toDouble()
-                ) ?: false
-            if (isValidArea) {
-                window.location = Point(savedX, savedY)
-            } else {
-                TranslationStates.translationDialogLocationX = null
-                TranslationStates.translationDialogLocationY = null
-            }
-        }
         val savedSize = Dimension(savedWidth, savedHeight)
         translationPanel.size = savedSize
         translationPanel.preferredSize = savedSize
         fixWindowHeight(savedWidth)
+    }
+
+    private fun restoreWindowLocation() {
+        val windowLocation = Settings.translationWindowLocation
+        if (windowLocation == WindowLocation.DEFAULT) {
+            return
+        }
+
+        val savedX = TranslationStates.translationDialogLocationX
+        val savedY = TranslationStates.translationDialogLocationY
+        if (savedX == null || savedY == null) {
+            return
+        }
+
+        val savedWidth = TranslationStates.translationDialogWidth
+        val savedHeight = TranslationStates.translationDialogHeight
+        val ownerWindow = window.owner
+        val screenDeviceBounds = GraphicsEnvironment
+            .getLocalGraphicsEnvironment()
+            .screenDevices
+            .map { sd -> sd.defaultConfiguration.bounds }
+        val isValidArea = screenDeviceBounds
+            .filter { windowLocation == WindowLocation.LAST_LOCATION || it.contains(ownerWindow.location) }
+            .any { bounds ->
+                val offset = 10
+                Rectangle(
+                    bounds.x + offset,
+                    bounds.y + offset,
+                    bounds.width - offset,
+                    bounds.height - offset
+                ).intersects(
+                    savedX.toDouble(),
+                    savedY.toDouble(),
+                    savedWidth.toDouble(),
+                    savedHeight.toDouble()
+                )
+            }
+
+        if (isValidArea) {
+            window.location = Point(savedX, savedY)
+        } else {
+            TranslationStates.translationDialogLocationX = null
+            TranslationStates.translationDialogLocationY = null
+        }
     }
 
     private class UIProvider : TranslationDialogUiProvider {
