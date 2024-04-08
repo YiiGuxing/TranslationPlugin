@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.action.SettingsAction
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
@@ -52,7 +53,7 @@ import kotlin.properties.Delegates
 
 class TranslationDialog(
     private val project: Project?,
-    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider())
+    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider(project))
 ) :
     DialogWrapper(project),
     TranslationDialogUI by ui,
@@ -133,7 +134,7 @@ class TranslationDialog(
                 else -> false
             }
             if (needCloseDialog) {
-                doCancelAction()
+                close()
             }
         }
 
@@ -244,11 +245,6 @@ class TranslationDialog(
                     super.setCursor(content, cursor)
                 }
             }
-
-            override fun mouseReleased(event: MouseEvent?) {
-                super.mouseReleased(event)
-                storeWindowLocationAndSize()
-            }
         }
         glassPane.addMouseMotionPreprocessor(resizeListener, this.disposable)
         glassPane.addMousePreprocessor(resizeListener, this.disposable)
@@ -275,7 +271,7 @@ class TranslationDialog(
 
     // Close the dialog when the ESC key is pressed
     override fun createCancelAction(): ActionListener {
-        return ActionListener { doCancelAction() }
+        return ActionListener { close() }
     }
 
     private fun initLangComboBoxes() {
@@ -665,7 +661,6 @@ class TranslationDialog(
     }
 
     fun close() {
-        storeWindowLocationAndSize()
         close(CLOSE_EXIT_CODE)
     }
 
@@ -674,6 +669,7 @@ class TranslationDialog(
             return
         }
 
+        storeWindowLocationAndSize()
         Disposer.dispose(this)
         super.dispose()
         _disposed = true
@@ -831,10 +827,12 @@ class TranslationDialog(
         }
     }
 
-    private class UIProvider : TranslationDialogUiProvider {
+    private class UIProvider(private val project: Project?) : TranslationDialogUiProvider {
         override fun createPinButton(): JComponent = actionButton(MyPinAction())
 
-        override fun createSettingsButton(): JComponent = actionButton(SettingsAction())
+        override fun createSettingsButton(): JComponent = actionButton(SettingsAction {
+            TranslationUIManager.instance(project).currentTranslationDialog()?.close()
+        })
 
         private fun actionButton(action: AnAction): ActionButton =
             ActionButton(
