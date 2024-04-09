@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
@@ -164,6 +165,11 @@ class Settings : PersistentStateComponent<Settings> {
             SETTINGS_CHANGE_PUBLISHER.onWordbookStoragePathChanged(this)
         }
     }
+
+    /**
+     * 翻译对话框位置
+     */
+    var translationWindowLocation: WindowLocation = WindowLocation.MOUSE_SCREEN
 
     override fun getState(): Settings = this
 

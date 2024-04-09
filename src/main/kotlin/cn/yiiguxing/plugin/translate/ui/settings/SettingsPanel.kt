@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.ByteSize
 import cn.yiiguxing.plugin.translate.util.CacheService
@@ -201,6 +202,7 @@ class SettingsPanel(
                     || settings.showReplacementAction != showReplacementActionCheckBox.isSelected
                     || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
                     || states.maxHistorySize != maxHistoriesSizeComboBox.item
+                    || settings.translationWindowLocation != translationWindowLocationComboBox.selected
         }
 
     private fun getConfigurationPath(vararg configurations: String): String = configurations.joinToString("|") {
@@ -253,6 +255,7 @@ class SettingsPanel(
             showActionsInContextMenuOnlyWithSelection = showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
             takeWordWhenDialogOpens = takeWordCheckBox.isSelected
             ignoreRegex = this@SettingsPanel.ignoreRegExp.text
+            translationWindowLocation = translationWindowLocationComboBox.selected ?: WindowLocation.MOUSE_SCREEN
         }
     }
 
@@ -285,6 +288,7 @@ class SettingsPanel(
             settings.showActionsInContextMenuOnlyWithSelection
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
         wordbookStoragePathField.text = settings.wordbookStoragePath ?: ""
+        translationWindowLocationComboBox.selected = settings.translationWindowLocation
     }
 
     companion object {

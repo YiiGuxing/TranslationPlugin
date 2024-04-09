@@ -13,10 +13,12 @@ import javax.swing.Icon
 class SettingsAction(
     @ActionText text: String? = message("settings.title.translate"),
     @NlsActions.ActionDescription description: String? = message("settings.title.translate"),
-    icon: Icon? = AllIcons.General.GearPlain
+    icon: Icon? = AllIcons.General.GearPlain,
+    private val beforeActionPerformed: ((event: AnActionEvent) -> Unit)? = null
 ) : AnAction(text, description, icon), DumbAware {
 
     override fun actionPerformed(e: AnActionEvent) {
+        beforeActionPerformed?.invoke(e)
         TranslationConfigurable.showSettingsDialog(e.project)
     }
 
