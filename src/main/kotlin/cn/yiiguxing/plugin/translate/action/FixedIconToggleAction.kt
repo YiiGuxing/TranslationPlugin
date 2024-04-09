@@ -12,8 +12,8 @@ import javax.swing.Icon
 
 abstract class FixedIconToggleAction(
     protected val icon: Icon,
-    text: Supplier<@ActionText String>,
-    description: Supplier<@NlsActions.ActionDescription String> = Presentation.NULL_STRING,
+    text: Supplier<@ActionText String?>,
+    description: Supplier<@NlsActions.ActionDescription String?> = Presentation.NULL_STRING,
 ) : UpdateInBackgroundCompatToggleAction(text, description, null) {
 
     override fun update(e: AnActionEvent) {
