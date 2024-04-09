@@ -3,7 +3,7 @@
 jsoup = "1.17.2"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
-ideaCompat = "0.0.3"
+ideaCompat = "0.0.4"
 junit = "4.13.2"
 
 # plugins
