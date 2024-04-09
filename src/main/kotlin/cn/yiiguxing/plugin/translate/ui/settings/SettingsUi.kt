@@ -16,6 +16,7 @@ import cn.yiiguxing.plugin.translate.ui.UI.migLayoutVertical
 import cn.yiiguxing.plugin.translate.ui.UI.migSize
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
+import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import com.intellij.openapi.application.ApplicationManager
@@ -27,6 +28,7 @@ import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -81,7 +83,7 @@ abstract class SettingsUi {
             override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
                 val text = getText(0, length)
                 val stringToInsert = str
-                    ?.filter { it in ' '..'~' && !Character.isLetterOrDigit(it) && !text.contains(it) }
+                    ?.filter { (it in ' '..'~' || it == '\t') && !Character.isLetterOrDigit(it) && !text.contains(it) }
                     ?.toSet()
                     ?.take(10 - length)
                     ?.joinToString("")
@@ -111,7 +113,6 @@ abstract class SettingsUi {
     protected val ttsSourceComboBox: ComboBox<TTSSource> =
         ComboBox(CollectionComboBoxModel(TTSSource.values().asList())).apply {
             renderer = SimpleListCellRenderer.create("") { it.displayName }
-            preferredSize = Dimension(preferredSize.width, JBUI.scale(26))
         }
 
     protected val autoPlayTTSCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoPlayTTS")).apply {
@@ -148,6 +149,10 @@ abstract class SettingsUi {
 
     protected val showActionsInContextMenuOnlyWithSelectionCheckbox: JBCheckBox =
         JBCheckBox(message("settings.options.show.actions.only.with.selection"))
+
+    protected val translationWindowLocationComboBox: ComboBox<WindowLocation> = comboBox<WindowLocation>().apply {
+        renderer = SimpleListCellRenderer.create("") { it.displayName }
+    }
 
     protected val supportLinkLabel: LinkLabel<*> =
         LinkLabel<Any>(message("support.or.donate"), TranslationIcons.Support).apply {
@@ -225,9 +230,16 @@ abstract class SettingsUi {
         }
 
         val translationPopupPanel = titledPanel(message("settings.panel.title.translation.popup")) {
-            add(foldOriginalCheckBox, wrap().span(2))
-            add(autoPlayTTSCheckBox)
-            add(ttsSourceComboBox, wrap())
+            add(foldOriginalCheckBox, wrap())
+            add(hBox(autoPlayTTSCheckBox, ttsSourceComboBox), wrap())
+            add(
+                hBox(
+                    JLabel(message("settings.label.translation.dialog.location")),
+                    translationWindowLocationComboBox,
+                    ContextHelpLabel.create(message("window.location.help.tip"))
+                ),
+                wrap()
+            )
         }
 
         val translateAndReplacePanel = titledPanel(message("settings.panel.title.translate.and.replace")) {
@@ -346,6 +358,11 @@ abstract class SettingsUi {
                 add(it, fillX())
             }
             add(JPanel(), fillY())
+        }
+
+        private fun hBox(vararg components: JComponent): JPanel = JPanel().apply {
+            layout = HorizontalLayout(JBUIScale.scale(4))
+            components.forEach { add(it) }
         }
 
         private fun <T> comboBox(elements: List<T>): ComboBox<T> = ComboBox(CollectionComboBoxModel(elements))

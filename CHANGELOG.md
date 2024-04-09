@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- User interaction experience optimization and improvement.
+- Compatible with 2024.4.
+- Bug fixes.
+- 用户交互体验优化与改进
+- 兼容 IDE 2024.1 版本
+- Bug 修复
+
 ## [3.5.7] (2024/03/14)
 
 - Bug fixes.

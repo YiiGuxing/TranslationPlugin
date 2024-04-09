@@ -71,7 +71,7 @@ class BalloonTranslationPane(
             }
         }
 
-        viewer.border = JBUI.Borders.emptyRight(OFFSET + GAP)
+        viewer.border = JBUI.Borders.empty(GAP, 0, GAP, OFFSET + GAP)
 
         if (isDictViewer(viewer)) {
             dictViewerScrollWrapper = scrollPane

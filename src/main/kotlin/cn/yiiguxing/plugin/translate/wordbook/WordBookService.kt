@@ -28,6 +28,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.sql.Driver
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.concurrent.CountDownLatch
@@ -359,6 +360,19 @@ class WordBookService : Disposable {
         }
     }
 
+    private val isReturningSupported: Boolean by lazy {
+        val driver = try {
+            Class.forName(SQLITE_JDBC, true, classLoader).getConstructor().newInstance() as Driver
+        } catch (e: Throwable) {
+            LOGGER.w("Failed to get driver", e)
+            return@lazy false
+        }
+        val majorVersion = driver.majorVersion
+        majorVersion > RETURNING_SUPPORTED_MAJOR_VERSION ||
+                (majorVersion == RETURNING_SUPPORTED_MAJOR_VERSION &&
+                        driver.minorVersion >= RETURNING_SUPPORTED_MINOR_VERSION)
+    }
+
     /**
      * Inserts the specified [word] to the word book and returns the id if the [word] is inserted.
      */
@@ -375,19 +389,35 @@ class WordBookService : Disposable {
                 $COLUMN_TAGS,
                 $COLUMN_CREATED_AT
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
-        """.trimIndent()
+        """.trimIndent().trim()
 
-        return queryRunner.insert(
-            sql,
-            WordIdHandler,
-            word.word,
-            word.sourceLanguage.code,
-            word.targetLanguage.code,
-            word.phonetic,
-            word.explanation,
-            word.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
-            word.createdAt
-        )?.also { word.id = it }
+        // v3.43.0.0 ~ v3.44.1.0 removed support for Statement#getGeneratedKeys
+        // https://github.com/xerial/sqlite-jdbc/releases/tag/3.43.0.0
+        return if (isReturningSupported) {
+            queryRunner.query(
+                "$sql RETURNING $COLUMN_ID",
+                WordIdHandler,
+                word.word,
+                word.sourceLanguage.code,
+                word.targetLanguage.code,
+                word.phonetic,
+                word.explanation,
+                word.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
+                word.createdAt
+            )
+        } else {
+            queryRunner.insert(
+                sql,
+                WordIdHandler,
+                word.word,
+                word.sourceLanguage.code,
+                word.targetLanguage.code,
+                word.phonetic,
+                word.explanation,
+                word.tags.takeIf { it.isNotEmpty() }?.joinToString(","),
+                word.createdAt
+            )
+        }?.also { word.id = it }
     }
 
     /**
@@ -558,7 +588,9 @@ class WordBookService : Disposable {
 
 
     companion object {
-        private const val DRIVER_VERSION = "3.39.3.0"
+        private const val RETURNING_SUPPORTED_MAJOR_VERSION = 3
+        private const val RETURNING_SUPPORTED_MINOR_VERSION = 35
+        private const val DRIVER_VERSION = "3.44.1.0"
         private const val STORAGE_FILE_NAME = "wordbook.sqlite"
 
         private val LOCK_FILE = TranslationStorages.DATA_DIRECTORY.resolve(".lock")
@@ -568,9 +600,10 @@ class WordBookService : Disposable {
         private const val DRIVER_FILE_URL =
             "https://maven.aliyun.com/repository/public/org/xerial/sqlite-jdbc/$DRIVER_VERSION/sqlite-jdbc-$DRIVER_VERSION.jar"
 
-        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.39.3.0/sqlite-jdbc-3.39.3.0.jar.sha1
-        private const val DRIVER_FILE_SHA1 = "94166806682e738a5275bd09052fa34b1328eedf"
+        // https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.44.1.0/sqlite-jdbc-3.44.1.0.jar.sha1
+        private const val DRIVER_FILE_SHA1 = "012e6182deef32d366ade664aa33bec9f4dd3ffe"
 
+        private const val SQLITE_JDBC = "org.sqlite.JDBC"
         private const val SQLITE_DATA_SOURCE = "org.sqlite.SQLiteDataSource"
         private const val DATABASE_URL_PREFIX = "jdbc:sqlite:"
 
@@ -618,8 +651,12 @@ class WordBookService : Disposable {
         }
 
         private fun ClassLoader.canDriveService(default: Boolean = true): Boolean {
-            // 内置的SQLite驱动不支持Mac M1
-            if (default && SystemInfo.isMac && /* Mac M1 */ SystemInfo.OS_ARCH.equals("aarch64", ignoreCase = true)) {
+            // 老版本内置的SQLite驱动不支持Mac M1
+            if (default &&
+                IdeVersion < IdeVersion.IDE2024_1 &&
+                SystemInfo.isMac &&
+                /* Mac M1 */ SystemInfo.OS_ARCH.equals("aarch64", ignoreCase = true)
+            ) {
                 return false
             }
 

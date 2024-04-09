@@ -203,7 +203,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     private class TranslationItemRenderer : LookupElementRenderer<LookupElement>() {
         override fun renderElement(element: LookupElement, presentation: LookupElementPresentation) {
-            presentation.itemText = element.lookupString.replace(CRLF, "↩")
+            presentation.itemText = element.lookupString.replace(CRLF, "↩").replace("\t", "⇥")
         }
     }
 

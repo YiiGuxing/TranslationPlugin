@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.intellij.compat.action.CompatToggleAction
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.action.SettingsAction
+import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
@@ -53,7 +54,7 @@ import kotlin.properties.Delegates
 
 class TranslationDialog(
     private val project: Project?,
-    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider())
+    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider(project))
 ) :
     DialogWrapper(project),
     TranslationDialogUI by ui,
@@ -134,7 +135,7 @@ class TranslationDialog(
                 else -> false
             }
             if (needCloseDialog) {
-                doCancelAction()
+                close()
             }
         }
 
@@ -245,11 +246,6 @@ class TranslationDialog(
                     super.setCursor(content, cursor)
                 }
             }
-
-            override fun mouseReleased(event: MouseEvent?) {
-                super.mouseReleased(event)
-                storeWindowLocationAndSize()
-            }
         }
         glassPane.addMouseMotionPreprocessor(resizeListener, this.disposable)
         glassPane.addMousePreprocessor(resizeListener, this.disposable)
@@ -276,7 +272,7 @@ class TranslationDialog(
 
     // Close the dialog when the ESC key is pressed
     override fun createCancelAction(): ActionListener {
-        return ActionListener { doCancelAction() }
+        return ActionListener { close() }
     }
 
     private fun initLangComboBoxes() {
@@ -657,15 +653,15 @@ class TranslationDialog(
 
     override fun show() {
         if (!isShowing) {
+            restoreWindowSize()
             super.show()
-            restoreWindowLocationAndSize()
+            restoreWindowLocation()
         }
 
         focusManager.requestFocus(inputTextArea, true)
     }
 
     fun close() {
-        storeWindowLocationAndSize()
         close(CLOSE_EXIT_CODE)
     }
 
@@ -674,6 +670,7 @@ class TranslationDialog(
             return
         }
 
+        storeWindowLocationAndSize()
         Disposer.dispose(this)
         super.dispose()
         _disposed = true
@@ -778,40 +775,65 @@ class TranslationDialog(
         translationPanel.preferredSize = translationPanel.size
     }
 
-    private fun restoreWindowLocationAndSize() {
-        val savedX = TranslationStates.translationDialogLocationX
-        val savedY = TranslationStates.translationDialogLocationY
+    private fun restoreWindowSize() {
         val savedWidth = TranslationStates.translationDialogWidth
         val savedHeight = TranslationStates.translationDialogHeight
-        if (savedX != null && savedY != null) {
-            val intersectWithScreen = GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .screenDevices
-                .any { gd ->
-                    gd.defaultConfiguration.bounds.intersects(
-                        savedX.toDouble(),
-                        savedY.toDouble(),
-                        savedWidth.toDouble(),
-                        savedHeight.toDouble()
-                    )
-                }
-            if (intersectWithScreen) {
-                window.location = Point(savedX, savedY)
-            } else {
-                TranslationStates.translationDialogLocationX = null
-                TranslationStates.translationDialogLocationY = null
-            }
-        }
         val savedSize = Dimension(savedWidth, savedHeight)
         translationPanel.size = savedSize
         translationPanel.preferredSize = savedSize
         fixWindowHeight(savedWidth)
     }
 
-    private class UIProvider : TranslationDialogUiProvider {
+    private fun restoreWindowLocation() {
+        val windowLocation = Settings.translationWindowLocation
+        if (windowLocation == WindowLocation.DEFAULT) {
+            return
+        }
+
+        val savedX = TranslationStates.translationDialogLocationX
+        val savedY = TranslationStates.translationDialogLocationY
+        if (savedX == null || savedY == null) {
+            return
+        }
+
+        val savedWidth = TranslationStates.translationDialogWidth
+        val savedHeight = TranslationStates.translationDialogHeight
+        val ownerWindow = window.owner
+        val screenDeviceBounds = GraphicsEnvironment
+            .getLocalGraphicsEnvironment()
+            .screenDevices
+            .map { sd -> sd.defaultConfiguration.bounds }
+        val isValidArea = screenDeviceBounds
+            .filter { windowLocation == WindowLocation.LAST_LOCATION || it.contains(ownerWindow.location) }
+            .any { bounds ->
+                val offset = 10
+                Rectangle(
+                    bounds.x + offset,
+                    bounds.y + offset,
+                    bounds.width - offset,
+                    bounds.height - offset
+                ).intersects(
+                    savedX.toDouble(),
+                    savedY.toDouble(),
+                    savedWidth.toDouble(),
+                    savedHeight.toDouble()
+                )
+            }
+
+        if (isValidArea) {
+            window.location = Point(savedX, savedY)
+        } else {
+            TranslationStates.translationDialogLocationX = null
+            TranslationStates.translationDialogLocationY = null
+        }
+    }
+
+    private class UIProvider(private val project: Project?) : TranslationDialogUiProvider {
         override fun createPinButton(): JComponent = actionButton(MyPinAction())
 
-        override fun createSettingsButton(): JComponent = actionButton(SettingsAction())
+        override fun createSettingsButton(): JComponent = actionButton(SettingsAction {
+            TranslationUIManager.instance(project).currentTranslationDialog()?.close()
+        })
 
         private fun actionButton(action: AnAction): ActionButton =
             ActionButton(
