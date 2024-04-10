@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.5.8] (2024/04/10)
+
 - User interaction experience optimization and improvement.
 - Compatible with 2024.4.
 - Bug fixes.
@@ -458,7 +460,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.7...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.8...HEAD
+[3.5.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.7...v3.5.8
 [3.5.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.6...v3.5.7
 [3.5.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.5...v3.5.6
 [3.5.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...v3.5.5
