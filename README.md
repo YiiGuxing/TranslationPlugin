@@ -403,13 +403,13 @@ website. [[Become a sponsor][open-collective-contribute]]
 [gh:#81]: https://github.com/YiiGuxing/TranslationPlugin/issues/81
 [gh:#115]: https://github.com/YiiGuxing/TranslationPlugin/issues/115
 
-[logo:ali-translate]: .github/readme/ali_translate_logo.png
-[logo:baidu-translate]: .github/readme/baidu_translate_logo.svg
-[logo:deepl-translator]: .github/readme/deepl_translate_logo.svg
-[logo:google-translate]: .github/readme/google_translate_logo.svg
-[logo:microsoft-translator]: .github/readme/microsoft_translator_logo.svg
-[logo:openai]: .github/readme/openai_logo.svg
-[logo:youdao-translate]: .github/readme/youdao_translate_logo.svg
+[logo:ali-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/ali_translate_logo.png
+[logo:baidu-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/baidu_translate_logo.svg
+[logo:deepl-translator]: https://yiiguxing.github.io/TranslationPlugin/img/ext/deepl_translate_logo.svg
+[logo:google-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/google_translate_logo.svg
+[logo:microsoft-translator]: https://yiiguxing.github.io/TranslationPlugin/img/ext/microsoft_translator_logo.svg
+[logo:openai]: https://yiiguxing.github.io/TranslationPlugin/img/ext/openai_logo.svg
+[logo:youdao-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/youdao_translate_logo.svg
 
 [file:settings-font]: .github/readme/settings_font.png
 [file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
