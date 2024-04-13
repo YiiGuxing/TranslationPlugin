@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.trans.microsoft.data
+package cn.yiiguxing.plugin.translate.trans.microsoft.models
 
 enum class TextType(val value: String) {
     PLAIN("plain"),

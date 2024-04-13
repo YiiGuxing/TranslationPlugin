@@ -2,7 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftErrorMessage
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftErrorMessage
 import com.intellij.util.io.HttpRequests
 import java.io.IOException
 

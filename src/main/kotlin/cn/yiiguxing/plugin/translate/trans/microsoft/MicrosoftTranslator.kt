@@ -2,10 +2,10 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftTranslation
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftSourceText
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftTranslation
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson

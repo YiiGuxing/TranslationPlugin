@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.trans.microsoft.data
+package cn.yiiguxing.plugin.translate.trans.microsoft.models
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation

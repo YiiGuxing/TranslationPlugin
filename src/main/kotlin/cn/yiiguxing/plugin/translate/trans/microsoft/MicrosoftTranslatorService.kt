@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftSourceText
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch

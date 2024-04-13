@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftError
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftError
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Http.sendJson
 import cn.yiiguxing.plugin.translate.util.d

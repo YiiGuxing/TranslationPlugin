@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.trans.microsoft.data
+package cn.yiiguxing.plugin.translate.trans.microsoft.models
 
 import com.google.gson.annotations.SerializedName
 
