@@ -15,10 +15,11 @@ internal object MicrosoftHttp {
 
     private val LOG: Logger = logger<MicrosoftHttp>()
 
-    fun post(url: String, data: Any, init: RequestBuilder.() -> Unit): String {
+    fun post(url: String, token: String, data: Any, init: RequestBuilder.() -> Unit = {}): String {
         return try {
             HttpRequests.post(url, Http.MIME_TYPE_JSON)
                 .accept(Http.MIME_TYPE_JSON)
+                .tuner { it.setRequestProperty("Authorization", "Bearer $token") }
                 .apply(init)
                 .sendJson(data) { it.readString() }
         } catch (e: Http.StatusException) {
