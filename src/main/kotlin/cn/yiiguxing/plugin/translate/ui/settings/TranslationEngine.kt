@@ -13,14 +13,17 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAICredential
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAISettingsDialog
-import cn.yiiguxing.plugin.translate.trans.openai.OpenAITranslator
+import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
+import cn.yiiguxing.plugin.translate.trans.openai.OpenAiTranslator
+import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import cn.yiiguxing.plugin.translate.util.Settings
+import com.intellij.openapi.components.service
 import icons.TranslationIcons
 import java.util.*
 import javax.swing.Icon
@@ -44,7 +47,13 @@ enum class TranslationEngine(
     BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
     ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
     DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
-    OPEN_AI("translate.openai", message("translation.engine.openai.name"), TranslationIcons.Engines.OpenAI, 2000, 1000);
+    OPEN_AI(
+        "translate.openai",
+        message("translation.engine.openai.name"),
+        TranslationIcons.Engines.OpenAI,
+        10000,
+        1000
+    );
 
     var primaryLanguage: Lang
         get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
@@ -65,7 +74,7 @@ enum class TranslationEngine(
                 BAIDU -> BaiduTranslator
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
-                OPEN_AI -> OpenAITranslator
+                OPEN_AI -> OpenAiTranslator
             }
         }
 
@@ -84,7 +93,9 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(Settings.baiduTranslateSettings)
             ALI -> isConfigured(Settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            OPEN_AI -> OpenAICredential.isApiKeySet
+            OPEN_AI -> service<OpenAiSettings>().let {
+                it.isConfigured(ConfigType.TRANSLATOR) && OpenAiCredentials.isCredentialSet(it.provider)
+            }
         }
     }
 
@@ -116,7 +127,7 @@ enum class TranslationEngine(
 
             GOOGLE -> GoogleSettingsDialog().showAndGet()
             DEEPL -> DeeplSettingsDialog().showAndGet()
-            OPEN_AI -> OpenAISettingsDialog().showAndGet()
+            OPEN_AI -> OpenAISettingsDialog(ConfigType.TRANSLATOR).showAndGet()
 
             else -> true
         }

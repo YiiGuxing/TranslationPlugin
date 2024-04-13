@@ -1,8 +1,6 @@
 package icons
 
-import cn.yiiguxing.plugin.translate.ui.icon.SuspendIcon
 import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.JBColor
 import javax.swing.Icon
 
 object TranslationIcons {
@@ -20,12 +18,6 @@ object TranslationIcons {
     val Wordbook: Icon = load("/icons/wordbook.svg")
 
     @JvmField
-    val Audio: Icon = load("/icons/audio.svg")
-
-    @JvmField
-    val AudioPressed: Icon = load("/icons/audioPressed.svg")
-
-    @JvmField
     val StarOff: Icon = load("/icons/starOff.svg")
 
     @JvmField
@@ -35,13 +27,7 @@ object TranslationIcons {
     val GrayStarOff: Icon = load("/icons/grayStarOff.svg")
 
     @JvmField
-    val AudioDisabled: Icon = load("/icons/audioDisabled.svg")
-
-    @JvmField
-    val TTSSuspend: Icon = SuspendIcon(JBColor(0x757575, 0xABABAB))
-
-    @JvmField
-    val TTSSuspendHovering: Icon = SuspendIcon(JBColor(0x555555, 0x8A8A8A))
+    val Stop: Icon = load("/icons/stop.svg")
 
     @JvmField
     val Swap: Icon = load("/icons/swap.svg")

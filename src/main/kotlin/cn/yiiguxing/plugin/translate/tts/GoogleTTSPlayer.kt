@@ -1,189 +1,65 @@
 package cn.yiiguxing.plugin.translate.tts
 
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.google.googleApiUrl
 import cn.yiiguxing.plugin.translate.trans.google.googleReferer
 import cn.yiiguxing.plugin.translate.trans.google.tk
+import cn.yiiguxing.plugin.translate.tts.sound.AudioPlayer
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackState
 import cn.yiiguxing.plugin.translate.util.*
-import cn.yiiguxing.plugin.translate.util.Http.userAgent
-import com.intellij.openapi.Disposable
+import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
-import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
+import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Disposer
 import com.intellij.util.io.HttpRequests
-import javazoom.jl.decoder.Bitstream
-import javazoom.spi.mpeg.sampled.convert.DecodedMpegAudioInputStream
-import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
-import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
-import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.SequenceInputStream
-import java.lang.StrictMath.round
-import javax.sound.sampled.*
 
 
 /**
  * Google TTS player.
  */
-class GoogleTTSPlayer(
+class GoogleTTSPlayer private constructor(
     project: Project?,
     private val text: String,
     private val lang: Lang,
-    private val completeListener: ((TTSPlayer) -> Unit)? = null
-) : TTSPlayer {
-
-    private val playTask: PlayTask = PlayTask(project).apply {
-        cancelText = "stop"
-        cancelTooltipText = "stop"
-    }
-    private val playController: ProgressIndicator
-
-    override val disposable: Disposable
-    override val isPlaying: Boolean
-        get() {
-            checkThread()
-            return playController.isRunning
-        }
-
-    @Volatile
-    private var started = false
-
-    private var duration = 0
-
-    private val playlist: List<String> by lazy {
-        val ttsUrl = googleApiUrl(TTS_API_PATH)
-        text.splitSentence(MAX_TEXT_LENGTH).let {
-            it.mapIndexed { index, sentence ->
-                @Suppress("SpellCheckingInspection")
-                UrlBuilder(ttsUrl)
-                    .addQueryParameter("client", "gtx")
-                    .addQueryParameter("ie", "UTF-8")
-                    .addQueryParameter("tl", lang.code)
-                    .addQueryParameter("total", it.size.toString())
-                    .addQueryParameter("idx", index.toString())
-                    .addQueryParameter("textlen", sentence.length.toString())
-                    .addQueryParameter("tk", sentence.tk())
-                    .addQueryParameter("q", sentence)
-                    .build()
-            }
-        }
-    }
+    private val player: AudioPlayer = AudioPlayer()
+) : PlaybackController by player {
 
     init {
-        playController = BackgroundableProcessIndicator(playTask).apply { isIndeterminate = true }
-        disposable = playController
+        setupSources()
+        setupErrorHandler(project)
     }
 
-    private inner class PlayTask(project: Project?) : Task.Backgroundable(project, "TTS") {
-        override fun run(indicator: ProgressIndicator) {
-            play(indicator)
-        }
-
-        override fun onThrowable(error: Throwable) {
-            when (error) {
-                is IOException -> Notifications.showErrorNotification("TTS", error.getCommonMessage(), project)
-                else -> LOGGER.e("TTS Error", error)
+    private fun setupSources() {
+        val sentences = text.splitSentence(MAX_TEXT_LENGTH)
+        val total = sentences.size
+        val indicator = EmptyProgressIndicator()
+        player.stateBinding.observe { state, _ ->
+            if (state == PlaybackState.STOPPED) {
+                indicator.cancel()
             }
         }
-
-        override fun onFinished() {
-            Disposer.dispose(disposable)
-            completeListener?.invoke(this@GoogleTTSPlayer)
-        }
-    }
-
-    override fun start() {
-        checkThread()
-        check(!started) { "Start with wrong state." }
-
-        started = true
-        ProgressManager.getInstance().runProcessWithProgressAsynchronously(playTask, playController)
-    }
-
-    override fun stop() {
-        checkThread()
-        playController.cancel()
-    }
-
-    private fun play(indicator: ProgressIndicator) {
-        with(indicator) {
-            checkCanceled()
-            text = message("tts.progress.downloading")
-        }
-        playlist
-            .map { url ->
-                indicator.checkCanceled()
-                LOGGER.i("TTS>>> $url")
+        sentences.forEachIndexed { index, sentence ->
+            player.addSource {
+                val url = getTtsUrl(sentence, lang, index, total)
                 HttpRequests.request(url)
-                    .userAgent()
+                    .setUserAgent()
                     .googleReferer()
                     .readBytes(indicator)
-                    .let {
-                        ByteArrayInputStream(it).apply { duration += getAudioDuration(it.size) }
-                    }
             }
-            .enumeration()
-            .let {
-                SequenceInputStream(it).use { sis ->
-                    indicator.checkCanceled()
-                    sis.asAudioInputStream().rawPlay(indicator)
-                }
-            }
+        }
     }
 
-    private fun AudioInputStream.rawPlay(indicator: ProgressIndicator) {
-        val decodedFormat = format.let {
-            AudioFormat(
-                AudioFormat.Encoding.PCM_SIGNED, it.sampleRate, 16, it.channels,
-                it.channels * 2, it.sampleRate, false
-            )
-        }
+    private fun setupErrorHandler(project: Project?) {
+        player.setErrorHandler { error ->
+            if (project?.isDisposed != false) {
+                return@setErrorHandler
+            }
 
-        MpegFormatConversionProvider()
-            .getAudioInputStream(decodedFormat, this)
-            .rawPlay(decodedFormat, indicator)
-    }
-
-    private fun AudioInputStream.rawPlay(format: AudioFormat, indicator: ProgressIndicator) {
-        indicator.apply {
-            checkCanceled()
-            fraction = 0.0
-            isIndeterminate = duration <= 0
-            text = message("tts.progress.playing")
-        }
-
-        this as DecodedMpegAudioInputStream
-        format.openLine()?.run {
-            start()
-            try {
-                val data = ByteArray(2048)
-                var bytesRead: Int
-                while (!indicator.isCanceled) {
-                    bytesRead = read(data, 0, data.size)
-                    if (bytesRead != -1) {
-                        write(data, 0, bytesRead)
-
-                        if (duration > 0) {
-                            val currentTime = properties()["mp3.position.microseconds"] as Long / 1000
-                            indicator.fraction = currentTime.toDouble() / duration.toDouble()
-                        }
-                    } else {
-                        indicator.fraction = 1.0
-                        break
-                    }
-                }
-
-                drain()
-                stop()
-            } finally {
-                duration = 0
-                close()
+            when (error) {
+                is IOException -> Notifications.showErrorNotification("Google TTS", error.getCommonMessage(), project)
+                else -> LOGGER.e("Google TTS Error", error)
             }
         }
     }
@@ -195,7 +71,7 @@ class GoogleTTSPlayer(
 
         private const val MAX_TEXT_LENGTH = 200
 
-        val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+        private   val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.CHINESE, Lang.ENGLISH, Lang.CHINESE_TRADITIONAL, Lang.ALBANIAN, Lang.ARABIC, Lang.ESTONIAN,
             Lang.ICELANDIC, Lang.POLISH, Lang.BOSNIAN, Lang.AFRIKAANS, Lang.DANISH, Lang.GERMAN, Lang.RUSSIAN,
             Lang.FRENCH, Lang.FINNISH, Lang.KHMER, Lang.KOREAN, Lang.DUTCH, Lang.CATALAN, Lang.CZECH, Lang.CROATIAN,
@@ -206,30 +82,25 @@ class GoogleTTSPlayer(
             Lang.JAVANESE, Lang.VIETNAMESE
         )
 
-        private fun checkThread() = checkDispatchThread<GoogleTTSPlayer>()
+        fun isSupportLanguage(lang: Lang): Boolean = SUPPORTED_LANGUAGES.contains(lang)
 
-        private fun InputStream.asAudioInputStream(): AudioInputStream =
-            MpegAudioFileReader().getAudioInputStream(this)
-
-        private fun InputStream.getAudioDuration(dataLength: Int): Int {
-            return try {
-                round(Bitstream(this).readFrame().total_ms(dataLength))
-            } catch (e: Throwable) {
-                LOGGER.warn("Failed to get audio duration.", e)
-                0
-            } finally {
-                reset()
-            }
+        fun create(project: Project?, text: String, lang: Lang): GoogleTTSPlayer {
+            return GoogleTTSPlayer(project, text, lang)
         }
 
-        private fun AudioFormat.openLine(): SourceDataLine? = try {
-            val info = DataLine.Info(SourceDataLine::class.java, this)
-            (AudioSystem.getLine(info) as? SourceDataLine)?.apply {
-                open(this@openLine)
-            }
-        } catch (e: Exception) {
-            LOGGER.w("openLine", e)
-            null
+        private fun getTtsUrl(sentence: String, lang: Lang, index: Int, total: Int): String {
+            val ttsUrl = googleApiUrl(TTS_API_PATH)
+            @Suppress("SpellCheckingInspection")
+            return UrlBuilder(ttsUrl)
+                .addQueryParameter("client", "gtx")
+                .addQueryParameter("ie", "UTF-8")
+                .addQueryParameter("tl", lang.code)
+                .addQueryParameter("total", total.toString())
+                .addQueryParameter("idx", index.toString())
+                .addQueryParameter("textlen", sentence.length.toString())
+                .addQueryParameter("tk", sentence.tk())
+                .addQueryParameter("q", sentence)
+                .build()
         }
     }
 }

@@ -16,7 +16,7 @@ data class ChatCompletion internal constructor(
     /**
      * The creation time in epoch milliseconds.
      */
-    @SerializedName("created") val created: Int,
+    @SerializedName("created") val created: Long,
 
     /**
      * The model used.

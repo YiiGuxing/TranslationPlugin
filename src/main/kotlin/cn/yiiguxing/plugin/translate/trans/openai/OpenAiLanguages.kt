@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.openai
 
 import cn.yiiguxing.plugin.translate.trans.Lang
 
-internal object OpenAILanguages {
+internal object OpenAiLanguages {
 
     val languageMap = linkedMapOf(
         Lang.ENGLISH to "English",
@@ -27,8 +27,8 @@ internal object OpenAILanguages {
 }
 
 /**
- * The language name of the OpenAI API.
- * @see OpenAILanguages.languageMap
+ * The language name of the OpenAi API.
+ * @see OpenAiLanguages.languageMap
  */
-val Lang.openAILanguage: String
-    get() = OpenAILanguages.languageMap[this] ?: throw IllegalArgumentException("Unsupported language: $this")
+val Lang.openAiLanguage: String
+    get() = OpenAiLanguages.languageMap[this] ?: throw IllegalArgumentException("Unsupported language: $this")

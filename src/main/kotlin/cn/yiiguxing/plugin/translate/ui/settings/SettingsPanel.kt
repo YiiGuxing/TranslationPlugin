@@ -134,6 +134,10 @@ class SettingsPanel(
             translationEngineComboBox.selected?.showConfigurationDialog()
         }, null)
 
+        configureTtsEngineLink.setListener({ _, _ ->
+            ttsEngineComboBox.selected?.showConfigurationDialog()
+        }, null)
+
         val background = ignoreRegExp.background
         ignoreRegExp.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: DocumentEvent) {
@@ -181,6 +185,7 @@ class SettingsPanel(
         get() {
             val settings = settings
             return settings.translator != translationEngineComboBox.selected
+                    || settings.ttsEngine != ttsEngineComboBox.selected
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
@@ -227,14 +232,16 @@ class SettingsPanel(
         with(settings) {
             val selectedTranslator = translationEngineComboBox.selected ?: translator
             if (!selectedTranslator.isConfigured()) {
-                throw ConfigurationException(
-                    message(
-                        "settings.translator.requires.configuration",
-                        selectedTranslator.translatorName
-                    )
-                )
+                throwConfigurationException(selectedTranslator.translatorName)
             }
+
+            val selectedTtsEngine = ttsEngineComboBox.selected ?: ttsEngine
+            if (!selectedTtsEngine.isConfigured()) {
+                throwConfigurationException(selectedTtsEngine.ttsName)
+            }
+
             translator = selectedTranslator
+            ttsEngine = selectedTtsEngine
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
             primaryFontFamily = primaryFontComboBox.fontName
@@ -259,11 +266,16 @@ class SettingsPanel(
         }
     }
 
+    private fun throwConfigurationException(name: String): Nothing {
+        throw ConfigurationException(message("settings.translator.requires.configuration", name))
+    }
+
     @Suppress("Duplicates")
     override fun reset() {
         resetPrimaryLanguageComboBox(settings.translator)
 
         translationEngineComboBox.selected = settings.translator
+        ttsEngineComboBox.selected = settings.ttsEngine
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ignoreRegExp.text = settings.ignoreRegex
         separatorTextField.text = settings.separators

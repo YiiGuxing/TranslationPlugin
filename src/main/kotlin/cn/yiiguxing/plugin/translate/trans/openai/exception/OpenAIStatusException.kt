@@ -6,5 +6,5 @@ class OpenAIStatusException(
     message: String,
     statusCode: Int,
     url: String,
-    val error: OpenAIError? = null
+    val error: OpenAiError? = null
 ) : HttpRequests.HttpStatusException(message, statusCode, url)

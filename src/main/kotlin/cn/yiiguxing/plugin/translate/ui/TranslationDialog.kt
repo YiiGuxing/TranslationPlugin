@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.append
 import cn.yiiguxing.plugin.translate.trans.text.apply
+import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
@@ -53,7 +54,7 @@ import kotlin.properties.Delegates
 
 class TranslationDialog(
     private val project: Project?,
-    val ui: TranslationDialogUI = TranslationDialogUiImpl(UIProvider(project))
+    val ui: TranslationDialogUI = TranslationDialogUiImpl(project, UIProvider(project))
 ) :
     DialogWrapper(project),
     TranslationDialogUI by ui,
@@ -167,11 +168,11 @@ class TranslationDialog(
             )
 
         // Toolbar buttons
-        DumbAwareAction.create { inputTTSButton.play() }
+        DumbAwareAction.create { inputTTSButton.toggle() }
             .registerCustomShortcutSet(
                 CustomShortcutSet.fromString("alt ENTER", "meta ENTER"), rootPane, this
             )
-        DumbAwareAction.create { translationTTSButton.play() }
+        DumbAwareAction.create { translationTTSButton.toggle() }
             .registerCustomShortcutSet(
                 CustomShortcutSet.fromString("shift ENTER"), rootPane, this
             )
@@ -633,6 +634,15 @@ class TranslationDialog(
     override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
         updateLanguages()
         requestTranslate(0)
+    }
+
+    override fun onTTSEngineChanged(settings: Settings, ttsEngine: TTSEngine) {
+        inputTTSButton.isEnabled = lastTranslation?.srcLang?.let {
+            TextToSpeech.isSupportLanguage(it)
+        } ?: false
+        translationTTSButton.isEnabled = lastTranslation?.targetLang?.let {
+            TextToSpeech.isSupportLanguage(it)
+        } ?: false
     }
 
     private fun updateLanguages(languagePair: LanguagePair? = null) {

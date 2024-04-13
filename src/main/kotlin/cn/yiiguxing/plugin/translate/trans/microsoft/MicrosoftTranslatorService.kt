@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
 import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
 import cn.yiiguxing.plugin.translate.util.*
-import cn.yiiguxing.plugin.translate.util.Http.userAgent
+import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -60,7 +60,7 @@ internal class MicrosoftTranslatorService {
                 latch.await(100, TimeUnit.MILLISECONDS)
                 Http.get(AUTH_URL) {
                     accept("*/*")
-                    userAgent()
+                    setUserAgent()
                 }.also {
                     if (!it.matches(JWT_REGEX)) {
                         throw MicrosoftAuthenticationException("Authentication failed: Invalid token.")

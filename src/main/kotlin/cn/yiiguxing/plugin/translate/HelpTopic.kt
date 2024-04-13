@@ -18,7 +18,10 @@ enum class HelpTopic(id: String, val url: String) {
     DEEPL("deepl", "https://www.deepl.com/pro-api"),
 
     /** OpenAI */
-    OPEN_AI("openai", "https://platform.openai.com");
+    OPEN_AI("openai", "https://platform.openai.com"),
+
+    /** Azure OpenAI */
+    AZURE_OPEN_AI("azure_openai", "https://learn.microsoft.com/en-us/azure/ai-services/openai");
 
     val id: String = "${TranslationPlugin.PLUGIN_ID}.$id"
 

@@ -16,26 +16,26 @@ internal object MicrosoftHttp {
     private val LOG: Logger = logger<MicrosoftHttp>()
 
     fun post(url: String, data: Any, init: RequestBuilder.() -> Unit): String {
-        val response = HttpRequests.post(url, Http.MIME_TYPE_JSON)
-            .accept(Http.MIME_TYPE_JSON)
-            .apply(init)
-            .sendJson(data)
-        return when (response) {
-            is Http.Response.Success -> response.body
-            is Http.Response.Error -> throwStatusCodeException(url, response)
+        return try {
+            HttpRequests.post(url, Http.MIME_TYPE_JSON)
+                .accept(Http.MIME_TYPE_JSON)
+                .apply(init)
+                .sendJson(data) { it.readString() }
+        } catch (e: Http.StatusException) {
+            throwStatusCodeException(e)
         }
     }
 
-    private fun throwStatusCodeException(url: String, response: Http.Response.Error): Nothing {
-        val statusLine = "${response.code} ${response.message}"
-        val errorText = response.body
-        LOG.d("Request: $url : Error $statusLine body:\n$errorText")
+    private fun throwStatusCodeException(e: Http.StatusException): Nothing {
+        val statusLine = "${e.statusCode} ${e.responseMessage}"
+        val errorText = e.errorText
+        LOG.d("Request: ${e.url} : Error $statusLine body:\n$errorText")
 
         val jsonError = errorText?.toJsonError()
-        jsonError ?: LOG.d("Request: $url : Unable to parse JSON error")
+        jsonError ?: LOG.d("Request: ${e.url} : Unable to parse JSON error")
 
         val message = "$statusLine - ${jsonError?.presentableError ?: errorText}"
-        throw MicrosoftStatusException(message, response.code, url, jsonError?.error)
+        throw MicrosoftStatusException(message, e.statusCode, e.url, jsonError?.error)
     }
 
     private fun String.toJsonError(): MicrosoftError? = try {
