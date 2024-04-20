@@ -119,6 +119,7 @@ open class ObservableValue<T>(
     private val comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
 ) : AbstractObservable<T>(), ReadWriteProperty<Any?, T> {
 
+    @Volatile
     override var value = initialValue
         set(value) {
             val oldValue = field
