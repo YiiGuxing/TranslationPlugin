@@ -2,111 +2,45 @@
 
 package cn.yiiguxing.plugin.translate.tts.sound
 
+import cn.yiiguxing.plugin.translate.tts.sound.source.PlaybackSource
 import cn.yiiguxing.plugin.translate.util.Observable
 import cn.yiiguxing.plugin.translate.util.ObservableValue
-import cn.yiiguxing.plugin.translate.util.withPluginContextClassLoader
 import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.util.concurrency.AppExecutorUtil
-import com.intellij.util.io.HttpRequests
-import java.io.ByteArrayInputStream
-import java.io.File
-import java.io.InputStream
-import java.util.function.Supplier
-import javax.sound.sampled.*
+import javax.sound.sampled.AudioFormat
+import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.DataLine
+import javax.sound.sampled.SourceDataLine
 
 /**
- * An audio player with multiple sources, supporting audio formats such as
- * '.wav', '.mp3', '.au', '.aiff', etc. The player follows a strategy of
- * playing one and preloading one when loading and playing audio sources.
- *
- * **Note**: The player is disposable, once stopped, it will no longer be
- * available. When preloading an audio source, all its data will be loaded
- * into memory, so the data of a single source should not be too large.
- * If it is too large, please split it into multiple sources.
+ * A disposable audio player that will no longer be available once it stops playing.
  */
-class AudioPlayer : PlaybackController {
+class AudioPlayer(
+    private val playbackSource: PlaybackSource
+) : PlaybackController {
 
-    private val _state: ObservableValue<PlaybackState> = ObservableValue(PlaybackState.IDLE)
-    private var currentState: PlaybackState by _state
-    private var playbackList: MutableList<PlaybackSource> = ArrayList()
-    private val playWorker: PlayWorker = PlayWorker(this)
-    private var playingIndex: Int = -1
-
-    private val playing: Boolean get() = currentState == PlaybackState.PLAYING
-    private val completed: Boolean get() = currentState.isCompletedState
+    private val _status: ObservableValue<PlaybackStatus> = ObservableValue(PlaybackStatus.IDLE)
+    private var currentStatus: PlaybackStatus by _status
+    private val playWorker: PlayWorker = PlayWorker()
 
     @Volatile
     private var errorHandler: ((Throwable) -> Unit)? = null
 
-    override val stateBinding: Observable<PlaybackState> =
-        object : ObservableValue.ReadOnlyWrapper<PlaybackState>(_state) {
-            override val value: PlaybackState
+    private val completed: Boolean get() = currentStatus.isCompletedState
+
+    override val statusBinding: Observable<PlaybackStatus> =
+        object : ObservableValue.ReadOnlyWrapper<PlaybackStatus>(_status) {
+            override val value: PlaybackStatus
                 get() = synchronized(this@AudioPlayer) { super.value }
         }
-    override val isPlaying: Boolean get() = synchronized(this) { playing }
+    override val isPlaying: Boolean get() = synchronized(this) { currentStatus == PlaybackStatus.PLAYING }
     override val isCompleted: Boolean get() = synchronized(this) { completed }
 
-
-    /**
-     * Add an audio source from the specified [file].
-     *
-     * @throws IllegalStateException if the player is not in the idle state.
-     */
-    fun addSource(file: File) {
-        checkIdleState { "Cannot add source in $it state" }
-        addSource { file.readBytes() }
-    }
-
-    /**
-     * Add an audio source from the specified [url].
-     *
-     * @throws IllegalStateException if the player is not in the idle state.
-     */
-    fun addSource(url: String) {
-        checkIdleState { "Cannot add source in $it state" }
-        addSource {
-            val indicator = EmptyProgressIndicator()
-            val listener = Observable.ChangeListener<PlaybackState> { state, _ ->
-                if (state == PlaybackState.STOPPED) {
-                    indicator.cancel()
-                }
-            }
-            _state.observe(listener)
-            try {
-                HttpRequests.request(url).readBytes(indicator)
-            } finally {
-                _state.unobserve(listener)
-            }
+    init {
+        playbackSource.onStalled {
+            updateStatus(PlaybackStatus.PREPARING)
         }
-    }
-
-    /**
-     * Add an audio source from the specified [inputStream].
-     *
-     * @throws IllegalStateException if the player is not in the idle state.
-     */
-    fun addSource(inputStream: InputStream) {
-        checkIdleState { "Cannot add source in $it state" }
-        addSource { inputStream.use { it.readBytes() } }
-    }
-
-    /**
-     * Add an audio source from the specified [dataSource].
-     *
-     * @throws IllegalStateException if the player is not in the idle state.
-     */
-    fun addSource(dataSource: Supplier<ByteArray>) {
-        synchronized(this) {
-            checkIdleState { "Cannot add source in $it state" }
-            playbackList.add(PlaybackSource(dataSource))
-        }
-    }
-
-    private inline fun checkIdleState(message: (actualState: PlaybackState) -> String) {
-        val actualState = currentState
-        check(actualState == PlaybackState.IDLE) { message(actualState) }
     }
 
     /**
@@ -118,295 +52,104 @@ class AudioPlayer : PlaybackController {
 
     private fun onError(error: Throwable) {
         val handler = errorHandler
-        val cause = if (error is PlaybackException) error.cause!! else error
         if (handler != null) {
-            handler(cause)
+            handler(error)
         } else {
-            thisLogger().error("Error occurred", cause)
+            thisLogger().error(error.message, error)
         }
     }
 
     override fun start() {
         synchronized(this) {
-            checkIdleState { "Cannot start in $it state" }
-            if (playbackList.isNotEmpty()) {
-                currentState = PlaybackState.PREPARING
-            } else {
-                currentState = PlaybackState.STOPPED
-                return
+            val status = currentStatus
+            if (status != PlaybackStatus.IDLE) {
+                throw PlaybackException("Cannot start from $status state.")
             }
+            currentStatus = PlaybackStatus.PREPARING
         }
 
-        prepare(0)
+        AppExecutorUtil.getAppExecutorService().execute(playWorker)
     }
 
     override fun stop() {
-        stop(PlaybackState.STOPPED, true)
+        if (updateStatus(PlaybackStatus.STOPPED)) {
+            playbackSource.close()
+        }
     }
 
-    private fun stop(state: PlaybackState, immediate: Boolean) {
-        check(state == PlaybackState.STOPPED || state == PlaybackState.ERROR) {
-            "Invalid stop state: $state"
-        }
-
-        var needStop = false
-        var needRelease = false
+    private fun updateStatus(status: PlaybackStatus): Boolean {
         synchronized(this) {
-            if (!completed) {
-                currentState.let {
-                    needStop = immediate && it == PlaybackState.PLAYING
-                    needRelease = it == PlaybackState.PREPARING
+            val oldStatus = currentStatus
+            if (!oldStatus.isCompletedState) {
+                if (oldStatus != status) {
+                    currentStatus = status
                 }
-                currentState = state
+                return true
             }
         }
-        if (needStop) {
-            playWorker.stop(true)
-        }
-        if (needRelease) {
-            release()
-        }
+
+        return false
     }
 
-    private fun release() {
-        playWorker.release()
-        synchronized(this) { playingIndex = -1 }
-        playbackList.forEach(PlaybackSource::close)
-    }
 
-    private fun prepare(index: Int): Boolean {
-        if (index >= playbackList.size) {
-            return false
-        }
-
-        AppExecutorUtil.getAppExecutorService().execute {
-            if (!isCompleted) {
-                playbackList.getOrNull(index)?.let { source ->
-                    source.prepare()
-                    onPrepared(index)
-                }
-            }
-        }
-        return true
-    }
-
-    private fun onPrepared(sourceIndex: Int) {
-        synchronized(this) {
-            val source = playbackList[sourceIndex]
-            if (completed) {
-                source.close()
-                return
-            }
-
-            source.isPrepared = true
-            if (currentState != PlaybackState.PREPARING) {
-                return
-            }
-            currentState = PlaybackState.PLAYING
-            playingIndex = sourceIndex
-        }
-
-        AppExecutorUtil
-            .getAppExecutorService()
-            .execute(playWorker)
-    }
-
-    private fun getPlayingIndex(): Int? {
-        return synchronized(this) {
-            playingIndex.takeIf { it in playbackList.indices && playing }
-        }
-    }
-
-    private fun updateNext(sourceIndex: Int): Boolean {
-        synchronized(this) {
-            if (completed) {
-                return false
-            }
-
-            check(currentState == PlaybackState.PLAYING) { "Invalid state: $currentState" }
-            if (!playbackList[sourceIndex].isPrepared) {
-                currentState = PlaybackState.PREPARING
-                return false
-            }
-
-            playingIndex = sourceIndex
-            return true
-        }
-    }
-
-    private class PlayWorker(private val player: AudioPlayer) : Runnable {
-        private var line: SourceDataLine? = null
-
+    private inner class PlayWorker : Runnable {
         override fun run() {
-            val player = player
-            val buffer: ByteArray by lazy { ByteArray(BUFFER_SIZE) }
-            while (true) {
-                val index = player.getPlayingIndex() ?: break
-                val source = player.playbackList[index]
-                var hasPreparing: Boolean
-                try {
-                    source.error?.let {
-                        throw if (it is ProcessCanceledException) it else PlaybackException("Error occurred", it)
-                    }
-                    hasPreparing = player.prepare(index + 1)
-                    source.use { playLine(it.audioInputStream, buffer) }
-                } catch (e: Throwable) {
-                    val isCanceled = e is ProcessCanceledException
-                    val state = if (isCanceled) PlaybackState.STOPPED else PlaybackState.ERROR
-                    player.stop(state, false)
-                    if (!isCanceled) {
-                        player.onError(e)
-                    }
-                    break
-                }
-                if (!hasPreparing) {
-                    player.stop(PlaybackState.STOPPED, false)
-                    break
-                }
-                if (!player.updateNext(index + 1)) {
-                    break
-                }
+            if (isCompleted) {
+                return
             }
 
-            checkStopped()
-        }
-
-        private fun playLine(ais: AudioInputStream, buffer: ByteArray) {
-            val line = initLine(ais.format)
-            line.start()
-
-            while (player.isPlaying) {
-                val read = ais.read(buffer)
-                if (read == -1) {
-                    break
-                }
-                line.write(buffer, 0, read)
-            }
-        }
-
-        private fun initLine(audioFormat: AudioFormat): SourceDataLine {
-            val line = line ?: createLine(audioFormat).also { line = it }
-            if (line.isOpen && !line.format.matches(audioFormat)) {
-                line.drain()
-                line.close()
-            }
-            if (!line.isOpen) {
-                line.open(audioFormat)
-            }
-
-            return line
-        }
-
-        private fun createLine(audioFormat: AudioFormat): SourceDataLine {
-            val info = DataLine.Info(SourceDataLine::class.java, audioFormat, AudioSystem.NOT_SPECIFIED)
-            return AudioSystem.getLine(info) as SourceDataLine
-        }
-
-        private fun checkStopped() {
-            if (player.isCompleted) {
-                player.release()
-            } else if (!player.isPlaying) {
-                stop(false)
-            }
-        }
-
-        fun stop(immediate: Boolean) {
-            line?.let {
-                if (immediate) {
-                    it.flush()
-                } else {
-                    it.drain()
-                }
-                it.stop()
-            }
-        }
-
-        fun release() {
-            line?.let {
-                it.drain()
-                it.stop()
-                it.close()
-            }
-            line = null
-        }
-    }
-
-    private class PlaybackException(message: String, cause: Throwable) : IllegalStateException(message, cause)
-
-    private class PlaybackSource(private val dataSource: Supplier<ByteArray>) : AutoCloseable {
-        @Volatile
-        var isPrepared = false
-
-        @Volatile
-        private var _audioInputStream: AudioInputStream? = null
-
-        val audioInputStream: AudioInputStream
-            get() = _audioInputStream ?: throw error ?: IllegalStateException("Not prepared")
-
-        @Volatile
-        var error: Throwable? = null
-            private set
-            get() {
-                check(isPrepared) { "Not prepared" }
-                return field
-            }
-
-        fun prepare() {
             try {
-                load()
+                playbackSource.use(::prepareAndPlay)
             } catch (e: Throwable) {
-                error = e
-                closeStream()
+                if (e !is ProcessCanceledException) {
+                    updateStatus(PlaybackStatus.ERROR)
+                    onError(PlaybackException("Error occurred while playing audio", e))
+                    return
+                }
             }
+
+            updateStatus(PlaybackStatus.STOPPED)
         }
 
-        private fun load() {
-            val data = dataSource.get()
-            val bis = ByteArrayInputStream(data)
-            _audioInputStream = withPluginContextClassLoader {
-                AudioSystem.getAudioInputStream(bis).decode()
+        private fun prepareAndPlay(source: PlaybackSource) {
+            source.prepare()
+            source.waitForReady()
+            if (isCompleted) {
+                return
             }
-        }
 
-        private fun closeStream() {
-            try {
-                _audioInputStream?.close()
-            } finally {
-                _audioInputStream = null
+            source.getAudioInputStream().use { ais ->
+                openLine(ais.format).use { line ->
+                    line.start()
+                    try {
+                        val buffer = ByteArray(BUFFER_SIZE)
+                        while (!isCompleted) {
+                            val read = ais.read(buffer)
+                            if (read == -1 || !updateStatus(PlaybackStatus.PLAYING)) {
+                                break
+                            }
+                            line.write(buffer, 0, read)
+                        }
+                    } finally {
+                        line.drain()
+                        line.stop()
+                    }
+                }
             }
-        }
-
-        override fun close() {
-            closeStream()
         }
     }
+
+
+    class PlaybackException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
     companion object {
         private const val BUFFER_SIZE = 4000 * 4
 
-        private fun AudioInputStream.decode(): AudioInputStream {
-            val sourceFormat = format
-            var targetSampleSizeInBits = sourceFormat.sampleSizeInBits
-            if (targetSampleSizeInBits <= 0) {
-                targetSampleSizeInBits = 16
+        private fun openLine(audioFormat: AudioFormat): SourceDataLine {
+            val info = DataLine.Info(SourceDataLine::class.java, audioFormat, AudioSystem.NOT_SPECIFIED)
+            return (AudioSystem.getLine(info) as SourceDataLine).apply {
+                open(audioFormat)
             }
-            if ((sourceFormat.encoding === AudioFormat.Encoding.ULAW) || (sourceFormat.encoding === AudioFormat.Encoding.ALAW)) {
-                targetSampleSizeInBits = 16
-            }
-            if (targetSampleSizeInBits != 8) {
-                targetSampleSizeInBits = 16
-            }
-            val targetFormat = AudioFormat(
-                AudioFormat.Encoding.PCM_SIGNED,
-                sourceFormat.sampleRate,
-                targetSampleSizeInBits,
-                sourceFormat.channels,
-                sourceFormat.channels * (targetSampleSizeInBits / 8),
-                sourceFormat.sampleRate,
-                false
-            )
-
-            return AudioSystem.getAudioInputStream(targetFormat, this)
         }
     }
 }

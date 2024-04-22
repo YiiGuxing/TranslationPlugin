@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
-import cn.yiiguxing.plugin.translate.tts.sound.PlaybackState
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
 import cn.yiiguxing.plugin.translate.tts.sound.isCompletedState
 import cn.yiiguxing.plugin.translate.ui.icon.SoundIcon
 import cn.yiiguxing.plugin.translate.util.Observable
@@ -74,13 +74,13 @@ class TTSButton(
             setHoveringIcon(TranslationIcons.Stop)
             TextToSpeech.speak(project, text, lang).let { controller ->
                 ttsController = controller
-                controller.stateBinding.observe(this, Observable.ChangeOnEDTListener { state, _ ->
+                controller.statusBinding.observe(this, Observable.ChangeOnEDTListener { state, _ ->
                     when {
-                        state == PlaybackState.PREPARING -> {
+                        state == PlaybackStatus.PREPARING -> {
                             icon = loadingIcon
                         }
 
-                        state == PlaybackState.PLAYING -> {
+                        state == PlaybackStatus.PLAYING -> {
                             icon = playingIcon
                         }
 

@@ -5,17 +5,17 @@ import cn.yiiguxing.plugin.translate.util.Observable
 /** Playback controller. */
 interface PlaybackController {
 
-    /** The state binding of the playback. */
-    val stateBinding: Observable<PlaybackState>
+    /** The status binding of the playback. */
+    val statusBinding: Observable<PlaybackStatus>
 
-    /** The current state of the playback. */
-    val state get() = stateBinding.value
+    /** The current status of the playback. */
+    val status get() = statusBinding.value
 
     /** Whether the playback is currently playing. */
-    val isPlaying: Boolean get() = state == PlaybackState.PLAYING
+    val isPlaying: Boolean get() = status == PlaybackStatus.PLAYING
 
     /** Whether the playback is currently completed. */
-    val isCompleted: Boolean get() = state.isCompletedState
+    val isCompleted: Boolean get() = status.isCompletedState
 
     /** Start the playback. */
     fun start()

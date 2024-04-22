@@ -6,11 +6,10 @@ import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
 import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIStatusException
 import cn.yiiguxing.plugin.translate.tts.sound.AudioPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
-import cn.yiiguxing.plugin.translate.tts.sound.PlaybackState
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.getCommonMessage
-import cn.yiiguxing.plugin.translate.util.invokeAndWait
-import cn.yiiguxing.plugin.translate.util.splitSentence
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
+import cn.yiiguxing.plugin.translate.tts.sound.source.DefaultPlaybackSource
+import cn.yiiguxing.plugin.translate.tts.sound.source.PlaybackLoader
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -19,54 +18,70 @@ import com.intellij.openapi.project.Project
 import java.io.IOException
 
 class OpenAiTTSPlayer private constructor(
-    project: Project?,
-    private val text: String,
-    private val player: AudioPlayer = AudioPlayer()
-) : PlaybackController by player {
+    private val project: Project?,
+    private val text: String
+) : PlaybackController {
 
-    init {
-        setupSources(project)
-        setupErrorHandler(project)
+    private val player: AudioPlayer = AudioPlayer(DefaultPlaybackSource(Loader())).apply {
+        setErrorHandler(::showErrorNotification)
     }
 
-    private fun setupSources(project: Project?) {
-        val service = OpenAiService.get(service<OpenAiSettings>().getOptions())
-        val modalityState = ModalityState.defaultModalityState()
-        val indicator = EmptyProgressIndicator()
-        player.stateBinding.observe { state, _ ->
-            if (state == PlaybackState.STOPPED) {
-                indicator.cancel()
-            }
-        }
-        text.splitSentence(MAX_TEXT_LENGTH).forEach { sentence ->
-            player.addSource {
-                if (!TTSEngine.OPENAI.isConfigured()) {
-                    invokeAndWait(modalityState) {
-                        if (project?.isDisposed == false) {
-                            TTSEngine.OPENAI.showConfigurationDialog()
-                        }
-                    }
-                }
+    override val statusBinding: Observable<PlaybackStatus> = player.statusBinding
 
-                service.speech(sentence, indicator)
-            }
-        }
+    override fun start() {
+        player.start()
     }
 
-    private fun setupErrorHandler(project: Project?) {
-        player.setErrorHandler { error ->
-            if (project?.isDisposed != false) {
-                return@setErrorHandler
-            }
+    override fun stop() {
+        player.stop()
+    }
 
-            val message = when (error) {
-                is IOException -> (error as? OpenAIStatusException)?.error?.message ?: error.getCommonMessage()
-                else -> {
-                    thisLogger().warn("OpenAi TTS Error", error)
-                    error.message
+    private fun showErrorNotification(error: Throwable) {
+        if (project?.isDisposed != false) {
+            return
+        }
+
+        val message = when (error) {
+            is IOException -> (error as? OpenAIStatusException)?.error?.message ?: error.getCommonMessage()
+            else -> {
+                thisLogger().warn("OpenAi TTS Error", error)
+                error.message
+            }
+        } ?: message("error.unknown")
+        Notifications.showErrorNotification("OpenAi TTS", message, project)
+    }
+
+    private inner class Loader : PlaybackLoader() {
+        private lateinit var service: OpenAiService
+
+        private val modalityState = ModalityState.defaultModalityState()
+
+        private val indicator = EmptyProgressIndicator()
+
+        private val sentences = text.splitSentence(MAX_TEXT_LENGTH).iterator()
+
+        override fun onStart() {
+            service = OpenAiService.get(service<OpenAiSettings>().getOptions())
+            if (TTSEngine.OPENAI.isConfigured()) {
+                return
+            }
+            invokeAndWait(modalityState) {
+                if (project?.isDisposed != false || !TTSEngine.OPENAI.showConfigurationDialog()) {
+                    cancel()
                 }
-            } ?: message("error.unknown")
-            Notifications.showErrorNotification("OpenAi TTS", message, project)
+            }
+        }
+
+        override fun hasNext(): Boolean = sentences.hasNext()
+
+        override fun onLoad(): ByteArray = service.speech(sentences.next(), indicator)
+
+        override fun onError(error: Throwable) {
+            showErrorNotification(error)
+        }
+
+        override fun onCanceled() {
+            indicator.cancel()
         }
     }
 

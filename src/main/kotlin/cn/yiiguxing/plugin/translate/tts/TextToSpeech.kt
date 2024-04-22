@@ -44,7 +44,7 @@ class TextToSpeech private constructor() {
 
         currentPlaying?.stop()
         currentPlaying = player
-        player.stateBinding.observe(Observable.ChangeOnEDTListener { state, _ ->
+        player.statusBinding.observe(Observable.ChangeOnEDTListener { state, _ ->
             if (state.isCompletedState && currentPlaying === player) {
                 currentPlaying = null
             }

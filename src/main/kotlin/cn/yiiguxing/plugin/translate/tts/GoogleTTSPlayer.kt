@@ -6,7 +6,9 @@ import cn.yiiguxing.plugin.translate.trans.google.googleReferer
 import cn.yiiguxing.plugin.translate.trans.google.tk
 import cn.yiiguxing.plugin.translate.tts.sound.AudioPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
-import cn.yiiguxing.plugin.translate.tts.sound.PlaybackState
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
+import cn.yiiguxing.plugin.translate.tts.sound.source.DefaultPlaybackSource
+import cn.yiiguxing.plugin.translate.tts.sound.source.PlaybackLoader
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import com.intellij.openapi.diagnostic.Logger
@@ -20,47 +22,59 @@ import java.io.IOException
  * Google TTS player.
  */
 class GoogleTTSPlayer private constructor(
-    project: Project?,
+    private val project: Project?,
     private val text: String,
-    private val lang: Lang,
-    private val player: AudioPlayer = AudioPlayer()
-) : PlaybackController by player {
+    private val lang: Lang
+) : PlaybackController {
 
-    init {
-        setupSources()
-        setupErrorHandler(project)
+    private val player: AudioPlayer = AudioPlayer(DefaultPlaybackSource(Loader())).apply {
+        setErrorHandler(::showErrorNotification)
     }
 
-    private fun setupSources() {
-        val sentences = text.splitSentence(MAX_TEXT_LENGTH)
-        val total = sentences.size
-        val indicator = EmptyProgressIndicator()
-        player.stateBinding.observe { state, _ ->
-            if (state == PlaybackState.STOPPED) {
-                indicator.cancel()
-            }
+    override val statusBinding: Observable<PlaybackStatus> = player.statusBinding
+
+    override fun start() {
+        player.start()
+    }
+
+    override fun stop() {
+        player.stop()
+    }
+
+    private fun showErrorNotification(error: Throwable) {
+        if (project?.isDisposed != false) {
+            return
         }
-        sentences.forEachIndexed { index, sentence ->
-            player.addSource {
-                val url = getTtsUrl(sentence, lang, index, total)
-                HttpRequests.request(url)
-                    .setUserAgent()
-                    .googleReferer()
-                    .readBytes(indicator)
-            }
+
+        when (error) {
+            is IOException -> Notifications.showErrorNotification("Google TTS", error.getCommonMessage(), project)
+            else -> LOGGER.e("Google TTS Error", error)
         }
     }
 
-    private fun setupErrorHandler(project: Project?) {
-        player.setErrorHandler { error ->
-            if (project?.isDisposed != false) {
-                return@setErrorHandler
-            }
+    private inner class Loader : PlaybackLoader() {
+        private val sentences = text.splitSentence(MAX_TEXT_LENGTH)
 
-            when (error) {
-                is IOException -> Notifications.showErrorNotification("Google TTS", error.getCommonMessage(), project)
-                else -> LOGGER.e("Google TTS Error", error)
-            }
+        private var index = 0
+
+        private val indicator = EmptyProgressIndicator()
+
+        override fun hasNext(): Boolean = index < sentences.size
+
+        override fun onLoad(): ByteArray {
+            val url = getTtsUrl(sentences[index], lang, index++, sentences.size)
+            return HttpRequests.request(url)
+                .setUserAgent()
+                .googleReferer()
+                .readBytes(indicator)
+        }
+
+        override fun onError(error: Throwable) {
+            showErrorNotification(error)
+        }
+
+        override fun onCanceled() {
+            indicator.cancel()
         }
     }
 
@@ -71,7 +85,7 @@ class GoogleTTSPlayer private constructor(
 
         private const val MAX_TEXT_LENGTH = 200
 
-        private   val SUPPORTED_LANGUAGES: List<Lang> = listOf(
+        private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
             Lang.CHINESE, Lang.ENGLISH, Lang.CHINESE_TRADITIONAL, Lang.ALBANIAN, Lang.ARABIC, Lang.ESTONIAN,
             Lang.ICELANDIC, Lang.POLISH, Lang.BOSNIAN, Lang.AFRIKAANS, Lang.DANISH, Lang.GERMAN, Lang.RUSSIAN,
             Lang.FRENCH, Lang.FINNISH, Lang.KHMER, Lang.KOREAN, Lang.DUTCH, Lang.CATALAN, Lang.CZECH, Lang.CROATIAN,
