@@ -22,7 +22,7 @@ class DefaultPlaybackSource(
         } catch (e: ProcessCanceledException) {
             throw e
         } catch (e: Throwable) {
-            // Ignore
+            throw ProcessCanceledException(e)
         }
     }
 

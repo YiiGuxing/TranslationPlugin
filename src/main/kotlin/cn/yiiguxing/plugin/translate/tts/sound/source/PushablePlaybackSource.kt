@@ -46,7 +46,7 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
         get() = !finished || stacked > 0
 
     @Volatile
-    private var isPreparationProcessCanceled = false
+    private var preparationProcessCanceledException: ProcessCanceledException? = null
     private val readySignal = CountDownLatch(1)
 
     override fun getAudioInputStreamWithContext(): AudioInputStream = audioStream
@@ -60,7 +60,7 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
             try {
                 onPrepare()
             } catch (e: ProcessCanceledException) {
-                isPreparationProcessCanceled = true
+                preparationProcessCanceledException = e
             } finally {
                 finish()
             }
@@ -89,9 +89,7 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
             // Ignore
         }
 
-        if (isPreparationProcessCanceled) {
-            throw ProcessCanceledException()
-        }
+        preparationProcessCanceledException?.let { throw it }
     }
 
     /**
