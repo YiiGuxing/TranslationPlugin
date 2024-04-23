@@ -4,6 +4,7 @@ jsoup = "1.17.2"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 junit = "4.13.2"
+websocket = "1.5.6"
 
 # plugins
 kotlin = "1.9.23"
@@ -17,6 +18,7 @@ jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 dbutils = { group = "commons-dbutils", name = "commons-dbutils", version.ref = "dbutils" }
 mp3spi = { group = "com.googlecode.soundlibs", name = "mp3spi", version.ref = "mp3spi" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+websocket = { group = "org.java-websocket", name = "Java-WebSocket", version.ref = "websocket" }
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
