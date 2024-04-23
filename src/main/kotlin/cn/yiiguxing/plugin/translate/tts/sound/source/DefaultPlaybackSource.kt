@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.tts.sound.source
 
 import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.util.concurrency.AppExecutorUtil
 
 /**
  * The default [PushablePlaybackSource] implementation.
@@ -9,7 +10,17 @@ class DefaultPlaybackSource(
     private val loader: PlaybackLoader
 ) : PushablePlaybackSource() {
 
-    override fun onPrepare() {
+    override fun prepare() {
+        AppExecutorUtil.getAppExecutorService().execute {
+            try {
+                onPrepare()
+            } finally {
+                finish()
+            }
+        }
+    }
+
+    private fun onPrepare() {
         val loader = loader
         try {
             loader.start()
@@ -20,9 +31,9 @@ class DefaultPlaybackSource(
                 push(data)
             }
         } catch (e: ProcessCanceledException) {
-            throw e
+            setPrepareCanceled(e)
         } catch (e: Throwable) {
-            throw ProcessCanceledException(e)
+            setPrepareCanceled(ProcessCanceledException(e))
         }
     }
 

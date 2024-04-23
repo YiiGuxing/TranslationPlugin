@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts.sound.source
 
 import com.intellij.openapi.progress.ProcessCanceledException
-import com.intellij.util.concurrency.AppExecutorUtil
 import java.io.InputStream
 import java.io.InterruptedIOException
 import java.nio.ByteBuffer
@@ -55,23 +54,6 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
         onStalledAction = action
     }
 
-    override fun prepare() {
-        AppExecutorUtil.getAppExecutorService().execute {
-            try {
-                onPrepare()
-            } catch (e: ProcessCanceledException) {
-                preparationProcessCanceledException = e
-            } finally {
-                finish()
-            }
-        }
-    }
-
-    /**
-     * Prepare the source, this method will be called in a background thread.
-     */
-    protected abstract fun onPrepare()
-
     /**
      * Notify that the source is ready.
      *
@@ -82,6 +64,10 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
         readySignal.countDown()
     }
 
+    protected fun setPrepareCanceled(e: ProcessCanceledException) {
+        preparationProcessCanceledException = e
+    }
+
     override fun waitForReady() {
         try {
             readySignal.await()
@@ -89,7 +75,14 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
             // Ignore
         }
 
-        preparationProcessCanceledException?.let { throw it }
+        preparationProcessCanceledException?.let {
+            preparationProcessCanceledException = null
+            throw it
+        }
+    }
+
+    protected fun push(data: ByteArray) {
+        push(ByteBuffer.wrap(data))
     }
 
     /**
@@ -100,10 +93,10 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
      * @param data the data to push
      * @see finish
      */
-    protected fun push(data: ByteArray) {
+    protected fun push(data: ByteBuffer) {
         ready()
         lock.withLock {
-            if (!closed && !finished && data.isNotEmpty()) {
+            if (!closed && !finished && data.hasRemaining()) {
                 stacked++
                 try {
                     while (buffer1 !== EMPTY_BUFFER && buffer2 !== EMPTY_BUFFER) {
@@ -121,14 +114,13 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
                     return
                 }
 
-                val newBuffer = ByteBuffer.wrap(data).asReadOnlyBuffer()
                 if (buffer1 === EMPTY_BUFFER) {
-                    buffer1 = newBuffer
+                    buffer1 = data
                 } else if (buffer2 === EMPTY_BUFFER) {
-                    buffer2 = newBuffer
+                    buffer2 = data
                 }
 
-                count += data.size
+                count += data.remaining()
                 readCondition.signalAll()
             }
         }
