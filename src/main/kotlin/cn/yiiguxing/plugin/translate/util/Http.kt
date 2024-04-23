@@ -144,9 +144,9 @@ object Http {
         return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
     }
 
-    private fun getUserAgent(): String {
-        val chrome = "Chrome/122.0.0.0"
-        val edge = "Edg/122.0.0.0"
+    fun getUserAgent(): String {
+        val chrome = "Chrome/124.0.0.0"
+        val edge = "Edg/124.0.0.0"
         val safari = "Safari/537.36"
         val appleWebKit = "AppleWebKit/537.36"
         val mozilla = "Mozilla/5.0"
