@@ -42,7 +42,7 @@ class Settings : PersistentStateComponent<Settings> {
                 }
             }
 
-    var ttsEngine: TTSEngine by Delegates.observable(TTSEngine.GOOGLE) { _, oldValue: TTSEngine, newValue: TTSEngine ->
+    var ttsEngine: TTSEngine by Delegates.observable(TTSEngine.EDGE) { _, oldValue: TTSEngine, newValue: TTSEngine ->
         if (isInitialized && oldValue != newValue) {
             SETTINGS_CHANGE_PUBLISHER.onTTSEngineChanged(this, newValue)
         }

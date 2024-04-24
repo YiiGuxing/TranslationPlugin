@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.tts
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.tts.microsoft.EdgeTTSPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.isCompletedState
 import cn.yiiguxing.plugin.translate.util.Observable
@@ -56,6 +57,7 @@ class TextToSpeech private constructor() {
 
     private fun getPlayer(project: Project?, text: String, lang: Lang): PlaybackController {
         return when (settings.ttsEngine) {
+            TTSEngine.EDGE -> EdgeTTSPlayer.create(project, text, lang)
             TTSEngine.GOOGLE -> GoogleTTSPlayer.create(project, text, lang)
             TTSEngine.OPENAI -> OpenAiTTSPlayer.create(project, text)
         }
@@ -68,6 +70,7 @@ class TextToSpeech private constructor() {
         checkThread()
         return when (settings.ttsEngine) {
             TTSEngine.GOOGLE -> GoogleTTSPlayer.isSupportLanguage(lang)
+            TTSEngine.EDGE,
             TTSEngine.OPENAI -> true
         }
     }

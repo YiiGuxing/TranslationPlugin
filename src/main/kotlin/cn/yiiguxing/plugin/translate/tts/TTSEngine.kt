@@ -13,12 +13,15 @@ enum class TTSEngine(
     val ttsName: String,
     val configurable: Boolean = false
 ) {
+    EDGE(TranslationIcons.Engines.Microsoft, "Microsoft Edge TTS"),
     GOOGLE(TranslationIcons.Engines.Google, "Google TTS"),
     OPENAI(TranslationIcons.Engines.OpenAI, "OpenAI TTS", true);
 
     fun isConfigured(): Boolean {
         return when (this) {
+            EDGE,
             GOOGLE -> true
+
             OPENAI -> service<OpenAiSettings>().let {
                 it.isConfigured(ConfigType.TTS) && OpenAiCredentials.isCredentialSet(it.provider)
             }
@@ -27,7 +30,9 @@ enum class TTSEngine(
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {
-            GOOGLE -> false
+            EDGE,
+            GOOGLE -> true
+
             OPENAI -> OpenAISettingsDialog(ConfigType.TTS).showAndGet()
         }
     }
