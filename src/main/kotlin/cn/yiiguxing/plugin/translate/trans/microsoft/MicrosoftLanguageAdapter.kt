@@ -23,9 +23,12 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.JAVANESE,
         Lang.KINYARWANDA,
         Lang.KURDISH, // 己俱体分为 `库尔德语（库尔曼吉语）` 和 `库尔德语（索拉尼）`
+        Lang.KYRGYZ,
         Lang.LATIN,
         Lang.LUXEMBOURGISH,
+        Lang.MALAGASY,
         Lang.PORTUGUESE,
+        Lang.SCOTS_GAELIC,
         Lang.SERBIAN,
         Lang.SESOTHO,
         Lang.SHONA,
@@ -35,7 +38,6 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.TAJIK,
         Lang.XHOSA,
         Lang.YIDDISH,
-        Lang.YORUBA,
     )
 
     @Suppress("SpellCheckingInspection")

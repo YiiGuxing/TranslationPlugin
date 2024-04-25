@@ -70,7 +70,7 @@ class TextToSpeech private constructor() {
         checkThread()
         return when (settings.ttsEngine) {
             TTSEngine.GOOGLE -> GoogleTTSPlayer.isSupportLanguage(lang)
-            TTSEngine.EDGE,
+            TTSEngine.EDGE -> EdgeTTSPlayer.isSupportLanguage(lang)
             TTSEngine.OPENAI -> true
         }
     }

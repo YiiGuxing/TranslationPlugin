@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.tts.sound.source.PushablePlaybackSource
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.removeWhitespaces
 import cn.yiiguxing.plugin.translate.util.splitSentence
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.ProcessCanceledException
 import org.java_websocket.client.WebSocketClient
@@ -26,6 +27,7 @@ internal class EdgeTTSSource(
     private val lang: Lang
 ) : PushablePlaybackSource() {
 
+    private val settings = service<EdgeTTSSettings>()
     private val wsClient = EdgeTTSWebSocketClient()
     private val sentences = text.splitSentence(MAX_TEXT_LENGTH).iterator()
     private var errorHandler: (Throwable) -> Unit = { thisLogger().error(it) }
@@ -45,8 +47,7 @@ internal class EdgeTTSSource(
 
     private fun closeSource() = close()
 
-    private inner class EdgeTTSWebSocketClient
-        : WebSocketClient(URI("$WSS_URL&ConnectionId=${generateUuid()}")) {
+    private inner class EdgeTTSWebSocketClient : WebSocketClient(getWSSUri()) {
 
         init {
             addHeader("Pragma", "no-cache")
@@ -102,10 +103,13 @@ internal class EdgeTTSSource(
                 timestamp = getTimestamp() + "Z" // ???
                 path = "ssml"
                 content = ssml {
-                    // FIXME: auto detect voice
-                    voice = "zh-CN-XiaoxiaoNeural"
-                    rate = 0
+                    voice = settings.voice
+                        ?.takeIf { it.isNotBlank() }
+                        ?: EdgeTTSVoiceManager.getDefaultVoiceName(lang)
+                    rate = settings.speed
                     this.text = text
+                }.also {
+                    println(it)
                 }
             })
         }
@@ -134,12 +138,6 @@ internal class EdgeTTSSource(
     companion object {
         private const val MAX_TEXT_LENGTH = 200
 
-        private const val TRUSTED_CLIENT_TOKEN = "6A5AA1D4EAFF4E9FB37E23D68491D6F4"
-
-        @Suppress("SpellCheckingInspection")
-        private const val WSS_URL =
-            "wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=$TRUSTED_CLIENT_TOKEN"
-
         private const val TURN_END = "turn.end"
 
         @Suppress("SpellCheckingInspection")
@@ -159,6 +157,10 @@ internal class EdgeTTSSource(
               }
             }
         """.removeWhitespaces()
+
+        private fun getWSSUri(): URI {
+            return URI("$EDGE_TTS_WSS_URL?TrustedClientToken=$TRUSTED_CLIENT_TOKEN&ConnectionId=${generateUuid()}")
+        }
 
         private fun generateUuid(): String {
             return UUID.randomUUID().toString().replace("-", "")

@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts.microsoft
 
+import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.util.text.StringUtil
 
 /**
@@ -117,3 +118,29 @@ internal data class EdgeTTSMessage(
         }
     }
 }
+
+internal data class EdgeTTSVoice(
+    @SerializedName("Name")
+    val name: String,
+    @SerializedName("ShortName")
+    val shortName: String,
+    @SerializedName("FriendlyName")
+    val friendlyName: String,
+    @SerializedName("Gender")
+    val gender: String,
+    @SerializedName("Locale")
+    val locale: String,
+    @SerializedName("SuggestedCodec")
+    val suggestedCodec: String,
+    @SerializedName("Status")
+    val status: String,
+    @SerializedName("VoiceTag")
+    val voiceTag: VoiceTag = VoiceTag(),
+)
+
+internal data class VoiceTag(
+    @SerializedName("ContentCategories")
+    val contentCategories: List<String> = emptyList(),
+    @SerializedName("VoicePersonalities")
+    val voicePersonalities: List<String> = emptyList(),
+)

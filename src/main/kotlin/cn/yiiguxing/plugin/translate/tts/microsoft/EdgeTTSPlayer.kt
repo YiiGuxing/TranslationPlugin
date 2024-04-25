@@ -70,5 +70,10 @@ class EdgeTTSPlayer private constructor(
         fun create(project: Project?, text: String, lang: Lang): EdgeTTSPlayer {
             return EdgeTTSPlayer(project, text, lang)
         }
+
+        /**
+         * Checks if the specified [language][lang] is supported by the Microsoft Edge TTS.
+         */
+        fun isSupportLanguage(lang: Lang): Boolean = EdgeTTSVoiceManager.isSupportLanguage(lang)
     }
 }
