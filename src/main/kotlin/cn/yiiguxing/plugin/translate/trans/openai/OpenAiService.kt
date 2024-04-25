@@ -38,7 +38,7 @@ interface OpenAiService {
         val endpoint: String?
         val ttsModel: OpenAiModel
         val ttsVoice: OpenAiTtsVoice
-        val ttsSpeed: Float
+        val ttsSpeed: Int
     }
 
     interface OpenAIOptions : Options {
@@ -86,7 +86,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             module = options.ttsModel.value,
             input = text,
             voice = options.ttsVoice.value,
-            speed = options.ttsSpeed
+            speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
         return OpenAiHttp.post(getApiUrl(OPEN_AI_SPEECH_API_PATH)) {
             auth()
@@ -114,7 +114,7 @@ class Azure(private val options: OpenAiService.AzureOptions) : OpenAiService {
             module = options.ttsModel.value,
             input = text,
             voice = options.ttsVoice.value,
-            speed = options.ttsSpeed
+            speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
         return OpenAiHttp.post(options.getApiUrl(true)) {
             auth()

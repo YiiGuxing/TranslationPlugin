@@ -56,12 +56,6 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             ui.apiEndpointField.text = if (value.isNullOrEmpty()) null else value
         }
 
-    private var ttsSpeed: Float
-        get() = ui.ttsSpeedSlicer.value / 100f
-        set(value) {
-            ui.ttsSpeedSlicer.value = (value * 100).toInt()
-        }
-
     init {
         setResizable(false)
         init()
@@ -156,7 +150,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                 }
             }
             ui.ttsSpeedSlicer.addChangeListener {
-                commonStates.ttsSpeed = ttsSpeed
+                commonStates.ttsSpeed = ui.ttsSpeedSlicer.value
             }
         }
     }
@@ -228,7 +222,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         apiEndpoint = commonStates.endpoint
         ui.apiKeyField.text = apiKeys[newProvider]
         if (configType == ConfigType.TTS) {
-            ttsSpeed = commonStates.ttsSpeed
+            ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
             ui.modelComboBox.selected = commonStates.ttsModel
             ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
         }

@@ -136,18 +136,16 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
                 label.text = voice.voiceName
             }
         }
-        ttsSpeedSlicer = JSlider(25, 400, 100).apply {
-            majorTickSpacing = 25
-            minorTickSpacing = 5
+        ttsSpeedSlicer = JSlider(OpenAiTTSSpeed.MIN, OpenAiTTSSpeed.MAX, OpenAiTTSSpeed.NORMAL).apply {
+            majorTickSpacing = 100
+            minorTickSpacing = 10
             snapToTicks = true
             paintTicks = true
             paintLabels = true
             labelTable = Hashtable<Int, JLabel>().apply {
-                put(25, JLabel("0.25x"))
-                put(100, JLabel("1x"))
-                put(200, JLabel("2x"))
-                put(300, JLabel("3x"))
-                put(400, JLabel("4x"))
+                put(OpenAiTTSSpeed.MIN, JLabel(message("tts.label.speed.slow")))
+                put(OpenAiTTSSpeed.NORMAL, JLabel(message("tts.label.speed.normal")))
+                put(OpenAiTTSSpeed.MAX, JLabel(message("tts.label.speed.fast")))
             }
         }
     }
@@ -196,9 +194,9 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         form.add(azureApiVersionComboBox, comboBoxCC)
 
         if (isTTS) {
-            form.add(JLabel(message("openai.settings.dialog.label.tts.voice")), labelCC)
+            form.add(JLabel(message("tts.label.voice")), labelCC)
             form.add(ttsVoiceComboBox, comboBoxCC)
-            form.add(JLabel(message("openai.settings.dialog.label.tts.speed")), labelCC)
+            form.add(JLabel(message("tts.label.speed")), labelCC)
             form.add(ttsSpeedSlicer, UI.fillX().wrap())
         }
     }

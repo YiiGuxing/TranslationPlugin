@@ -55,7 +55,7 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
 
         @get:OptionTag("TTS_SPEED")
-        var ttsSpeed: Float by property(1.0f)
+        var ttsSpeed: Int by property(100)
     }
 
     @Tag("open-ai")
