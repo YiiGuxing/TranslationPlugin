@@ -361,16 +361,18 @@ class WordBookService : Disposable {
     }
 
     private val isReturningSupported: Boolean by lazy {
-        val driver = try {
-            Class.forName(SQLITE_JDBC, true, classLoader).getConstructor().newInstance() as Driver
+        try {
+            val clazz = Class.forName(SQLITE_JDBC, true, classLoader)
+            val driver = clazz.getConstructor().newInstance() as Driver
+            val majorVersion = driver.majorVersion
+            majorVersion > RETURNING_SUPPORTED_MAJOR_VERSION ||
+                    (majorVersion == RETURNING_SUPPORTED_MAJOR_VERSION &&
+                            driver.minorVersion >= RETURNING_SUPPORTED_MINOR_VERSION)
         } catch (e: Throwable) {
-            LOGGER.w("Failed to get driver", e)
-            return@lazy false
+            LOGGER.w(if (e is NumberFormatException) "Unknown version" else "Failed to get driver", e)
+            // IDE 2024.1+ uses a newer version of the SQLite JDBC driver that supports RETURNING
+            IdeVersion >= IdeVersion.IDE2024_1
         }
-        val majorVersion = driver.majorVersion
-        majorVersion > RETURNING_SUPPORTED_MAJOR_VERSION ||
-                (majorVersion == RETURNING_SUPPORTED_MAJOR_VERSION &&
-                        driver.minorVersion >= RETURNING_SUPPORTED_MINOR_VERSION)
     }
 
     /**
