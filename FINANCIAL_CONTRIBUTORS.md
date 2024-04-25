@@ -79,12 +79,15 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | IKUN#1337 |  | 35.00 CNY |
 | 小明 |  | 32.00 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30.00 CNY |
+| 姜巍 |  | 26.66 CNY |
 | 包子 |  | 26.66 CNY |
 | 田坪毛小江 |  | 26.66 CNY |
+| 星夜 |  | 26.64 CNY |
 | 王宏杰 |  | 26.64 CNY |
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 王凯 |  | 20.00 CNY |
 | 雨点.儿 |  | 20.00 CNY |
 | 嘎辉 |  | 20.00 CNY |
 | Wis |  | 20.00 CNY |
@@ -121,16 +124,16 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua |  | 20.00 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20.00 CNY |
 | Yiyi |  | 20.00 CNY |
-| 星夜 |  | 19.98 CNY |
 | 番茄炒蛋 |  | 16.66 CNY |
 | 向阳 |  | 16.66 CNY |
 | ZDQ |  | 16.66 CNY |
 | 本善之初 |  | 16.66 CNY |
 | Joey |  | 16.66 CNY |
 | Joker |  | 16.66 CNY |
-| 姜巍 |  | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15.00 CNY |
 | Zyc |  | 15.00 CNY |
+| 不一样的烟火 |  | 13.32 CNY |
+| Chen |  | 13.32 CNY |
 | 小猪 |  | 13.32 CNY |
 | Null |  | 13.32 CNY |
 | 早睡早起 |  | 13.32 CNY |
@@ -142,6 +145,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 似水年华 |  | 10.00 CNY |
+| 芯辰 |  | 10.00 CNY |
+| 水 |  | 10.00 CNY |
 | 柱子 |  | 10.00 CNY |
 | Clear\_T |  | 10.00 CNY |
 | 淅潼 |  | 10.00 CNY |
@@ -307,6 +313,21 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| L |  | 6.66 CNY |
+| 张雅旗 |  | 6.66 CNY |
+| Wn |  | 6.66 CNY |
+| 许振淳 |  | 6.66 CNY |
+| Iyue |  | 6.66 CNY |
+| Poki |  | 6.66 CNY |
+| 小黄人面包 |  | 6.66 CNY |
+| 海灰吸 |  | 6.66 CNY |
+| WYM |  | 6.66 CNY |
+| Asqhaqs |  | 6.66 CNY |
+| BT-7274 |  | 6.66 CNY |
+| Hello |  | 6.66 CNY |
+| 过客 |  | 6.66 CNY |
+| C壮永 |  | 6.66 CNY |
+| Hugo |  | 6.66 CNY |
 | 墨离 |  | 6.66 CNY |
 | 赵哈哈 |  | 6.66 CNY |
 | Echo'sEcho |  | 6.66 CNY |
@@ -339,7 +360,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 7even |  | 6.66 CNY |
 | Sleeping |  | 6.66 CNY |
 | 刘葛曦 |  | 6.66 CNY |
-| Chen |  | 6.66 CNY |
 | 文件专偷助手 |  | 6.66 CNY |
 | & |  | 6.66 CNY |
 | Leejunfong |  | 6.66 CNY |
@@ -382,7 +402,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 米仓老鼠 |  | 6.66 CNY |
 | 悟过 |  | 6.66 CNY |
 | KLB |  | 6.66 CNY |
-| 不一样的烟火 |  | 6.66 CNY |
 | Sky |  | 6.66 CNY |
 | 文曲星 |  | 6.66 CNY |
 | 陈先生 |  | 6.66 CNY |
