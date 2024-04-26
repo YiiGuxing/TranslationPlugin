@@ -99,7 +99,7 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
             if (!closed && !finished && data.hasRemaining()) {
                 stacked++
                 try {
-                    while (buffer1 !== EMPTY_BUFFER && buffer2 !== EMPTY_BUFFER) {
+                    while (!closed && buffer1 !== EMPTY_BUFFER && buffer2 !== EMPTY_BUFFER) {
                         try {
                             pushCondition.await()
                         } catch (e: InterruptedException) {
