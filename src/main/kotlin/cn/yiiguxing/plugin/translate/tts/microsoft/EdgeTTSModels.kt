@@ -12,9 +12,9 @@ import com.intellij.openapi.util.text.StringUtil
  */
 internal class SSMLBuilder {
     lateinit var voice: String
-    var rate: Int = 0
+    var rate: Int = EDGE_TTS_NORMAL_SPEED
         set(value) {
-            field = value.coerceIn(-50, 100)
+            field = value.coerceIn(EDGE_TTS_MIN_SPEED, EDGE_TTS_MAX_SPEED)
         }
     lateinit var text: String
 

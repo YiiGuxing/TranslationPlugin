@@ -12,7 +12,7 @@ class EdgeTTSSettings : BaseState(), PersistentStateComponent<EdgeTTSSettings> {
     var voice: String? by string()
 
     @get:OptionTag("SPEED")
-    var speed: Int by property(0)
+    var speed: Int by property(EDGE_TTS_NORMAL_SPEED)
 
     override fun getState(): EdgeTTSSettings = this
 

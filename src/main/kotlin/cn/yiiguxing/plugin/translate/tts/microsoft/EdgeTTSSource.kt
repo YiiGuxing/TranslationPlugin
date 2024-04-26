@@ -108,8 +108,6 @@ internal class EdgeTTSSource(
                         ?: EdgeTTSVoiceManager.getDefaultVoiceName(lang)
                     rate = settings.speed
                     this.text = text
-                }.also {
-                    println(it)
                 }
             })
         }
@@ -122,6 +120,10 @@ internal class EdgeTTSSource(
         }
 
         override fun onClose(code: Int, reason: String, remote: Boolean) {
+            if (remote && code == CODE_UNSUPPORTED_VOICE && !settings.voice.isNullOrBlank()) {
+                settings.voice = null
+            }
+
             var closed = false
             if (code != CloseFrame.NORMAL && reason.isNotEmpty()) {
                 closed = true
@@ -139,6 +141,8 @@ internal class EdgeTTSSource(
         private const val MAX_TEXT_LENGTH = 200
 
         private const val TURN_END = "turn.end"
+
+        private const val CODE_UNSUPPORTED_VOICE = 1007
 
         @Suppress("SpellCheckingInspection")
         // language=JSON

@@ -9,3 +9,7 @@ internal const val EDGE_TTS_VOICES_URL =
 @Suppress("SpellCheckingInspection")
 internal const val EDGE_TTS_WSS_URL =
     "wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1"
+
+internal const val EDGE_TTS_NORMAL_SPEED = 0
+internal const val EDGE_TTS_MIN_SPEED = -50
+internal const val EDGE_TTS_MAX_SPEED = 100

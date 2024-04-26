@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.util.createDirectoriesIfNotExists
 import cn.yiiguxing.plugin.translate.util.w
 import cn.yiiguxing.plugin.translate.util.writeSafe
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
@@ -284,7 +285,7 @@ internal object EdgeTTSVoiceManager {
             createDirectoriesIfNotExists(TTS_DIR)
             VOICES_FILE.writeSafe { os ->
                 BufferedWriter(OutputStreamWriter(os)).use {
-                    Gson().toJson(voices, it)
+                    GsonBuilder().setPrettyPrinting().create().toJson(voices, it)
                 }
             }
         } catch (e: IOException) {
