@@ -95,19 +95,33 @@ abstract class PlaybackLoader {
 
 
     /**
-     * A single data loader.
+     * A single source data loader.
      */
     @Suppress("unused")
-    abstract class Single : PlaybackLoader() {
+    abstract class SingleSource<T>(protected val src: T) : PlaybackLoader() {
         private var loaded = false
 
         final override fun hasNext(): Boolean = !loaded
 
         final override fun onLoad(): ByteArray {
             loaded = true
-            return load()
+            return onLoad(src)
         }
 
-        abstract fun load(): ByteArray
+        abstract fun onLoad(src: T): ByteArray
+    }
+
+    /**
+     * A multi-source data loader.
+     */
+    abstract class MultiSource<T>(private val srcset: Iterator<T>) : PlaybackLoader() {
+
+        override fun hasNext(): Boolean = srcset.hasNext()
+
+        final override fun onLoad(): ByteArray {
+            return onLoad(srcset.next())
+        }
+
+        abstract fun onLoad(src: T): ByteArray
     }
 }

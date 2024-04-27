@@ -51,14 +51,14 @@ class OpenAiTTSPlayer private constructor(
         Notifications.showErrorNotification("OpenAi TTS", message, project)
     }
 
-    private inner class Loader : PlaybackLoader() {
+    private inner class Loader : PlaybackLoader.MultiSource<String>(
+        text.splitSentence(MAX_TEXT_LENGTH).iterator()
+    ) {
         private lateinit var service: OpenAiService
 
         private val modalityState = ModalityState.defaultModalityState()
 
         private val indicator = EmptyProgressIndicator()
-
-        private val sentences = text.splitSentence(MAX_TEXT_LENGTH).iterator()
 
         override fun onStart() {
             service = OpenAiService.get(service<OpenAiSettings>().getOptions())
@@ -72,9 +72,7 @@ class OpenAiTTSPlayer private constructor(
             }
         }
 
-        override fun hasNext(): Boolean = sentences.hasNext()
-
-        override fun onLoad(): ByteArray = service.speech(sentences.next(), indicator)
+        override fun onLoad(src: String): ByteArray = service.speech(src, indicator)
 
         override fun onError(error: Throwable) {
             showErrorNotification(error)
