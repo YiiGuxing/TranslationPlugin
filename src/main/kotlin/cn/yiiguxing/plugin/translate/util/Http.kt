@@ -18,6 +18,8 @@ object Http {
 
     const val MIME_TYPE_JSON = "application/json"
 
+    const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
+
     val defaultGson = Gson()
 
 
@@ -64,10 +66,8 @@ object Http {
         dataForm: Map<String, String>,
         init: RequestBuilder.() -> Unit = {}
     ): String {
-        val data = dataForm.entries.joinToString("&") { (key, value) ->
-            "$key=${value.urlEncode()}"
-        }
-        return post(url, "application/x-www-form-urlencoded", data, init)
+        val data = getFormUrlEncoded(dataForm)
+        return post(url, MIME_TYPE_FORM, data, init)
     }
 
     inline fun <reified T> postJson(
@@ -125,6 +125,12 @@ object Http {
         val errorText: String?
     ) : HttpRequests.HttpStatusException(message, status, url)
 
+    private fun getFormUrlEncoded(dataForm: Map<String, String>): String {
+        return dataForm.entries.joinToString("&") { (key, value) ->
+            "${key.urlEncode()}=${value.urlEncode()}"
+        }
+    }
+
     fun <T> RequestBuilder.send(data: String, dataReader: (HttpRequests.Request) -> T): T {
         throwStatusCodeException(false)
         return connect {
@@ -132,6 +138,10 @@ object Http {
             it.checkResponseCode()
             dataReader(it)
         }
+    }
+
+    fun <T> RequestBuilder.sendForm(dataForm: Map<String, String>, dataReader: (HttpRequests.Request) -> T): T {
+        return send(getFormUrlEncoded(dataForm), dataReader)
     }
 
     fun <T> RequestBuilder.sendJson(data: Any, dataReader: (HttpRequests.Request) -> T): T {
