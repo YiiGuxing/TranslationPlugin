@@ -24,6 +24,7 @@
     </li>
     <li>Text to speech.
         <ul>
+            <li>Microsoft Edge TTS.</li>
             <li>Google TTS.</li>
             <li>OpenAI TTS.</li>
         </ul>
