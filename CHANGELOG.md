@@ -1,6 +1,7 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Add Microsoft Edge TTS engine.
 - Add OpenAI TTS engine.
 - OpenAI Translator now supports Azure OpenAI.
 - OpenAI Translator now offers API endpoint configuration.
