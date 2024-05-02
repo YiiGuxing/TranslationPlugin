@@ -30,7 +30,7 @@ private fun showNotification(project: Project) {
         .createNotification(
             message("notification.idea.version"), NotificationType.WARNING
         )
-        .setIcon(TranslationIcons.Translation)
+        .setIcon(TranslationIcons.Logo)
         .setTitle(message("notification.idea.version.title"))
         .addAction(Notifications.DoNotShowAgainAction(DO_NOT_NOTIFY_AGAIN_KEY))
         .setImportant(true)
