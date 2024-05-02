@@ -5,7 +5,6 @@ import cn.yiiguxing.plugin.translate.tts.sound.source.PushablePlaybackSource
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.removeWhitespaces
 import cn.yiiguxing.plugin.translate.util.splitSentence
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.ProcessCanceledException
 import org.java_websocket.client.WebSocketClient
@@ -27,7 +26,6 @@ internal class EdgeTTSSource(
     private val lang: Lang
 ) : PushablePlaybackSource() {
 
-    private val settings = service<EdgeTTSSettings>()
     private val wsClient = EdgeTTSWebSocketClient()
     private val sentences = text.splitSentence(MAX_TEXT_LENGTH).iterator()
     private var errorHandler: (Throwable) -> Unit = { thisLogger().error(it) }
@@ -48,6 +46,8 @@ internal class EdgeTTSSource(
     private fun closeSource() = close()
 
     private inner class EdgeTTSWebSocketClient : WebSocketClient(getWSSUri()) {
+
+        private val settings: EdgeTTSSettings by lazy { EdgeTTSSettings.instance() }
 
         init {
             addHeader("Pragma", "no-cache")

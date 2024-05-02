@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.concurrent.*
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.*
@@ -19,7 +18,7 @@ import javax.swing.*
 
 internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
 
-    private val settings = service<EdgeTTSSettings>()
+    private val settings = EdgeTTSSettings.instance()
 
     private val speedSlicer: JSlider = JSlider(
         EDGE_TTS_MIN_SPEED, EDGE_TTS_MAX_SPEED, settings.speed

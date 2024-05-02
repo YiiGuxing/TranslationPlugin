@@ -17,6 +17,12 @@ import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.project.Project
 import java.io.IOException
 
+/**
+ * The OpenAI TTS player.
+ *
+ * @param project the project.
+ * @param text the text to be synthesized.
+ */
 class OpenAiTTSPlayer private constructor(
     private val project: Project?,
     private val text: String
@@ -28,7 +34,11 @@ class OpenAiTTSPlayer private constructor(
 
     override val statusBinding: Observable<PlaybackStatus> = player.statusBinding
 
+    @Volatile
+    private lateinit var modalityState: ModalityState
+
     override fun start() {
+        modalityState = ModalityState.defaultModalityState()
         player.start()
     }
 
@@ -55,9 +65,6 @@ class OpenAiTTSPlayer private constructor(
         text.splitSentence(MAX_TEXT_LENGTH).iterator()
     ) {
         private lateinit var service: OpenAiService
-
-        private val modalityState = ModalityState.defaultModalityState()
-
         private val indicator = EmptyProgressIndicator()
 
         override fun onStart() {
@@ -86,6 +93,12 @@ class OpenAiTTSPlayer private constructor(
     companion object {
         private const val MAX_TEXT_LENGTH = 300
 
+        /**
+         * Creates a new [OpenAiTTSPlayer] instance with the specified [text].
+         *
+         * @param project the project.
+         * @param text the text to be synthesized.
+         */
         fun create(project: Project?, text: String): OpenAiTTSPlayer {
             return OpenAiTTSPlayer(project, text)
         }
