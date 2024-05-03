@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.diagnostic.ReportException
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.getCommonMessage
 import com.intellij.openapi.diagnostic.thisLogger
@@ -27,7 +28,7 @@ abstract class AbstractTranslator : Translator {
         action()
     } catch (throwable: Throwable) {
         var error = throwable
-        if (throwable is TranslationReportException) {
+        if (throwable is ReportException) {
             thisLogger().error(throwable.message, throwable, *throwable.attachments)
             throwable.cause?.let { error = it }
         }

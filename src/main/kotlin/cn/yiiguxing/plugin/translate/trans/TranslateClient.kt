@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.diagnostic.ReportException
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.util.toHexString
 import cn.yiiguxing.plugin.translate.util.w
@@ -81,7 +82,7 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
             .createRequestAttachment(translator, requestText, srcLang, targetLang)
         val translationAttachment = TranslationAttachmentFactory
             .createTranslationAttachment(translation)
-        throw TranslationReportException(
+        throw ReportException(
             "Translation parsing failed[${translator.id}]: ${error.message}",
             requestAttachment,
             translationAttachment,
