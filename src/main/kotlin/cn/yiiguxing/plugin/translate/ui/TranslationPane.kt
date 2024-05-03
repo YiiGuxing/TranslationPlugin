@@ -8,15 +8,15 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.append
 import cn.yiiguxing.plugin.translate.trans.text.apply
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
-import cn.yiiguxing.plugin.translate.util.TextToSpeech
-import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.splitSentence
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.replace
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
@@ -369,7 +369,7 @@ abstract class TranslationPane<T : JComponent>(
                 }
             } else {
                 resetComponents()
-                TextToSpeech.stop()
+                TextToSpeech.getInstance().stop()
             }
         }
     }
@@ -378,9 +378,10 @@ abstract class TranslationPane<T : JComponent>(
         sourceLangComponent.updateLanguage(translation.srcLang.takeIf { it != Lang.UNKNOWN } ?: Lang.AUTO)
         targetLangComponent.updateLanguage(translation.targetLang)
 
-        originalTTSLink.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
+        val tts = TextToSpeech.getInstance()
+        originalTTSLink.isEnabled = tts.isSupportLanguage(translation.srcLang)
         transTTSLink.isEnabled =
-            !translation.translation.isNullOrEmpty() && TextToSpeech.isSupportLanguage(translation.targetLang)
+            !translation.translation.isNullOrEmpty() && tts.isSupportLanguage(translation.targetLang)
 
         updateOriginalViewer(translation)
         spellComponent.spell = translation.spell
@@ -413,7 +414,8 @@ abstract class TranslationPane<T : JComponent>(
             viewer.text = text
         }
 
-        if ((project != null || WordBookService.isInitialized) && WordBookService.canAddToWordbook(text)) {
+        val wordBookService = WordBookService.getInstance()
+        if ((project != null || wordBookService.isInitialized) && wordBookService.canAddToWordbook(text)) {
             viewer.appendStarButton(translation)
         }
 

@@ -11,12 +11,15 @@ import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.append
 import cn.yiiguxing.plugin.translate.trans.text.apply
 import cn.yiiguxing.plugin.translate.tts.TTSEngine
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Application
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.text.clear
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
@@ -64,6 +67,8 @@ class TranslationDialog(
 
     private val presenter: Presenter = TranslationPresenter(this)
     private val focusManager: IdeFocusManager = IdeFocusManager.getInstance(project)
+
+    private val states: TranslationStates = TranslationStates.getInstance()
 
     private val alarm: Alarm = Alarm(this)
     private val translateAction = Runnable { onTranslate() }
@@ -126,7 +131,7 @@ class TranslationDialog(
         val awtEventListener = AWTEventListener { event ->
             val needCloseDialog = when (event) {
                 is MouseEvent -> event.id == MouseEvent.MOUSE_PRESSED &&
-                        !TranslationStates.pinTranslationDialog &&
+                        !states.pinTranslationDialog &&
                         !isInside(event)
 
                 is KeyEvent -> event.keyCode == KeyEvent.VK_ESCAPE &&
@@ -285,7 +290,7 @@ class TranslationDialog(
                     unequivocalTargetLang = true
                 }
 
-                TranslationStates.lastLanguages.let { pair ->
+                states.lastLanguages.let { pair ->
                     pair.source = sourceLang
                     pair.target = targetLang
                 }
@@ -443,12 +448,12 @@ class TranslationDialog(
         }
         expandDictViewerButton.setListener({ _, _ ->
             expandDictViewer()
-            TranslationStates.translationDialogCollapseDictViewer = false
+            states.translationDialogCollapseDictViewer = false
             fixWindowHeight()
         }, null)
         collapseDictViewerButton.setListener({ _, _ ->
             collapseDictViewer()
-            TranslationStates.translationDialogCollapseDictViewer = true
+            states.translationDialogCollapseDictViewer = true
             fixWindowHeight()
         }, null)
     }
@@ -472,9 +477,10 @@ class TranslationDialog(
 
         updatePresentation(translation?.favoriteId)
 
+        val wordBookService = WordBookService.getInstance()
         starButton.isEnabled = translation != null
-                && (project != null || WordBookService.isInitialized)
-                && WordBookService.canAddToWordbook(translation.original)
+                && (project != null || wordBookService.isInitialized)
+                && wordBookService.canAddToWordbook(translation.original)
         starButton.setListener(StarButtons.listener, translation)
 
         translation?.observableFavoriteId?.observe(this@TranslationDialog) { favoriteId, _ ->
@@ -509,7 +515,7 @@ class TranslationDialog(
         }
 
         val hasContent = dictDocument != null || extraDocuments.isNotEmpty()
-        if (hasContent && TranslationStates.translationDialogCollapseDictViewer)
+        if (hasContent && states.translationDialogCollapseDictViewer)
             collapseDictViewer()
         else if (hasContent)
             expandDictViewer()
@@ -616,8 +622,10 @@ class TranslationDialog(
         currentRequest = null
         lastTranslation = translation
         swapButton.isEnabled = true
-        inputTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.srcLang)
-        translationTTSButton.isEnabled = TextToSpeech.isSupportLanguage(translation.targetLang)
+        TextToSpeech.getInstance().let { tts ->
+            inputTTSButton.isEnabled = tts.isSupportLanguage(translation.srcLang)
+            translationTTSButton.isEnabled = tts.isSupportLanguage(translation.targetLang)
+        }
         translationTextArea.text = translation.translation
         updateOnTranslation(translation)
     }
@@ -637,12 +645,9 @@ class TranslationDialog(
     }
 
     override fun onTTSEngineChanged(settings: Settings, ttsEngine: TTSEngine) {
-        inputTTSButton.isEnabled = lastTranslation?.srcLang?.let {
-            TextToSpeech.isSupportLanguage(it)
-        } ?: false
-        translationTTSButton.isEnabled = lastTranslation?.targetLang?.let {
-            TextToSpeech.isSupportLanguage(it)
-        } ?: false
+        val tts = TextToSpeech.getInstance()
+        inputTTSButton.isEnabled = lastTranslation?.srcLang?.let { tts.isSupportLanguage(it) } ?: false
+        translationTTSButton.isEnabled = lastTranslation?.targetLang?.let { tts.isSupportLanguage(it) } ?: false
     }
 
     private fun updateLanguages(languagePair: LanguagePair? = null) {
@@ -776,17 +781,17 @@ class TranslationDialog(
     }
 
     private fun storeWindowLocationAndSize() {
-        TranslationStates.translationDialogLocationX = window.location.x
-        TranslationStates.translationDialogLocationY = window.location.y
-        TranslationStates.translationDialogWidth = translationPanel.width
-        TranslationStates.translationDialogHeight = translationPanel.height
+        states.translationDialogLocationX = window.location.x
+        states.translationDialogLocationY = window.location.y
+        states.translationDialogWidth = translationPanel.width
+        states.translationDialogHeight = translationPanel.height
 
         translationPanel.preferredSize = translationPanel.size
     }
 
     private fun restoreWindowSize() {
-        val savedWidth = TranslationStates.translationDialogWidth
-        val savedHeight = TranslationStates.translationDialogHeight
+        val savedWidth = states.translationDialogWidth
+        val savedHeight = states.translationDialogHeight
         val savedSize = Dimension(savedWidth, savedHeight)
         translationPanel.size = savedSize
         translationPanel.preferredSize = savedSize
@@ -794,19 +799,19 @@ class TranslationDialog(
     }
 
     private fun restoreWindowLocation() {
-        val windowLocation = Settings.translationWindowLocation
+        val windowLocation = Settings.getInstance().translationWindowLocation
         if (windowLocation == WindowLocation.DEFAULT) {
             return
         }
 
-        val savedX = TranslationStates.translationDialogLocationX
-        val savedY = TranslationStates.translationDialogLocationY
+        val savedX = states.translationDialogLocationX
+        val savedY = states.translationDialogLocationY
         if (savedX == null || savedY == null) {
             return
         }
 
-        val savedWidth = TranslationStates.translationDialogWidth
-        val savedHeight = TranslationStates.translationDialogHeight
+        val savedWidth = states.translationDialogWidth
+        val savedHeight = states.translationDialogHeight
         val ownerWindow = window.owner
         val screenDeviceBounds = GraphicsEnvironment
             .getLocalGraphicsEnvironment()
@@ -832,8 +837,8 @@ class TranslationDialog(
         if (isValidArea) {
             window.location = Point(savedX, savedY)
         } else {
-            TranslationStates.translationDialogLocationX = null
-            TranslationStates.translationDialogLocationY = null
+            states.translationDialogLocationX = null
+            states.translationDialogLocationY = null
         }
     }
 
@@ -863,11 +868,11 @@ class TranslationDialog(
         }
 
         override fun isSelected(e: AnActionEvent): Boolean {
-            return TranslationStates.pinTranslationDialog
+            return TranslationStates.getInstance().pinTranslationDialog
         }
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
-            TranslationStates.pinTranslationDialog = state
+            TranslationStates.getInstance().pinTranslationDialog = state
         }
     }
 

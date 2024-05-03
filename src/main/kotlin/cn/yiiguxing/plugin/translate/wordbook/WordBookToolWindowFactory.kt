@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
@@ -17,17 +18,34 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import org.jetbrains.concurrency.runAsync
 
+/** The id of the wordbook tool window. */
+const val WORDBOOK_TOOL_WINDOW_ID = "Translation.Wordbook"
+
+private const val GOT_IT_KEY = "${TranslationPlugin.PLUGIN_ID}.got.it.wordbook.storage.path"
+
+internal interface WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
+    companion object {
+        /**
+         * Show the word book tool window stripe button.
+         */
+        fun requireWordBook() {
+            checkDispatchThread { "Must only be invoked from the Event Dispatch Thread." }
+            Application.messageBus.syncPublisher(RequireWordBookListener.TOPIC).onRequire()
+        }
+    }
+}
+
 /**
  * Word book tool window factory
  */
-class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
+internal class WordBookToolWindowFactoryImpl : WordBookToolWindowFactory {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         // Try to fix: https://github.com/YiiGuxing/TranslationPlugin/issues/1186
         if (project.isDisposed) {
             return
         }
-        WordBookView.instance.setup(project, toolWindow)
+        WordBookView.getInstance().setup(project, toolWindow)
     }
 
     override fun init(toolWindow: ToolWindow) {
@@ -75,14 +93,15 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             }
         })
 
+        val wordBookService = WordBookService.getInstance()
         val disposable = Disposer.newDisposable(toolWindow.disposable, "Wordbook tool window availability state")
-        WordBookService.instance.stateBinding.observe(disposable) { state, _ ->
+        wordBookService.stateBinding.observe(disposable) { state, _ ->
             if (state == WordBookState.RUNNING) {
                 toolWindowRef.updateVisible()
                 Disposer.dispose(disposable)
             }
         }
-        if (WordBookService.instance.isInitialized) {
+        if (wordBookService.isInitialized) {
             toolWindowRef.updateVisible()
             Disposer.dispose(disposable)
         }
@@ -101,7 +120,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
             return
         }
 
-        if (Settings.wordbookStoragePath.isNullOrEmpty()) {
+        if (Settings.getInstance().wordbookStoragePath.isNullOrEmpty()) {
             Notifications.showFullContentNotification(
                 message("wordbook.window.title"),
                 message("got.it.notification.text.wordbook.storage.path"),
@@ -129,7 +148,7 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
     }
 
     private fun DisposableRef<ToolWindowEx>.updateVisible() {
-        runAsync { with(WordBookService.instance) { isInitialized && hasWords() } }
+        runAsync { with(WordBookService.getInstance()) { isInitialized && hasWords() } }
             .successOnUiThread(this, ModalityState.NON_MODAL) { toolWindow, available ->
                 if (available) {
                     toolWindow.showStripeButton()
@@ -139,28 +158,13 @@ class WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun shouldBeAvailable(project: Project): Boolean = true
 
-    companion object {
-        const val TOOL_WINDOW_ID = "Translation.Wordbook"
-
-        private const val GOT_IT_KEY = "${TranslationPlugin.PLUGIN_ID}.got.it.wordbook.storage.path"
-
-        private val requirePublisher: RequireWordBookListener by lazy {
-            Application.messageBus.syncPublisher(RequireWordBookListener.TOPIC)
+    private inline fun ToolWindowEx.runIfSurvive(crossinline action: ToolWindowEx.() -> Unit) {
+        if (isDisposed) {
+            return
         }
-
-        fun requireWordBook() {
-            checkDispatchThread { "Must only be invoked from the Event Dispatch Thread." }
-            requirePublisher.onRequire()
-        }
-
-        private inline fun ToolWindowEx.runIfSurvive(crossinline action: ToolWindowEx.() -> Unit) {
-            if (isDisposed) {
-                return
-            }
-            invokeLater(ModalityState.NON_MODAL, project.disposed) {
-                if (!isDisposed) {
-                    action()
-                }
+        invokeLater(ModalityState.NON_MODAL, project.disposed) {
+            if (!isDisposed) {
+                action()
             }
         }
     }

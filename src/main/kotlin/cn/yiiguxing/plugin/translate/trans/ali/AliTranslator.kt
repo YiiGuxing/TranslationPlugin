@@ -1,9 +1,13 @@
 package cn.yiiguxing.plugin.translate.trans.ali
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.hmacSha1
+import cn.yiiguxing.plugin.translate.util.i
+import cn.yiiguxing.plugin.translate.util.md5Base64
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.diagnostic.Logger
@@ -45,7 +49,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = AliLanguageAdapter.supportedTargetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.aliTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+        if (force || Settings.getInstance().aliTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return ALI.showConfigurationDialog()
         }
 
@@ -130,7 +134,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         """.trimIndent()
 
         logger.i("Data to sign: $dataToSign")
-        val settings = Settings.aliTranslateSettings
+        val settings = Settings.getInstance().aliTranslateSettings
 
         return Http.post(url, contentType, body) {
             tuner { conn ->

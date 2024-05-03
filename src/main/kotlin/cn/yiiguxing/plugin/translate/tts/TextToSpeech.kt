@@ -82,7 +82,10 @@ class TextToSpeech private constructor() {
     }
 
     companion object {
-        val instance: TextToSpeech get() = service()
+        /**
+         * Returns the instance of [TextToSpeech].
+         */
+        fun getInstance(): TextToSpeech = service()
 
         private fun checkThread() = checkDispatchThread<TextToSpeech>()
     }

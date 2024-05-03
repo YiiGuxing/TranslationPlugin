@@ -7,7 +7,7 @@ import com.intellij.openapi.project.DumbAware
 
 class TTSEngineAction(private val engine: TTSEngine) : FixedIconToggleAction(engine.icon, engine.ttsName), DumbAware {
 
-    private val settings: Settings = Settings.instance
+    private val settings: Settings = Settings.getInstance()
 
     fun isAvailable(): Boolean = engine == settings.ttsEngine || try {
         engine.isConfigured()

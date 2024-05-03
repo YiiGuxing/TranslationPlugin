@@ -14,6 +14,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -200,20 +201,15 @@ class Settings : PersistentStateComponent<Settings> {
     }
 
     companion object {
-
-        /**
-         * Get the instance of this service.
-         *
-         * @return the unique [Settings] instance.
-         */
-        val instance: Settings
-            get() = ApplicationManager.getApplication().getService(Settings::class.java)
-
-
         private const val CURRENT_DATA_VERSION = 1
         private const val DATA_VERSION_KEY = "${TranslationPlugin.PLUGIN_ID}.settings.data.version"
 
         private val LOG = Logger.getInstance(Settings::class.java)
+
+        /**
+         * Get the instance of [Settings].
+         */
+        fun getInstance(): Settings = service()
 
         private fun String.toIgnoreRegex(): Regex? = takeIf { it.isNotEmpty() }?.toRegexOrNull(RegexOption.MULTILINE)
 

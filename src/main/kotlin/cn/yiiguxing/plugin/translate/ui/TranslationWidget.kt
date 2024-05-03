@@ -7,9 +7,9 @@ import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
 import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
@@ -89,8 +89,10 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
         invokeLaterIfNeeded {
             if (project.isDisposed) return@invokeLaterIfNeeded
 
-            toolTipText = TranslateService.translator.name
-            icon = TranslateService.translator.icon
+            TranslateService.getInstance().translator.let { translator ->
+                toolTipText = translator.name
+                icon = translator.icon
+            }
             onUpdated?.invoke()
             repaint()
         }

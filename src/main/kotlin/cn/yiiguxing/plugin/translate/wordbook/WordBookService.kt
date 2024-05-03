@@ -10,10 +10,10 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -170,7 +170,7 @@ class WordBookService : Disposable {
     }
 
     private fun initService() {
-        val dbFile = Settings.instance.wordbookStoragePath
+        val dbFile = Settings.getInstance().wordbookStoragePath
             ?.takeIf { it.isNotBlank() }
             ?.let { getStorageFile(Paths.get(it)) }
             ?: getStorageFile(TranslationStorages.DATA_DIRECTORY).also { dbFile ->
@@ -619,10 +619,12 @@ class WordBookService : Disposable {
         private const val COLUMN_TAGS = "tags"
         private const val COLUMN_CREATED_AT = "created_at"
 
-        private val LOGGER = Logger.getInstance(WordBookService::class.java)
+        private val LOGGER = logger<WordBookService>()
 
-        val instance: WordBookService
-            get() = ApplicationManager.getApplication().getService(WordBookService::class.java)
+        /**
+         * Returns the instance of [WordBookService].
+         */
+        fun getInstance(): WordBookService = service()
 
         fun isStableState(state: WordBookState): Boolean {
             return state == NO_DRIVER || state == INITIALIZATION_ERROR || state == RUNNING

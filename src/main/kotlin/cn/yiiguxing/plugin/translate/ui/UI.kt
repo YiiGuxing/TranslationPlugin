@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.Settings
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.components.labels.LinkLabel
@@ -39,9 +39,10 @@ object UI {
 
     @JvmStatic
     fun getFonts(primaryFontSize: Int, phoneticFontSize: Int): FontPair {
+        val settings = Settings.getInstance()
         return FontPair(
-            getFont(Settings.primaryFontFamily, primaryFontSize),
-            getFont(Settings.phoneticFontFamily, phoneticFontSize)
+            getFont(settings.primaryFontFamily, primaryFontSize),
+            getFont(settings.phoneticFontFamily, phoneticFontSize)
         )
     }
 

@@ -13,7 +13,7 @@ import com.intellij.openapi.util.Condition
 class TranslationEngineAction(private val translator: TranslationEngine) :
     DumbAwareAction(translator.translatorName, null, translator.icon) {
 
-    private val settings: Settings = Settings.instance
+    private val settings: Settings = Settings.getInstance()
 
     fun isAvailable(): Boolean = settings.translator == translator || try {
         translator.isConfigured()
@@ -41,7 +41,7 @@ class TranslationEngineAction(private val translator: TranslationEngine) :
         }
 
         val PRESELECT_CONDITION: Condition<AnAction> = Condition { action ->
-            (action as? TranslationEngineAction)?.translator == Settings.instance.translator
+            (action as? TranslationEngineAction)?.translator == Settings.getInstance().translator
         }
     }
 }

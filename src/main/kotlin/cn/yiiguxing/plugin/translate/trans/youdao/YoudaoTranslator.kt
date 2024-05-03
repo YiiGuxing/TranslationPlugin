@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.trans.youdao
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
 import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
@@ -14,7 +14,6 @@ import org.jsoup.nodes.Document
 import java.util.*
 import javax.swing.Icon
 
-@Suppress("SpellCheckingInspection")
 object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private const val YOUDAO_API_SERVICE_URL = "https://openapi.youdao.com"
@@ -74,7 +73,9 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.youdaoTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+        if (force || Settings.getInstance().youdaoTranslateSettings.let {
+                it.appId.isEmpty() || it.getAppKey().isEmpty()
+            }) {
             return YOUDAO.showConfigurationDialog()
         }
 

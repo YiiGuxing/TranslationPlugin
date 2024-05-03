@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
+import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
@@ -16,10 +17,10 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookListener
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookViewListener
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.messages.MessageBusConnection
 
 
@@ -35,8 +36,10 @@ class TranslateService private constructor() : Disposable {
 
     private val listeners = mutableMapOf<ListenerKey, MutableSet<ListenerInfo>>()
 
+    private val cacheService: CacheService by lazy { CacheService.getInstance() }
+
     init {
-        setTranslator(Settings.instance.translator)
+        setTranslator(Settings.getInstance().translator)
         Application.messageBus
             .connect(this)
             .subscribeSettingsTopic()
@@ -60,7 +63,7 @@ class TranslateService private constructor() : Disposable {
 
     fun getCache(text: String, srcLang: Lang, targetLang: Lang): Translation? {
         checkThread()
-        return CacheService.getMemoryCache(text, srcLang, targetLang, translator.id)
+        return cacheService.getMemoryCache(text, srcLang, targetLang, translator.id)
     }
 
     fun translate(
@@ -71,7 +74,7 @@ class TranslateService private constructor() : Disposable {
         modalityState: ModalityState = ModalityState.defaultModalityState()
     ) {
         checkThread()
-        CacheService.getMemoryCache(text, srcLang, targetLang, translator.id)?.let {
+        cacheService.getMemoryCache(text, srcLang, targetLang, translator.id)?.let {
             listener.onSuccess(it)
             return
         }
@@ -89,7 +92,7 @@ class TranslateService private constructor() : Disposable {
                 with(translator) {
                     translate(text, srcLang, targetLang).let { translation ->
                         translation.favoriteId = getFavoriteId(translation)
-                        CacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
+                        cacheService.putMemoryCache(text, srcLang, targetLang, id, translation)
                         listeners.run(key) { onSuccess(translation) }
                     }
                 }
@@ -108,7 +111,7 @@ class TranslateService private constructor() : Disposable {
 
     private fun getFavoriteId(translation: Translation): Long? {
         return try {
-            WordBookService.instance
+            WordBookService.getInstance()
                 .takeIf { it.isInitialized && it.canAddToWordbook(translation.original) }
                 ?.getWordId(translation.original, translation.srcLang, translation.targetLang)
         } catch (e: Throwable) {
@@ -144,7 +147,7 @@ class TranslateService private constructor() : Disposable {
 
     private fun updateFavorites(favorites: List<WordBookItem>) {
         checkThread()
-        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+        for ((_, translation) in cacheService.getMemoryCacheSnapshot()) {
             translation.favoriteId = null
             translation.updateFavoriteStateIfNeed(favorites)
         }
@@ -152,14 +155,14 @@ class TranslateService private constructor() : Disposable {
 
     private fun notifyFavoriteAdded(favorites: List<WordBookItem>) {
         checkThread()
-        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+        for ((_, translation) in cacheService.getMemoryCacheSnapshot()) {
             translation.updateFavoriteStateIfNeed(favorites)
         }
     }
 
     private fun notifyFavoriteRemoved(favoriteIds: List<Long>) {
         checkThread()
-        for ((_, translation) in CacheService.getMemoryCacheSnapshot()) {
+        for ((_, translation) in cacheService.getMemoryCacheSnapshot()) {
             if (translation.favoriteId in favoriteIds) {
                 translation.favoriteId = null
             }
@@ -194,10 +197,12 @@ class TranslateService private constructor() : Disposable {
     private data class ListenerInfo(val modalityState: ModalityState, val listener: TranslateListener)
 
     companion object {
-        val instance: TranslateService
-            get() = ApplicationManager.getApplication().getService(TranslateService::class.java)
+        private val LOG = logger<TranslateService>()
 
-        private val LOG = Logger.getInstance(TranslateService::class.java)
+        /**
+         * Returns the [TranslateService] instance.
+         */
+        fun getInstance(): TranslateService = service()
 
         private fun checkThread() = checkDispatchThread<TranslateService>()
     }

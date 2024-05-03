@@ -2,12 +2,12 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
 import cn.yiiguxing.plugin.translate.tts.sound.isCompletedState
 import cn.yiiguxing.plugin.translate.ui.icon.SoundIcon
 import cn.yiiguxing.plugin.translate.util.Observable
-import cn.yiiguxing.plugin.translate.util.TextToSpeech
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.ui.AnimatedIcon
@@ -72,7 +72,7 @@ class TTSButton(
             val playingIcon: SoundIcon by lazy { SoundIcon() }
             icon = loadingIcon
             setHoveringIcon(TranslationIcons.Stop)
-            TextToSpeech.speak(project, text, lang).let { controller ->
+            TextToSpeech.getInstance().speak(project, text, lang).let { controller ->
                 ttsController = controller
                 controller.statusBinding.observe(this, Observable.ChangeOnEDTListener { state, _ ->
                     when {

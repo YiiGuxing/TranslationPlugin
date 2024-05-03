@@ -1,12 +1,12 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.ByteSize
-import cn.yiiguxing.plugin.translate.util.CacheService
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
@@ -69,8 +69,9 @@ class SettingsPanel(
             resetWordbookStoragePathButton.isEnabled = enabled
         }
 
-        updateEnabled(WordBookService.instance.state)
-        WordBookService.instance.stateBinding.observe(this) { state, _ ->
+        val wordBookService = WordBookService.getInstance()
+        updateEnabled(wordBookService.state)
+        wordBookService.stateBinding.observe(this) { state, _ ->
             updateEnabled(state)
         }
     }
@@ -85,15 +86,17 @@ class SettingsPanel(
             isClearing = true
 
             runAsync {
-                CacheService.evictAllDiskCaches()
-                CacheService.getDiskCacheSize()
+                with(CacheService.getInstance()) {
+                    evictAllDiskCaches()
+                    getDiskCacheSize()
+                }
             }.finishOnUiThread(labelRef) { label, size ->
                 isClearing = false
                 label.text = ByteSize.format(size ?: 0L)
             }
         }
 
-        runAsync { CacheService.getDiskCacheSize() }
+        runAsync { CacheService.getInstance().getDiskCacheSize() }
             .successOnUiThread(labelRef) { label, size ->
                 label.text = ByteSize.format(size)
             }

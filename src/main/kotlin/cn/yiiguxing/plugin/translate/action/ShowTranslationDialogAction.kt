@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.SelectionMode
-import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 
@@ -20,7 +20,7 @@ class ShowTranslationDialogAction : TranslateAction(true) {
     }
 
     override val selectionMode: SelectionMode
-        get() = Settings.autoSelectionMode
+        get() = Settings.getInstance().autoSelectionMode
 
     // should be always available
     override fun update(e: AnActionEvent) {}
@@ -31,7 +31,7 @@ class ShowTranslationDialogAction : TranslateAction(true) {
         }
 
         TranslationUIManager.showDialog(e.project)
-        if (Settings.takeWordWhenDialogOpens) {
+        if (Settings.getInstance().takeWordWhenDialogOpens) {
             super.actionPerformed(e)
         }
     }

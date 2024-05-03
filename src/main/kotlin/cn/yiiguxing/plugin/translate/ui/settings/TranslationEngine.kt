@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.AppKeySettings
 import cn.yiiguxing.plugin.translate.HelpTopic
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
@@ -22,7 +23,6 @@ import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
-import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.components.service
 import icons.TranslationIcons
 import java.util.*
@@ -56,9 +56,10 @@ enum class TranslationEngine(
     );
 
     var primaryLanguage: Lang
-        get() = Settings.primaryLanguage?.takeIf { it in supportedTargetLanguages() } ?: translator.defaultLangForLocale
+        get() = Settings.getInstance().primaryLanguage?.takeIf { it in supportedTargetLanguages() }
+            ?: translator.defaultLangForLocale
         set(value) {
-            Settings.primaryLanguage = if (value in supportedTargetLanguages()) {
+            Settings.getInstance().primaryLanguage = if (value in supportedTargetLanguages()) {
                 value
             } else {
                 translator.defaultLangForLocale
@@ -87,11 +88,12 @@ enum class TranslationEngine(
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
 
     fun isConfigured(): Boolean {
+        val settings = Settings.getInstance()
         return when (this) {
             MICROSOFT, GOOGLE -> true
-            YOUDAO -> isConfigured(Settings.youdaoTranslateSettings)
-            BAIDU -> isConfigured(Settings.baiduTranslateSettings)
-            ALI -> isConfigured(Settings.aliTranslateSettings)
+            YOUDAO -> isConfigured(settings.youdaoTranslateSettings)
+            BAIDU -> isConfigured(settings.baiduTranslateSettings)
+            ALI -> isConfigured(settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
             OPEN_AI -> service<OpenAiSettings>().let {
                 it.isConfigured(ConfigType.TRANSLATOR) && OpenAiCredentials.isCredentialSet(it.provider)
@@ -110,7 +112,7 @@ enum class TranslationEngine(
                 AppKeySettingsPanel(
                     TranslationIcons.load("/image/baidu_translate_logo.svg"),
                     "https://fanyi-api.baidu.com/manage/developer",
-                    Settings.baiduTranslateSettings
+                    Settings.getInstance().baiduTranslateSettings
                 ),
                 HelpTopic.BAIDU
             ).showAndGet()
@@ -120,7 +122,7 @@ enum class TranslationEngine(
                 AppKeySettingsPanel(
                     TranslationIcons.load("/image/ali_translate_logo.png"),
                     "https://usercenter.console.aliyun.com/#/manage/ak",
-                    Settings.aliTranslateSettings
+                    Settings.getInstance().aliTranslateSettings
                 ),
                 HelpTopic.ALI
             ).showAndGet()
