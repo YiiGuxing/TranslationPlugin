@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.getCommonMessage
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.util.io.HttpRequests
 import io.netty.handler.codec.http.HttpResponseStatus
 import java.io.IOException
@@ -25,7 +26,13 @@ abstract class AbstractTranslator : Translator {
     protected inline fun <T> checkError(action: () -> T): T = try {
         action()
     } catch (throwable: Throwable) {
-        onError(throwable)
+        var error = throwable
+        if (throwable is TranslationReportException) {
+            thisLogger().error(throwable.message, throwable, *throwable.attachments)
+            throwable.cause?.let { error = it }
+        }
+
+        onError(error)
     }
 
     protected open fun createErrorInfo(throwable: Throwable): ErrorInfo? {

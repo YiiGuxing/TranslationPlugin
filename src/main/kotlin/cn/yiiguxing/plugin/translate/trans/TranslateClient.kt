@@ -75,16 +75,16 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
         srcLang: Lang,
         targetLang: Lang,
         translation: String
-    ) {
+    ): Nothing {
         val requestAttachment = TranslationAttachmentFactory
             .createRequestAttachment(translator, requestText, srcLang, targetLang)
         val translationAttachment = TranslationAttachmentFactory
             .createTranslationAttachment(translation)
-        LOG.error(
+        throw TranslationReportException(
             "Translation parsing failed[${translator.id}]: ${error.message}",
-            error,
             requestAttachment,
-            translationAttachment
+            translationAttachment,
+            cause = error
         )
     }
 
