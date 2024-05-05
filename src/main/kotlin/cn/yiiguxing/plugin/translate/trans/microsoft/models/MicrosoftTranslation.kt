@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 
 data class MicrosoftTranslation(
     @SerializedName("sourceText")
-    var sourceText: MicrosoftSourceText,
+    var sourceText: SourceText,
     var sourceLang: Lang,
 
     @SerializedName("detectedLanguage")

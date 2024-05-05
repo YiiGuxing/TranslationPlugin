@@ -2,6 +2,6 @@ package cn.yiiguxing.plugin.translate.trans.microsoft.models
 
 import com.google.gson.annotations.SerializedName
 
-data class MicrosoftSourceText(
+data class SourceText(
     @SerializedName("Text") val text: String
 )
