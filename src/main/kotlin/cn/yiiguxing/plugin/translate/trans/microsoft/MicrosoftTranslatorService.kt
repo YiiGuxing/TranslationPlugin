@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftTranslation
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.SourceText
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
-import com.google.gson.reflect.TypeToken
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 
 
@@ -38,12 +37,10 @@ internal object MicrosoftTranslatorService {
         }
 
         val accessToken = MicrosoftEdgeAuthService.service().getAccessToken()
-        val type = object : TypeToken<ArrayList<MicrosoftTranslation>>() {}.type
-        return MicrosoftHttp.post<ArrayList<MicrosoftTranslation>>(
+        return MicrosoftHttp.post<Array<out MicrosoftTranslation>>(
             translateUrl,
             accessToken,
-            listOf(SourceText(text)),
-            type
+            listOf(SourceText(text))
         )
             .firstOrNull()
             ?.apply {
@@ -64,12 +61,10 @@ internal object MicrosoftTranslatorService {
         }
 
         val accessToken = MicrosoftEdgeAuthService.service().getAccessToken()
-        val type = object : TypeToken<ArrayList<DictionaryLookup>>() {}.type
-        return MicrosoftHttp.post<ArrayList<DictionaryLookup>>(
+        return MicrosoftHttp.post<Array<out DictionaryLookup>>(
             lookupUrl,
             accessToken,
             listOf(SourceText(text)),
-            type
         ).first()
     }
 

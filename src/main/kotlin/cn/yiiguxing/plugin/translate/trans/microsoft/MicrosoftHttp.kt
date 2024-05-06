@@ -19,6 +19,16 @@ internal object MicrosoftHttp {
 
     private val LOG: Logger = logger<MicrosoftHttp>()
 
+    inline fun <reified T> post(
+        url: String,
+        token: String,
+        data: Any,
+        cache: Boolean = true,
+        noinline builder: RequestBuilder.() -> Unit = {}
+    ): T {
+        return post(url, token, data, T::class.java, cache, builder)
+    }
+
     fun <T> post(
         url: String,
         token: String,

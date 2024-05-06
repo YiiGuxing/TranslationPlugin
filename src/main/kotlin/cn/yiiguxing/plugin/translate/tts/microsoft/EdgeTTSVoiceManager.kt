@@ -3,14 +3,10 @@ package cn.yiiguxing.plugin.translate.tts.microsoft
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Lang.*
-import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
-import cn.yiiguxing.plugin.translate.util.createDirectoriesIfNotExists
-import cn.yiiguxing.plugin.translate.util.w
-import cn.yiiguxing.plugin.translate.util.writeSafe
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import kotlinx.collections.immutable.toImmutableList
@@ -251,9 +247,8 @@ internal object EdgeTTSVoiceManager {
      */
     @RequiresBackgroundThread
     fun fetchVoiceList(): List<EdgeTTSVoice> {
-        val type = object : TypeToken<List<EdgeTTSVoice>>() {}.type
         val url = "$EDGE_TTS_VOICES_URL?TrustedClientToken=$TRUSTED_CLIENT_TOKEN"
-        return Http.request<List<EdgeTTSVoice>>(url, typeOfT = type) { setUserAgent() }
+        return Http.request<List<EdgeTTSVoice>>(url, typeOfT = type<List<EdgeTTSVoice>>()) { setUserAgent() }
             .toImmutableList()
             .also { saveVoicesToLocale(it) }
     }
@@ -273,7 +268,7 @@ internal object EdgeTTSVoiceManager {
         }
         return try {
             Files.newBufferedReader(VOICES_FILE).use {
-                Gson().fromJson(it, object : TypeToken<List<EdgeTTSVoice>>() {}.type)
+                Gson().fromJson(it, type<List<EdgeTTSVoice>>())
             }
         } catch (e: Exception) {
             null
