@@ -6,6 +6,9 @@ import cn.yiiguxing.plugin.translate.trans.text.DictionaryEntry
 import cn.yiiguxing.plugin.translate.trans.text.DictionaryGroup
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 
+/**
+ * Microsoft dictionary document factory.
+ */
 object MicrosoftDictionaryDocumentFactory : TranslationDocument.Factory<DictionaryLookup, DictionaryDocument> {
     override fun getDocument(input: DictionaryLookup): DictionaryDocument? {
         if (input.translations.isEmpty()) {
