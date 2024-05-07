@@ -3,6 +3,7 @@
 ## [Unreleased]
 - Add Microsoft Edge TTS engine.
 - Add OpenAI TTS engine.
+- Microsoft Translator now supports dictionary lookup and example sentences.
 - OpenAI Translator now supports Azure OpenAI.
 - OpenAI Translator now offers API endpoint configuration.
 - The model list of OpenAI Translator has been updated.
