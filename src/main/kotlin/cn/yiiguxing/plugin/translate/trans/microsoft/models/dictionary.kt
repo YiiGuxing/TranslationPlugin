@@ -2,13 +2,16 @@ package cn.yiiguxing.plugin.translate.trans.microsoft.models
 
 import com.google.gson.annotations.SerializedName
 
-data class DictionaryLookup(
+// Doc: https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-lookup
+
+
+internal data class DictionaryLookup(
     @SerializedName("normalizedSource") val normalizedSource: String,
     @SerializedName("displaySource") val displaySource: String,
     @SerializedName("translations") val translations: List<DictionaryTranslation>,
 )
 
-data class DictionaryTranslation(
+internal data class DictionaryTranslation(
     @SerializedName("normalizedTarget") val normalizedTarget: String,
     @SerializedName("displayTarget") val displayTarget: String,
     @SerializedName("posTag") val posTag: PosTag,
@@ -17,7 +20,7 @@ data class DictionaryTranslation(
     @SerializedName("backTranslations") val backTranslations: List<DictionaryBackTranslation>,
 )
 
-data class DictionaryBackTranslation(
+internal data class DictionaryBackTranslation(
     @SerializedName("normalizedText") val normalizedText: String,
     @SerializedName("displayText") val displayText: String,
 )

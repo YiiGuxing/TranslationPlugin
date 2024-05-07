@@ -46,7 +46,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         } else null
 
         return Translation(
-            msTranslation.sourceText.text,
+            text,
             translation.text,
             sourceLang,
             Lang.fromMicrosoftLanguageCode(translation.to),

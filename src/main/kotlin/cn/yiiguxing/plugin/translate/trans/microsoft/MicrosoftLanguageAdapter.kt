@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 /**
  * Language adapter for Microsoft Translator.
  */
-object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
+internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.BELARUSIAN,
@@ -66,12 +66,12 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
 /**
  * Language code for Microsoft Translator.
  */
-val Lang.microsoftLanguageCode: String
+internal val Lang.microsoftLanguageCode: String
     get() = MicrosoftLanguageAdapter.getLanguageCode(this)
 
 /**
  * Returns the [language][Lang] for the specified Microsoft Translator language [code].
  */
-fun Lang.Companion.fromMicrosoftLanguageCode(code: String): Lang {
+internal fun Lang.Companion.fromMicrosoftLanguageCode(code: String): Lang {
     return MicrosoftLanguageAdapter.getLanguage(code)
 }

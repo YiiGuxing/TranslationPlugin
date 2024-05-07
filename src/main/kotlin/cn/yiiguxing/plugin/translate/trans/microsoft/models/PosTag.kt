@@ -10,7 +10,7 @@ import org.jetbrains.annotations.PropertyKey
 /**
  * The part-of-speech tag.
  */
-enum class PosTag(@PropertyKey(resourceBundle = BUNDLE) displayTagKey: String) {
+internal enum class PosTag(@PropertyKey(resourceBundle = BUNDLE) displayTagKey: String) {
     @SerializedName("ADJ")
     ADJECTIVES("pos.tag.adjectives"),
 

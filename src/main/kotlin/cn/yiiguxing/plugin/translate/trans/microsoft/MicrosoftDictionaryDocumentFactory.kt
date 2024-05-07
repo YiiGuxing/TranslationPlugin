@@ -9,7 +9,7 @@ import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 /**
  * Microsoft dictionary document factory.
  */
-object MicrosoftDictionaryDocumentFactory : TranslationDocument.Factory<DictionaryLookup, DictionaryDocument> {
+internal object MicrosoftDictionaryDocumentFactory : TranslationDocument.Factory<DictionaryLookup, DictionaryDocument> {
     override fun getDocument(input: DictionaryLookup): DictionaryDocument? {
         if (input.translations.isEmpty()) {
             return null
