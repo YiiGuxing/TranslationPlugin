@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
 import org.jsoup.nodes.Document
 import javax.swing.Icon
@@ -45,12 +46,19 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
             MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
         } else null
 
+        val extraDocuments = dictionaryLookup
+            ?.let { MicrosoftTranslatorService.dictionaryExamples(it, sourceLang, targetLang) }
+            ?.let { MicrosoftExampleDocumentFactory.getDocument(it) }
+            ?.let { listOf(NamedTranslationDocument(message("examples.document.name"), it)) }
+            ?: emptyList()
+
         return Translation(
             text,
             translation.text,
             sourceLang,
             Lang.fromMicrosoftLanguageCode(translation.to),
-            dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument)
+            dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument),
+            extraDocuments = extraDocuments
         )
     }
 

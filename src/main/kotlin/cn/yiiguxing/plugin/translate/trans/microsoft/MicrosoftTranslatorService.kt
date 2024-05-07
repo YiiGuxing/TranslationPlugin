@@ -1,11 +1,9 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.microsoft.models.DictionaryLookup
-import cn.yiiguxing.plugin.translate.trans.microsoft.models.InputText
-import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftTranslation
-import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
+import cn.yiiguxing.plugin.translate.util.type
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 
 
@@ -17,10 +15,13 @@ internal object MicrosoftTranslatorService {
     private const val API_BASE_URL = "https://api.cognitive.microsofttranslator.com"
     private const val TRANSLATE_API_URL = "$API_BASE_URL/translate"
     private const val DICTIONARY_LOOKUP_API_URL = "$API_BASE_URL/dictionary/lookup"
+    private const val DICTIONARY_EXAMPLES_API_URL = "$API_BASE_URL/dictionary/examples"
 
     /** The maximum length of the text that can be looked up in the dictionary. */
     private const val MAX_DICT_INPUT_TEXT_LENGTH = 100
 
+    /** The maximum number of items that can be looked up in the dictionary examples. */
+    private const val MAX_DICT_EXAMPLE_INPUT_ITEM_COUNT = 10
 
     /**
      * Translates the [text] from [from] language to [to] language.
@@ -77,6 +78,40 @@ internal object MicrosoftTranslatorService {
             accessToken,
             arrayOf(InputText(text)),
         ).first()
+    }
+
+    /**
+     * Looks up the dictionary examples.
+     * Provides examples that show how terms in the dictionary are used in context.
+     * This operation is used in tandem with [Dictionary lookup][dictionaryLookup].
+     *
+     * [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-examples)
+     */
+    fun dictionaryExamples(dictionaryLookup: DictionaryLookup, from: Lang, to: Lang): List<DictionaryExample> {
+        val request = dictionaryLookup.translations
+            .asSequence()
+            .sortedByDescending { it.confidence }
+            .filter { it.normalizedTarget.length <= MAX_DICT_INPUT_TEXT_LENGTH }
+            .take(MAX_DICT_EXAMPLE_INPUT_ITEM_COUNT)
+            .map {
+                DictionaryExampleInputText(dictionaryLookup.normalizedSource, it.normalizedTarget)
+            }
+            .toList()
+            .takeIf { it.isNotEmpty() }
+            ?: return emptyList()
+
+        val lookupUrl = requestUrl(DICTIONARY_EXAMPLES_API_URL) {
+            addQueryParameter("from", from.microsoftLanguageCode)
+            addQueryParameter("to", to.microsoftLanguageCode)
+        }
+
+        val accessToken = MicrosoftEdgeAuthService.service().getAccessToken()
+        return MicrosoftHttp.post(
+            lookupUrl,
+            accessToken,
+            request,
+            typeOfT = type<List<DictionaryExample>>()
+        )
     }
 
     private inline fun requestUrl(baseUrl: String, block: UrlBuilder.() -> Unit): String {

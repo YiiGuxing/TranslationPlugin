@@ -24,3 +24,27 @@ internal data class DictionaryBackTranslation(
     @SerializedName("normalizedText") val normalizedText: String,
     @SerializedName("displayText") val displayText: String,
 )
+
+
+// Doc: https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-examples
+
+
+internal data class DictionaryExampleInputText(
+    @SerializedName("Text") val text: String,
+    @SerializedName("Translation") val translation: String,
+)
+
+internal data class DictionaryExample(
+    @SerializedName("normalizedSource") val normalizedSource: String,
+    @SerializedName("normalizedTarget") val normalizedTarget: String,
+    @SerializedName("examples") val examples: List<DictionaryExampleItem>,
+)
+
+internal data class DictionaryExampleItem(
+    @SerializedName("sourcePrefix") val sourcePrefix: String,
+    @SerializedName("sourceTerm") val sourceTerm: String,
+    @SerializedName("sourceSuffix") val sourceSuffix: String,
+    @SerializedName("targetPrefix") val targetPrefix: String,
+    @SerializedName("targetTerm") val targetTerm: String,
+    @SerializedName("targetSuffix") val targetSuffix: String
+)
