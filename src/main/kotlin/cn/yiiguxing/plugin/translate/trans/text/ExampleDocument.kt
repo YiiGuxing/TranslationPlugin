@@ -1,9 +1,7 @@
-package cn.yiiguxing.plugin.translate.trans.google
+package cn.yiiguxing.plugin.translate.trans.text
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
-import cn.yiiguxing.plugin.translate.util.chunked
 import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
@@ -11,7 +9,10 @@ import icons.TranslationIcons
 import java.awt.Color
 import javax.swing.text.*
 
-class GoogleExamplesDocument private constructor(private val examples: List<List<CharSequence>>) : TranslationDocument {
+/**
+ * Example document.
+ */
+class ExampleDocument(private val examples: List<List<CharSequence>>) : TranslationDocument {
 
     override val text: String
         get() = examples.joinToString("\n") { it.joinToString("") }
@@ -22,7 +23,7 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
 
             val startOffset = length
             appendExamples()
-            setParagraphStyle(startOffset, length - startOffset, EXAMPLE_PARAGRAPH_STYLE, false)
+            setParagraphStyle(startOffset, length - startOffset, STYLE_EXAMPLE_PARAGRAPH, false)
         }
     }
 
@@ -31,11 +32,14 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
         if (examples.size > 1) {
             newLine()
             val startOffset = length
-            val foldingAttr = SimpleAttributeSet(getStyle(EXAMPLE_FOLDING_STYLE))
+            val foldingAttr = SimpleAttributeSet(getStyle(STYLE_EXAMPLE_FOLDING))
             StyledViewer.StyleConstants.setMouseListener(foldingAttr, createFoldingMouseListener(examples.drop(1)))
-            val placeholder = " " + message("title.google.document.examples.show.all", examples.size) + " "
+            val placeholder = " " + message("examples.document.folding.show.all", examples.size) + " "
             appendString(placeholder, foldingAttr)
-            setParagraphStyle(startOffset, placeholder.length, EXAMPLE_FOLDING_PARAGRAPH_STYLE, false)
+            setParagraphStyle(
+                startOffset, placeholder.length,
+                STYLE_EXAMPLE_FOLDING_PARAGRAPH, false
+            )
         }
     }
 
@@ -43,7 +47,7 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
         if (newLine) {
             newLine()
         }
-        appendString(" ", ICON_QUOTE_STYLE)
+        appendString(" ", STYLE_ICON_QUOTE)
         appendString("\t")
         for (ex in example) {
             appendCharSequence(ex)
@@ -56,56 +60,44 @@ class GoogleExamplesDocument private constructor(private val examples: List<List
                 remove(element.startOffset - 1, element.rangeSize + 1)
                 val startOffset = length
                 examples.drop(1).forEach { appendExample(it) }
-                setParagraphStyle(startOffset, length - startOffset, EXAMPLE_PARAGRAPH_STYLE, true)
+                setParagraphStyle(
+                    startOffset, length - startOffset,
+                    STYLE_EXAMPLE_PARAGRAPH, true
+                )
             }
         }
     }
 
     override fun toString(): String = text
 
-    companion object : TranslationDocument.Factory<GExamples?, GoogleExamplesDocument> {
 
-        private val BOLD_REGEX = Regex("<b>(.+?)</b>")
-
-        private const val EXAMPLE_PARAGRAPH_STYLE = "g_example_p_style"
-        private const val ICON_QUOTE_STYLE = "g_example_icon_quote_style"
-        private const val EXAMPLE_BOLD_STYLE = "g_example_bold_style"
-        private const val EXAMPLE_FOLDING_STYLE = "g_example_folding_style"
-        private const val EXAMPLE_FOLDING_PARAGRAPH_STYLE = "g_example_folding_ps"
-
-        override fun getDocument(input: GExamples?): GoogleExamplesDocument? {
-            if (input == null || input.examples.isEmpty()) {
-                return null
-            }
-
-            val examples = input.examples.asSequence()
-                .map { (example) ->
-                    example.chunked(BOLD_REGEX) { StyledString(it.groupValues[1], EXAMPLE_BOLD_STYLE) }
-                }
-                .toList()
-            return GoogleExamplesDocument(examples)
-        }
+    companion object {
+        const val STYLE_EXAMPLE_BOLD = "example-bold"
+        private const val STYLE_EXAMPLE_PARAGRAPH = "example-p"
+        private const val STYLE_ICON_QUOTE = "example-icon-quote"
+        private const val STYLE_EXAMPLE_FOLDING = "example-folding"
+        private const val STYLE_EXAMPLE_FOLDING_PARAGRAPH = "example-folding--p"
 
         private fun StyledDocument.initStyle() {
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
-            getStyleOrAdd(EXAMPLE_PARAGRAPH_STYLE, defaultStyle) { style ->
+            getStyleOrAdd(STYLE_EXAMPLE_PARAGRAPH, defaultStyle) { style ->
                 StyleConstants.setTabSet(style, TabSet(arrayOf(TabStop(JBUIScale.scale(5f)))))
                 StyleConstants.setForeground(style, JBColor(0x606060, 0xBBBDBF))
             }
-            getStyleOrAdd(EXAMPLE_BOLD_STYLE, defaultStyle) { style ->
+            getStyleOrAdd(STYLE_EXAMPLE_BOLD, defaultStyle) { style ->
                 StyleConstants.setBold(style, true)
                 StyleConstants.setForeground(style, JBColor(0x555555, 0xC8CACC))
             }
-            getStyleOrAdd(ICON_QUOTE_STYLE) { style ->
+            getStyleOrAdd(STYLE_ICON_QUOTE) { style ->
                 StyleConstants.setIcon(style, TranslationIcons.Quote)
             }
-            getStyleOrAdd(EXAMPLE_FOLDING_STYLE, defaultStyle) { style ->
+            getStyleOrAdd(STYLE_EXAMPLE_FOLDING, defaultStyle) { style ->
                 StyleConstants.setFontSize(style, getFont(style).size - 1)
                 StyleConstants.setForeground(style, JBColor(0x777777, 0x888888))
                 val background = JBColor(Color(0, 0, 0, 0x18), Color(0xFF, 0xFF, 0xFF, 0x10))
                 StyleConstants.setBackground(style, background)
             }
-            getStyleOrAdd(EXAMPLE_FOLDING_PARAGRAPH_STYLE, defaultStyle) { style ->
+            getStyleOrAdd(STYLE_EXAMPLE_FOLDING_PARAGRAPH, defaultStyle) { style ->
                 StyleConstants.setSpaceAbove(style, JBUIScale.scale(8f))
             }
         }

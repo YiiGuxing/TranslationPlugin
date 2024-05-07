@@ -45,8 +45,8 @@ data class GoogleTranslation(
             .joinToString("")
             .replace(ZERO_WIDTH_SPACE, "")
 
-        val extraDocuments = GoogleExamplesDocument.getDocument(examples)?.let {
-            listOf(NamedTranslationDocument(message("title.google.document.examples"), it))
+        val extraDocuments = GoogleExampleDocumentFactory.getDocument(examples)?.let {
+            listOf(NamedTranslationDocument(message("examples.document.name"), it))
         } ?: emptyList()
 
         return Translation(

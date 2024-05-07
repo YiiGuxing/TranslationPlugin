@@ -9,9 +9,9 @@ import com.intellij.ui.scale.JBUIScale
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-class NamedTranslationDocument(
+class NamedTranslationDocument<T : TranslationDocument>(
     val name: String,
-    val document: TranslationDocument
+    val document: T
 ) : TranslationDocument {
 
     override val translations: Set<String>
