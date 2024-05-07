@@ -18,6 +18,9 @@ internal object MicrosoftTranslatorService {
     private const val TRANSLATE_URL = "$API_BASE_URL/translate"
     private const val DICTIONARY_LOOKUP_URL = "$API_BASE_URL/dictionary/lookup"
 
+    /** The maximum length of the text that can be looked up in the dictionary. */
+    private const val MAX_DICT_LOOKUP_TEXT_LENGTH = 100
+
     /**
      * Translates the [text] from [from] language to [to] language.
      *
@@ -43,10 +46,14 @@ internal object MicrosoftTranslatorService {
             listOf(SourceText(text))
         )
             .firstOrNull()
-            ?.apply {
-                sourceText = SourceText(text)
-                sourceLang = from
-            }
+            ?.apply { sourceText = SourceText(text) }
+    }
+
+    /**
+     * Determines whether the [text] can be looked up in the dictionary.
+     */
+    fun canLookupDictionary(text: String): Boolean {
+        return text.length <= MAX_DICT_LOOKUP_TEXT_LENGTH && text.any { !it.isWhitespace() }
     }
 
     /**

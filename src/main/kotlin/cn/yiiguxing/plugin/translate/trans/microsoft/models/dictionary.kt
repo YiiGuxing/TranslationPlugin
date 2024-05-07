@@ -12,7 +12,7 @@ data class DictionaryTranslation(
     @SerializedName("normalizedTarget") val normalizedTarget: String,
     @SerializedName("displayTarget") val displayTarget: String,
     @SerializedName("posTag") val posTag: PosTag,
-    @SerializedName("confidence") val confidence: Double,
+    @SerializedName("confidence") val confidence: Float,
     @SerializedName("prefixWord") val prefixWord: String,
     @SerializedName("backTranslations") val backTranslations: List<DictionaryBackTranslation>,
 )

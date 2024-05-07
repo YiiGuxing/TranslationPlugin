@@ -1,33 +1,15 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft.models
 
-import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
-import cn.yiiguxing.plugin.translate.trans.microsoft.fromMicrosoftLanguageCode
 import com.google.gson.annotations.SerializedName
 
 data class MicrosoftTranslation(
     @SerializedName("sourceText")
     var sourceText: SourceText,
-    var sourceLang: Lang,
-
     @SerializedName("detectedLanguage")
     val detectedLanguage: MSDetectedLanguage? = null,
     @SerializedName("translations")
     val translations: List<MSTranslation> = emptyList()
-) : TranslationAdapter {
-
-    override fun toTranslation(): Translation {
-        val translation = translations.first()
-        return Translation(
-            sourceText.text,
-            translation.text,
-            detectedLanguage?.language?.let { Lang.fromMicrosoftLanguageCode(it) } ?: sourceLang,
-            Lang.fromMicrosoftLanguageCode(translation.to)
-        )
-    }
-
-}
+)
 
 data class MSDetectedLanguage(
     @SerializedName("language")

@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
@@ -23,9 +25,33 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = MicrosoftLanguageAdapter.supportedTargetLanguages
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN)
-            ?.toTranslation()
-            ?: Translation(text, text, srcLang, targetLang, emptyList())
+        if (!targetLang.isExplicit()) {
+            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.langName}")
+        }
+
+        val msTranslation = MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN)
+            ?: return Translation(text, text, srcLang.toExplicit(), targetLang)
+
+        val translation = msTranslation.translations.first()
+        val sourceLang = msTranslation.detectedLanguage?.language
+            ?.let { Lang.fromMicrosoftLanguageCode(it) }
+            ?: srcLang.toExplicit()
+
+        val dictionaryLookup = if (
+            sourceLang.isExplicit() &&
+            sourceLang != targetLang &&
+            MicrosoftTranslatorService.canLookupDictionary(text)
+        ) {
+            MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
+        } else null
+
+        return Translation(
+            msTranslation.sourceText.text,
+            translation.text,
+            sourceLang,
+            Lang.fromMicrosoftLanguageCode(translation.to),
+            dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument)
+        )
     }
 
     override fun translateDocumentation(
