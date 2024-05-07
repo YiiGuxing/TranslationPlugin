@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.google.GoogleDictDocument
+import cn.yiiguxing.plugin.translate.trans.text.DictionaryDocument
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoDictDocument
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoWebTranslationDocument
 import cn.yiiguxing.plugin.translate.util.text.text
@@ -151,6 +151,7 @@ class StyledViewer : Viewer() {
                         event.button == MouseEvent.BUTTON1 && event.clickCount == 1 -> {
                             listener.mouseClicked(this@StyledViewer, event, elem)
                         }
+
                         event.button == MouseEvent.BUTTON3 && event.clickCount == 1 -> {
                             listener.mouseRightButtonClicked(this@StyledViewer, event, elem)
                         }
@@ -254,31 +255,36 @@ class StyledViewer : Viewer() {
             addPopupMenuItem(message("menu.item.copy"), AllIcons.Actions.Copy) { _, element, _ ->
                 CopyPasteManager.getInstance().setContents(StringSelection(element.text))
             }
+
+            //TODO: Should decouple from the specific implementation.
             onClick { element, data ->
                 prevTranslation()?.run {
                     val src: Lang
                     val target: Lang
                     when (data) {
-                        GoogleDictDocument.WordType.WORD,
+                        DictionaryDocument.WordType.WORD,
                         YoudaoDictDocument.WordType.WORD,
                         YoudaoWebTranslationDocument.WordType.WEB_VALUE -> {
                             src = targetLang
                             target = srcLang
                         }
-                        GoogleDictDocument.WordType.REVERSE,
+
+                        DictionaryDocument.WordType.REVERSE,
                         YoudaoDictDocument.WordType.VARIANT,
                         YoudaoWebTranslationDocument.WordType.WEB_KEY -> {
                             src = srcLang
                             target = targetLang
                         }
+
                         else -> return@onClick
                     }
 
-                    onNewTranslateHandler(element.text, src, target)
+                    when (target) {
+                        Lang.AUTO, Lang.UNKNOWN -> return@onClick
+                        else -> onNewTranslateHandler(element.text, src, target)
+                    }
                 }
             }
         }
-
     }
-
 }

@@ -14,6 +14,9 @@ class NamedTranslationDocument(
     val document: TranslationDocument
 ) : TranslationDocument {
 
+    override val translations: Set<String>
+        get() = document.translations
+
     override val text: String
         get() = "$name\n${document.text}"
 

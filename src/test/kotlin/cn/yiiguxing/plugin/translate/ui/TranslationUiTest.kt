@@ -79,7 +79,7 @@ fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
 )
 
 fun setupGoogleDictDocument(dictViewer: StyledViewer, googleTranslation: GoogleTranslation) {
-    val document = GoogleDictDocument.Factory.getDocument(googleTranslation)
+    val document = GoogleDictionaryDocumentFactory.getDocument(googleTranslation)
     dictViewer.apply(document!!)
 }
 

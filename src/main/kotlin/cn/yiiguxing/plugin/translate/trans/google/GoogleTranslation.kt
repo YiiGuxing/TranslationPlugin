@@ -58,7 +58,7 @@ data class GoogleTranslation(
             translit?.srcTranslit,
             translit?.translit,
             spell?.spell,
-            GoogleDictDocument.Factory.getDocument(this),
+            GoogleDictionaryDocumentFactory.getDocument(this),
             extraDocuments
         )
     }
