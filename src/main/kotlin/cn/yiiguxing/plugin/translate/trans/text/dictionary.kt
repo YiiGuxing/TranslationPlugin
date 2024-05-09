@@ -159,11 +159,11 @@ private fun StyledDocument.appendDictionaries(groups: List<DictionaryGroup>) {
 }
 
 private fun StyledDocument.appendDict(groups: DictionaryGroup, isFirst: Boolean, isLast: Boolean) {
-    setParagraphStyle(style = if (isFirst) POS_PARAGRAPH_STYLE_FIRST else POS_PARAGRAPH_STYLE)
+    setParagraphStyle(if (isFirst) POS_PARAGRAPH_STYLE_FIRST else POS_PARAGRAPH_STYLE)
     appendString(groups.partOfSpeech, POS_STYLE)
     appendString("\n")
 
-    setParagraphStyle(style = if (isLast) ENTRY_END_PARAGRAPH_STYLE else ENTRY_PARAGRAPH_STYLE)
+    setParagraphStyle(if (isLast) ENTRY_END_PARAGRAPH_STYLE else ENTRY_PARAGRAPH_STYLE)
     val hasWordOnly = groups.entries
         .asSequence()
         .filter { it.reverseTranslation.isEmpty() }
@@ -215,7 +215,7 @@ private fun StyledDocument.appendFolding(foldingEntries: List<DictionaryEntry>) 
         take(3).joinToString(prefix = " ", postfix = if (size > 3) ", ... " else " ") { it.word }
     }
 
-    setParagraphStyle(style = ENTRY_END_PARAGRAPH_STYLE)
+    setParagraphStyle(ENTRY_END_PARAGRAPH_STYLE)
     val foldingAttr = SimpleAttributeSet(getStyle(FOLDING_STYLE))
     StyledViewer.StyleConstants.setMouseListener(foldingAttr, createFoldingMouseListener(foldingEntries))
     appendString(placeholder, foldingAttr)
@@ -240,7 +240,7 @@ private fun createFoldingMouseListener(foldingEntries: List<DictionaryEntry>): S
 private fun StyledDocument.insertDictEntry(offset: Int, dictEntry: DictionaryEntry, isLast: Boolean): Int {
     var currentOffset = insert(offset, dictEntry.word, WORD_STYLE)
     currentOffset = insert(currentOffset, "\n")
-    setParagraphStyle(offset, currentOffset - offset, ENTRY_END_PARAGRAPH_STYLE, true)
+    setParagraphStyle(ENTRY_END_PARAGRAPH_STYLE, offset, currentOffset - offset, true)
 
     val paragraphStart = currentOffset
     dictEntry.reverseTranslation.forEachIndexed { index, reverseTranslation ->
@@ -251,7 +251,7 @@ private fun StyledDocument.insertDictEntry(offset: Int, dictEntry: DictionaryEnt
     }
 
     val style = if (isLast) ENTRY_END_PARAGRAPH_STYLE else ENTRY_PARAGRAPH_STYLE
-    setParagraphStyle(paragraphStart, currentOffset - paragraphStart, style, true)
+    setParagraphStyle(style, paragraphStart, currentOffset - paragraphStart, true)
 
     return currentOffset
 }

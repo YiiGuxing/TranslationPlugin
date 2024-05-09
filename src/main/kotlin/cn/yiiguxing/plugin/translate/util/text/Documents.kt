@@ -66,9 +66,9 @@ inline fun StyledDocument.getStyleOrAdd(name: String, parent: Style? = null, ini
 }
 
 fun StyledDocument.setParagraphStyle(
+    style: String,
     offset: Int? = null,
     len: Int = 0,
-    style: String,
     replace: Boolean = true
 ) {
     setParagraphAttributes(offset ?: length, len, getStyle(style), replace)

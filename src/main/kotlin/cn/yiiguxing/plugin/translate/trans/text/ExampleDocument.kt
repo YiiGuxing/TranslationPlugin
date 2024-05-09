@@ -7,7 +7,13 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
 import icons.TranslationIcons
 import java.awt.Color
-import javax.swing.text.*
+import java.awt.Component
+import java.awt.Graphics
+import javax.swing.Icon
+import javax.swing.text.SimpleAttributeSet
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
+import javax.swing.text.StyledDocument
 
 /**
  * Example document.
@@ -23,7 +29,7 @@ class ExampleDocument(private val examples: List<List<CharSequence>>) : Translat
 
             val startOffset = length
             appendExamples()
-            setParagraphStyle(startOffset, length - startOffset, STYLE_EXAMPLE_PARAGRAPH, false)
+            setParagraphStyle(STYLE_EXAMPLE_PARAGRAPH, startOffset, length - startOffset, false)
         }
     }
 
@@ -36,10 +42,7 @@ class ExampleDocument(private val examples: List<List<CharSequence>>) : Translat
             StyledViewer.StyleConstants.setMouseListener(foldingAttr, createFoldingMouseListener(examples.drop(1)))
             val placeholder = " " + message("examples.document.folding.show.all", examples.size) + " "
             appendString(placeholder, foldingAttr)
-            setParagraphStyle(
-                startOffset, placeholder.length,
-                STYLE_EXAMPLE_FOLDING_PARAGRAPH, false
-            )
+            setParagraphStyle(STYLE_EXAMPLE_FOLDING_PARAGRAPH, startOffset, placeholder.length, false)
         }
     }
 
@@ -48,7 +51,7 @@ class ExampleDocument(private val examples: List<List<CharSequence>>) : Translat
             newLine()
         }
         appendString(" ", STYLE_ICON_QUOTE)
-        appendString("\t")
+        appendString(" ")
         for (ex in example) {
             appendCharSequence(ex)
         }
@@ -60,10 +63,7 @@ class ExampleDocument(private val examples: List<List<CharSequence>>) : Translat
                 remove(element.startOffset - 1, element.rangeSize + 1)
                 val startOffset = length
                 examples.drop(1).forEach { appendExample(it) }
-                setParagraphStyle(
-                    startOffset, length - startOffset,
-                    STYLE_EXAMPLE_PARAGRAPH, true
-                )
+                setParagraphStyle(STYLE_EXAMPLE_PARAGRAPH, startOffset, length - startOffset, true)
             }
         }
     }
@@ -72,17 +72,31 @@ class ExampleDocument(private val examples: List<List<CharSequence>>) : Translat
 
 
     companion object {
+        /** Represents a bold style. */
         const val STYLE_EXAMPLE_BOLD = "example-bold"
+
+        /** Represents a horizontal space style. */
+        const val STYLE_EXAMPLE_SPACE = "example-space"
+
+        // private styles
         private const val STYLE_EXAMPLE_PARAGRAPH = "example-p"
         private const val STYLE_ICON_QUOTE = "example-icon-quote"
         private const val STYLE_EXAMPLE_FOLDING = "example-folding"
         private const val STYLE_EXAMPLE_FOLDING_PARAGRAPH = "example-folding--p"
 
+        private val SPACE_ICON = object : Icon {
+            override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) = Unit
+            override fun getIconWidth(): Int = JBUIScale.scale(16)
+            override fun getIconHeight(): Int = 1
+        }
+
         private fun StyledDocument.initStyle() {
             val defaultStyle = getStyle(StyleContext.DEFAULT_STYLE)
             getStyleOrAdd(STYLE_EXAMPLE_PARAGRAPH, defaultStyle) { style ->
-                StyleConstants.setTabSet(style, TabSet(arrayOf(TabStop(JBUIScale.scale(5f)))))
                 StyleConstants.setForeground(style, JBColor(0x606060, 0xBBBDBF))
+            }
+            getStyleOrAdd(STYLE_EXAMPLE_SPACE, defaultStyle) { style ->
+                StyleConstants.setIcon(style, SPACE_ICON)
             }
             getStyleOrAdd(STYLE_EXAMPLE_BOLD, defaultStyle) { style ->
                 StyleConstants.setBold(style, true)

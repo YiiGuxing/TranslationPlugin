@@ -22,7 +22,7 @@ internal object MicrosoftExampleDocumentFactory :
                     it.sourcePrefix,
                     StyledString(it.sourceTerm, ExampleDocument.STYLE_EXAMPLE_BOLD),
                     it.sourceSuffix,
-                    " - ",
+                    StyledString("\t", ExampleDocument.STYLE_EXAMPLE_SPACE),
                     it.targetPrefix,
                     StyledString(it.targetTerm, ExampleDocument.STYLE_EXAMPLE_BOLD),
                     it.targetSuffix

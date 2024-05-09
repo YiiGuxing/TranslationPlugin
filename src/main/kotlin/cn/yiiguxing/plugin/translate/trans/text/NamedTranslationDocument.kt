@@ -22,12 +22,12 @@ class NamedTranslationDocument<T : TranslationDocument>(
 
     private fun appendName(viewer: StyledViewer) {
         viewer.styledDocument.apply {
-            setParagraphStyle(style = TITLE_PARAGRAPH_STYLE)
+            setParagraphStyle(TITLE_PARAGRAPH_STYLE)
             if (length > 0) {
-                setParagraphStyle(style = TITLE_PARAGRAPH_STYLE2, replace = false)
+                setParagraphStyle(TITLE_PARAGRAPH_STYLE2, replace = false)
             }
             appendString("$name\n", TITLE_STYLE)
-            setParagraphStyle(style = TITLE_END_PARAGRAPH_STYLE)
+            setParagraphStyle(TITLE_END_PARAGRAPH_STYLE)
         }
     }
 
