@@ -9,6 +9,7 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -34,6 +35,7 @@
             z-index: 1;
             background: #fafafa;
             overflow: auto;
+            transition: opacity 0.5s;
         }
 
         .loading > .logo {
@@ -185,7 +187,11 @@
         let iframe = document.createElement('iframe');
         iframe.src = url;
         iframe.onload = function () {
-            document.querySelector('.loading').remove();
+            setTimeout(() => {
+                let loading = document.querySelector('.loading');
+                loading.style.opacity = 0;
+                loading.addEventListener('transitionend', () => loading.remove(), {once: true});
+            }, 1000);
         };
         document.body.appendChild(iframe);
     }

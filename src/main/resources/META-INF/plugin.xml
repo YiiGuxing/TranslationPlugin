@@ -148,10 +148,8 @@
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"/>
 
-        <action id="$WhatsNewInTranslationAction"
-                class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
-            <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
-        </action>
+        <action id="$WhatsNewInTranslationAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
+        <action id="$TranslationGettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
 
         <action id="PinBalloonAction"
                 class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
@@ -188,6 +186,17 @@
             <reference ref="$TranslateAndReplaceAction"/>
             <reference ref="TranslationGroup.Expanded"/>
             <separator/>
+        </group>
+        <group id="TranslationHelpGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
+            <reference ref="$WhatsNewInTranslationAction"/>
+            <reference ref="$TranslationGettingStartAction"/>
+        </group>
+        <group id="$TranslationHelpGroup" text="TranslationHelpGroup">
+            <separator/>
+            <reference ref="TranslationHelpGroup"/>
+            <separator/>
+
+            <add-to-group group-id="HelpMenu" anchor="before" relative-to-action="WhatsNewAction"/>
         </group>
     </actions>
 

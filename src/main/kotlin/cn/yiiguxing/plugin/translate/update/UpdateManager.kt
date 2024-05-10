@@ -2,25 +2,23 @@ package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.WebPages
+import cn.yiiguxing.plugin.translate.action.GettingStartedAction
+import cn.yiiguxing.plugin.translate.action.SupportAction
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.Hyperlinks
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.show
 import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.icons.AllIcons
-import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.notification.impl.NotificationsManagerImpl
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
@@ -115,7 +113,7 @@ class UpdateManager : BaseStartupActivity(true) {
             plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 
-        val canBrowseWhatsNewInHTMLEditor = WhatsNew.canBrowseInHTMLEditor
+        val canBrowseWhatsNewInHTMLEditor = WebPages.canBrowseInHTMLEditor()
         val notificationGroup = NotificationGroupManager.getInstance()
             .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID) ?: return false
         val notification = notificationGroup
@@ -131,16 +129,16 @@ class UpdateManager : BaseStartupActivity(true) {
                     addAction(WhatsNew.Action(version))
                 }
             }
-            .addAction(GetStartedAction())
+            .addAction(GettingStartedAction(AllIcons.General.Web))
             .addAction(SupportAction())
             .whenExpired {
                 if (!canBrowseWhatsNewInHTMLEditor) {
                     return@whenExpired
                 }
                 if (isFirstInstallation) {
-                    WhatsNew.browse(project) { WebPages.home() }
+                    WebPages.browse(project, WebPages.home())
                 } else if (!version.isRreRelease && isFeatureVersion) {
-                    WhatsNew.browse(version, project)
+                    WhatsNew.browse(project, version)
                 }
             }
 
@@ -199,14 +197,5 @@ class UpdateManager : BaseStartupActivity(true) {
 
         show(target, Balloon.Position.atLeft)
         return true
-    }
-
-    private class SupportAction : DumbAwareAction(message("support.notification"), null, TranslationIcons.Support) {
-        override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
-    }
-
-    private class GetStartedAction :
-        DumbAwareAction(message("action.GetStartedAction.text"), null, AllIcons.General.Web) {
-        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(WebPages.docs())
     }
 }

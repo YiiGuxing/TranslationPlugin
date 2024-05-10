@@ -1,18 +1,16 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.TranslationPlugin
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.update.Version
 import cn.yiiguxing.plugin.translate.update.WhatsNew
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 
 
-class WhatsNewAction : DumbAwareAction() {
-    init {
-        templatePresentation.text = adaptedMessage("action.WhatsNewInTranslationAction.text", "Translation")
-    }
-
+class WhatsNewAction :
+    DumbAwareAction({ message("action.WhatsNewAction.text", TranslationPlugin.descriptor.name) }) {
     override fun actionPerformed(e: AnActionEvent) {
-        WhatsNew.browse(Version.current(), e.project)
+        WhatsNew.browse(e.project, Version.current())
     }
 }
