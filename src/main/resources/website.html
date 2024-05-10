@@ -186,12 +186,13 @@
         isDode = true;
         let iframe = document.createElement('iframe');
         iframe.src = url;
+        let time = Date.now();
         iframe.onload = function () {
             setTimeout(() => {
                 let loading = document.querySelector('.loading');
                 loading.style.opacity = 0;
                 loading.addEventListener('transitionend', () => loading.remove(), {once: true});
-            }, 1000);
+            }, Math.max(0, 1000 - (Date.now() - time)));
         };
         document.body.appendChild(iframe);
     }
