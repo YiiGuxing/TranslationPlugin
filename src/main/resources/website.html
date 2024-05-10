@@ -199,8 +199,11 @@
     test(BASE_URL_GITHUB);
     test(BASE_URL_GITEE);
 
-    document.querySelector('#github').href = `${BASE_URL_GITHUB}${TARGET_PATH}`;
-    document.querySelector('#gitee').href = `${BASE_URL_GITEE}${TARGET_PATH}`;
+    (function () {
+        let path = TARGET_PATH.replace('compact=true', 'compact');
+        document.querySelector('#github').href = `${BASE_URL_GITHUB}${path}`;
+        document.querySelector('#gitee').href = `${BASE_URL_GITEE}${path}`;
+    })();
 </script>
 </body>
 </html>
