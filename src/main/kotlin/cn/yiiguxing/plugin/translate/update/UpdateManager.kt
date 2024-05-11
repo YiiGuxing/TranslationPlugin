@@ -7,10 +7,7 @@ import cn.yiiguxing.plugin.translate.action.SupportAction
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.util.Hyperlinks
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.show
-import cn.yiiguxing.plugin.translate.util.toRGBHex
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.icons.AllIcons
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
@@ -49,7 +46,7 @@ class UpdateManager : BaseStartupActivity(true) {
     companion object {
         internal const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin updated"
 
-        private val VERSION_PROPERTY = TranslationPlugin.generateId("version")
+        private const val VERSION_PROPERTY = "${TranslationPlugin.PLUGIN_ID}.version"
 
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"
@@ -67,12 +64,14 @@ class UpdateManager : BaseStartupActivity(true) {
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersionString = properties.getValue(VERSION_PROPERTY, Version.INITIAL_VERSION)
         if (versionString == lastVersionString) {
+            onPostUpdate()
             return
         }
 
         val version = Version(versionString)
         val lastVersion = Version.getOrElse(lastVersionString) { Version() }
         if (version.isSameVersion(lastVersion)) {
+            onPostUpdate()
             return
         }
 
@@ -132,14 +131,14 @@ class UpdateManager : BaseStartupActivity(true) {
             .addAction(GettingStartedAction(AllIcons.General.Web))
             .addAction(SupportAction())
             .whenExpired {
-                if (!canBrowseWhatsNewInHTMLEditor) {
-                    return@whenExpired
+                if (canBrowseWhatsNewInHTMLEditor) {
+                    if (isFirstInstallation) {
+                        WebPages.browse(project, WebPages.home())
+                    } else if (!version.isRreRelease && isFeatureVersion) {
+                        WhatsNew.browse(project, version)
+                    }
                 }
-                if (isFirstInstallation) {
-                    WebPages.browse(project, WebPages.home())
-                } else if (!version.isRreRelease && isFeatureVersion) {
-                    WhatsNew.browse(project, version)
-                }
+                onPostUpdate()
             }
 
         if (!notification.notifyByBalloon(project)) {
@@ -197,5 +196,11 @@ class UpdateManager : BaseStartupActivity(true) {
 
         show(target, Balloon.Position.atLeft)
         return true
+    }
+
+    private fun onPostUpdate() {
+        invokeLaterIfNeeded {
+            Application.messageBus.syncPublisher(UpdateListener.TOPIC).onPostUpdate()
+        }
     }
 }
