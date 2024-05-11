@@ -9,7 +9,7 @@ import com.intellij.openapi.project.DumbAwareAction
 
 
 class WhatsNewAction :
-    DumbAwareAction({ message("action.WhatsNewAction.text", TranslationPlugin.descriptor.name) }) {
+    DumbAwareAction({ message("action.WhatsNewAction.text", TranslationPlugin.name) }) {
     override fun actionPerformed(e: AnActionEvent) {
         WhatsNew.browse(e.project, Version.current())
     }

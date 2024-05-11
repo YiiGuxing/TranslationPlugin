@@ -86,7 +86,7 @@ object WebPages {
     /**
      * Browse the specified [PageFragment].
      */
-    fun browse(project: Project?, pageFragment: PageFragment, title: String = TranslationPlugin.descriptor.name) {
+    fun browse(project: Project?, pageFragment: PageFragment, title: String = TranslationPlugin.name) {
         if (project != null && !project.isDefault && !project.isDisposed && canBrowseInHTMLEditor()) {
             val modalityState = ModalityState.defaultModalityState()
             runAsync {

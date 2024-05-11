@@ -49,7 +49,7 @@ class UpdateManager : BaseStartupActivity(true) {
     companion object {
         internal const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin updated"
 
-        private const val VERSION_PROPERTY = "${TranslationPlugin.PLUGIN_ID}.version"
+        private val VERSION_PROPERTY = TranslationPlugin.generateId("version")
 
         private const val MILESTONE_URL =
             "https://github.com/YiiGuxing/TranslationPlugin/issues?q=milestone%%3Av%s+is%%3Aclosed"

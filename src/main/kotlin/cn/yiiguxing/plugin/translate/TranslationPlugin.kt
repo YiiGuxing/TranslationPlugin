@@ -10,6 +10,16 @@ object TranslationPlugin {
 
     val descriptor: IdeaPluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))!!
 
+    val name: String by lazy { descriptor.name }
+
     val version: String by lazy { descriptor.version }
+
+    /**
+     * Generate an id with the specified [postfix].
+     * The generated id is in the format of `<PLUGIN_ID>.<postfix>`.
+     */
+    fun generateId(postfix: String): String {
+        return "$PLUGIN_ID.$postfix"
+    }
 
 }

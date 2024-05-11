@@ -14,7 +14,7 @@ class GettingStartedAction(icon: Icon? = null) :
         WebPages.browse(
             e.project,
             WebPages.docs(),
-            message("help.getting.started", TranslationPlugin.descriptor.name)
+            message("help.getting.started", TranslationPlugin.name)
         )
     }
 }

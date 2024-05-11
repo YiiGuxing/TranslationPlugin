@@ -21,7 +21,7 @@ import org.jetbrains.concurrency.runAsync
 /** The id of the wordbook tool window. */
 const val WORDBOOK_TOOL_WINDOW_ID = "Translation.Wordbook"
 
-private const val GOT_IT_KEY = "${TranslationPlugin.PLUGIN_ID}.got.it.wordbook.storage.path"
+private val GOT_IT_KEY = TranslationPlugin.generateId("got.it.wordbook.storage.path")
 
 internal interface WordBookToolWindowFactory : ToolWindowFactory, DumbAware {
     companion object {

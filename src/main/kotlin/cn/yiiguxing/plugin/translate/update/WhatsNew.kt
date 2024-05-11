@@ -15,7 +15,7 @@ internal object WhatsNew {
         WebPages.browse(
             project,
             WebPages.releaseNote(v),
-            message("help.whats.new", TranslationPlugin.descriptor.name),
+            message("help.whats.new", TranslationPlugin.name),
         )
     }
 

@@ -23,7 +23,7 @@ enum class HelpTopic(id: String, val url: String) {
     /** Azure OpenAI */
     AZURE_OPEN_AI("azure_openai", "https://learn.microsoft.com/en-us/azure/ai-services/openai");
 
-    val id: String = "${TranslationPlugin.PLUGIN_ID}.$id"
+    val id: String = TranslationPlugin.generateId("help.$id")
 
     companion object {
         fun of(helpTopicId: String): HelpTopic {
