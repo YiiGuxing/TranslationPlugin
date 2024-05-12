@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts
 
+import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
@@ -15,7 +16,7 @@ enum class TTSEngine(
     val configurable: Boolean = false
 ) {
     EDGE(TranslationIcons.Engines.Microsoft, "Microsoft Edge TTS", true),
-    GOOGLE(TranslationIcons.Engines.Google, "Google TTS"),
+    GOOGLE(TranslationIcons.Engines.Google, "Google TTS", true),
     OPENAI(TranslationIcons.Engines.OpenAI, "OpenAI TTS", true);
 
     fun isConfigured(): Boolean {
@@ -31,12 +32,16 @@ enum class TTSEngine(
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {
-            GOOGLE -> true
-
             EDGE -> {
                 EdgeTTSSettingsDialog().show()
                 true
             }
+
+            GOOGLE -> {
+                GoogleSettingsDialog().show()
+                true
+            }
+
 
             OPENAI -> OpenAISettingsDialog(ConfigType.TTS).showAndGet()
         }
