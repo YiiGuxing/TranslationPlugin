@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatComboBoxAction
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
@@ -45,7 +45,7 @@ class SwitchTranslationEngineAction : UpdateInBackgroundCompatComboBoxAction(), 
     }
 
     override fun update(e: AnActionEvent) {
-        TranslateService.translator.let { translator ->
+        TranslateService.getInstance().translator.let { translator ->
             e.presentation.text = translator.name
             e.presentation.icon = if (isActionPerforming || isButtonActionPerforming) {
                 AnimatedIcon.Default.INSTANCE

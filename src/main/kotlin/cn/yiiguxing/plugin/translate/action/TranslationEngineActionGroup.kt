@@ -11,6 +11,8 @@ import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
 import java.util.function.Supplier
 
+var tt = 0
+
 /**
  * TranslatorActionGroup
  */
@@ -23,10 +25,12 @@ class TranslationEngineActionGroup(
         val (availableActions, unavailableActions) = TranslationEngineAction.actionsGroupedByAvailability()
         addAll(availableActions)
         if (unavailableActions.isNotEmpty()) {
-            addSeparator(message("action.TranslationEngineActionGroup.separator.inactivated"))
+            addSeparator(message("action.separator.inactivated"))
             addAll(unavailableActions)
         }
 
+        addSeparator()
+        add(TTSEngineActionGroup())
         addSeparator()
         add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
     }

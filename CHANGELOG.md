@@ -1,6 +1,23 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Added Microsoft Edge TTS Engine.
+- Added OpenAI TTS Engine.
+- Microsoft Translator now supports dictionary lookup and example sentences.
+- OpenAI Translator now supports Azure OpenAI service.
+- OpenAI Translator now offers API endpoint configuration.
+- The model list of OpenAI Translator has been updated.
+- User interaction experience optimization and improvement.
+- Bug fixes.
+- 新增 Microsoft Edge TTS 引擎
+- 新增 OpenAI TTS 引擎
+- Microsoft 翻译引擎新增词典查询和例句展示
+- OpenAI 翻译引擎现已支持 Azure OpenAI 服务和 API 端点配置
+- 更新了 OpenAI 翻译引擎的模型列表
+- 用户交互体验优化与改进
+- Bug 修复
+
+## [3.5.8] (2024/04/10)
 
 ## [3.5.8] (2024/04/10)
 

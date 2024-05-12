@@ -4,11 +4,11 @@ package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.intellij.compat.DocumentationBrowserCompat
 import cn.yiiguxing.intellij.compat.get
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.documentation.QuickDocUtil
@@ -96,7 +96,7 @@ open class ToggleQuickDocTranslationAction :
             }
         }
 
-        return state ?: Settings.translateDocumentation
+        return state ?: Settings.getInstance().translateDocumentation
     }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {

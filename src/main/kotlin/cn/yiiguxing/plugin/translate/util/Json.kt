@@ -3,10 +3,16 @@ package cn.yiiguxing.plugin.translate.util
 import cn.yiiguxing.plugin.translate.trans.Lang
 import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
+import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
+import java.lang.reflect.Type
 import java.util.*
+
+inline fun <reified T> type(): Type = typeToken<T>().type
+
+inline fun <reified T> typeToken(): TypeToken<T> = object : TypeToken<T>() {}
 
 private object LanguageTypeAdapter : TypeAdapter<Lang>() {
     override fun write(out: JsonWriter, value: Lang?) {

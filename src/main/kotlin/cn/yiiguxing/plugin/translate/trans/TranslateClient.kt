@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
-import cn.yiiguxing.plugin.translate.util.CacheService
+import cn.yiiguxing.plugin.translate.diagnostic.ReportException
+import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.util.toHexString
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
@@ -39,8 +40,9 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
             throw UnsupportedLanguageException(targetLang)
         }
 
+        val cacheService = CacheService.getInstance()
         val cacheKey = getCacheKey(text, srcLang, targetLang)
-        val cache = CacheService.getDiskCache(cacheKey)
+        val cache = cacheService.getDiskCache(cacheKey)
         if (cache != null) try {
             return parse(cache, text, srcLang, targetLang)
         } catch (e: Throwable) {
@@ -56,7 +58,7 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
             }
             throw error
         }
-        CacheService.putDiskCache(cacheKey, result)
+        cacheService.putDiskCache(cacheKey, result)
 
         return translation
     }
@@ -75,16 +77,16 @@ abstract class TranslateClient<T : BaseTranslation>(private val translator: Tran
         srcLang: Lang,
         targetLang: Lang,
         translation: String
-    ) {
+    ): Nothing {
         val requestAttachment = TranslationAttachmentFactory
             .createRequestAttachment(translator, requestText, srcLang, targetLang)
         val translationAttachment = TranslationAttachmentFactory
             .createTranslationAttachment(translation)
-        LOG.error(
+        throw ReportException(
             "Translation parsing failed[${translator.id}]: ${error.message}",
-            error,
             requestAttachment,
-            translationAttachment
+            translationAttachment,
+            cause = error
         )
     }
 

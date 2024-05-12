@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.TargetLanguageSelection
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.ActionLink
 import cn.yiiguxing.plugin.translate.ui.TypedComboBoxEditor
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
@@ -44,8 +45,6 @@ import javax.swing.text.PlainDocument
 abstract class SettingsUi {
     protected val wholePanel: JPanel = JPanel()
 
-    protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
-
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
         renderer = SimpleListCellRenderer.create { label, value, _ ->
             label.text = value.translatorName
@@ -58,6 +57,21 @@ abstract class SettingsUi {
         }
     }
 
+    protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
+
+    protected val ttsEngineComboBox: ComboBox<TTSEngine> = comboBox<TTSEngine>().apply {
+        renderer = SimpleListCellRenderer.create { label, value, _ ->
+            label.text = value.ttsName
+            label.icon = value.icon
+        }
+        addItemListener {
+            if (it.stateChange == ItemEvent.SELECTED) {
+                fixTtsEngineConfigurationComponent()
+            }
+        }
+    }
+
+    protected val configureTtsEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
 
     protected val primaryLanguageComboBox: ComboBox<Lang> = comboBox<Lang>().apply {
         renderer = SimpleListCellRenderer.create { label, lang, _ ->
@@ -170,6 +184,14 @@ abstract class SettingsUi {
                 fixEngineConfigurationComponent()
             }
             add(configurePanel, wrap().gapBefore("indent").span(2))
+
+            add(JLabel(message("settings.label.tts.engine")))
+            add(ttsEngineComboBox, CC().sizeGroupX(comboboxGroup))
+            val ttsConfigurePanel = Box.createHorizontalBox().apply {
+                add(configureTtsEngineLink)
+                fixTtsEngineConfigurationComponent()
+            }
+            add(ttsConfigurePanel, wrap().gapBefore("indent").span(2))
 
             add(JLabel(message("settings.label.primaryLanguage")))
             add(primaryLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
@@ -315,6 +337,10 @@ abstract class SettingsUi {
 
     private fun fixEngineConfigurationComponent() {
         configureTranslationEngineLink.isVisible = translationEngineComboBox.selected?.hasConfiguration ?: false
+    }
+
+    private fun fixTtsEngineConfigurationComponent() {
+        configureTtsEngineLink.isVisible = ttsEngineComboBox.selected?.configurable ?: false
     }
 
     open fun isSupportDocumentTranslation(): Boolean {

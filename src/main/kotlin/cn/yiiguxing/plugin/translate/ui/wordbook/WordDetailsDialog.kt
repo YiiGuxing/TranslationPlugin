@@ -2,13 +2,9 @@ package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.Popups
-import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.wordbook.WordBookException
-import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
-import cn.yiiguxing.plugin.translate.wordbook.WordBookView
-import cn.yiiguxing.plugin.translate.wordbook.WordTags
+import cn.yiiguxing.plugin.translate.wordbook.*
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
@@ -43,7 +39,7 @@ class WordDetailsDialog(
 
     private val tags: MutableSet<String> = TreeSet()
 
-    private val tagCompletionProvider = TagsCompletionProvider(WordBookView.instance.wordTags) { tag ->
+    private val tagCompletionProvider = TagsCompletionProvider(WordBookView.getInstance().wordTags) { tag ->
         synchronized(tags) { tag !in tags }
     }
 
@@ -162,7 +158,7 @@ class WordDetailsDialog(
         val modalityState = ModalityState.current()
         val dialogRef = WeakReference(this)
         val expired = Condition<Any?> { dialogRef.get()?.isDisposed ?: true }
-        runAsync { WordBookService.updateWord(newWord) }
+        runAsync { WordBookService.getInstance().updateWord(newWord) }
             .onSuccess { updated ->
                 if (updated) invokeLater(modalityState, expired) {
                     dialogRef.get()?.onEditingSaved(newWord)

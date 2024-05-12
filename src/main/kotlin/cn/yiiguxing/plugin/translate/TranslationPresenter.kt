@@ -1,19 +1,19 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.TargetLanguageSelection.*
-import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.TranslateListener
-import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.Translator
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
+import cn.yiiguxing.plugin.translate.util.NON_LATIN_CONDITION
+import cn.yiiguxing.plugin.translate.util.any
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.Logger
 import java.lang.ref.WeakReference
 
 class TranslationPresenter(private val view: View, private val recordHistory: Boolean = true) : Presenter {
 
-    private val translateService = TranslateService
-    private val settings = Settings.instance
-    private val states = TranslationStates.instance
+    private val translateService = TranslateService.getInstance()
+    private val settings = Settings.getInstance()
+    private val states = TranslationStates.getInstance()
     private var currentRequest: Presenter.Request? = null
 
     override val translator: Translator
@@ -62,7 +62,7 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
             return
         }
 
-        TextToSpeech.stop()
+        TextToSpeech.getInstance().stop()
 
         currentRequest = request
         if (recordHistory) {

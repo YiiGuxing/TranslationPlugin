@@ -10,10 +10,10 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -170,7 +170,7 @@ class WordBookService : Disposable {
     }
 
     private fun initService() {
-        val dbFile = Settings.instance.wordbookStoragePath
+        val dbFile = Settings.getInstance().wordbookStoragePath
             ?.takeIf { it.isNotBlank() }
             ?.let { getStorageFile(Paths.get(it)) }
             ?: getStorageFile(TranslationStorages.DATA_DIRECTORY).also { dbFile ->
@@ -361,16 +361,18 @@ class WordBookService : Disposable {
     }
 
     private val isReturningSupported: Boolean by lazy {
-        val driver = try {
-            Class.forName(SQLITE_JDBC, true, classLoader).getConstructor().newInstance() as Driver
+        try {
+            val clazz = Class.forName(SQLITE_JDBC, true, classLoader)
+            val driver = clazz.getConstructor().newInstance() as Driver
+            val majorVersion = driver.majorVersion
+            majorVersion > RETURNING_SUPPORTED_MAJOR_VERSION ||
+                    (majorVersion == RETURNING_SUPPORTED_MAJOR_VERSION &&
+                            driver.minorVersion >= RETURNING_SUPPORTED_MINOR_VERSION)
         } catch (e: Throwable) {
-            LOGGER.w("Failed to get driver", e)
-            return@lazy false
+            LOGGER.w(if (e is NumberFormatException) "Unknown version" else "Failed to get driver", e)
+            // IDE 2024.1+ uses a newer version of the SQLite JDBC driver that supports RETURNING
+            IdeVersion >= IdeVersion.IDE2024_1
         }
-        val majorVersion = driver.majorVersion
-        majorVersion > RETURNING_SUPPORTED_MAJOR_VERSION ||
-                (majorVersion == RETURNING_SUPPORTED_MAJOR_VERSION &&
-                        driver.minorVersion >= RETURNING_SUPPORTED_MINOR_VERSION)
     }
 
     /**
@@ -619,10 +621,12 @@ class WordBookService : Disposable {
         private const val COLUMN_TAGS = "tags"
         private const val COLUMN_CREATED_AT = "created_at"
 
-        private val LOGGER = Logger.getInstance(WordBookService::class.java)
+        private val LOGGER = logger<WordBookService>()
 
-        val instance: WordBookService
-            get() = ApplicationManager.getApplication().getService(WordBookService::class.java)
+        /**
+         * Returns the instance of [WordBookService].
+         */
+        fun getInstance(): WordBookService = service()
 
         fun isStableState(state: WordBookState): Boolean {
             return state == NO_DRIVER || state == INITIALIZATION_ERROR || state == RUNNING

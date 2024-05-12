@@ -2,12 +2,6 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.TranslationStates
-import cn.yiiguxing.plugin.translate.service.CacheService
-import cn.yiiguxing.plugin.translate.trans.TranslateService
-import cn.yiiguxing.plugin.translate.tts.TextToSpeech
-import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.notification.Notification
 import com.intellij.notification.Notifications
 import com.intellij.openapi.application.Application
@@ -20,13 +14,6 @@ import java.util.concurrent.Future
 
 
 inline val Application: Application get() = ApplicationManager.getApplication()
-
-inline val TranslationStates: TranslationStates get() = TranslationStates.instance
-inline val Settings: Settings get() = Settings.instance
-inline val TranslateService: TranslateService get() = TranslateService.instance
-inline val CacheService: CacheService get() = CacheService.instance
-inline val TextToSpeech: TextToSpeech get() = TextToSpeech.instance
-inline val WordBookService: WordBookService get() = WordBookService.instance
 
 
 /**
@@ -144,8 +131,8 @@ inline fun invokeLater(
  * a corresponding method from UiUtil is allowed.
  *
  * Causes `runnable.run()` to be executed asynchronously on the
- * AWT event dispatching thread under Write Intent lock, when IDE is in the specified modality
- * state(or a state with less modal dialogs open) - unless the expiration condition is fulfilled.
+ * AWT event dispatching thread under Write Intent lock, when IDE is in the specified modality state
+ * (or a state with less modal dialogs open) - unless the expiration condition is fulfilled.
  * This will happen after all pending AWT events have been processed.
  *
  * Please use this method instead of [javax.swing.SwingUtilities.invokeLater] or [com.intellij.util.ui.UIUtil] methods

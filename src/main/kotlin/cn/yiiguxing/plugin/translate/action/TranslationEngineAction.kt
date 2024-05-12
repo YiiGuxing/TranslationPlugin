@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.Settings
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
@@ -14,7 +14,9 @@ import com.intellij.openapi.util.Condition
 class TranslationEngineAction(private val translator: TranslationEngine) :
     UpdateInBackgroundCompatAction(translator.translatorName, null, translator.icon), DumbAware {
 
-    fun isAvailable(): Boolean = Settings.translator == translator || try {
+    private val settings: Settings = Settings.getInstance()
+
+    fun isAvailable(): Boolean = settings.translator == translator || try {
         translator.isConfigured()
     } catch (e: Throwable) {
         false
@@ -25,24 +27,22 @@ class TranslationEngineAction(private val translator: TranslationEngine) :
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        Settings.translator = translator
+        settings.translator = translator
     }
 
     companion object {
-        private val ACTIONS: List<TranslationEngineAction> =
-            TranslationEngine.values().toList().map { TranslationEngineAction(it) }
-
         /**
          * Returns available - unavailable actions pair.
          */
         fun actionsGroupedByAvailability(): Pair<List<TranslationEngineAction>, List<TranslationEngineAction>> {
-            return ACTIONS.groupBy { it.isAvailable() }.let {
-                it.getOrDefault(true, emptyList()) to it.getOrDefault(false, emptyList())
-            }
+            return TranslationEngine.values().toList()
+                .map { TranslationEngineAction(it) }
+                .groupBy { it.isAvailable() }
+                .let { it.getOrDefault(true, emptyList()) to it.getOrDefault(false, emptyList()) }
         }
 
         val PRESELECT_CONDITION: Condition<AnAction> = Condition { action ->
-            (action as? TranslationEngineAction)?.translator == Settings.translator
+            (action as? TranslationEngineAction)?.translator == Settings.getInstance().translator
         }
     }
 }

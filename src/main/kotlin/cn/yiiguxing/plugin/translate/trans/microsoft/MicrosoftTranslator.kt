@@ -2,16 +2,12 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftSourceText
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.MicrosoftTranslation
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.TextType
-import cn.yiiguxing.plugin.translate.trans.microsoft.data.presentableError
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
+import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
-import cn.yiiguxing.plugin.translate.util.i
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.diagnostic.logger
 import org.jsoup.nodes.Document
 import javax.swing.Icon
 
@@ -19,8 +15,6 @@ import javax.swing.Icon
  * Microsoft translator.
  */
 object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
-
-    private val LOG: Logger = logger<MicrosoftTranslator>()
 
     override val id: String = MICROSOFT.id
     override val name: String = MICROSOFT.translatorName
@@ -32,11 +26,40 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = MicrosoftLanguageAdapter.supportedTargetLanguages
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(
-            this,
-            { _, _, _ -> MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN) },
-            ::parseTranslation
-        ).execute(text, srcLang, targetLang)
+        if (!targetLang.isExplicit()) {
+            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.langName}")
+        }
+
+        val msTranslation = MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN)
+            ?: return Translation(text, text, srcLang.toExplicit(), targetLang)
+
+        val translation = msTranslation.translations.first()
+        val sourceLang = msTranslation.detectedLanguage?.language
+            ?.let { Lang.fromMicrosoftLanguageCode(it) }
+            ?: srcLang.toExplicit()
+
+        val dictionaryLookup = if (
+            sourceLang.isExplicit() &&
+            sourceLang != targetLang &&
+            MicrosoftTranslatorService.canLookupDictionary(text)
+        ) {
+            MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
+        } else null
+
+        val extraDocuments = dictionaryLookup
+            ?.let { MicrosoftTranslatorService.dictionaryExamples(it, sourceLang, targetLang) }
+            ?.let { MicrosoftExampleDocumentFactory.getDocument(it) }
+            ?.let { listOf(NamedTranslationDocument(message("examples.document.name"), it)) }
+            ?: emptyList()
+
+        return Translation(
+            text,
+            translation.text,
+            sourceLang,
+            Lang.fromMicrosoftLanguageCode(translation.to),
+            dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument),
+            extraDocuments = extraDocuments
+        )
     }
 
     override fun translateDocumentation(
@@ -50,27 +73,11 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
-        val client = SimpleTranslateClient(
-            this,
-            { _, _, _ -> MicrosoftTranslatorService.translate(documentation, srcLang, targetLang, TextType.HTML) },
-            ::parseTranslation
-        )
-        client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
-        return client.execute(documentation, srcLang, targetLang).translation ?: ""
-    }
-
-    private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {
-        LOG.i("Translate result: $translation")
-
-        val type = object : TypeToken<ArrayList<MicrosoftTranslation>>() {}.type
-        return Gson().fromJson<ArrayList<MicrosoftTranslation>>(translation, type)
-            .firstOrNull()
-            ?.apply {
-                this.sourceText = MicrosoftSourceText(original)
-                this.sourceLang = srcLang
-            }
-            ?.toTranslation()
-            ?: Translation(original, original, srcLang, targetLang, emptyList())
+        return MicrosoftTranslatorService.translate(documentation, srcLang, targetLang, TextType.HTML)
+            ?.translations
+            ?.firstOrNull()
+            ?.text
+            ?: documentation
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
