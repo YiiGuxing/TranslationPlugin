@@ -7,8 +7,6 @@ import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
 import java.util.function.Supplier
 
-var tt = 0
-
 /**
  * TranslatorActionGroup
  */
