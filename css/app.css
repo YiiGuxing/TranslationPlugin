@@ -481,9 +481,9 @@ main.hide-sidebar .sidebar-toggle {
 
 
 .cover-main .logo {
-    margin: auto auto 0;
-    width: 100px;
-    height: 100px;
+    margin: 0 auto 2rem;
+    width: 96px;
+    height: 96px;
     position: relative;
 }
 
@@ -491,9 +491,9 @@ main.hide-sidebar .sidebar-toggle {
     width: 100%;
     height: 100%;
     z-index: 3;
-    border: 5px solid rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.3);
     position: relative;
+    background: rgba(255, 255, 255, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.6);
 }
 
 .cover-main .logo > .bg {
@@ -519,7 +519,7 @@ main.hide-sidebar .sidebar-toggle {
     transform: scale(3);
     background-size: cover;
     background-image: url("../img/mesh_gradient.png");
-    animation: rotate 6s linear infinite, move 12s linear infinite;
+    animation: rotate 5s linear infinite, move 12s linear infinite;
 }
 
 @keyframes rotate {
@@ -533,19 +533,19 @@ main.hide-sidebar .sidebar-toggle {
 
 @keyframes move {
     0% {
-        transform-origin: 35% 35%;
+        transform-origin: 30% 30%;
     }
     25% {
-        transform-origin: 35% 65%;
+        transform-origin: 30% 65%;
     }
     50% {
-        transform-origin: 65% 35%;
+        transform-origin: 65% 30%;
     }
     75% {
         transform-origin: 65% 65%;
     }
     100% {
-        transform-origin: 35% 35%;
+        transform-origin: 30% 30%;
     }
 }
 
