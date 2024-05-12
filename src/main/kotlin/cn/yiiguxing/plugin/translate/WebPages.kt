@@ -93,7 +93,7 @@ object WebPages {
                 val html = try {
                     @Suppress("DialogTitleCapitalization")
                     WebPages::class.java.classLoader
-                        .getResourceAsStream("/website.html")
+                        .getResourceAsStream("website.html")
                         ?.use { it.reader().readText() }
                         ?.replace(
                             """const TARGET_PATH = "/";""",
