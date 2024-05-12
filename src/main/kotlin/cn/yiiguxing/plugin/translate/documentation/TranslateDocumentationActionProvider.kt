@@ -13,14 +13,17 @@ import com.intellij.psi.PsiDocCommentBase
 class TranslateDocumentationActionProvider : DocumentationActionProvider {
     override fun additionalActions(
         editor: Editor,
-        docComment: PsiDocCommentBase,
-        renderedText: String
+        docComment: PsiDocCommentBase?,
+        renderedText: String?
     ): List<AnAction> {
-        return listOf(
+        val actions: MutableList<AnAction> = mutableListOf(
             Separator(),
             TranslateRenderedDocSelectionAction(),
-            TranslateRenderedDocAction(editor, docComment)
         )
+        if (docComment != null) {
+            actions.add(TranslateRenderedDocAction(editor, docComment))
+        }
+        return actions
     }
 
     override fun additionalActions(component: DocumentationComponent): List<AnAction> {
@@ -30,6 +33,5 @@ class TranslateDocumentationActionProvider : DocumentationActionProvider {
             ToggleQuickDocTranslationAction()
         )
     }
-
 }
 

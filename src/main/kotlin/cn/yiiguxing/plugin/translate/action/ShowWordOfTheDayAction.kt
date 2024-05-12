@@ -4,10 +4,10 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory
+import cn.yiiguxing.plugin.translate.wordbook.WORDBOOK_TOOL_WINDOW_ID
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -32,7 +32,8 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
         }
 
         val project = e.project ?: return
-        if (!WordBookService.isInitialized) {
+        val wordBookService = WordBookService.getInstance()
+        if (!wordBookService.isInitialized) {
             showNotificationByBalloon(project, message("wordbook.window.message.missing.driver"))
             return
         }
@@ -42,7 +43,7 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
                 return@executeOnPooledThread
             }
 
-            val words = WordBookService.getWords().shuffled()
+            val words = wordBookService.getWords().shuffled()
             invokeLater {
                 if (!project.isDisposed) {
                     if (words.isNotEmpty()) {
@@ -59,7 +60,7 @@ class ShowWordOfTheDayAction : AnAction(), DumbAware {
         ToolWindowManager
             .getInstance(project)
             .notifyByBalloon(
-                WordBookToolWindowFactory.TOOL_WINDOW_ID,
+                WORDBOOK_TOOL_WINDOW_ID,
                 MessageType.INFO,
                 message,
                 AllIcons.General.Information,

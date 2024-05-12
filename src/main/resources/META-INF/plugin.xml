@@ -61,7 +61,7 @@
 
         <applicationConfigurable groupId="tools"
                                  displayName="Translation"
-                                 instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable"/>
+                                 instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurableImpl"/>
 
         <statusBarWidgetFactory id="Translation.Widget"
                                 order="before LineSeparator, after Position, before lineSeparatorWidget, after positionWidget"
@@ -71,9 +71,10 @@
                     anchor="right"
                     secondary="true"
                     doNotActivateOnStart="true"
-                    factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory"/>
+                    factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactoryImpl"/>
 
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
+        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.CheckGoogleNetworkStartupActivity"/>
         <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
@@ -147,10 +148,8 @@
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"/>
 
-        <action id="$WhatsNewInTranslationAction"
-                class="cn.yiiguxing.plugin.translate.action.WhatsNewAction">
-            <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction"/>
-        </action>
+        <action id="$WhatsNewInTranslationAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
+        <action id="$TranslationGettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
 
         <action id="PinBalloonAction"
                 class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
@@ -187,6 +186,17 @@
             <reference ref="$TranslateAndReplaceAction"/>
             <reference ref="TranslationGroup.Expanded"/>
             <separator/>
+        </group>
+        <group id="TranslationHelpGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
+            <reference ref="$WhatsNewInTranslationAction"/>
+            <reference ref="$TranslationGettingStartAction"/>
+        </group>
+        <group id="$TranslationHelpGroup" text="TranslationHelpGroup">
+            <separator/>
+            <reference ref="TranslationHelpGroup"/>
+            <separator/>
+
+            <add-to-group group-id="HelpMenu" anchor="before" relative-to-action="WhatsNewAction"/>
         </group>
     </actions>
 

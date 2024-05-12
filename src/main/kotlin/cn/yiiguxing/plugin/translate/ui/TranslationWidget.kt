@@ -7,9 +7,10 @@ import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
 import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import cn.yiiguxing.plugin.translate.update.UpdateListener
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
@@ -20,6 +21,7 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.impl.status.TextPanel.WithIconAndArrows
@@ -89,30 +91,41 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
         invokeLaterIfNeeded {
             if (project.isDisposed) return@invokeLaterIfNeeded
 
-            toolTipText = TranslateService.translator.name
-            icon = TranslateService.translator.icon
+            TranslateService.getInstance().translator.let { translator ->
+                toolTipText = translator.name
+                icon = translator.icon
+            }
             onUpdated?.invoke()
             repaint()
         }
     }
 
     private fun scheduleGotItTooltip() {
-        DumbService.getInstance(project).smartInvokeLater {
-            if (!project.isDisposed) {
-                showGotItTooltipIfNeed()
-            }
-        }
+        val disposable = Disposer.newDisposable(this, "GotItTooltip Scheduler Disposable")
+        project.messageBus
+            .connect(disposable)
+            .subscribe(UpdateListener.TOPIC, object : UpdateListener {
+                override fun onPostUpdate() {
+                    Disposer.dispose(disposable)
+                    if (project.isDisposed) {
+                        return
+                    }
+                    DumbService.getInstance(project).smartInvokeLater {
+                        showGotItTooltipIfNeed()
+                    }
+                }
+            })
     }
 
     private fun showGotItTooltipIfNeed() {
-        if (isDisposed) {
+        if (isDisposed || project.isDisposed) {
             return
         }
 
-        val id = "${TranslationPlugin.PLUGIN_ID}.tooltip.new.translation.engines.openai"
-        val message = message("got.it.tooltip.text.new.translation.engines")
+        val id = TranslationPlugin.generateId("tooltip.new.engines.tts")
+        val message = message("got.it.tooltip.text.new.engines")
         GotItTooltip(id, message, this)
-            .withHeader(message("got.it.tooltip.title.new.translation.engines"))
+            .withHeader(message("got.it.tooltip.title.new.engines"))
             .show(this, GotItTooltipPosition.TOP)
     }
 

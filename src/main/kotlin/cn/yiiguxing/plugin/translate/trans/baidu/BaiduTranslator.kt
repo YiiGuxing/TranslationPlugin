@@ -2,12 +2,12 @@
 
 package cn.yiiguxing.plugin.translate.trans.baidu
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.compat.lowercase
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
 import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
@@ -64,7 +64,7 @@ object BaiduTranslator : AbstractTranslator() {
     }
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+        if (force || Settings.getInstance().baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
             return BAIDU.showConfigurationDialog()
         }
 
@@ -80,7 +80,7 @@ object BaiduTranslator : AbstractTranslator() {
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang): String {
-        val settings = Settings.baiduTranslateSettings
+        val settings = Settings.getInstance().baiduTranslateSettings
         val appId = settings.appId
         val privateKey = settings.getAppKey()
         val salt = System.currentTimeMillis().toString()

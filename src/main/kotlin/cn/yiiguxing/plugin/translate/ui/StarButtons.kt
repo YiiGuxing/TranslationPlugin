@@ -3,10 +3,10 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookException
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory
 import cn.yiiguxing.plugin.translate.wordbook.toWordBookItem
 import com.intellij.openapi.application.ModalityState
@@ -18,7 +18,7 @@ object StarButtons {
 
     fun toolTipText(favoriteId: Long?): String {
         return when {
-            !WordBookService.isInitialized -> message("tooltip.wordBookNotInitialized")
+            !WordBookService.getInstance().isInitialized -> message("tooltip.wordBookNotInitialized")
             favoriteId == null -> message("tooltip.addToWordBook")
             else -> message("tooltip.removeFromWordBook")
         }
@@ -26,13 +26,14 @@ object StarButtons {
 
     val listener: LinkListener<Translation> = object : LinkListener<Translation> {
         override fun linkSelected(starLabel: LinkLabel<Translation>, translation: Translation?) {
-            if (!WordBookService.isInitialized) {
+            val wordBookService = WordBookService.getInstance()
+            if (!wordBookService.isInitialized) {
                 WordBookToolWindowFactory.requireWordBook()
                 return
             }
             translation ?: return
             starLabel.isEnabled = false
-            if (!WordBookService.canAddToWordbook(translation.original)) {
+            if (!wordBookService.canAddToWordbook(translation.original)) {
                 return
             }
 
@@ -57,7 +58,7 @@ object StarButtons {
     }
 
     private fun addToWordBook(translation: Translation) = try {
-        WordBookService.addWord(translation.toWordBookItem())
+        WordBookService.getInstance().addWord(translation.toWordBookItem())
     } catch (e: WordBookException) {
         Notifications.showErrorNotification(
             message("wordbook.notification.title"),
@@ -67,7 +68,7 @@ object StarButtons {
     }
 
     private fun removeWordFromWordBook(favoriteId: Long) = try {
-        WordBookService.removeWord(favoriteId)
+        WordBookService.getInstance().removeWord(favoriteId)
     } catch (e: WordBookException) {
         Notifications.showErrorNotification(
             message("wordbook.notification.title"),

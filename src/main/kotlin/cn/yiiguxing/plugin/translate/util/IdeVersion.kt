@@ -11,6 +11,7 @@ enum class IdeVersion(val buildNumber: Int) {
     IDE2021_2(212),
     IDE2021_3(213),
     IDE2022_1(221),
+    IDE2023_1(231),
     IDE2024_1(241);
 
     companion object {

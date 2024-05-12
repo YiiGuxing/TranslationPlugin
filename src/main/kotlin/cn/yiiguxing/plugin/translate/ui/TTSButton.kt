@@ -2,10 +2,15 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.util.TextToSpeech
+import cn.yiiguxing.plugin.translate.tts.TextToSpeech
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
+import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
+import cn.yiiguxing.plugin.translate.tts.sound.isCompletedState
+import cn.yiiguxing.plugin.translate.ui.icon.SoundIcon
+import cn.yiiguxing.plugin.translate.util.Observable
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Disposer
+import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.util.ui.JBDimension
@@ -15,23 +20,23 @@ import javax.swing.SwingConstants
 /**
  * TTSButton
  */
-class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
+class TTSButton(
+    private val project: Project? = null
+) : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
 
-    var project: Project? = null
-
-    private var ttsDisposable: Disposable? = null
+    private var ttsController: PlaybackController? = null
 
     private lateinit var dataSource: () -> Pair<String, Lang>?
 
     init {
-        icon = TranslationIcons.Audio
-        disabledIcon = TranslationIcons.AudioDisabled
-        setHoveringIcon(TranslationIcons.AudioPressed)
         myPaintUnderline = false
         toolTipText = message("tooltip.listen")
         horizontalAlignment = SwingConstants.CENTER
+        preferredSize = JBDimension(16, 16)
+        disabledIcon = SoundIcon.DISABLED
+
+        resetIcon()
         setListener(this, null)
-        preferredSize = JBDimension(16, 14)
     }
 
     fun dataSource(ds: () -> Pair<String, Lang>?) {
@@ -39,34 +44,58 @@ class TTSButton : LinkLabel<Any>(), LinkListener<Any?>, Disposable {
     }
 
     override fun linkSelected(aSource: LinkLabel<Any?>?, aLinkData: Any?) {
-        play()
+        toggle()
     }
 
-    fun play() {
+    private fun resetIcon() {
+        icon = SoundIcon.PASSIVE
+        setHoveringIcon(SoundIcon.ACTIVE)
+    }
+
+    fun toggle() {
         if (!isEnabled) {
             return
         }
 
+        ttsController?.let {
+            it.stop()
+            ttsController = null
+            return
+        }
+
         dataSource()?.let { (text, lang) ->
-            ttsDisposable?.let {
-                Disposer.dispose(it)
+            if (text.isBlank()) {
                 return
             }
 
-            icon = TranslationIcons.TTSSuspend
-            setHoveringIcon(TranslationIcons.TTSSuspendHovering)
-            TextToSpeech.speak(project, text, lang).let { disposable ->
-                ttsDisposable = disposable
-                Disposer.register(disposable) {
-                    ttsDisposable = null
-                    icon = TranslationIcons.Audio
-                    setHoveringIcon(TranslationIcons.AudioPressed)
-                }
+            val loadingIcon = AnimatedIcon.Default()
+            val playingIcon: SoundIcon by lazy { SoundIcon() }
+            icon = loadingIcon
+            setHoveringIcon(TranslationIcons.Stop)
+            TextToSpeech.getInstance().speak(project, text, lang).let { controller ->
+                ttsController = controller
+                controller.statusBinding.observe(this, Observable.ChangeOnEDTListener { state, _ ->
+                    when {
+                        state == PlaybackStatus.PREPARING -> {
+                            icon = loadingIcon
+                        }
+
+                        state == PlaybackStatus.PLAYING -> {
+                            icon = playingIcon
+                        }
+
+                        state.isCompletedState -> {
+                            ttsController = null
+                            resetIcon()
+                        }
+                    }
+                })
             }
         }
     }
 
     override fun dispose() {
-        ttsDisposable?.dispose()
+        ttsController?.stop()
+        ttsController = null
     }
 }

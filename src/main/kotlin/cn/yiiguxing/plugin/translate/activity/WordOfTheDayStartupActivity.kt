@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.activity
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 
@@ -14,14 +14,14 @@ import com.intellij.openapi.project.Project
  */
 class WordOfTheDayStartupActivity : BaseStartupActivity(true), DumbAware {
 
-    override fun onBeforeRunActivity(project: Project): Boolean = Settings.showWordsOnStartup
+    override fun onBeforeRunActivity(project: Project): Boolean = Settings.getInstance().showWordsOnStartup
 
     override fun onRunActivity(project: Project) {
         executeOnPooledThread {
             if (project.isDisposed) {
                 return@executeOnPooledThread
             }
-            WordBookService
+            WordBookService.getInstance()
                 .takeIf { it.isInitialized }
                 ?.getWords()
                 ?.takeIf { it.isNotEmpty() }

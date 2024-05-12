@@ -1,12 +1,11 @@
 package cn.yiiguxing.plugin.translate.trans.youdao
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
 import cn.yiiguxing.plugin.translate.util.Http
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.i
-import cn.yiiguxing.plugin.translate.util.sha256
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
@@ -15,7 +14,6 @@ import org.jsoup.nodes.Document
 import java.util.*
 import javax.swing.Icon
 
-@Suppress("SpellCheckingInspection")
 object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private const val YOUDAO_API_SERVICE_URL = "https://openapi.youdao.com"
@@ -75,7 +73,9 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.youdaoTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
+        if (force || Settings.getInstance().youdaoTranslateSettings.let {
+                it.appId.isEmpty() || it.getAppKey().isEmpty()
+            }) {
             return YOUDAO.showConfigurationDialog()
         }
 
@@ -97,25 +97,12 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun getBaseRequestParams(text: String, srcLang: Lang, targetLang: Lang): MutableMap<String, String> {
-        val credentialSettings = Settings.youdaoTranslateSettings
-
-        val appId = credentialSettings.appId
-        val privateKey = credentialSettings.getAppKey()
-        val salt = UUID.randomUUID().toString()
-        val curTime = (System.currentTimeMillis() / 1000).toString()
-        val qInSign = if (text.length <= 20) text else "${text.take(10)}${text.length}${text.takeLast(10)}"
-        val sign = "$appId$qInSign$salt$curTime$privateKey".sha256()
-
-        return mutableMapOf(
-            "q" to text,
-            "from" to srcLang.youdaoLanguageCode,
-            "to" to targetLang.youdaoLanguageCode,
-            "appKey" to appId,
-            "salt" to salt,
-            "sign" to sign,
-            "signType" to "v3",
-            "curtime" to curTime,
-        )
+        return YoudaoRequestHelper.getSignedParams(text)
+            .toMutableMap()
+            .also { params ->
+                params["from"] = srcLang.youdaoLanguageCode
+                params["to"] = targetLang.youdaoLanguageCode
+            }
     }
 
     private fun parseTranslation(translation: String, original: String, srcLang: Lang, targetLang: Lang): Translation {

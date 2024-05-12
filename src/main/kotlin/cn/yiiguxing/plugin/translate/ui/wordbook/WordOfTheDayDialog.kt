@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.ui.wordbook
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.TTSButton
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.Viewer
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookItem
 import com.intellij.openapi.project.Project
@@ -133,7 +133,10 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : DialogW
         explanationView.caretPosition = 0
         explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
 
-        explanationLayout.show(explainsCard, if (Settings.showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK)
+        explanationLayout.show(
+            explainsCard,
+            if (Settings.getInstance().showExplanation) CARD_EXPLAINS_VIEW else CARD_MASK
+        )
     }
 
     override fun show() {
