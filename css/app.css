@@ -20,6 +20,10 @@ body {
     user-select: none;
 }
 
+[data-typed-delay] {
+    display: none !important;
+}
+
 section.cover {
     background: linear-gradient(127deg, rgba(7, 195, 242, 0.9), rgba(7, 195, 242, 0) 70%),
     linear-gradient(217deg, rgba(8, 124, 250, 0.9), rgba(8, 124, 250, 0) 70%),
@@ -547,6 +551,10 @@ main.hide-sidebar .sidebar-toggle {
     100% {
         transform-origin: 30% 30%;
     }
+}
+
+section.cover .plugin-description {
+    font-size: 1.5rem;
 }
 
 section.cover .badges {

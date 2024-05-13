@@ -17,7 +17,10 @@
 
 <h1>Translation Plugin</h1>
 
-> An IntelliJ-based IDEs/Android Studio Translation Plugin.
+<div class="plugin-description" data-typed-target="description">
+<p><span data-typed-delay>^500</span>An IntelliJ-based IDEs/Android Studio Translation Plugin.<span data-typed-delay>^30000</span></p>
+</div>
+<p class="plugin-description"><span data-typed="description"></span></p>
 
 <div class="badges">
 

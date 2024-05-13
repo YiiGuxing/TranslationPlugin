@@ -8,7 +8,7 @@
     <meta name="keywords" content="IDEA Plugin,IDEA Translation Plugin,IDEA 插件,IDEA 翻译插件,插件">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="stylesheet" href="css/vue.css?v1.2">
-    <link rel="stylesheet" href="css/app.css?v1.4">
+    <link rel="stylesheet" href="css/app.css?v1.5">
 </head>
 <body>
 <nav class="app-nav unselectable">
@@ -87,7 +87,7 @@
     }
 </script>
 <script>
-    LAST_PLUGIN_VERSION = "v3.5";
+    LAST_PLUGIN_VERSION = "v3.6";
 
     function gaPlugin(hook) {
         hook.beforeEach(gaPageView);
@@ -164,6 +164,7 @@
             updateLanguage(vm);
             updateNavBar(vm);
             updateSidebar(vm);
+            startTyped();
         });
     }
 
@@ -357,6 +358,32 @@
         return html;
     }
 
+    function startTyped() {
+        window.typedInstances = window.typedInstances || [];
+        window.typedInstances.forEach(function (typed) {
+            typed.destroy();
+        });
+
+        window.typedInstances = [];
+        document.querySelectorAll("[data-typed]").forEach(function (el) {
+            if (!el.offsetParent) {
+                return;
+            }
+            var target = el.dataset.typed;
+            if (!target) {
+                return;
+            }
+            window.typedInstances.push(new Typed(el, {
+                stringsElement: '[data-typed-target="' + target + '"]',
+                typeSpeed: 60,
+                backSpeed: 10,
+                cursorChar: '_',
+                smartBackspace: true,
+                loop: true,
+            }));
+        });
+    }
+
     window.$docsify = {
         // name: "TranslationPlugin",
         onlyCover: true,
@@ -395,7 +422,7 @@
 </script>
 <script src="js/typed@2.1.0.umd.js"></script>
 <!-- Docsify v4 -->
-<script src="js/docsify@4.13.1.min.js"></script>
+<script src="js/docsify@4.13.1-cover-lifecycle.min.js"></script>
 <script src="js/external-script.min.js"></script>
 </body>
 </html>

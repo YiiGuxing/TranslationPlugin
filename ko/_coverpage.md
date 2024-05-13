@@ -17,7 +17,10 @@
 
 <h1>Translation Plugin</h1>
 
-> IntelliJ 기반 IDE/Android Studio 번역 플러그인.
+<div class="plugin-description" data-typed-target="description">
+<p><span data-typed-delay>^500</span>IntelliJ 기반 IDE/Android Studio 번역 플러그인.<span data-typed-delay>^30000</span></p>
+</div>
+<p class="plugin-description"><span data-typed="description"></span></p>
 
 <div class="badges">
 

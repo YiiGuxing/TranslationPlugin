@@ -17,7 +17,29 @@
 
 <h1>Translation Plugin</h1>
 
-> 一个基于 IntelliJ IDEs/Android Studio 的翻译插件
+<div class="plugin-description" data-typed-target="description">
+<p>一个基于 IntelliJ IDEs/Android Studio 的翻译插件^30000</p>
+</div>
+<p class="plugin-description"><span data-typed="description"></span></p>
+
+<div data-typed-target="features">
+<p>翻译引擎：微软翻译^3000</p>
+<p>翻译引擎：谷歌翻译^3000</p>
+<p>翻译引擎：OpenAI 翻译^3000</p>
+<p>翻译引擎：DeepL 翻译^3000</p>
+<p>翻译引擎：有道翻译^3000</p>
+<p>翻译引擎：百度翻译^3000</p>
+<p>翻译引擎：阿里翻译^3000</p>
+<p>TTS 引擎：微软 Edge TTS^3000</p>
+<p>TTS 引擎：Google TTS^3000</p>
+<p>TTS 引擎：OpenAI TTS^3000</p>
+<p>多语言互译^3000</p>
+<p>文档翻译^3000</p>
+<p>自动选词^3000</p>
+<p>自动单词拆分^3000</p>
+<p>单词本...<span data-typed-delay>^5000</span></p>
+</div>
+<p><span data-typed="features"></span></p>
 
 <div class="badges">
 
