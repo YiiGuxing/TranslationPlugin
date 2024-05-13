@@ -19,9 +19,6 @@
 
 > An IntelliJ-based IDEs/Android Studio Translation Plugin.
 
-
-![Multiple translation engines, Multilingual translation, Document translation, Text-to-speech services, ...](img/typing_description.svg ':size=200x30')
-
 <div class="badges">
 
 [![Last version][badge:last-version]][gh:last-release]
@@ -62,7 +59,7 @@
 
 <div class="jetbrains-logo">
 
-[![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163 Development supported by JetBrains')
+[![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163')
 
 </div>
 

@@ -19,8 +19,6 @@
 
 > IntelliJ 기반 IDE/Android Studio 번역 플러그인.
 
-![다중 번역 엔진, 다국어 번역, 문서 번역, 텍스트 음성 변환 서비스, ...](img/typing_description.svg ':size=200x30')
-
 <div class="badges">
 
 [![최신 버전][badge:last-version]][gh:last-release]
@@ -61,7 +59,7 @@
 
 <div class="jetbrains-logo">
 
-[![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163 JetBrains에서 개발 지원')
+[![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163')
 
 </div>
 

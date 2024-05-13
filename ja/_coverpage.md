@@ -19,8 +19,6 @@
 
 > IntelliJ ベースの IDE/Android Studio 翻訳プラグインは
 
-![複数の翻訳エンジンを搭載、多言語翻訳、ドキュメントの翻訳、音声読み上げ、...](img/typing_description.svg ':size=200x30')
-
 <div class="badges">
 
 [![最新のバージョン][badge:last-version]][gh:last-release]
@@ -61,7 +59,7 @@
 
 <div class="jetbrains-logo">
 
-[![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163 開発には JetBrains からサポートを提供していただきました')
+[![JetBrains](../img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163')
 
 </div>
 

@@ -19,8 +19,6 @@
 
 > 一个基于 IntelliJ IDEs/Android Studio 的翻译插件
 
-![多翻译引擎，多语言互译，语音朗读，文档翻译，...](img/typing_description.svg ':size=150x30')
-
 <div class="badges">
 
 [![最新版本][badge:last-version]][gh:last-release]
@@ -61,7 +59,7 @@
 
 <div class="jetbrains-logo">
 
-[![JetBrains](img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163 开发由 JetBrains 提供支持')
+[![JetBrains](img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163')
 
 </div>
 
