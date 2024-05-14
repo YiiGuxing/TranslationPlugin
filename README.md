@@ -58,9 +58,12 @@
     - Youdao Translate
     - Baidu Translate
     - Alibaba Translate
-- Multilingual translation
-- Document translation
+- Multiple languages inter-translation
 - Text-to-speech
+  - Microsoft Edge TTS
+  - Google TTS
+  - OpenAI TTS
+- Document translation
 - Automatic word selection
 - Automatic word breaks
 - Word Book
@@ -68,21 +71,22 @@
 ## Compatibility
 
 - Android Studio
+- Aqua
 - AppCode
 - CLion
 - DataGrip
+- DataSpell
 - GoLand
 - HUAWEI DevEco Studio
-- IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
-- IntelliJ IDEA Educational
+- IntelliJ IDEA Ultimate
 - MPS
 - PhpStorm
-- PyCharm Professional
 - PyCharm Community
-- PyCharm Educational
+- PyCharm Professional
 - Rider
 - RubyMine
+- RustRover
 - WebStorm
 
 ## Installation
