@@ -18,9 +18,28 @@
 <h1>Translation Plugin</h1>
 
 <div class="plugin-description" data-typed-target="description">
-<p><span data-typed-delay>^500</span>IntelliJ 기반 IDE/Android Studio 번역 플러그인.<span data-typed-delay>^30000</span></p>
+<p>IntelliJ 기반 IDE/Android Studio 번역 플러그인.^30000</p>
 </div>
 <p class="plugin-description"><span data-typed="description"></span></p>
+
+<div data-typed-target="features">
+<p>번역 엔진: Google 번역^3000</p>
+<p>번역 엔진: Microsoft 번역^3000</p>
+<p>번역 엔진: OpenAI 번역^3000</p>
+<p>번역 엔진: DeepL 번역^3000</p>
+<p>번역 엔진: Youdao 번역^3000</p>
+<p>번역 엔진: Baidu 번역^3000</p>
+<p>번역 엔진: Alibaba 번역^3000</p>
+<p>TTS 엔진：Microsoft Edge TTS^3000</p>
+<p>TTS 엔진：Google TTS^3000</p>
+<p>TTS 엔진：OpenAI TTS^3000</p>
+<p>다국어 번역^3000</p>
+<p>문서 번역^3000</p>
+<p>자동 단어 선택^3000</p>
+<p>자동 단어 분할^3000</p>
+<p>단어장...^5000</p>
+</div>
+<p><span data-typed="features"></span></p>
 
 <div class="badges">
 

@@ -13,9 +13,13 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
   - 百度翻译
   - 阿里翻译
   - DeepL 翻译
+  - OpenAI 翻译
 - 多语言互译
-- 文档翻译
 - 语音朗读
+  - 微软 Edge TTS
+  - 谷歌 TTS
+  - OpenAI TTS
+- 文档翻译
 - 自动选词
 - 自动单词拆分
 - 单词本
@@ -24,22 +28,22 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 
 插件支持的 IDE 产品：
 - Android Studio
+- Aqua
 - AppCode
 - CLion
-- DataSpell
 - DataGrip
+- DataSpell
 - GoLand
 - HUAWEI DevEco Studio
-- IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
-- IntelliJ IDEA Educational
+- IntelliJ IDEA Ultimate
 - MPS
 - PhpStorm
-- PyCharm Professional
 - PyCharm Community
-- PyCharm Educational
+- PyCharm Professional
 - Rider
 - RubyMine
+- RustRover
 - WebStorm
 
 

@@ -18,9 +18,28 @@
 <h1>Translation Plugin</h1>
 
 <div class="plugin-description" data-typed-target="description">
-<p><span data-typed-delay>^500</span>An IntelliJ-based IDEs/Android Studio Translation Plugin.<span data-typed-delay>^30000</span></p>
+<p>An IntelliJ-based IDEs/Android Studio Translation Plugin.^30000</p>
 </div>
 <p class="plugin-description"><span data-typed="description"></span></p>
+
+<div data-typed-target="features">
+<p>Translation engines: Google Translate^3000</p>
+<p>Translation engines: Microsoft Translator^3000</p>
+<p>Translation engines: OpenAI Translator^3000</p>
+<p>Translation engines: DeepL Translator^3000</p>
+<p>Translation engines: Youdao Translate^3000</p>
+<p>Translation engines: Baidu Translate^3000</p>
+<p>Translation engines: Alibaba Translate^3000</p>
+<p>TTS engines：Microsoft Edge TTS^3000</p>
+<p>TTS engines：Google TTS^3000</p>
+<p>TTS engines：OpenAI TTS^3000</p>
+<p>Multiple languages inter-translation^3000</p>
+<p>Document translation^3000</p>
+<p>Automatic word selection^3000</p>
+<p>Automatic word breaks^3000</p>
+<p>Word Book...^5000</p>
+</div>
+<p><span data-typed="features"></span></p>
 
 <div class="badges">
 

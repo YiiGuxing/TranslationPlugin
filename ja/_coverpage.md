@@ -18,9 +18,28 @@
 <h1>Translation Plugin</h1>
 
 <div class="plugin-description" data-typed-target="description">
-<p><span data-typed-delay>^500</span>IntelliJ ベースの IDE/Android Studio 翻訳プラグインは<span data-typed-delay>^30000</span></p>
+<p>IntelliJ ベースの IDE/Android Studio 翻訳プラグインは^30000</p>
 </div>
 <p class="plugin-description"><span data-typed="description"></span></p>
+
+<div data-typed-target="features">
+<p>翻訳エンジン：Google 翻訳^3000</p>
+<p>翻訳エンジン：Microsoft 翻訳^3000</p>
+<p>翻訳エンジン：OpenAI 翻訳^3000</p>
+<p>翻訳エンジン：DeepL 翻訳^3000</p>
+<p>翻訳エンジン：Youdao 翻訳^3000</p>
+<p>翻訳エンジン：Baidu 翻訳^3000</p>
+<p>翻訳エンジン：Alibaba 翻訳^3000</p>
+<p>TTSエンジン：Microsoft Edge TTS^3000</p>
+<p>TTSエンジン：Google TTS^3000</p>
+<p>TTSエンジン：OpenAI TTS^3000</p>
+<p>多言語翻訳^3000</p>
+<p>ドキュメントの翻訳^3000</p>
+<p>単語の自動選択^3000</p>
+<p>単語の自動分割^3000</p>
+<p>単語帳...^5000</p>
+</div>
+<p><span data-typed="features"></span></p>
 
 <div class="badges">
 

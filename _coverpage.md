@@ -37,7 +37,7 @@
 <p>文档翻译^3000</p>
 <p>自动选词^3000</p>
 <p>自动单词拆分^3000</p>
-<p>单词本...<span data-typed-delay>^5000</span></p>
+<p>单词本...^5000</p>
 </div>
 <p><span data-typed="features"></span></p>
 

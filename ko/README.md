@@ -9,13 +9,17 @@ TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. I
 - 여러 번역 엔진
     - Google 번역
     - Microsoft 번역
+    - OpenAI 번역
     - DeepL 번역
     - Youdao 번역
     - Baidu 번역
     - Alibaba 번역
 - 다국어 번역
-- 문서 번역
 - 음성 읽기
+  - Microsoft Edge TTS
+  - Google TTS
+  - OpenAI TTS
+- 문서 번역
 - 자동 단어 선택
 - 자동 단어 분할
 - 단어장
@@ -24,22 +28,22 @@ TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. I
 
 지원하는 IDE 제품::
 - Android Studio
+- Aqua
 - AppCode
 - CLion
-- DataSpell
 - DataGrip
+- DataSpell
 - GoLand
 - HUAWEI DevEco Studio
-- IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
-- IntelliJ IDEA Educational
+- IntelliJ IDEA Ultimate
 - MPS
 - PhpStorm
-- PyCharm Professional
 - PyCharm Community
-- PyCharm Educational
+- PyCharm Professional
 - Rider
 - RubyMine
+- RustRover
 - WebStorm
 
 
