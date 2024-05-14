@@ -9,20 +9,30 @@ import org.junit.Test
 class StringsTest {
 
     @Test
-    fun testSplitWord() {
-        Assert.assertEquals("split Word", "splitWord".splitWords())
-        Assert.assertEquals("Split Word", "SplitWord".splitWords())
-        Assert.assertEquals("Split Word", "Split_Word".splitWords())
-        Assert.assertEquals("split word", "split_word".splitWords())
-        Assert.assertEquals("SPLIT WORD", "SPLIT_WORD".splitWords())
-        Assert.assertEquals("split WORD", "splitWORD".splitWords())
-        Assert.assertEquals("SPLIT Word", "SPLITWord".splitWords())
-        Assert.assertEquals(" split  Word  Split Word;", " split  Word  SplitWord;".splitWords())
-        Assert.assertEquals("0 word 1", "0word1".splitWords())
-        Assert.assertEquals("word字", "word字".splitWords())
+    fun testSplitWords() {
+        Assert.assertEquals("word", "word".splitCamelCaseWords())
+        Assert.assertEquals("Word", "Word".splitCamelCaseWords())
+        Assert.assertEquals("split word", "splitWord".splitCamelCaseWords())
+        Assert.assertEquals("split word", "SplitWord".splitCamelCaseWords())
+        Assert.assertEquals("split word", "Split_Word".splitCamelCaseWords())
+        Assert.assertEquals("split word", "split_word".splitCamelCaseWords())
+        Assert.assertEquals("split word", "split_word__".splitCamelCaseWords())
+        Assert.assertEquals("SPLIT WORD", "SPLIT_WORD".splitCamelCaseWords())
+        Assert.assertEquals("split WORD", "splitWORD".splitCamelCaseWords())
+        Assert.assertEquals("SPLIT word", "SPLITWord".splitCamelCaseWords())
+        Assert.assertEquals("0 word 1", "0word1".splitCamelCaseWords())
+        Assert.assertEquals("word字", "word字".splitCamelCaseWords())
         Assert.assertEquals(
-            "0 split Word Split Word Split WORD SPLIT Word字",
-            "0splitWordSplitWordSplitWORD_SPLITWord字".splitWords()
+            " split  Word  SplitWord;",
+            " split  Word  SplitWord;".splitCamelCaseWords()
+        )
+        Assert.assertEquals(
+            "0 split word split word split WORD SPLIT word",
+            "0splitWordSplitWordSplitWORD_SPLITWord".splitCamelCaseWords()
+        )
+        Assert.assertEquals(
+            "0splitWordSplitWordSplitWORD_SPLITWord字",
+            "0splitWordSplitWordSplitWORD_SPLITWord字".splitCamelCaseWords()
         )
     }
 
