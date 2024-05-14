@@ -116,9 +116,9 @@ _Editor inlay documentation rendered view:_
 
 !> *Note:* Editor inlay documentation do not support automatic translation.
 
-#### 5. 번역 엔진 전환 :id=usage-switch-translation-engine
+#### 5. 엔진 전환 :id=usage-switch-engines
 
-상태 표시줄의 번역 엔진 상태 아이콘을 클릭하거나 단축키 <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>)를 사용하여 번역 엔진을 빠르게 전환할 수 있으며.
+상태 표시줄의 엔진 위젯을 클릭하거나 단축키 <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>)를 사용하여 번역 엔진과 TTS 엔진을 빠르게 전환합니다.
 
 ![번역 엔진 전환](../en/img/translation_engines.png ':size=247x259 :class=round')
 
@@ -202,9 +202,9 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. 번역기 선택 :id=switch-translation-engine-action
+#### 8. 엔진 전환 :id=switch-engine-action
 
-번역 엔진을 빠르게 전환할 수 있습니다.디폴트 단축키:
+번역 엔진과 TTS 엔진을 빠르게 전환합니다.디폴트 단축키:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 

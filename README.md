@@ -117,9 +117,9 @@ _编辑器内嵌文档视图：_
 
 !> *注意：*编辑器内嵌文档不支持自动翻译文档。
 
-#### 5. 切换翻译引擎 :id=usage-switch-translation-engine
+#### 5. 切换引擎 :id=usage-switch-engines
 
-点击 **IDE** 状态栏的翻译引擎状态图标或者使用快捷键<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）可以快速切换翻译引擎。
+点击 **IDE** 状态栏的引擎状态图标或者使用快捷键<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）可以快速切换翻译引擎和 TTS 引擎。
 
 ![翻译引擎](/img/translation_engines.png ':size=151x281')
 
@@ -199,9 +199,9 @@ _编辑器内嵌文档视图：_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. 切换翻译引擎 :id=switch-translation-engine-action
+#### 8. 切换引擎 :id=switch-engine-action
 
-快速切换翻译引擎。默认快捷键：
+快速切换翻译引擎和 TTS 引擎。默认快捷键：
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 

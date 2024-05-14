@@ -116,9 +116,9 @@ _Editor inlay documentation rendered view:_
 
 !> *Note:* Editor inlay documentation do not support automatic translation.
 
-#### 5. 翻訳エンジンの切り替え :id=usage-switch-translation-engine
+#### 5. エンジンの切り替え :id=usage-switch-engines
 
-ステータスバーの翻訳エンジンステータスアイコンをクリックするか、ショートカットキーの <kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）を使用して、翻訳エンジンをすばやく切り替えることができます。
+ステータスバーのエンジンウィジェットをクリックするか、ショートカット<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）を使用して、翻訳エンジンとTTSエンジンを素早く切り替えます。
 
 ![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259')
 
@@ -202,9 +202,9 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. 翻訳エンジンの選択 :id=switch-translation-engine-action
+#### 8. エンジンの選択 :id=switch-engine-action
 
-翻訳エンジンを素早く切り替えます。デフォルトのショートカットキー：
+翻訳エンジンとTTSエンジンを素早く切り替えます。デフォルトのショートカットキー：
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 

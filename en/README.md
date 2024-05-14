@@ -135,10 +135,10 @@ _Editor inlay documentation rendered view:_
 
 !> *Note:* Editor inlay documentation does not support automatic translation.
 
-#### 5. Switch translation engines :id=usage-switch-translation-engine
+#### 5. Switch engines :id=usage-switch-engines
 
-Click the translation engine icon in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
-(macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between translation engines quickly.
+Click the engine widget in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
+(macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between the translation engine and the TTS engine quickly.
 
 ![Translation engines](img/translation_engines.png ':size=245x281')
 
@@ -242,9 +242,9 @@ Default shortcut (same as the [Translate Action](#translate-action)):
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. Switch Translation Engine :id=switch-translation-engine-action
+#### 8. Switch Engine :id=switch-engine-action
 
-Quickly switch between translation engines. Default shortcut:
+Quickly switch between translation engine and TTS engine. Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
