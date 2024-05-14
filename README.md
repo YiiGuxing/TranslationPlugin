@@ -139,10 +139,11 @@ Restart the **IDE** after installation.
    <kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>Other</kbd> > <kbd>Translate
    documents</kbd>: When you check this option, the document will be automatically translated when you view it.
 
-5. **Switch translation engines**
+5. **Switch engines**
 
-   Click the translation engine icon in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>
-   S</kbd> (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to switch between translation engines quickly.
+   Click the engine widget in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+   (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to switch between 
+   the translation engine and the TTS engine quickly.
 
 ## Actions
 
@@ -204,9 +205,9 @@ Restart the **IDE** after installation.
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
     - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
-- **Choose Translation Engine**
+- **Switch Engine**
 
-  Quickly toggle between translation engines. Default shortcut:
+  Quickly switch between translation engine and TTS engine. Default shortcut:
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
     - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
