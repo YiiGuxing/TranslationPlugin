@@ -21,9 +21,9 @@ import javax.swing.JComponent
 
 
 /**
- * Switch translator action
+ * Switch engine action
  */
-class SwitchTranslationEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, PopupAction {
+class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, PopupAction {
 
     private var disposable: Disposable? = null
 
@@ -35,8 +35,8 @@ class SwitchTranslationEngineAction : UpdateInBackgroundCompatComboBoxAction(), 
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = message("action.SwitchTranslationEngineAction.text")
-        templatePresentation.description = message("action.SwitchTranslationEngineAction.description")
+        templatePresentation.text = message("action.SwitchEngineAction.text")
+        templatePresentation.description = message("action.SwitchEngineAction.description")
     }
 
     private fun getDisposable(): Disposable {

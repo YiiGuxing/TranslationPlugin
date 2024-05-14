@@ -112,8 +112,8 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
         </action>
 
-        <action id="$SwitchTranslationEngineAction"
-                class="cn.yiiguxing.plugin.translate.action.SwitchTranslationEngineAction">
+        <action id="$SwitchEngineAction"
+                class="cn.yiiguxing.plugin.translate.action.SwitchEngineAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>

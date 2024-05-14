@@ -22,6 +22,7 @@
             <li>Baidu Translate.</li>
         </ul>
     </li>
+    <li>Multiple languages inter-translation.</li>
     <li>Text to speech.
         <ul>
             <li>Microsoft Edge TTS.</li>
@@ -29,7 +30,6 @@
             <li>OpenAI TTS.</li>
         </ul>
     </li>
-    <li>Multiple languages inter-translation.</li>
     <li>Document translation.</li>
     <li>Automatic word selection.</li>
     <li>Automatic word division.</li>

@@ -3,15 +3,9 @@ package cn.yiiguxing.plugin.translate.util
 import java.net.URLEncoder
 
 
-private val REGEX_UNDERLINE = Regex("([A-Za-z])_+([A-Za-z])")
-private val REGEX_NUM_WORD = Regex("([0-9])([A-Za-z])")
-private val REGEX_WORD_NUM = Regex("([A-Za-z])([0-9])")
-private val REGEX_LOWER_UPPER = Regex("([a-z])([A-Z])")
-private val REGEX_UPPER_WORD = Regex("([A-Z])([A-Z][a-z])")
 private val REGEX_SINGLE_LINE = Regex("\\r\\n|\\r|\\n")
 private val REGEX_COMPRESS_WHITESPACE = Regex("\\s{2,}")
 private val REGEX_WHITESPACES = Regex("\\s+")
-private const val REPLACEMENT_SPLIT_GROUP = "$1 $2"
 
 
 fun String.toRegexOrNull(vararg option: RegexOption): Regex? = try {
@@ -20,17 +14,6 @@ fun String.toRegexOrNull(vararg option: RegexOption): Regex? = try {
     null
 }
 
-
-/**
- * 单词拆分
- */
-fun String.splitWords(): String {
-    return replace(REGEX_UNDERLINE, REPLACEMENT_SPLIT_GROUP)
-        .replace(REGEX_NUM_WORD, REPLACEMENT_SPLIT_GROUP)
-        .replace(REGEX_WORD_NUM, REPLACEMENT_SPLIT_GROUP)
-        .replace(REGEX_LOWER_UPPER, REPLACEMENT_SPLIT_GROUP)
-        .replace(REGEX_UPPER_WORD, REPLACEMENT_SPLIT_GROUP)
-}
 
 /**
  * 分割句子

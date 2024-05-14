@@ -99,7 +99,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val text = editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?: return
-        val processedText = text.trim().let { if (!it.contains(WHITESPACE)) it.splitWords() else it }
+        val processedText = text.trim().splitCamelCaseWords()
         val primaryLanguage = translateService.translator.primaryLanguage
 
         val indicator = Indicator(project, editorRef).apply { setProgressText(processedText) }
@@ -216,8 +216,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
 
         val CRLF = Regex("\r\n|\r|\n")
-
-        val WHITESPACE = Regex("\\s+")
 
         val HIGHLIGHT_ATTRIBUTES = TextAttributes().apply {
             effectType = EffectType.BOXED
