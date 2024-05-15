@@ -1,6 +1,6 @@
 # はじめに :id=introduction
 
-TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. It integrates many translation engines such as Google Translate, Microsoft Translate, DeepL Translate, etc. You can translate the text, code comments, and code documents, etc. You want to translate in your IDE at any time.
+TranslationPluginは、IntelliJベースのIDE/Android Studioの翻訳プラグインです。Google翻訳、Microsoft翻訳、OpenAI翻訳、DeepL翻訳など、多くの翻訳エンジンを統合しています。あなたはいつでもIDEでテキスト、コードコメント、コードドキュメントなどを翻訳することができます。
 
 ![TranslationPlugin](../img/translation_plugin.png)
 
@@ -92,35 +92,35 @@ _入力ボックス：_
 
 ![入力ボックス](../img/translation_replacement_component.gif ':size=460x400')
 
-?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> > Enables the <kbd>**Add to context menu**</kbd> option.  
-_Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> > <kbd>**Separators**</kbd>.
+?> _右クリックメニューオプションを有効にする：_ <kbd>**Translation 設定**</kbd> > <kbd>**翻訳と置換**</kbd> > <kbd>**コンテキストメニューに追加**</kbd> オプションを有効にする。  
+_セパレータ設定：_ <kbd>**Translation 設定**</kbd> > <kbd>**翻訳と置換**</kbd> > <kbd>**セパレータ**</kbd>.
 
 #### 4. ドキュメントの翻訳 :id=usage-translate-doc
 
-- Right-click within a documentation view (including editor inlay documentation rendered view) or within a documentation comment block > <kbd>**ドキュメントの翻訳**</kbd> (or click the Translate Documentation icon on the documentation view toolbar) to toggle the translation status of the documentation.
-- When the "**Automatically translate documentation**" option is enabled, the documentation will be automatically translated when you view the Quick Documentation.
+- ドキュメンテーションビュー（エディタ内レイドキュメンテーションレンダリングビューを含む）またはドキュメンテーションコメントブロック内で右クリックします > <kbd>**ドキュメントの翻訳**</kbd>（または、ドキュメンテーションビューツールバーのドキュメンテーション翻訳アイコンをクリックして）ドキュメンテーションの翻訳ステータスを切り替えます。
+- "**自動的にドキュメンテーションを翻訳する**"オプションが有効になっている場合、クイックドキュメンテーションを表示するときにドキュメンテーションが自動的に翻訳されます。
 
-_Quick documentation:_
+_クイックドキュメンテーション：_
 
-![Quick documentation](../img/docs_translation.gif ':size=302x162 :class=round')
+![クイックドキュメンテーション](../img/docs_translation.gif ':size=302x162 :class=round')
 
-_Documentation comment:_
+_ドキュメンテーションコメント：_
 
-![Documentation comment](../img/doc_comment_translation.gif ':size=400x380')
+![ドキュメンテーションコメント](../img/doc_comment_translation.gif ':size=400x380')
 
-_Editor inlay documentation rendered view:_
+_エディタ内レイドキュメンテーションレンダリングビュー：_
 
-![Editor inlay documentation rendered view](../img/docs_inlay_comment_translation.gif ':size=400x300')
+![エディタ内レイドキュメンテーションレンダリングビュー](../img/docs_inlay_comment_translation.gif ':size=400x300')
 
-?> _Enable the "**Automatically translate documentation**" option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Other**</kbd> > <kbd>**Automatically translate documentation**</kbd>.
+?> _"**自動的にドキュメンテーションを翻訳する**"オプションを有効にする：_ <kbd>**Translation 設定**</kbd> > <kbd>**その他**</kbd> > <kbd>**自動的にドキュメンテーションを翻訳する**</kbd>.
 
-!> *Note:* Editor inlay documentation do not support automatic translation.
+!> *注意：* エディタのインレイドキュメンテーションは自動翻訳をサポートしていません。
 
 #### 5. エンジンの切り替え :id=usage-switch-engines
 
 ステータスバーのエンジンウィジェットをクリックするか、ショートカット<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）を使用して、翻訳エンジンとTTSエンジンを素早く切り替えます。
 
-![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259')
+![翻訳エンジン](../ja/img/translation_engines.png ':size=204x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -181,20 +181,20 @@ _入力ボックス：_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![Documentation translation](../img/docs_translation.gif ':size=302x162 :class=round')
+![ドキュメンテーションの翻訳](../img/docs_translation.gif ':size=302x162 :class=round')
 
 ##### 6.2. Translate Documentation Comment :id=translate-doc-comment-action
 
-Translate documentation comment content. Appears on the editor right-click context menu by default, and is available when inside a documentation comment block. Default shortcut: (None)
+ドキュメンテーションコメントの内容を翻訳します。デフォルトでは、エディタの右クリックコンテキストメニューに表示され、ドキュメンテーションコメントブロック内にいるときに利用可能です。デフォルトのショートカットキー：（なし）
 
-_Documentation comment:_
+_ドキュメンテーションコメント：_
 
-![Documentation comment](../img/doc_comment_translation.gif ':size=400x380')
+![ドキュメンテーションコメント](../img/doc_comment_translation.gif ':size=400x380')
 
 
-_Editor inlay documentation rendered view:_
+_エディタインレイドキュメンテーションレンダリングビュー：_
 
-![Editor inlay documentation rendered view:](../img/docs_inlay_comment_translation.gif ':size=400x300')
+![エディタインレイドキュメンテーションレンダリングビュー](../img/docs_inlay_comment_translation.gif ':size=400x300')
 
 #### 7. テキストコンポーネントの翻訳 :id=translate-text-component-action
 
@@ -208,7 +208,7 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![翻訳エンジン](../ja/img/translation_engines.png ':size=218x259')
+![翻訳エンジン](../ja/img/translation_engines.png ':size=204x314')
 
 #### 9. 今日の単語 :id=word-of-the-day-action
 

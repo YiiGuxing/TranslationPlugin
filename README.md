@@ -1,6 +1,6 @@
 # 简介 :id=introduction
 
-TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、有道翻译、百度翻译等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
+TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、OpenAI 翻译、有道翻译等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
 
 ![TranslationPlugin](img/translation_plugin.png)
 
@@ -121,7 +121,7 @@ _编辑器内嵌文档视图：_
 
 点击 **IDE** 状态栏的引擎状态图标或者使用快捷键<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）可以快速切换翻译引擎和 TTS 引擎。
 
-![翻译引擎](/img/translation_engines.png ':size=151x281')
+![翻译引擎](/img/translation_engines.png ':size=139x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -205,7 +205,7 @@ _编辑器内嵌文档视图：_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![翻译引擎](/img/translation_engines.png ':size=151x281')
+![翻译引擎](/img/translation_engines.png ':size=139x314')
 
 #### 9. 每日一词 :id=word-of-the-day-action
 

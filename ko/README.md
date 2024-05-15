@@ -1,6 +1,6 @@
 # 소개 :id=introduction
 
-TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. It integrates many translation engines such as Google Translate, Microsoft Translate, DeepL Translate, etc. You can translate the text, code comments, and code documents, etc. You want to translate in your IDE at any time.
+TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인입니다. Google 번역, Microsoft 번역, OpenAI 번역, DeepL 번역 등 많은 번역 엔진을 통합합니다. 텍스트, 코드 주석, 코드 문서 등을 IDE에서 언제든지 번역할 수 있습니다.
 
 ![TranslationPlugin](../img/translation_plugin.png)
 
@@ -120,7 +120,7 @@ _Editor inlay documentation rendered view:_
 
 상태 표시줄의 엔진 위젯을 클릭하거나 단축키 <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>)를 사용하여 번역 엔진과 TTS 엔진을 빠르게 전환합니다.
 
-![번역 엔진 전환](../en/img/translation_engines.png ':size=247x259 :class=round')
+![번역 엔진 전환](../en/img/translation_engines.png ':size=233x314 :class=round')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -208,7 +208,7 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![번역기 선택](../en/img/translation_engines.png ':size=247x259 :class=round')
+![번역기 선택](../en/img/translation_engines.png ':size=233x314 :class=round')
 
 #### 9. 오늘의 단어 :id=word-of-the-day-action
 

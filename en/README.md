@@ -1,8 +1,9 @@
 # Introduction :id=introduction
 
-TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin.
-It integrates many translation engines such as Google Translate, Microsoft Translate, DeepL Translate, etc.
-You can translate the text, code comments, and code documents, etc. You want to translate in your IDE at any time.
+TranslationPlugin is an IntelliJ-based IDEs/Android Studio translation plugin.
+It integrates many translation engines such as Google Translate, Microsoft Translate,
+OpenAI Translate, DeepL Translate, etc. You can translate the text, code comments,
+and code documents, etc. You want to translate in your IDE at any time.
 
 ![TranslationPlugin](../img/translation_plugin.png)
 
@@ -140,7 +141,7 @@ _Editor inlay documentation rendered view:_
 Click the engine widget in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
 (macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between the translation engine and the TTS engine quickly.
 
-![Translation engines](img/translation_engines.png ':size=245x281')
+![Translation engines](img/translation_engines.png ':size=233x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -248,7 +249,7 @@ Quickly switch between translation engine and TTS engine. Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![Translation Engines](img/translation_engines.png ':size=245x281')
+![Translation Engines](img/translation_engines.png ':size=233x314')
 
 #### 9. Word of the Day :id=word-of-the-day-action
 
