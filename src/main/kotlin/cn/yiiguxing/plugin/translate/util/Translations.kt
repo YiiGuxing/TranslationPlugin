@@ -27,7 +27,7 @@ fun String.processBeforeTranslate(): String? {
 }
 
 /**
- * Divides camel case words.
+ * Splits camel case words.
  */
 fun String.splitCamelCaseWords(): String = when {
     matches(REGEX_WORDS) -> CamelCaseSplitter.split(this)
