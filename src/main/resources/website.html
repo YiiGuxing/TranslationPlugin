@@ -175,7 +175,13 @@
     const BASE_URL_GITEE = "https://yiiguxing.gitee.io/translation-plugin";
 
     // Here will be matched and replaced, DO NOT MODIFY!!!
-    const TARGET_PATH = "/";
+    // Config Start
+    const config = {
+        fragment: "",
+        intellijPlatform: "",
+        dark: false,
+    };
+    // Config End
 
     let isDode = false;
     let failCount = 0;
@@ -206,17 +212,29 @@
         }
     }
 
+    function getTargetUrl(baseURL) {
+        const parameters = [];
+        if (config.intellijPlatform) {
+            parameters.push(`intellij=${config.intellijPlatform}`);
+        }
+        if (config.dark) {
+            parameters.push('dark=true');
+        }
+        const query = parameters.length > 0 ? `?${parameters.join('&')}` : '';
+        return `${baseURL}/${query}${config.fragment}`
+    }
+
     function test(baseURL) {
-        fetch(`${baseURL}/`).then(() => onDode(`${baseURL}${TARGET_PATH}`), onFail);
+        fetch(`${baseURL}/`).then(() => onDode(getTargetUrl(baseURL)), onFail);
     }
 
     test(BASE_URL_GITHUB);
     test(BASE_URL_GITEE);
 
     (function () {
-        let path = TARGET_PATH.replace('compact=true', 'compact');
-        document.querySelector('#github').href = `${BASE_URL_GITHUB}${path}`;
-        document.querySelector('#gitee').href = `${BASE_URL_GITEE}${path}`;
+        const fragment = config.fragment.replace('&compact=true', '');
+        document.querySelector('#github').href = `${BASE_URL_GITHUB}/${fragment}`;
+        document.querySelector('#gitee').href = `${BASE_URL_GITEE}/${fragment}`;
     })();
 </script>
 </body>
