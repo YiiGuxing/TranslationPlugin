@@ -133,7 +133,7 @@
         });
 
         hook.mounted(function () {
-            if (window.$compactMode || vm.route.query.compact === "true") {
+            if (vm.route.query.compact) {
                 vm.config.topMargin = 0;
                 vm.config.hideSidebar = true;
                 vm.customConfig.compact = true;
@@ -409,24 +409,16 @@
         },
     };
 
-    function checkCompactMode(search) {
+    (function (hash) {
+        var search = hash.split("?")[1];
         if (search) {
             var searchParams = new URLSearchParams(search);
-            return searchParams.get('compact') === 'true';
-        } else {
-            return false;
+            if (searchParams.get('compact')) {
+                var nav = document.querySelector(".app-nav");
+                nav && nav.classList.add("hide");
+            }
         }
-    }
-
-    (function () {
-        var compactMode = checkCompactMode(window.location.search) ||
-            checkCompactMode(window.location.hash.split("?")[1]);
-        if (compactMode) {
-            window.$compactMode = true;
-            var nav = document.querySelector(".app-nav");
-            nav && nav.classList.add("hide");
-        }
-    })();
+    })(window.location.hash);
 </script>
 <script src="js/typed@2.1.0.umd.js"></script>
 <!-- Docsify v4 -->
