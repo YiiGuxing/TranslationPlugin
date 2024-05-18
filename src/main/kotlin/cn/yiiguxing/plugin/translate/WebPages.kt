@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.application.ModalityState
@@ -54,8 +55,8 @@ object WebPages {
      * Get the release note page for the specified version.
      * Unlike the [update page][updates], the release notes page does not include the website framework.
      */
-    fun releaseNote(version: String, dark: Boolean = UIUtil.isUnderDarcula()): PageFragment {
-        return updates(version).query("compact=true&dark=$dark")
+    fun releaseNote(version: String): PageFragment {
+        return updates(version).copy(compact = true)
     }
 
     /**
@@ -66,16 +67,13 @@ object WebPages {
     /**
      * Get the donor page.
      */
-    fun donors(): PageFragment = get("support").query("id=translation-plugin-sponsors")
+    fun donors(): PageFragment = support().copy(id = "translation-plugin-sponsors")
 
     /**
      * Get the full URL for the specified [PageFragment].
      */
     fun getUrl(pageFragment: PageFragment): String {
-        val fixedFragment = if (pageFragment.query.isNullOrEmpty()) pageFragment else {
-            pageFragment.query(pageFragment.query.replace("compact=true", "compact"))
-        }
-        return "${BASE_URL}/${fixedFragment}"
+        return "${BASE_URL}/${pageFragment.copy(compact = false)}"
     }
 
     /**
@@ -91,13 +89,18 @@ object WebPages {
             val modalityState = ModalityState.defaultModalityState()
             runAsync {
                 val html = try {
-                    @Suppress("DialogTitleCapitalization")
                     WebPages::class.java.classLoader
                         .getResourceAsStream("website.html")
                         ?.use { it.reader().readText() }
                         ?.replace(
-                            """const TARGET_PATH = "/";""",
-                            """const TARGET_PATH = "/$pageFragment";"""
+                            "// Config Start(.*)// Config End".toRegex(RegexOption.DOT_MATCHES_ALL),
+                            """
+                            const config = {
+                              fragment: "$pageFragment",
+                              intellijPlatform: "${IdeVersion.buildNumber.productCode}",
+                              dark: ${UIUtil.isUnderDarcula()},
+                            };
+                            """.trimIndent()
                         )
                 } catch (e: Exception) {
                     LOG.warn("Failed to load website.html", e)
@@ -143,44 +146,43 @@ object WebPages {
     class PageFragment(
         private vararg val paths: String,
         /** The query string. */
-        val query: String? = null,
+        val id: String? = null,
         /** The language of the page. */
-        val language: Language = Language.CHINESE
+        val language: Language = Language.CHINESE,
+        /** Whether to use compact mode. */
+        val compact: Boolean = false,
     ) {
         /** The path of the fragment. */
         val path: String
             get() = paths.joinToString("/")
 
         override fun toString(): String {
-            return "#${language.path}/${path.trimStart('/')}${if (query.isNullOrEmpty()) "" else "?$query"}"
+            val queryPart = StringBuilder("utm_source=intellij")
+            if (compact) {
+                queryPart.append("&compact=true")
+            }
+            id?.let { queryPart.append("&id=$it") }
+
+            return "#${language.path}/${path.trimStart('/')}?$queryPart"
         }
 
         /**
-         * Create a new [PageFragment] with the specified path.
-         */
-        fun path(vararg path: String): PageFragment {
-            return PageFragment(*path, query = query, language = language)
-        }
-
-        /**
-         * Resolve the path with the specified path.
+         * Resolve the path with the specified [path].
          */
         fun resolvePath(vararg path: String): PageFragment {
-            return PageFragment(*this.paths, *path, query = query, language = language)
+            return PageFragment(*this.paths, *path, id = id, language = language)
         }
 
         /**
-         * Create a new [PageFragment] with the specified query.
+         * Copy this [PageFragment] with the specified parameters.
          */
-        fun query(query: String?): PageFragment {
-            return PageFragment(*paths, query = query, language = language)
-        }
-
-        /**
-         * Create a new [PageFragment] with the specified language.
-         */
-        fun language(language: Language): PageFragment {
-            return PageFragment(*paths, query = query, language = language)
+        fun copy(
+            vararg path: String = this.paths,
+            id: String? = this.id,
+            language: Language = this.language,
+            compact: Boolean = this.compact
+        ): PageFragment {
+            return PageFragment(*path, id = id, language = language, compact = compact)
         }
 
         /**
