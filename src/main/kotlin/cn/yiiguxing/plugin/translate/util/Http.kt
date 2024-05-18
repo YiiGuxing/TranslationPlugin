@@ -155,8 +155,8 @@ object Http {
     }
 
     fun getUserAgent(): String {
-        val chrome = "Chrome/124.0.0.0"
-        val edge = "Edg/124.0.0.0"
+        val chrome = "Chrome/125.0.0.0"
+        val edge = "Edg/125.0.0.0"
         val safari = "Safari/537.36"
         val appleWebKit = "AppleWebKit/537.36"
         val mozilla = "Mozilla/5.0"
