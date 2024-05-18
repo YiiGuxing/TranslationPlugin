@@ -23,6 +23,6 @@ fun IOException.getCommonMessage(): String {
             else -> HttpResponseStatus.valueOf(statusCode).reasonPhrase()
         }
 
-        else -> message("error.io.exception", message ?: "")
+        else -> message("error.io.exception", message ?: message("error.unknown"))
     }
 }

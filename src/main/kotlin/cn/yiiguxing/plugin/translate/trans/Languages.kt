@@ -472,5 +472,28 @@ enum class Lang(
          */
         operator fun get(code: String): Lang = mapping[code] ?: UNKNOWN
 
+        /**
+         * Returns `true` if this language is [AUTO].
+         */
+        fun Lang.isAuto(): Boolean = this == AUTO
+
+        /**
+         * Returns `true` if this language is [UNKNOWN].
+         */
+        fun Lang.isUnknown(): Boolean = this == UNKNOWN
+
+        /**
+         * Tests if this language is explicit (not [AUTO] and not [UNKNOWN]).
+         */
+        fun Lang.isExplicit(): Boolean = this != AUTO && this != UNKNOWN
+
+        /**
+         * Try to convert to an explicit language: Returns [UNKNOWN] (even though [UNKNOWN]
+         * is not an explicit language) if it is [AUTO], otherwise return itself.
+         */
+        fun Lang.toExplicit(): Lang = when (this) {
+            AUTO -> UNKNOWN
+            else -> this
+        }
     }
 }

@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.util.TranslateService
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.runReadAction
 import com.intellij.codeInsight.documentation.DocumentationManager
@@ -118,7 +118,7 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         private var lastTranslationTask: TranslateDocumentationTask? = null
 
         private fun isTranslateDocumentation(element: PsiElement): Boolean {
-            return DocTranslationService.getTranslationState(element) ?: Settings.instance.translateDocumentation
+            return DocTranslationService.getTranslationState(element) ?: Settings.getInstance().translateDocumentation
         }
 
         /**
@@ -165,7 +165,7 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
             if (text.isNullOrEmpty()) return null
 
             val lastTask = lastTranslationTask
-            val translator = TranslateService.translator
+            val translator = TranslateService.getInstance().translator
 
             val task = if (
                 lastTask != null &&

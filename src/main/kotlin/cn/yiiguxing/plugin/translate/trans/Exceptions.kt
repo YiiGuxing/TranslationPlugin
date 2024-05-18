@@ -7,7 +7,10 @@ class TranslateException(
     cause: Throwable? = null
 ) : RuntimeException("$translatorName[$translatorId] :: ${errorInfo.message}", cause)
 
-class UnsupportedLanguageException(val lang: Lang) : RuntimeException("Unsupported language: ${lang.langName}")
+class UnsupportedLanguageException(
+    val lang: Lang,
+    message: String = "Unsupported language: ${lang.langName}"
+) : RuntimeException(message)
 
 open class TranslationResultException(val code: Int) : RuntimeException("Translation result code: $code")
 

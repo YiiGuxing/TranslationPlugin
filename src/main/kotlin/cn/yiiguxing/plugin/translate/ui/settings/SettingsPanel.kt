@@ -1,12 +1,12 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.ByteSize
-import cn.yiiguxing.plugin.translate.util.CacheService
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
@@ -69,8 +69,9 @@ class SettingsPanel(
             resetWordbookStoragePathButton.isEnabled = enabled
         }
 
-        updateEnabled(WordBookService.instance.state)
-        WordBookService.instance.stateBinding.observe(this) { state, _ ->
+        val wordBookService = WordBookService.getInstance()
+        updateEnabled(wordBookService.state)
+        wordBookService.stateBinding.observe(this) { state, _ ->
             updateEnabled(state)
         }
     }
@@ -85,15 +86,17 @@ class SettingsPanel(
             isClearing = true
 
             runAsync {
-                CacheService.evictAllDiskCaches()
-                CacheService.getDiskCacheSize()
+                with(CacheService.getInstance()) {
+                    evictAllDiskCaches()
+                    getDiskCacheSize()
+                }
             }.finishOnUiThread(labelRef) { label, size ->
                 isClearing = false
                 label.text = ByteSize.format(size ?: 0L)
             }
         }
 
-        runAsync { CacheService.getDiskCacheSize() }
+        runAsync { CacheService.getInstance().getDiskCacheSize() }
             .successOnUiThread(labelRef) { label, size ->
                 label.text = ByteSize.format(size)
             }
@@ -132,6 +135,10 @@ class SettingsPanel(
 
         configureTranslationEngineLink.setListener({ _, _ ->
             translationEngineComboBox.selected?.showConfigurationDialog()
+        }, null)
+
+        configureTtsEngineLink.setListener({ _, _ ->
+            ttsEngineComboBox.selected?.showConfigurationDialog()
         }, null)
 
         val background = ignoreRegExp.background
@@ -181,6 +188,7 @@ class SettingsPanel(
         get() {
             val settings = settings
             return settings.translator != translationEngineComboBox.selected
+                    || settings.ttsEngine != ttsEngineComboBox.selected
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
                     || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
@@ -227,14 +235,16 @@ class SettingsPanel(
         with(settings) {
             val selectedTranslator = translationEngineComboBox.selected ?: translator
             if (!selectedTranslator.isConfigured()) {
-                throw ConfigurationException(
-                    message(
-                        "settings.translator.requires.configuration",
-                        selectedTranslator.translatorName
-                    )
-                )
+                throwConfigurationException(selectedTranslator.translatorName)
             }
+
+            val selectedTtsEngine = ttsEngineComboBox.selected ?: ttsEngine
+            if (!selectedTtsEngine.isConfigured()) {
+                throwConfigurationException(selectedTtsEngine.ttsName)
+            }
+
             translator = selectedTranslator
+            ttsEngine = selectedTtsEngine
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
             targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
             primaryFontFamily = primaryFontComboBox.fontName
@@ -259,11 +269,16 @@ class SettingsPanel(
         }
     }
 
+    private fun throwConfigurationException(name: String): Nothing {
+        throw ConfigurationException(message("settings.translator.requires.configuration", name))
+    }
+
     @Suppress("Duplicates")
     override fun reset() {
         resetPrimaryLanguageComboBox(settings.translator)
 
         translationEngineComboBox.selected = settings.translator
+        ttsEngineComboBox.selected = settings.ttsEngine
         targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ignoreRegExp.text = settings.ignoreRegex
         separatorTextField.text = settings.separators

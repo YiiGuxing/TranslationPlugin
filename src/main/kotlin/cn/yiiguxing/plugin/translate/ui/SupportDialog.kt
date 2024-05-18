@@ -122,7 +122,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
                 if (it.eventType == HyperlinkEvent.EventType.ACTIVATED) {
                     when (it.description) {
                         "#e-mail" -> mail()
-                        "#patrons" -> BrowserUtil.browse(WebPages.donors())
+                        "#patrons" -> BrowserUtil.browse(WebPages.donors().getUrl())
                     }
                 }
             }

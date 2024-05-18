@@ -54,7 +54,7 @@ object TranslationNotifications {
         }
     }
 
-    private class SwitchTranslationEngineAction : AnAction({ message("action.SwitchTranslationEngineAction.text") }),
+    private class SwitchTranslationEngineAction : AnAction({ message("action.SwitchEngineAction.text") }),
         PopupAction {
 
         private var isActionPerforming = false

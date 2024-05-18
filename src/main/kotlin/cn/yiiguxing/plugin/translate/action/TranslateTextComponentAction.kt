@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.canPreSelectFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
@@ -32,12 +32,10 @@ class TranslateTextComponentAction :
 
     private class Handler : EditorActionHandler() {
 
-        private val settings = Settings
-
         public override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
             val text = when {
                 editor.selectionModel.hasSelection() -> editor.selectionModel.selectedText
-                !editor.isViewer -> editor.getSelectionFromCurrentCaret(settings.autoSelectionMode)?.let {
+                !editor.isViewer -> editor.getSelectionFromCurrentCaret(Settings.getInstance().autoSelectionMode)?.let {
                     editor.document.getText(it)
                 }
 

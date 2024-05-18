@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.util.TranslationStates
 import javax.swing.AbstractListModel
 import javax.swing.ComboBoxModel
 
@@ -38,7 +38,7 @@ private class SimpleLanguageListModel(private val languages: List<Lang>) : Langu
 private class SortedLanguageListModel(languages: Collection<Lang>, selection: Lang? = null)
     : LanguageListModel() {
 
-    private val states = TranslationStates
+    private val states = TranslationStates.getInstance()
 
     private val languageList: MutableList<Lang> = ArrayList(languages).apply { sort() }
 

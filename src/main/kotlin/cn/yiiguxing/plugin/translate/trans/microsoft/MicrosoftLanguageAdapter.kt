@@ -6,7 +6,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 /**
  * Language adapter for Microsoft Translator.
  */
-object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
+internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.BELARUSIAN,
@@ -23,9 +23,12 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.JAVANESE,
         Lang.KINYARWANDA,
         Lang.KURDISH, // 己俱体分为 `库尔德语（库尔曼吉语）` 和 `库尔德语（索拉尼）`
+        Lang.KYRGYZ,
         Lang.LATIN,
         Lang.LUXEMBOURGISH,
+        Lang.MALAGASY,
         Lang.PORTUGUESE,
+        Lang.SCOTS_GAELIC,
         Lang.SERBIAN,
         Lang.SESOTHO,
         Lang.SHONA,
@@ -35,7 +38,6 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.TAJIK,
         Lang.XHOSA,
         Lang.YIDDISH,
-        Lang.YORUBA,
     )
 
     @Suppress("SpellCheckingInspection")
@@ -64,12 +66,12 @@ object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
 /**
  * Language code for Microsoft Translator.
  */
-val Lang.microsoftLanguageCode: String
+internal val Lang.microsoftLanguageCode: String
     get() = MicrosoftLanguageAdapter.getLanguageCode(this)
 
 /**
  * Returns the [language][Lang] for the specified Microsoft Translator language [code].
  */
-fun Lang.Companion.fromMicrosoftLanguageCode(code: String): Lang {
+internal fun Lang.Companion.fromMicrosoftLanguageCode(code: String): Lang {
     return MicrosoftLanguageAdapter.getLanguage(code)
 }

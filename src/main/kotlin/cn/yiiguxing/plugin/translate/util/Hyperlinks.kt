@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable
@@ -42,7 +43,10 @@ object Hyperlinks {
         when (hyperlinkEvent.description) {
             SETTINGS_DESCRIPTION -> TranslationConfigurable.showSettingsDialog()
             SUPPORT_DESCRIPTION -> SupportDialog.show()
-            TRANSLATOR_CONFIGURATION_DESCRIPTION -> TranslateService.translator.checkConfiguration(true)
+            TRANSLATOR_CONFIGURATION_DESCRIPTION -> TranslateService.getInstance()
+                .translator
+                .checkConfiguration(true)
+
             else -> return false
         }
 

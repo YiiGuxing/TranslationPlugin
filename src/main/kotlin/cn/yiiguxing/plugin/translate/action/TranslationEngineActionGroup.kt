@@ -1,11 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.actionSystem.PlatformDataKeys
-import com.intellij.openapi.actionSystem.PopupAction
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
@@ -23,10 +19,12 @@ class TranslationEngineActionGroup(
         val (availableActions, unavailableActions) = TranslationEngineAction.actionsGroupedByAvailability()
         addAll(availableActions)
         if (unavailableActions.isNotEmpty()) {
-            addSeparator(message("action.TranslationEngineActionGroup.separator.inactivated"))
+            addSeparator(message("action.separator.inactivated"))
             addAll(unavailableActions)
         }
 
+        addSeparator()
+        add(TTSEngineActionGroup())
         addSeparator()
         add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
     }

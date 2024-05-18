@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.codeInsight.documentation.DocumentationManager
@@ -64,7 +64,7 @@ open class ToggleQuickDocTranslationAction :
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project) ?: return false
 
         return activeDocComponent.element?.let { DocTranslationService.getTranslationState(it) }
-            ?: Settings.translateDocumentation
+            ?: Settings.getInstance().translateDocumentation
     }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {

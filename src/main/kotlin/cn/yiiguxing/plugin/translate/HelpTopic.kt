@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate
 enum class HelpTopic(id: String, val url: String) {
 
     /** Default help */
-    DEFAULT("default", WebPages.docs()),
+    DEFAULT("default", WebPages.docs().getUrl()),
 
     /** 阿里机器翻译通用版 */
     ALI("ali", "https://www.aliyun.com/product/ai/base_alimt"),
@@ -18,9 +18,12 @@ enum class HelpTopic(id: String, val url: String) {
     DEEPL("deepl", "https://www.deepl.com/pro-api"),
 
     /** OpenAI */
-    OPEN_AI("openai", "https://platform.openai.com");
+    OPEN_AI("openai", "https://platform.openai.com"),
 
-    val id: String = "${TranslationPlugin.PLUGIN_ID}.$id"
+    /** Azure OpenAI */
+    AZURE_OPEN_AI("azure_openai", "https://learn.microsoft.com/en-us/azure/ai-services/openai");
+
+    val id: String = TranslationPlugin.generateId("help.$id")
 
     companion object {
         fun of(helpTopicId: String): HelpTopic {

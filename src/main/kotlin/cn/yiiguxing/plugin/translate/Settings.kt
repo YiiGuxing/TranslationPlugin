@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.*
@@ -13,6 +14,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -40,6 +42,12 @@ class Settings : PersistentStateComponent<Settings> {
                     SETTINGS_CHANGE_PUBLISHER.onTranslatorChanged(this, newValue)
                 }
             }
+
+    var ttsEngine: TTSEngine by Delegates.observable(TTSEngine.EDGE) { _, oldValue: TTSEngine, newValue: TTSEngine ->
+        if (isInitialized && oldValue != newValue) {
+            SETTINGS_CHANGE_PUBLISHER.onTTSEngineChanged(this, newValue)
+        }
+    }
 
     /**
      * 主要语言
@@ -193,20 +201,15 @@ class Settings : PersistentStateComponent<Settings> {
     }
 
     companion object {
-
-        /**
-         * Get the instance of this service.
-         *
-         * @return the unique [Settings] instance.
-         */
-        val instance: Settings
-            get() = ApplicationManager.getApplication().getService(Settings::class.java)
-
-
         private const val CURRENT_DATA_VERSION = 1
         private const val DATA_VERSION_KEY = "${TranslationPlugin.PLUGIN_ID}.settings.data.version"
 
         private val LOG = Logger.getInstance(Settings::class.java)
+
+        /**
+         * Get the instance of [Settings].
+         */
+        fun getInstance(): Settings = service()
 
         private fun String.toIgnoreRegex(): Regex? = takeIf { it.isNotEmpty() }?.toRegexOrNull(RegexOption.MULTILINE)
 
@@ -312,6 +315,8 @@ enum class TargetLanguageSelection(val displayName: String) {
 interface SettingsChangeListener {
 
     fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {}
+
+    fun onTTSEngineChanged(settings: Settings, ttsEngine: TTSEngine) {}
 
     fun onOverrideFontChanged(settings: Settings) {}
 

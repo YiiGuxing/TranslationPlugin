@@ -11,7 +11,7 @@ import cn.yiiguxing.plugin.translate.trans.youdao.*
 import cn.yiiguxing.plugin.translate.util.text.newLine
 
 fun main() = uiTest("Translation UI Test", 500, 300/*, true*/) {
-    val ui = TranslationDialogUiImpl(TranslationDialogUiProvider.testProvider())
+    val ui = TranslationDialogUiImpl(null, TranslationDialogUiProvider.testProvider())
     val mainPanel = ui.createMainPanel()
 
     ui.sourceLangComboBox.model = LanguageListModel.simple(listOf(Lang.AUTO, Lang.ENGLISH, Lang.CHINESE))
@@ -79,7 +79,7 @@ fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
 )
 
 fun setupGoogleDictDocument(dictViewer: StyledViewer, googleTranslation: GoogleTranslation) {
-    val document = GoogleDictDocument.Factory.getDocument(googleTranslation)
+    val document = GoogleDictionaryDocumentFactory.getDocument(googleTranslation)
     dictViewer.apply(document!!)
 }
 

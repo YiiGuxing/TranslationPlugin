@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.components.service
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.CollectionBean
@@ -131,14 +132,10 @@ class TranslationStates : PersistentStateComponent<TranslationStates> {
         private const val DEFAULT_HISTORY_SIZE = 50
 
         /**
-         * Get the instance of this service.
-         *
-         * @return the unique [TranslationStates] instance.
+         * Get the instance of [TranslationStates].
          */
-        val instance: TranslationStates
-            get() = ApplicationManager.getApplication().getService(TranslationStates::class.java)
+        fun getInstance(): TranslationStates = service()
     }
-
 }
 
 interface HistoriesChangedListener {
