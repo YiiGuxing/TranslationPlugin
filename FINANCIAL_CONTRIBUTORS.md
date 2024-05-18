@@ -145,6 +145,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 猫的谔定靴 |  | 10.00 CNY |
 | 似水年华 |  | 10.00 CNY |
 | 芯辰 |  | 10.00 CNY |
 | 水 |  | 10.00 CNY |
@@ -313,6 +314,15 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 大笨钟 |  | 6.66 CNY |
+| 菲 |  | 6.66 CNY |
+| 林小哥 |  | 6.66 CNY |
+| 佛铃 |  | 6.66 CNY |
+| Ai幻想家 |  | 6.66 CNY |
+| 流浪土狗 |  | 6.66 CNY |
+| 将图南 |  | 6.66 CNY |
+| 悟 |  | 6.66 CNY |
+| 艾尔伯特 |  | 6.66 CNY |
 | L |  | 6.66 CNY |
 | 张雅旗 |  | 6.66 CNY |
 | Wn |  | 6.66 CNY |
