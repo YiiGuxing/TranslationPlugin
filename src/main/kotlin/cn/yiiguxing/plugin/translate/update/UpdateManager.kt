@@ -122,8 +122,6 @@ class UpdateManager : BaseStartupActivity(true) {
             .setIcon(TranslationIcons.Logo)
             .apply {
                 setListener(Notifications.UrlOpeningListener(false))
-            }
-            .apply {
                 if (!version.isRreRelease && isFeatureVersion && !canBrowseWhatsNewInHTMLEditor) {
                     addAction(WhatsNew.Action(version))
                 }
