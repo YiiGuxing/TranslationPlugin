@@ -198,7 +198,7 @@
                 let loading = document.querySelector('.loading');
                 loading.style.opacity = 0;
                 loading.addEventListener('transitionend', () => loading.remove(), {once: true});
-            }, Math.max(0, 1000 - (Date.now() - time)));
+            }, Math.max(0, 2000 - (Date.now() - time)));
         };
         document.body.appendChild(iframe);
     }
