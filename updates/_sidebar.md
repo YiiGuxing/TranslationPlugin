@@ -1,6 +1,7 @@
 
 <h2 class="versions">版本</h2>
 
+* [v3.6 (2024-05-20)](/updates/v3.6.md)
 * [v3.5 (2023-06-01)](/updates/v3.5.md)
 * [v3.4 (2022-11-30)](/updates/v3.4.md)
 * [v3.3 (2022-03-25)](/updates/v3.3.md)
