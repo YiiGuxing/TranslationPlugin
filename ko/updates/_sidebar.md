@@ -1,3 +1,4 @@
+<div class="sponsor-container"></div>
 
 <h2 class="versions">버전</h2>
 

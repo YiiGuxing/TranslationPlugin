@@ -429,20 +429,84 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
 
 .sidebar {
     padding-top: 85px;
-    width: 240px;
+    width: 200px;
+    border-right: none;
+    box-sizing: border-box;
+    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-toggle {
-    width: 224px;
+    width: 200px;
 }
 
 .sidebar .sidebar-nav {
-    padding-left: 20px;
+    padding-left: 10px;
+    box-sizing: border-box;
 }
 
 .sidebar .sidebar-nav .versions {
     margin-top: 0;
     margin-left: 15px;
+}
+
+.sponsor-container {
+    border-color: #eee;
+    border-style: solid;
+    border-width: 1px 0 1px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.compact-mode .sponsor-container {
+    display: flex;
+}
+
+.sponsor-container a.sponsor-link {
+    margin-top: 1rem;
+    display: block;
+    height: 50px;
+    width: 250px;
+    padding: 0 10px;
+    line-height: 50px;
+    text-align: center;
+    color: rgba(60, 60, 60, .33);
+    text-decoration: none;
+    font-size: 11px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: #f7f7f7;
+}
+
+.sponsor-container a.label-link {
+    font-size: 11px;
+    height: 1rem;
+    display: inline-block;
+    line-height: 1rem;
+    color: rgba(60, 60, 60, .33);
+    text-decoration: none;
+}
+
+.sponsor-container a.sponsor-link:last-child {
+    margin-bottom: 1rem;
+}
+
+.sidebar .sponsor-container {
+    border: none;
+    display: flex;
+    margin: 0 10px 1rem 0;
+    align-items: flex-end;
+}
+
+.sidebar .sponsor-container a.sponsor-link {
+    width: 100%;
+    margin-top: 0;
+}
+
+.sidebar .sponsor-container a.label-link {
+    margin-right: 3px;
 }
 
 .content {
@@ -456,7 +520,7 @@ main.hide-sidebar .sidebar + .content {
 }
 
 main:not(.hide-sidebar) .sidebar + .content {
-    margin-left: 240px;
+    margin-left: 200px;
 }
 
 .sidebar ul li.active--imp > a {
@@ -471,7 +535,7 @@ main:not(.hide-sidebar) .sidebar + .content {
 }
 
 body.close .sidebar {
-    transform: translateX(-240px);
+    transform: translateX(-200px);
 }
 
 body.close .content {
@@ -781,20 +845,20 @@ section.cover .badges > p {
     }
 
     .sidebar {
-        left: -240px;
+        left: -200px;
         transition: transform .25s ease-out;
     }
 
     body.close .sidebar {
-        transform: translateX(240px);
+        transform: translateX(200px);
     }
 
     body.close .sidebar-toggle {
-        width: 224px;
+        width: 200px;
     }
 
     body.close .content {
-        transform: translateX(240px);
+        transform: translateX(200px);
     }
 
     .app-nav .nav-logo > span {

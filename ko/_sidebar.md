@@ -1,3 +1,5 @@
+<div class="sponsor-container"></div>
+
 * [소개](/ko/docs#introduction)
     * [특성](/ko/docs#features)
     * [호환성](/ko/docs#compatibility)

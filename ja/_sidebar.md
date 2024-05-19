@@ -1,3 +1,5 @@
+<div class="sponsor-container"></div>
+
 * [はじめに](/ja/docs#introduction)
     * [特徴](/ja/docs#features)
     * [コンパチビリティ](/ja/docs#compatibility)

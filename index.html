@@ -89,6 +89,8 @@
 <script>
     LAST_PLUGIN_VERSION = "v3.6";
 
+    ACTIVE_SPONSORS = [];
+
     function gaPlugin(hook) {
         hook.beforeEach(gaPageView);
     }
@@ -164,6 +166,7 @@
             updateLanguage(vm);
             updateNavBar(vm);
             updateSidebar(vm);
+            updateSponsors(vm);
             startTyped();
         });
     }
@@ -304,6 +307,37 @@
         }
     }
 
+    function updateSponsors(vm) {
+        var sponsors = document.querySelectorAll(".sponsor-container");
+        if (!sponsors) {
+            return;
+        }
+
+        var labels = {
+            "/": "成为赞助商",
+            "/en/": "Become a Sponsor",
+            "/ja/": "スポンサーになる",
+            "/ko/": "후원자가 되다",
+        }
+
+        var languagePath = getLanguagePath(vm);
+        sponsors.forEach(function (container) {
+            var becomeASponsor = document.createElement("a");
+            becomeASponsor.classList.add("sponsor-link");
+            becomeASponsor.href = "#" + languagePath + "support";
+            becomeASponsor.innerText = labels[languagePath];
+            container.appendChild(becomeASponsor);
+
+            if (ACTIVE_SPONSORS.length) {
+                var becomeASponsorLink = document.createElement("a");
+                becomeASponsorLink.classList.add("label-link");
+                becomeASponsorLink.href = "#" + languagePath + "support";
+                becomeASponsorLink.innerText = labels[languagePath];
+                container.appendChild(becomeASponsorLink);
+            }
+        })
+    }
+
     function updateLanguage(vm) {
         var result = /^\/((en|ja|ko)\/)?(.*)/.exec(vm.route.path);
         var lang = result && result[2] || "zh"
@@ -414,6 +448,7 @@
         if (search) {
             var searchParams = new URLSearchParams(search);
             if (searchParams.get('compact')) {
+                document.body.classList.add("compact-mode");
                 var nav = document.querySelector(".app-nav");
                 nav && nav.classList.add("hide");
             }
