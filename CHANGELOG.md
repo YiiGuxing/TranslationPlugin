@@ -18,8 +18,6 @@
 
 ## [3.5.8] (2024/04/10)
 
-## [3.5.8] (2024/04/10)
-
 - User interaction experience optimization and improvement.
 - Compatible with 2024.4.
 - Bug fixes.
