@@ -7,15 +7,14 @@ import cn.yiiguxing.plugin.translate.ui.Popups
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordBookWindowComponent
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordDetailsDialog
 import cn.yiiguxing.plugin.translate.util.*
-import cn.yiiguxing.plugin.translate.util.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.exports.WordBookExporter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
@@ -40,7 +39,11 @@ class WordBookView {
 
     private var isInitialized: Boolean = false
 
-    private val publisher: WordBookViewListener = Application.messageBus.syncPublisher(WordBookViewListener.TOPIC)
+    private val service: WordBookService by lazy { WordBookService.getInstance() }
+
+    private val publisher: WordBookViewListener by lazy {
+        Application.messageBus.syncPublisher(WordBookViewListener.TOPIC)
+    }
 
     private val observableLoading: ObservableValue<Boolean> = ObservableValue(false)
     private var isLoading: Boolean by observableLoading
@@ -77,7 +80,7 @@ class WordBookView {
         })
         contentManager.setSelectedContent(content)
 
-        if (WordBookService.isInitialized) {
+        if (service.isInitialized) {
             refresh()
         }
 
@@ -107,10 +110,10 @@ class WordBookView {
     private fun createWordBookWindowComponent(project: Project, disposable: Disposable): WordBookWindowComponent {
         return WordBookWindowComponent(disposable).apply {
             bindLoading(observableLoading.asReadOnly(), false)
-            bindState(WordBookService.stateBinding)
-            onRetryInitialization { WordBookService.asyncInitialize() }
+            bindState(service.stateBinding)
+            onRetryInitialization { service.asyncInitialize() }
             onDownloadDriver {
-                if (!WordBookService.downloadDriverAndInitService()) {
+                if (!service.downloadDriverAndInitService()) {
                     val message = message("wordbook.window.message.in.download")
                     Popups.showBalloonForComponent(it, message, MessageType.INFO, project, offsetY = JBUIScale.scale(2))
                 }
@@ -143,14 +146,14 @@ class WordBookView {
         }
         val result = MessageDialogBuilder.yesNo(title, message).ask(project)
         if (result) {
-            executeOnPooledThread { WordBookService.removeWords(words.mapNotNull { it.id }) }
+            executeOnPooledThread { service.removeWords(words.mapNotNull { it.id }) }
         }
     }
 
     private fun subscribeWordBookTopic() {
         if (!isInitialized) {
-            if (!WordBookService.isInitialized) {
-                WordBookService.stateBinding.observe(TranslationUIManager.disposable()) { state, _ ->
+            if (!service.isInitialized) {
+                service.stateBinding.observe(TranslationUIManager.disposable()) { state, _ ->
                     if (state == WordBookState.RUNNING) {
                         refresh()
                     }
@@ -196,7 +199,7 @@ class WordBookView {
 
         isLoading = true
         val modalityState = ModalityState.current()
-        runAsync { WordBookService.getWords() }
+        runAsync { service.getWords() }
             .onSuccess { newWords ->
                 invokeLater(modalityState) {
                     words.clear()
@@ -322,9 +325,9 @@ class WordBookView {
         UpdateInBackgroundCompatAction(text, description, icon), DumbAware {
 
         final override fun actionPerformed(e: AnActionEvent) {
-            if (WordBookService.isInitialized) {
+            if (service.isInitialized) {
                 doAction(e)
-            } else if (WordBookService.state == WordBookState.NO_DRIVER) {
+            } else if (service.state == WordBookState.NO_DRIVER) {
                 Popups.showBalloonForComponent(
                     e.inputEvent.component,
                     message("wordbook.window.message.missing.driver"),
@@ -378,7 +381,7 @@ class WordBookView {
 
     private inner class ImportAction : WordBookAction(message("wordbook.window.action.import")) {
         override fun update(e: AnActionEvent) {
-            e.presentation.isEnabled = WordBookService.isInitialized
+            e.presentation.isEnabled = service.isInitialized
         }
 
         override fun doAction(e: AnActionEvent) = importWordBook(e.project) { refresh() }
@@ -387,7 +390,7 @@ class WordBookView {
     private inner class ExportAction(private val exporter: WordBookExporter) :
         WordBookAction("${exporter.name}${if (exporter.availableForImport) message("wordbook.window.export.tip") else ""}") {
         override fun update(e: AnActionEvent) {
-            e.presentation.isEnabled = WordBookService.isInitialized
+            e.presentation.isEnabled = service.isInitialized
         }
 
         override fun doAction(e: AnActionEvent) = exporter.export(e.project, words)
@@ -402,8 +405,10 @@ class WordBookView {
     companion object {
         private const val TAB_NAME_ALL = "ALL"
 
-        val instance: WordBookView
-            get() = ApplicationManager.getApplication().getService(WordBookView::class.java)
+        /**
+         * Returns the [WordBookView] instance.
+         */
+        fun getInstance(): WordBookView = service()
 
         private val Content.wordBookWindowComponent: WordBookWindowComponent
             get() = component as WordBookWindowComponent

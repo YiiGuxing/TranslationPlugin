@@ -1,11 +1,10 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.TranslateListener
-import cn.yiiguxing.plugin.translate.trans.Translation
-import cn.yiiguxing.plugin.translate.trans.TranslationNotifications
+import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
@@ -49,7 +48,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     }
 
     override val selectionMode: SelectionMode
-        get() = Settings.autoSelectionMode
+        get() = Settings.getInstance().autoSelectionMode
 
     override val AnActionEvent.editor: Editor?
         get() {
@@ -86,7 +85,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         if (!isWritable) {
             return
         }
-        if (!TranslateService.translator.checkConfiguration()) {
+        val translateService = TranslateService.getInstance()
+        if (!translateService.translator.checkConfiguration()) {
             return
         }
 
@@ -99,8 +99,8 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val text = editor.document.getText(selectionRange)
             .takeIf { it.isNotBlank() && it.any(JAVA_IDENTIFIER_PART_CONDITION) }
             ?: return
-        val processedText = text.trim().let { if (!it.contains(WHITESPACE)) it.splitWords() else it }
-        val primaryLanguage = TranslateService.translator.primaryLanguage
+        val processedText = text.trim().splitCamelCaseWords()
+        val primaryLanguage = translateService.translator.primaryLanguage
 
         val indicator = Indicator(project, editorRef).apply { setProgressText(processedText) }
         val modalityState = ModalityState.current()
@@ -108,7 +108,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             if (indicator.checkProcessCanceledAndEditorDisposed()) {
                 return
             }
-            TranslateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
+            translateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
                 override fun onSuccess(translation: Translation) {
                     if (indicator.checkProcessCanceledAndEditorDisposed()) {
                         return
@@ -118,7 +118,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                         && primaryLanguage != Lang.ENGLISH
                         && targetLang == Lang.ENGLISH
                     ) {
-                        val delay = TranslateService.translator.intervalLimit
+                        val delay = translateService.translator.intervalLimit
                         if (delay <= 0) {
                             translate(primaryLanguage)
                         } else {
@@ -146,7 +146,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }, modalityState)
         }
 
-        if (Settings.selectTargetLanguageBeforeReplacement) {
+        if (Settings.getInstance().selectTargetLanguageBeforeReplacement) {
             editor.showTargetLanguagesPopup { translate(it) }
         } else {
             val targetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
@@ -217,8 +217,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         val CRLF = Regex("\r\n|\r|\n")
 
-        val WHITESPACE = Regex("\\s+")
-
         val HIGHLIGHT_ATTRIBUTES = TextAttributes().apply {
             effectType = EffectType.BOXED
             effectColor = JBColor(0xFF0000, 0xFF0000)
@@ -227,8 +225,9 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         fun String.fixWhitespace() = replace(SPACES, " ")
 
         fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
-            val states = TranslationStates
-            val languages = TranslateService.translator.supportedTargetLanguages.sortedByDescending {
+            val states = TranslationStates.getInstance()
+            val translateService = TranslateService.getInstance()
+            val languages = translateService.translator.supportedTargetLanguages.sortedByDescending {
                 if (it == Lang.AUTO) Int.MAX_VALUE else states.getLanguageScore(it)
             }
             val index = languages.indexOf(states.lastReplacementTargetLanguage)
@@ -256,7 +255,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun Editor.tryReplace(selectionRange: TextRange, elementsToReplace: List<String>): Boolean {
-            return if (elementsToReplace.size == 1 && Settings.autoReplace) {
+            return if (elementsToReplace.size == 1 && Settings.getInstance().autoReplace) {
                 replaceText(selectionRange, elementsToReplace.first())
                 true
             } else false
@@ -415,8 +414,9 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             val camelBuilder = StringBuilder()
             val pascalBuilder = StringBuilder()
 
-            val lowerWithSeparatorBuilders = Settings.separators.map { it to StringBuilder() }
-            val withSeparator = Settings.separators.map { it to LinkedHashSet<String>() }.toMap()
+            val settings = Settings.getInstance()
+            val lowerWithSeparatorBuilders = settings.separators.map { it to StringBuilder() }
+            val withSeparator = settings.separators.map { it to LinkedHashSet<String>() }.toMap()
 
             for (item in items) {
                 original.add(item)

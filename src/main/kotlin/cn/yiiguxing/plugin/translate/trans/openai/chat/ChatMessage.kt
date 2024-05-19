@@ -22,10 +22,16 @@ data class ChatMessage(
 )
 
 /**
- * The messages to generate chat completions for.
+ * The message to generate chat completions for.
  */
 fun chatMessage(block: ChatMessageBuilder.() -> Unit): ChatMessage =
     ChatMessageBuilder().apply(block).build()
+
+/**
+ * The messages to generate chat completions for.
+ */
+fun chatMessages(block: ChatMessagesBuilder.() -> Unit): List<ChatMessage> =
+    ChatMessagesBuilder().apply(block).messages
 
 /**
  * Builder of [ChatMessageBuilder] instances.
@@ -50,4 +56,18 @@ class ChatMessageBuilder {
         role = requireNotNull(role) { "role is required" },
         content = requireNotNull(content) { "content is required" },
     )
+}
+
+/**
+ * Creates a list of [ChatMessage].
+ */
+class ChatMessagesBuilder {
+    internal val messages = mutableListOf<ChatMessage>()
+
+    /**
+     * Creates a [ChatMessage] instance.
+     */
+    fun message(block: ChatMessageBuilder.() -> Unit) {
+        messages += ChatMessageBuilder().apply(block).build()
+    }
 }

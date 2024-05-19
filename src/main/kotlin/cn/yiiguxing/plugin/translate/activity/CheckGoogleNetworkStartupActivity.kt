@@ -1,8 +1,10 @@
 package cn.yiiguxing.plugin.translate.activity
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettings
 import cn.yiiguxing.plugin.translate.trans.google.TKK
+import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.Notifications
@@ -27,8 +29,11 @@ class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
     override fun onBeforeRunActivity(project: Project): Boolean {
         // 简单判断一下中文环境就可以了...
         return Locale.getDefault() == Locale.CHINA &&
+                !Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY) &&
                 !service<GoogleSettings>().customServer &&
-                !Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY)
+                with(Settings.getInstance()) {
+                    translator == TranslationEngine.GOOGLE || ttsEngine == TTSEngine.GOOGLE
+                }
     }
 
     override fun onRunActivity(project: Project) {

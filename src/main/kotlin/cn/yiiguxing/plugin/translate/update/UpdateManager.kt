@@ -2,25 +2,20 @@ package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.WebPages
+import cn.yiiguxing.plugin.translate.action.GettingStartedAction
+import cn.yiiguxing.plugin.translate.action.SupportAction
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.ui.SupportDialog
-import cn.yiiguxing.plugin.translate.util.Hyperlinks
-import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.show
-import cn.yiiguxing.plugin.translate.util.toRGBHex
+import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.icons.AllIcons
-import com.intellij.ide.BrowserUtil
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.notification.impl.NotificationsManagerImpl
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
@@ -71,12 +66,14 @@ class UpdateManager : BaseStartupActivity(true) {
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersionString = properties.getValue(VERSION_PROPERTY, Version.INITIAL_VERSION)
         if (versionString == lastVersionString) {
+            onPostUpdate()
             return
         }
 
         val version = Version(versionString)
         val lastVersion = Version.getOrElse(lastVersionString) { Version() }
         if (version.isSameVersion(lastVersion)) {
+            onPostUpdate()
             return
         }
 
@@ -117,7 +114,7 @@ class UpdateManager : BaseStartupActivity(true) {
             plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 
-        val canBrowseWhatsNewInHTMLEditor = WhatsNew.canBrowseInHTMLEditor
+        val canBrowseWhatsNewInHTMLEditor = WebPages.canBrowseInHTMLEditor()
         val notificationGroup = NotificationGroupManager.getInstance()
             .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID) ?: return false
         val notification = notificationGroup
@@ -127,27 +124,27 @@ class UpdateManager : BaseStartupActivity(true) {
             .setIcon(TranslationIcons.Logo)
             .apply {
                 setListener(Notifications.UrlOpeningListener(false))
-            }
-            .apply {
                 if (!version.isRreRelease && isFeatureVersion && !canBrowseWhatsNewInHTMLEditor) {
                     addAction(WhatsNew.Action(version))
                 }
             }
-            .addAction(GetStartedAction())
+            .addAction(GettingStartedAction(AllIcons.General.Web))
             .addAction(SupportAction())
             .whenExpired {
-                if (!canBrowseWhatsNewInHTMLEditor) {
-                    return@whenExpired
+                if (canBrowseWhatsNewInHTMLEditor) {
+                    if (isFirstInstallation) {
+                        WebPages.browse(project, WebPages.home())
+                    } else if (!version.isRreRelease && isFeatureVersion) {
+                        WhatsNew.browse(project, version)
+                    }
                 }
-                if (isFirstInstallation) {
-                    WhatsNew.browse(project) { WebPages.home() }
-                } else if (!version.isRreRelease && isFeatureVersion) {
-                    WhatsNew.browse(version, project)
-                }
+                onPostUpdate()
             }
 
-        if (!notification.notifyByBalloon(project)) {
-            notification.show(project)
+        invokeLaterIfNeeded(expired = project.disposed) {
+            if (!notification.notifyByBalloon(project)) {
+                notification.show(project)
+            }
         }
 
         return true
@@ -188,7 +185,7 @@ class UpdateManager : BaseStartupActivity(true) {
         } else {
             val layeredPane = component.rootPane?.layeredPane
             val titleBar = layeredPane?.components?.find {
-                it.x == 0 && it.y == 0 && it.width == layeredPane.width && it.height > 0
+                it.isShowing && it.x == 0 && it.y == 0 && it.width == layeredPane.width && it.height > 0
             }
 
             val insetTop = shadowBorderInsets.top
@@ -203,12 +200,9 @@ class UpdateManager : BaseStartupActivity(true) {
         return true
     }
 
-    private class SupportAction : DumbAwareAction(message("support.notification"), null, TranslationIcons.Support) {
-        override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
-    }
-
-    private class GetStartedAction :
-        DumbAwareAction(message("action.GetStartedAction.text"), null, AllIcons.General.Web) {
-        override fun actionPerformed(e: AnActionEvent) = BrowserUtil.browse(WebPages.docs())
+    private fun onPostUpdate() {
+        invokeLaterIfNeeded {
+            Application.messageBus.syncPublisher(UpdateListener.TOPIC).onPostUpdate()
+        }
     }
 }

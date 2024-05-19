@@ -18,6 +18,8 @@ object Http {
 
     const val MIME_TYPE_JSON = "application/json"
 
+    const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
+
     val defaultGson = Gson()
 
 
@@ -64,10 +66,8 @@ object Http {
         dataForm: Map<String, String>,
         init: RequestBuilder.() -> Unit = {}
     ): String {
-        val data = dataForm.entries.joinToString("&") { (key, value) ->
-            "$key=${value.urlEncode()}"
-        }
-        return post(url, "application/x-www-form-urlencoded", data, init)
+        val data = getFormUrlEncoded(dataForm)
+        return post(url, MIME_TYPE_FORM, data, init)
     }
 
     inline fun <reified T> postJson(
@@ -104,58 +104,48 @@ object Http {
     }
 
     private fun HttpRequests.Request.checkResponseCode() {
-        val responseCode = (connection as HttpURLConnection).responseCode
+        val connection = connection as HttpURLConnection
+        val responseCode = connection.responseCode
         if (responseCode >= 400) {
-            throw HttpRequests.HttpStatusException("Request failed with status code $responseCode", responseCode, url)
+            throw StatusException(
+                "Request failed with status code $responseCode",
+                responseCode,
+                url,
+                connection.responseMessage,
+                connection.getErrorText()
+            )
         }
     }
 
-    /**
-     * A simple Http response.
-     */
-    sealed class Response private constructor(val code: Int, val message: String, open val body: Any?) {
-        /**
-         * Successful response.
-         */
-        class Success(code: Int, message: String, override val body: String) : Response(code, message, body)
+    class StatusException(
+        message: String,
+        status: Int,
+        url: String,
+        val responseMessage: String?,
+        val errorText: String?
+    ) : HttpRequests.HttpStatusException(message, status, url)
 
-        /**
-         * Error response.
-         */
-        class Error(code: Int, message: String, override val body: String?) : Response(code, message, body)
-
-        override fun toString(): String {
-            return "Response - ${javaClass.simpleName}\n" +
-                    "\tcode: $code\n" +
-                    "\tmessage: $message\n" +
-                    "\tbody: $body"
+    private fun getFormUrlEncoded(dataForm: Map<String, String>): String {
+        return dataForm.entries.joinToString("&") { (key, value) ->
+            "${key.urlEncode()}=${value.urlEncode()}"
         }
     }
 
-    /**
-     * Sends a request and returns a [Response].
-     */
-    fun RequestBuilder.send(data: String): Response {
+    fun <T> RequestBuilder.send(data: String, dataReader: (HttpRequests.Request) -> T): T {
         throwStatusCodeException(false)
         return connect {
             it.write(data)
-
-            val connection = it.connection as HttpURLConnection
-            val responseCode = connection.responseCode
-            val message = connection.responseMessage
-            if (responseCode < 400) {
-                Response.Success(responseCode, message, it.readString())
-            } else {
-                Response.Error(responseCode, message, connection.getErrorText())
-            }
+            it.checkResponseCode()
+            dataReader(it)
         }
     }
 
-    /**
-     * Sends a request with the specified [data] in JSON format and returns a [Response].
-     */
-    fun RequestBuilder.sendJson(data: Any): Response {
-        return send(defaultGson.toJson(data))
+    fun <T> RequestBuilder.sendForm(dataForm: Map<String, String>, dataReader: (HttpRequests.Request) -> T): T {
+        return send(getFormUrlEncoded(dataForm), dataReader)
+    }
+
+    fun <T> RequestBuilder.sendJson(data: Any, dataReader: (HttpRequests.Request) -> T): T {
+        return send(defaultGson.toJson(data), dataReader)
     }
 
     private fun HttpURLConnection.getErrorText(): String? {
@@ -164,16 +154,18 @@ object Http {
         return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
     }
 
-    private fun getUserAgent(): String {
-        val chrome = "Chrome/115.0.0.0"
-        val edge = "Edg/115.0.1901.203"
+    fun getUserAgent(): String {
+        val chrome = "Chrome/125.0.0.0"
+        val edge = "Edg/125.0.0.0"
         val safari = "Safari/537.36"
-        val systemInfo = "Windows NT ${SystemInfoRt.OS_VERSION}; Win64; x64"
+        val appleWebKit = "AppleWebKit/537.36"
+        val mozilla = "Mozilla/5.0"
+        val systemInfo = "Windows NT ${if (SystemInfoRt.isWindows) SystemInfoRt.OS_VERSION else "10.0"}; Win64; x64"
         @Suppress("SpellCheckingInspection")
-        return "Mozilla/5.0 ($systemInfo) AppleWebKit/537.36 (KHTML, like Gecko) $chrome $safari $edge"
+        return "$mozilla ($systemInfo) $appleWebKit (KHTML, like Gecko) $chrome $safari $edge"
     }
 
-    fun RequestBuilder.userAgent(): RequestBuilder = apply { userAgent(getUserAgent()) }
+    fun RequestBuilder.setUserAgent(): RequestBuilder = apply { userAgent(getUserAgent()) }
 
     fun RequestBuilder.pluginUserAgent(): RequestBuilder = apply { userAgent(PLUGIN_USER_AGENT) }
 }

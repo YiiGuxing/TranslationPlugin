@@ -52,7 +52,7 @@ class YoudaoDictDocument private constructor(
 
         if (variantStrings.isNotEmpty()) {
             newLine()
-            setParagraphStyle(length - 1, 1, SPACE_BELOW_STYLE, false)
+            setParagraphStyle(SPACE_BELOW_STYLE, length - 1, 1, false)
             appendStrings(variantStrings)
         }
     }

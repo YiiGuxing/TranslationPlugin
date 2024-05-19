@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.youdao
 
 import cn.yiiguxing.plugin.translate.HelpTopic
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
@@ -8,7 +9,6 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.Settings
 import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
@@ -35,7 +35,7 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
     private val settings = service<YoudaoSettings>()
 
     // TODO 迁移到 Credential
-    private val credentialSettings = Settings.youdaoTranslateSettings
+    private val credentialSettings = Settings.getInstance().youdaoTranslateSettings
 
     private val appIdField: JBTextField = JBTextField()
     private val appKeyField: JBPasswordField = JBPasswordField()

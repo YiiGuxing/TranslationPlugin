@@ -17,7 +17,8 @@ plugins {
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
-fun dateValue(pattern: String): String = LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
+fun dateValue(pattern: String): String =
+    LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
 
 val autoSnapshotVersionEnv: Provider<Boolean> = environment("AUTO_SNAPSHOT_VERSION").map(String::toBoolean).orElse(true)
 val snapshotVersionPart: Provider<String> = properties("autoSnapshotVersion")
@@ -66,7 +67,8 @@ dependencies {
     implementation(libs.jsoup)
     implementation(libs.dbutils)
     implementation(libs.ideaCompat)
-    implementation(libs.mp3spi) { exclude("junit") }
+    implementation(libs.websocket) { exclude(module = "slf4j-api") }
+    implementation(libs.mp3spi) { exclude(module = "junit") }
     testImplementation(libs.junit)
 }
 

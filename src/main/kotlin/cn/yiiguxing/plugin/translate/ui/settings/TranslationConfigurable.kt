@@ -1,10 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.HelpTopic
-import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.util.Settings
-import cn.yiiguxing.plugin.translate.util.TranslationStates
+import cn.yiiguxing.plugin.translate.*
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
@@ -12,13 +8,25 @@ import com.intellij.openapi.util.ClearableLazyValue
 import com.intellij.openapi.util.Disposer
 import javax.swing.JComponent
 
+internal interface TranslationConfigurable : SearchableConfigurable {
+    companion object {
+        /**
+         * Show the settings dialog.
+         */
+        fun showSettingsDialog(project: Project? = null) {
+            ShowSettingsUtil.getInstance()
+                .showSettingsDialog(project?.takeUnless { it.isDisposed }, TranslationConfigurable::class.java)
+        }
+    }
+}
+
 /**
  * 选项配置
  */
-class TranslationConfigurable : SearchableConfigurable {
+internal class TranslationConfigurableImpl : TranslationConfigurable {
 
     private val ui: ClearableLazyValue<ConfigurableUi> = ClearableLazyValue.create {
-        SettingsPanel(Settings, TranslationStates)
+        SettingsPanel(Settings.getInstance(), TranslationStates.getInstance())
     }
 
     override fun getId(): String = TranslationPlugin.PLUGIN_ID
@@ -44,12 +52,5 @@ class TranslationConfigurable : SearchableConfigurable {
     override fun disposeUIResources() {
         ui.value.let { Disposer.dispose(it) }
         ui.drop()
-    }
-
-    companion object {
-        fun showSettingsDialog(project: Project? = null) {
-            ShowSettingsUtil.getInstance()
-                .showSettingsDialog(project?.takeUnless { it.isDisposed }, TranslationConfigurable::class.java)
-        }
     }
 }

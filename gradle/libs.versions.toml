@@ -5,9 +5,10 @@ dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 ideaCompat = "0.0.4"
 junit = "4.13.2"
+websocket = "1.5.6"
 
 # plugins
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 kover = "0.7.6"
 qodana = "0.1.13"
 changelog = "2.2.0"
@@ -19,6 +20,7 @@ dbutils = { group = "commons-dbutils", name = "commons-dbutils", version.ref = "
 mp3spi = { group = "com.googlecode.soundlibs", name = "mp3spi", version.ref = "mp3spi" }
 ideaCompat = { group = "com.github.YiiGuxing", name = "intellij-idea-compat", version.ref = "ideaCompat" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+websocket = { group = "org.java-websocket", name = "Java-WebSocket", version.ref = "websocket" }
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

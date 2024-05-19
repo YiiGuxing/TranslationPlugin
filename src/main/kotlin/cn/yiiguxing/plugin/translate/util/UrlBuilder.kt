@@ -12,12 +12,14 @@ class UrlBuilder(private val baseUrl: String) {
         queryParameters += name to value
     }
 
-    fun addQueryParameters(name: String, vararg values: String) = apply {
-        queryParameters += values.map { name to it }
+    fun addQueryParameters(name: String, value: String, vararg other: String) = apply {
+        queryParameters += name to value
+        queryParameters += other.map { name to it }
     }
 
-    fun addQueryParameters(vararg parameters: Pair<String, String>) = apply {
-        queryParameters += parameters
+    fun addQueryParameters(parameter: Pair<String, String>, vararg other: Pair<String, String>) = apply {
+        queryParameters += parameter
+        queryParameters += other
     }
 
     fun build(): String {
@@ -25,10 +27,12 @@ class UrlBuilder(private val baseUrl: String) {
             return baseUrl
         }
 
-        return StringBuilder(baseUrl).apply {
+        val base = baseUrl.trimEnd('&', '?')
+        val hasParams = base.contains('?')
+        return StringBuilder(base).apply {
             queryParameters.forEachIndexed { index, (name, value) ->
-                append(if (index == 0) "?" else "&")
-                append(name, "=", value.urlEncode())
+                append(if (index == 0 && !hasParams) "?" else "&")
+                append(name.urlEncode(), "=", value.urlEncode())
             }
         }.toString()
     }

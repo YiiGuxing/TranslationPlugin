@@ -1,11 +1,13 @@
 package cn.yiiguxing.plugin.translate.util
 
-private val REGEX_WHITESPACE_CHARACTER = Regex("\\s")
+import cn.yiiguxing.plugin.translate.Settings
+
 private val REGEX_WHITESPACE_CHARACTERS = Regex("\\s+")
+private val REGEX_WORDS = Regex("^\\w{2,}$")
 
 fun String.filterIgnore(): String {
     return try {
-        Settings.ignoreRegexPattern
+        Settings.getInstance().ignoreRegexPattern
             ?.let { replace(it, "") }
             ?: this
     } catch (e: Exception) {
@@ -15,11 +17,28 @@ fun String.filterIgnore(): String {
 
 fun String.processBeforeTranslate(): String? {
     val filteredIgnore = filterIgnore()
-    val formatted = if (!Settings.keepFormat) {
+    val formatted = if (!Settings.getInstance().keepFormat) {
         filteredIgnore.replace(REGEX_WHITESPACE_CHARACTERS, " ").trim()
     } else filteredIgnore
 
     return formatted
         .takeIf { it.isNotBlank() }
-        ?.let { if (!it.contains(REGEX_WHITESPACE_CHARACTER)) it.splitWords() else it }
+        ?.splitCamelCaseWords()
+}
+
+/**
+ * Splits camel case words.
+ */
+fun String.splitCamelCaseWords(): String = when {
+    matches(REGEX_WORDS) -> CamelCaseSplitter.split(this)
+        .filter { it[0] != '_' }.let { words ->
+            when {
+                words.size == 1 -> words[0]
+                else -> words.joinToString(" ") {
+                    if (it.all { c -> c.isUpperCase() }) it else it.lowercase()
+                }
+            }
+        }
+
+    else -> this
 }

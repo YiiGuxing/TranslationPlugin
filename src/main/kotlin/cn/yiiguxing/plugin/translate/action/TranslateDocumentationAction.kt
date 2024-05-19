@@ -5,8 +5,8 @@ import cn.yiiguxing.plugin.translate.documentation.DocNotifications
 import cn.yiiguxing.plugin.translate.documentation.getTranslatedDocumentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.Application
-import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.executeOnPooledThread
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.codeInsight.documentation.DocumentationComponent
@@ -69,7 +69,7 @@ class TranslateDocumentationAction : PsiElementTranslateAction() {
                 }
 
                 val translatedDocumentation =
-                    TranslateService.translator.getTranslatedDocumentation(doc, element.language)
+                    TranslateService.getInstance().translator.getTranslatedDocumentation(doc, element.language)
                 invokeLater {
                     val docComponent = documentationComponentRef.get() ?: return@invokeLater
                     val e = editorRef.get()?.takeUnless { it.isDisposed }

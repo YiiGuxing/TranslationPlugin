@@ -23,10 +23,12 @@ class TranslationEngineActionGroup(
         val (availableActions, unavailableActions) = TranslationEngineAction.actionsGroupedByAvailability()
         addAll(availableActions)
         if (unavailableActions.isNotEmpty()) {
-            addSeparator(message("action.TranslationEngineActionGroup.separator.inactivated"))
+            addSeparator(message("action.separator.inactivated"))
             addAll(unavailableActions)
         }
 
+        addSeparator()
+        add(TTSEngineActionGroup())
         addSeparator()
         add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
     }

@@ -23,7 +23,7 @@ data class Translation(
     val transliteration: String? = null,
     val spell: String? = null,
     val dictDocument: TranslationDocument? = null,
-    val extraDocuments: List<NamedTranslationDocument> = emptyList()
+    val extraDocuments: List<NamedTranslationDocument<*>> = emptyList()
 ) : BaseTranslation(original, srcLang, targetLang, translation) {
 
     val sourceLanguages: List<Lang> by lazy { sourceLangs.filter { it != Lang.UNKNOWN } }

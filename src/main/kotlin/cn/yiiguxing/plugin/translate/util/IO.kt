@@ -29,3 +29,9 @@ fun Path.writeSafe(outConsumer: (OutputStream) -> Unit): Path {
     }
     return this
 }
+
+fun createDirectoriesIfNotExists(path: Path) {
+    if (!Files.exists(path) || !Files.isDirectory(path)) {
+        Files.createDirectories(path)
+    }
+}

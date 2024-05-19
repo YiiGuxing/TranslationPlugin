@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.util.Settings
+import cn.yiiguxing.plugin.translate.Settings
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.components.labels.LinkLabel
@@ -20,6 +20,7 @@ import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JEditorPane
 import javax.swing.border.Border
+import javax.swing.text.JTextComponent
 
 /**
  * UI
@@ -38,9 +39,10 @@ object UI {
 
     @JvmStatic
     fun getFonts(primaryFontSize: Int, phoneticFontSize: Int): FontPair {
+        val settings = Settings.getInstance()
         return FontPair(
-            getFont(Settings.primaryFontFamily, primaryFontSize),
-            getFont(Settings.phoneticFontFamily, phoneticFontSize)
+            getFont(settings.primaryFontFamily, primaryFontSize),
+            getFont(settings.phoneticFontFamily, phoneticFontSize)
         )
     }
 
@@ -66,8 +68,8 @@ object UI {
         setHoveringIcon(IconUtil.darker(baseIcon, 3))
     }
 
-    fun migLayout(gapX: String = "0!", gapY: String = "0!", insets: String = "0") =
-        MigLayout(LC().fill().gridGap(gapX, gapY).insets(insets))
+    fun migLayout(gapX: String = "0!", gapY: String = "0!", insets: String = "0", lcBuilder: (LC.() -> Unit)? = null) =
+        MigLayout(LC().fill().gridGap(gapX, gapY).insets(insets).also { lcBuilder?.invoke(it) })
 
     fun migLayoutVertical() =
         MigLayout(LC().flowY().fill().gridGap("0!", "0!").insets("0"))
@@ -77,6 +79,9 @@ object UI {
      * Therefore, it is necessary to use this method to unify the unit as pixels.
      */
     fun migSize(size: Int, scale: Boolean = true): String = "${if (scale) JBUIScale.scale(size) else size}px"
+
+    fun migInsets(top: Int = 0, left: Int = 0, bottom: Int = 0, right: Int = 0, scale: Boolean = true): String =
+        "${migSize(top, scale)} ${migSize(left, scale)} ${migSize(bottom, scale)} ${migSize(right, scale)}"
 
     fun cc() = CC()
 
@@ -101,7 +106,7 @@ object UI {
 
     operator fun Border.plus(external: Border): Border = JBUI.Borders.merge(this, external, true)
 
-    fun createHint(content: String, componentWidth: Int = 300, hintForComponent: JComponent? = null): JComponent =
+    fun createHint(content: String, componentWidth: Int = 300, hintForComponent: JComponent? = null): JTextComponent =
         JEditorPane().apply {
             isEditable = false
             isFocusable = false

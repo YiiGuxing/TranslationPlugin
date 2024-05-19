@@ -4,12 +4,8 @@ import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.*
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.Storage
-import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.components.*
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.io.delete
 import com.intellij.util.io.readText
 import java.io.IOException
@@ -170,10 +166,9 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         private const val MAX_DISK_CACHE_SIZE = 1024
         private const val TRIM_INTERVAL = 5 * 24 * 60 * 60 * 1000 // 5 days
 
-        private val LOG = Logger.getInstance(CacheService::class.java)
+        private val LOG = logger<CacheService>()
 
-        val instance: CacheService
-            get() = ApplicationManager.getApplication().getService(CacheService::class.java)
+        fun getInstance(): CacheService = service()
 
         fun getCacheFilePath(key: String): Path = TranslationStorages.CACHE_DIRECTORY.resolve(key)
     }

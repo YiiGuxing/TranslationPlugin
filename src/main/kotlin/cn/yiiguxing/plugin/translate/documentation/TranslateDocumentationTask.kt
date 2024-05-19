@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translator
-import cn.yiiguxing.plugin.translate.util.TranslateService
 import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import com.intellij.lang.Language
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException
 class TranslateDocumentationTask(
     val text: String,
     val language: Language? = null,
-    val translator: Translator = TranslateService.translator
+    val translator: Translator = TranslateService.getInstance().translator
 ) {
 
     // Execute on a different thread outside read action
