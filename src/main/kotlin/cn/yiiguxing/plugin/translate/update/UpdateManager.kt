@@ -141,8 +141,10 @@ class UpdateManager : BaseStartupActivity(true) {
                 onPostUpdate()
             }
 
-        if (!notification.notifyByBalloon(project)) {
-            notification.show(project)
+        invokeLaterIfNeeded(expired = project.disposed) {
+            if (!notification.notifyByBalloon(project)) {
+                notification.show(project)
+            }
         }
 
         return true
@@ -183,7 +185,7 @@ class UpdateManager : BaseStartupActivity(true) {
         } else {
             val layeredPane = component.rootPane?.layeredPane
             val titleBar = layeredPane?.components?.find {
-                it.x == 0 && it.y == 0 && it.width == layeredPane.width && it.height > 0
+                it.isShowing && it.x == 0 && it.y == 0 && it.width == layeredPane.width && it.height > 0
             }
 
             val insetTop = shadowBorderInsets.top
