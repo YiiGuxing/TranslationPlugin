@@ -1,6 +1,9 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+
+## [3.6.0] (2024/05/20)
+
 - Added Microsoft Edge TTS Engine.
 - Added OpenAI TTS Engine.
 - The translation results of Microsoft Translator now include dictionaries and example sentences.
@@ -474,7 +477,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.8...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.0...HEAD
+[3.6.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.8...v3.6.0
 [3.5.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.7...v3.5.8
 [3.5.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.6...v3.5.7
 [3.5.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.5...v3.5.6
