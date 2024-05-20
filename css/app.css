@@ -466,10 +466,11 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
 
 .sponsor-container a.sponsor-link {
     margin-top: 1rem;
-    display: block;
-    height: 50px;
+    height: 40px;
     width: 250px;
-    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     line-height: 50px;
     text-align: center;
     color: rgba(60, 60, 60, .33);
@@ -478,6 +479,19 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     overflow: hidden;
     border-radius: 3px;
     background: #f7f7f7;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sponsor-container a.sponsor-link img {
+    border: none;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    line-height: normal;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    padding: 0 10px;
 }
 
 .sponsor-container a.label-link {
