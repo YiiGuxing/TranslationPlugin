@@ -69,9 +69,19 @@
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP"></script>
-<script src="js/app.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-RMH8BJ3BGP', {send_page_view: false});
+</script>
+
+<script src="js/app.js?v1.0"></script>
 <script src="js/typed@2.1.0.umd.js"></script>
-<!-- Docsify v4 -->
 <script src="js/docsify@4.13.1-cover-lifecycle.min.js"></script>
 <script src="js/external-script.min.js"></script>
 </body>

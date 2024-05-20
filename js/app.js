@@ -26,24 +26,14 @@
         },
     ];
 
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-    gtag('config', 'G-RMH8BJ3BGP', {send_page_view: false});
-
-    function gaPageView() {
-        gtag('event', 'page_view', {
-            page_path: window.location.hash,
-            page_title: document.title
-        });
-    }
-
     function gaPlugin(hook) {
-        hook.beforeEach(gaPageView);
+        hook.beforeEach(function () {
+            console.log("===PV");
+            gtag('event', 'page_view', {
+                page_path: window.location.hash,
+                page_title: document.title
+            });
+        });
     }
 
     function plugin(hook, vm) {
@@ -89,10 +79,6 @@
             if (vm.route.query.compact) {
                 vm.config.topMargin = 0;
                 vm.customConfig.compact = true;
-            }
-
-            if (/^\/((en|ja|ko)\/)?$/.test(vm.route.path)) {
-                gaPageView();
             }
 
             initNavBar(vm);
@@ -192,7 +178,6 @@
 
                 if (this.id === "nav-home") {
                     resetTitle(vm);
-                    gaPageView();
                     setTimeout(function () {
                         document.scrollingElement.scrollTop = 0;
                     }, 0);
