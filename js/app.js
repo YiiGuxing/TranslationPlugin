@@ -284,7 +284,7 @@
                     sponsorLink.href = sponsor.links[languagePath] || sponsor.links.default;
 
                     var img = document.createElement("img");
-                    img.src = "/img/sponsor/" + sponsor.logo;
+                    img.src = "./img/sponsor/" + sponsor.logo;
                     img.alt = sponsor.name;
                     img.title = sponsor.description[languagePath] || sponsor.description.default;
 
