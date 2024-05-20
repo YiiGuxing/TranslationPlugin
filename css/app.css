@@ -538,6 +538,10 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     transition: transform .25s ease, margin-left .25s ease;
 }
 
+.compact-mode .content {
+    padding-top: 1rem !important;
+}
+
 main.hide-sidebar .sidebar + .content {
     transition: none;
 }
