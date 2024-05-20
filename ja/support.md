@@ -19,6 +19,8 @@
 
 このプラグインを気に入っていただけましたら、プラグインに関わる活動を支えるための寄付をご検討ください。
 
+**スポンサーの利点**：スポンサーシップ期間中、スポンサー様のロゴは、スクロールせずに表示されるコンテンツページのサイドバーに配置されます。ロゴはスポンサー様のウェブサイトにリンクされます。このロゴの配置にご興味がある方やご質問がある方は、📨[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Sponsorship%20Consulting)までお問い合わせください。
+
 ### OpenCollective 経由で寄付する :id=donate-on-open-collective
 
 <a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
@@ -62,6 +64,8 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 </div>
 <div class="sponsors">
 
+[![Mybatis Code Helper Pro](../img/sponsor/logo_mybatis_code_helper_pro.svg ':class=active')](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
+[![Fast Request](../img/sponsor/logo_fast_request.svg ':class=active')](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
 [![Targeted Web Traffic](../img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
 [![Atom Material Themes & Plugins](../img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
 [![Intellij Rainbow Brackets](../img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')

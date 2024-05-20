@@ -1,3 +1,5 @@
+<div class="sponsor-container"></div>
+
 * [简介](/docs#introduction)
     * [特征](/docs#features)
     * [兼容](/docs#compatibility)

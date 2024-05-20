@@ -1,6 +1,6 @@
 # 简介 :id=introduction
 
-TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、有道翻译、百度翻译等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
+TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、OpenAI 翻译、有道翻译等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
 
 ![TranslationPlugin](img/translation_plugin.png)
 
@@ -13,9 +13,13 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
   - 百度翻译
   - 阿里翻译
   - DeepL 翻译
+  - OpenAI 翻译
 - 多语言互译
-- 文档翻译
 - 语音朗读
+  - 微软 Edge TTS
+  - 谷歌 TTS
+  - OpenAI TTS
+- 文档翻译
 - 自动选词
 - 自动单词拆分
 - 单词本
@@ -24,22 +28,22 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 
 插件支持的 IDE 产品：
 - Android Studio
+- Aqua
 - AppCode
 - CLion
-- DataSpell
 - DataGrip
+- DataSpell
 - GoLand
 - HUAWEI DevEco Studio
-- IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
-- IntelliJ IDEA Educational
+- IntelliJ IDEA Ultimate
 - MPS
 - PhpStorm
-- PyCharm Professional
 - PyCharm Community
-- PyCharm Educational
+- PyCharm Professional
 - Rider
 - RubyMine
+- RustRover
 - WebStorm
 
 
@@ -113,11 +117,11 @@ _编辑器内嵌文档视图：_
 
 !> *注意：*编辑器内嵌文档不支持自动翻译文档。
 
-#### 5. 切换翻译引擎 :id=usage-switch-translation-engine
+#### 5. 切换引擎 :id=usage-switch-engines
 
-点击 **IDE** 状态栏的翻译引擎状态图标或者使用快捷键<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）可以快速切换翻译引擎。
+点击 **IDE** 状态栏的引擎状态图标或者使用快捷键<kbd>**Ctrl + Shift + S**</kbd>（macOS: <kbd>**Control + Meta + Y**</kbd>）可以快速切换翻译引擎和 TTS 引擎。
 
-![翻译引擎](/img/translation_engines.png ':size=151x281')
+![翻译引擎](/img/translation_engines.png ':size=139x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -195,13 +199,13 @@ _编辑器内嵌文档视图：_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. 切换翻译引擎 :id=switch-translation-engine-action
+#### 8. 切换引擎 :id=switch-engine-action
 
-快速切换翻译引擎。默认快捷键：
+快速切换翻译引擎和 TTS 引擎。默认快捷键：
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![翻译引擎](/img/translation_engines.png ':size=151x281')
+![翻译引擎](/img/translation_engines.png ':size=139x314')
 
 #### 9. 每日一词 :id=word-of-the-day-action
 

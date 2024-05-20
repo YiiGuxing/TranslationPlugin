@@ -1,6 +1,8 @@
+<div class="sponsor-container"></div>
 
 <h2 class="versions">버전</h2>
 
+* [v3.6 (2024-05-20)](/ko/updates/v3.6.md)
 * [v3.5 (2023-06-01)](/ko/updates/v3.5.md)
 * [v3.4 (2022-11-30)](/ko/updates/v3.4.md)
 * [v3.3 (2022-03-25)](/ko/updates/v3.3.md)

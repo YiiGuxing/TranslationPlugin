@@ -22,6 +22,13 @@ sponsors.
 If you think **TranslationPlugin** is helpful to you or that my work is valuable, please consider
 ❤️[sponsoring us](#sponsor-translation-plugin)❤️. It will inspire us to continue development on the project.
 
+**Sponsor Benefits**：During the sponsorship period, sponsors will receive a logo placement on the sidebar of
+the content page that is visible without scrolling.
+The logo will be linked to the sponsor's website.
+If you are interested in this logo placement or have any questions,
+please contact 📨[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Sponsorship%20Consulting)
+for more details.
+
 ### Donate via OpenCollective :id=donate-on-open-collective
 
 <a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
@@ -66,6 +73,8 @@ Thank you to all our backers! ❤️
 </div>
 <div class="sponsors">
 
+[![Mybatis Code Helper Pro](../img/sponsor/logo_mybatis_code_helper_pro.svg ':class=active')](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
+[![Fast Request](../img/sponsor/logo_fast_request.svg ':class=active')](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
 [![Targeted Web Traffic](../img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
 [![Atom Material Themes & Plugins](../img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
 [![Intellij Rainbow Brackets](../img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')

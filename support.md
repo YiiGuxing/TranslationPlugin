@@ -19,6 +19,8 @@
 
 如果你觉得 **TranslationPlugin** 对你有帮助，请考虑❤️[赞助](#sponsor-translation-plugin)❤️我们，这将极大地激励我们持续开发这个项目。
 
+**赞助商权益**：赞助商在赞助期间内将会获得在内容页面侧边栏上无需滚动即可见的 Logo 展示位，Logo 将会链接到赞助商的网站。如果您对此赞助位感兴趣或有任何疑问，请致信 📨[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Sponsorship%20Consulting) 咨询具体事宜。
+
 ### 通过 Open Collective 捐赠 :id=donate-on-open-collective
 
 <a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
@@ -45,8 +47,8 @@
 > 支付平台：支付宝/微信支付  
 > 单号（后5位）：
 
-邮箱地址：[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0D%0D%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0D%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0D%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0D%0D)
-📨（点击发送邮件）  
+邮箱地址：📨[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Donate&body=%E5%90%8D%E5%AD%97%2F%E6%98%B5%E7%A7%B0%3C%E7%BD%91%E7%AB%99%3E%EF%BC%9A%E6%82%A8%E7%9A%84%E7%95%99%E8%A8%80%0D%0D%E6%8D%90%E8%B5%A0%E9%87%91%E9%A2%9D%EF%BC%9A%0D%E6%94%AF%E4%BB%98%E5%B9%B3%E5%8F%B0%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%2F%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%0D%E5%8D%95%E5%8F%B7%EF%BC%88%E5%90%8E5%E4%BD%8D%EF%BC%89%EF%BC%9A%0D%0D)
+（点击发送邮件）  
 你提供的名字、网站和捐赠金额将会被添加到[赞助者列表](#wechat-alipay-donors)中。
 
 ## 赞助列表 :id=translation-plugin-sponsors
@@ -57,12 +59,14 @@
 
 <div class="sponsors gold">
 
-[![New Relic CodeStream](./img/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
-[![JetBrains](./img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
+[![New Relic CodeStream](/img/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
+[![JetBrains](/img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
 
 </div>
 <div class="sponsors">
 
+[![Mybatis Code Helper Pro](./img/sponsor/logo_mybatis_code_helper_pro.svg ':class=active')](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
+[![Fast Request](./img/sponsor/logo_fast_request.svg ':class=active')](https://api-buddy.com?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
 [![Targeted Web Traffic](./img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
 [![Atom Material Themes & Plugins](./img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
 [![Intellij Rainbow Brackets](./img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')

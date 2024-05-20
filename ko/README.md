@@ -1,6 +1,6 @@
 # 소개 :id=introduction
 
-TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. It integrates many translation engines such as Google Translate, Microsoft Translate, DeepL Translate, etc. You can translate the text, code comments, and code documents, etc. You want to translate in your IDE at any time.
+TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인입니다. Google 번역, Microsoft 번역, OpenAI 번역, DeepL 번역 등 많은 번역 엔진을 통합합니다. 텍스트, 코드 주석, 코드 문서 등을 IDE에서 언제든지 번역할 수 있습니다.
 
 ![TranslationPlugin](../img/translation_plugin.png)
 
@@ -9,13 +9,17 @@ TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. I
 - 여러 번역 엔진
     - Google 번역
     - Microsoft 번역
+    - OpenAI 번역
     - DeepL 번역
     - Youdao 번역
     - Baidu 번역
     - Alibaba 번역
 - 다국어 번역
-- 문서 번역
 - 음성 읽기
+  - Microsoft Edge TTS
+  - Google TTS
+  - OpenAI TTS
+- 문서 번역
 - 자동 단어 선택
 - 자동 단어 분할
 - 단어장
@@ -24,22 +28,22 @@ TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin. I
 
 지원하는 IDE 제품::
 - Android Studio
+- Aqua
 - AppCode
 - CLion
-- DataSpell
 - DataGrip
+- DataSpell
 - GoLand
 - HUAWEI DevEco Studio
-- IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
-- IntelliJ IDEA Educational
+- IntelliJ IDEA Ultimate
 - MPS
 - PhpStorm
-- PyCharm Professional
 - PyCharm Community
-- PyCharm Educational
+- PyCharm Professional
 - Rider
 - RubyMine
+- RustRover
 - WebStorm
 
 
@@ -112,11 +116,11 @@ _Editor inlay documentation rendered view:_
 
 !> *Note:* Editor inlay documentation do not support automatic translation.
 
-#### 5. 번역 엔진 전환 :id=usage-switch-translation-engine
+#### 5. 엔진 전환 :id=usage-switch-engines
 
-상태 표시줄의 번역 엔진 상태 아이콘을 클릭하거나 단축키 <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>)를 사용하여 번역 엔진을 빠르게 전환할 수 있으며.
+상태 표시줄의 엔진 위젯을 클릭하거나 단축키 <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>)를 사용하여 번역 엔진과 TTS 엔진을 빠르게 전환합니다.
 
-![번역 엔진 전환](../en/img/translation_engines.png ':size=247x259 :class=round')
+![번역 엔진 전환](../en/img/translation_engines.png ':size=233x314 :class=round')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -198,13 +202,13 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. 번역기 선택 :id=switch-translation-engine-action
+#### 8. 엔진 전환 :id=switch-engine-action
 
-번역 엔진을 빠르게 전환할 수 있습니다.디폴트 단축키:
+번역 엔진과 TTS 엔진을 빠르게 전환합니다.디폴트 단축키:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![번역기 선택](../en/img/translation_engines.png ':size=247x259 :class=round')
+![번역기 선택](../en/img/translation_engines.png ':size=233x314 :class=round')
 
 #### 9. 오늘의 단어 :id=word-of-the-day-action
 

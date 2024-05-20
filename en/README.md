@@ -1,8 +1,9 @@
 # Introduction :id=introduction
 
-TranslationPlugin is an IntelliJ-based IDEs/Android Studio Translation Plugin.
-It integrates many translation engines such as Google Translate, Microsoft Translate, DeepL Translate, etc.
-You can translate the text, code comments, and code documents, etc. You want to translate in your IDE at any time.
+TranslationPlugin is an IntelliJ-based IDEs/Android Studio translation plugin.
+It integrates many translation engines such as Google Translate, Microsoft Translate,
+OpenAI Translate, DeepL Translate, etc. You can translate the text, code comments,
+and code documents, etc. You want to translate in your IDE at any time.
 
 ![TranslationPlugin](../img/translation_plugin.png)
 
@@ -11,13 +12,17 @@ You can translate the text, code comments, and code documents, etc. You want to 
 - Multiple Translation Engines
     - Google Translate
     - Microsoft Translator
+    - OpenAI Translator
     - DeepL Translator
     - Youdao Translate
     - Baidu Translate
     - Alibaba Translate
-- Multilingual translation
-- Document translation
+- Multiple languages inter-translation
 - Text-to-speech
+  - Microsoft Edge TTS
+  - Google TTS
+  - OpenAI TTS
+- Document translation
 - Automatic word selection
 - Automatic word breaks
 - Word Book
@@ -26,22 +31,22 @@ You can translate the text, code comments, and code documents, etc. You want to 
 
 Supported IDE Products:
 - Android Studio
+- Aqua
 - AppCode
 - CLion
-- DataSpell
 - DataGrip
+- DataSpell
 - GoLand
 - HUAWEI DevEco Studio
-- IntelliJ IDEA Ultimate
 - IntelliJ IDEA Community
-- IntelliJ IDEA Educational
+- IntelliJ IDEA Ultimate
 - MPS
 - PhpStorm
-- PyCharm Professional
 - PyCharm Community
-- PyCharm Educational
+- PyCharm Professional
 - Rider
 - RubyMine
+- RustRover
 - WebStorm
 
 
@@ -131,12 +136,12 @@ _Editor inlay documentation rendered view:_
 
 !> *Note:* Editor inlay documentation does not support automatic translation.
 
-#### 5. Switch translation engines :id=usage-switch-translation-engine
+#### 5. Switch engines :id=usage-switch-engines
 
-Click the translation engine icon in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
-(macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between translation engines quickly.
+Click the engine widget in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
+(macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between the translation engine and the TTS engine quickly.
 
-![Translation engines](img/translation_engines.png ':size=245x281')
+![Translation engines](img/translation_engines.png ':size=233x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -238,13 +243,13 @@ Default shortcut (same as the [Translate Action](#translate-action)):
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-#### 8. Switch Translation Engine :id=switch-translation-engine-action
+#### 8. Switch Engine :id=switch-engine-action
 
-Quickly switch between translation engines. Default shortcut:
+Quickly switch between translation engine and TTS engine. Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![Translation Engines](img/translation_engines.png ':size=245x281')
+![Translation Engines](img/translation_engines.png ':size=233x314')
 
 #### 9. Word of the Day :id=word-of-the-day-action
 

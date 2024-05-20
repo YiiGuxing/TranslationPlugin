@@ -1,3 +1,5 @@
+<div class="sponsor-container"></div>
+
 * [Introduction](/en/docs#introduction)
     * [Features](/en/docs#features)
     * [Compatibility](/en/docs#compatibility)
