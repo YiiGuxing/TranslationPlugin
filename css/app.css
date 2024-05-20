@@ -444,9 +444,14 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     box-sizing: border-box;
 }
 
+.sidebar .sidebar-nav .title,
 .sidebar .sidebar-nav .versions {
     margin-top: 0;
     margin-left: 15px;
+}
+
+.compact-mode .sidebar {
+    padding-top: 2rem;
 }
 
 .sponsor-container {
@@ -481,6 +486,10 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     background: #f7f7f7;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.sponsor-container a.sponsor-link + a.sponsor-link {
+    margin-top: 2px;
 }
 
 .sponsor-container a.sponsor-link img {

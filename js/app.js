@@ -23,7 +23,7 @@
                 "/": "https://api-buddy.com?utm_source=TranslationPlugin&utm_campaign=product",
                 default: "https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product",
             }
-        }
+        },
     ];
 
     window.dataLayer = window.dataLayer || [];
@@ -88,7 +88,6 @@
         hook.mounted(function () {
             if (vm.route.query.compact) {
                 vm.config.topMargin = 0;
-                vm.config.hideSidebar = true;
                 vm.customConfig.compact = true;
             }
 
@@ -109,6 +108,7 @@
         hook.afterEach(function (html, next) {
             var output = resolveImagePathIfNeed(vm, html);
             output = resolveHeading(output);
+            output = resolveIFrame(vm, output);
             next(output);
         });
 
@@ -127,11 +127,18 @@
         Object.defineProperty(vm.config, "loadSidebar", {
             get: function () {
                 var path = (vm.route.path || "").replace(pathRegex, "")
-                if (!path || path === "docs" || path.indexOf("updates/") === 0) {
+                if (!path || path === "docs") {
+                    return "_sidebar.md"
+                } else if (path.indexOf("updates/") === 0) {
+                    if (vm.route.query.compact && path.indexOf("updates/v") === 0) {
+                        return path.substring(8) + "_sidebar.md"
+                    }
+
                     return "_sidebar.md"
                 } else if (path === "updates") {
                     return "updates/_sidebar.md"
                 }
+
                 return false;
             }
         });
@@ -238,7 +245,7 @@
     }
 
     function updateSidebar(vm) {
-        var showSidebar = !vm.customConfig.compact && /^\/((en|ja|ko)\/)?(docs|updates(\/.*)?)?$/.test(vm.route.path);
+        var showSidebar = /^\/((en|ja|ko)\/)?(docs|updates(\/.*)?)?$/.test(vm.route.path);
         var main = document.querySelector("main");
         main && main.classList.toggle("hide-sidebar", !showSidebar);
 
@@ -273,31 +280,41 @@
 
         var languagePath = getLanguagePath(vm);
         sponsors.forEach(function (container) {
-            var sponsorLink = document.createElement("a");
-            sponsorLink.classList.add("sponsor-link");
-            container.appendChild(sponsorLink);
-
             if (activeSponsors.length) {
-                var randomIndex = Math.floor(Math.random() * activeSponsors.length);
-                var sponsor = activeSponsors[randomIndex];
+                for (var i = 0; i < activeSponsors.length; i++) {
+                    var sponsor = activeSponsors[i];
+                    var sponsorLink = document.createElement("a");
+                    sponsorLink.classList.add("sponsor-link");
+                    sponsorLink.target = "_blank";
+                    sponsorLink.href = sponsor.links[languagePath] || sponsor.links.default;
 
-                var img = document.createElement("img");
-                img.src = "/img/sponsor/" + sponsor.logo;
-                img.alt = sponsor.name;
-                img.title = sponsor.description[languagePath] || sponsor.description.default;
+                    var img = document.createElement("img");
+                    img.src = "/img/sponsor/" + sponsor.logo;
+                    img.alt = sponsor.name;
+                    img.title = sponsor.description[languagePath] || sponsor.description.default;
 
-                sponsorLink.target = "_blank";
-                sponsorLink.href = sponsor.links[languagePath] || sponsor.links.default;
-                sponsorLink.appendChild(img);
+                    sponsorLink.appendChild(img);
+                    container.appendChild(sponsorLink);
+                }
 
+                var becomeASponsorLabelLink = document.createElement("a");
+                becomeASponsorLabelLink.classList.add("label-link");
+                becomeASponsorLabelLink.href = "#" + languagePath + "support";
+                becomeASponsorLabelLink.innerText = labels[languagePath];
+                if (vm.customConfig.compact) {
+                    becomeASponsorLabelLink.target = "_blank";
+                }
+                container.appendChild(becomeASponsorLabelLink);
+            } else {
                 var becomeASponsorLink = document.createElement("a");
-                becomeASponsorLink.classList.add("label-link");
+                becomeASponsorLink.classList.add("sponsor-link");
                 becomeASponsorLink.href = "#" + languagePath + "support";
                 becomeASponsorLink.innerText = labels[languagePath];
+                if (vm.customConfig.compact) {
+                    becomeASponsorLink.target = "_blank";
+                }
+
                 container.appendChild(becomeASponsorLink);
-            } else {
-                sponsorLink.href = "#" + languagePath + "support";
-                sponsorLink.innerText = labels[languagePath];
             }
         })
     }
@@ -356,6 +373,20 @@
         return html;
     }
 
+    function resolveIFrame(vm, html) {
+        if (!html || !window.$intellij) {
+            return html;
+        }
+
+        try {
+            var reg = /<iframe.*?((>\s*?<\/iframe)|\/)>/gi;
+            return html.replace(reg, '');
+        } catch (e) {
+        }
+
+        return html;
+    }
+
     function startTyped() {
         window.typedInstances = window.typedInstances || [];
         window.typedInstances.forEach(function (typed) {
@@ -408,13 +439,13 @@
     };
 
 
-    var search = window.location.hash.split("?")[1];
-    if (search) {
-        var searchParams = new URLSearchParams(search);
-        if (searchParams.get('compact')) {
-            document.body.classList.add("compact-mode");
-            var nav = document.querySelector(".app-nav");
-            nav && nav.classList.add("hide");
-        }
+    var params = new URLSearchParams(window.location.search);
+    window.$intellij = params.get("intellij") || params.has("intellij");
+
+    var searchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+    if (searchParams.get('compact')) {
+        document.body.classList.add("compact-mode");
+        var nav = document.querySelector(".app-nav");
+        nav && nav.classList.add("hide");
     }
 })();
