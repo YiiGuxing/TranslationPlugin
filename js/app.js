@@ -265,6 +265,14 @@
         }
     }
 
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     function updateSponsors(vm) {
         var sponsors = document.querySelectorAll(".sponsor-container");
         if (!sponsors) {
@@ -279,8 +287,10 @@
         }
 
         var languagePath = getLanguagePath(vm);
+        var becomeASponsorUrl = "#" + languagePath + "support?id=sponsor-translation-plugin";
         sponsors.forEach(function (container) {
             if (activeSponsors.length) {
+                shuffle(activeSponsors);
                 for (var i = 0; i < activeSponsors.length; i++) {
                     var sponsor = activeSponsors[i];
                     var sponsorLink = document.createElement("a");
@@ -299,7 +309,7 @@
 
                 var becomeASponsorLabelLink = document.createElement("a");
                 becomeASponsorLabelLink.classList.add("label-link");
-                becomeASponsorLabelLink.href = "#" + languagePath + "support";
+                becomeASponsorLabelLink.href = becomeASponsorUrl;
                 becomeASponsorLabelLink.innerText = labels[languagePath];
                 if (vm.customConfig.compact) {
                     becomeASponsorLabelLink.target = "_blank";
@@ -308,7 +318,7 @@
             } else {
                 var becomeASponsorLink = document.createElement("a");
                 becomeASponsorLink.classList.add("sponsor-link");
-                becomeASponsorLink.href = "#" + languagePath + "support";
+                becomeASponsorLink.href = becomeASponsorUrl;
                 becomeASponsorLink.innerText = labels[languagePath];
                 if (vm.customConfig.compact) {
                     becomeASponsorLink.target = "_blank";

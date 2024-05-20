@@ -22,6 +22,13 @@ sponsors.
 If you think **TranslationPlugin** is helpful to you or that my work is valuable, please consider
 ❤️[sponsoring us](#sponsor-translation-plugin)❤️. It will inspire us to continue development on the project.
 
+**Sponsor Benefits**：During the sponsorship period, sponsors will receive a logo placement on the sidebar of
+the content page that is visible without scrolling.
+The logo will be linked to the sponsor's website.
+If you are interested in this logo placement or have any questions,
+please contact 📨[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Sponsorship%20Consulting)
+for more details.
+
 ### Donate via OpenCollective :id=donate-on-open-collective
 
 <a class="open-collective-donate-button" rel="noopener noreferrer" href="https://opencollective.com/translation-plugin/donate" target="_blank">
