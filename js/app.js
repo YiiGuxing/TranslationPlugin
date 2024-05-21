@@ -274,6 +274,7 @@
         var languagePath = getLanguagePath(vm);
         var becomeASponsorUrl = "#" + languagePath + "support?id=sponsor-translation-plugin";
         sponsors.forEach(function (container) {
+            container.textContent = "";
             if (activeSponsors.length) {
                 shuffle(activeSponsors);
                 for (var i = 0; i < activeSponsors.length; i++) {
