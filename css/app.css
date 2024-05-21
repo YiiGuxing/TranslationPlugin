@@ -476,20 +476,58 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 50px;
     text-align: center;
     color: rgba(60, 60, 60, .33);
     text-decoration: none;
     font-size: 11px;
-    overflow: hidden;
     border-radius: 3px;
     background: #f7f7f7;
     text-overflow: ellipsis;
     white-space: nowrap;
+    position: relative;
 }
 
 .sponsor-container a.sponsor-link + a.sponsor-link {
     margin-top: 2px;
+}
+
+.sponsor-container a.sponsor-link::after {
+    content: attr(data-description);
+    display: none;
+    padding: 5px;
+    margin-top: 2px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    color: #222;
+    font-size: 12px;
+    line-height: normal;
+    text-align: initial;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    background-color: white;
+    white-space: normal;
+    opacity: 0;
+    animation-delay: 1s;
+    animation-name: fade-in;
+    animation-duration: 0s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0.9;
+    }
+}
+
+.sponsor-container a.sponsor-link:hover::after {
+    display: block;
 }
 
 .sponsor-container a.sponsor-link img {

@@ -283,10 +283,14 @@
                     sponsorLink.target = "_blank";
                     sponsorLink.href = sponsor.links[languagePath] || sponsor.links.default;
 
+                    var description = sponsor.description[languagePath] || sponsor.description.default;
+                    if (description) {
+                        sponsorLink.dataset.description = sponsor.description[languagePath] || sponsor.description.default;
+                    }
+
                     var img = document.createElement("img");
                     img.src = "./img/sponsor/" + sponsor.logo;
                     img.alt = sponsor.name;
-                    img.title = sponsor.description[languagePath] || sponsor.description.default;
 
                     sponsorLink.appendChild(img);
                     container.appendChild(sponsorLink);
