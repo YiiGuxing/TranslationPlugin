@@ -14,7 +14,7 @@
         },
         {
             name: "Fast Request",
-            logo: "fast_request.svg",
+            logo: "fast_request_2.svg",
             description: {
                 "/": "为简化调试API而生",
                 default: "Born to simplify debugging APIs"
