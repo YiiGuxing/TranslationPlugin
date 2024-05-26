@@ -118,7 +118,7 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
     }
 
     private fun showGotItTooltipIfNeed() {
-        if (isDisposed || project.isDisposed) {
+        if (!isShowing || isDisposed || project.isDisposed) {
             return
         }
 

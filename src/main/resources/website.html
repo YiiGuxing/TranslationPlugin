@@ -7,19 +7,7 @@
         html, body {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            position: relative;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
         }
 
         .loading {
@@ -35,7 +23,6 @@
             z-index: 1;
             background: #fafafa;
             overflow: auto;
-            transition: opacity 0.5s;
         }
 
         .loading > .logo {
@@ -154,13 +141,21 @@
         <span id="loading-text">Loading...</span>
         <div class="links">
             <span>Open in browser: </span>
-            <a id="github" href="https://yiiguxing.github.io/TranslationPlugin/" target="_blank">
+            <a id="github" href="https://yiiguxing.github.io/TranslationPlugin/" title="GitHub" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                     <path fill="#333"
                           d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
                 </svg>
             </a>
-            <a id="gitee" href="https://yiiguxing.gitee.io/translation-plugin/" target="_blank">
+            <a id="cloudflare" href="https://yiiguxing.gitee.io/translation-plugin/" title="Cloudflare" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+                    <path fill="#FBAD41"
+                          d="M47.927,28.225c-0.2,0-0.397,0.007-0.594,0.014c-0.032,0.002-0.064,0.009-0.094,0.022 c-0.105,0.035-0.186,0.121-0.214,0.229l-0.846,2.924c-0.365,1.257-0.23,2.418,0.383,3.27c0.563,0.789,1.498,1.251,2.634,1.305 l4.589,0.276c0.131,0.004,0.252,0.071,0.326,0.179c0.076,0.116,0.093,0.26,0.046,0.39c-0.076,0.215-0.271,0.365-0.498,0.384 l-4.768,0.276c-2.59,0.118-5.377,2.21-6.355,4.761l-0.344,0.9c-0.05,0.131,0.016,0.277,0.146,0.327 c0.025,0.01,0.052,0.015,0.079,0.016H58.84c0.195,0.002,0.368-0.127,0.422-0.315c0.292-1.036,0.439-2.108,0.437-3.185 c0-6.5-5.266-11.766-11.764-11.766"/>
+                    <path fill="#F6821F"
+                          d="M40.76,43.12l0.304-1.057c0.365-1.258,0.229-2.418-0.384-3.271c-0.562-0.788-1.497-1.25-2.633-1.304 L16.52,37.212c-0.136-0.002-0.262-0.069-0.34-0.18c-0.076-0.115-0.093-0.26-0.047-0.39c0.077-0.215,0.274-0.365,0.502-0.383 l21.727-0.276c2.58-0.118,5.367-2.21,6.345-4.761l1.24-3.24c0.05-0.138,0.062-0.286,0.035-0.43 c-1.41-6.319-7.057-11.052-13.81-11.052c-6.223,0-11.503,4.016-13.399,9.598c-1.28-0.961-2.875-1.402-4.467-1.236 c-3.498,0.36-6.042,3.487-5.682,6.985c0.032,0.312,0.087,0.621,0.165,0.925C3.913,32.917,0,36.912,0,41.82 c0,0.445,0.032,0.882,0.097,1.308c0.028,0.208,0.205,0.362,0.415,0.362h39.756c0.229-0.003,0.429-0.156,0.491-0.376"/>
+                </svg>
+            </a>
+            <a id="gitee" href="https://yiiguxing.gitee.io/translation-plugin/" title="Gitee" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
                     <circle cx="16" cy="16" fill="#c71d23" r="16"/>
                     <path fill="#fff"
@@ -171,9 +166,6 @@
     </div>
 </div>
 <script>
-    const BASE_URL_GITHUB = "https://yiiguxing.github.io/TranslationPlugin";
-    const BASE_URL_GITEE = "https://yiiguxing.gitee.io/translation-plugin";
-
     // Here will be matched and replaced, DO NOT MODIFY!!!
     // Config Start
     const config = {
@@ -183,31 +175,32 @@
     };
     // Config End
 
-    let isDode = false;
-    let failCount = 0;
+    const DELAY = 1000;
+    const START_AT = Date.now();
+    const URLS = {
+        github: "https://yiiguxing.github.io/TranslationPlugin",
+        cloudflare: "https://translation-plugin.pages.dev",
+        gitee: "https://yiiguxing.gitee.io/translation-plugin"
+    }
+    const state = {
+        isDode: false,
+        failCount: 0,
+    };
 
     function onDode(url) {
-        if (isDode) return;
+        if (state.isDode) return;
 
-        isDode = true;
-        let iframe = document.createElement('iframe');
-        iframe.src = url;
-        let time = Date.now();
-        iframe.onload = function () {
-            setTimeout(() => {
-                let loading = document.querySelector('.loading');
-                loading.style.opacity = 0;
-                loading.addEventListener('transitionend', () => loading.remove(), {once: true});
-            }, Math.max(0, 2000 - (Date.now() - time)));
-        };
-        document.body.appendChild(iframe);
+        state.isDode = true;
+        setTimeout(() => {
+            window.location.replace(url);
+        }, Math.max(0, DELAY - (Date.now() - START_AT)));
     }
 
     function onFail() {
-        if (isDode) return;
+        if (state.isDode) return;
 
-        failCount++;
-        if (failCount >= 2) {
+        state.failCount++;
+        if (state.failCount >= Object.keys(URLS).length) {
             document.querySelector('#loading-text').innerText = 'Failed to load the page.';
         }
     }
@@ -228,13 +221,21 @@
         fetch(`${baseURL}/`).then(() => onDode(getTargetUrl(baseURL)), onFail);
     }
 
-    test(BASE_URL_GITHUB);
-    test(BASE_URL_GITEE);
+    function updateLink(id, url) {
+        const a = document.querySelector(`#${id}`);
+        if (a) {
+            a.href = url
+        }
+    }
 
     (function () {
         const fragment = config.fragment.replace('&compact=true', '');
-        document.querySelector('#github').href = `${BASE_URL_GITHUB}/${fragment}`;
-        document.querySelector('#gitee').href = `${BASE_URL_GITEE}/${fragment}`;
+        for (const key in URLS) {
+            updateLink(key, `${URLS[key]}/${fragment}`);
+        }
+        for (const url of Object.values(URLS)) {
+            test(url);
+        }
     })();
 </script>
 </body>
