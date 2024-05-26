@@ -469,7 +469,7 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     display: flex;
 }
 
-.sponsor-container a.sponsor-link {
+.sponsor-container a.sponsor {
     margin-top: 1rem;
     height: 40px;
     width: 250px;
@@ -487,11 +487,11 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     position: relative;
 }
 
-.sponsor-container a.sponsor-link + a.sponsor-link {
+.sponsor-container a.sponsor + a.sponsor {
     margin-top: 2px;
 }
 
-.sponsor-container a.sponsor-link::after {
+.sponsor-container a.sponsor::after {
     content: attr(data-description);
     display: none;
     padding: 5px;
@@ -526,11 +526,11 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     }
 }
 
-.sponsor-container a.sponsor-link:hover::after {
+.sponsor-container a.sponsor:hover::after {
     display: block;
 }
 
-.sponsor-container a.sponsor-link img {
+.sponsor-container a.sponsor img {
     border: none;
     max-width: 100%;
     max-height: 100%;
@@ -550,7 +550,7 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     text-decoration: none;
 }
 
-.sponsor-container a.sponsor-link:last-child {
+.sponsor-container a.sponsor:last-child {
     margin-bottom: 1rem;
 }
 
@@ -561,7 +561,7 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     align-items: flex-end;
 }
 
-.sidebar .sponsor-container a.sponsor-link {
+.sidebar .sponsor-container a.sponsor {
     width: 100%;
     margin-top: 0;
 }

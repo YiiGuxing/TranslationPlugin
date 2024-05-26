@@ -28,7 +28,6 @@
 
     function gaPlugin(hook) {
         hook.beforeEach(function () {
-            console.log("===PV");
             gtag('event', 'page_view', {
                 page_path: window.location.hash,
                 page_title: document.title
@@ -280,7 +279,7 @@
                 for (var i = 0; i < activeSponsors.length; i++) {
                     var sponsor = activeSponsors[i];
                     var sponsorLink = document.createElement("a");
-                    sponsorLink.classList.add("sponsor-link");
+                    sponsorLink.classList.add("sponsor");
                     sponsorLink.target = "_blank";
                     sponsorLink.href = sponsor.links[languagePath] || sponsor.links.default;
 
@@ -307,7 +306,7 @@
                 container.appendChild(becomeASponsorLabelLink);
             } else {
                 var becomeASponsorLink = document.createElement("a");
-                becomeASponsorLink.classList.add("sponsor-link");
+                becomeASponsorLink.classList.add("sponsor");
                 becomeASponsorLink.href = becomeASponsorUrl;
                 becomeASponsorLink.innerText = labels[languagePath];
                 if (vm.customConfig.compact) {
