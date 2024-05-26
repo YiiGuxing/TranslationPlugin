@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
-import kotlinx.collections.immutable.toImmutableSet
 import java.awt.Color
 import javax.swing.text.*
 
@@ -23,22 +22,16 @@ private const val FOLDING_STYLE = "dict-folding"
  */
 class DictionaryDocument(private val dictionaryGroups: List<DictionaryGroup>) : TranslationDocument {
 
-    private val _translations: Set<String> by lazy {
-        dictionaryGroups.asSequence()
+    override val translations: Set<String>
+        get() = dictionaryGroups.asSequence()
             .map { it.entries }
             .flatten()
             .sortedByDescending { it.score }
             .map { it.word }
             .toSet()
-            .toImmutableSet()
-    }
-    private val _text: String by lazy { dictionaryGroups.toText() }
-
-    override val translations: Set<String>
-        get() = _translations
 
     override val text: String
-        get() = _text
+        get() = dictionaryGroups.toText()
 
     override fun applyTo(viewer: StyledViewer) {
         viewer.styledDocument.apply {

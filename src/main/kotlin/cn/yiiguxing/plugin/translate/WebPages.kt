@@ -110,7 +110,7 @@ object WebPages {
                     invokeLater(modalityState, expired = project.disposed) {
                         try {
                             HTMLEditorProvider.openEditor(project, title, html)
-                        } catch (e: Exception) {
+                        } catch (e: Throwable) {
                             LOG.warn("Failed to open website", e)
                             BrowserUtil.browse(pageFragment.getUrl())
                         }

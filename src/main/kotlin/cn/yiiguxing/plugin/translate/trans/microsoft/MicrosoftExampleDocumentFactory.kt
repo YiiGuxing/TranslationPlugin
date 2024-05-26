@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.DictionaryExample
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.DictionaryExampleItem
 import cn.yiiguxing.plugin.translate.trans.text.ExampleDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
 import cn.yiiguxing.plugin.translate.util.text.StyledString
@@ -15,21 +16,23 @@ internal object MicrosoftExampleDocumentFactory :
             return null
         }
 
-        val examples = input.asSequence()
+        return input.asSequence()
             .mapNotNull { it.examples.firstOrNull() }
-            .map {
-                listOf(
-                    it.sourcePrefix,
-                    StyledString(it.sourceTerm, ExampleDocument.STYLE_EXAMPLE_BOLD),
-                    it.sourceSuffix,
-                    StyledString("\t", ExampleDocument.STYLE_EXAMPLE_SPACE),
-                    it.targetPrefix,
-                    StyledString(it.targetTerm, ExampleDocument.STYLE_EXAMPLE_BOLD),
-                    it.targetSuffix
-                )
-            }
+            .map(::toExampleStrings)
             .toList()
+            .takeIf { it.isNotEmpty() }
+            ?.let { ExampleDocument(it) }
+    }
 
-        return ExampleDocument(examples)
+    private fun toExampleStrings(example: DictionaryExampleItem): List<CharSequence> {
+        return listOf(
+            example.sourcePrefix,
+            StyledString(example.sourceTerm, ExampleDocument.STYLE_EXAMPLE_BOLD),
+            example.sourceSuffix,
+            StyledString("\t", ExampleDocument.STYLE_EXAMPLE_SPACE),
+            example.targetPrefix,
+            StyledString(example.targetTerm, ExampleDocument.STYLE_EXAMPLE_BOLD),
+            example.targetSuffix
+        )
     }
 }

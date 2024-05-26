@@ -506,7 +506,10 @@ class TranslationDialog(
         targetTransliterationLabel.text = translation?.transliteration
     }
 
-    private fun updateDictViewer(dictDocument: TranslationDocument?, extraDocuments: List<NamedTranslationDocument<*>>) {
+    private fun updateDictViewer(
+        dictDocument: TranslationDocument?,
+        extraDocuments: List<NamedTranslationDocument<*>>
+    ) {
         dictViewer.document.clear()
         dictDocument?.let {
             dictViewer.apply(it)
@@ -813,7 +816,7 @@ class TranslationDialog(
 
         val savedWidth = states.translationDialogWidth
         val savedHeight = states.translationDialogHeight
-        val ownerWindow = window.owner
+        val ownerWindow = window.owner ?: window
         val screenDeviceBounds = GraphicsEnvironment
             .getLocalGraphicsEnvironment()
             .screenDevices
