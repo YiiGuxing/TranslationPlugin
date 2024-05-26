@@ -1,6 +1,8 @@
 # Translation Plugin Changelog
 
 ## [Unreleased]
+- Bug fixes.
+- Bug 修复
 
 ## [3.6.0] (2024/05/20)
 
