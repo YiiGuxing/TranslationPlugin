@@ -1,0 +1,124 @@
+{
+  "labels": {
+    "auto-generated-report": {
+      "name": "auto generated report 🤖",
+      "colour": "#5C6BC0",
+      "description": "This is an automatically generated report"
+    },
+    "bug-crash": {
+      "name": "bug/crash 💥",
+      "colour": "#B60205",
+      "description": "Uh-oh!"
+    },
+    "not-plugins-bug": {
+      "name": "not plugin's bug",
+      "colour": "#1A322A",
+      "description": "This issue is not for this project"
+    },
+    "dynamic-plugin": {
+      "name": "dynamic plugin 🔌",
+      "colour": "#E0E0E0",
+      "description": "Caused by the dynamic loading"
+    },
+    "wont-fix": {
+      "name": "wontfix",
+      "colour": "#FFFFFF",
+      "description": "This will not be worked on"
+    }
+  },
+  "issue": {
+    "auto-generated-report": {
+      "requires": 2,
+      "conditions": [
+        {
+          "type": "titleMatches",
+          "pattern": "^\\[Auto Generated].+"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": ":warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_"
+        }
+      ]
+    },
+    "bug-crash": {
+      "requires": 3,
+      "conditions": [
+        {
+          "type": "titleMatches",
+          "pattern": "^\\[Auto Generated].+"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": ":warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "## Stack Trace"
+        }
+      ]
+    },
+    "not-plugins-bug": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "titleMatches",
+          "pattern": "find: An invalid (record|handle) was encountered\\. \\(-\\d+\\)"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "java\\.lang\\.ClassCastException: class (?<class1>\\S+) cannot be cast to class (?<class2>\\S+) \\(\\k<class1> (and|is in unnamed module of loader \\S+ClassLoader @[0-9a-f]+;) \\k<class2> (is|are) in unnamed module of loader \\S+ClassLoader @[0-9a-f]+\\)"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "Conflicting component name '(?<name>\\S+)': class \\S+\\.\\k<name> and class \\S+\\.\\k<name> \\(componentManager=.+ \\(containerState=.+\\) \\)"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "com\\.intellij\\.diagnostic\\.PluginException: Key cn\\.yiiguxing\\.plugin\\.translate\\.\\S+ duplicated"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "(?<class>TranslatedDocumentationProvider|TranslatingDocumentationProvider)\\$Companion\\.nullIfError\\(\\k<class>\\.kt:\\d+\\)"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at cn\\.yiiguxing\\.plugin\\.translate\\.ui\\.settings\\.TranslationConfigurable\\$Companion\\.showSettingsDialog\\(TranslationConfigurable\\.kt:\\d+\\)/s"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.openapi\\.actionSystem\\.ActionManager\\.getInstance\\(ActionManager\\.java:\\d+\\)/s"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.util\\.SVGLoader\\.loadFromClassResource\\(SVGLoader\\.java:\\d+\\)/s"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/:warning:_`\\[Auto Generated Report]-=[0-9A-F]{32}=-`_.+## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+?```/s"
+        }
+      ]
+    },
+    "dynamic-plugin": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "java\\.lang\\.ClassCastException: class (?<class1>\\S+) cannot be cast to class (?<class2>\\S+) \\(\\k<class1> (and|is in unnamed module of loader \\S+ClassLoader @[0-9a-f]+;) \\k<class2> (is|are) in unnamed module of loader \\S+ClassLoader @[0-9a-f]+\\)"
+        },
+        {
+          "type": "descriptionMatches",
+          "pattern": "/## Stack Trace\\s+```((?!at cn\\.yiiguxing\\.plugin\\.translate\\.).)+at com\\.intellij\\.ide\\.plugins\\.DynamicPlugins\\.loadPlugin\\(DynamicPlugins\\.kt:\\d+\\)/s"
+        }
+      ]
+    },
+    "wont-fix": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "group with id \"Documentation.PrimaryGroup\" isn't registered;"
+        }
+      ]
+    }
+  }
+}

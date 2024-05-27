@@ -9,7 +9,6 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.intellij.openapi.progress.impl.ProgressManagerImpl
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils
 import com.intellij.openapi.project.Project
 import com.intellij.util.concurrency.AppExecutorUtil
@@ -21,11 +20,12 @@ import kotlin.math.max
 
 internal class GitHubDeviceAuthTask(
     project: Project?,
+    component: JComponent?,
     private val clientId: String,
     private val deviceCode: GitHubDeviceCode
 ) :
     Task.WithResult<GitHubCredentials, Exception>(
-        project, message("github.waiting.authentication.task.title"), true
+        project, component, message("github.waiting.authentication.task.title"), true
     ) {
 
     companion object {
@@ -72,11 +72,9 @@ internal class GitHubDeviceAuthTask(
         )
     }
 
-    fun queueAndGet(parentComponent: JComponent?): GitHubCredentials? {
+    fun queueAndGet(): GitHubCredentials? {
         return try {
-            val progressManager = ProgressManager.getInstance() as ProgressManagerImpl
-            progressManager.runProcessWithProgressSynchronously(this, parentComponent)
-            result
+            ProgressManager.getInstance().run(this)
         } catch (e: ProcessCanceledException) {
             null
         }

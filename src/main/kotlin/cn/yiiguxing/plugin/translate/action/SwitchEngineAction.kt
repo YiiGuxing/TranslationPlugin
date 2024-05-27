@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatComboBoxAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
@@ -9,7 +10,6 @@ import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.JBPopup
@@ -23,7 +23,7 @@ import javax.swing.JComponent
 /**
  * Switch engine action
  */
-class SwitchEngineAction : ComboBoxAction(), DumbAware, PopupAction {
+class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, PopupAction {
 
     private var disposable: Disposable? = null
 

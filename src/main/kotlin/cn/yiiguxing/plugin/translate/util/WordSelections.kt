@@ -5,7 +5,6 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import cn.yiiguxing.plugin.translate.compat.code
 import com.intellij.codeInsight.editorActions.SelectWordUtil
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange

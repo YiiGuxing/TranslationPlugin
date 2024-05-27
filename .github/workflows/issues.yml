@@ -1,0 +1,67 @@
+
+name: Issues
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  issues: write
+
+jobs:
+
+  label:
+    name: Label Issue
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+
+      - name: Label Issue
+        uses: Videndum/super-labeler-action@1.1.0
+        with:
+          GITHUB_TOKEN: "${{ secrets.ISSUE_LABEL_TOKEN }}"
+
+  close:
+    name: Close Issue
+    if: github.event.action == 'labeled'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Close fixed
+        if: github.event.label.name == 'fixed 🛠'
+        uses: YiiGuxing/close-issue@v2.1.0
+
+      - name: Close duplicate
+        if: github.event.label.name == 'duplicate'
+        uses: YiiGuxing/close-issue@v2.1.0
+        with:
+          close-reason: not_planned
+
+      - name: Close not plugin bug
+        if: github.event.label.name == 'not plugin''s bug'
+        uses: YiiGuxing/close-issue@v2.1.0
+        with:
+          close-reason: not_planned
+          comment: >
+            This issue has been automatically closed because it is not an issue for this project.
+            If you think there are something really wrong, please reply this issue. Thanks for your cooperation.
+
+      - name: Close dynamic plugin
+        if: github.event.label.name == 'dynamic plugin 🔌'
+        uses: YiiGuxing/close-issue@v2.1.0
+        with:
+          close-reason: not_planned
+          comment: >
+            This problem is caused by the dynamic loading of the plugin, you need to restart the IDE to solve it.
+
+      - name: Close wont fix
+        if: github.event.label.name == 'wontfix'
+        uses: YiiGuxing/close-issue@v2.1.0
+        with:
+          close-reason: not_planned
+          comment: >
+            This issue has been automatically closed as `wontfix` because nothing it's wrong here.
+            If you think there are something really wrong, please reply this issue. Thanks for your cooperation.

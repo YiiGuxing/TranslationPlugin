@@ -3,8 +3,6 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.compat.lowercase
-import cn.yiiguxing.plugin.translate.compat.uppercase
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
@@ -24,7 +22,6 @@ import com.intellij.openapi.editor.markup.*
 import com.intellij.openapi.editor.textarea.TextComponentEditor
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl
 import com.intellij.openapi.fileTypes.PlainTextLanguage
-import com.intellij.openapi.progress.PerformInBackgroundOption
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase
 import com.intellij.openapi.project.Project
@@ -164,7 +161,6 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
     ) : BackgroundableProcessIndicator(
         project,
         message("action.TranslateAndReplaceAction.description"),
-        PerformInBackgroundOption.ALWAYS_BACKGROUND,
         null,
         null,
         true

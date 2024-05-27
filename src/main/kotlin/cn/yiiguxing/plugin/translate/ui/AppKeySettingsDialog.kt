@@ -13,7 +13,7 @@ class AppKeySettingsDialog(
 ) : DialogWrapper(false) {
     init {
         setTitle(title)
-        setResizable(false)
+        isResizable = false
         Disposer.register(disposable, appKeySettingsPanel)
         init()
     }

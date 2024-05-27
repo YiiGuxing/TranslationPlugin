@@ -1,7 +1,11 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys
+import com.intellij.openapi.actionSystem.PopupAction
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
@@ -54,7 +58,7 @@ class TranslationEngineActionGroup(
         )
 
     fun showActionPopup(dataContext: DataContext, disposeCallback: Runnable? = null) {
-        val component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext)
+        val component = PlatformCoreDataKeys.CONTEXT_COMPONENT.getData(dataContext)
         val title = if (component == null) message("translation.engines.popup.title") else null
         val popup = createActionPopup(dataContext, title, disposeCallback)
         component?.let { popup.showUnderneathOf(it) } ?: popup.showInBestPositionFor(dataContext)

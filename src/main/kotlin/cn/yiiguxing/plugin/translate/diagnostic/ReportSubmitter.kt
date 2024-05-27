@@ -24,8 +24,8 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageConstants
 import com.intellij.openapi.ui.MessageDialogBuilder
-import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.Consumer
@@ -67,8 +67,8 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
                 .show(project)
 
             when (choice) {
-                Messages.YES -> reportCredentials.clear()
-                Messages.NO -> {
+                MessageConstants.YES -> reportCredentials.clear()
+                MessageConstants.NO -> {
                     // Use an anonymous account
                     reportCredentials.clear()
                     return

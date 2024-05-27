@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.util
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.compat.lowercase
 
 private val REGEX_WHITESPACE_CHARACTERS = Regex("\\s+")
 private val REGEX_WORDS = Regex("^\\w{2,}$")

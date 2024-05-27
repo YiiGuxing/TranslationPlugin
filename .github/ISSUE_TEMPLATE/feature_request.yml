@@ -1,0 +1,32 @@
+name: "✨ Feature/enhancement request"
+description: Propose something new.
+labels: ["feature request ✨"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please limit one request per issue.
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature/Enhancement Description
+      placeholder: |
+        What is the expected behavior of the proposed feature?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      placeholder: |
+        Describe the solution you'd like in a clear and concise manner.
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      placeholder: |
+        Add any other context about the problem here.
+    validations:
+      required: false

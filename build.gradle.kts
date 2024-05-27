@@ -59,12 +59,14 @@ repositories {
     maven(url = "https://maven.aliyun.com/repository/public")
     maven(url = "https://maven-central.storage-download.googleapis.com/repos/central/data/")
     maven(url = "https://www.jetbrains.com/intellij-repository/releases")
+    maven(url = "https://jitpack.io")
     mavenCentral()
 }
 
 dependencies {
     implementation(libs.jsoup)
     implementation(libs.dbutils)
+    implementation(libs.ideaCompat)
     implementation(libs.websocket) { exclude(module = "slf4j-api") }
     implementation(libs.mp3spi) { exclude(module = "junit") }
     testImplementation(libs.junit)
@@ -113,7 +115,6 @@ tasks {
         systemProperty("idea.is.internal", true)
         systemProperty("translation.plugin.log.stdout", true)
 
-        jbrVariant = "dcevm"
         // Enable hotswap, requires JBR 17+ or JBR 11 with DCEVM, and run in debug mode.
         jvmArgs = listOf("-XX:+AllowEnhancedClassRedefinition")
 
@@ -144,6 +145,11 @@ tasks {
                 )
             }
         }
+    }
+
+    // Validate plugin starting from version 2022.3.3 to save disk space
+    listProductsReleases {
+        sinceVersion = "2022.3.3"
     }
 
     signPlugin {

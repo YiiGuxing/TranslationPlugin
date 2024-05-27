@@ -60,7 +60,7 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
     init {
         title = message("deepl.settings.dialog.title")
-        setResizable(false)
+        isResizable = false
         init()
         updateUsageInfo(null)
         initListeners()

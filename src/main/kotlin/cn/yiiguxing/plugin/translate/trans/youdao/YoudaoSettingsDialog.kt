@@ -56,7 +56,7 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
 
     init {
         title = message("youdao.settings.dialog.title")
-        setResizable(false)
+        isResizable = false
 
         init()
 

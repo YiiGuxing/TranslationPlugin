@@ -368,14 +368,25 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 #### Donors
 
-| **Name** | **Website**                                                | **Amount** |
-|----------|------------------------------------------------------------|------------|
+| **Name**   | **Website**                                                | **Amount** |
+|------------|------------------------------------------------------------|------------|
+| 丿初音        |                                                            | 425.00 CNY |
+| 剑平         |                                                            | 120.00 CNY |
+| 山有扶苏       | [github.com/fobgochod](https://github.com/fobgochod)       | 110.00 CNY |
+| Kimmy      |                                                            | 100.00 CNY |
+| LiMingjun  |                                                            | 100.00 CNY |
+| DarknessTM | [github.com/darknesstm](https://github.com/darknesstm)     | 100.00 CNY |
+| Sunlife95  |                                                            | 100.00 CNY |
+| 马强@咔丘互娱    |                                                            | 100.00 CNY |
+| Rrtt\_2323 |                                                            | 100.00 CNY |
+| 唐嘉         | [github.com/qq1427998646](https://github.com/qq1427998646) | 100.00 CNY |
+
 
 
 [More donors][file:financial-contributors]
 
 
-[plugin-logo]: https://cdn.jsdelivr.net/gh/YiiGuxing/TranslationPlugin@master/pluginIcon.svg
+[plugin-logo]: https://yiiguxing.github.io/TranslationPlugin/img/ext/plugin-icon.svg
 
 [badge:plugin-homepage]: https://img.shields.io/badge/plugin%20homepage-translation-4caf50.svg?style=flat-square
 [badge:build]: https://img.shields.io/endpoint?label=build&style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FYiiGuxing%2FTranslationPlugin%2Fbadge%3Fref%3Dmaster
@@ -397,13 +408,13 @@ website. [[Become a sponsor][open-collective-contribute]]
 [gh:#81]: https://github.com/YiiGuxing/TranslationPlugin/issues/81
 [gh:#115]: https://github.com/YiiGuxing/TranslationPlugin/issues/115
 
-[logo:ali-translate]: .github/readme/ali_translate_logo.png
-[logo:baidu-translate]: .github/readme/baidu_translate_logo.svg
-[logo:deepl-translator]: .github/readme/deepl_translate_logo.svg
-[logo:google-translate]: .github/readme/google_translate_logo.svg
-[logo:microsoft-translator]: .github/readme/microsoft_translator_logo.svg
-[logo:openai]: .github/readme/openai_logo.svg
-[logo:youdao-translate]: .github/readme/youdao_translate_logo.svg
+[logo:ali-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/ali_translate_logo.png
+[logo:baidu-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/baidu_translate_logo.svg
+[logo:deepl-translator]: https://yiiguxing.github.io/TranslationPlugin/img/ext/deepl_translate_logo.svg
+[logo:google-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/google_translate_logo.svg
+[logo:microsoft-translator]: https://yiiguxing.github.io/TranslationPlugin/img/ext/microsoft_translator_logo.svg
+[logo:openai]: https://yiiguxing.github.io/TranslationPlugin/img/ext/openai_logo.svg
+[logo:youdao-translate]: https://yiiguxing.github.io/TranslationPlugin/img/ext/youdao_translate_logo.svg
 
 [file:settings-font]: .github/readme/settings_font.png
 [file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md

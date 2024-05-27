@@ -1,0 +1,65 @@
+name: "🐛 Bug report"
+description: Report errors or unexpected behavior.
+labels: ["bug 🐛"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please make sure to [search for existing issues](https://github.com/YiiGuxing/TranslationPlugin/issues) before filing a new one.
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Issue Description
+      description: "Please describe the problem in detail. Be sure to include: steps to reproduce the problem, what happened, what you think the correct behavior should be. If applicable, add screenshots to help explain your problem."
+      placeholder: |
+        1. Open the translation dialog
+        2. Click the "translate" button
+        3. The translation dialog disappears
+        4. The expected behavior is that the translation dialog will not disappear
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 🏷 Plugin Version
+      description: What version of translation plugin are you running?
+      placeholder: e.g. 2.2.2, 2.2.2+222.2
+    validations:
+      required: true
+  - type: dropdown
+    id: engines
+    attributes:
+      label: 🔁 Translation Engine(s)
+      description: What translation engines are you using?
+      multiple: true
+      options:
+        - All
+        - Google Translate
+        - Microsoft Translator
+        - DeepL Translator
+        - Youdao Translate
+        - Baidu Translate
+        - Alibaba Translate
+    validations:
+      required: true
+  - type: textarea
+    id: runtime_env
+    attributes:
+      label: 💻 IDE and Operating Environment
+      description: What version of OS and IDE are you using? (IDE main menu > Help > About > Click "Copy" button to copy to clipboard)
+      placeholder: |
+        IntelliJ IDEA 2022.2.2 Preview (Ultimate Edition)
+        Build #IU-222.4167.9, built on September 1, 2022
+        Runtime version: 17.0.4+7-b469.53 amd64
+        VM: OpenJDK 64-Bit Server VM by JetBrains s.r.o.
+        Windows 11 10.0
+        ...
+      render: plain text
+    validations:
+      required: true
+  - type: textarea
+    id: stacktrace
+    attributes:
+      label: 📋 Stacktrace
+      description: If the plugin crashes and you can get the stack trace, paste it here. If you don't know how to get the stack trace, please ignore this item.
+      render: plain text

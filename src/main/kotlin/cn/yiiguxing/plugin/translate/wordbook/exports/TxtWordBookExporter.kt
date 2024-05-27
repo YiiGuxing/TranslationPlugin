@@ -25,8 +25,8 @@ class TxtWordBookExporter : WordBookExporter {
     }
 
     companion object {
-        private const val SEPARATOR = '\t'.toInt()
-        private const val ITEM_SEPARATOR = '\n'.toInt()
+        private const val SEPARATOR = '\t'.code
+        private const val ITEM_SEPARATOR = '\n'.code
         private val EXPLANATION_REPLACE_REGEX = Regex("[\n\t]")
     }
 }

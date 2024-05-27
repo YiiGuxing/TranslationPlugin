@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.SystemInfoRt
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.ui.BalloonImpl
 import com.intellij.ui.BalloonLayoutData
@@ -35,7 +36,8 @@ import javax.swing.UIManager
 
 private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
 
-private val defaultTitleBarHeight: Int get() = JBUIScale.scale(30)
+private val defaultTitleBarHeight: Int
+    get() = JBUIScale.scale(if (Registry.`is`("ide.experimental.ui", true)) 40 else 30)
 
 private val borderColor: String
     get() = (UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR).toRGBHex()
