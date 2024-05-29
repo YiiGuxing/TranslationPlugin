@@ -20,8 +20,8 @@
                 default: "Born to simplify debugging APIs"
             },
             links: {
-                "/": "https://api-buddy.com?utm_source=TranslationPlugin&utm_campaign=product",
-                default: "https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product",
+                "/": "https://api-buddy.com?from=TranslationPlugin",
+                default: "https://api-buddy.com/en?from=TranslationPlugin",
             }
         },
     ];
