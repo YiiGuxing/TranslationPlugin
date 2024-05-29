@@ -2,5 +2,6 @@
 .idea/*
 !.idea/icon.svg
 .gradle
+.kotlin
 build
 sandbox
