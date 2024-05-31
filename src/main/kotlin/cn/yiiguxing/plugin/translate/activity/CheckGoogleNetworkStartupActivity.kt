@@ -1,24 +1,22 @@
 package cn.yiiguxing.plugin.translate.activity
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettings
 import cn.yiiguxing.plugin.translate.trans.google.TKK
 import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import org.jetbrains.concurrency.runAsync
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
-class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
+class CheckGoogleNetworkStartupActivity : BaseStartupActivity(true) {
 
     companion object {
         private const val DO_NOT_NOTIFY_AGAIN_KEY = "check.google.network"
@@ -26,7 +24,7 @@ class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
         private const val ANNOUNCEMENT_URL = "https://github.com/YiiGuxing/TranslationPlugin/discussions/2315"
     }
 
-    override fun onBeforeRunActivity(project: Project): Boolean {
+    override suspend fun onBeforeRunActivity(project: Project): Boolean {
         // 简单判断一下中文环境就可以了...
         return Locale.getDefault() == Locale.CHINA &&
                 !Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY) &&
@@ -36,14 +34,15 @@ class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
                 }
     }
 
-    override fun onRunActivity(project: Project) {
-        val projectRef = DisposableRef.create(TranslationUIManager.disposable(project), project)
-        runAsync { TKK.testConnection() }
-            .successOnUiThread(projectRef, ModalityState.NON_MODAL) { p, res ->
-                if (!p.isDisposed && !res) {
-                    showNotification(p)
-                }
+    override suspend fun onRunActivity(project: Project) {
+        val res = withContext(Dispatchers.IO) {
+            TKK.testConnection()
+        }
+        if (!res) {
+            withContext(Dispatchers.EDT) {
+                showNotification(project)
             }
+        }
     }
 
     private fun showNotification(project: Project) {

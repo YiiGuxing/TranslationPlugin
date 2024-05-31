@@ -43,7 +43,7 @@ private val borderColor: String
     get() = (UIManager.getColor("DialogWrapper.southPanelDivider") ?: DEFAULT_BORDER_COLOR).toRGBHex()
 
 
-class UpdateManager : BaseStartupActivity(true) {
+class UpdateManager : BaseStartupActivity(true, false) {
 
     companion object {
         internal const val UPDATE_NOTIFICATION_GROUP_ID = "Translation Plugin updated"
@@ -56,7 +56,7 @@ class UpdateManager : BaseStartupActivity(true) {
         private val LOG = logger<UpdateManager>()
     }
 
-    override fun onRunActivity(project: Project) {
+    override suspend fun onRunActivity(project: Project) {
         checkUpdate(project)
     }
 
@@ -123,6 +123,7 @@ class UpdateManager : BaseStartupActivity(true) {
             .setImportant(true)
             .setIcon(TranslationIcons.Logo)
             .apply {
+                @Suppress("DEPRECATION")
                 setListener(Notifications.UrlOpeningListener(false))
                 if (!version.isRreRelease && isFeatureVersion && !canBrowseWhatsNewInHTMLEditor) {
                     addAction(WhatsNew.Action(version))
@@ -143,7 +144,7 @@ class UpdateManager : BaseStartupActivity(true) {
 
         invokeLaterIfNeeded(expired = project.disposed) {
             if (!notification.notifyByBalloon(project)) {
-                notification.show(project)
+                notification.notify(project)
             }
         }
 
