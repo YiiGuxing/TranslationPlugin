@@ -4,10 +4,14 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.DictionaryLookup
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
+import cn.yiiguxing.plugin.translate.trans.text.ExampleDocument
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
+import cn.yiiguxing.plugin.translate.util.e
+import com.intellij.openapi.diagnostic.thisLogger
 import org.jsoup.nodes.Document
 import javax.swing.Icon
 
@@ -15,6 +19,8 @@ import javax.swing.Icon
  * Microsoft translator.
  */
 object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
+
+    private const val ERROR_INVALID_LANGUAGE_PAIR = 400023
 
     override val id: String = MICROSOFT.id
     override val name: String = MICROSOFT.translatorName
@@ -38,28 +44,47 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
             ?.let { Lang.fromMicrosoftLanguageCode(it) }
             ?: srcLang.toExplicit()
 
-        val dictionaryLookup = if (
-            sourceLang.isExplicit() &&
-            sourceLang != targetLang &&
-            MicrosoftTranslatorService.canLookupDictionary(text)
-        ) {
-            MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
-        } else null
-
-        val extraDocuments = dictionaryLookup
-            ?.let { MicrosoftTranslatorService.dictionaryExamples(it, sourceLang, targetLang) }
-            ?.let { MicrosoftExampleDocumentFactory.getDocument(it) }
-            ?.let { listOf(NamedTranslationDocument(message("examples.document.name"), it)) }
-            ?: emptyList()
+        val dictionaryLookup = getDictionaryLookup(text, sourceLang, targetLang)
+        val dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument)
+        val exampleDocument = dictionaryLookup?.let { getExampleDocument(it, sourceLang, targetLang) }
+        val extraDocuments = exampleDocument?.let { listOf(it) } ?: emptyList()
 
         return Translation(
             text,
             translation.text,
             sourceLang,
             Lang.fromMicrosoftLanguageCode(translation.to),
-            dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument),
+            dictDocument = dictDocument,
             extraDocuments = extraDocuments
         )
+    }
+
+    private fun getDictionaryLookup(text: String, sourceLang: Lang, targetLang: Lang): DictionaryLookup? {
+        if (!sourceLang.isExplicit() ||
+            sourceLang == targetLang ||
+            !MicrosoftTranslatorService.canLookupDictionary(text)
+        ) {
+            return null
+        }
+        return try {
+            MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
+        } catch (e: MicrosoftStatusException) {
+            if (e.error?.code != ERROR_INVALID_LANGUAGE_PAIR) {
+                thisLogger().e("Failed to lookup dictionary", e)
+            }
+            null
+        }
+    }
+
+    private fun getExampleDocument(
+        dictionaryLookup: DictionaryLookup,
+        sourceLang: Lang,
+        targetLang: Lang
+    ): NamedTranslationDocument<ExampleDocument>? {
+        val dictionaryExamples = MicrosoftTranslatorService.dictionaryExamples(dictionaryLookup, sourceLang, targetLang)
+        return MicrosoftExampleDocumentFactory.getDocument(dictionaryExamples)?.let {
+            NamedTranslationDocument(message("examples.document.name"), it)
+        }
     }
 
     override fun translateDocumentation(
@@ -92,6 +117,4 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         }
         return super.createErrorInfo(throwable)
     }
-
-
 }
