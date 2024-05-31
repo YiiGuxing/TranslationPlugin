@@ -42,7 +42,7 @@ object Notifications {
             .setIcon(getNotificationIcon(type))
             .setTitle(title)
             .apply { notificationCustomizer(this) }
-            .show(project)
+            .notify(project)
     }
 
     fun showFullContentNotification(
@@ -57,7 +57,7 @@ object Notifications {
         val notification = FullContentNotification(group.displayId, title, message, type)
         notification.setIcon(getNotificationIcon(type))
         notificationCustomizer(notification)
-        notification.show(project)
+        notification.notify(project)
     }
 
     fun showInfoNotification(
