@@ -17,7 +17,6 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.AnimatedIcon
 import org.jetbrains.concurrency.runAsync
 import java.awt.event.ActionEvent
-import javax.swing.JComponent
 
 
 /**
@@ -75,10 +74,6 @@ class SwitchEngineAction : ComboBoxAction(), DumbAware, PopupAction {
                 }
             }
             .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }
-    }
-
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
-        throw UnsupportedOperationException()
     }
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {
