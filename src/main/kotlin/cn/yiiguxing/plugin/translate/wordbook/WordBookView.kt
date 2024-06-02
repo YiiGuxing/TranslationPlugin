@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.Popups
@@ -11,6 +10,7 @@ import cn.yiiguxing.plugin.translate.wordbook.exports.WordBookExporter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
@@ -322,7 +322,9 @@ class WordBookView {
     }
 
     private abstract inner class WordBookAction(text: String, description: String? = text, icon: Icon? = null) :
-        UpdateInBackgroundCompatAction(text, description, icon), DumbAware {
+        AnAction(text, description, icon), DumbAware {
+
+        override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
         final override fun actionPerformed(e: AnActionEvent) {
             if (service.isInitialized) {

@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.intellij.compat.action.CompatToggleAction
 import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.action.SettingsAction
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
@@ -862,7 +861,7 @@ class TranslationDialog(
             )
     }
 
-    private class MyPinAction : CompatToggleAction(
+    private class MyPinAction : ToggleAction(
         message("translation.dialog.pin.window"),
         message("translation.dialog.pin.window"),
         AllIcons.General.Pin_tab
@@ -877,6 +876,10 @@ class TranslationDialog(
 
         override fun setSelected(e: AnActionEvent, state: Boolean) {
             TranslationStates.getInstance().pinTranslationDialog = state
+        }
+
+        override fun getActionUpdateThread(): ActionUpdateThread {
+            return ActionUpdateThread.EDT
         }
     }
 

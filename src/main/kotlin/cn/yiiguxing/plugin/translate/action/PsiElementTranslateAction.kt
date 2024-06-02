@@ -1,17 +1,15 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.util.w
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 
-abstract class PsiElementTranslateAction : UpdateInBackgroundCompatAction() {
+abstract class PsiElementTranslateAction : AnAction() {
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     final override fun update(e: AnActionEvent) {
         val editor = e.editor

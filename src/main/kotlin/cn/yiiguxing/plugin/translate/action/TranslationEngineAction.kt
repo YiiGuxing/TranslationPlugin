@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Condition
  * Translation Engine Action
  */
 class TranslationEngineAction(private val translator: TranslationEngine) :
-    UpdateInBackgroundCompatAction(translator.translatorName, null, translator.icon), DumbAware {
+    AnAction(translator.translatorName, null, translator.icon), DumbAware {
 
     private val settings: Settings = Settings.getInstance()
 
@@ -21,6 +21,8 @@ class TranslationEngineAction(private val translator: TranslationEngine) :
     } catch (e: Throwable) {
         false
     }
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabled = isAvailable()
