@@ -9,10 +9,7 @@ import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.wordbook.exports.WordBookExporter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionGroup
-import com.intellij.openapi.actionSystem.ActionUpdateThread
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
@@ -22,14 +19,13 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ex.ToolWindowEx
-import com.intellij.tools.SimpleActionGroup
 import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentManager
 import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.ui.content.ContentManagerListener
 import com.intellij.ui.scale.JBUIScale
-import com.intellij.util.containers.ContainerUtil
 import org.jetbrains.concurrency.runAsync
+import java.util.*
 import javax.swing.Icon
 
 /**
@@ -53,8 +49,8 @@ class WordBookView {
 
     val wordTags: Set<String> get() = groupedWords.keys
 
-    private val windows: MutableMap<Project, ToolWindow> = ContainerUtil.createWeakMap()
-    private val components: MutableMap<Project, WordBookWindowComponent> = ContainerUtil.createWeakMap()
+    private val windows: MutableMap<Project, ToolWindow> = WeakHashMap()
+    private val components: MutableMap<Project, WordBookWindowComponent> = WeakHashMap()
 
     fun setup(project: Project, toolWindow: ToolWindow) {
         assertIsDispatchThread()
@@ -64,7 +60,7 @@ class WordBookView {
         val contentManager = toolWindow.contentManager
         if (!Application.isUnitTestMode) {
             (toolWindow as ToolWindowEx).apply {
-                val gearActions = SimpleActionGroup().apply {
+                val gearActions = DefaultActionGroup().apply {
                     add(ImportAction())
                     add(ExportActionGroup())
                 }
