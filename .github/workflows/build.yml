@@ -1,7 +1,6 @@
 # GitHub Actions Workflow is created for testing and preparing the plugin release in the following steps:
 # - Validate Gradle Wrapper.
 # - Run 'test' and 'verifyPlugin' tasks.
-# - Run Qodana inspections.
 # - Run the 'buildPlugin' task and prepare artifact for further tests.
 # - Run the 'runPluginVerifier' task.
 # - Create a draft release.
@@ -21,8 +20,7 @@ on:
     paths-ignore:
       - '.idea/**'
       - '.run/**'
-      - 'art/**'
-      - 'images/**'
+      - 'resources/**'
       - '.gitignore'
       - 'README.md'
       - 'FINANCIAL_CONTRIBUTORS.md'
@@ -32,8 +30,7 @@ on:
     paths-ignore:
       - '.idea/**'
       - '.run/**'
-      - 'art/**'
-      - 'images/**'
+      - 'resources/**'
       - '.gitignore'
       - 'README.md'
       - 'FINANCIAL_CONTRIBUTORS.md'
