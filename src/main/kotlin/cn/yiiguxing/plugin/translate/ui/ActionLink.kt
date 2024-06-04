@@ -15,6 +15,7 @@ class ActionLink(
         private val action: (ActionLink) -> Unit
 ) : LinkLabel<Any?>(text, icon), LinkListener<Any?> {
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var visitedColor: Color? = null
     var activeColor: Color? = null
     var normalColor: Color? = null
