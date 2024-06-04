@@ -88,6 +88,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| 123 |  | 20.00 CNY |
+| 延卿 |  | 20.00 CNY |
+| Ohayou |  | 20.00 CNY |
 | 王凯 |  | 20.00 CNY |
 | 雨点.儿 |  | 20.00 CNY |
 | 嘎辉 |  | 20.00 CNY |
@@ -146,6 +149,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 枭雨月 |  | 10.00 CNY |
 | 肖恩 |  | 10.00 CNY |
 | 完美的一天 |  | 10.00 CNY |
 | 猫的谔定靴 |  | 10.00 CNY |
@@ -317,6 +321,12 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 阿七 |  | 6.66 CNY |
+| Wason\_jin |  | 6.66 CNY |
+| Mr.大罗 |  | 6.66 CNY |
+| 龍飛 |  | 6.66 CNY |
+| Locter |  | 6.66 CNY |
+| 绿缘 |  | 6.66 CNY |
 | 气疯怼瘦 |  | 6.66 CNY |
 | 山峰 |  | 6.66 CNY |
 | 小松 |  | 6.66 CNY |
