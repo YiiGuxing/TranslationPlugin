@@ -52,7 +52,7 @@ class SupportDialog private constructor() : DialogWrapper(null) {
 
     init {
         title = message("support")
-        setResizable(false)
+        isResizable = false
         setOKButtonText(message("support.thanks"))
         init()
     }
