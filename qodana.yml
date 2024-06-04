@@ -10,3 +10,4 @@ exclude:
   - name: All
     paths:
       - .qodana
+      - src/main/java/cn/yiiguxing/plugin/translate/ui/balloon
