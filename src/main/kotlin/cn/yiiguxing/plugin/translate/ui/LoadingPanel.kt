@@ -1,5 +1,3 @@
-@file:Suppress("MemberVisibilityCanBePrivate", "unused")
-
 package cn.yiiguxing.plugin.translate.ui
 
 import com.intellij.openapi.Disposable
@@ -21,19 +19,22 @@ open class LoadingPanel(
     onCreateLoadingDecorator: (JPanel) -> LoadingDecorator
 ) : JPanel(BorderLayout()) {
 
-    val contentPanel: JPanel
+    @Suppress("MemberVisibilityCanBePrivate")
+    val contentPanel: JPanel = manager?.let { JPanel(manager) } ?: JPanel()
 
     private lateinit var decorator: LoadingDecorator
 
     private val listeners: MutableCollection<JBLoadingPanelListener> = ContainerUtil.createLockFreeCopyOnWriteList()
 
+    @Suppress("unused")
     constructor(manager: LayoutManager?, parent: Disposable, startDelayMs: Int = -1)
             : this(manager, { panel: JPanel -> LoadingDecorator(panel, parent, startDelayMs) })
 
     init {
-        contentPanel = manager?.let { JPanel(manager) } ?: JPanel()
-        contentPanel.isOpaque = false
-        contentPanel.isFocusable = false
+        contentPanel.apply {
+            isOpaque = false
+            isFocusable = false
+        }
         onLoadingDecoratorCreated(onCreateLoadingDecorator(contentPanel))
     }
 
@@ -72,10 +73,12 @@ open class LoadingPanel(
         }
     }
 
+    @Suppress("unused")
     fun addListener(listener: JBLoadingPanelListener) {
         listeners.add(listener)
     }
 
+    @Suppress("unused")
     fun removeListener(listener: JBLoadingPanelListener): Boolean {
         return listeners.remove(listener)
     }
