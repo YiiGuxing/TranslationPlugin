@@ -57,11 +57,9 @@ private fun Editor.getBalloonLocation(
 
     val centerX = ((startPoint.x + endPoint.x) * 0.5f).toInt()
     val x = minOf(centerX, endPoint.x)
-    val y = if (
-        position === Balloon.Position.below &&
-        @Suppress("INACCESSIBLE_TYPE")
-        balloon?.position === BalloonImpl.ABOVE
-    ) {
+
+    @Suppress("INACCESSIBLE_TYPE")
+    val y = if (position === Balloon.Position.below && balloon?.position === BalloonImpl.ABOVE) {
         endPoint.y
     } else {
         endPoint.y + lineHeight
