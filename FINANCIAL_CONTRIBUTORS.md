@@ -79,6 +79,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 战斗猪 |  | 40.00 CNY |
 | IKUN#1337 |  | 35.00 CNY |
 | 小明 |  | 32.00 CNY |
+| 淅潼 |  | 30.00 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30.00 CNY |
 | 姜巍 |  | 26.66 CNY |
 | 包子 |  | 26.66 CNY |
@@ -158,7 +159,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 水 |  | 10.00 CNY |
 | 柱子 |  | 10.00 CNY |
 | Clear\_T |  | 10.00 CNY |
-| 淅潼 |  | 10.00 CNY |
 | 郭睿 |  | 10.00 CNY |
 | X B.H. |  | 10.00 CNY |
 | 传说之心 |  | 10.00 CNY |
