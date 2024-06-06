@@ -16,6 +16,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.util.concurrency.AppExecutorUtil
+import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
@@ -37,10 +38,10 @@ internal class DocTranslationService : Disposable {
             if (n - l >= CLEANUP_INTERVAL) n else l
         } == now
         if (updated) {
-            ReadAction.nonBlocking {
+            ReadAction.nonBlocking(Callable {
                 translationStates.removeIf { key, _ -> key.elementOrNull == null }
                 inlayDocTranslations.keys.removeIf { it.elementOrNull == null }
-            }.submit(AppExecutorUtil.getAppExecutorService())
+            }).submit(AppExecutorUtil.getAppExecutorService())
         }
     }
 
