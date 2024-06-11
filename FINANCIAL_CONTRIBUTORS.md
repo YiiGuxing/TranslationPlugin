@@ -321,6 +321,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 尧 |  | 6.66 CNY |
+| 韦 |  | 6.66 CNY |
+| 马衡山 |  | 6.66 CNY |
 | 阿七 |  | 6.66 CNY |
 | Wason\_jin |  | 6.66 CNY |
 | Mr.大罗 |  | 6.66 CNY |
