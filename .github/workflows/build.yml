@@ -16,8 +16,7 @@ on:
   # Trigger the workflow on pushes to only the 'main' branch (this avoids duplicate checks being run e.g., for dependabot pull requests)
   push:
     branches:
-      - master
-      - '**/compat/*'
+      - 'v3.6/203-212'
     paths-ignore:
       - '.idea/**'
       - '.run/**'
