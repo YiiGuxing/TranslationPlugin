@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 class TranslateException(
+    @Suppress("MemberVisibilityCanBePrivate")
     val translatorId: String,
     val translatorName: String,
     val errorInfo: ErrorInfo,
