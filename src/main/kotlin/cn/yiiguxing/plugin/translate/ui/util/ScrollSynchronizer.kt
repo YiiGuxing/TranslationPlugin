@@ -55,6 +55,7 @@ class ScrollSynchronizer private constructor(private vararg val scrollBars: JScr
     /**
      * Release the synchronizer
      */
+    @Suppress("unused")
     fun release() {
         for (scrollBar in scrollBars) {
             scrollBar.model.removeChangeListener(this)

@@ -9,7 +9,6 @@ plugins {
     id("java") // Java support
     alias(libs.plugins.kotlin) // Kotlin support
     alias(libs.plugins.kover) // Gradle Kover Plugin
-    alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
 }
@@ -94,19 +93,13 @@ changelog {
     repositoryUrl = properties("pluginRepositoryUrl")
 }
 
-// Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
-qodana {
-    cachePath = provider { file(".qodana").canonicalPath }
-    reportPath = provider { file("build/reports/inspections").canonicalPath }
-    saveReport = true
-    showReport = environment("QODANA_SHOW_REPORT").map(String::toBoolean).getOrElse(false)
-}
-
 // Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
-koverReport {
-    defaults {
-        xml { onCheck = true }
-        html { onCheck = true }
+kover {
+    reports {
+        total {
+            xml { onCheck = true }
+            html { onCheck = true }
+        }
     }
 }
 

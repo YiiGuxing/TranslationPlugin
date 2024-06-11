@@ -47,6 +47,7 @@ object WebPages {
     /**
      * Get the update page for the specified version.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun updates(version: String = ""): PageFragment {
         return get("updates").let { if (version.isEmpty()) it else it.resolvePath("v$version") }
     }
@@ -150,6 +151,7 @@ object WebPages {
         /** The language of the page. */
         val language: Language = Language.CHINESE,
         /** Whether to use compact mode. */
+        @Suppress("MemberVisibilityCanBePrivate")
         val compact: Boolean = false,
     ) {
         /** The path of the fragment. */
