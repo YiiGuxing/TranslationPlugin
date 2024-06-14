@@ -12,7 +12,7 @@ kotlin = "2.0.0"
 kover = "0.8.1"
 qodana = "2024.1.5"
 changelog = "2.2.0"
-gradleIntelliJPlugin = "1.17.3"
+gradleIntelliJPlugin = "1.17.4"
 
 [libraries]
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
