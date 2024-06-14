@@ -25,7 +25,6 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,9 +87,6 @@ public class BalloonPopupBuilder implements BalloonBuilder {
     public BalloonPopupBuilder(@Nullable Map<Disposable, List<Balloon>> storage, @NotNull final JComponent content) {
         myStorage = storage;
         myContent = content;
-        if (UIUtil.isClientPropertyTrue(myContent, BalloonImpl.FORCED_NO_SHADOW)) {
-            myShadow = false;
-        }
     }
 
     @NotNull
