@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Bug fixes.
+- Bug 修复
+
 ## [3.6.2] (2024/06/12)
 
 - Bug fixes.
