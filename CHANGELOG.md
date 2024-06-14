@@ -2,9 +2,6 @@
 
 ## [Unreleased]
 
-- Bug fixes.
-- Bug 修复
-
 ## [3.6.2] (2024/06/12)
 
 - Bug fixes.
@@ -491,76 +488,149 @@
 - Bug修复
 
 [Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.2...HEAD
+
 [3.6.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.1...v3.6.2
+
 [3.6.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.0...v3.6.1
+
 [3.6.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.8...v3.6.0
+
 [3.5.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.7...v3.5.8
+
 [3.5.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.6...v3.5.7
+
 [3.5.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.5...v3.5.6
+
 [3.5.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.4...v3.5.5
+
 [3.5.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.3...v3.5.4
+
 [3.5.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.2...v3.5.3
+
 [3.5.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.1...v3.5.2
+
 [3.5.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.0...v3.5.1
+
 [3.5.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.2...v3.5.0
+
 [3.4.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.1...v3.4.2
+
 [3.4.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.4.0...v3.4.1
+
 [3.4.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.5...v3.4.0
+
 [3.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.4...v3.3.5
+
 [3.3.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.3...v3.3.4
+
 [3.3.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.2...v3.3.3
+
 [3.3.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.1...v3.3.2
+
 [3.3.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.3.0...v3.3.1
+
 [3.3.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.2.2...v3.3.0
+
 [3.2.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.2.1...v3.2.2
+
 [3.2.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.2.0...v3.2.1
+
 [3.2.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.1.1...v3.2.0
+
 [3.1.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.1.0...v3.1.1
+
 [3.1.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.0.3...v3.1.0
+
 [3.0.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.0.2...v3.0.3
+
 [3.0.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.0.1...v3.0.2
+
 [3.0.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.0.0...v3.0.1
+
 [3.0.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.9.2...v3.0.0
+
 [2.9.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.9.1...v2.9.2
+
 [2.9.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.9.0...v2.9.1
+
 [2.9.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.8.1...v2.9.0
+
 [2.8.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.8.0...v2.8.1
+
 [2.8.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.7.3...v2.8.0
+
 [2.7.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.7.2...v2.7.3
+
 [2.7.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.7.1...v2.7.2
+
 [2.7.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.7.0...v2.7.1
+
 [2.7.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.6.2...v2.7.0
+
 [2.6.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.6.1...v2.6.2
+
 [2.6.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.6.0...v2.6.1
+
 [2.6.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.5.1...v2.6.0
+
 [2.5.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.5.0...v2.5.1
+
 [2.5.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.4.2...v2.5.0
+
 [2.4.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.4.1...v2.4.2
+
 [2.4.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.4.0...v2.4.1
+
 [2.4.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.8...v2.4.0
+
 [2.3.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.7...v2.3.8
+
 [2.3.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.6...v2.3.7
+
 [2.3.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.5...v2.3.6
+
 [2.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.4...v2.3.5
+
 [2.3.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.3...v2.3.4
+
 [2.3.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.2...v2.3.3
+
 [2.3.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.1...v2.3.2
+
 [2.3.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.3.0...v2.3.1
+
 [2.3.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.2.0...v2.3.0
+
 [2.2.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.1.1...v2.2.0
+
 [2.1.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.1.0...v2.1.1
+
 [2.1.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.0.3...v2.1.0
+
 [2.0.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.0.2...v2.0.3
+
 [2.0.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.0.1...v2.0.2
+
 [2.0.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v2.0.0...v2.0.1
+
 [2.0.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.6...v2.0.0
+
 [1.3.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.5...v1.3.6
+
 [1.3.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.4...v1.3.5
+
 [1.3.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.3...v1.3.4
+
 [1.3.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.2...v1.3.3
+
 [1.3.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.1...v1.3.2
+
 [1.3.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.3.0...v1.3.1
+
 [1.3.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.2.2...v1.3.0
+
 [1.2.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.2.1...v1.2.2
+
 [1.2.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v1.2.0...v1.2.1
+
 [1.2.0]: https://github.com/YiiGuxing/TranslationPlugin/commits/v1.2.0
