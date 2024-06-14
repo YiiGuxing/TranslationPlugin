@@ -50,6 +50,5 @@ open class TranslationDynamicBundle(private val pathToBundle: String) : Abstract
                 null
             }
         }
-
     }
 }
