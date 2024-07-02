@@ -1,4 +1,5 @@
 <div class="sponsor-container"></div>
+<div class="ww-ads wwads-cn wwads-horizontal" data-id="327"></div>
 
 <h2 class="versions">バージョン</h2>
 
