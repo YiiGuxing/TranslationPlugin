@@ -459,7 +459,7 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
 
 .sidebar .sidebar-nav .title,
 .sidebar .sidebar-nav .versions {
-    margin-top: 0;
+    margin-top: 1.2rem;
     margin-left: 15px;
 }
 
