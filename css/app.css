@@ -453,7 +453,7 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     box-sizing: border-box;
 }
 
-.sidebar .sidebar-nav ul {
+.sidebar .sidebar-nav > ul {
     margin-top: 1.2rem;
 }
 
