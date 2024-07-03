@@ -435,6 +435,14 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     box-shadow: 1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
+.sidebar::-webkit-scrollbar-thumb {
+    background: hsla(0, 0%, 53.3%, .4);
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: hsla(0, 0%, 53.3%, .1);
+}
+
 .sidebar-toggle {
     width: 200px;
 }
@@ -573,6 +581,11 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
 
 .sidebar .sponsor-container a.label-link {
     margin-right: 3px;
+}
+
+.ww-ads {
+    max-width: 180px !important;
+    margin-top: 6px !important;
 }
 
 .content {
