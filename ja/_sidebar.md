@@ -1,5 +1,4 @@
 <div class="sponsor-container"></div>
-<div class="ww-ads wwads-cn wwads-horizontal" data-id="327"></div>
 
 * [はじめに](/ja/docs#introduction)
     * [特徴](/ja/docs#features)
