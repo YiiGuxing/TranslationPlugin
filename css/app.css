@@ -562,7 +562,7 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
 .sidebar .sponsor-container {
     border: none;
     display: flex;
-    margin: 0 10px 0;
+    margin-right: 10px;
     align-items: flex-end;
 }
 
