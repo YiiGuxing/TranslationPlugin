@@ -16,10 +16,18 @@
 <body>
 <div>
     <h1>Redirecting...</h1>
-    <p>If you are not redirected automatically, follow this <a href="https://translation-plugin.pages.dev">link</a>.</p>
+    <p>
+        If you are not redirected automatically, follow this
+        <a id="link" href="https://translation-plugin.pages.dev">link</a>.
+    </p>
 </div>
 <script>
-    window.location.replace('https://translation-plugin.pages.dev' + window.location.search + window.location.hash)
+    var url = 'https://translation-plugin.pages.dev' + window.location.search + window.location.hash;
+    var linkEl = document.getElementById('link');
+    if (linkEl) {
+        linkEl.href = url;
+    }
+    window.location.replace(url);
 </script>
 </body>
 </html>
