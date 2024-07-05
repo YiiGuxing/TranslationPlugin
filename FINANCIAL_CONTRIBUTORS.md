@@ -34,6 +34,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 丿初音 |  | 425.00 CNY |
 | 剑平 |  | 120.00 CNY |
 | 山有扶苏 | [github.com/fobgochod](https://github.com/fobgochod) | 110.00 CNY |
+| 逆行 |  | 100.00 CNY |
 | Kimmy |  | 100.00 CNY |
 | LiMingjun |  | 100.00 CNY |
 | DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100.00 CNY |
@@ -79,6 +80,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 战斗猪 |  | 40.00 CNY |
 | IKUN#1337 |  | 35.00 CNY |
 | 小明 |  | 32.00 CNY |
+| 爱笑的木头人 |  | 30.00 CNY |
 | 淅潼 |  | 30.00 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30.00 CNY |
 | 姜巍 |  | 26.66 CNY |
@@ -129,6 +131,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua |  | 20.00 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20.00 CNY |
 | Yiyi |  | 20.00 CNY |
+| 北Pro |  | 16.66 CNY |
 | 番茄炒蛋 |  | 16.66 CNY |
 | 向阳 |  | 16.66 CNY |
 | ZDQ |  | 16.66 CNY |
@@ -137,6 +140,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Joker |  | 16.66 CNY |
 | AsadZhang | [github.com/ZHughZhang](https://github.com/ZHughZhang) | 15.00 CNY |
 | Zyc |  | 15.00 CNY |
+| 月半 |  | 13.32 CNY |
+| 星期五 |  | 13.32 CNY |
 | 不一样的烟火 |  | 13.32 CNY |
 | Chen |  | 13.32 CNY |
 | 小猪 |  | 13.32 CNY |
@@ -150,6 +155,8 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 帕鲁 |  | 10.00 CNY |
+| OAHCCAI |  | 10.00 CNY |
 | 枭雨月 |  | 10.00 CNY |
 | 肖恩 |  | 10.00 CNY |
 | 完美的一天 |  | 10.00 CNY |
@@ -190,7 +197,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 张晨 |  | 10.00 CNY |
 | 海风 |  | 10.00 CNY |
 | 一叶之秋 |  | 10.00 CNY |
-| 爱笑的木头人 |  | 10.00 CNY |
 | 路振振 |  | 10.00 CNY |
 | SLYLnguLuu |  | 10.00 CNY |
 | 初一十五 |  | 10.00 CNY |
@@ -321,6 +327,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 枝梧栖鹰 |  | 6.66 CNY |
+| 行之惟艰 |  | 6.66 CNY |
+| Duer |  | 6.66 CNY |
+| A无聊看看天 |  | 6.66 CNY |
+| 高楚钧 |  | 6.66 CNY |
+| 张怀民 |  | 6.66 CNY |
+| 走走停停 |  | 6.66 CNY |
+| YmY |  | 6.66 CNY |
+| 00:00:00™ |  | 6.66 CNY |
+| 简简单单有点乱 |  | 6.66 CNY |
+| 贫僧不解风情 |  | 6.66 CNY |
 | 尧 |  | 6.66 CNY |
 | 韦 |  | 6.66 CNY |
 | 马衡山 |  | 6.66 CNY |
@@ -379,7 +396,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Bleibtreu |  | 6.66 CNY |
 | 🌙Moon🌙 |  | 6.66 CNY |
 | XnyuDo |  | 6.66 CNY |
-| 星期五 |  | 6.66 CNY |
 | 南城 |  | 6.66 CNY |
 | Yx |  | 6.66 CNY |
 | Look |  | 6.66 CNY |
@@ -498,7 +514,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 原磨豆浆熊 |  | 6.66 CNY |
 | Kursuser |  | 6.66 CNY |
 | 自然的歌声 |  | 6.66 CNY |
-| 月半 |  | 6.66 CNY |
 | 七分 |  | 6.66 CNY |
 | 牧 |  | 6.66 CNY |
 | Neo |  | 6.66 CNY |
@@ -556,7 +571,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Camellia |  | 6.66 CNY |
 | Freesia🍬 |  | 6.66 CNY |
 | 凡人 |  | 6.66 CNY |
-| 北Pro |  | 6.66 CNY |
 | 瓜瓜 |  | 6.66 CNY |
 | Fitz\_dev |  | 6.66 CNY |
 | Kim |  | 6.66 CNY |

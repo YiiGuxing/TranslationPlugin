@@ -368,19 +368,18 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 #### Donors
 
-| **Name**   | **Website**                                                | **Amount** |
-|------------|------------------------------------------------------------|------------|
-| 丿初音        |                                                            | 425.00 CNY |
-| 剑平         |                                                            | 120.00 CNY |
-| 山有扶苏       | [github.com/fobgochod](https://github.com/fobgochod)       | 110.00 CNY |
-| Kimmy      |                                                            | 100.00 CNY |
-| LiMingjun  |                                                            | 100.00 CNY |
-| DarknessTM | [github.com/darknesstm](https://github.com/darknesstm)     | 100.00 CNY |
-| Sunlife95  |                                                            | 100.00 CNY |
-| 马强@咔丘互娱    |                                                            | 100.00 CNY |
-| Rrtt\_2323 |                                                            | 100.00 CNY |
-| 唐嘉         | [github.com/qq1427998646](https://github.com/qq1427998646) | 100.00 CNY |
-
+| **Name**   | **Website**                                            | **Amount** |
+|------------|--------------------------------------------------------|------------|
+| 丿初音        |                                                        | 425.00 CNY |
+| 剑平         |                                                        | 120.00 CNY |
+| 山有扶苏       | [github.com/fobgochod](https://github.com/fobgochod)   | 110.00 CNY |
+| 逆行         |                                                        | 100.00 CNY |
+| Kimmy      |                                                        | 100.00 CNY |
+| LiMingjun  |                                                        | 100.00 CNY |
+| DarknessTM | [github.com/darknesstm](https://github.com/darknesstm) | 100.00 CNY |
+| Sunlife95  |                                                        | 100.00 CNY |
+| 马强@咔丘互娱    |                                                        | 100.00 CNY |
+| Rrtt\_2323 |                                                        | 100.00 CNY |
 
 
 [More donors][file:financial-contributors]
