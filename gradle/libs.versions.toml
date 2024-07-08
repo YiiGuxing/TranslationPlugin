@@ -5,7 +5,7 @@ dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 ideaCompat = "0.0.4"
 junit = "4.13.2"
-websocket = "1.5.6"
+websocket = "1.5.7"
 
 # plugins
 kotlin = "2.0.0"
