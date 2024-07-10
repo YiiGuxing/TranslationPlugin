@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
+import cn.yiiguxing.plugin.translate.trans.libretranslate.LtTranslator
 import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
@@ -57,6 +58,7 @@ class TranslateService private constructor() : Disposable {
                 TranslationEngine.ALI -> AliTranslator
                 TranslationEngine.DEEPL -> DeeplTranslator
                 TranslationEngine.OPEN_AI -> OpenAiTranslator
+                TranslationEngine.LT -> LtTranslator
             }
         }
     }

@@ -76,6 +76,9 @@ object TranslationIcons {
 
         @JvmField
         val Youdao: Icon = load("/icons/engines/youdao.svg")
+
+        @JvmField
+        val Lt: Icon = load("/icons/engines/libretranslate.svg")
     }
 
 

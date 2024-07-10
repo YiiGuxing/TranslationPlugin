@@ -1,9 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.AppKeySettings
-import cn.yiiguxing.plugin.translate.HelpTopic
-import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.ali.AliTranslator
@@ -13,6 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
+import cn.yiiguxing.plugin.translate.trans.libretranslate.LtTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
 import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
@@ -21,6 +19,8 @@ import cn.yiiguxing.plugin.translate.trans.openai.OpenAiTranslator
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
+import cn.yiiguxing.plugin.translate.ui.ApiSettingsDialog
+import cn.yiiguxing.plugin.translate.ui.ApiSettingsPanel
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import com.intellij.openapi.components.service
@@ -53,7 +53,8 @@ enum class TranslationEngine(
         TranslationIcons.Engines.OpenAI,
         10000,
         1000
-    );
+    ),
+    LT("translate.lt", message("translation.engine.lt.name"), TranslationIcons.Engines.Lt, 5000);
 
     var primaryLanguage: Lang
         get() = Settings.getInstance().primaryLanguage?.takeIf { it in supportedTargetLanguages() }
@@ -76,6 +77,7 @@ enum class TranslationEngine(
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
                 OPEN_AI -> OpenAiTranslator
+                LT -> LtTranslator
             }
         }
 
@@ -98,10 +100,13 @@ enum class TranslationEngine(
             OPEN_AI -> service<OpenAiSettings>().let {
                 it.isConfigured(ConfigType.TRANSLATOR) && OpenAiCredentials.isCredentialSet(it.provider)
             }
+            LT -> isConfigured(settings.ltTranslateSettings)
         }
     }
 
     private fun isConfigured(settings: AppKeySettings) = settings.appId.isNotEmpty() && settings.isAppKeySet
+
+    private fun isConfigured(settings: ApiSettings) = settings.apiEndpoint.isNotEmpty()
 
     fun showConfigurationDialog(): Boolean {
         return when (this) {
@@ -130,6 +135,16 @@ enum class TranslationEngine(
             GOOGLE -> GoogleSettingsDialog().showAndGet()
             DEEPL -> DeeplSettingsDialog().showAndGet()
             OPEN_AI -> OpenAISettingsDialog(ConfigType.TRANSLATOR).showAndGet()
+
+            LT -> ApiSettingsDialog(
+                message("settings.lt.title"),
+                ApiSettingsPanel(
+                    TranslationIcons.load("/image/lt_translate_logo.svg"),
+                    "https://github.com/LibreTranslate/LibreTranslate?tab=readme-ov-file#manage-api-keys",
+                    Settings.getInstance().ltTranslateSettings
+                ),
+                HelpTopic.LT
+            ).showAndGet()
 
             else -> true
         }
