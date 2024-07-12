@@ -8,6 +8,9 @@ enum class HelpTopic(id: String, val url: String) {
     /** 阿里机器翻译通用版 */
     ALI("ali", "https://www.aliyun.com/product/ai/base_alimt"),
 
+    /** LibreTranslate */
+    LT("lt", "https://libretranslate.com"),
+
     /** 百度翻译 */
     BAIDU("baidu", "https://fanyi-api.baidu.com/"),
 

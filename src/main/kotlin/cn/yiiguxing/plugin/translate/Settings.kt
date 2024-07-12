@@ -70,6 +70,11 @@ class Settings : PersistentStateComponent<Settings> {
     var aliTranslateSettings: AliTranslateSettings = AliTranslateSettings()
 
     /**
+     * LibreTranslate翻译选项
+     */
+    var ltTranslateSettings: LtTranslateSettings = LtTranslateSettings()
+
+    /**
      * 主要字体
      */
     var primaryFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
@@ -256,6 +261,7 @@ private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
+private const val LT_API_KEY = "LT_API_KEY"
 
 private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", TranslationPlugin.PLUGIN_ID)
 
@@ -285,6 +291,28 @@ abstract class AppKeySettings(serviceKey: String) {
         @Transient get() = keyManager.isCredentialSet
 }
 
+@Tag("api-key")
+abstract class ApiSettings(serviceKey: String) {
+
+    @Transient
+    private val keyManager = SimpleStringCredentialManager("$SETTINGS_REPOSITORY_SERVICE.$serviceKey")
+
+    var apiEndpoint: String = ""
+
+    /** 获取应用密钥. */
+    @Transient
+    fun getApiKey(): String = keyManager.credential?.trim() ?: ""
+
+    /** 设置应用密钥. */
+    @Transient
+    fun setApiKey(value: String?) {
+        keyManager.credential = value
+    }
+
+    val isApiKeySet: Boolean
+        @Transient get() = keyManager.isCredentialSet
+}
+
 /**
  * 有道翻译选项
  */
@@ -300,6 +328,11 @@ class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY)
  * 阿里云翻译选项
  */
 class AliTranslateSettings : AppKeySettings(ALI_APP_KEY)
+
+/**
+ * LibreTranslate选项
+ */
+class LtTranslateSettings : ApiSettings(LT_API_KEY)
 
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),
