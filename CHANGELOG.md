@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
+- Alibaba Translate now correctly returns the detected language.
 - Bug fixes.
+- 阿里翻译现在正确地返回检测到的语言
 - Bug 修复
 
 ## [3.6.2] (2024/06/12)
