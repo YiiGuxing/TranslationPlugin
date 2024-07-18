@@ -33,8 +33,6 @@ data class AliTranslation(
 }
 
 data class AliTranslationData(
-    @SerializedName("WordCount")
-    val wordCount: Int? = 0,
     @SerializedName("DetectedLanguage")
     val detectedLanguage: String? = null,
     @SerializedName("Translated")
