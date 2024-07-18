@@ -3,15 +3,17 @@ package cn.yiiguxing.plugin.translate.trans.ali
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
+import cn.yiiguxing.plugin.translate.trans.ali.models.AliMTRequest
+import cn.yiiguxing.plugin.translate.trans.ali.models.AliMTResponse
+import cn.yiiguxing.plugin.translate.trans.ali.models.AliTranslation
+import cn.yiiguxing.plugin.translate.trans.ali.models.AliTranslationInput
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.diagnostic.Logger
 import org.jsoup.nodes.Document
 import java.net.URLEncoder
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.swing.Icon
 
 
@@ -24,15 +26,10 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private const val ALI_TRANSLATE_PRODUCT_URL = "https://www.aliyun.com/product/ai/base_alimt"
 
-    private const val API_ENDPOINT = "mt.aliyuncs.com"
-    private const val API_VERSION = "2018-10-12"
     private const val SIGNATURE_ALGORITHM = "ACS3-HMAC-SHA256"
     private const val ACTION_TRANSLATE = "TranslateGeneral"
 
     private val EMPTY_RESPONSE_REGEX = "\\{\\s*}".toRegex()
-    private val DATE_FORMATTER = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").apply {
-        timeZone = SimpleTimeZone(0, "GMT")
-    }
 
 
     private val logger: Logger = Logger.getInstance(AliTranslator::class.java)
@@ -96,13 +93,42 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private fun callTranslate(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
         val formatType = if (isDocumentation) "html" else "text"
-        val data = AliTranslationData(text, srcLang.aliLanguageCode, targetLang.aliLanguageCode, formatType)
-        val request = Request(ACTION_TRANSLATE, Http.MIME_TYPE_FORM, Http.getFormUrlEncoded(data.toDataForm()))
-        return sendHttpRequest(request)
+        val data = AliTranslationInput(text, srcLang.aliLanguageCode, targetLang.aliLanguageCode, formatType)
+        val request = AliMTRequest(
+            ACTION_TRANSLATE,
+            Http.MIME_TYPE_FORM,
+            Http.getFormUrlEncoded(data.toDataForm())
+        )
+        return sendRequest(request)
     }
 
-    private fun sendHttpRequest(request: Request): String {
-        sign(request)
+    private fun parseTranslation(
+        translation: String,
+        original: String,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Translation {
+        logger.i("Translate result: $translation")
+
+        val explicitSrcLang = srcLang.toExplicit()
+        // 可能会返回一个空JSON对象：`{}`
+        if (translation.isBlank() || translation.trim().matches(EMPTY_RESPONSE_REGEX)) {
+            return Translation(original, original, explicitSrcLang, targetLang, listOf(explicitSrcLang))
+        }
+
+        val type = type<AliMTResponse<AliTranslation>>()
+        val response: AliMTResponse<AliTranslation> = Gson().fromJson(translation, type)
+        if (!response.isSuccessful) {
+            throw AliTranslationResultException(response.code, response.message)
+        }
+
+        val translationText = response.data?.translation?.takeIf { it.isNotEmpty() } ?: original
+        val srcLanguage = response.data?.detectedLanguage?.let { Lang.fromAliLanguageCode(it) } ?: explicitSrcLang
+        return Translation(original, translationText, srcLanguage, targetLang, listOf(srcLanguage))
+    }
+
+    private fun sendRequest(request: AliMTRequest): String {
+        signRequest(request)
 
         val url = UrlBuilder("https://${request.uriHost}${request.uriPath}").apply {
             request.queries.forEach { (key, value) -> addQueryParameter(key, value) }
@@ -116,59 +142,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         }
     }
 
-    private fun parseTranslation(
-        translation: String,
-        original: String,
-        srcLang: Lang,
-        targetLang: Lang
-    ): Translation {
-        logger.i("Translate result: $translation")
-
-        // 阿里翻译会返回一个空JSON对象：`{}`
-        if (translation.isBlank() || translation.trim().matches(EMPTY_RESPONSE_REGEX)) {
-            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
-        }
-
-        return Gson().fromJson(translation, AliTranslation::class.java).apply {
-            query = original
-            src = srcLang
-            target = targetLang
-            if (!isSuccessful) {
-                throw AliTranslationResultException(intCode, errorMessage)
-            }
-        }.toTranslation()
-    }
-
-    override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
-        val errorMessage = when (throwable) {
-            is AliTranslationResultException -> when (throwable.code) {
-                10010 -> return ErrorInfo(
-                    message("error.service.is.down"),
-                    ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
-                )
-
-                else -> "[${throwable.code}] ${throwable.errorMessage}"
-            }
-
-            is Http.StatusException -> getErrorMessage(throwable)
-
-            else -> null
-        } ?: return super.createErrorInfo(throwable)
-
-        return ErrorInfo(errorMessage)
-    }
-
-    private fun getErrorMessage(exception: Http.StatusException): String? {
-        return try {
-            exception.errorText
-                ?.let { Gson().fromJson(it, ErrorResponse::class.java) }
-                ?.let { "[${it.code}] ${it.message}" }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun sign(request: Request) {
+    private fun signRequest(request: AliMTRequest) {
         val requestPayloadHash = request.body.sha256().toLowerCase()
         request.headers["x-acs-content-sha256"] = requestPayloadHash
 
@@ -215,60 +189,32 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             .replace("%7E", "~")
     }
 
+    override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
+        val errorMessage = when (throwable) {
+            is AliTranslationResultException -> when (throwable.code) {
+                10010 -> return ErrorInfo(
+                    message("error.service.is.down"),
+                    ErrorInfo.browseUrlAction(message("error.service.is.down.action.name"), ALI_TRANSLATE_PRODUCT_URL)
+                )
 
-    private data class Request(
-        val action: String,
-        val contentType: String,
-        val body: String,
-        val version: String = API_VERSION,
-        val uriHost: String = API_ENDPOINT,
-        val uriPath: String = "/",
-        val headers: TreeMap<String, String> = TreeMap(),
-        val queries: TreeMap<String, String> = TreeMap()
-    ) {
-        init {
-            headers["Host"] = uriHost
-            headers["x-acs-action"] = action
-            headers["x-acs-version"] = version
-            headers["x-acs-date"] = DATE_FORMATTER.format(Date())
-            headers["x-acs-signature-nonce"] = UUID.randomUUID().toString()
-        }
+                else -> "[${throwable.errorCode}] ${throwable.errorMessage}"
+            }
+
+            is Http.StatusException -> getErrorMessage(throwable)
+
+            else -> null
+        } ?: return super.createErrorInfo(throwable)
+
+        return ErrorInfo(errorMessage)
     }
 
-    private data class AliTranslationData(
-        @SerializedName("SourceText")
-        val sourceText: String,
-        @SerializedName("SourceLanguage")
-        val sourceLanguage: String,
-        @SerializedName("TargetLanguage")
-        val targetLanguage: String,
-        @SerializedName("FormatType")
-        val formatType: String = "text",
-        @SerializedName("Scene")
-        val scene: String = "general"
-    ) {
-        fun toDataForm(): Map<String, String> {
-            return mapOf(
-                "SourceText" to sourceText,
-                "SourceLanguage" to sourceLanguage,
-                "TargetLanguage" to targetLanguage,
-                "FormatType" to formatType,
-                "Scene" to scene
-            )
-        }
-    }
-
-    private data class ErrorResponse(
-        @SerializedName("Code")
-        val code: String,
-        @SerializedName("Message")
-        val message: String
-    )
-
-    class AliTranslationResultException(code: Int, val errorMessage: String?) :
-        TranslationResultException(code) {
-        override fun getLocalizedMessage(): String {
-            return "$message[$errorMessage]"
+    private fun getErrorMessage(exception: Http.StatusException): String? {
+        return try {
+            exception.errorText
+                ?.let { Gson().fromJson(it, AliMTResponse::class.java) }
+                ?.let { "[${it.code}] ${it.message}" }
+        } catch (e: Exception) {
+            null
         }
     }
 }
