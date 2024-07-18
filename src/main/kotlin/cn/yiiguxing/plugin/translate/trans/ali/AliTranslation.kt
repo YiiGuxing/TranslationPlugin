@@ -27,13 +27,16 @@ data class AliTranslation(
         check(isSuccessful) { "Cannot convert to Translation: errorCode=${code}" }
 
         val translation = data.translation.takeIf { it.isNotEmpty() } ?: query
-        return Translation(query, translation, src, target, listOf(src))
+        val srcLang = data.detectedLanguage?.let { Lang.fromAliLanguageCode(it) } ?: src
+        return Translation(query, translation, srcLang, target, listOf(srcLang))
     }
 }
 
 data class AliTranslationData(
     @SerializedName("WordCount")
     val wordCount: Int? = 0,
+    @SerializedName("DetectedLanguage")
+    val detectedLanguage: String? = null,
     @SerializedName("Translated")
     val translation: String
 )

@@ -69,7 +69,6 @@ val Lang.aliLanguageCode: String
 /**
  * Returns the [language][Lang] for the specified Ali Translator language [code].
  */
-@Suppress("unused")
 fun Lang.Companion.fromAliLanguageCode(code: String): Lang {
     return AliLanguageAdapter.getLanguage(code)
 }
