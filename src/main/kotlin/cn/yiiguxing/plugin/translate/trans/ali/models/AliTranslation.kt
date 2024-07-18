@@ -6,5 +6,5 @@ internal data class AliTranslation(
     @SerializedName("DetectedLanguage")
     val detectedLanguage: String? = null,
     @SerializedName("Translated")
-    val translation: String
+    val translated: String
 )

@@ -122,8 +122,9 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             throw AliTranslationResultException(response.code, response.message)
         }
 
-        val translationText = response.data?.translation?.takeIf { it.isNotEmpty() } ?: original
-        val srcLanguage = response.data?.detectedLanguage?.let { Lang.fromAliLanguageCode(it) } ?: explicitSrcLang
+        val aliTranslation = response.data
+        val translationText = aliTranslation?.translated?.takeIf { it.isNotEmpty() } ?: original
+        val srcLanguage = aliTranslation?.detectedLanguage?.let { Lang.fromAliLanguageCode(it) } ?: explicitSrcLang
         return Translation(original, translationText, srcLanguage, targetLang, listOf(srcLanguage))
     }
 
