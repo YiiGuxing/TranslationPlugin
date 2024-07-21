@@ -7,27 +7,82 @@
     <meta name="description" content="IntelliJ-based IDEs/Android Studio 翻译插件，支持多语言互译、文档翻译、语音朗读...">
     <meta name="keywords" content="IDEA Plugin,IDEA Translation Plugin,IDEA 插件,IDEA 翻译插件,插件">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <style>
-        html, body {
-            background-color: #fafafa;
-        }
-    </style>
+    <link rel="stylesheet" href="css/vue.css?v1.2">
+    <link rel="stylesheet" href="css/app.css?v1.1.0">
 </head>
 <body>
-<div>
-    <h1>Redirecting...</h1>
-    <p>
-        If you are not redirected automatically, follow this
-        <a id="link" href="https://translation-plugin.pages.dev">link</a>.
-    </p>
-</div>
+<nav class="app-nav unselectable">
+    <div class="left">
+        <a id="nav-home" class="nav-logo" data-path="">
+            <img src="img/logo.svg" width="40" height="40" alt="logo">
+            <span>TranslationPlugin</span>
+        </a>
+        <a id="nav-docs" data-path="docs"><span
+                lang="zh">文档</span><span
+                lang="en">Docs</span><span
+                lang="ja">ドキュメント</span><span
+                lang="ko">문서</span></a>
+        <a id="nav-updates" data-path="updates"><span
+                lang="zh">更新</span><span
+                lang="en">Updates</span><span
+                lang="ja">更新</span><span
+                lang="ko">업데이트</span></a>
+        <a id="nav-support" data-path="support"><span
+                lang="zh">支持与赞助</span><span
+                lang="en">Support/Sponsor</span><span
+                lang="ja">サポートとスポンサー</span><span
+                lang="ko">지원 및 기부</span></a>
+        <a id="nav-faq" data-path="faq"><span
+                lang="zh">FAQ</span><span
+                lang="en">FAQ</span><span
+                lang="ja">FAQ</span><span
+                lang="ko">FAQ</span></a>
+    </div>
+
+    <div class="nav-translation--wrapper">
+        <a id="nav-translation" class="nav-icon-link nav-translations">
+            <img src="img/translation.svg" width="22" height="22" alt="translations">
+        </a>
+        <div class="nav-translations--menu">
+            <ul>
+                <li><a id="translation-zh" lang="zh">简体中文</a></li>
+                <li><a id="translation-en" lang="en">English</a></li>
+                <li><a id="translation-jp" lang="ja">日本語</a></li>
+                <li><a id="translation-ko" lang="ko">한국어</a></li>
+            </ul>
+            <div class="nav-translations--item-help">
+                <a id="help-translate" href="https://github.com/YiiGuxing/TranslationPlugin/tree/pages-staging"
+                   target="_blank">👋
+                    <span lang="zh">帮助我们翻译！</span><span
+                            lang="en">Help Us Translate!</span><span
+                            lang="ja">翻訳にご協力ください！</span><span
+                            lang="ko">번역을 도와주세요!</span></a>
+            </div>
+        </div>
+    </div>
+
+    <a id="nav-github" class="nav-icon-link" href="https://github.com/YiiGuxing/TranslationPlugin" target="_blank">
+        <img src="img/github.svg" width="24" height="24" alt="github">
+    </a>
+</nav>
+<div id="app"></div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP"></script>
 <script>
-    var url = 'https://translation-plugin.pages.dev' + window.location.search + window.location.hash;
-    var linkEl = document.getElementById('link');
-    if (linkEl) {
-        linkEl.href = url;
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
     }
-    window.location.replace(url);
+
+    gtag('js', new Date());
+    gtag('config', 'G-RMH8BJ3BGP', {send_page_view: false});
 </script>
+
+<script src="js/app.js?v1.0.7"></script>
+<script src="js/typed@2.1.0.umd.js"></script>
+<script src="js/docsify@4.13.1-cover-lifecycle.min.js"></script>
+<script src="js/external-script.min.js"></script>
 </body>
 </html>
