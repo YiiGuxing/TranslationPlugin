@@ -2,9 +2,9 @@
 <br/>
 <p>
     <b>
-        <a href="https://yiiguxing.github.io/TranslationPlugin/index.html">Website</a> |
+        <a href="https://intellij-translation.yiiguxing.top">Website</a> |
         <a href="https://github.com/YiiGuxing/TranslationPlugin">GitHub</a> |
-        <a href="https://yiiguxing.github.io/TranslationPlugin/start.html">Get Started</a> |
+        <a href="https://intellij-translation.yiiguxing.top/start.html">Get Started</a> |
         <a href="https://plugins.jetbrains.com/plugin/8579-translation/support-donate">Donate</a>
     </b>
 </p>

@@ -26,5 +26,5 @@ data class ChatCompletion internal constructor(
     /**
      * A list of generated completions
      */
-    @SerializedName("choices") val choices: List<ChatChoice>
+    @SerializedName("choices") val choices: List<ChatChoice>?
 )

@@ -67,7 +67,7 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
 
         val messages = getChatCompletionMessages(text, srcLang, targetLang, isFofDocumentation)
         val chatCompletion = OpenAiService.get(settings.getOptions()).chatCompletion(messages)
-        var result = chatCompletion.choices.first().message?.content ?: return ""
+        var result = chatCompletion.choices?.first()?.message?.content ?: return ""
         if (!isFofDocumentation && result.length > 1 && result.first() == '"' && result.last() == '"') {
             result = result.substring(1, result.lastIndex)
         }

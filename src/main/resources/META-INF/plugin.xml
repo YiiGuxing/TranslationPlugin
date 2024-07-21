@@ -155,6 +155,7 @@
 
         <action id="$WhatsNewInTranslationAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
         <action id="$TranslationGettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
+        <action id="Translation.SupportAction" class="cn.yiiguxing.plugin.translate.action.SupportAction"/>
 
         <action id="PinBalloonAction"
                 class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
@@ -205,6 +206,7 @@
         <group id="TranslationHelpGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
             <reference ref="$WhatsNewInTranslationAction"/>
             <reference ref="$TranslationGettingStartAction"/>
+            <reference ref="Translation.SupportAction"/>
         </group>
         <group id="$TranslationHelpGroup" text="TranslationHelpGroup">
             <separator/>

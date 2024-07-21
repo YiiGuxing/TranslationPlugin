@@ -15,6 +15,7 @@ import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.notification.impl.NotificationsManagerImpl
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
@@ -31,6 +32,7 @@ import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import java.awt.Color
 import java.awt.Point
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.UIManager
 
 
@@ -117,6 +119,7 @@ class UpdateManager : BaseStartupActivity(true) {
         val canBrowseWhatsNewInHTMLEditor = WebPages.canBrowseInHTMLEditor()
         val notificationGroup = NotificationGroupManager.getInstance()
             .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID) ?: return false
+        val gettingStartedAction = MyGettingStartedAction()
         val notification = notificationGroup
             .createNotification(content, NotificationType.INFORMATION)
             .setTitle(title)
@@ -128,12 +131,12 @@ class UpdateManager : BaseStartupActivity(true) {
                     addAction(WhatsNew.Action(version))
                 }
             }
-            .addAction(GettingStartedAction(AllIcons.General.Web))
+            .addAction(gettingStartedAction)
             .addAction(SupportAction())
             .whenExpired {
                 if (canBrowseWhatsNewInHTMLEditor) {
-                    if (isFirstInstallation) {
-                        WebPages.browse(project, WebPages.home())
+                    if (isFirstInstallation && !gettingStartedAction.isPerformed.get()) {
+                        GettingStartedAction.browse(project)
                     } else if (!version.isRreRelease && isFeatureVersion) {
                         WhatsNew.browse(project, version)
                     }
@@ -203,6 +206,15 @@ class UpdateManager : BaseStartupActivity(true) {
     private fun onPostUpdate() {
         invokeLaterIfNeeded {
             Application.messageBus.syncPublisher(UpdateListener.TOPIC).onPostUpdate()
+        }
+    }
+
+    private class MyGettingStartedAction : GettingStartedAction(AllIcons.General.Web) {
+        val isPerformed = AtomicBoolean(false)
+
+        override fun actionPerformed(e: AnActionEvent) {
+            isPerformed.set(true)
+            super.actionPerformed(e)
         }
     }
 }
