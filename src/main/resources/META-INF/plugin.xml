@@ -88,10 +88,6 @@
         <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Translation Plugin updated" displayType="STICKY_BALLOON" isLogByDefault="false"/>
-
-        <registryKey key="cn.yiiguxing.plugin.translate.bundle.forceFollowLanguagePack"
-                     defaultValue="false" restartRequired="true"
-                     description="Force translation plugin localization to follow IDE language pack"/>
     </extensions>
 
     <actions>
@@ -150,6 +146,7 @@
 
         <action id="$WhatsNewInTranslationAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
         <action id="$TranslationGettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
+        <action id="Translation.SupportAction" class="cn.yiiguxing.plugin.translate.action.SupportAction"/>
 
         <action id="PinBalloonAction"
                 class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
@@ -190,6 +187,7 @@
         <group id="TranslationHelpGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
             <reference ref="$WhatsNewInTranslationAction"/>
             <reference ref="$TranslationGettingStartAction"/>
+            <reference ref="Translation.SupportAction"/>
         </group>
         <group id="$TranslationHelpGroup" text="TranslationHelpGroup">
             <separator/>

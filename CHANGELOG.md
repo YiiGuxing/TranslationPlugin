@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+- The GPT-4o mini is now available in the OpenAI Translator engine.
+- Alibaba Translate can now return the detected language.
+- Bug fixes.
+- GPT-4o mini 现已在 OpenAI 翻译引擎中可用
+- 阿里翻译现在能返回检测到的语言
+- Bug 修复
+
+## [3.6.2] (2024/06/12)
+
 - Bug fixes.
 - Bug 修复
 
@@ -485,7 +494,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.1...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.2...HEAD
+[3.6.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.1...v3.6.2
 [3.6.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.0...v3.6.1
 [3.6.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.8...v3.6.0
 [3.5.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.5.7...v3.5.8

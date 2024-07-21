@@ -61,7 +61,7 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
     @Tag("open-ai")
     class OpenAi : CommonState(), OpenAiService.OpenAIOptions {
         @get:OptionTag("MODEL")
-        override var model: OpenAiModel by enum(OpenAiModel.GPT_3_5_TURBO)
+        override var model: OpenAiModel by enum(OpenAiModel.GPT_4O_MINI)
     }
 
     @Tag("azure")
