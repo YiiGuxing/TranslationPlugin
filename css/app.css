@@ -591,6 +591,12 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     background-color: #f7f7f7 !important;
 }
 
+.ww-ads .wwads-content .wwads-text,
+.ww-ads .wwads-horizontal .wwads-text {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+}
+
 .content {
     padding-top: 60px !important;
     position: static;
