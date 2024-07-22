@@ -463,6 +463,10 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     margin-left: 15px;
 }
 
+.sidebar .sidebar-nav ul li a {
+    font-size: 15px;
+}
+
 .compact-mode .sidebar {
     padding-top: 2rem;
 }
