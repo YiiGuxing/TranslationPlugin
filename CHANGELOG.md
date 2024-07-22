@@ -39,7 +39,7 @@
 ## [3.5.8] (2024/04/10)
 
 - User interaction experience optimization and improvement.
-- Compatible with 2024.4.
+- Compatible with 2024.1.
 - Bug fixes.
 - 用户交互体验优化与改进
 - 兼容 IDE 2024.1 版本
