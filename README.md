@@ -419,10 +419,10 @@ website. [[Become a sponsor][open-collective-contribute]]
 [file:settings-font]: .github/readme/settings_font.png
 [file:financial-contributors]: https://github.com/YiiGuxing/TranslationPlugin/blob/master/FINANCIAL_CONTRIBUTORS.md
 
-[get-started-en]: https://yiiguxing.github.io/TranslationPlugin/en/start.html
-[get-started-zh]: https://yiiguxing.github.io/TranslationPlugin/start.html
-[get-started-ja]: https://yiiguxing.github.io/TranslationPlugin/ja/start.html
-[get-started-ko]: https://yiiguxing.github.io/TranslationPlugin/ko/start.html
+[get-started-en]: https://intellij-translation.yiiguxing.top/#/en/docs
+[get-started-zh]: https://intellij-translation.yiiguxing.top/#/docs
+[get-started-ja]: https://intellij-translation.yiiguxing.top/#/ja/docs
+[get-started-ko]: https://intellij-translation.yiiguxing.top/#/ko/docs
 
 [plugin-homepage]: https://plugins.jetbrains.com/plugin/8579-translation
 [plugin-versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions

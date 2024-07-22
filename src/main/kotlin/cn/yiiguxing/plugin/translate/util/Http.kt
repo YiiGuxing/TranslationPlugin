@@ -125,7 +125,7 @@ object Http {
         val errorText: String?
     ) : HttpRequests.HttpStatusException(message, status, url)
 
-    private fun getFormUrlEncoded(dataForm: Map<String, String>): String {
+    fun getFormUrlEncoded(dataForm: Map<String, String>): String {
         return dataForm.entries.joinToString("&") { (key, value) ->
             "${key.urlEncode()}=${value.urlEncode()}"
         }

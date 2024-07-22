@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.util
 import com.intellij.util.io.DigestUtil
 import java.nio.file.Path
 import java.security.MessageDigest
-import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -27,23 +26,13 @@ fun String.md5(): String = getMessageDigest(DigestUtil.md5())
 fun String.sha256(): String = getMessageDigest(DigestUtil.sha256())
 
 /**
- * 生成Base64格式的MD5摘要
+ * 生成`HmacSHA256`摘要
  */
-fun String.md5Base64(): String {
-    return with(DigestUtil.md5()) {
-        update(toByteArray())
-        Base64.getEncoder().encodeToString(digest())
-    }
-}
-
-/**
- * 生成Base64格式的`HMACSha1`摘要
- */
-fun String.hmacSha1(key: String): String {
-    val mac: Mac = Mac.getInstance("HMACSha1")
+fun String.hmacSha256(key: String): String {
+    val mac: Mac = Mac.getInstance("HmacSHA256")
     val secretKeySpec = SecretKeySpec(key.toByteArray(), mac.algorithm)
     mac.init(secretKeySpec)
-    return Base64.getEncoder().encodeToString(mac.doFinal(toByteArray()))
+    return mac.doFinal(toByteArray()).toHexString()
 }
 
 /**

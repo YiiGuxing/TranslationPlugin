@@ -1,13 +1,14 @@
 package cn.yiiguxing.plugin.translate.tts.microsoft
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.sound.AudioPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
 import cn.yiiguxing.plugin.translate.util.Notifications
 import cn.yiiguxing.plugin.translate.util.Observable
-import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.getCommonMessage
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import java.io.IOException
@@ -46,17 +47,15 @@ class EdgeTTSPlayer private constructor(
             return
         }
 
-        val message = when (error) {
+        val errorMessage = when (error) {
             is EdgeTTSException -> error.message ?: error.getCommonMessage()
             is IOException -> error.getCommonMessage()
-
-            else -> {
-                thisLogger().e("Microsoft Edge TTS Error", error)
-                return
-            }
+            else -> error.message ?: message("error.unknown")
         }
 
+        val message = message("tts.playback.failed", errorMessage)
         Notifications.showErrorNotification("Microsoft Edge TTS", message, project)
+        thisLogger().w("Microsoft Edge TTS Error", error)
     }
 
     companion object {

@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.util.IdeVersion
@@ -17,7 +19,7 @@ import java.util.*
  */
 object WebPages {
 
-    private const val BASE_URL = "https://yiiguxing.github.io/TranslationPlugin"
+    private const val BASE_URL = "https://intellij-translation.yiiguxing.top"
 
     private val LOG = logger<WebPages>()
 
@@ -47,7 +49,6 @@ object WebPages {
     /**
      * Get the update page for the specified version.
      */
-    @Suppress("MemberVisibilityCanBePrivate")
     fun updates(version: String = ""): PageFragment {
         return get("updates").let { if (version.isEmpty()) it else it.resolvePath("v$version") }
     }
@@ -151,7 +152,6 @@ object WebPages {
         /** The language of the page. */
         val language: Language = Language.CHINESE,
         /** Whether to use compact mode. */
-        @Suppress("MemberVisibilityCanBePrivate")
         val compact: Boolean = false,
     ) {
         /** The path of the fragment. */
