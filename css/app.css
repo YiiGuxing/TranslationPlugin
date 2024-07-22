@@ -585,6 +585,8 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
 
 .ww-ads {
     max-width: 180px !important;
+    font-size: 13px !important;
+    line-height: 1.2 !important;
     margin-top: 6px !important;
     background-color: #f7f7f7 !important;
 }
