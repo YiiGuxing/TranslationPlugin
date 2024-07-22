@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.util.IdeVersion
@@ -17,7 +19,7 @@ import java.util.*
  */
 object WebPages {
 
-    private const val BASE_URL = "https://yiiguxing.github.io/TranslationPlugin"
+    private const val BASE_URL = "https://intellij-translation.yiiguxing.top"
 
     private val LOG = logger<WebPages>()
 

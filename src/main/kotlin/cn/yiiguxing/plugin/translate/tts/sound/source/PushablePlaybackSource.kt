@@ -114,15 +114,21 @@ abstract class PushablePlaybackSource : PlaybackSourceWithContext() {
                     return
                 }
 
-                if (buffer1 === EMPTY_BUFFER) {
-                    buffer1 = data
-                } else if (buffer2 === EMPTY_BUFFER) {
-                    buffer2 = data
-                }
-
+                setData(data)
                 count += data.remaining()
                 readCondition.signalAll()
             }
+        }
+    }
+
+    private fun setData(data: ByteBuffer) {
+        if (buffer1 === EMPTY_BUFFER) {
+            buffer1 = data
+        } else if (buffer2 === EMPTY_BUFFER) {
+            buffer2 = data
+        } else {
+            // Should not happen
+            throw IllegalStateException("Buffer is full")
         }
     }
 

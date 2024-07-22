@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package cn.yiiguxing.plugin.translate.util
 
 import com.intellij.openapi.Disposable

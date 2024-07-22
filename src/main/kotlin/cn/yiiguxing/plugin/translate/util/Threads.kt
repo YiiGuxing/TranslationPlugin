@@ -18,6 +18,7 @@ inline fun <T> withContextClassLoader(classLoader: ClassLoader, block: () -> T):
 /**
  * Execute the [block] with the plugin's class loader.
  */
+@Suppress("unused")
 inline fun <T> withPluginContextClassLoader(block: () -> T): T {
     return withContextClassLoader(TranslationPlugin::class.java.classLoader, block)
 }

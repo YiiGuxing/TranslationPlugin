@@ -16,8 +16,7 @@ on:
   # Trigger the workflow on pushes to only the 'main' branch (this avoids duplicate checks being run e.g., for dependabot pull requests)
   push:
     branches:
-      - master
-      - '**/compat/*'
+      - 'v3.6/213'
     paths-ignore:
       - '.idea/**'
       - '.run/**'
@@ -62,7 +61,7 @@ jobs:
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/actions/wrapper-validation@v3
 
       # Set up Java environment for the next steps
       - name: Setup Java
