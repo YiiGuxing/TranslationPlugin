@@ -144,7 +144,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun signRequest(request: AliMTRequest) {
-        val requestPayloadHash = request.body.sha256().toLowerCase()
+        val requestPayloadHash = request.body.sha256().lowercase()
         request.headers["x-acs-content-sha256"] = requestPayloadHash
 
         val headers = request.headers
@@ -154,7 +154,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
                         key.equals("Host", true) ||
                         key.equals("Content-Type", true)
             }
-            .map { (key, value) -> key.toLowerCase() to value }
+            .map { (key, value) -> key.lowercase() to value }
             .sortedBy { (key) -> key }
         val headerNames = headers.joinToString(";") { (key) -> key }
         val headerContent = headers.joinToString("\n", postfix = "\n") { (key, value) -> "${key}:$value" }
@@ -171,12 +171,12 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             |$headerNames
             |$requestPayloadHash
         """.trimMargin("|")
-        val requestContentHash = requestContent.sha256().toLowerCase()
+        val requestContentHash = requestContent.sha256().lowercase()
 
         val settings = Settings.getInstance().aliTranslateSettings
         val signature = settings.getAppKey()
             .takeIf { it.isNotEmpty() }
-            ?.let { key -> "$SIGNATURE_ALGORITHM\n$requestContentHash".hmacSha256(key).toLowerCase() }
+            ?.let { key -> "$SIGNATURE_ALGORITHM\n$requestContentHash".hmacSha256(key).lowercase() }
             ?: ""
         val authorization =
             "$SIGNATURE_ALGORITHM Credential=${settings.appId},SignedHeaders=$headerNames,Signature=$signature"
