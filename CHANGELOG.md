@@ -2,8 +2,6 @@
 
 ## [Unreleased]
 
-## [3.6.3] (2024/07/22)
-
 - The GPT-4o mini is now available in the OpenAI Translator engine.
 - Alibaba Translate can now return the detected language.
 - Fixed the issue where clicking on the status bar widget had no effect.
