@@ -104,7 +104,6 @@ kover {
 tasks {
     runIde {
         systemProperty("idea.is.internal", true)
-        systemProperty("translation.plugin.log.stdout", true)
 
         jbrVariant = "dcevm"
         jvmArgs = listOf(
