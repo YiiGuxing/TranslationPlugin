@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
@@ -122,13 +123,18 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
         // This is a modal dialog, so it needs to be invoked later.
         SwingUtilities.invokeLater {
             val dialogRef = DisposableRef.create(disposable, this)
-            runAsync { credentialSettings.getAppKey() to credentialSettings.isAppKeySet }
-                .expireWith(disposable)
-                .successOnUiThread(dialogRef) { dialog, (appKey, isAppKeySet) ->
-                    dialog.appKey = appKey
-                    dialog.isAppKeySet = isAppKeySet
+            asyncLatch { latch ->
+                runAsync {
+                    latch.await()
+                    credentialSettings.getAppKey() to credentialSettings.isAppKeySet
                 }
-                .disposeAfterProcessing(dialogRef)
+                    .expireWith(disposable)
+                    .successOnUiThread(dialogRef) { dialog, (appKey, isAppKeySet) ->
+                        dialog.appKey = appKey
+                        dialog.isAppKeySet = isAppKeySet
+                    }
+                    .disposeAfterProcessing(dialogRef)
+            }
         }
         super.show()
     }

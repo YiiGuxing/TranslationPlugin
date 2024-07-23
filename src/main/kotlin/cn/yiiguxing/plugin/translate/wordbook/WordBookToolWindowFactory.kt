@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurable
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.NotificationAction
@@ -148,12 +149,16 @@ internal class WordBookToolWindowFactoryImpl : WordBookToolWindowFactory {
     }
 
     private fun DisposableRef<ToolWindowEx>.updateVisible() {
-        runAsync { with(WordBookService.getInstance()) { isInitialized && hasWords() } }
-            .successOnUiThread(this, ModalityState.NON_MODAL) { toolWindow, available ->
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                with(WordBookService.getInstance()) { isInitialized && hasWords() }
+            }.successOnUiThread(this, ModalityState.NON_MODAL) { toolWindow, available ->
                 if (available) {
                     toolWindow.showStripeButton()
                 }
             }
+        }
     }
 
     override fun shouldBeAvailable(project: Project): Boolean = true

@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.ui.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.Popups
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.*
@@ -158,22 +159,24 @@ class WordDetailsDialog(
         val modalityState = ModalityState.current()
         val dialogRef = WeakReference(this)
         val expired = Condition<Any?> { dialogRef.get()?.isDisposed ?: true }
-        runAsync { WordBookService.getInstance().updateWord(newWord) }
-            .onSuccess { updated ->
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                WordBookService.getInstance().updateWord(newWord)
+            }.onSuccess { updated ->
                 if (updated) invokeLater(modalityState, expired) {
                     dialogRef.get()?.onEditingSaved(newWord)
                 }
-            }
-            .onError { error ->
+            }.onError { error ->
                 invokeLater(modalityState, expired) {
                     dialogRef.get()?.onEditError(error)
                 }
-            }
-            .onProcessed {
+            }.onProcessed {
                 invokeLater(modalityState, expired) {
                     dialogRef.get()?.saveAction?.isEnabled = true
                 }
             }
+        }
     }
 
     private fun onEditingSaved(newWord: WordBookItem) {

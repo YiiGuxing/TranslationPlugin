@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [3.6.4] (2024/07/23)
+
+- The GPT-4o mini is now available in the OpenAI Translator engine.
+- Alibaba Translate can now return the detected language.
+- Fixed the issue where clicking on the status bar widget had no effect.
+- GPT-4o mini 现已在 OpenAI 翻译引擎中可用
+- 阿里翻译现在能返回检测到的语言
+- 修复了状态栏徽标点击无效的问题
+
 ## [3.6.3] (2024/07/22)
 
 - The GPT-4o mini is now available in the OpenAI Translator engine.
@@ -496,7 +505,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.3...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.4...HEAD
+[3.6.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.3...v3.6.4
 [3.6.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.2...v3.6.3
 [3.6.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.1...v3.6.2
 [3.6.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.0...v3.6.1

@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.Notifications
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationAction
@@ -38,12 +39,16 @@ class CheckGoogleNetworkStartupActivity : BaseStartupActivity() {
 
     override fun onRunActivity(project: Project) {
         val projectRef = DisposableRef.create(TranslationUIManager.disposable(project), project)
-        runAsync { TKK.testConnection() }
-            .successOnUiThread(projectRef, ModalityState.NON_MODAL) { p, res ->
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                TKK.testConnection()
+            }.successOnUiThread(projectRef, ModalityState.NON_MODAL) { p, res ->
                 if (!p.isDisposed && !res) {
                     showNotification(p)
                 }
             }
+        }
     }
 
     private fun showNotification(project: Project) {
