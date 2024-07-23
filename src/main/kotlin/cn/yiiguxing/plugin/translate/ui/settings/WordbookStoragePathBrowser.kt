@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -91,24 +92,27 @@ internal class WordbookStoragePathBrowser(val settings: Settings) : TextBrowseFo
                 return
             }
 
-            runAsync {
-                Files.createDirectories(toPath.parent)
-                Files.copy(fromPath, toPath, StandardCopyOption.REPLACE_EXISTING)
-            }.onError {
-                invokeLater {
-                    val retry = MessageDialogBuilder
-                        .okCancel(
-                            message("settings.wordbook.alert.title.move.storage.file"),
-                            message("settings.wordbook.alert.message.failed.to.move.storage.file", it.message ?: "")
-                        )
-                        .icon(UIUtil.getErrorIcon())
-                        .ask(null as Project?)
-                    if (retry) {
-                        moveWordbookStorageFile(fromPath, toPath, onSuccess)
+            asyncLatch { latch ->
+                runAsync {
+                    latch.await()
+                    Files.createDirectories(toPath.parent)
+                    Files.copy(fromPath, toPath, StandardCopyOption.REPLACE_EXISTING)
+                }.onError {
+                    invokeLater {
+                        val retry = MessageDialogBuilder
+                            .okCancel(
+                                message("settings.wordbook.alert.title.move.storage.file"),
+                                message("settings.wordbook.alert.message.failed.to.move.storage.file", it.message ?: "")
+                            )
+                            .icon(UIUtil.getErrorIcon())
+                            .ask(null as Project?)
+                        if (retry) {
+                            moveWordbookStorageFile(fromPath, toPath, onSuccess)
+                        }
                     }
+                }.onSuccess {
+                    invokeLater(onSuccess)
                 }
-            }.onSuccess {
-                invokeLater(onSuccess)
             }
         }
     }

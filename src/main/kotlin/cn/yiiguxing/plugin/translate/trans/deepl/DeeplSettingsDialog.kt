@@ -5,10 +5,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
-import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
-import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
-import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.*
 import cn.yiiguxing.plugin.translate.util.getCommonMessage
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.thisLogger
@@ -151,16 +148,21 @@ class DeeplSettingsDialog : DialogWrapper(false) {
         postUsageInfo(service, null)
 
         val dialogRef = DisposableRef.create(disposable, this)
-        runAsync { service.getUsage() }
-            .expireWith(disposable)
-            .successOnUiThread(dialogRef) { dialog, usage ->
-                dialog.postUsageInfo(service, usage)
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                service.getUsage()
             }
-            .errorOnUiThread(dialogRef) { dialog, error ->
-                thisLogger().w("Failed to get usage info.", error)
-                dialog.postUsageInfo(service, null, error)
-            }
-            .disposeAfterProcessing(dialogRef)
+                .expireWith(disposable)
+                .successOnUiThread(dialogRef) { dialog, usage ->
+                    dialog.postUsageInfo(service, usage)
+                }
+                .errorOnUiThread(dialogRef) { dialog, error ->
+                    thisLogger().w("Failed to get usage info.", error)
+                    dialog.postUsageInfo(service, null, error)
+                }
+                .disposeAfterProcessing(dialogRef)
+        }
     }
 
     private fun postUsageInfo(service: DeeplService, usage: DeeplService.Usage?, throwable: Throwable? = null) {
@@ -190,14 +192,19 @@ class DeeplSettingsDialog : DialogWrapper(false) {
         // This is a modal dialog, so it needs to be invoked later.
         SwingUtilities.invokeLater {
             val dialogRef = DisposableRef.create(disposable, this)
-            runAsync { DeeplCredential.authKey to DeeplCredential.isAuthKeySet }
-                .expireWith(disposable)
-                .successOnUiThread(dialogRef) { dialog, (key, isAuthKeySet) ->
-                    dialog.authKey = key
-                    dialog.isOK = isAuthKeySet
-                    dialog.doGetUsageInfo()
+            asyncLatch { latch ->
+                runAsync {
+                    latch.await()
+                    DeeplCredential.authKey to DeeplCredential.isAuthKeySet
                 }
-                .disposeAfterProcessing(dialogRef)
+                    .expireWith(disposable)
+                    .successOnUiThread(dialogRef) { dialog, (key, isAuthKeySet) ->
+                        dialog.authKey = key
+                        dialog.isOK = isAuthKeySet
+                        dialog.doGetUsageInfo()
+                    }
+                    .disposeAfterProcessing(dialogRef)
+            }
         }
         super.show()
     }
