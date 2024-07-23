@@ -3,7 +3,7 @@
 package cn.yiiguxing.plugin.translate.util.concurrent
 
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.util.invokeAndWait
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
@@ -100,7 +100,7 @@ internal inline fun <T, V> Promise<T>.onUiThread(
     crossinline uiThreadAction: (V) -> Unit
 ): Promise<T> {
     return fn(Consumer { result ->
-        invokeLater(modalityState) { uiThreadAction(result) }
+        invokeAndWait(modalityState) { uiThreadAction(result) }
     })
 }
 
@@ -113,7 +113,7 @@ internal inline fun <Ref, T, V> Promise<T>.onUiThread(
     return expireWith(disposableRef)
         .fn(Consumer { result ->
             if (disposableRef.get() != null && !Disposer.isDisposed(disposableRef)) {
-                invokeLater(modalityState) {
+                invokeAndWait(modalityState) {
                     disposableRef.get()?.let { uiThreadAction(it, result) }
                 }
             }

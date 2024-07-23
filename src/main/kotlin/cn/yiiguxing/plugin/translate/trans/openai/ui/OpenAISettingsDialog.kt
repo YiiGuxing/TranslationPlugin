@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
@@ -298,20 +299,23 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         // This is a modal dialog, so it needs to be invoked later.
         SwingUtilities.invokeLater {
             val dialogRef = DisposableRef.create(disposable, this)
-            runAsync {
-                ApiKeys(
-                    OpenAiCredentials.manager(ServiceProvider.OpenAI).credential,
-                    OpenAiCredentials.manager(ServiceProvider.Azure).credential
-                )
-            }
-                .expireWith(disposable)
-                .successOnUiThread(dialogRef) { dialog, apiKeys ->
-                    dialog.apiKeys.copyFrom(apiKeys)
-                    dialog.ui.apiKeyField.text = apiKeys[dialog.provider]
-                    dialog.isApiKeySet = !apiKeys[dialog.provider].isNullOrEmpty()
-                    dialog.verify()
+            asyncLatch { latch ->
+                runAsync {
+                    latch.await()
+                    ApiKeys(
+                        OpenAiCredentials.manager(ServiceProvider.OpenAI).credential,
+                        OpenAiCredentials.manager(ServiceProvider.Azure).credential
+                    )
                 }
-                .disposeAfterProcessing(dialogRef)
+                    .expireWith(disposable)
+                    .successOnUiThread(dialogRef) { dialog, apiKeys ->
+                        dialog.apiKeys.copyFrom(apiKeys)
+                        dialog.ui.apiKeyField.text = apiKeys[dialog.provider]
+                        dialog.isApiKeySet = !apiKeys[dialog.provider].isNullOrEmpty()
+                        dialog.verify()
+                    }
+                    .disposeAfterProcessing(dialogRef)
+            }
         }
 
         super.show()
