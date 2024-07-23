@@ -9,10 +9,7 @@ import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.update.UpdateListener
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
-import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
-import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
-import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.*
 import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.ModalityState
@@ -134,21 +131,27 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
 
         isLoadingTranslationEngines = true
         val widgetRef = DisposableRef.create(this, this)
-        runAsync { TranslationEngineActionGroup() }
-            .expireWith(this)
-            .successOnUiThread(widgetRef) { widget, group ->
-                val context = DataManager.getInstance().getDataContext(widget)
-                val popup = group.createActionPopup(context)
-                val at = Point(0, -popup.content.preferredSize.height)
-                popup.show(RelativePoint(widget, at))
+
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                TranslationEngineActionGroup()
             }
-            .onError {
-                logger<TranslationWidget>().warn("Failed to show translation engines popup.", it)
-            }
-            .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
-                widget.isLoadingTranslationEngines = false
-            }
-            .disposeAfterProcessing(widgetRef)
+                .expireWith(this)
+                .successOnUiThread(widgetRef) { widget, group ->
+                    val context = DataManager.getInstance().getDataContext(widget)
+                    val popup = group.createActionPopup(context)
+                    val at = Point(0, -popup.content.preferredSize.height)
+                    popup.show(RelativePoint(widget, at))
+                }
+                .onError {
+                    logger<TranslationWidget>().warn("Failed to show translation engines popup.", it)
+                }
+                .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
+                    widget.isLoadingTranslationEngines = false
+                }
+                .disposeAfterProcessing(widgetRef)
+        }
     }
 
     override fun dispose() {
