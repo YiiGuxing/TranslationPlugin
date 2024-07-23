@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.ui.Popups
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordBookWindowComponent
 import cn.yiiguxing.plugin.translate.ui.wordbook.WordDetailsDialog
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.wordbook.exports.WordBookExporter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
@@ -199,18 +200,21 @@ class WordBookView {
 
         isLoading = true
         val modalityState = ModalityState.current()
-        runAsync { service.getWords() }
-            .onSuccess { newWords ->
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                service.getWords()
+            }.onSuccess { newWords ->
                 invokeLater(modalityState) {
                     words.clear()
                     words.addAll(newWords)
                     notifyWordsChanged()
                     publisher.onWordBookRefreshed(newWords)
                 }
-            }
-            .onProcessed {
+            }.onProcessed {
                 invokeLater(modalityState) { isLoading = false }
             }
+        }
     }
 
     private fun notifyWordsChanged() {

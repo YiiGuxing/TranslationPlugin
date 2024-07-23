@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.ui.UI.fillX
 import cn.yiiguxing.plugin.translate.ui.UI.migLayout
 import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import cn.yiiguxing.plugin.translate.util.DisposableRef
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
@@ -67,13 +68,18 @@ class AppKeySettingsPanel(
         appIdField.text = appKeySettings.appId
         appKey = ""
         val ref = DisposableRef.create(this, this)
-        runAsync { appKeySettings.getAppKey() to appKeySettings.isAppKeySet }
-            .expireWith(this)
-            .successOnUiThread(ref) { panel, (key, isAppKeySet) ->
-                panel.appKey = key
-                panel.isAppKeySet = isAppKeySet
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                appKeySettings.getAppKey() to appKeySettings.isAppKeySet
             }
-            .disposeAfterProcessing(ref)
+                .expireWith(this)
+                .successOnUiThread(ref) { panel, (key, isAppKeySet) ->
+                    panel.appKey = key
+                    panel.isAppKeySet = isAppKeySet
+                }
+                .disposeAfterProcessing(ref)
+        }
     }
 
     fun apply() {

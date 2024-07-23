@@ -4,10 +4,7 @@ import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
-import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
-import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
-import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.*
 import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
@@ -106,36 +103,42 @@ class TranslationFailedComponent : JPanel(), Disposable {
 
         isLoadingTranslationEngines = true
         val widgetRef = DisposableRef.create(this, this)
-        runAsync { TranslationEngineActionGroup() }
-            .expireWith(this)
-            .successOnUiThread(widgetRef) { widget, group ->
-                val button = widget.optionButton.takeIf { it.isShowing } ?: return@successOnUiThread
-                var offsetLeft: Int
-                var offsetRight: Int
-                var offsetBottom: Int
-                if (button.componentCount > 0) {
-                    val first = (button.getComponent(0) as? JComponent)?.insets ?: button.insets
-                    val last = (button.getComponent(button.componentCount - 1) as? JComponent)?.insets ?: button.insets
-                    offsetLeft = first.left
-                    offsetRight = last.right
-                    offsetBottom = first.right
-                } else {
-                    button.insets.let {
-                        offsetLeft = it.left
-                        offsetRight = it.right
-                        offsetBottom = it.bottom
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                TranslationEngineActionGroup()
+            }
+                .expireWith(this)
+                .successOnUiThread(widgetRef) { widget, group ->
+                    val button = widget.optionButton.takeIf { it.isShowing } ?: return@successOnUiThread
+                    var offsetLeft: Int
+                    var offsetRight: Int
+                    var offsetBottom: Int
+                    if (button.componentCount > 0) {
+                        val first = (button.getComponent(0) as? JComponent)?.insets ?: button.insets
+                        val last = (button.getComponent(button.componentCount - 1) as? JComponent)?.insets
+                            ?: button.insets
+                        offsetLeft = first.left
+                        offsetRight = last.right
+                        offsetBottom = first.right
+                    } else {
+                        button.insets.let {
+                            offsetLeft = it.left
+                            offsetRight = it.right
+                            offsetBottom = it.bottom
+                        }
                     }
-                }
 
-                val dataContext = DataManager.getInstance().getDataContext(button)
-                group.createActionPopup(dataContext)
-                    .apply { minimumSize = Dimension(button.width - offsetLeft - offsetRight, 1) }
-                    .showBelow(button, offsetLeft, offsetBottom)
-            }
-            .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
-                widget.isLoadingTranslationEngines = false
-            }
-            .disposeAfterProcessing(widgetRef)
+                    val dataContext = DataManager.getInstance().getDataContext(button)
+                    group.createActionPopup(dataContext)
+                        .apply { minimumSize = Dimension(button.width - offsetLeft - offsetRight, 1) }
+                        .showBelow(button, offsetLeft, offsetBottom)
+                }
+                .finishOnUiThread(widgetRef, ModalityState.any()) { widget, _ ->
+                    widget.isLoadingTranslationEngines = false
+                }
+                .disposeAfterProcessing(widgetRef)
+        }
     }
 
     fun onRetry(handler: () -> Unit) {

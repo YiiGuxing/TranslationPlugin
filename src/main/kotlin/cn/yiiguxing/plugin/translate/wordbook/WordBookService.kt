@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.wordbook.WordBookState.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
@@ -31,7 +32,6 @@ import java.nio.file.StandardCopyOption
 import java.sql.Driver
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.sql.DataSource
 
@@ -116,36 +116,38 @@ class WordBookService : Disposable {
             }
         }
 
-        runAsync {
-            val newDbFile = newPath?.takeIf { it.isNotBlank() }
-                ?.let { getStorageFile(Paths.get(it)) }
-                ?: getStorageFile(TranslationStorages.DATA_DIRECTORY)
-            Files.createDirectories(newDbFile.parent)
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                val newDbFile = newPath?.takeIf { it.isNotBlank() }
+                    ?.let { getStorageFile(Paths.get(it)) }
+                    ?: getStorageFile(TranslationStorages.DATA_DIRECTORY)
+                Files.createDirectories(newDbFile.parent)
 
-            val runner = createRunner(newDbFile)
-            synchronized(this@WordBookService) {
-                queryRunner = runner
-            }
+                val runner = createRunner(newDbFile)
+                synchronized(this@WordBookService) {
+                    queryRunner = runner
+                }
 
-            invokeLater(ModalityState.any()) { wordBookPublisher.onStoragePathChanged(this@WordBookService) }
-        }.onError { error ->
-            nextState(INITIALIZATION_ERROR)
-            val errorMsg = (error as? SQLException)
-                ?.let { WordBookErrorCode[it.errorCode].reason }
-                ?: error.message ?: ""
-            val title = message("wordbook.service.notification.title")
-            val message =
-                message("wordbook.service.notification.message.failed.to.switch.storage.path", errorMsg)
-            invokeLater(ModalityState.NON_MODAL) {
-                LOGGER.w("Failed to switch storage path", error)
-                Notifications.showErrorNotification(title, message)
+                invokeLater(ModalityState.any()) { wordBookPublisher.onStoragePathChanged(this@WordBookService) }
+            }.onError { error ->
+                nextState(INITIALIZATION_ERROR)
+                val errorMsg = (error as? SQLException)
+                    ?.let { WordBookErrorCode[it.errorCode].reason }
+                    ?: error.message ?: ""
+                val title = message("wordbook.service.notification.title")
+                val message =
+                    message("wordbook.service.notification.message.failed.to.switch.storage.path", errorMsg)
+                invokeLater(ModalityState.NON_MODAL) {
+                    LOGGER.w("Failed to switch storage path", error)
+                    Notifications.showErrorNotification(title, message)
+                }
             }
         }
     }
 
     fun asyncInitialize() {
-        val latch = CountDownLatch(1)
-        try {
+        asyncLatch { latch ->
             runAsync {
                 // 确保外部各种回调都准备好了再执行后台任务
                 latch.await()
@@ -164,8 +166,6 @@ class WordBookService : Disposable {
                 LOGGER.w("Wordbook initialization failed", it)
                 nextState(INITIALIZATION_ERROR)
             }
-        } finally {
-            latch.countDown()
         }
     }
 

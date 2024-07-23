@@ -3,10 +3,7 @@ package cn.yiiguxing.plugin.translate.action
 import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatComboBoxAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateService
-import cn.yiiguxing.plugin.translate.util.concurrent.errorOnUiThread
-import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
-import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
-import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
+import cn.yiiguxing.plugin.translate.util.concurrent.*
 import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
@@ -64,15 +61,20 @@ class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, 
         isActionPerforming = true
         val component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT)
         val expireDisposable = getDisposable()
-        runAsync { TranslationEngineActionGroup() }
-            .expireWith(expireDisposable)
-            .successOnUiThread { group ->
-                if (isActionPerforming && !project.isDisposed) {
-                    val dataContext = DataManager.getInstance().getDataContext(component)
-                    group.createActionPopup(dataContext).showCenteredInCurrentWindow(project)
-                }
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                TranslationEngineActionGroup()
             }
-            .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }
+                .expireWith(expireDisposable)
+                .successOnUiThread { group ->
+                    if (isActionPerforming && !project.isDisposed) {
+                        val dataContext = DataManager.getInstance().getDataContext(component)
+                        group.createActionPopup(dataContext).showCenteredInCurrentWindow(project)
+                    }
+                }
+                .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }
+        }
     }
 
     override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
@@ -112,18 +114,23 @@ class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, 
             isButtonActionPerforming = true
             val expireDisposable = getDisposable()
             Disposer.register(expireDisposable) { isButtonActionPerforming = false }
-            runAsync { TranslationEngineActionGroup() }
-                .expireWith(expireDisposable)
-                .successOnUiThread { group ->
-                    if (isButtonActionPerforming && isShowing) {
-                        actionGroup = group
-                        super.fireActionPerformed(event)
-                    } else {
-                        isButtonActionPerforming = false
-                    }
+            asyncLatch { latch ->
+                runAsync {
+                    latch.await()
+                    TranslationEngineActionGroup()
                 }
-                .errorOnUiThread(ModalityState.any()) { isButtonActionPerforming = false }
-                .finishOnUiThread(ModalityState.any()) { disposable = null }
+                    .expireWith(expireDisposable)
+                    .successOnUiThread { group ->
+                        if (isButtonActionPerforming && isShowing) {
+                            actionGroup = group
+                            super.fireActionPerformed(event)
+                        } else {
+                            isButtonActionPerforming = false
+                        }
+                    }
+                    .errorOnUiThread(ModalityState.any()) { isButtonActionPerforming = false }
+                    .finishOnUiThread(ModalityState.any()) { disposable = null }
+            }
         }
     }
 }

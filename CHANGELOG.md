@@ -6,6 +6,15 @@
 
 - The GPT-4o mini is now available in the OpenAI Translator engine.
 - Alibaba Translate can now return the detected language.
+- Fixed the issue where clicking on the status bar widget had no effect.
+- GPT-4o mini 现已在 OpenAI 翻译引擎中可用
+- 阿里翻译现在能返回检测到的语言
+- 修复了状态栏徽标点击无效的问题
+
+## [3.6.3] (2024/07/22)
+
+- The GPT-4o mini is now available in the OpenAI Translator engine.
+- Alibaba Translate can now return the detected language.
 - Bug fixes.
 - GPT-4o mini 现已在 OpenAI 翻译引擎中可用
 - 阿里翻译现在能返回检测到的语言

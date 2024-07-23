@@ -9,6 +9,7 @@ import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.ByteSize
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.SelectionMode
+import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.wordbook.WordBookService
@@ -85,21 +86,28 @@ class SettingsPanel(
             }
             isClearing = true
 
-            runAsync {
-                with(CacheService.getInstance()) {
-                    evictAllDiskCaches()
-                    getDiskCacheSize()
+            asyncLatch { latch ->
+                runAsync {
+                    latch.await()
+                    with(CacheService.getInstance()) {
+                        evictAllDiskCaches()
+                        getDiskCacheSize()
+                    }
+                }.finishOnUiThread(labelRef) { label, size ->
+                    isClearing = false
+                    label.text = ByteSize.format(size ?: 0L)
                 }
-            }.finishOnUiThread(labelRef) { label, size ->
-                isClearing = false
-                label.text = ByteSize.format(size ?: 0L)
             }
         }
 
-        runAsync { CacheService.getInstance().getDiskCacheSize() }
-            .successOnUiThread(labelRef) { label, size ->
+        asyncLatch { latch ->
+            runAsync {
+                latch.await()
+                CacheService.getInstance().getDiskCacheSize()
+            }.successOnUiThread(labelRef) { label, size ->
                 label.text = ByteSize.format(size)
             }
+        }
     }
 
     private fun initSupport() {
