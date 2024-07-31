@@ -187,9 +187,6 @@
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </group>
-        <group id="TranslationTitleBar" text="Translation Title Bar Actions">
-            <reference ref="$ShowTranslationDialogAction"/>
-        </group>
         <group id="Translation.ExpandedGroup" popup="true" text="Expanded">
             <reference ref="Translation.ShowTranslationDialogAction"/>
             <reference ref="Translation.InclusiveTranslateAction"/>
