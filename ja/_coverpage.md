@@ -60,7 +60,7 @@
 </div>
 
 <div class="idea-frame" oncontextmenu="return false;" ondragstart="return false;">
-<div class="frame-header">TranslationPlugin</div>
+<div class="frame-header">IntelliJ Translation Plugin</div>
 
 ![Screenshot](../img/screenshot.gif ':size=550x545')
 

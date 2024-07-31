@@ -1,6 +1,6 @@
 # はじめに :id=introduction
 
-TranslationPluginは、IntelliJベースのIDE/Android Studioの翻訳プラグインです。Google翻訳、Microsoft翻訳、OpenAI翻訳、DeepL翻訳など、多くの翻訳エンジンを統合しています。あなたはいつでもIDEでテキスト、コードコメント、コードドキュメントなどを翻訳することができます。
+**IntelliJ Translation Plugin**は、IntelliJベースのIDE/Android Studioの翻訳プラグインです。Google翻訳、Microsoft翻訳、OpenAI翻訳、DeepL翻訳など、多くの翻訳エンジンを統合しています。あなたはいつでもIDEでテキスト、コードコメント、コードドキュメントなどを翻訳することができます。
 
 ![TranslationPlugin](../img/translation_plugin.png)
 

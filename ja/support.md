@@ -1,10 +1,10 @@
-# TranslationPlugin のサポーターおよびスポンサーになる :id=become-a-supporter
+# IntelliJ Translation Plugin のサポーターおよびスポンサーになる :id=become-a-supporter
 
-**TranslationPlugin** は、MIT ライセンスのオープンソースプロジェクトで、完全に無料で使用できます。
+**IntelliJ Translation Plugin** は、MIT ライセンスのオープンソースプロジェクトで、完全に無料で使用できます。
 
 このプロジェクトを維持し、このプロジェクトの新しい機能を開発する開発者は、多大なエネルギーと労力を必要とします。これは、すべての人のサポートとスポンサーの寛大な財政的支援によってのみ維持できます。
 
-## 支援 TranslationPlugin✨ :id=support-translation-plugin
+## 支援 IntelliJ Translation Plugin ✨ :id=support-translation-plugin
 
 以下の方法で、本プロジェクトをサポートしていただけます。
 
@@ -15,7 +15,7 @@
 - [PR を送る](https://github.com/YiiGuxing/TranslationPlugin)
 - プラグインを友人/同僚と共有する
 
-## TranslationPlugin を寄付する❤️ :id=sponsor-translation-plugin
+## IntelliJ Translation Plugin を寄付する❤️ :id=sponsor-translation-plugin
 
 このプラグインを気に入っていただけましたら、プラグインに関わる活動を支えるための寄付をご検討ください。
 

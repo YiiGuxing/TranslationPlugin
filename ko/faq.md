@@ -1,6 +1,6 @@
 # 자주 묻는 질문 :id=faq
 
-Here we list some problems and solutions that may be encountered in the process of using **TranslationPlugin**.
+Here we list some problems and solutions that may be encountered in the process of using **IntelliJ Translation Plugin**.
 
 If you don't see an answer to your question here, check our previously [reported issues on GitHub][gh:issues], or ask for help in [GitHub discussions][gh:discussions].
 
