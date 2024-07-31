@@ -1,6 +1,6 @@
 # FAQ :id=faq
 
-Here we list some problems and solutions that may be encountered in the process of using **TranslationPlugin**.
+Here we list some problems and solutions that may be encountered in the process of using **IntelliJ Translation Plugin**.
 
 If you don't see an answer to your question here, check our previously [reported issues on GitHub][gh:issues], or ask for help in [GitHub discussions][gh:discussions].
 
@@ -10,7 +10,7 @@ If you don't see an answer to your question here, check our previously [reported
 
 ## What should I do if there is a network error or the network connection times out? :id=faq-network-error
 
-**TranslationPlugin** currently translates all translation operations online and does not support offline translation at the moment. Therefore, please make sure your machine is in a good network environment before performing translation operations. If you have network problems such as network error or network connection timeout while translating, please check your network connection as follows:
+**IntelliJ Translation Plugin** currently translates all translation operations online and does not support offline translation at the moment. Therefore, please make sure your machine is in a good network environment before performing translation operations. If you have network problems such as network error or network connection timeout while translating, please check your network connection as follows:
 - Check the network environment and make sure the network is running smoothly.
 - Check whether a proxy is preventing the plugin from accessing the translation API.
 - Check the IDE proxy configuration to see if that is the cause of the problem.

@@ -1,23 +1,23 @@
-# 成为 TranslationPlugin 的支持者与赞助者 :id=become-a-supporter
+# 成为 IntelliJ Translation Plugin 的支持者与赞助者 :id=become-a-supporter
 
-**TranslationPlugin** 是采用 **MIT** 许可的开源项目，使用完全免费。
+**IntelliJ Translation Plugin** 是采用 **MIT** 许可的开源项目，使用完全免费。
 
 开发者维护这个项目和为这个项目开发新功能需要巨大的精力和努力，只有在大家的支持和赞助者慷慨的财务支持下才得以持续。
 
-## 支持 TranslationPlugin✨ :id=support-translation-plugin
+## 支持 IntelliJ Translation Plugin ✨ :id=support-translation-plugin
 
-你可以通过执行以下任意操作来贡献和支持 **TranslationPlugin**：
+你可以通过执行以下任意操作来贡献和支持 **IntelliJ Translation Plugin**：
 
-- 在 **GitHub** 上 [⭐️TranslationPlugin 项目](https://github.com/YiiGuxing/TranslationPlugin)
+- 在 **GitHub** 上 [⭐️IntelliJ Translation Plugin 项目](https://github.com/YiiGuxing/TranslationPlugin)
 - [五星好评 ⭐️⭐️⭐️⭐️⭐️](https://plugins.jetbrains.com/plugin/8579-translation/reviews)
 - [提交你的想法/建议](https://github.com/YiiGuxing/TranslationPlugin/discussions/categories/ideas)
 - [反馈问题](https://github.com/YiiGuxing/TranslationPlugin/issues/new/choose)
 - [提交PR](https://github.com/YiiGuxing/TranslationPlugin)
 - 将插件分享给你的朋友/同事
 
-## 赞助 TranslationPlugin❤️ :id=sponsor-translation-plugin
+## 赞助 IntelliJ Translation Plugin ❤️ :id=sponsor-translation-plugin
 
-如果你觉得 **TranslationPlugin** 对你有帮助，请考虑❤️[赞助](#sponsor-translation-plugin)❤️我们，这将极大地激励我们持续开发这个项目。
+如果你觉得 **IntelliJ Translation Plugin** 对你有帮助，请考虑❤️[赞助](#sponsor-translation-plugin)❤️我们，这将极大地激励我们持续开发这个项目。
 
 **赞助商权益**：赞助商在赞助期间内将会获得在内容页面侧边栏上无需滚动即可见的 Logo 展示位，Logo 将会链接到赞助商的网站。如果您对此赞助位感兴趣或有任何疑问，请致信 📨[yii.guxing@outlook.com](mailto:yii.guxing@outlook.com?subject=Sponsorship%20Consulting) 咨询具体事宜。
 

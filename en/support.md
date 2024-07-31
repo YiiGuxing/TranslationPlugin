@@ -1,14 +1,14 @@
-# Become a TranslationPlugin Supporter and Sponsor :id=become-a-supporter
+# Become a Supporter and Sponsor :id=become-a-supporter
 
-**TranslationPlugin** is an MIT licensed open-source project and completely free to use.
+**IntelliJ Translation Plugin** is an MIT licensed open-source project and completely free to use.
 
 The developer's maintenance of this project and the development of new features for this project requires tremendous
 energy and effort, which can only be sustained with the support of everyone and the generous financial support of
 sponsors.
 
-## Support TranslationPlugin✨ :id=support-translation-plugin
+## Support IntelliJ Translation Plugin ✨ :id=support-translation-plugin
 
-You can support **TranslationPlugin** by doing any of the following:
+You can support **IntelliJ Translation Plugin** by doing any of the following:
 
 - [Star the project on GitHub](https://github.com/YiiGuxing/TranslationPlugin).
 - [Rate this plugin on JetBrains Marketplace](https://plugins.jetbrains.com/plugin/8579-translation/reviews).
@@ -17,9 +17,9 @@ You can support **TranslationPlugin** by doing any of the following:
 - [Commit PR](https://github.com/YiiGuxing/TranslationPlugin).
 - Share the plugin with your friends/colleagues.
 
-## Sponsor TranslationPlugin❤️ :id=sponsor-translation-plugin
+## Sponsor IntelliJ Translation Plugin ❤️ :id=sponsor-translation-plugin
 
-If you think **TranslationPlugin** is helpful to you or that my work is valuable, please consider
+If you think **IntelliJ Translation Plugin** is helpful to you or that my work is valuable, please consider
 ❤️[sponsoring us](#sponsor-translation-plugin)❤️. It will inspire us to continue development on the project.
 
 
