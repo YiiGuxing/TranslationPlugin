@@ -95,13 +95,6 @@
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="cn.yiiguxing.plugin.translate.action.TitleBarActionRegistrar"
-                  topic="com.intellij.ide.AppLifecycleListener"/>
-        <listener class="cn.yiiguxing.plugin.translate.action.TitleBarActionRegistrar"
-                  topic="com.intellij.ide.plugins.DynamicPluginListener"/>
-    </applicationListeners>
-
     <actions>
         <action id="Translation.ShowTranslationDialogAction"
                 icon="TranslationIcons.Translation"
