@@ -147,14 +147,14 @@
         }
 
         if (title) {
-            title += " - ";
+            title += " · ";
         }
 
-        return title + "TranslationPlugin ❤️ Yii.Guxing";
+        return title + "IntelliJ Translation Plugin";
     }
 
     function resetTitle(vm) {
-        var title = "TranslationPlugin ❤️ Yii.Guxing";
+        var title = "IntelliJ Translation Plugin";
         vm.currentTitle = title;
         document.title = title;
     }

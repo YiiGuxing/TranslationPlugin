@@ -15,7 +15,7 @@
     </svg>
 </div>
 
-<h1>Translation Plugin</h1>
+<h1>IntelliJ Translation Plugin</h1>
 
 <div class="plugin-description" data-typed-target="description">
 <p>An IntelliJ-based IDEs/Android Studio Translation Plugin.^30000</p>

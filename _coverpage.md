@@ -15,7 +15,7 @@
     </svg>
 </div>
 
-<h1>Translation Plugin</h1>
+<h1>IntelliJ Translation Plugin</h1>
 
 <div class="plugin-description" data-typed-target="description">
 <p>一个基于 IntelliJ IDEs/Android Studio 的翻译插件^30000</p>
