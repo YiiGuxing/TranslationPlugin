@@ -83,6 +83,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 爱笑的木头人 |  | 30.00 CNY |
 | 淅潼 |  | 30.00 CNY |
 | Ultcrt | [github.com/Ultcrt](https://github.com/Ultcrt) | 30.00 CNY |
+| 夏泽业 |  | 26.66 CNY |
 | 姜巍 |  | 26.66 CNY |
 | 包子 |  | 26.66 CNY |
 | 田坪毛小江 |  | 26.66 CNY |
@@ -91,6 +92,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| Xcye |  | 20.00 CNY |
+| 完美的一天 |  | 20.00 CNY |
+| 奥拓 |  | 20.00 CNY |
 | 123 |  | 20.00 CNY |
 | 延卿 |  | 20.00 CNY |
 | Ohayou |  | 20.00 CNY |
@@ -131,6 +135,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Hanlehua |  | 20.00 CNY |
 | Hanelalo | [github.com/hanelalo](https://github.com/hanelalo) | 20.00 CNY |
 | Yiyi |  | 20.00 CNY |
+| 猫的谔定靴 |  | 16.66 CNY |
 | 北Pro |  | 16.66 CNY |
 | 番茄炒蛋 |  | 16.66 CNY |
 | 向阳 |  | 16.66 CNY |
@@ -155,12 +160,11 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 关情 |  | 10.00 CNY |
 | 帕鲁 |  | 10.00 CNY |
 | OAHCCAI |  | 10.00 CNY |
 | 枭雨月 |  | 10.00 CNY |
 | 肖恩 |  | 10.00 CNY |
-| 完美的一天 |  | 10.00 CNY |
-| 猫的谔定靴 |  | 10.00 CNY |
 | 似水年华 |  | 10.00 CNY |
 | 芯辰 |  | 10.00 CNY |
 | 水 |  | 10.00 CNY |
@@ -327,6 +331,18 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 陈飞龙 |  | 6.66 CNY |
+| 星辰. |  | 6.66 CNY |
+| Jaden |  | 6.66 CNY |
+| 青玉 |  | 6.66 CNY |
+| 瞳 |  | 6.66 CNY |
+| ByMe |  | 6.66 CNY |
+| 天道愁 秦先生 |  | 6.66 CNY |
+| 承灵 |  | 6.66 CNY |
+| A.笑笑 |  | 6.66 CNY |
+| 森屿 |  | 6.66 CNY |
+| 范特蛟 |  | 6.66 CNY |
+| 人设崩塌 |  | 6.66 CNY |
 | 枝梧栖鹰 |  | 6.66 CNY |
 | 行之惟艰 |  | 6.66 CNY |
 | Duer |  | 6.66 CNY |
@@ -672,7 +688,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | たかさま |  | 6.66 CNY |
 | 纸短情长。 |  | 6.66 CNY |
 | 困顿 |  | 6.66 CNY |
-| 夏泽业 |  | 6.66 CNY |
 | Traveling Light |  | 6.66 CNY |
 | 究梧桐 |  | 6.66 CNY |
 | 紫川 |  | 6.66 CNY |
