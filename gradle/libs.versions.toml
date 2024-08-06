@@ -8,7 +8,7 @@ junit = "4.13.2"
 websocket = "1.5.7"
 
 # plugins
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 kover = "0.8.3"
 qodana = "2024.1.5"
 changelog = "2.2.1"
