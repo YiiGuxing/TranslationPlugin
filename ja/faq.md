@@ -19,7 +19,7 @@
 
 パスワードの保存方法を `In KeePass` 方式に変更してみてください（<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>）。
 
-![](../img/ide_passwords.png ':class=round')
+![](/img/ide_passwords.png ':class=round')
 
 原因と詳細：
 - macOS の場合は、[#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
@@ -29,7 +29,7 @@
 
 文字化けは通常、フォントに対応する文字がないことが原因です。プラグインの設定ページでフォントを変更して文字化けの問題を解決できます（次の図を参照）。
 
-![](../ja/img/settings_font.png ':class=round')
+![](/ja/img/settings_font.png ':class=round')
 
 ## ショートカットキーが使用できない場合はどうすればいいですか？ :id=faq-shortcuts
 

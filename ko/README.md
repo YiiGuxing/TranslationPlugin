@@ -2,7 +2,7 @@
 
 TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인입니다. Google 번역, Microsoft 번역, OpenAI 번역, DeepL 번역 등 많은 번역 엔진을 통합합니다. 텍스트, 코드 주석, 코드 문서 등을 IDE에서 언제든지 번역할 수 있습니다.
 
-![TranslationPlugin](../img/translation_plugin.png)
+![TranslationPlugin](/img/translation_plugin.png)
 
 ## 특성 :id=features
 
@@ -74,7 +74,7 @@ TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인�
 
 텍스트를 선택하거나 마우스로 텍스트를 가리킴 > 마우스 오른쪽 버튼 클릭 > <kbd>**Translate**</kbd>.
 
-![번역 시작](../img/translate.gif ':size=520x450')
+![번역 시작](/img/translate.gif ':size=520x450')
 
 ?> 또는 단축키를 사용하여 번역, 자세한 내용은 [액션](#translate-action) 참고.
 
@@ -86,11 +86,11 @@ TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인�
 
 _편집자:_
 
-![편집자](../img/translation_replacement.gif ':size=400x380')
+![편집자](/img/translation_replacement.gif ':size=400x380')
 
 _입력 상자:_
 
-![입력 상자](../img/translation_replacement_component.gif ':size=460x400')
+![입력 상자](/img/translation_replacement_component.gif ':size=460x400')
 
 ?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> > Enables the <kbd>**Add to context menu**</kbd> option.  
 _Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> > <kbd>**Separators**</kbd>.
@@ -102,15 +102,15 @@ _Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translat
 
 _Quick documentation:_
 
-![Quick documentation](../img/docs_translation.gif ':size=302x162 :class=round')
+![Quick documentation](/img/docs_translation.gif ':size=302x162 :class=round')
 
 _Documentation comment:_
 
-![Documentation comment](../img/doc_comment_translation.gif ':size=400x380')
+![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
 
 _Editor inlay documentation rendered view:_
 
-![Editor inlay documentation rendered view](../img/docs_inlay_comment_translation.gif ':size=400x300')
+![Editor inlay documentation rendered view](/img/docs_inlay_comment_translation.gif ':size=400x300')
 
 ?> _Enable the "**Automatically translate documentation**" option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Other**</kbd> > <kbd>**Automatically translate documentation**</kbd>.
 
@@ -120,7 +120,7 @@ _Editor inlay documentation rendered view:_
 
 상태 표시줄의 엔진 위젯을 클릭하거나 단축키 <kbd>**Ctrl + Shift + S**</kbd> (macOS: <kbd>**Control + Meta + Y**</kbd>)를 사용하여 번역 엔진과 TTS 엔진을 빠르게 전환합니다.
 
-![번역 엔진 전환](../en/img/translation_engines.png ':size=233x314 :class=round')
+![번역 엔진 전환](/en/img/translation_engines.png ':size=233x314 :class=round')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -138,7 +138,7 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + O**</kbd>
 - macOS - <kbd>**Control + Meta + I**</kbd>
 
-![Translation dialog](../img/translation_dialog.png ':size=550x250')
+![Translation dialog](/img/translation_dialog.png ':size=550x250')
 
 #### 2. 번역 :id=translate-action
 
@@ -146,19 +146,19 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![번역](../img/translate_auto_selection.gif ':size=300x250')
+![번역](/img/translate_auto_selection.gif ':size=300x250')
 
 #### 3. 번역 (포괄적) :id=translate-inclusive-action
 
 단어를 가져와서 번역합니다.가장 가까운 모든 단어를 최대 범위로 자동으로 가져오며, 수동 선택한 텍스트는 무시합니다.디폴트 단축키: (없음)
 
-![번역 (포괄적)](../img/translate_inclusive.gif ':size=300x250')
+![번역 (포괄적)](/img/translate_inclusive.gif ':size=300x250')
 
 #### 4. 번역 (배타적) :id=translate-exclusive-action
 
 단어를 가져와서 번역합니다.가장 가까운 개별 단어를 자동으로 가져오며, 수동으로 선택한 텍스트는 무시합니다.디폴트 단축키: (없음)
 
-![번역 (배타적)](../img/translate_exclusive.gif ':size=300x250')
+![번역 (배타적)](/img/translate_exclusive.gif ':size=300x250')
 
 #### 5. 번역 및 바꾸기... :id=translate-and-replace-action
 
@@ -168,11 +168,11 @@ _Editor inlay documentation rendered view:_
 
 _편집자:_
 
-![편집자](../img/translation_replacement_by_shortcut.gif ':size=260x380')
+![편집자](/img/translation_replacement_by_shortcut.gif ':size=260x380')
 
 _입력 상자:_
 
-![입력 상자](../img/translation_replacement_component.gif ':size=460x400')
+![입력 상자](/img/translation_replacement_component.gif ':size=460x400')
 
 #### 6. 문서 번역 :id=translate-doc-action
 ##### 6.1. 빠른 문서 번역 간 전환 :id=toggle-quick-doc-translation-action
@@ -181,7 +181,7 @@ _입력 상자:_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![Documentation translation](../img/docs_translation.gif ':size=302x162 :class=round')
+![Documentation translation](/img/docs_translation.gif ':size=302x162 :class=round')
 
 ##### 6.2. Translate Documentation Comment :id=translate-doc-comment-action
 
@@ -189,12 +189,12 @@ Translate documentation comment content. Appears on the editor right-click conte
 
 _Documentation comment:_
 
-![Documentation comment](../img/doc_comment_translation.gif ':size=400x380')
+![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
 
 
 _Editor inlay documentation rendered view:_
 
-![Editor inlay documentation rendered view:](../img/docs_inlay_comment_translation.gif ':size=400x300')
+![Editor inlay documentation rendered view:](/img/docs_inlay_comment_translation.gif ':size=400x300')
 
 #### 7. 번역 텍스트 구성 요소 :id=translate-text-component-action
 
@@ -208,13 +208,13 @@ _Editor inlay documentation rendered view:_
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![번역기 선택](../en/img/translation_engines.png ':size=233x314 :class=round')
+![번역기 선택](/en/img/translation_engines.png ':size=233x314 :class=round')
 
 #### 9. 오늘의 단어 :id=word-of-the-day-action
 
 오늘의 단어 대화상자를 표시합니다.디폴트 단축키: (없음)
 
-![오늘의 단어](../en/img/word_of_the_day.png ':size=552x478 :class=round')
+![오늘의 단어](/en/img/word_of_the_day.png ':size=552x478 :class=round')
 
 #### 10. 기타 :id=other-actions
 
