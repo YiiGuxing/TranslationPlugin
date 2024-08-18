@@ -19,7 +19,7 @@ If you don't see an answer to your question here, check our previously [reported
 
 You can try changing the way passwords are saved to `In KeePass` (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>). 
 
-![](../img/ide_passwords.png ':class=round')
+![](/img/ide_passwords.png ':class=round')
 
 For more details:
 - For macOS, please refer to [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
@@ -29,7 +29,7 @@ For more details:
 
 The Garbled code generally appears when there is a lack of corresponding characters in the font. You can go to the Settings page of the plugin to modify the font in order to fix the garbled code (as shown below).
 
-![](img/settings_font.png ':class=round')
+![](/img/settings_font.png ':class=round')
 
 ## What if the shortcuts don't work? :id=faq-shortcuts
 

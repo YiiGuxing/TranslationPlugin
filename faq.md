@@ -25,7 +25,7 @@
 
 可以尝试将密码保存方式改成 `In KeePass` 的方式 (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>)。
 
-![](img/ide_passwords.png ':class=round')
+![](/img/ide_passwords.png ':class=round')
 
 原因与细节：
 - macOS，请另阅 [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)
@@ -35,7 +35,7 @@
 
 由于一些翻译引擎支持翻译到众多的目标语言，如果**IDE**当前使用的字体中没有这些语言所需的字体，此时就很有可能会出现乱码，这时你可以到插件的设置页面修改字体以解决乱码问题（如下图所示）。
 
-![](img/settings_font.png ':class=round')
+![](/img/settings_font.png ':class=round')
 
 ## 快捷键不能使用怎么办? :id=faq-shortcuts
 

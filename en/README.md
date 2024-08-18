@@ -5,7 +5,7 @@ It integrates many translation engines such as Google Translate, Microsoft Trans
 OpenAI Translate, DeepL Translate, etc. You can translate the text, code comments,
 and code documents, etc. You want to translate in your IDE at any time.
 
-![IntelliJ Translation Plugin](../img/translation_plugin.png)
+![IntelliJ Translation Plugin](/img/translation_plugin.png)
 
 ## Features :id=features
 
@@ -83,7 +83,7 @@ and then bind the **Authentication Key** within the plugin: <kbd>**Preferences(S
 
 Select a text or hover the mouse over the text > <kbd>**Right-click**</kbd> > <kbd>**Translate**</kbd>.
 
-![Begin translating](../img/translate.gif ':size=520x450')
+![Begin translating](/img/translate.gif ':size=520x450')
 
 ?> Or use shortcuts for translation, as detailed in [Actions](#translate-action).
 
@@ -99,11 +99,11 @@ as detailed in [Actions](#translate-and-replace-action)).
 
 _Editor:_
 
-![Editor: plugin settings](../img/translation_replacement.gif ':size=400x380')
+![Editor: plugin settings](/img/translation_replacement.gif ':size=400x380')
 
 _Input box:_
 
-![Input box: translate and replace](../img/translation_replacement_component.gif ':size=460x400')
+![Input box: translate and replace](/img/translation_replacement_component.gif ':size=460x400')
 
 ?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> >
 Enables the <kbd>**Add to context menu**</kbd> option.  
@@ -121,15 +121,15 @@ _Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translat
 
 _Quick documentation:_
 
-![Quick documentation](../img/docs_translation.gif ':size=302x162 :class=round')
+![Quick documentation](/img/docs_translation.gif ':size=302x162 :class=round')
 
 _Documentation comment:_
 
-![Documentation comment](../img/doc_comment_translation.gif ':size=400x380')
+![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
 
 _Editor inlay documentation rendered view:_
 
-![Editor inlay documentation rendered view](../img/docs_inlay_comment_translation.gif ':size=400x300')
+![Editor inlay documentation rendered view](/img/docs_inlay_comment_translation.gif ':size=400x300')
 
 ?> _Enable the "**Automatically translate documentation**" option:_ <kbd>**Translation Settings**</kbd> >
 <kbd>**Other**</kbd> > <kbd>**Automatically translate documentation**</kbd>.
@@ -141,7 +141,7 @@ _Editor inlay documentation rendered view:_
 Click the engine widget in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
 (macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between the translation engine and the TTS engine quickly.
 
-![Translation engines](img/translation_engines.png ':size=233x314')
+![Translation engines](/img/translation_engines.png ':size=233x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -159,7 +159,7 @@ Open the translation dialog, which appears by default on the toolbar. Default sh
 - Windows - <kbd>**Ctrl + Shift + O**</kbd>
 - macOS - <kbd>**Control + Meta + I**</kbd>
 
-![Translation dialog](../img/translation_dialog.png ':size=550x250')
+![Translation dialog](/img/translation_dialog.png ':size=550x250')
 
 #### 2. Translate :id=translate-action
 
@@ -172,7 +172,7 @@ Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![Translate Action](../img/translate_auto_selection.gif ':size=300x250')
+![Translate Action](/img/translate_auto_selection.gif ':size=300x250')
 
 #### 3. Translate (inclusive) :id=translate-inclusive-action
 
@@ -180,7 +180,7 @@ Extract words and translate them.
 Automatically extract and translate all words from a specific range, ignoring manually selected text.
 Default shortcut: (None)
 
-![Translate (inclusive) Action](../img/translate_inclusive.gif ':size=300x250')
+![Translate (inclusive) Action](/img/translate_inclusive.gif ':size=300x250')
 
 #### 4. Translate (exclusive) :id=translate-exclusive-action
 
@@ -188,7 +188,7 @@ Extract words and translate them.
 Automatically extract the nearest single word, ignoring manually selected text.
 Default shortcut: (None)
 
-![Translate (exclusive) Action](../img/translate_exclusive.gif ':size=300x250')
+![Translate (exclusive) Action](/img/translate_exclusive.gif ':size=300x250')
 
 #### 5. Translate and Replace... :id=translate-and-replace-action
 
@@ -201,11 +201,11 @@ Default shortcut:
 
 _Editor:_
 
-![Editor: Translate and Replace](../img/translation_replacement_by_shortcut.gif ':size=260x380')
+![Editor: Translate and Replace](/img/translation_replacement_by_shortcut.gif ':size=260x380')
 
 _Input box:_
 
-![Input box: Translate and Replace](../img/translation_replacement_component.gif ':size=460x400')
+![Input box: Translate and Replace](/img/translation_replacement_component.gif ':size=460x400')
 
 #### 6. Translate Documentation :id=translate-doc-action
 ##### 6.1. Toggle between Quick Documentation translations :id=toggle-quick-doc-translation-action
@@ -217,7 +217,7 @@ Default shortcut (same as the [Translate Action](#translate-action)):
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![Documentation translation](../img/docs_translation.gif ':size=302x162 :class=round')
+![Documentation translation](/img/docs_translation.gif ':size=302x162 :class=round')
 
 ##### 6.2. Translate Documentation Comment :id=translate-doc-comment-action
 
@@ -228,12 +228,12 @@ Default shortcut: (None)
 
 _Documentation comment:_
 
-![Documentation comment](../img/doc_comment_translation.gif ':size=400x380')
+![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
 
 
 _Editor inlay documentation rendered view:_
 
-![Editor inlay documentation rendered view:](../img/docs_inlay_comment_translation.gif ':size=400x300')
+![Editor inlay documentation rendered view:](/img/docs_inlay_comment_translation.gif ':size=400x300')
 
 #### 7. Translate the Text Component :id=translate-text-component-action
 
@@ -249,13 +249,13 @@ Quickly switch between translation engine and TTS engine. Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![Translation Engines](img/translation_engines.png ':size=233x314')
+![Translation Engines](/img/translation_engines.png ':size=233x314')
 
 #### 9. Word of the Day :id=word-of-the-day-action
 
 Display the "**Word of the Day**" dialog. Default shortcut: (None)
 
-![Word of the Day](img/word_of_the_day.png ':size=552x478 :class=round')
+![Word of the Day](/img/word_of_the_day.png ':size=552x478 :class=round')
 
 #### 10. Other :id=other-actions
 

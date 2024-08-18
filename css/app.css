@@ -680,7 +680,7 @@ main.hide-sidebar .sidebar-toggle {
     content: '';
     transform: scale(3);
     background-size: cover;
-    background-image: url("../img/mesh_gradient.png");
+    background-image: url("https://intellij-translation-resources.yiiguxing.top/img/mesh_gradient.png");
     animation: rotate 5s linear infinite, move 12s linear infinite;
 }
 
@@ -753,13 +753,13 @@ section.cover .badges > p {
     text-align: start;
     margin-bottom: 20px;
     background-color: #f2f2f2;
-    background-image: url("../img/screenshot_frame_header.png");
+    background-image: url("https://intellij-translation-resources.yiiguxing.top/img/screenshot_frame_header.png");
 }
 
 .idea-frame .frame-footer {
     height: 21px;
     background-color: #f2f2f2;
-    background-image: url("../img/screenshot_frame_footer.png");
+    background-image: url("https://intellij-translation-resources.yiiguxing.top/img/screenshot_frame_footer.png");
 }
 
 .translator-logo {
@@ -806,7 +806,7 @@ section.cover .badges > p {
     overflow: hidden;
     background-color: transparent;
     background-repeat: no-repeat;
-    background-image: url(../img/oc-donate-button.svg);
+    background-image: url(https://intellij-translation-resources.yiiguxing.top/img/oc-donate-button.svg);
 }
 
 .open-collective-donate-button > .button--bg:hover {

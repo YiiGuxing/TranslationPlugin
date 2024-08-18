@@ -2,7 +2,7 @@
 
 **IntelliJ Translation Plugin** 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、OpenAI 翻译、有道翻译等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
 
-![IntelliJ Translation Plugin](img/translation_plugin.png)
+![IntelliJ Translation Plugin](/img/translation_plugin.png)
 
 ## 特征 :id=features
 
@@ -87,11 +87,11 @@
 
 _编辑器：_
 
-![编辑器：翻译和替换](img/translation_replacement.gif ':size=400x380')
+![编辑器：翻译和替换](/img/translation_replacement.gif ':size=400x380')
 
 _文本输入框：_
 
-![文本输入框：翻译和替换](img/translation_replacement_component.gif ':size=460x400')
+![文本输入框：翻译和替换](/img/translation_replacement_component.gif ':size=460x400')
 
 ?> _开启右键菜单项：_<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > 勾选<kbd>**在右键菜单显示替换操作**</kbd>；  
 _分隔符配置：_<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > <kbd>**分隔符**</kbd>。
@@ -135,7 +135,7 @@ _编辑器内嵌文档视图：_
 - Windows - <kbd>**Ctrl + Shift + O**</kbd>
 - macOS - <kbd>**Control + Meta + I**</kbd>
 
-![翻译对话框](img/translation_dialog.png ':size=550x250')
+![翻译对话框](/img/translation_dialog.png ':size=550x250')
 
 #### 2. 翻译 :id=translate-action
 
@@ -143,19 +143,19 @@ _编辑器内嵌文档视图：_
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![翻译](img/translate_auto_selection.gif ':size=300x250')
+![翻译](/img/translate_auto_selection.gif ':size=300x250')
 
 #### 3. 翻译（包含） :id=translate-inclusive-action
 
 取词并翻译。自动以最大范围取最近的所有词，忽略手动选择的文本。默认快捷键：（无）
 
-![翻译（包含）](img/translate_inclusive.gif ':size=300x250')
+![翻译（包含）](/img/translate_inclusive.gif ':size=300x250')
 
 #### 4. 翻译（独占） :id=translate-exclusive-action
 
 取词并翻译。自动取最近的单个词，忽略手动选择的文本。默认快捷键：（无）
 
-![翻译（独占）](img/translate_exclusive.gif ':size=300x250')
+![翻译（独占）](/img/translate_exclusive.gif ':size=300x250')
 
 #### 5. 翻译和替换... :id=translate-and-replace-action
 
@@ -165,11 +165,11 @@ _编辑器内嵌文档视图：_
 
 _编辑器：_
 
-![编辑器：翻译和替换](img/translation_replacement_by_shortcut.gif ':size=260x380')
+![编辑器：翻译和替换](/img/translation_replacement_by_shortcut.gif ':size=260x380')
 
 _文本输入框：_
 
-![文本输入框：翻译和替换](img/translation_replacement_component.gif ':size=460x400')
+![文本输入框：翻译和替换](/img/translation_replacement_component.gif ':size=460x400')
 
 #### 6. 翻译文档 :id=translate-doc-action
 ##### 6.1. 切换快速文档翻译 :id=toggle-quick-doc-translation-action

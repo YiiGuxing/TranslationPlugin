@@ -26,6 +26,9 @@
         },
     ];
 
+    var RESOURCES_BASE_URL = "https://intellij-translation-resources.yiiguxing.top";
+    var __DEV__ = localStorage.getItem("dev") === "true";
+
     function gaPlugin(hook) {
         hook.beforeEach(function () {
             gtag('event', 'page_view', {
@@ -91,7 +94,7 @@
         });
 
         hook.afterEach(function (html, next) {
-            var output = resolveImagePathIfNeed(vm, html);
+            var output = resolveImagePath(vm, html);
             output = resolveHeading(output);
             output = resolveIFrame(vm, output);
             next(output);
@@ -350,12 +353,13 @@
         }
     }
 
-    function resolveImagePathIfNeed(vm, html) {
-        if (!html || !/^\/((en|ja|ko)\/)?updates(\/.*)?$/.test(vm.route.path)) {
+    function resolveImagePath(vm, html) {
+        if (!html) {
             return html;
         }
 
-        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, '<img src=".$3"$2$4>');
+        var baseUrl = __DEV__ ? "" : RESOURCES_BASE_URL;
+        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, '<img src="' + baseUrl + '$3"$2$4>');
     }
 
     function resolveHeading(html) {

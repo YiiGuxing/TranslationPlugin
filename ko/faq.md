@@ -19,7 +19,7 @@ If you don't see an answer to your question here, check our previously [reported
 
 암호 저장 방법을 `In KeePass` 방법으로 변경해 보세요 (<kbd>**Preferences(Settings)**</kbd> > <kbd>**Appearance & Behavior**</kbd> > <kbd>**System Settings**</kbd> > <kbd>**Passwords**</kbd>).
 
-![](../img/ide_passwords.png ':class=round')
+![](/img/ide_passwords.png ':class=round')
 
 원인 및 세부 정보는 다음과 같습니다:
 - macOS의 경우, [#81](https://github.com/YiiGuxing/TranslationPlugin/issues/81)을 참조하세요.
@@ -29,7 +29,7 @@ If you don't see an answer to your question here, check our previously [reported
 
 깨진 글자는 일반적으로 글꼴에 해당 문자가 없기 때문에 발생하는 문제이며, 플러그인의 설정 페이지에서 글꼴을 수정하여 깨진 글자 문제를 해결할 수 있습니다(아래 그림 참조).
 
-![](../en/img/settings_font.png ':class=round')
+![](/en/img/settings_font.png ':class=round')
 
 ## 단축키를 사용할 수 없는 경우 어떻게 해야 하나요? :id=faq-shortcuts
 
