@@ -359,7 +359,10 @@
         }
 
         var baseUrl = __DEV__ ? "" : RESOURCES_BASE_URL;
-        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, '<img src="' + baseUrl + '$3"$2$4>');
+        return html.replace(/<img src="(.+?)"(.*?)data-origin="(.+?)"(.*?)>/g, function replacer(match, p1, p2, p3, p4) {
+            var src = (p3 || "").charAt(0) === "/" ? baseUrl + p3 : p3;
+            return '<img src="' + src + '"' + p2 + p4 + '>';
+        });
     }
 
     function resolveHeading(html) {
