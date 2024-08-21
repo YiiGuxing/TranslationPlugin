@@ -41,20 +41,19 @@ class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), Im
             return
         }
 
-        val editorPane = getPaneWithSelection(null, editor) as? JEditorPane
-        e.presentation.isEnabledAndVisible = !editor.selectionModel.hasSelection(true) &&
-                editorPane != null && !editorPane.selectedText.isNullOrBlank()
+        e.presentation.isEnabledAndVisible = !editor.selectionModel.hasSelection(true)
+                && !editor.getInlinePaneWithSelection()?.selectedText.isNullOrBlank()
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         val editor = e.editor ?: return
-        val editorPane = getPaneWithSelection(null, editor) as? JEditorPane
-        val selectedText = editorPane?.selectedText?.processBeforeTranslate()
+        val editorPane = editor.getInlinePaneWithSelection() ?: return
+        val selectedText = editorPane.selectedText?.processBeforeTranslate()
         if (selectedText.isNullOrBlank()) {
             return
         }
 
-        val positionInEditor = getSelectionPositionInEditor(editorPane) as? Point ?: return
+        val positionInEditor = editorPane.getSelectionPositionInEditor() ?: return
         val scrollingModel = editor.scrollingModel
         if (!scrollingModel.visibleAreaOnScrollingFinished.contains(positionInEditor)) {
             scrollingModel.scrollTo(editor.xyToLogicalPosition(positionInEditor), ScrollType.MAKE_VISIBLE)
@@ -77,7 +76,7 @@ class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), Im
                 return lastPosition
             }
 
-            val positionStartInEditor = getSelectionPositionInEditor(editorPane) as Point? ?: return lastPosition
+            val positionStartInEditor = editorPane.getSelectionPositionInEditor() ?: return lastPosition
             val positionStartInPane = editorPane.modelToView2D(editorPane.selectionStart)
             val positionEndInPane = editorPane.modelToView2D(editorPane.selectionEnd)
             val positionEndXInEditor = positionEndInPane.x + positionStartInEditor.x - positionStartInPane.x
@@ -101,7 +100,7 @@ class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), Im
     }
 
     companion object {
-        private val getPaneWithSelection: Method? by lazy {
+        private val getPaneWithSelectionMethod: Method? by lazy {
             try {
                 val clazz = Class.forName("com.intellij.codeInsight.documentation.render.DocRenderSelectionManager")
                 clazz.getDeclaredMethod("getPaneWithSelection", Editor::class.java)
@@ -110,13 +109,30 @@ class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), Im
             }
         }
 
-        private val getSelectionPositionInEditor: Method? by lazy {
-            try {
-                val clazz = Class.forName("com.intellij.codeInsight.documentation.render.DocRenderer\$EditorPane")
-                clazz.getDeclaredMethod("getSelectionPositionInEditor")
-            } catch (e: Throwable) {
-                null
+        private fun Editor.getInlinePaneWithSelection(): JEditorPane? {
+            return getPaneWithSelectionMethod(null, this) as? JEditorPane
+        }
+
+        private var selectionPositionMethod: Method? = null
+        private var isSelectionPositionMethodInitialized = false
+
+        @Synchronized
+        private fun getSelectionPositionMethod(obj: Any): Method? {
+            if (!isSelectionPositionMethodInitialized) {
+                selectionPositionMethod = try {
+                    obj.javaClass.getDeclaredMethod("getSelectionPositionInEditor")
+                } catch (e: Throwable) {
+                    null
+                } finally {
+                    isSelectionPositionMethodInitialized = true
+                }
             }
+
+            return selectionPositionMethod
+        }
+
+        private fun JEditorPane.getSelectionPositionInEditor(): Point? {
+            return getSelectionPositionMethod(this)(this) as? Point
         }
 
         private operator fun Method?.invoke(obj: Any?, vararg args: Any?): Any? {
