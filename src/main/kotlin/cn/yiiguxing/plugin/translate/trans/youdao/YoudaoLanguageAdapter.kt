@@ -10,7 +10,7 @@ object YoudaoLanguageAdapter : BaseLanguageAdapter() {
 
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
         Lang.AUTO,
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.CHINESE_TRADITIONAL,
         Lang.ENGLISH,
         Lang.JAPANESE,
@@ -33,7 +33,7 @@ object YoudaoLanguageAdapter : BaseLanguageAdapter() {
     override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
-        "zh-CHS" to Lang.CHINESE,
+        "zh-CHS" to Lang.CHINESE_SIMPLIFIED,
         "zh-CHT" to Lang.CHINESE_TRADITIONAL,
     )
 

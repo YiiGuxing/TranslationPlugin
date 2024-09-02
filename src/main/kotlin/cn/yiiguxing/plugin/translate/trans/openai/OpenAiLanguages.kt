@@ -6,7 +6,7 @@ internal object OpenAiLanguages {
 
     val languageMap = linkedMapOf(
         Lang.ENGLISH to "English",
-        Lang.CHINESE to "Simplified Chinese",
+        Lang.CHINESE_SIMPLIFIED to "Simplified Chinese",
         Lang.CHINESE_TRADITIONAL to "Traditional Chinese",
         Lang.JAPANESE to "Japanese",
         Lang.KOREAN to "Korean",

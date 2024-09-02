@@ -12,6 +12,7 @@ internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         Lang.BELARUSIAN,
         Lang.CEBUANO,
         Lang.CHICHEWA,
+        Lang.CHINESE, // 己俱体分为 `中文（简体）` 和 `中文（繁体）` 等
         Lang.CORSICAN,
         Lang.ENGLISH_AMERICAN,
         Lang.ENGLISH_BRITISH,
@@ -44,7 +45,7 @@ internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "yue" to Lang.CHINESE_CANTONESE,
         "lzh" to Lang.CHINESE_CLASSICAL,
-        "zh-Hans" to Lang.CHINESE,
+        "zh-Hans" to Lang.CHINESE_SIMPLIFIED,
         "zh-Hant" to Lang.CHINESE_TRADITIONAL,
         "fil" to Lang.FILIPINO,
         "he" to Lang.HEBREW,

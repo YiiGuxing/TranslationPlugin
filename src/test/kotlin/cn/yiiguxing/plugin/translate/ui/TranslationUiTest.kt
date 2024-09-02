@@ -14,8 +14,8 @@ fun main() = uiTest("Translation UI Test", 500, 300/*, true*/) {
     val ui = TranslationDialogUiImpl(null, TranslationDialogUiProvider.testProvider())
     val mainPanel = ui.createMainPanel()
 
-    ui.sourceLangComboBox.model = LanguageListModel.simple(listOf(Lang.AUTO, Lang.ENGLISH, Lang.CHINESE))
-    ui.targetLangComboBox.model = LanguageListModel.simple(listOf(Lang.CHINESE, Lang.ENGLISH))
+    ui.sourceLangComboBox.model = LanguageListModel.simple(listOf(Lang.AUTO, Lang.ENGLISH, Lang.CHINESE_SIMPLIFIED))
+    ui.targetLangComboBox.model = LanguageListModel.simple(listOf(Lang.CHINESE_SIMPLIFIED, Lang.ENGLISH))
 
     ui.initFonts(UI.FontPair(UI.defaultFont, UI.defaultFont.lessOn(2f)))
 
@@ -26,7 +26,7 @@ fun main() = uiTest("Translation UI Test", 500, 300/*, true*/) {
     ui.targetTransliterationLabel.text = "Fānyì"
 
     val googleTranslation = createGoogleTranslation()
-    val translation = googleTranslation.toTranslation().copy(srcLang = Lang.CHINESE)
+    val translation = googleTranslation.toTranslation().copy(srcLang = Lang.CHINESE_SIMPLIFIED)
     ui.spellComponent.spell = "translation"
     ui.fixLangComponent.updateOnTranslation(translation)
 
@@ -57,7 +57,7 @@ fun createDummyYoudaoTranslation(): YoudaoTranslation = YoudaoTranslation(
 fun createGoogleTranslation(): GoogleTranslation = GoogleTranslation(
     "translation",
     Lang.ENGLISH,
-    Lang.CHINESE,
+    Lang.CHINESE_SIMPLIFIED,
     listOf(GTransSentence("translation", "翻译", 2), GTranslitSentence("transˈlāSH(ə)n", "Fānyì")),
     listOf(
         GDict(

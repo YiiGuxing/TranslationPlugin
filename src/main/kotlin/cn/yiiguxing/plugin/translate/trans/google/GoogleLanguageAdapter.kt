@@ -11,6 +11,7 @@ object GoogleLanguageAdapter : BaseLanguageAdapter() {
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.ASSAMESE,
         Lang.BASHKIR,
+        Lang.CHINESE, // 己俱体分为 `中文（简体）`
         Lang.CHINESE_CANTONESE,
         Lang.CHINESE_CLASSICAL,
         Lang.DARI,

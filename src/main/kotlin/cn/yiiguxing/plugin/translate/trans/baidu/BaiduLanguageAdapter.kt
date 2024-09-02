@@ -10,7 +10,7 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
 
     /** 通用版支持的语言列表 */
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.ENGLISH,
         Lang.CHINESE_TRADITIONAL,
         Lang.CHINESE_CANTONESE,
@@ -43,7 +43,7 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
     /** 尊享版支持的语言列表 */
     @Suppress("unused")
     private val SUPPORTED_LANGUAGES_PRO: List<Lang> = listOf(
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.ENGLISH,
         Lang.CHINESE_TRADITIONAL,
         Lang.CHINESE_CANTONESE,
@@ -141,7 +141,7 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
         "ben" to Lang.BENGALI,
         "bos" to Lang.BOSNIAN,
         "bul" to Lang.BULGARIAN,
-        "zh" to Lang.CHINESE,
+        "zh" to Lang.CHINESE_SIMPLIFIED,
         "cht" to Lang.CHINESE_TRADITIONAL,
         "wyw" to Lang.CHINESE_CLASSICAL,
         "yue" to Lang.CHINESE_CANTONESE,

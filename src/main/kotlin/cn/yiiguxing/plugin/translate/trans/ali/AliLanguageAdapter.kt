@@ -10,7 +10,7 @@ object AliLanguageAdapter : BaseLanguageAdapter() {
 
     override val supportedSourceLanguages: List<Lang> = listOf(
         Lang.AUTO,
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.CHINESE_TRADITIONAL,
         Lang.ENGLISH,
         Lang.JAPANESE,
@@ -31,7 +31,7 @@ object AliLanguageAdapter : BaseLanguageAdapter() {
     )
 
     override val supportedTargetLanguages: List<Lang> = listOf(
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.ENGLISH,
         Lang.JAPANESE,
         Lang.KOREAN,
@@ -49,7 +49,7 @@ object AliLanguageAdapter : BaseLanguageAdapter() {
     )
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
-        "zh" to Lang.CHINESE,
+        "zh" to Lang.CHINESE_SIMPLIFIED,
         "zh-tw" to Lang.CHINESE_TRADITIONAL,
         "yue" to Lang.CHINESE_CANTONESE,
         "fil" to Lang.FILIPINO,
