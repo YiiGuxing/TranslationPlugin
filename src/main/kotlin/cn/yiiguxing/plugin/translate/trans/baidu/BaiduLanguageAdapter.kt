@@ -2,11 +2,12 @@ package cn.yiiguxing.plugin.translate.trans.baidu
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 /**
  * Language adapter for Baidu Translator.
  */
-object BaiduLanguageAdapter : BaseLanguageAdapter() {
+object BaiduLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
     /** 通用版支持的语言列表 */
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
@@ -123,11 +124,11 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
         Lang.ARMENIAN,
     )
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val sourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
         .toMutableList()
         .apply { add(0, Lang.AUTO) }
 
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val targetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "afr" to Lang.AFRIKAANS,

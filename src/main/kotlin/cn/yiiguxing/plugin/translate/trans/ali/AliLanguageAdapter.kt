@@ -2,13 +2,14 @@ package cn.yiiguxing.plugin.translate.trans.ali
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 /**
  * Language adapter for Ali Translator.
  */
-object AliLanguageAdapter : BaseLanguageAdapter() {
+object AliLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
-    override val supportedSourceLanguages: List<Lang> = listOf(
+    override val sourceLanguages: List<Lang> = listOf(
         Lang.AUTO,
         Lang.CHINESE_SIMPLIFIED,
         Lang.CHINESE_TRADITIONAL,
@@ -30,7 +31,7 @@ object AliLanguageAdapter : BaseLanguageAdapter() {
         Lang.HINDI
     )
 
-    override val supportedTargetLanguages: List<Lang> = listOf(
+    override val targetLanguages: List<Lang> = listOf(
         Lang.CHINESE_SIMPLIFIED,
         Lang.ENGLISH,
         Lang.JAPANESE,

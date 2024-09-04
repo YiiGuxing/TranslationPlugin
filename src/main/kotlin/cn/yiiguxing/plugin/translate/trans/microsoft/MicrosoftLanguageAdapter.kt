@@ -2,11 +2,12 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 /**
  * Language adapter for Microsoft Translator.
  */
-internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
+internal object MicrosoftLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.BELARUSIAN,
@@ -57,10 +58,9 @@ internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         "pt" to Lang.PORTUGUESE_BRAZILIAN,
     )
 
-    override val supportedSourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
+    override val sourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
 
-    override val supportedTargetLanguages: List<Lang> =
-        (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
+    override val targetLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
 }
 
 

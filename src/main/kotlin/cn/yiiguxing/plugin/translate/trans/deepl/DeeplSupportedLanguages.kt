@@ -2,16 +2,17 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 
 /**
  * Supported languages for DeepL Translator.
  */
-object DeeplSupportedLanguages {
+object DeeplSupportedLanguages : SupportedLanguages {
     /**
      * The supported source languages.
      */
-    val sourceLanguages: List<Lang> = listOf(
+    override val sourceLanguages: List<Lang> = listOf(
         Lang.AUTO,
         Lang.ARABIC,
         Lang.BULGARIAN,
@@ -48,7 +49,7 @@ object DeeplSupportedLanguages {
     /**
      * The supported target languages.
      */
-    val targetLanguages: List<Lang> = listOf(
+    override val targetLanguages: List<Lang> = listOf(
         Lang.ARABIC,
         Lang.BULGARIAN,
         Lang.CHINESE_SIMPLIFIED,
@@ -86,10 +87,6 @@ object DeeplSupportedLanguages {
 }
 
 private val adapter = object : BaseLanguageAdapter() {
-    override val supportedSourceLanguages: List<Lang> = DeeplSupportedLanguages.sourceLanguages
-
-    override val supportedTargetLanguages: List<Lang> = DeeplSupportedLanguages.targetLanguages
-
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "AR" to Lang.ARABIC,
         "BG" to Lang.BULGARIAN,
