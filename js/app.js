@@ -26,7 +26,7 @@
         },
     ];
 
-    var RESOURCES_BASE_URL = "https://intellij-translation-resources.yiiguxing.top";
+    var RESOURCES_BASE_URL = "";
     var __DEV__ = localStorage.getItem("dev") === "true";
 
     function gaPlugin(hook) {
