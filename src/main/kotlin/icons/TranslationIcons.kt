@@ -12,6 +12,9 @@ object TranslationIcons {
     val Translation: Icon = load("/icons/translation.svg")
 
     @JvmField
+    val TranslationInactivated: Icon = load("/icons/translationInactivated.svg")
+
+    @JvmField
     val TranslationReplace: Icon = load("/icons/translationReplace.svg")
 
     @JvmField

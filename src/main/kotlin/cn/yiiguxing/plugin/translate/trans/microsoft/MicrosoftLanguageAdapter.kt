@@ -2,16 +2,18 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 /**
  * Language adapter for Microsoft Translator.
  */
-internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
+internal object MicrosoftLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.BELARUSIAN,
         Lang.CEBUANO,
         Lang.CHICHEWA,
+        Lang.CHINESE, // 己俱体分为 `中文（简体）` 和 `中文（繁体）` 等
         Lang.CORSICAN,
         Lang.ENGLISH_AMERICAN,
         Lang.ENGLISH_BRITISH,
@@ -44,7 +46,7 @@ internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "yue" to Lang.CHINESE_CANTONESE,
         "lzh" to Lang.CHINESE_CLASSICAL,
-        "zh-Hans" to Lang.CHINESE,
+        "zh-Hans" to Lang.CHINESE_SIMPLIFIED,
         "zh-Hant" to Lang.CHINESE_TRADITIONAL,
         "fil" to Lang.FILIPINO,
         "he" to Lang.HEBREW,
@@ -56,10 +58,9 @@ internal object MicrosoftLanguageAdapter : BaseLanguageAdapter() {
         "pt" to Lang.PORTUGUESE_BRAZILIAN,
     )
 
-    override val supportedSourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
+    override val sourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
 
-    override val supportedTargetLanguages: List<Lang> =
-        (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
+    override val targetLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
 }
 
 

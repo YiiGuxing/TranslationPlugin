@@ -2,15 +2,17 @@ package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 /**
  * Language adapter for Google Translator.
  */
-object GoogleLanguageAdapter : BaseLanguageAdapter() {
+object GoogleLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
     private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
         Lang.ASSAMESE,
         Lang.BASHKIR,
+        Lang.CHINESE, // 己俱体分为 `中文（简体）`
         Lang.CHINESE_CANTONESE,
         Lang.CHINESE_CLASSICAL,
         Lang.DARI,
@@ -35,10 +37,9 @@ object GoogleLanguageAdapter : BaseLanguageAdapter() {
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf()
 
-    override val supportedSourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
+    override val sourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
 
-    override val supportedTargetLanguages: List<Lang> =
-        (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
+    override val targetLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
 }
 
 

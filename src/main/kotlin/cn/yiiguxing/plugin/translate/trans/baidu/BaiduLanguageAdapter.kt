@@ -2,15 +2,16 @@ package cn.yiiguxing.plugin.translate.trans.baidu
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
 
 /**
  * Language adapter for Baidu Translator.
  */
-object BaiduLanguageAdapter : BaseLanguageAdapter() {
+object BaiduLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
     /** 通用版支持的语言列表 */
     private val SUPPORTED_LANGUAGES: List<Lang> = listOf(
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.ENGLISH,
         Lang.CHINESE_TRADITIONAL,
         Lang.CHINESE_CANTONESE,
@@ -43,7 +44,7 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
     /** 尊享版支持的语言列表 */
     @Suppress("unused")
     private val SUPPORTED_LANGUAGES_PRO: List<Lang> = listOf(
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
         Lang.ENGLISH,
         Lang.CHINESE_TRADITIONAL,
         Lang.CHINESE_CANTONESE,
@@ -123,11 +124,11 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
         Lang.ARMENIAN,
     )
 
-    override val supportedSourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val sourceLanguages: List<Lang> = SUPPORTED_LANGUAGES
         .toMutableList()
         .apply { add(0, Lang.AUTO) }
 
-    override val supportedTargetLanguages: List<Lang> = SUPPORTED_LANGUAGES
+    override val targetLanguages: List<Lang> = SUPPORTED_LANGUAGES
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
         "afr" to Lang.AFRIKAANS,
@@ -141,7 +142,7 @@ object BaiduLanguageAdapter : BaseLanguageAdapter() {
         "ben" to Lang.BENGALI,
         "bos" to Lang.BOSNIAN,
         "bul" to Lang.BULGARIAN,
-        "zh" to Lang.CHINESE,
+        "zh" to Lang.CHINESE_SIMPLIFIED,
         "cht" to Lang.CHINESE_TRADITIONAL,
         "wyw" to Lang.CHINESE_CLASSICAL,
         "yue" to Lang.CHINESE_CANTONESE,

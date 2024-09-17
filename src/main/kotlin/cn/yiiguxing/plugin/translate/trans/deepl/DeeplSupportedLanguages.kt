@@ -2,31 +2,38 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.trans.BaseLanguageAdapter
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
+
 
 /**
- * Language adapter for DeepL Translator.
+ * Supported languages for DeepL Translator.
  */
-object DeeplLanguageAdapter : BaseLanguageAdapter() {
-
-    override val supportedSourceLanguages: List<Lang> = listOf(
+object DeeplSupportedLanguages : SupportedLanguages {
+    /**
+     * The supported source languages.
+     */
+    override val sourceLanguages: List<Lang> = listOf(
         Lang.AUTO,
+        Lang.ARABIC,
         Lang.BULGARIAN,
         Lang.CHINESE,
         Lang.CZECH,
         Lang.DANISH,
         Lang.DUTCH,
-        Lang.GERMAN,
-        Lang.GREEK,
         Lang.ENGLISH,
         Lang.ESTONIAN,
         Lang.FINNISH,
         Lang.FRENCH,
+        Lang.GERMAN,
+        Lang.GREEK,
         Lang.HUNGARIAN,
+        Lang.INDONESIAN,
         Lang.ITALIAN,
         Lang.JAPANESE,
         Lang.KOREAN,
         Lang.LATVIAN,
         Lang.LITHUANIAN,
+        Lang.NORWEGIAN,
         Lang.POLISH,
         Lang.PORTUGUESE,
         Lang.ROMANIAN,
@@ -35,86 +42,116 @@ object DeeplLanguageAdapter : BaseLanguageAdapter() {
         Lang.SLOVENIAN,
         Lang.SPANISH,
         Lang.SWEDISH,
+        Lang.TURKISH,
         Lang.UKRAINIAN,
     )
 
-    override val supportedTargetLanguages: List<Lang> = listOf(
+    /**
+     * The supported target languages.
+     */
+    override val targetLanguages: List<Lang> = listOf(
+        Lang.ARABIC,
         Lang.BULGARIAN,
-        Lang.CHINESE,
+        Lang.CHINESE_SIMPLIFIED,
+        Lang.CHINESE_TRADITIONAL,
         Lang.CZECH,
         Lang.DANISH,
         Lang.DUTCH,
-        Lang.GERMAN,
-        Lang.GREEK,
-        Lang.ENGLISH,
         Lang.ENGLISH_AMERICAN,
         Lang.ENGLISH_BRITISH,
         Lang.ESTONIAN,
         Lang.FINNISH,
         Lang.FRENCH,
+        Lang.GERMAN,
+        Lang.GREEK,
         Lang.HUNGARIAN,
+        Lang.INDONESIAN,
         Lang.ITALIAN,
         Lang.JAPANESE,
         Lang.KOREAN,
         Lang.LATVIAN,
         Lang.LITHUANIAN,
+        Lang.NORWEGIAN,
         Lang.POLISH,
         Lang.PORTUGUESE,
         Lang.PORTUGUESE_BRAZILIAN,
-        Lang.PORTUGUESE_PORTUGUESE,
         Lang.ROMANIAN,
         Lang.RUSSIAN,
         Lang.SLOVAK,
         Lang.SLOVENIAN,
         Lang.SPANISH,
         Lang.SWEDISH,
+        Lang.TURKISH,
         Lang.UKRAINIAN,
     )
+}
 
+private val adapter = object : BaseLanguageAdapter() {
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf(
+        "AR" to Lang.ARABIC,
         "BG" to Lang.BULGARIAN,
         "ZH" to Lang.CHINESE,
+        "ZH-HANS" to Lang.CHINESE_SIMPLIFIED,
+        "ZH-HANT" to Lang.CHINESE_TRADITIONAL,
         "CS" to Lang.CZECH,
         "DA" to Lang.DANISH,
         "NL" to Lang.DUTCH,
-        "DE" to Lang.GERMAN,
-        "EL" to Lang.GREEK,
         "EN" to Lang.ENGLISH,
         "EN-US" to Lang.ENGLISH_AMERICAN,
         "EN-GB" to Lang.ENGLISH_BRITISH,
         "ET" to Lang.ESTONIAN,
         "FI" to Lang.FINNISH,
         "FR" to Lang.FRENCH,
+        "DE" to Lang.GERMAN,
+        "EL" to Lang.GREEK,
         "HU" to Lang.HUNGARIAN,
         "IT" to Lang.ITALIAN,
+        "ID" to Lang.INDONESIAN,
         "JA" to Lang.JAPANESE,
         "KO" to Lang.KOREAN,
         "LV" to Lang.LATVIAN,
         "LT" to Lang.LITHUANIAN,
+        "NB" to Lang.NORWEGIAN,
         "PL" to Lang.POLISH,
+
+        // PORTUGUESE is ambiguous, and the regions it
+        // represents differ between the source and target languages.
         "PT" to Lang.PORTUGUESE,
+        "PT-PT" to Lang.PORTUGUESE,
+
         "PT-BR" to Lang.PORTUGUESE_BRAZILIAN,
-        "PT-PT" to Lang.PORTUGUESE_PORTUGUESE,
         "RO" to Lang.ROMANIAN,
         "RU" to Lang.RUSSIAN,
         "SK" to Lang.SLOVAK,
         "SL" to Lang.SLOVENIAN,
         "ES" to Lang.SPANISH,
         "SV" to Lang.SWEDISH,
+        "TR" to Lang.TURKISH,
         "UK" to Lang.UKRAINIAN,
     )
 }
 
+/**
+ * Source Language Code for DeepL Translator.
+ */
+val Lang.deeplLanguageCodeForSource: String
+    get() = when (this) {
+        Lang.PORTUGUESE -> "PT"
+        else -> adapter.getLanguageCode(this)
+    }
 
 /**
- * Language code for DeepL Translator.
+ * Target Language Code for DeepL Translator.
  */
-val Lang.deeplLanguageCode: String
-    get() = DeeplLanguageAdapter.getLanguageCode(this)
+val Lang.deeplLanguageCodeForTarget: String
+    get() = when (this) {
+        Lang.PORTUGUESE -> "PT-PT"
+        else -> adapter.getLanguageCode(this)
+    }
 
 /**
  * Returns the [language][Lang] for the specified DeepL Translator language [code].
  */
 fun Lang.Companion.fromDeeplLanguageCode(code: String): Lang {
-    return DeeplLanguageAdapter.getLanguage(code)
+    return adapter.getLanguage(code)
 }

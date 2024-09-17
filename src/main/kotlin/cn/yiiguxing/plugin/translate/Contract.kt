@@ -4,11 +4,10 @@
 package cn.yiiguxing.plugin.translate
 
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.SupportedLanguagesData
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.Translator
 import com.intellij.openapi.Disposable
-
-data class SupportedLanguages(val source: List<Lang>, val target: List<Lang>)
 
 interface Presenter {
 
@@ -27,7 +26,7 @@ interface Presenter {
     /**
      * 已支持的语言
      */
-    val supportedLanguages: SupportedLanguages
+    val supportedLanguages: SupportedLanguagesData
 
     /**
      * 检测指定的源语言是否被支持

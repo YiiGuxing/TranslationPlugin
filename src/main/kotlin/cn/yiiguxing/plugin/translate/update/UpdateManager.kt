@@ -68,14 +68,14 @@ class UpdateManager : BaseStartupActivity(true, false) {
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
         val lastVersionString = properties.getValue(VERSION_PROPERTY, Version.INITIAL_VERSION)
         if (versionString == lastVersionString) {
-            onPostUpdate()
+            onPostUpdate(false)
             return
         }
 
         val version = Version(versionString)
         val lastVersion = Version.getOrElse(lastVersionString) { Version() }
         if (version.isSameVersion(lastVersion)) {
-            onPostUpdate()
+            onPostUpdate(false)
             return
         }
 
@@ -142,7 +142,7 @@ class UpdateManager : BaseStartupActivity(true, false) {
                         WhatsNew.browse(project, version)
                     }
                 }
-                onPostUpdate()
+                onPostUpdate(true)
             }
 
         invokeLaterIfNeeded(expired = project.disposed) {
@@ -204,9 +204,9 @@ class UpdateManager : BaseStartupActivity(true, false) {
         return true
     }
 
-    private fun onPostUpdate() {
+    private fun onPostUpdate(hasUpdate: Boolean) {
         invokeLaterIfNeeded {
-            Application.messageBus.syncPublisher(UpdateListener.TOPIC).onPostUpdate()
+            Application.messageBus.syncPublisher(UpdateListener.TOPIC).onPostUpdate(hasUpdate)
         }
     }
 
