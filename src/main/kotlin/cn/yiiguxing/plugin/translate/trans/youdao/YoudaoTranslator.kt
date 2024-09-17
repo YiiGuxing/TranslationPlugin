@@ -44,9 +44,9 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = YOUDAO.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = YoudaoLanguageAdapter.supportedSourceLanguages
+    override val supportedSourceLanguages: List<Lang> = YoudaoLanguageAdapter.sourceLanguages
 
-    override val supportedTargetLanguages: List<Lang> = YoudaoLanguageAdapter.supportedTargetLanguages
+    override val supportedTargetLanguages: List<Lang> = YoudaoLanguageAdapter.targetLanguages
 
     private val errorMessageMap: Map<Int, String> by lazy {
         mapOf(

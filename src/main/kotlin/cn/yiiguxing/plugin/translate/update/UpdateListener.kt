@@ -8,7 +8,7 @@ interface UpdateListener {
      * Called after the update check is completed. If the update notification is shown,
      * this method will be called after the notification is closed.
      */
-    fun onPostUpdate() {}
+    fun onPostUpdate(hasUpdate: Boolean) {}
 
     companion object {
         @Topic.AppLevel
