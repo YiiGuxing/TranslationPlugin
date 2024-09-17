@@ -10,7 +10,7 @@ websocket = "1.5.7"
 # plugins
 kotlin = "2.0.20"
 kover = "0.8.3"
-qodana = "2024.1.9"
+qodana = "2024.2.2"
 changelog = "2.2.1"
 gradleIntelliJPlugin = "1.17.4"
 
