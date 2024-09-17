@@ -62,7 +62,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         try {
             TranslationStorages.createCacheDirectoriesIfNotExists()
             getCacheFilePath(key).writeSafe { it.write(translation.toByteArray()) }
-            println("DEBUG - Puts disk cache: $key")
+            LOG.d("Puts disk cache: $key")
             trimDiskCachesIfNeed()
         } catch (e: Exception) {
             LOG.w(e)
@@ -72,7 +72,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     fun getDiskCache(key: String): String? {
         return try {
             getCacheFilePath(key).takeIf { Files.isRegularFile(it) }?.readText()?.apply {
-                println("DEBUG - Disk cache hit: $key")
+                LOG.d("Disk cache hit: $key")
             }
         } catch (e: Exception) {
             LOG.w(e)

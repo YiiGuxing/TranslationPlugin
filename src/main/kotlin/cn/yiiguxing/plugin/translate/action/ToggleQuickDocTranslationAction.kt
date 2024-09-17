@@ -21,14 +21,9 @@ import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.concurrency.AppExecutorUtil
-import icons.TranslationIcons
-import javax.swing.Icon
 
 open class ToggleQuickDocTranslationAction :
-    FixedIconToggleAction(
-        TranslationIcons.Documentation,
-        { adaptedMessage("action.ToggleQuickDocTranslationAction.text") }
-    ),
+    ToggleableTranslationAction(),
     HintManagerImpl.ActionToIgnore,
     ImportantTranslationAction {
 
@@ -42,26 +37,27 @@ open class ToggleQuickDocTranslationAction :
 
     private fun documentationBrowser(dc: DataContext): DocumentationBrowserCompat? = DocumentationBrowserCompat.get(dc)
 
-    final override fun update(e: AnActionEvent) {
-        super.update(e)
-        val project = e.project
+    final override fun update(event: AnActionEvent, isSelected: Boolean) {
+        val presentation = event.presentation
+        presentation.text = adaptedMessage(
+            if (isSelected) "action.ToggleQuickDocTranslationAction.text.original"
+            else "action.ToggleQuickDocTranslationAction.text"
+        )
+
+        val project = event.project
         if (project == null) {
-            e.presentation.isEnabled = false
+            presentation.isEnabled = false
             return
         }
 
         if (isDocumentationV2) {
-            e.presentation.isEnabledAndVisible = documentationBrowser(e.dataContext)
+            presentation.isEnabledAndVisible = documentationBrowser(event.dataContext)
                 ?.targetElement
                 .let { it != null && DocTranslationService.isSupportedForPsiElement(it) }
             return
         }
 
-        update(project, e)
-    }
-
-    override fun getIcon(place: String, selected: Boolean): Icon? {
-        return if (ActionPlaces.JAVADOC_TOOLBAR != place && selected) null else icon
+        update(project, event)
     }
 
     private fun update(project: Project, e: AnActionEvent) {
@@ -82,10 +78,10 @@ open class ToggleQuickDocTranslationAction :
             activeDocComponent != null && (isDocMenuPlace || toolWindow == null || toolWindow.isActive)
     }
 
-    override fun isSelected(e: AnActionEvent): Boolean {
-        val project = e.project ?: return false
+    override fun isSelected(event: AnActionEvent): Boolean {
+        val project = event.project ?: return false
         val state = if (isDocumentationV2) {
-            documentationBrowser(e.dataContext)?.targetElement?.let {
+            documentationBrowser(event.dataContext)?.targetElement?.let {
                 DocTranslationService.getTranslationState(it)
             }
         } else {
@@ -97,10 +93,10 @@ open class ToggleQuickDocTranslationAction :
         return state ?: Settings.getInstance().translateDocumentation
     }
 
-    override fun setSelected(e: AnActionEvent, state: Boolean) {
-        val project = e.project ?: return
+    override fun setSelected(event: AnActionEvent, state: Boolean) {
+        val project = event.project ?: return
         if (isDocumentationV2) {
-            documentationBrowser(e.dataContext)?.apply {
+            documentationBrowser(event.dataContext)?.apply {
                 targetElement?.let { DocTranslationService.setTranslationState(it, state) }
                 reload()
             }
@@ -143,5 +139,4 @@ open class ToggleQuickDocTranslationAction :
             }
         }
     }
-
 }

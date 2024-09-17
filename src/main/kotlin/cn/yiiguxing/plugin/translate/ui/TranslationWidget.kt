@@ -25,9 +25,11 @@ import com.intellij.openapi.wm.impl.status.TextPanel.WithIconAndArrows
 import com.intellij.ui.ClickListener
 import com.intellij.ui.GotItTooltip
 import com.intellij.ui.awt.RelativePoint
+import com.intellij.util.concurrency.AppExecutorUtil
 import org.jetbrains.concurrency.runAsync
 import java.awt.Point
 import java.awt.event.MouseEvent
+import java.util.concurrent.TimeUnit
 import javax.swing.JComponent
 
 /**
@@ -102,13 +104,19 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
         project.messageBus
             .connect(disposable)
             .subscribe(UpdateListener.TOPIC, object : UpdateListener {
-                override fun onPostUpdate() {
+                override fun onPostUpdate(hasUpdate: Boolean) {
                     Disposer.dispose(disposable)
-                    if (project.isDisposed) {
-                        return
+                    val runnable = {
+                        if (!project.isDisposed) {
+                            DumbService.getInstance(project).smartInvokeLater {
+                                showGotItTooltipIfNeed()
+                            }
+                        }
                     }
-                    DumbService.getInstance(project).smartInvokeLater {
-                        showGotItTooltipIfNeed()
+                    if (hasUpdate) {
+                        AppExecutorUtil.getAppScheduledExecutorService().schedule(runnable, 1, TimeUnit.SECONDS)
+                    } else {
+                        runnable()
                     }
                 }
             })

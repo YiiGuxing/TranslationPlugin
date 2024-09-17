@@ -106,7 +106,6 @@ kover {
 tasks {
     runIde {
         systemProperty("idea.is.internal", true)
-        systemProperty("translation.plugin.log.stdout", true)
 
         jvmArgs = listOf(
             // Enable hotswap, requires JBR 17+ or JBR 11 with DCEVM, and run in debug mode.

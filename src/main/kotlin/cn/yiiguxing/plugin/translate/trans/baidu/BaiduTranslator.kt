@@ -41,9 +41,9 @@ object BaiduTranslator : AbstractTranslator() {
     override val primaryLanguage: Lang
         get() = BAIDU.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = BaiduLanguageAdapter.supportedSourceLanguages
+    override val supportedSourceLanguages: List<Lang> = BaiduLanguageAdapter.sourceLanguages
 
-    override val supportedTargetLanguages: List<Lang> = BaiduLanguageAdapter.supportedTargetLanguages
+    override val supportedTargetLanguages: List<Lang> = BaiduLanguageAdapter.targetLanguages
 
     private val errorMessageMap: Map<Int, String> by lazy {
         mapOf(

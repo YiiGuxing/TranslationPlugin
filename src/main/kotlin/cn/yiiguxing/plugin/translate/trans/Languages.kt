@@ -85,13 +85,16 @@ enum class Lang(
     CHICHEWA("chichewa", "ny"),
 
     /** 中文 */
-    CHINESE("chinese", "zh-CN"),
+    CHINESE("chinese", "zh"),
 
     /** 粤语 */
     CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE"),
 
     /** 文言文 */
     CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL"),
+
+    /** 中文(简体) */
+    CHINESE_SIMPLIFIED("chinese.simplified", "zh-CN"),
 
     /** 中文(繁体) */
     CHINESE_TRADITIONAL("chinese.traditional", "zh-TW"),
@@ -459,7 +462,7 @@ enum class Lang(
                 return when (localeLanguage) {
                     Locale.CHINESE.language -> when (Locale.getDefault().country) {
                         "HK", "TW" -> CHINESE_TRADITIONAL
-                        else -> CHINESE
+                        else -> CHINESE_SIMPLIFIED
                     }
 
                     else -> values().find { Locale(it.code).language.equals(localeLanguage, ignoreCase = true) }
