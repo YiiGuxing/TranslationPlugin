@@ -44,9 +44,9 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = GOOGLE.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = GoogleLanguageAdapter.supportedSourceLanguages
+    override val supportedSourceLanguages: List<Lang> = GoogleLanguageAdapter.sourceLanguages
 
-    override val supportedTargetLanguages: List<Lang> = GoogleLanguageAdapter.supportedTargetLanguages
+    override val supportedTargetLanguages: List<Lang> = GoogleLanguageAdapter.targetLanguages
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {

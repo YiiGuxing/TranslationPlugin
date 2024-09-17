@@ -636,11 +636,13 @@ class WordBookService : Disposable {
 
         private inline fun <T> lock(block: () -> T): T {
             return RandomAccessFile(LOCK_FILE.toFile(), "rw").use { lockFile ->
-                val lock = lockFile.channel.lock()
-                try {
-                    block()
-                } finally {
-                    lock.release()
+                synchronized(LOCK_FILE) {
+                    val lock = lockFile.channel.lock()
+                    try {
+                        block()
+                    } finally {
+                        lock.release()
+                    }
                 }
             }
         }

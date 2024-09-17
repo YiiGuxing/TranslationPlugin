@@ -13,7 +13,7 @@ import com.intellij.util.io.RequestBuilder
 class DeeplService(var authKey: String) {
 
     /**
-     * Determines if the given [DeepL Authentication Key][authKey] belongs to an API Free account.
+     * Determines if the given [DeepL Authentication Key][authKey] belongs to an API-Free account.
      */
     val isFreeAccount: Boolean get() = isFreeAccountAuthKey(authKey)
 
@@ -27,7 +27,7 @@ class DeeplService(var authKey: String) {
     private fun RequestBuilder.auth() {
         userAgent(Http.PLUGIN_USER_AGENT)
         // Authentication method should be header-based authentication,
-        // auth-key will leak into the log file if it is authenticated as a parameter.
+        // the auth-key will leak into the log file if it is authenticated as a parameter.
         tuner { it.setRequestProperty("Authorization", "DeepL-Auth-Key $authKey") }
     }
 
@@ -36,11 +36,11 @@ class DeeplService(var authKey: String) {
      */
     fun translate(text: String, sourceLang: Lang, targetLang: Lang, isDocument: Boolean): String {
         val params: LinkedHashMap<String, String> = linkedMapOf(
-            "target_lang" to targetLang.deeplLanguageCode,
+            "target_lang" to targetLang.deeplLanguageCodeForTarget,
             "text" to text
         )
         if (sourceLang !== Lang.AUTO) {
-            params["source_lang"] = sourceLang.deeplLanguageCode
+            params["source_lang"] = sourceLang.deeplLanguageCodeForSource
         }
         if (isDocument) {
             params["tag_handling"] = "html"
@@ -80,10 +80,10 @@ class DeeplService(var authKey: String) {
         private const val DEEPL_SERVER_URL_PRO = "https://api.deepl.com"
 
         /**
-         * Determines if the given [DeepL Authentication Key][authKey] belongs to an API Free account.
+         * Determines if the given [DeepL Authentication Key][authKey] belongs to an API-Free account.
          *
          * @param authKey DeepL Authentication Key as found in your [DeepL account](https://www.deepl.com/pro-account/).
-         * @return `true` if the Authentication Key belongs to an API Free account, otherwise `false`.
+         * @return `true` if the Authentication Key belongs to an API-Free account, otherwise `false`.
          */
         fun isFreeAccountAuthKey(authKey: String): Boolean = authKey.endsWith(":fx")
     }

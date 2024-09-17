@@ -47,9 +47,9 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     override val primaryLanguage: Lang
         get() = ALI.primaryLanguage
 
-    override val supportedSourceLanguages: List<Lang> = AliLanguageAdapter.supportedSourceLanguages
+    override val supportedSourceLanguages: List<Lang> = AliLanguageAdapter.sourceLanguages
 
-    override val supportedTargetLanguages: List<Lang> = AliLanguageAdapter.supportedTargetLanguages
+    override val supportedTargetLanguages: List<Lang> = AliLanguageAdapter.targetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force ||

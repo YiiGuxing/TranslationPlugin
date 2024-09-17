@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- DeepL Translator now supports languages such as Chinese Traditional.
+- User interaction experience optimization and improvement.
+- Bug fixes.
+- DeepL 翻译现已支持繁体中文等语言
+- 用户交互体验优化与改进
+- Bug 修复
+
 ## [3.6.4] (2024/07/23)
 
 - The GPT-4o mini is now available in the OpenAI Translator engine.
