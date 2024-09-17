@@ -34,6 +34,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 丿初音 |  | 425.00 CNY |
 | 剑平 |  | 120.00 CNY |
 | 山有扶苏 | [github.com/fobgochod](https://github.com/fobgochod) | 110.00 CNY |
+| 丁云波 |  | 100.00 CNY |
 | 逆行 |  | 100.00 CNY |
 | Kimmy |  | 100.00 CNY |
 | LiMingjun |  | 100.00 CNY |
@@ -92,6 +93,9 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Numbpad1 | [github.com/numbpad1](https://github.com/numbpad1) | 25.00 CNY |
 | 张弛 | [www.chinazach.com](https://www.chinazach.com) | 22.00 CNY |
 | 安红豆 | [ormissia.github.io](https://ormissia.github.io) | 21.00 CNY |
+| Yuchen |  | 20.00 CNY |
+| Jesse |  | 20.00 CNY |
+| 虫虫 |  | 20.00 CNY |
 | Xcye |  | 20.00 CNY |
 | 完美的一天 |  | 20.00 CNY |
 | 奥拓 |  | 20.00 CNY |
@@ -160,6 +164,10 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Jardel | [github.com/JardelCheung](https://github.com/JardelCheung) | 10.24 CNY |
 | Devwei095 |  | 10.24 CNY |
 | Ncayu618 |  | 10.24 CNY |
+| 陈佳 |  | 10.00 CNY |
+| 冲锋の大选帝侯 |  | 10.00 CNY |
+| ᕕᐛ |  | 10.00 CNY |
+| 裴涛 |  | 10.00 CNY |
 | 关情 |  | 10.00 CNY |
 | 帕鲁 |  | 10.00 CNY |
 | OAHCCAI |  | 10.00 CNY |
@@ -191,7 +199,6 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 湛蓝徽章 |  | 10.00 CNY |
 | 恒 |  | 10.00 CNY |
 | 繁星 |  | 10.00 CNY |
-| 虫虫 |  | 10.00 CNY |
 | 🇨🇴🇸🇹🇦 |  | 10.00 CNY |
 | Kay |  | 10.00 CNY |
 | 大鹏 |  | 10.00 CNY |
@@ -331,6 +338,17 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 甯 |  | 8.00 CNY |
 | 干巴爹 |  | 8.00 CNY |
 | 尼古拉斯 |  | 6.67 CNY |
+| 一曲终了 |  | 6.66 CNY |
+| Phil liu |  | 6.66 CNY |
+| （Ω\_Ω） |  | 6.66 CNY |
+| 青松 |  | 6.66 CNY |
+| ZhAnGpYU |  | 6.66 CNY |
+| Hone |  | 6.66 CNY |
+| 与 |  | 6.66 CNY |
+| 闲趣 |  | 6.66 CNY |
+| gohobo |  | 6.66 CNY |
+| 空灵 |  | 6.66 CNY |
+| Hunter |  | 6.66 CNY |
 | 陈飞龙 |  | 6.66 CNY |
 | 星辰. |  | 6.66 CNY |
 | Jaden |  | 6.66 CNY |
