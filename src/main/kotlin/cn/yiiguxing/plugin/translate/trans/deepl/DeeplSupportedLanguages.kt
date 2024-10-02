@@ -57,6 +57,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.CZECH,
         Lang.DANISH,
         Lang.DUTCH,
+        Lang.ENGLISH,
         Lang.ENGLISH_AMERICAN,
         Lang.ENGLISH_BRITISH,
         Lang.ESTONIAN,
