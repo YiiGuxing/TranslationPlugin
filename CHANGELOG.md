@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- User interaction experience optimization and improvement.
+- Bug fixes.
+- 用户交互体验优化与改进
+- Bug 修复
+
 ## [3.6.5] (2024/09/17)
 
 - DeepL Translator now supports languages such as Chinese Traditional.

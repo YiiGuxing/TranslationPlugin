@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.service
 
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.components.*
@@ -30,17 +31,19 @@ class CacheService : PersistentStateComponent<CacheService.State> {
 
     fun putMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String, translation: Translation) {
         memoryCache.put(MemoryCacheKey(text, srcLang, targetLang, translatorId), translation)
-        if (Lang.AUTO == srcLang) {
-            memoryCache.put(MemoryCacheKey(text, translation.srcLang, targetLang, translatorId), translation)
+
+        val srcLangToCache = when {
+            srcLang.isExplicit() -> srcLang
+            translation.srcLang.isExplicit() -> translation.srcLang
+            else -> return
         }
-        if (Lang.AUTO == targetLang) {
-            memoryCache.put(MemoryCacheKey(text, srcLang, translation.targetLang, translatorId), translation)
+        val targetLangToCache = when {
+            targetLang.isExplicit() -> targetLang
+            translation.targetLang.isExplicit() -> translation.targetLang
+            else -> return
         }
-        if (Lang.AUTO == srcLang && Lang.AUTO == targetLang) {
-            memoryCache.put(
-                MemoryCacheKey(text, translation.srcLang, translation.targetLang, translatorId),
-                translation
-            )
+        if (srcLangToCache != srcLang || targetLangToCache != targetLang) {
+            memoryCache.put(MemoryCacheKey(text, srcLangToCache, targetLangToCache, translatorId), translation)
         }
     }
 
