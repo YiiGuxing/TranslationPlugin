@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
  * @param param the parameter that caused the error, if applicable.
  * @param type the type of error that occurred.
  */
-data class OpenAiError internal constructor(
+data class OpenAiError(
     @SerializedName("code") val code: String?,
     @SerializedName("message") val message: String?,
     @SerializedName("param") val param: String?,
