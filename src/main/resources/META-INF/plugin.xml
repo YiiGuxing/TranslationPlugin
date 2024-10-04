@@ -44,12 +44,6 @@
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider"/>
         </extensionPoint>
-        <extensionPoint name="documentationElementProvider"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint"
-                        dynamic="true">
-            <with attribute="implementationClass"
-                  implements="cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider"/>
-        </extensionPoint>
     </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -125,9 +119,6 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
-        <action id="Translation.TranslateDocumentationAction"
-                icon="TranslationIcons.Documentation"
-                class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"/>
         <action id="Translation.InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"/>
         <action id="Translation.ExclusiveTranslateAction"
@@ -165,7 +156,6 @@
             <separator/>
             <reference ref="Translation.EditorTranslateAction"/>
             <reference ref="Translation.TranslateAndReplaceAction"/>
-            <reference ref="Translation.TranslateDocumentationAction"/>
             <separator/>
 
             <add-to-group group-id="BasicEditorPopupMenu" anchor="first"/>
