@@ -71,8 +71,6 @@
         <!--<backgroundPostStartupActivity
                 implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>-->
         <backgroundPostStartupActivity
-                implementation="cn.yiiguxing.plugin.translate.activity.CheckGoogleNetworkStartupActivity"/>
-        <backgroundPostStartupActivity
                 implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
         <documentationActionProvider
