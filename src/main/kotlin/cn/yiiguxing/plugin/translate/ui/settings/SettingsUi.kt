@@ -6,7 +6,6 @@ import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.TTSEngine
-import cn.yiiguxing.plugin.translate.ui.ActionLink
 import cn.yiiguxing.plugin.translate.ui.TypedComboBoxEditor
 import cn.yiiguxing.plugin.translate.ui.UI.emptyBorder
 import cn.yiiguxing.plugin.translate.ui.UI.fill
@@ -20,6 +19,12 @@ import cn.yiiguxing.plugin.translate.ui.UI.wrap
 import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.util.IdeVersion
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.actionSystem.ActionPlaces
+import com.intellij.openapi.actionSystem.ActionToolbar
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -37,6 +42,7 @@ import icons.TranslationIcons
 import net.miginfocom.layout.CC
 import java.awt.Dimension
 import java.awt.event.ItemEvent
+import java.util.function.Supplier
 import javax.swing.*
 import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
@@ -57,7 +63,16 @@ abstract class SettingsUi {
         }
     }
 
-    protected val configureTranslationEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
+    private lateinit var configureTranslationEngineHandler: () -> Unit
+
+    private val configureTranslationEngineButton: ActionButton =
+        configureButton({ message("settings.action.configure.translation.engine") }) {
+            configureTranslationEngineHandler()
+        }
+
+    protected fun onConfigureTranslationEngine(handler: () -> Unit) {
+        configureTranslationEngineHandler = handler
+    }
 
     protected val ttsEngineComboBox: ComboBox<TTSEngine> = comboBox<TTSEngine>().apply {
         renderer = SimpleListCellRenderer.create { label, value, _ ->
@@ -71,7 +86,16 @@ abstract class SettingsUi {
         }
     }
 
-    protected val configureTtsEngineLink: ActionLink = ActionLink(message("settings.configure.link")) {}
+    private lateinit var configureTTSEngineHandler: () -> Unit
+
+    private val configureTtsEngineButton: ActionButton =
+        configureButton({ message("settings.action.configure.tts.engine") }) {
+            configureTTSEngineHandler()
+        }
+
+    protected fun onConfigureTTSEngine(handler: () -> Unit) {
+        configureTTSEngineHandler = handler
+    }
 
     protected val primaryLanguageComboBox: ComboBox<Lang> = comboBox<Lang>().apply {
         renderer = SimpleListCellRenderer.create { label, lang, _ ->
@@ -180,18 +204,18 @@ abstract class SettingsUi {
             add(JLabel(message("settings.label.translation.engine")))
             add(translationEngineComboBox, CC().sizeGroupX(comboboxGroup).minWidth(migSize(200)))
             val configurePanel = Box.createHorizontalBox().apply {
-                add(configureTranslationEngineLink)
+                add(configureTranslationEngineButton)
                 fixEngineConfigurationComponent()
             }
-            add(configurePanel, wrap().gapBefore("indent").span(2))
+            add(configurePanel, wrap().span(2))
 
             add(JLabel(message("settings.label.tts.engine")))
             add(ttsEngineComboBox, CC().sizeGroupX(comboboxGroup))
             val ttsConfigurePanel = Box.createHorizontalBox().apply {
-                add(configureTtsEngineLink)
+                add(configureTtsEngineButton)
                 fixTtsEngineConfigurationComponent()
             }
-            add(ttsConfigurePanel, wrap().gapBefore("indent").span(2))
+            add(ttsConfigurePanel, wrap().span(2))
 
             add(JLabel(message("settings.label.primaryLanguage")))
             add(primaryLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
@@ -336,11 +360,11 @@ abstract class SettingsUi {
     }
 
     private fun fixEngineConfigurationComponent() {
-        configureTranslationEngineLink.isVisible = translationEngineComboBox.selected?.hasConfiguration ?: false
+        configureTranslationEngineButton.isVisible = translationEngineComboBox.selected?.hasConfiguration ?: false
     }
 
     private fun fixTtsEngineConfigurationComponent() {
-        configureTtsEngineLink.isVisible = ttsEngineComboBox.selected?.configurable ?: false
+        configureTtsEngineButton.isVisible = ttsEngineComboBox.selected?.configurable ?: false
     }
 
     open fun isSupportDocumentTranslation(): Boolean {
@@ -397,5 +421,16 @@ abstract class SettingsUi {
         private fun <T> comboBox(vararg elements: T): ComboBox<T> = comboBox(elements.toList())
 
         private inline fun <reified T : Enum<T>> comboBox(): ComboBox<T> = comboBox(enumValues<T>().toList())
+
+        private fun configureButton(actionText: Supplier<String>, action: () -> Unit): ActionButton {
+            return ActionButton(
+                object : AnAction(actionText, actionText, AllIcons.General.Settings) {
+                    override fun actionPerformed(e: AnActionEvent) = action()
+                },
+                null,
+                ActionPlaces.UNKNOWN,
+                ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE
+            )
+        }
     }
 }

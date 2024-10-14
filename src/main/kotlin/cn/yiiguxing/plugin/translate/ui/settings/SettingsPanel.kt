@@ -141,13 +141,12 @@ class SettingsPanel(
             states.clearHistories()
         }
 
-        configureTranslationEngineLink.setListener({ _, _ ->
+        onConfigureTranslationEngine {
             translationEngineComboBox.selected?.showConfigurationDialog()
-        }, null)
-
-        configureTtsEngineLink.setListener({ _, _ ->
+        }
+        onConfigureTTSEngine {
             ttsEngineComboBox.selected?.showConfigurationDialog()
-        }, null)
+        }
 
         val background = ignoreRegExp.background
         ignoreRegExp.addDocumentListener(object : DocumentListener {
