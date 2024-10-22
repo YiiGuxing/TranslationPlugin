@@ -51,6 +51,9 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         @get:OptionTag("TTS_MODEL")
         var ttsModel: OpenAiModel by enum(OpenAiModel.TTS_1)
 
+        @get:OptionTag("CUSTOM_TTS_MODEL")
+        var customTTSModel: String? by string()
+
         @get:OptionTag("TTS_VOICE")
         var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
 
@@ -62,15 +65,18 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
     class OpenAi : CommonState(), OpenAiService.OpenAIOptions {
         @get:OptionTag("MODEL")
         override var model: OpenAiModel by enum(OpenAiModel.GPT_4O_MINI)
+
+        @get:OptionTag("CUSTOM_MODEL")
+        override var customModel: String? by string()
     }
 
     @Tag("azure")
     class Azure : CommonState(), OpenAiService.AzureOptions {
         @get:OptionTag("API_VERSION")
-        override var apiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_02_01)
+        override var apiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_06_01)
 
         @get:OptionTag("TTS_API_VERSION")
-        override var ttsApiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_05_01_PREVIEW)
+        override var ttsApiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_09_01_PREVIEW)
 
         @get:OptionTag("DEPLOYMENT_ID")
         override var deployment: String? by string()

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
  * [Documentation](https://platform.openai.com/docs/api-reference/audio/createSpeech)
  */
 data class SpeechRequest(
-    @SerializedName("model") val module: String,
+    @SerializedName("model") val model: String?,
     @SerializedName("input") val input: String,
     @SerializedName("voice") val voice: String,
     @SerializedName("speed") val speed: Float,

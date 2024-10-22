@@ -25,6 +25,8 @@ internal interface OpenAISettingsUI {
 
     val modelComboBox: ComboBox<OpenAiModel>
 
+    val customModelField: JBTextField
+
     val azureApiVersionComboBox: ComboBox<AzureServiceVersion>
 
     val ttsVoiceComboBox: ComboBox<OpenAiTtsVoice>

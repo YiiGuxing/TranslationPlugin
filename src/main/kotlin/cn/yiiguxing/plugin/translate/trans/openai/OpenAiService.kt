@@ -37,12 +37,14 @@ interface OpenAiService {
     sealed interface Options {
         val endpoint: String?
         val ttsModel: OpenAiModel
+        val customTTSModel: String?
         val ttsVoice: OpenAiTtsVoice
         val ttsSpeed: Int
     }
 
     interface OpenAIOptions : Options {
         val model: OpenAiModel
+        val customModel: String?
     }
 
     interface AzureOptions : Options {
@@ -74,16 +76,24 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
     }
 
     override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
+        val model = when (options.model) {
+            OpenAiModel.CUSTOM -> options.customModel
+            else -> options.model.value
+        }
         val request = chatCompletionRequest {
-            model = options.model.value
+            this.model = model
             this.messages = messages
         }
         return OpenAiHttp.post(getApiUrl(OPEN_AI_API_PATH), request) { auth() }
     }
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
+        val model = when (options.ttsModel) {
+            OpenAiModel.CUSTOM -> options.customTTSModel
+            else -> options.ttsModel.value
+        }
         val request = SpeechRequest(
-            module = options.ttsModel.value,
+            model = model,
             input = text,
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
@@ -110,8 +120,12 @@ class Azure(private val options: OpenAiService.AzureOptions) : OpenAiService {
     }
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
+        val model = when (options.ttsModel) {
+            OpenAiModel.CUSTOM -> options.customTTSModel
+            else -> options.ttsModel.value
+        }
         val request = SpeechRequest(
-            module = options.ttsModel.value,
+            model = model,
             input = text,
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)

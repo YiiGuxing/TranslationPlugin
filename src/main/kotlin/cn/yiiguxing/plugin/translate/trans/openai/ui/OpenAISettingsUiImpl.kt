@@ -61,11 +61,12 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
             ConfigType.TRANSLATOR -> OpenAiModel.gptModels()
             ConfigType.TTS -> OpenAiModel.ttsModels()
         }
-        model = CollectionComboBoxModel(models)
+        model = CollectionComboBoxModel(models + OpenAiModel.CUSTOM)
         renderer = SimpleListCellRenderer.create { label, model, _ ->
             label.text = model.modelName
         }
     }
+    override val customModelField: JBTextField = JBTextField()
 
     private val azureApiVersionLabel =
         JLabel(message("openai.settings.dialog.label.api.version")).apply { isVisible = false }
@@ -153,7 +154,6 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
     private fun layout() {
         val isTTS = type == ConfigType.TTS
 
-
         val comboBoxCC = UI.wrap()
             .sizeGroupX("combo-box")
             .shrink(1f)
@@ -178,6 +178,7 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         form.add(providerComboBox, comboBoxCC)
         form.add(modelLabel, labelCC)
         form.add(modelComboBox, comboBoxCC)
+        form.add(customModelField, UI.fillX().wrap().cell(1, 3))
 
         form.add(azureDeploymentLabel, labelCC)
         form.add(azureDeploymentField, UI.fillX())
@@ -212,7 +213,11 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         if (type == ConfigType.TRANSLATOR) {
             modelLabel.isVisible = visible
             modelComboBox.isVisible = visible
+        } else {
+            modelLabel.isVisible = true
+            modelComboBox.isVisible = true
         }
+        customModelField.isVisible = modelComboBox.isVisible && modelComboBox.selectedItem == OpenAiModel.CUSTOM
         apiKeyHelpLabel.isVisible = visible
         endpointHelpSpace.isVisible = visible
     }

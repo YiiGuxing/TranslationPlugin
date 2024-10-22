@@ -128,8 +128,27 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                     ConfigType.TRANSLATOR -> openAiState.model = model
                     ConfigType.TTS -> commonStates.ttsModel = model
                 }
+
+                with(ui.customModelField) {
+                    val oldState = isVisible
+                    isVisible = model == OpenAiModel.CUSTOM
+                    if (oldState != isVisible) {
+                        pack()
+                    }
+                }
             }
         }
+
+        ui.customModelField.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                val text = ui.customModelField.text.takeUnless { it.isNullOrBlank() }?.trim()
+                when (configType) {
+                    ConfigType.TRANSLATOR -> openAiState.customModel = text
+                    ConfigType.TTS -> commonStates.customTTSModel = text
+                }
+                verify(ui.customModelField)
+            }
+        })
 
         ui.azureDeploymentField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
@@ -157,6 +176,19 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     private fun initValidators() {
+        installValidator(ui.customModelField) {
+            val customModel = it.text
+            when {
+                ui.modelComboBox.selected == OpenAiModel.CUSTOM && customModel.isNullOrBlank() -> ValidationInfo(
+                    message("openai.settings.dialog.error.missing.custom.model"),
+                    it
+                )
+
+                else -> null
+            }
+        }
+
+
         installValidator(ui.apiKeyField) {
             val password = it.password
             when {
@@ -217,16 +249,20 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         } else {
             ui.apiEndpointField.emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
         }
-        ui.setOpenAiFormComponentsVisible(!isAzure)
-        ui.setAzureFormComponentsVisible(isAzure)
 
         apiEndpoint = commonStates.endpoint
         ui.apiKeyField.text = apiKeys[newProvider]
-        if (configType == ConfigType.TTS) {
+        if (configType == ConfigType.TRANSLATOR) {
+            ui.customModelField.text = openAiState.customModel
+        } else {
+            ui.customModelField.text = commonStates.customTTSModel
             ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
             ui.modelComboBox.selected = commonStates.ttsModel
             ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
         }
+
+        ui.setOpenAiFormComponentsVisible(!isAzure)
+        ui.setAzureFormComponentsVisible(isAzure)
 
         invokeLater(expired = { isDisposed }) {
             verify()
@@ -253,7 +289,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private fun verify(): Boolean {
         var valid = true
         var focusTarget: JComponent? = null
-        listOf(ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
+        listOf(ui.customModelField, ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
             verify(it)?.let { info ->
                 // 校验不通过的聚焦优先级最高
                 if (valid && it.isShowing) {
