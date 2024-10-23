@@ -49,7 +49,7 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         var endpoint: String? by string()
 
         @get:OptionTag("TTS_MODEL")
-        var ttsModel: OpenAiModel by enum(OpenAiModel.TTS_1)
+        var ttsModel: OpenAiTTSModel by enum(OpenAiTTSModel.TTS_1)
 
         @get:OptionTag("TTS_VOICE")
         var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
@@ -61,7 +61,7 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
     @Tag("open-ai")
     class OpenAi : CommonState(), OpenAiService.OpenAIOptions {
         @get:OptionTag("MODEL")
-        override var model: OpenAiModel by enum(OpenAiModel.GPT_4O_MINI)
+        override var model: OpenAiGPTModel by enum(OpenAiGPTModel.GPT_4O_MINI)
 
         @get:OptionTag("CUSTOM_MODEL")
         override var customModel: String? by string()

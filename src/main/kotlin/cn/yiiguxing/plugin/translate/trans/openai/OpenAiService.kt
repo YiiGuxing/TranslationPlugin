@@ -35,7 +35,7 @@ interface OpenAiService {
     fun speech(text: String, indicator: ProgressIndicator? = null): ByteArray
 
     interface TTSOptions {
-        val ttsModel: OpenAiModel
+        val ttsModel: OpenAiTTSModel
         val ttsVoice: OpenAiTtsVoice
         val ttsSpeed: Int
     }
@@ -45,7 +45,7 @@ interface OpenAiService {
     }
 
     interface OpenAIOptions : Options {
-        val model: OpenAiModel
+        val model: OpenAiGPTModel
         val customModel: String?
         val useCustomModel: Boolean
     }
@@ -81,7 +81,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
     override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
         val model = when {
             options.useCustomModel -> options.customModel
-            else -> options.model.value
+            else -> options.model.modelId
         }
         val request = chatCompletionRequest {
             this.model = model
@@ -92,7 +92,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
         val request = SpeechRequest(
-            model = options.ttsModel.value,
+            model = options.ttsModel.modelId,
             input = text,
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
@@ -120,7 +120,7 @@ class Azure(private val options: OpenAiService.AzureOptions) : OpenAiService {
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
         val request = SpeechRequest(
-            model = options.ttsModel.value,
+            model = options.ttsModel.modelId,
             input = text,
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)

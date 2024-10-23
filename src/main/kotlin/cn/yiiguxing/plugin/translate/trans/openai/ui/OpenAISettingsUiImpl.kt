@@ -58,8 +58,8 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     private val modelLabel = JLabel(message("openai.settings.dialog.label.model"))
     override val modelComboBox: ComboBox<OpenAiModel> = ComboBox<OpenAiModel>().apply {
         val models = when (configType) {
-            ConfigType.TRANSLATOR -> OpenAiModel.gptModels()
-            ConfigType.TTS -> OpenAiModel.ttsModels()
+            ConfigType.TRANSLATOR -> OpenAiGPTModel.values().toList()
+            ConfigType.TTS -> OpenAiTTSModel.values().toList()
         }
         model = CollectionComboBoxModel(models)
         renderer = SimpleListCellRenderer.create { label, model, _ ->

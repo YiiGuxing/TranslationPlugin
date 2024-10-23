@@ -104,7 +104,7 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
     private fun getCacheKey(text: String, srcLang: Lang, targetLang: Lang): String {
         val provider = settings.provider
         val model = when (val options = settings.getOptions(provider)) {
-            is OpenAiService.OpenAIOptions -> options.model.value
+            is OpenAiService.OpenAIOptions -> options.model.modelId
             is OpenAiService.AzureOptions -> options.deployment ?: ""
         }
 

@@ -124,10 +124,12 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
         ui.modelComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                val model = it.item as OpenAiModel
                 when (configType) {
-                    ConfigType.TRANSLATOR -> openAiState.model = model
-                    ConfigType.TTS -> commonStates.ttsModel = model
+                    ConfigType.TRANSLATOR -> openAiState.model =
+                        it.item as? OpenAiGPTModel ?: OpenAiGPTModel.values().first()
+
+                    ConfigType.TTS -> commonStates.ttsModel =
+                        it.item as? OpenAiTTSModel ?: OpenAiTTSModel.values().first()
                 }
             }
         }
