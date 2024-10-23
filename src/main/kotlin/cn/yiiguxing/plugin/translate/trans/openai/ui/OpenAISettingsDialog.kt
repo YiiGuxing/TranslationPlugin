@@ -74,13 +74,14 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private fun initForTranslator() {
         title = message("openai.settings.dialog.title")
         ui.modelComboBox.selected = openAiState.model
+        ui.customModelField.text = openAiState.customModel
+        ui.customModelCheckbox.isSelected = openAiState.useCustomModel
         ui.azureDeploymentField.text = settings.azure.deployment.orEmpty()
         ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
     }
 
     private fun initForTTS() {
         title = message("openai.settings.dialog.title.tts")
-        ui.modelComboBox.selected = commonStates.ttsModel
         ui.azureDeploymentField.text = settings.azure.ttsDeployment.orEmpty()
         ui.azureApiVersionComboBox.selected = settings.azure.ttsApiVersion
     }
@@ -128,24 +129,22 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                     ConfigType.TRANSLATOR -> openAiState.model = model
                     ConfigType.TTS -> commonStates.ttsModel = model
                 }
+            }
+        }
 
-                with(ui.customModelField) {
-                    val oldState = isVisible
-                    isVisible = model == OpenAiModel.CUSTOM
-                    if (oldState != isVisible) {
-                        pack()
-                    }
-                }
+        ui.customModelCheckbox.addItemListener {
+            val selected = it.stateChange == ItemEvent.SELECTED
+            openAiState.useCustomModel = selected
+            if (configType == ConfigType.TRANSLATOR && provider == ServiceProvider.OpenAI) {
+                ui.customModelField.isVisible = selected
+                ui.modelComboBox.isVisible = !selected
             }
         }
 
         ui.customModelField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
                 val text = ui.customModelField.text.takeUnless { it.isNullOrBlank() }?.trim()
-                when (configType) {
-                    ConfigType.TRANSLATOR -> openAiState.customModel = text
-                    ConfigType.TTS -> commonStates.customTTSModel = text
-                }
+                openAiState.customModel = text
                 verify(ui.customModelField)
             }
         })
@@ -179,7 +178,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         installValidator(ui.customModelField) {
             val customModel = it.text
             when {
-                ui.modelComboBox.selected == OpenAiModel.CUSTOM && customModel.isNullOrBlank() -> ValidationInfo(
+                ui.customModelCheckbox.isSelected && customModel.isNullOrBlank() -> ValidationInfo(
                     message("openai.settings.dialog.error.missing.custom.model"),
                     it
                 )
@@ -252,17 +251,17 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
         apiEndpoint = commonStates.endpoint
         ui.apiKeyField.text = apiKeys[newProvider]
-        if (configType == ConfigType.TRANSLATOR) {
-            ui.customModelField.text = openAiState.customModel
-        } else {
-            ui.customModelField.text = commonStates.customTTSModel
-            ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
+        if (configType == ConfigType.TTS) {
             ui.modelComboBox.selected = commonStates.ttsModel
             ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
+            ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
         }
 
-        ui.setOpenAiFormComponentsVisible(!isAzure)
-        ui.setAzureFormComponentsVisible(isAzure)
+        val componentType = when {
+            isAzure -> OpenAISettingsUI.ComponentType.AZURE
+            else -> OpenAISettingsUI.ComponentType.OPEN_AI
+        }
+        ui.showComponents(componentType)
 
         invokeLater(expired = { isDisposed }) {
             verify()

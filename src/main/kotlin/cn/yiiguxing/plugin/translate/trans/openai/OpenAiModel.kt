@@ -2,8 +2,6 @@
 
 package cn.yiiguxing.plugin.translate.trans.openai
 
-import cn.yiiguxing.plugin.translate.message
-
 /**
  * See: [OpenAiService Models](https://platform.openai.com/docs/models)
  */
@@ -15,10 +13,7 @@ enum class OpenAiModel(val value: String, val modelName: String) {
     GPT_3_5_TURBO("gpt-3.5-turbo", "GPT-3.5 Turbo"),
 
     TTS_1("tts-1", "TTS-1"),
-    TTS_1_HD("tts-1-hd", "TTS-1 HD"),
-
-    /** Model customized by the user. */
-    CUSTOM("custom", message("openai.model.custom"));
+    TTS_1_HD("tts-1-hd", "TTS-1 HD");
 
     companion object {
         fun gptModels(): List<OpenAiModel> {

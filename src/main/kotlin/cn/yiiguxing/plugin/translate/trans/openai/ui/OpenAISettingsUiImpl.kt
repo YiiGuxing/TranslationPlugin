@@ -28,7 +28,7 @@ private fun maxWidth(vararg components: JComponent): Int = components.maxOf {
 }
 
 
-internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettingsUI {
+internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAISettingsUI {
 
     private val form: JComponent = JPanel(
         UI.migLayout(
@@ -57,21 +57,23 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
 
     private val modelLabel = JLabel(message("openai.settings.dialog.label.model"))
     override val modelComboBox: ComboBox<OpenAiModel> = ComboBox<OpenAiModel>().apply {
-        val models = when (type) {
+        val models = when (configType) {
             ConfigType.TRANSLATOR -> OpenAiModel.gptModels()
             ConfigType.TTS -> OpenAiModel.ttsModels()
         }
-        model = CollectionComboBoxModel(models + OpenAiModel.CUSTOM)
+        model = CollectionComboBoxModel(models)
         renderer = SimpleListCellRenderer.create { label, model, _ ->
             label.text = model.modelName
         }
     }
     override val customModelField: JBTextField = JBTextField()
+    override val customModelCheckbox: JCheckBox = JCheckBox(message("openai.settings.dialog.checkbox.custom.model"))
+    private val modelRowWrapHolder: JPanel = JPanel().apply { isVisible = false }
 
     private val azureApiVersionLabel =
         JLabel(message("openai.settings.dialog.label.api.version")).apply { isVisible = false }
     override val azureApiVersionComboBox: ComboBox<AzureServiceVersion> = ComboBox<AzureServiceVersion>().apply {
-        val versions = when (type) {
+        val versions = when (configType) {
             ConfigType.TRANSLATOR -> AzureServiceVersion.values().toList()
             ConfigType.TTS -> AzureServiceVersion.previewVersions()
         }
@@ -99,7 +101,7 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         ) {
             BrowserUtil.open(OPENAI_API_KEY_PAGE_URL)
         }
-    private val endpointHelpSpace: JComponent = JLabel()
+    private val endpointRowWrapHolder: JComponent = JLabel()
     private val azureDeploymentHelpLabel: JComponent =
         ContextHelpLabel.createWithLink(
             null,
@@ -113,7 +115,7 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
 
 
     init {
-        if (type == ConfigType.TTS) {
+        if (configType == ConfigType.TTS) {
             initTtsComponents()
         }
         layout()
@@ -124,7 +126,7 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         message("openai.settings.dialog.azure.api.key.help"),
         message("link.learn.more")
     ) {
-        val url = when (type) {
+        val url = when (configType) {
             ConfigType.TRANSLATOR -> message("openai.settings.dialog.azure.api.key.help.url")
             ConfigType.TTS -> message("openai.settings.dialog.azure.tts.api.key.help.url")
         }
@@ -152,11 +154,10 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
     }
 
     private fun layout() {
-        val isTTS = type == ConfigType.TTS
+        val isTTS = configType == ConfigType.TTS
 
-        val comboBoxCC = UI.wrap()
+        fun comboBoxCC() = UI.cc()
             .sizeGroupX("combo-box")
-            .shrink(1f)
             .minWidth(UI.migSize((MIN_WIDTH * 0.5).toInt()))
 
         val providerLabel = JLabel(message("openai.settings.dialog.label.provider"))
@@ -172,33 +173,36 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         )
         val labelCC = UI.cc()
             .sizeGroupX("label")
+            .alignY("center")
             .minWidth(UI.migSize(maxWidth, false))
 
         form.add(providerLabel, labelCC)
-        form.add(providerComboBox, comboBoxCC)
+        form.add(providerComboBox, comboBoxCC().wrap())
         form.add(modelLabel, labelCC)
-        form.add(modelComboBox, comboBoxCC)
-        form.add(customModelField, UI.fillX().wrap().cell(1, 3))
+        form.add(modelComboBox, comboBoxCC())
+        form.add(customModelField, comboBoxCC())
+        form.add(customModelCheckbox, UI.fillX().alignY("center").wrap())
+        form.add(modelRowWrapHolder, UI.wrap())
 
         form.add(azureDeploymentLabel, labelCC)
-        form.add(azureDeploymentField, UI.fillX())
+        form.add(azureDeploymentField, UI.fillX().spanX(2))
         form.add(azureDeploymentHelpLabel, UI.wrap())
         form.add(apiKeyLabel, labelCC)
-        form.add(apiKeyField, UI.fillX())
+        form.add(apiKeyField, UI.fillX().spanX(2))
         form.add(apiKeyHelpLabel, UI.wrap())
         form.add(azureApiKeyHelpLabel, UI.wrap())
         form.add(endpointLabel, labelCC)
-        form.add(apiEndpointField, UI.fillX())
-        form.add(endpointHelpSpace, UI.wrap())
+        form.add(apiEndpointField, UI.fillX().spanX(2))
+        form.add(endpointRowWrapHolder, UI.wrap())
         form.add(azureEndpointHelpLabel, UI.wrap())
         form.add(azureApiVersionLabel, labelCC)
-        form.add(azureApiVersionComboBox, comboBoxCC)
+        form.add(azureApiVersionComboBox, comboBoxCC().wrap())
 
         if (isTTS) {
             form.add(JLabel(message("tts.label.voice")), labelCC)
-            form.add(ttsVoiceComboBox, comboBoxCC)
+            form.add(ttsVoiceComboBox, comboBoxCC().wrap())
             form.add(JLabel(message("tts.label.speed")), labelCC)
-            form.add(ttsSpeedSlicer, UI.fillX().wrap())
+            form.add(ttsSpeedSlicer, UI.fillX().spanX(2).wrap())
         }
     }
 
@@ -209,26 +213,36 @@ internal class OpenAISettingsUiImpl(private val type: ConfigType) : OpenAISettin
         }
     }
 
-    override fun setOpenAiFormComponentsVisible(visible: Boolean) {
-        if (type == ConfigType.TRANSLATOR) {
-            modelLabel.isVisible = visible
-            modelComboBox.isVisible = visible
-        } else {
-            modelLabel.isVisible = true
-            modelComboBox.isVisible = true
-        }
-        customModelField.isVisible = modelComboBox.isVisible && modelComboBox.selectedItem == OpenAiModel.CUSTOM
-        apiKeyHelpLabel.isVisible = visible
-        endpointHelpSpace.isVisible = visible
-    }
+    override fun showComponents(type: OpenAISettingsUI.ComponentType) {
+        val isOpenAI = type == OpenAISettingsUI.ComponentType.OPEN_AI
+        val isAzure = type == OpenAISettingsUI.ComponentType.AZURE
 
-    override fun setAzureFormComponentsVisible(visible: Boolean) {
-        azureDeploymentLabel.isVisible = visible
-        azureDeploymentField.isVisible = visible
-        azureApiVersionLabel.isVisible = visible
-        azureApiVersionComboBox.isVisible = visible
-        azureApiKeyHelpLabel.isVisible = visible
-        azureEndpointHelpLabel.isVisible = visible
-        azureDeploymentHelpLabel.isVisible = visible
+        when (configType) {
+            ConfigType.TRANSLATOR -> {
+                modelLabel.isVisible = isOpenAI
+                modelComboBox.isVisible = isOpenAI && !customModelCheckbox.isSelected
+                customModelField.isVisible = isOpenAI && customModelCheckbox.isSelected
+                customModelCheckbox.isVisible = isOpenAI
+                modelRowWrapHolder.isVisible = false
+            }
+
+            ConfigType.TTS -> {
+                modelLabel.isVisible = true
+                modelComboBox.isVisible = true
+                customModelField.isVisible = false
+                customModelCheckbox.isVisible = false
+                modelRowWrapHolder.isVisible = true
+            }
+        }
+
+        apiKeyHelpLabel.isVisible = isOpenAI
+        endpointRowWrapHolder.isVisible = isOpenAI
+        azureDeploymentLabel.isVisible = isAzure
+        azureDeploymentField.isVisible = isAzure
+        azureApiVersionLabel.isVisible = isAzure
+        azureApiVersionComboBox.isVisible = isAzure
+        azureApiKeyHelpLabel.isVisible = isAzure
+        azureEndpointHelpLabel.isVisible = isAzure
+        azureDeploymentHelpLabel.isVisible = isAzure
     }
 }

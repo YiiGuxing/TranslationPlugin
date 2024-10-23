@@ -51,9 +51,6 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         @get:OptionTag("TTS_MODEL")
         var ttsModel: OpenAiModel by enum(OpenAiModel.TTS_1)
 
-        @get:OptionTag("CUSTOM_TTS_MODEL")
-        var customTTSModel: String? by string()
-
         @get:OptionTag("TTS_VOICE")
         var ttsVoice: OpenAiTtsVoice by enum(OpenAiTtsVoice.ALLOY)
 
@@ -68,6 +65,9 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
 
         @get:OptionTag("CUSTOM_MODEL")
         override var customModel: String? by string()
+
+        @get:OptionTag("USE_CUSTOM_MODEL")
+        override var useCustomModel: Boolean by property(false)
     }
 
     @Tag("azure")
