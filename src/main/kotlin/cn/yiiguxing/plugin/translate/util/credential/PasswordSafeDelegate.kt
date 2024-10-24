@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.util
+package cn.yiiguxing.plugin.translate.util.credential
 
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.ide.passwordSafe.PasswordSafe
@@ -7,12 +7,12 @@ import kotlin.reflect.KProperty
 
 
 /**
- * PasswordSafeDelegate
+ * Delegate for storing and retrieving password in [PasswordSafe].
  */
-class PasswordSafeDelegate(serviceName: String) : ReadWriteProperty<Any?, String?> {
+class PasswordSafeDelegate(serviceName: String, userName: String? = null) : ReadWriteProperty<Any?, String?> {
 
-    private val store = PasswordSafe.instance
-    private val attributes: CredentialAttributes = CredentialAttributes(serviceName)
+    private val store: PasswordSafe by lazy { PasswordSafe.instance }
+    private val attributes: CredentialAttributes = CredentialAttributes(serviceName, userName)
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): String? = store.getPassword(attributes)
 

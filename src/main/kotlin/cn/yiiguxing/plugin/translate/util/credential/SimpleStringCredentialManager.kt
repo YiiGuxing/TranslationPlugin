@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.util.credential
 
-import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import com.intellij.credentialStore.generateServiceName
 
 /**
@@ -9,9 +8,9 @@ import com.intellij.credentialStore.generateServiceName
  * @param serviceName The service name. Please consider using [generateServiceName] to generate.
  * @see generateServiceName
  */
-class SimpleStringCredentialManager(serviceName: String) : StringCredentialManager {
+class SimpleStringCredentialManager(serviceName: String, userName: String? = null) : StringCredentialManager {
 
-    private var _credential: String? by PasswordSafeDelegate(serviceName)
+    private var _credential: String? by PasswordSafeDelegate(serviceName, userName)
 
     private var _isCredentialSet: Boolean? = null
 
