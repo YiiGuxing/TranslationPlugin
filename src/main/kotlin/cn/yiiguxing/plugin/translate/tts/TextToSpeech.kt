@@ -5,7 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.microsoft.EdgeTTSPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.isCompletedState
-import cn.yiiguxing.plugin.translate.util.Observable
+import cn.yiiguxing.plugin.translate.util.EDTObservableListener
 import cn.yiiguxing.plugin.translate.util.checkDispatchThread
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -45,7 +45,7 @@ class TextToSpeech private constructor() {
 
         currentPlaying?.stop()
         currentPlaying = player
-        player.statusBinding.observe(Observable.ChangeOnEDTListener { state, _ ->
+        player.statusBinding.observe(EDTObservableListener { state, _ ->
             if (state.isCompletedState && currentPlaying === player) {
                 currentPlaying = null
             }

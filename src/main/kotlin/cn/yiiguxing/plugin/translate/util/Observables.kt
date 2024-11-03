@@ -23,41 +23,29 @@ interface Observable<T> : ReadOnlyProperty<Any?, T> {
     /**
      * Tests whether the specified [listener] has been observed.
      */
-    fun isObserved(listener: ChangeListener<T>): Boolean
+    fun isObserved(listener: ObservableListener<T>): Boolean
 
     /**
      * Observe the change of the value.
      */
-    fun observe(listener: ChangeListener<T>)
+    fun observe(listener: ObservableListener<T>)
 
     /**
      * Observe the change of the value.
      */
-    fun observe(parent: Disposable, listener: ChangeListener<T>)
+    fun observe(parent: Disposable, listener: ObservableListener<T>)
 
     /**
      * Stop observing the change of the value.
      */
-    fun unobserve(listener: ChangeListener<T>)
+    fun unobserve(listener: ObservableListener<T>)
+}
 
-    /**
-     * The change listener.
-     */
-    fun interface ChangeListener<T> {
-        fun onChanged(newValue: T, oldValue: T)
-    }
-
-    open class ChangeOnEDTListener<T>(
-        private val modalityState: ModalityState = ModalityState.defaultModalityState(),
-        private val delegate: ChangeListener<T>
-    ) : ChangeListener<T> {
-
-        override fun onChanged(newValue: T, oldValue: T) {
-            invokeLaterIfNeeded(modalityState) {
-                delegate.onChanged(newValue, oldValue)
-            }
-        }
-    }
+/**
+ * The change listener for [Observable].
+ */
+fun interface ObservableListener<T> {
+    fun onChanged(newValue: T, oldValue: T)
 }
 
 /**
@@ -76,13 +64,26 @@ interface WritableObservable<T> : Observable<T>, ReadWriteProperty<Any?, T> {
 
 }
 
+/**
+ * Executes value change callbacks on EDT.
+ */
+class EDTObservableListener<T>(
+    private val modalityState: ModalityState = ModalityState.defaultModalityState(),
+    private val delegate: ObservableListener<T>
+) : ObservableListener<T> {
+
+    override fun onChanged(newValue: T, oldValue: T) {
+        invokeLaterIfNeeded(modalityState) {
+            delegate.onChanged(newValue, oldValue)
+        }
+    }
+}
+
 abstract class AbstractObservable<T> : WritableObservable<T> {
 
-    private val listeners: MutableList<Observable.ChangeListener<T>> = CopyOnWriteArrayList()
+    private val listeners: MutableList<ObservableListener<T>> = CopyOnWriteArrayList()
 
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
-
-    override fun isObserved(listener: Observable.ChangeListener<T>): Boolean {
+    override fun isObserved(listener: ObservableListener<T>): Boolean {
         return listener in listeners
     }
 
@@ -95,18 +96,18 @@ abstract class AbstractObservable<T> : WritableObservable<T> {
         }
     }
 
-    override fun observe(listener: Observable.ChangeListener<T>) {
+    override fun observe(listener: ObservableListener<T>) {
         if (!isObserved(listener)) {
             listeners.add(listener)
         }
     }
 
-    override fun observe(parent: Disposable, listener: Observable.ChangeListener<T>) {
+    override fun observe(parent: Disposable, listener: ObservableListener<T>) {
         observe(listener)
         Disposer.register(parent) { unobserve(listener) }
     }
 
-    override fun unobserve(listener: Observable.ChangeListener<T>) {
+    override fun unobserve(listener: ObservableListener<T>) {
         listeners.remove(listener)
     }
 }
@@ -131,16 +132,51 @@ open class ObservableValue<T>(
             }
         }
 
+    /**
+     * Creates a read-only [ObservableValue] for this [ObservableValue].
+     */
     fun asReadOnly(): Observable<T> = ReadOnlyWrapper(this)
 
+    /**
+     * A read-only wrapper for [ObservableValue].
+     */
     open class ReadOnlyWrapper<T>(private val wrapped: ObservableValue<T>) : Observable<T> by wrapped
+
+    /**
+     * Creates an [ObservableValue] that notifies the listeners on the EDT.
+     */
+    fun asEDTObservableValue(
+        modalityState: ModalityState = ModalityState.defaultModalityState()
+    ): AbstractObservable<T> {
+        return NotifyOnEDTWrapper(this, modalityState)
+    }
+
+    /**
+     * A wrapper for [ObservableValue] that notifies the listeners on the EDT.
+     */
+    open class NotifyOnEDTWrapper<T>(
+        private val wrapped: ObservableValue<T>,
+        modalityState: ModalityState
+    ) : AbstractObservable<T>() {
+
+        override var value: T
+            get() = wrapped.value
+            set(value) {
+                wrapped.value = value
+            }
+
+        init {
+            wrapped.observe(EDTObservableListener(modalityState) { newValue, oldValue ->
+                notifyChanged(oldValue, newValue)
+            })
+        }
+    }
 }
 
 /**
- * An [NotifyOnEDTObservableValue] is an entity that wraps a value
- * and allows to observe the value for changes on the EDT.
+ * An [EDTObservableValue] is a subclass of [ObservableValue] that notifies the listeners on the EDT.
  */
-open class NotifyOnEDTObservableValue<T>(
+open class EDTObservableValue<T>(
     initialValue: T,
     private val modalityState: ModalityState = ModalityState.defaultModalityState(),
     comparison: (oldValue: T, newValue: T) -> Boolean = DEFAULT_COMPARISON
