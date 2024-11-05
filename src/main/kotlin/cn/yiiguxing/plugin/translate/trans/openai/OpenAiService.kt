@@ -40,17 +40,22 @@ interface OpenAiService {
         val ttsSpeed: Int
     }
 
-    sealed interface Options : TTSOptions {
+    interface TTSApiOptions {
+        val ttsEndpoint: String?
+    }
+
+    sealed interface Options {
         val endpoint: String?
     }
 
-    interface OpenAIOptions : Options {
+    interface OpenAIOptions : Options, TTSOptions, TTSApiOptions {
         val model: OpenAiGPTModel
         val customModel: String?
         val useCustomModel: Boolean
+        val sameApiOptionsInTTS: Boolean
     }
 
-    interface AzureOptions : Options {
+    interface AzureOptions : Options, TTSOptions {
         val deployment: String?
         val ttsDeployment: String?
         val apiVersion: AzureServiceVersion
@@ -69,13 +74,12 @@ interface OpenAiService {
 
 
 class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
-    private fun getApiUrl(path: String): String {
-        return (options.endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + path
+    private fun getApiUrl(endpoint: String?, path: String): String {
+        return (endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + path
     }
 
-    private fun RequestBuilder.auth() {
-        val apiKey = OpenAiCredentials.manager(ServiceProvider.OpenAI).credential
-        tuner { it.setRequestProperty("Authorization", "Bearer $apiKey") }
+    private fun RequestBuilder.auth(apiKey: String?) {
+        tuner { it.setRequestProperty("Authorization", "Bearer ${apiKey ?: ""}") }
     }
 
     override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
@@ -87,7 +91,9 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             this.model = model
             this.messages = messages
         }
-        return OpenAiHttp.post(getApiUrl(OPEN_AI_API_PATH), request) { auth() }
+        return OpenAiHttp.post(getApiUrl(options.endpoint, OPEN_AI_API_PATH), request) {
+           auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
+        }
     }
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
@@ -97,8 +103,9 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
-        return OpenAiHttp.post(getApiUrl(OPEN_AI_SPEECH_API_PATH)) {
-            auth()
+        val endpoint = with(options) { if (sameApiOptionsInTTS) endpoint else ttsEndpoint }
+        return OpenAiHttp.post(getApiUrl(endpoint, OPEN_AI_SPEECH_API_PATH)) {
+            auth(OpenAiCredentials.manager(ServiceProvider.OpenAI, !options.sameApiOptionsInTTS).credential)
             sendJson(request) { it.readBytes(indicator) }
         }
     }

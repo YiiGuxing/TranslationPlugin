@@ -24,13 +24,14 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
     var azure: Azure by property(Azure())
 
     @Transient
-    fun isConfigured(configType: ConfigType): Boolean = when (provider) {
-        ServiceProvider.Azure -> when (configType) {
-            ConfigType.TRANSLATOR -> !with(azure) { endpoint.isNullOrBlank() || deployment.isNullOrBlank() }
-            ConfigType.TTS -> !with(azure) { endpoint.isNullOrBlank() || ttsDeployment.isNullOrBlank() }
+    fun isConfigured(configType: ConfigType): Boolean {
+        return when (provider) {
+            ServiceProvider.OpenAI -> true
+            ServiceProvider.Azure -> when (configType) {
+                ConfigType.TRANSLATOR -> !with(azure) { endpoint.isNullOrBlank() || deployment.isNullOrBlank() }
+                ConfigType.TTS -> !with(azure) { endpoint.isNullOrBlank() || ttsDeployment.isNullOrBlank() }
+            }
         }
-
-        else -> true
     }
 
     fun getOptions(provider: ServiceProvider = this.provider): OpenAiService.Options = when (provider) {
@@ -68,6 +69,12 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
 
         @get:OptionTag("USE_CUSTOM_MODEL")
         override var useCustomModel: Boolean by property(false)
+
+        @get:OptionTag("TTS_ENDPOINT")
+        override val ttsEndpoint: String? by string()
+
+        @get:OptionTag("SAME_API_OPTIONS_IN_TTS")
+        override val sameApiOptionsInTTS: Boolean by property(true)
     }
 
     @Tag("azure")

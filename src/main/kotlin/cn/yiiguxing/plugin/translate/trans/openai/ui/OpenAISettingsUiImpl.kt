@@ -51,7 +51,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
             }
         }
 
-    override val apiKeyField: JBPasswordField = JBPasswordField()
+    override val apiKeyField: JBPasswordField = JBPasswordField().apply { isEnabled = false }
 
     override val apiEndpointField: ExtendableTextField = ExtendableTextField()
 
