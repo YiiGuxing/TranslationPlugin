@@ -5,6 +5,7 @@ package cn.yiiguxing.plugin.translate.tts.sound
 import cn.yiiguxing.plugin.translate.tts.sound.source.PlaybackSource
 import cn.yiiguxing.plugin.translate.util.Observable
 import cn.yiiguxing.plugin.translate.util.ObservableValue
+import cn.yiiguxing.plugin.translate.util.ReadOnlyObservableWrapper
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.util.concurrency.AppExecutorUtil
@@ -30,7 +31,7 @@ class AudioPlayer(
     private val completed: Boolean get() = currentStatus.isCompletedState
 
     override val statusBinding: Observable<PlaybackStatus> =
-        object : ObservableValue.ReadOnlyWrapper<PlaybackStatus>(_status) {
+        object : ReadOnlyObservableWrapper<PlaybackStatus>(_status) {
             override val value: PlaybackStatus
                 get() = synchronized(this@AudioPlayer) { super.value }
         }
