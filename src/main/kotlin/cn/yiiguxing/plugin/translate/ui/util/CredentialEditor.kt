@@ -22,10 +22,10 @@ import javax.swing.event.DocumentEvent
  * The editor for editing credentials.
  */
 class CredentialEditor private constructor(
-    managerLazy: Lazy<StringCredentialManager>,
+    lazyManager: Lazy<StringCredentialManager>,
     parent: Disposable?
 ) : Disposable {
-    private val manager: StringCredentialManager by managerLazy
+    private val manager: StringCredentialManager by lazyManager
 
     private var originalCredential: String? = null
     private val _credentialBinding = observe<String?>(null)
