@@ -1,31 +1,49 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package cn.yiiguxing.plugin.translate.ui.util
 
+import cn.yiiguxing.plugin.translate.util.asReadOnly
 import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
 import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
 import cn.yiiguxing.plugin.translate.util.credential.StringCredentialManager
+import cn.yiiguxing.plugin.translate.util.observe
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.ui.ComponentValidator
+import com.intellij.openapi.util.Disposer
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBPasswordField
 import org.jetbrains.concurrency.runAsync
 import javax.swing.JComponent
 import javax.swing.event.DocumentEvent
 
-class CredentialEditor(manager: () -> StringCredentialManager) : Disposable {
-    private var originalApiKey: String? = null
-    private var apiKey: String? = null
-    private var isLoaded: Boolean = false
+/**
+ * The editor for editing credentials.
+ */
+class CredentialEditor private constructor(
+    managerLazy: Lazy<StringCredentialManager>,
+    parent: Disposable?
+) : Disposable {
+    private val manager: StringCredentialManager by managerLazy
 
-    private val manager: StringCredentialManager by lazy { manager() }
+    private var originalCredential: String? = null
+    private val _credentialBinding = observe<String?>(null)
+    val credentialBinding = _credentialBinding.asReadOnly()
+    var credential: String? by _credentialBinding
+        private set
+
+    private val _loadedBinding = observe(false)
+    val loadedBinding = _loadedBinding.asReadOnly()
+    var isLoaded: Boolean by _loadedBinding
+        private set
 
     private var editor: JBPasswordField? = null
     private val documentListener = object : DocumentAdapter() {
         override fun textChanged(e: DocumentEvent) {
-            editor?.let {
-                apiKey = String(it.password)
-                it.verify()
+            editor?.let { editor ->
+                credential = editor.password?.takeIf { it.isNotEmpty() }?.let { String(it) }
+                editor.verify()
             }
         }
     }
@@ -33,30 +51,47 @@ class CredentialEditor(manager: () -> StringCredentialManager) : Disposable {
     val isCredentialSet: Boolean
         get() = manager.isCredentialSet
 
-    @Suppress("unused")
-    constructor(manager: StringCredentialManager) : this({ manager })
+    constructor(manager: StringCredentialManager, parent: Disposable? = null) : this(lazyOf(manager), parent)
 
+    constructor(parent: Disposable? = null, manager: () -> StringCredentialManager) : this(lazy { manager() }, parent)
+
+    init {
+        parent?.let { Disposer.register(it, this) }
+    }
+
+    /**
+     * Start editing the credential.
+     */
     fun startEditing(field: JBPasswordField) {
         editor = field
         field.document.addDocumentListener(documentListener)
 
         if (isLoaded) {
-            update(apiKey)
+            update(credential)
         } else {
             field.isEnabled = false
             load()
         }
     }
 
+    /**
+     * Stop editing the credential.
+     */
     fun stopEditing() {
         editor?.document?.removeDocumentListener(documentListener)
         editor = null
     }
 
-    fun applyEditing() {
-        if (isLoaded && apiKey != originalApiKey) {
-            manager.credential = apiKey
+    /**
+     * Apply the editing. Returns `true` if the credential has been changed.
+     */
+    fun applyEditing(): Boolean {
+        if (isLoaded && credential != originalCredential) {
+            manager.credential = credential
+            return true
         }
+
+        return false
     }
 
     private fun load() {
@@ -69,16 +104,16 @@ class CredentialEditor(manager: () -> StringCredentialManager) : Disposable {
                 .expireWith(this)
                 .successOnUiThread(ModalityState.stateForComponent(editor)) {
                     isLoaded = true
-                    apiKey = it
-                    originalApiKey = it
+                    credential = it
+                    originalCredential = it
                     update(it)
                 }
         }
     }
 
-    private fun update(apiKey: String?) {
+    private fun update(credential: String?) {
         editor?.let {
-            it.text = apiKey.orEmpty()
+            it.text = credential.orEmpty()
             it.isEnabled = true
             it.verify()
         }

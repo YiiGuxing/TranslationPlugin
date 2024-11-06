@@ -12,7 +12,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.openapi.util.Disposer
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.util.containers.orNull
@@ -347,8 +346,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     private fun createAiApiKeyEditor(provider: ServiceProvider, forTTS: Boolean = false): CredentialEditor {
-        return CredentialEditor { OpenAiCredentials.manager(provider, forTTS) }
-            .also { Disposer.register(disposable, it) }
+        return CredentialEditor(disposable) { OpenAiCredentials.manager(provider, forTTS) }
     }
 
     private companion object {
