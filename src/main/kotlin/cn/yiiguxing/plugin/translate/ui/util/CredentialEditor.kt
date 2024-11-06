@@ -69,7 +69,6 @@ class CredentialEditor private constructor(
         if (isLoaded) {
             update(credential)
         } else {
-            field.isEnabled = false
             load()
         }
     }
@@ -96,6 +95,9 @@ class CredentialEditor private constructor(
 
     private fun load() {
         val editor = editor ?: return
+
+        editor.text = ""
+        editor.isEnabled = false
         asyncLatch { latch ->
             runAsync {
                 latch.await()
