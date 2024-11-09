@@ -79,8 +79,13 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
     private fun initForTTS() {
         title = message("openai.settings.dialog.title.tts")
-        ui.azureDeploymentField.text = settings.azure.ttsDeployment.orEmpty()
-        ui.azureApiVersionComboBox.selected = settings.azure.ttsApiVersion
+        ui.azureDeploymentField.text = azureState.ttsDeployment.orEmpty()
+        ui.azureApiVersionComboBox.selected = azureState.ttsApiVersion
+        ui.ttsApiSettingsTypeComboBox.selected = if (openAiState.useSeparateTtsApiSettings) {
+            OpenAISettingsUI.TtsApiSettingsType.SEPARATE
+        } else {
+            OpenAISettingsUI.TtsApiSettingsType.SAME_AS_TRANSLATOR
+        }
     }
 
     override fun createCenterPanel(): JComponent = ui.component
@@ -146,6 +151,18 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                 verify(ui.customModelField)
             }
         })
+
+        ui.ttsApiSettingsTypeComboBox.addItemListener {
+            if (it.stateChange == ItemEvent.SELECTED && provider == ServiceProvider.OpenAI) {
+                val useSeparate = it.item == OpenAISettingsUI.TtsApiSettingsType.SEPARATE
+                if (openAiState.useSeparateTtsApiSettings != useSeparate) {
+                    openAiState.useSeparateTtsApiSettings = useSeparate
+                    ui.apiEndpointField.isEnabled = useSeparate
+                    updateApiKeyEditor()
+                    updateApiEndpoint()
+                }
+            }
+        }
 
         ui.azureDeploymentField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
@@ -254,11 +271,15 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             ui.apiEndpointField.emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
         }
 
-        apiEndpoint = commonStates.endpoint
+        updateApiEndpoint()
         if (configType == ConfigType.TTS) {
             ui.modelComboBox.selected = commonStates.ttsModel
             ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
             ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
+            ui.apiEndpointField.isEnabled = isAzure ||
+                    ui.ttsApiSettingsTypeComboBox.selected === OpenAISettingsUI.TtsApiSettingsType.SEPARATE
+        } else {
+            ui.apiEndpointField.isEnabled = true
         }
 
         val componentType = when {
@@ -271,20 +292,35 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private fun updateApiKeyEditor() {
         currentApiKeyEditor?.stopEditing()
         currentApiKeyEditor = when (provider) {
-            ServiceProvider.OpenAI -> if (configType == ConfigType.TTS && !openAiState.sameApiOptionsInTTS) {
+            ServiceProvider.OpenAI -> if (configType == ConfigType.TTS && openAiState.useSeparateTtsApiSettings) {
                 openAiTTSApiKeyEditor
-            } else openAiApiKeyEditor
+            } else {
+                openAiApiKeyEditor.apply { enabled = configType == ConfigType.TRANSLATOR }
+            }
 
             ServiceProvider.Azure -> azureApiKeyEditor
         }
         currentApiKeyEditor?.startEditing(ui.apiKeyField)
     }
 
+    private fun updateApiEndpoint() {
+        apiEndpoint = when {
+            configType == ConfigType.TRANSLATOR ||
+                    provider == ServiceProvider.Azure ||
+                    !openAiState.useSeparateTtsApiSettings -> commonStates.endpoint
+
+            else -> openAiState.ttsEndpoint
+        }
+    }
+
     private fun apiEndpointChanged() {
         val endpoint = apiEndpoint
             ?.takeIf { it.isValidEndpoint(true) }
-            ?: settings.getOptions(provider).endpoint
-        commonStates.endpoint = endpoint
+        if (configType == ConfigType.TTS && openAiState.useSeparateTtsApiSettings) {
+            openAiState.ttsEndpoint = endpoint ?: settings.openAi.ttsEndpoint
+        } else {
+            commonStates.endpoint = endpoint ?: settings.getOptions(provider).endpoint
+        }
     }
 
 

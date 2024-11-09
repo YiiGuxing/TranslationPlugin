@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.openai.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.openai.*
+import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsUI.TtsApiSettingsType
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
 import com.intellij.icons.AllIcons
@@ -15,6 +16,7 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.ui.components.fields.ExtendableTextField
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
+import java.awt.Dimension
 import java.util.*
 import javax.swing.*
 
@@ -22,7 +24,7 @@ private const val MIN_WIDTH = 450
 
 private const val OPENAI_API_KEY_PAGE_URL = "https://platform.openai.com/account/api-keys"
 
-private fun maxWidth(vararg components: JComponent): Int = components.maxOf {
+private fun maxWidth(components: List<JComponent>): Int = components.maxOf {
     it.setSize(10000, 1000)
     it.preferredSize.width
 }
@@ -54,6 +56,12 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     override val apiKeyField: JBPasswordField = JBPasswordField().apply { isEnabled = false }
 
     override val apiEndpointField: ExtendableTextField = ExtendableTextField()
+
+    private val ttsApiSettingsTypeLabel = JLabel(message("openai.settings.dialog.label.api.settings"))
+    override val ttsApiSettingsTypeComboBox: ComboBox<TtsApiSettingsType> = ComboBox<TtsApiSettingsType>().apply {
+        model = CollectionComboBoxModel(TtsApiSettingsType.values().toList())
+        renderer = SimpleListCellRenderer.create { label, type, _ -> label.text = type.displayName }
+    }
 
     private val modelLabel = JLabel(message("openai.settings.dialog.label.model"))
     override val modelComboBox: ComboBox<OpenAiModel> = ComboBox<OpenAiModel>().apply {
@@ -163,7 +171,10 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
         val providerLabel = JLabel(message("openai.settings.dialog.label.provider"))
         val apiKeyLabel = JLabel(message("openai.settings.dialog.label.api.key"))
         val endpointLabel = JLabel(message("openai.settings.dialog.label.endpoint"))
-        val maxWidth = maxWidth(
+        val voiceLabel = JLabel(message("tts.label.voice"))
+        val speedLabel = JLabel(message("tts.label.speed"))
+
+        val labels = arrayListOf(
             providerLabel,
             modelLabel,
             azureDeploymentLabel,
@@ -171,6 +182,13 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
             endpointLabel,
             azureApiVersionLabel
         )
+        if (isTTS) {
+            labels.add(voiceLabel)
+            labels.add(speedLabel)
+            labels.add(ttsApiSettingsTypeLabel)
+        }
+
+        val maxWidth = maxWidth(labels)
         val labelCC = UI.cc()
             .sizeGroupX("label")
             .alignY("center")
@@ -187,23 +205,40 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
         form.add(azureDeploymentLabel, labelCC)
         form.add(azureDeploymentField, UI.fillX().spanX(2))
         form.add(azureDeploymentHelpLabel, UI.wrap())
-        form.add(apiKeyLabel, labelCC)
-        form.add(apiKeyField, UI.fillX().spanX(2))
-        form.add(apiKeyHelpLabel, UI.wrap())
-        form.add(azureApiKeyHelpLabel, UI.wrap())
+
+        if (isTTS) {
+            form.add(voiceLabel, labelCC)
+            form.add(ttsVoiceComboBox, comboBoxCC().wrap())
+            form.add(speedLabel, labelCC)
+            form.add(ttsSpeedSlicer, UI.fillX().spanX(2).wrap())
+
+            val dimension = Dimension(1, 1)
+            form.add(JPanel().apply {
+                minimumSize = dimension
+                preferredSize = dimension
+            })
+            val line = JPanel().apply {
+                minimumSize = dimension
+                preferredSize = dimension
+                border = UI.lineAbove()
+            }
+            val gap = UI.migSize(10)
+            form.add(line, UI.fillX().gapTop(gap).gapBottom(gap).spanX(2).wrap())
+
+            form.add(ttsApiSettingsTypeLabel, labelCC)
+            form.add(ttsApiSettingsTypeComboBox, comboBoxCC().wrap())
+        }
+
+        form.add(azureApiVersionLabel, labelCC)
+        form.add(azureApiVersionComboBox, comboBoxCC().wrap())
         form.add(endpointLabel, labelCC)
         form.add(apiEndpointField, UI.fillX().spanX(2))
         form.add(endpointRowWrapHolder, UI.wrap())
         form.add(azureEndpointHelpLabel, UI.wrap())
-        form.add(azureApiVersionLabel, labelCC)
-        form.add(azureApiVersionComboBox, comboBoxCC().wrap())
-
-        if (isTTS) {
-            form.add(JLabel(message("tts.label.voice")), labelCC)
-            form.add(ttsVoiceComboBox, comboBoxCC().wrap())
-            form.add(JLabel(message("tts.label.speed")), labelCC)
-            form.add(ttsSpeedSlicer, UI.fillX().spanX(2).wrap())
-        }
+        form.add(apiKeyLabel, labelCC)
+        form.add(apiKeyField, UI.fillX().spanX(2))
+        form.add(apiKeyHelpLabel, UI.wrap())
+        form.add(azureApiKeyHelpLabel, UI.wrap())
     }
 
     private fun getProviderIcon(provider: ServiceProvider): Icon {
@@ -224,6 +259,8 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
                 customModelField.isVisible = isOpenAI && customModelCheckbox.isSelected
                 customModelCheckbox.isVisible = isOpenAI
                 modelRowWrapHolder.isVisible = false
+                ttsApiSettingsTypeLabel.isVisible = false
+                ttsApiSettingsTypeComboBox.isVisible = false
             }
 
             ConfigType.TTS -> {
@@ -232,6 +269,8 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
                 customModelField.isVisible = false
                 customModelCheckbox.isVisible = false
                 modelRowWrapHolder.isVisible = true
+                ttsApiSettingsTypeLabel.isVisible = isOpenAI
+                ttsApiSettingsTypeComboBox.isVisible = isOpenAI
             }
         }
 

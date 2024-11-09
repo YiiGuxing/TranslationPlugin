@@ -38,6 +38,12 @@ class CredentialEditor private constructor(
     var isLoaded: Boolean by _loadedBinding
         private set
 
+    var enabled: Boolean = true
+        set(value) {
+            field = value
+            editor?.isEnabled = value && isLoaded
+        }
+
     private var editor: JBPasswordField? = null
     private val documentListener = object : DocumentAdapter() {
         override fun textChanged(e: DocumentEvent) {
@@ -116,7 +122,7 @@ class CredentialEditor private constructor(
     private fun update(credential: String?) {
         editor?.let {
             it.text = credential.orEmpty()
-            it.isEnabled = true
+            it.isEnabled = enabled
             it.verify()
         }
     }

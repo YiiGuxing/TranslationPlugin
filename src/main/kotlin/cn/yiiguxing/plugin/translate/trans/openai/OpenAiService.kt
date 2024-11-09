@@ -52,7 +52,7 @@ interface OpenAiService {
         val model: OpenAiGPTModel
         val customModel: String?
         val useCustomModel: Boolean
-        val sameApiOptionsInTTS: Boolean
+        val useSeparateTtsApiSettings: Boolean
     }
 
     interface AzureOptions : Options, TTSOptions {
@@ -92,7 +92,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             this.messages = messages
         }
         return OpenAiHttp.post(getApiUrl(options.endpoint, OPEN_AI_API_PATH), request) {
-           auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
+            auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
         }
     }
 
@@ -103,9 +103,9 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
-        val endpoint = with(options) { if (sameApiOptionsInTTS) endpoint else ttsEndpoint }
+        val endpoint = with(options) { if (useSeparateTtsApiSettings) ttsEndpoint else endpoint }
         return OpenAiHttp.post(getApiUrl(endpoint, OPEN_AI_SPEECH_API_PATH)) {
-            auth(OpenAiCredentials.manager(ServiceProvider.OpenAI, !options.sameApiOptionsInTTS).credential)
+            auth(OpenAiCredentials.manager(ServiceProvider.OpenAI, options.useSeparateTtsApiSettings).credential)
             sendJson(request) { it.readBytes(indicator) }
         }
     }

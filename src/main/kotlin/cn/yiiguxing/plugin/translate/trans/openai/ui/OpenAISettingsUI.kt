@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.openai.ui
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.openai.AzureServiceVersion
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiModel
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiTtsVoice
@@ -22,6 +23,8 @@ internal interface OpenAISettingsUI {
 
     val apiEndpointField: ExtendableTextField
 
+    val ttsApiSettingsTypeComboBox: ComboBox<TtsApiSettingsType>
+
     val azureDeploymentField: JBTextField
 
     val modelComboBox: ComboBox<OpenAiModel>
@@ -41,5 +44,10 @@ internal interface OpenAISettingsUI {
     enum class ComponentType {
         OPEN_AI,
         AZURE
+    }
+
+    enum class TtsApiSettingsType(val displayName: String) {
+        SAME_AS_TRANSLATOR(message("openai.settings.ui.tts.api.settings.type.same.as.translator")),
+        SEPARATE(message("openai.settings.ui.tts.api.settings.type.separate"))
     }
 }

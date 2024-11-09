@@ -71,10 +71,10 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         override var useCustomModel: Boolean by property(false)
 
         @get:OptionTag("TTS_ENDPOINT")
-        override val ttsEndpoint: String? by string()
+        override var ttsEndpoint: String? by string()
 
-        @get:OptionTag("SAME_API_OPTIONS_IN_TTS")
-        override val sameApiOptionsInTTS: Boolean by property(true)
+        @get:OptionTag("USE_SEPARATE_TTS_API_SETTINGS")
+        override var useSeparateTtsApiSettings: Boolean by property(false)
     }
 
     @Tag("azure")

@@ -26,7 +26,7 @@ enum class TTSEngine(
             GOOGLE -> true
 
             OPENAI -> with(service<OpenAiSettings>()) {
-                val openAiTTS = provider == ServiceProvider.OpenAI && !openAi.sameApiOptionsInTTS
+                val openAiTTS = provider == ServiceProvider.OpenAI && openAi.useSeparateTtsApiSettings
                 isConfigured(ConfigType.TTS) && OpenAiCredentials.isCredentialSet(provider, openAiTTS)
             }
         }
