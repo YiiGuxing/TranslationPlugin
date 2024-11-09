@@ -8,9 +8,9 @@ import com.intellij.credentialStore.generateServiceName
  * @param serviceName The service name. Please consider using [generateServiceName] to generate.
  * @see generateServiceName
  */
-class SimpleStringCredentialManager(serviceName: String, userName: String? = null) : StringCredentialManager {
+class SimpleStringCredentialManager(serviceName: String) : StringCredentialManager {
 
-    private var _credential: String? by PasswordSafeDelegate(serviceName, userName)
+    private var _credential: String? by PasswordSafeDelegate(serviceName)
 
     private var _isCredentialSet: Boolean? = null
 

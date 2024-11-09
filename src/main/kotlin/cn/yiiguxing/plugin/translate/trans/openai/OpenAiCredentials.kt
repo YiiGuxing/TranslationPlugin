@@ -11,14 +11,13 @@ import com.intellij.openapi.components.service
 internal class OpenAiCredentials private constructor() {
 
     private val openAi: StringCredentialManager by lazy { SimpleStringCredentialManager(OPEN_AI_SERVICE_NAME) }
-    private val openAiTTS: StringCredentialManager by lazy {
-        SimpleStringCredentialManager(OPEN_AI_SERVICE_NAME, "tts")
-    }
+    private val openAiTTS: StringCredentialManager by lazy { SimpleStringCredentialManager(OPEN_AI_TTS_SERVICE_NAME) }
     private val azure: StringCredentialManager by lazy { SimpleStringCredentialManager(AZURE_SERVICE_NAME) }
 
     companion object {
         private const val SUBSYSTEM_NAME = "OpenAI Credentials"
         private val OPEN_AI_SERVICE_NAME = generateServiceName(SUBSYSTEM_NAME, generateId("OPENAI_API_KEY"))
+        private val OPEN_AI_TTS_SERVICE_NAME = generateServiceName(SUBSYSTEM_NAME, generateId("OPENAI_API_TTS_KEY"))
         private val AZURE_SERVICE_NAME = generateServiceName(SUBSYSTEM_NAME, generateId("AZURE_OPENAI_API_KEY"))
 
         private val service: OpenAiCredentials get() = service()

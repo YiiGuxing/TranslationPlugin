@@ -9,10 +9,11 @@ import kotlin.reflect.KProperty
 /**
  * Delegate for storing and retrieving password in [PasswordSafe].
  */
-class PasswordSafeDelegate(serviceName: String, userName: String? = null) : ReadWriteProperty<Any?, String?> {
+class PasswordSafeDelegate(serviceName: String) : ReadWriteProperty<Any?, String?> {
 
     private val store: PasswordSafe by lazy { PasswordSafe.instance }
-    private val attributes: CredentialAttributes = CredentialAttributes(serviceName, userName)
+    // should be the only credentials per service name, no need to specify a username. see: BaseKeePassCredentialStore
+    private val attributes: CredentialAttributes = CredentialAttributes(serviceName)
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): String? = store.getPassword(attributes)
 
