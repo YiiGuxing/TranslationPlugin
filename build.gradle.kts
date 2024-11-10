@@ -143,9 +143,9 @@ tasks {
         }
     }
 
-    // Validate plugin starting from version 2022.3.3 to save disk space
+    // Validate plugin starting from version 2024.1 to save disk space
     listProductsReleases {
-        sinceVersion = "2022.3.3"
+        sinceVersion = "2024.1"
     }
 
     signPlugin {
