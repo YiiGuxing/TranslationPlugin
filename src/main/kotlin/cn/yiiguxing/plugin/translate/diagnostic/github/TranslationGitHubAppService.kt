@@ -3,23 +3,16 @@ package cn.yiiguxing.plugin.translate.diagnostic.github
 import cn.yiiguxing.plugin.translate.diagnostic.github.auth.*
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Application
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import javax.swing.JComponent
 
 
-@Service
-internal class TranslationGitHubAppService private constructor() {
+internal object TranslationGitHubAppService {
 
-    companion object {
-        private const val CLIENT_ID = "e8a353548fe014bb27de"
+    private const val CLIENT_ID = "e8a353548fe014bb27de"
 
-        private val SCOPES: Array<out String> = arrayOf("public_repo")
-
-        val instance: TranslationGitHubAppService = service()
-    }
+    private val SCOPES: Array<out String> = arrayOf("public_repo")
 
 
     @RequiresEdt

@@ -83,7 +83,7 @@ internal class ReportSubmitter : ErrorReportSubmitter() {
 
     private fun requestNewCredentials(project: Project?, parentComponent: JComponent?) {
         val (user, token) = try {
-            TranslationGitHubAppService.instance.auth(project, parentComponent as JComponent) ?: return
+            TranslationGitHubAppService.auth(project, parentComponent as JComponent) ?: return
         } catch (e: Exception) {
             LOG.w("Failed to request new credentials", e)
 

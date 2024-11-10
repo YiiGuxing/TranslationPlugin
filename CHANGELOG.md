@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [3.6.7] (2024/11/10)
+
+- Bug fixes.
+- Bug 修复
+
 ## [3.6.6] (2024/10/02)
 
 - User interaction experience optimization and improvement.
@@ -521,7 +526,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.6...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.7...HEAD
+[3.6.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.6...v3.6.7
 [3.6.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.5...v3.6.6
 [3.6.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.4...v3.6.5
 [3.6.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.3...v3.6.4
