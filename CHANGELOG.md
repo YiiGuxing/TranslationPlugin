@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Bug fixes.
+- Bug 修复
+
 ## [3.6.6] (2024/10/02)
 
 - User interaction experience optimization and improvement.
