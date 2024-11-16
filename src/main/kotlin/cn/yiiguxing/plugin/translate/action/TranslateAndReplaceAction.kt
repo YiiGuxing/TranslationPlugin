@@ -233,7 +233,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             val index = languages.indexOf(states.lastReplacementTargetLanguage)
 
             val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
-                override fun getTextFor(value: Lang): String = value.langName
+                override fun getTextFor(value: Lang): String = value.localeName
                 override fun onChosen(selectedValue: Lang, finalChoice: Boolean): PopupStep<*>? {
                     onChosen(selectedValue)
                     states.accumulateLanguageScore(selectedValue)

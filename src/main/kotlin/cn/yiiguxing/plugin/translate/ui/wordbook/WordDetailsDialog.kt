@@ -134,10 +134,10 @@ class WordDetailsDialog(
         this.word = word
         with(ui) {
             wordView.text = word.word
-            languageLabel.text = word.sourceLanguage.langName
+            languageLabel.text = word.sourceLanguage.localeName
             ttsButton.dataSource { word.word to word.sourceLanguage }
             phoneticField.text = word.phonetic ?: ""
-            explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
+            explanationLabel.text = message("word.language.explanation", word.targetLanguage.localeName)
             explanationView.text = word.explanation
             explanationView.caretPosition = 0
             tagsField.text = WordTags.getTagsString(word.tags)

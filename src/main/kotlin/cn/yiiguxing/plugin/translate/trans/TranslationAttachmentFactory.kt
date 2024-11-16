@@ -13,8 +13,8 @@ object TranslationAttachmentFactory {
         return Attachment(
             "request.txt",
             "Translator: ${translator.id}\n" +
-                    "Source language: ${srcLang.langName}(${srcLang.code})\n" +
-                    "Target language: ${targetLang.langName}(${targetLang.code})\n" +
+                    "Source language: ${srcLang.localeName}(${srcLang.code})\n" +
+                    "Target language: ${targetLang.localeName}(${targetLang.code})\n" +
                     "================ Request Text ================\n" +
                     requestText +
                     "\n=============================================="

@@ -32,7 +32,7 @@ class FixLangComponent : JPanel() {
         lastTranslation = translation
         val sourceLanguages = translation?.sourceLanguages
         if (sourceLanguages != null && !sourceLanguages.contains(translation.srcLang)) {
-            isVisible = sourceLanguages.firstOrNull()?.langName.let {
+            isVisible = sourceLanguages.firstOrNull()?.localeName.let {
                 actionLink.text = it
                 !it.isNullOrEmpty()
             }

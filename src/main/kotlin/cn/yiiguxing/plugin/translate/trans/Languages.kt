@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.TranslationDynamicBundle
+import cn.yiiguxing.plugin.translate.trans.Lang.values
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
@@ -24,7 +25,7 @@ data class LanguagePair(
 @Suppress("SpellCheckingInspection", "unused")
 enum class Lang(
     @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
-    namePropertyKey: String,
+    localeNameKey: String,
     val code: String
 ) {
 
@@ -438,7 +439,7 @@ enum class Lang(
     ; // endregion
 
 
-    val langName: String by lazy { LanguageBundle.getMessage(namePropertyKey) }
+    val localeName: String by lazy { LanguageBundle.getMessage(localeNameKey) }
 
     companion object {
         private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
@@ -447,7 +448,7 @@ enum class Lang(
             values()
                 .asSequence()
                 .filter { it != UNKNOWN }
-                .sortedBy { if (it == AUTO) "" else it.langName }
+                .sortedBy { if (it == AUTO) "" else it.localeName }
                 .toList()
                 .let { Collections.unmodifiableList(it) }
         }

@@ -339,7 +339,7 @@ abstract class TranslationPane<T : JComponent>(
         val translation = translation
         val sourceLanguages = translation?.sourceLanguages
         if (sourceLanguages != null && !sourceLanguages.contains(translation.srcLang)) {
-            val visible = sourceLanguages.firstOrNull()?.langName.let {
+            val visible = sourceLanguages.firstOrNull()?.localeName.let {
                 fixLanguageLink.text = it
                 !it.isNullOrEmpty()
             }

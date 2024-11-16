@@ -33,7 +33,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         if (!targetLang.isExplicit()) {
-            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.langName}")
+            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.localeName}")
         }
 
         val msTranslation = MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN)

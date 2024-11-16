@@ -99,7 +99,7 @@ abstract class SettingsUi {
 
     protected val primaryLanguageComboBox: ComboBox<Lang> = comboBox<Lang>().apply {
         renderer = SimpleListCellRenderer.create { label, lang, _ ->
-            label.text = lang.langName
+            label.text = lang.localeName
         }
     }
 
