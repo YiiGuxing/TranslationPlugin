@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.trans.openai
 
 import cn.yiiguxing.plugin.translate.trans.openai.audio.SpeechRequest
 import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatCompletion
-import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatMessage
 import cn.yiiguxing.plugin.translate.trans.openai.chat.chatCompletionRequest
+import cn.yiiguxing.plugin.translate.trans.openai.prompt.Prompt
 import cn.yiiguxing.plugin.translate.util.Http.sendJson
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
@@ -24,7 +24,7 @@ interface OpenAiService {
      * [Chat Completion](https://platform.openai.com/docs/api-reference/chat/create)
      */
     @RequiresBackgroundThread
-    fun chatCompletion(messages: List<ChatMessage>): ChatCompletion
+    fun chatCompletion(prompt: Prompt): ChatCompletion
 
     /**
      * Generates audio from the input text.
@@ -82,14 +82,14 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
         tuner { it.setRequestProperty("Authorization", "Bearer ${apiKey ?: ""}") }
     }
 
-    override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
+    override fun chatCompletion(prompt: Prompt): ChatCompletion {
         val model = when {
             options.useCustomModel -> options.customModel
             else -> options.model.modelId
         }
         val request = chatCompletionRequest {
             this.model = model
-            this.messages = messages
+            this.messages = prompt.messages
         }
         return OpenAiHttp.post(getApiUrl(options.endpoint, OPEN_AI_API_PATH), request) {
             auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
@@ -118,9 +118,9 @@ class Azure(private val options: OpenAiService.AzureOptions) : OpenAiService {
         tuner { it.setRequestProperty("api-key", apiKey) }
     }
 
-    override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
+    override fun chatCompletion(prompt: Prompt): ChatCompletion {
         val request = chatCompletionRequest(false) {
-            this.messages = messages
+            this.messages = prompt.messages
         }
         return OpenAiHttp.post(options.getApiUrl(false), request) { auth() }
     }

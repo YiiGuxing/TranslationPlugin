@@ -18,4 +18,13 @@ enum class ChatRole(val role: String) {
 
     @SerializedName("assistant")
     ASSISTANT("assistant");
+
+    companion object {
+        fun from(name: String): ChatRole? = when (name) {
+            SYSTEM.name -> SYSTEM
+            USER.name -> USER
+            ASSISTANT.name -> ASSISTANT
+            else -> null
+        }
+    }
 }
