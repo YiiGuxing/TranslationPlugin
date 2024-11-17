@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.TranslationDynamicBundle
-import cn.yiiguxing.plugin.translate.trans.Lang.values
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Tag
 import org.jetbrains.annotations.PropertyKey
@@ -20,10 +19,14 @@ data class LanguagePair(
 
 
 /**
- * 语言
+ * 语言枚举
+ *
+ * @property languageName 语言英文名称
+ * @property code 语言代码
  */
 @Suppress("SpellCheckingInspection", "unused")
 enum class Lang(
+    @Suppress("MemberVisibilityCanBePrivate")
     val languageName: String,
     @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
     localeNameKey: String,
@@ -440,11 +443,18 @@ enum class Lang(
     ; // endregion
 
 
+    /** Localized name based on system locale */
     val localeName: String by lazy { LanguageBundle.getMessage(localeNameKey) }
 
-    companion object {
-        private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
+    /** Localized name based on IDE locale */
+    val adaptiveLocalName: String by lazy { LanguageBundle.getAdaptedMessage(localeNameKey) }
 
+    companion object {
+        private val mapping: Map<String, Lang> by lazy { values().associateBy { it.code } }
+
+        /**
+         * Sorted languages (excluding [UNKNOWN]) by their locale names.
+         */
         val sortedLanguages: List<Lang> by lazy {
             values()
                 .asSequence()
@@ -454,6 +464,9 @@ enum class Lang(
                 .let { Collections.unmodifiableList(it) }
         }
 
+        /**
+         * Returns the default language.
+         */
         val default: Lang
             get() {
                 val dynamicBundleLanguage = (TranslationDynamicBundle.dynamicLocale ?: Locale.ENGLISH).language
