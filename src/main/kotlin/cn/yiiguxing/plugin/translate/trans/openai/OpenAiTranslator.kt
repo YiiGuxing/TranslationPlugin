@@ -24,9 +24,8 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
     override val intervalLimit: Int = OPEN_AI.intervalLimit
     override val contentLengthLimit: Int = OPEN_AI.contentLengthLimit
     override val primaryLanguage: Lang get() = OPEN_AI.primaryLanguage
-    override val supportedSourceLanguages: List<Lang> =
-        OpenAiLanguages.languages.toMutableList().apply { add(0, Lang.AUTO) }
-    override val supportedTargetLanguages: List<Lang> = OpenAiLanguages.languages
+    override val supportedSourceLanguages: List<Lang> get() = OpenAiSupportedLanguages.sourceLanguages
+    override val supportedTargetLanguages: List<Lang> get() = OpenAiSupportedLanguages.targetLanguages
 
     private val settings: OpenAiSettings get() = service<OpenAiSettings>()
     private val promptService: PromptService get() = service<PromptService>()
