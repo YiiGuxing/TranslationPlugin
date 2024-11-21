@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.trans.openai.prompt
 
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.openai.prompt.template.LanguageEnum
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.template.TemplateRenderException
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.template.TemplateVariable
 import com.intellij.openapi.components.Service
@@ -25,7 +24,9 @@ The user will provide you with text in triple quotes.
 Translate the text#if(${'$'}LANGUAGE.isExplicit(${'$'}SOURCE_LANGUAGE)) from ${'$'}{SOURCE_LANGUAGE.languageName} to#else into#end ${'$'}{TARGET_LANGUAGE.languageName}.
 Do not return the translated text in triple quotes.
 [USER]
-""${'"'}${'$'}TEXT""${'"'}
+""${'"'}
+${'$'}TEXT
+""${'"'}
 """
 
 private const val DEFAULT_DOCUMENT_PROMPT_TEMPLATE = """
@@ -59,10 +60,7 @@ class PromptService {
         }
     }
     private val commonContext: Context by lazy {
-        val contextData = mapOf(
-            TemplateVariable.DS.name to '$',
-            TemplateVariable.LANGUAGE.name to LanguageEnum()
-        )
+        val contextData = TemplateVariable.commonVariables().mapKeys { it.key.name }
         VelocityContext(Collections.unmodifiableMap(contextData))
     }
 

@@ -13,6 +13,12 @@ enum class TemplateVariable(val description: String) {
     ),
 
     /**
+     * Utility functions.
+     * @see Utils
+     */
+    UTILS("Utility functions."),
+
+    /**
      * Language enum object.
      * @see LanguageEnum
      */
@@ -31,5 +37,16 @@ enum class TemplateVariable(val description: String) {
     /**
      * The [target language][Lang] to be translated into.
      */
-    TARGET_LANGUAGE("The target language to be translated into."),
+    TARGET_LANGUAGE("The target language to be translated into.");
+
+    companion object {
+        fun commonVariables(): Map<TemplateVariable, Any> {
+            @Suppress("DEPRECATION")
+            return mapOf(
+                DS to '$',
+                UTILS to Utils,
+                LANGUAGE to LanguageEnum()
+            )
+        }
+    }
 }

@@ -6,11 +6,17 @@ import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isUnknown
 
 /**
- * Language enum class for prompt template. DO NOT use this class directly in code.
+ * Language enum class for prompt template.
+ *
+ * DO NOT use this class directly in code.
  *
  * @see cn.yiiguxing.plugin.translate.trans.Lang
  */
 @Suppress("unused")
+@Deprecated(
+    "DO NOT use this class directly in code. Use Lang instead",
+    ReplaceWith("cn.yiiguxing.plugin.translate.trans.Lang")
+)
 internal class LanguageEnum {
     private val languages = Lang.values().associateBy { lang -> lang.name }
 
