@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.openai.prompt.template
 
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.util.text.Strings
 
 /**
@@ -100,6 +101,16 @@ internal object Utils {
         val spaces = " ".repeat(indent)
         return text.lineSequence().joinToString("\n") { line -> "$spaces$line" }
     }
+
+    /**
+     * Escapes characters in the specified [text], e.g. `"` replaced with `\"`.
+     */
+    fun escapeStringCharacters(text: String): String = StringUtil.escapeStringCharacters(text)
+
+    /**
+     * Unescapes characters in the specified [text], e.g. `\"` replaced with `"`.
+     */
+    fun unescapeStringCharacters(text: String): String = StringUtil.unescapeStringCharacters(text)
 
     /**
      * Returns [text] with some characters replaced with
