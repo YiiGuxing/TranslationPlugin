@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Added prompt template support for OpenAI Translator.
+- Enabled custom model naming for OpenAI Translator.
+- Introduced independent API configuration for OpenAI TTS.
+- Fixed 403 errors in Microsoft Edge TTS.
+
 ## [3.6.7] (2024/11/10)
 
 - Bug fixes.
