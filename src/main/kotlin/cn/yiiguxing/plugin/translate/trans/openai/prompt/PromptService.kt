@@ -91,8 +91,12 @@ class PromptService {
     private fun getTemplate(name: String): String? {
         val ptFile = TranslationStorages.DATA_DIRECTORY.resolve(Paths.get(PROMPTS_DIRECTORY, name))
         return try {
-            if (Files.exists(ptFile) && Files.isRegularFile(ptFile)) Files.readString(ptFile)
-            else null
+            if (Files.exists(ptFile) && Files.isRegularFile(ptFile)) {
+                Files.readString(ptFile)
+            } else {
+                LOG.debug("Prompt template file not found: $name")
+                null
+            }
         } catch (e: Exception) {
             LOG.warn("Failed to read prompt template file: $name", e)
             null
@@ -124,7 +128,9 @@ class PromptService {
         val prompt = promptWriter.toString()
         LOG.debug("Rendered prompt:\n$prompt")
 
-        return PromptParser.parse(prompt)
+        return PromptParser.parse(prompt).also {
+            LOG.debug("Parsed prompt: $it")
+        }
     }
 }
 
