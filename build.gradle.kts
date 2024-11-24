@@ -110,8 +110,6 @@ tasks {
         systemProperty("idea.log.debug.categories", "cn.yiiguxing.plugin.translate")
 
         jvmArgs = listOf(
-            // Enable hotswap, requires JBR 17+ or JBR 11 with DCEVM, and run in debug mode.
-            "-XX:+AllowEnhancedClassRedefinition",
             // Run the IDE in a specified language.
             // "-Duser.language=en"
         )
