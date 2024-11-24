@@ -20,6 +20,10 @@ object Http {
 
     const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
 
+    const val CHROMIUM_VERSION = "130.0.2849.68"
+
+    val CHROMIUM_MAJOR_VERSION: Int = CHROMIUM_VERSION.substringBefore('.').toInt()
+
     val defaultGson = Gson()
 
 
@@ -103,7 +107,7 @@ object Http {
             }
     }
 
-    private fun HttpRequests.Request.checkResponseCode() {
+    fun HttpRequests.Request.checkResponseCode() {
         val connection = connection as HttpURLConnection
         val responseCode = connection.responseCode
         if (responseCode >= 400) {
@@ -155,8 +159,8 @@ object Http {
     }
 
     fun getUserAgent(): String {
-        val chrome = "Chrome/125.0.0.0"
-        val edge = "Edg/125.0.0.0"
+        val chrome = "Chrome/$CHROMIUM_MAJOR_VERSION.0.0.0"
+        val edge = "Edg/$CHROMIUM_MAJOR_VERSION.0.0.0"
         val safari = "Safari/537.36"
         val appleWebKit = "AppleWebKit/537.36"
         val mozilla = "Mozilla/5.0"
