@@ -163,7 +163,13 @@ internal class EdgeTTSSource(
         """.removeWhitespaces()
 
         private fun getWSSUri(): URI {
-            return URI("$EDGE_TTS_WSS_URL?TrustedClientToken=$TRUSTED_CLIENT_TOKEN&ConnectionId=${generateUuid()}")
+            return URI(
+                EDGE_TTS_WSS_URL +
+                        "?TrustedClientToken=$TRUSTED_CLIENT_TOKEN" +
+                        "&Sec-MS-GEC=${DRM.generateSecMsGecToken()}" +
+                        "&Sec-MS-GEC-Version=${DRM.getSecMsGecVersion()}" +
+                        "&ConnectionId=${generateUuid()}"
+            )
         }
 
         private fun generateUuid(): String {
