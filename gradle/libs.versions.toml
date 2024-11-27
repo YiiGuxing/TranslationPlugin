@@ -1,6 +1,6 @@
 [versions]
 # libraries
-jsoup = "1.18.1"
+jsoup = "1.18.2"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 ideaCompat = "0.0.4"
