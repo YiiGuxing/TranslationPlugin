@@ -65,9 +65,9 @@ class DeeplService(var authKey: String) {
      */
     data class Usage(
         @SerializedName("character_count")
-        val characterCount: Int,
+        val characterCount: Long,
         @SerializedName("character_limit")
-        val characterLimit: Int
+        val characterLimit: Long
     ) {
         val limitReached: Boolean get() = characterCount >= characterLimit
     }
