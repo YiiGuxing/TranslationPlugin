@@ -9,7 +9,7 @@ websocket = "1.5.7"
 
 # plugins
 kotlin = "2.1.0"
-kover = "0.8.3"
+kover = "0.9.0"
 changelog = "2.2.1"
 gradleIntelliJPlugin = "1.17.4"
 
