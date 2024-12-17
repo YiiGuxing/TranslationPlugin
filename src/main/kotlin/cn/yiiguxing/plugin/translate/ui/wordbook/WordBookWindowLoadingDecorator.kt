@@ -14,8 +14,15 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 
-internal class WordBookWindowLoadingDecorator(content: JComponent, parent: Disposable) :
-    LoadingDecorator(content, parent, -1) {
+internal class WordBookWindowLoadingDecorator(
+    content: JComponent,
+    parent: Disposable
+) : LoadingDecorator(
+    content = content,
+    parent = parent,
+    startDelayMs = -1,
+    icon = AsyncProcessIcon.Big("Loading")
+) {
 
     override fun customizeLoadingLayer(parent: JPanel, text: JLabel, icon: AsyncProcessIcon): NonOpaquePanel {
         parent.layout = GridBagLayout()
