@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts.microsoft
 
+import cn.yiiguxing.plugin.translate.compat.uppercase
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.sha256
 
