@@ -80,10 +80,10 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
     @Tag("azure")
     class Azure : CommonState(), OpenAiService.AzureOptions {
         @get:OptionTag("API_VERSION")
-        override var apiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_06_01)
+        override var apiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_10_21)
 
         @get:OptionTag("TTS_API_VERSION")
-        override var ttsApiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2024_09_01_PREVIEW)
+        override var ttsApiVersion: AzureServiceVersion by enum(AzureServiceVersion.V2025_01_01_PREVIEW)
 
         @get:OptionTag("DEPLOYMENT_ID")
         override var deployment: String? by string()
