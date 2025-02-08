@@ -202,10 +202,6 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
         form.add(customModelCheckbox, UI.fillX().alignY("center").wrap())
         form.add(modelRowWrapHolder, UI.wrap())
 
-        form.add(azureDeploymentLabel, labelCC)
-        form.add(azureDeploymentField, UI.fillX().spanX(2))
-        form.add(azureDeploymentHelpLabel, UI.wrap())
-
         if (isTTS) {
             form.add(voiceLabel, labelCC)
             form.add(ttsVoiceComboBox, comboBoxCC().wrap())
@@ -231,6 +227,9 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
 
         form.add(azureApiVersionLabel, labelCC)
         form.add(azureApiVersionComboBox, comboBoxCC().wrap())
+        form.add(azureDeploymentLabel, labelCC)
+        form.add(azureDeploymentField, UI.fillX().spanX(2))
+        form.add(azureDeploymentHelpLabel, UI.wrap())
         form.add(endpointLabel, labelCC)
         form.add(apiEndpointField, UI.fillX().spanX(2))
         form.add(endpointRowWrapHolder, UI.wrap())
