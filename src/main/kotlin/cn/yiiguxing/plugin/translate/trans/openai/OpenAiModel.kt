@@ -14,11 +14,13 @@ sealed interface OpenAiModel {
  * See: [OpenAi GPT Models](https://platform.openai.com/docs/models)
  */
 enum class OpenAiGPTModel(override val modelId: String, override val modelName: String) : OpenAiModel {
-    GPT_4O_MINI("gpt-4o-mini", "GPT-4o mini"),
     GPT_4O("gpt-4o", "GPT-4o"),
+    GPT_4O_MINI("gpt-4o-mini", "GPT-4o mini"),
     GPT_4_TURBO("gpt-4-turbo", "GPT-4 Turbo"),
     GPT_4("gpt-4", "GPT-4"),
     GPT_3_5_TURBO("gpt-3.5-turbo", "GPT-3.5 Turbo"),
+    O3_MINI("o3-mini", "o3-mini"),
+    O1("o1", "o1"),
 }
 
 /**
