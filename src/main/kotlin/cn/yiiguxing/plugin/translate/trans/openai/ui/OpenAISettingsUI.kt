@@ -8,7 +8,6 @@ import cn.yiiguxing.plugin.translate.trans.openai.ServiceProvider
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.components.fields.ExtendableTextField
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 import javax.swing.JSlider
@@ -21,7 +20,9 @@ internal interface OpenAISettingsUI {
 
     val apiKeyField: JBPasswordField
 
-    val apiEndpointField: ExtendableTextField
+    val apiEndpointField: JBTextField
+
+    val apiPathField: JBTextField
 
     val ttsApiSettingsTypeComboBox: ComboBox<TtsApiSettingsType>
 

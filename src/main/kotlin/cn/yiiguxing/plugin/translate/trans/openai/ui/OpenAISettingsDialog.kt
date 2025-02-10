@@ -7,13 +7,11 @@ import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
-import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.DocumentAdapter
-import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.util.containers.orNull
 import java.awt.event.ItemEvent
 import java.util.function.Supplier
@@ -73,12 +71,16 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         ui.modelComboBox.selected = openAiState.model
         ui.customModelField.text = openAiState.customModel
         ui.customModelCheckbox.isSelected = openAiState.useCustomModel
+        ui.apiPathField.text = openAiState.apiPath
+        ui.apiPathField.emptyText.text = OPEN_AI_API_PATH
         ui.azureDeploymentField.text = settings.azure.deployment.orEmpty()
         ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
     }
 
     private fun initForTTS() {
         title = message("openai.settings.dialog.title.tts")
+        ui.apiPathField.text = openAiState.ttsApiPath
+        ui.apiPathField.emptyText.text = OPEN_AI_SPEECH_API_PATH
         ui.azureDeploymentField.text = azureState.ttsDeployment.orEmpty()
         ui.azureApiVersionComboBox.selected = azureState.ttsApiVersion
         ui.ttsApiSettingsTypeComboBox.selected = if (openAiState.useSeparateTtsApiSettings) {
@@ -103,25 +105,23 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             }
         })
 
-        ui.apiEndpointField.apply {
-            val extension = Extension.create(AllIcons.General.Reset, message("set.as.default.action.name")) {
-                text = null
-                setErrorText(null)
-                getButton(okAction)?.requestFocus()
+        ui.apiEndpointField.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                apiEndpointChanged()
+                verify(ui.apiEndpointField)
             }
-            document.addDocumentListener(object : DocumentAdapter() {
-                override fun textChanged(e: DocumentEvent) {
-                    apiEndpointChanged()
-                    if (apiEndpoint.isNullOrEmpty()) {
-                        removeExtension(extension)
-                    } else if (provider == ServiceProvider.OpenAI) {
-                        addExtension(extension)
-                    }
+        })
 
-                    verify(this@OpenAISettingsDialog.ui.apiEndpointField)
+        ui.apiPathField.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                val path = ui.apiPathField.text?.trim()?.takeIf { it.isNotBlank() }
+                when (configType) {
+                    ConfigType.TRANSLATOR -> openAiState.apiPath = path
+                    ConfigType.TTS -> openAiState.ttsApiPath = path
                 }
-            })
-        }
+                verify(ui.apiPathField)
+            }
+        })
 
         ui.modelComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
@@ -232,6 +232,13 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             }
         }
 
+        installValidator(ui.apiPathField) {
+            if (it.text.isValidPath()) null else ValidationInfo(
+                message("openai.settings.dialog.error.invalid.endpoint"),
+                it
+            )
+        }
+
         installValidator(ui.azureDeploymentField) {
             when {
                 it.text.isNullOrBlank() -> ValidationInfo(
@@ -265,7 +272,6 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private fun updateUiComponents() {
         val isAzure = provider == ServiceProvider.Azure
         if (isAzure) {
-            ui.apiEndpointField.setExtensions(emptyList())
             ui.apiEndpointField.emptyText.text = ""
         } else {
             ui.apiEndpointField.emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
@@ -386,10 +392,15 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     private companion object {
-        val URL_REGEX = "^https?://([^/?#\\s]+)([^?#;\\s]*)$".toRegex()
+        val ENDPOINT_REGEX = "^https?://[^/?#\\s]+$".toRegex()
+        val PATH_REGEX = "^/[^?#;\\s]*$".toRegex()
 
         fun String?.isValidEndpoint(canBeNullAndEmpty: Boolean = true): Boolean {
-            return this?.takeIf { it.isNotEmpty() }?.let { URL_REGEX.matches(it) } ?: canBeNullAndEmpty
+            return this?.takeIf { it.isNotEmpty() }?.let { ENDPOINT_REGEX.matches(it) } ?: canBeNullAndEmpty
+        }
+
+        fun String?.isValidPath(): Boolean {
+            return this?.takeIf { it.isNotEmpty() }?.let { PATH_REGEX.matches(it) } ?: true
         }
 
         private fun verify(component: JComponent): ValidationInfo? {

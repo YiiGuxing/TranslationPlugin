@@ -70,8 +70,14 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         @get:OptionTag("USE_CUSTOM_MODEL")
         override var useCustomModel: Boolean by property(false)
 
+        @get:OptionTag("API_PATH")
+        override var apiPath: String? by string()
+
         @get:OptionTag("TTS_ENDPOINT")
         override var ttsEndpoint: String? by string()
+
+        @get:OptionTag("TTS_API_PATH")
+        override var ttsApiPath: String? by string()
 
         @get:OptionTag("USE_SEPARATE_TTS_API_SETTINGS")
         override var useSeparateTtsApiSettings: Boolean by property(false)

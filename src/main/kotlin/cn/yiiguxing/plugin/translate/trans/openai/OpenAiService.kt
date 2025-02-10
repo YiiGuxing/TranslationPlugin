@@ -18,6 +18,7 @@ private const val AZURE_OPEN_AI_BASE_API_PATH = "openai/deployments"
 private const val AZURE_OPEN_AI_CHAT_API_PATH = "chat/completions"
 private const val AZURE_OPEN_AI_SPEECH_API_PATH = "audio/speech"
 
+//TODO [Refactor] Separate translation service and TTS service
 interface OpenAiService {
 
     /**
@@ -52,6 +53,8 @@ interface OpenAiService {
         val model: OpenAiGPTModel
         val customModel: String?
         val useCustomModel: Boolean
+        val apiPath: String?
+        val ttsApiPath: String?
         val useSeparateTtsApiSettings: Boolean
     }
 
@@ -91,7 +94,8 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             this.model = model
             this.messages = prompt.messages
         }
-        return OpenAiHttp.post(getApiUrl(options.endpoint, OPEN_AI_API_PATH), request) {
+        val path = options.apiPath?.takeIf { it.isNotBlank() } ?: OPEN_AI_API_PATH
+        return OpenAiHttp.post(getApiUrl(options.endpoint, path), request) {
             auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
         }
     }
@@ -104,7 +108,8 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
         val endpoint = with(options) { if (useSeparateTtsApiSettings) ttsEndpoint else endpoint }
-        return OpenAiHttp.post(getApiUrl(endpoint, OPEN_AI_SPEECH_API_PATH)) {
+        val path = options.ttsApiPath?.takeIf { it.isNotBlank() } ?: OPEN_AI_SPEECH_API_PATH
+        return OpenAiHttp.post(getApiUrl(endpoint, path)) {
             auth(OpenAiCredentials.manager(ServiceProvider.OpenAI, options.useSeparateTtsApiSettings).credential)
             sendJson(request) { it.readBytes(indicator) }
         }
