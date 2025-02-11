@@ -60,7 +60,7 @@
 <div class="sponsors gold">
 
 [<!-- $2000.00,2020/05/22 -->![New Relic CodeStream](/img/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
-[<!-- $696.00,2021/07/05 -->![JetBrains](/img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
+[<!-- $696.00,2021/07/05 -->![JetBrains](https://resources.jetbrains.com.cn/storage/products/company/brand/logos/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
 
 </div>
 <div class="sponsors">
