@@ -2,6 +2,16 @@
     var lastPluginVersion = "v3.6";
     var activeSponsors = [
         {
+            name: "Smart Input Pro",
+            logo: "smart_input_pro.svg",
+            description: {
+                default: "自动切换输入法插件，写代码从未如此丝滑"
+            },
+            links: {
+                default: "https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/",
+            }
+        },
+        {
             name: "Mybatis Code Helper Pro",
             logo: "mybatis_code_helper_pro.svg",
             description: {
@@ -278,7 +288,7 @@
         sponsors.forEach(function (container) {
             container.textContent = "";
             if (activeSponsors.length) {
-                shuffle(activeSponsors);
+                //shuffle(activeSponsors);
                 for (var i = 0; i < activeSponsors.length; i++) {
                     var sponsor = activeSponsors[i];
                     var sponsorLink = document.createElement("a");

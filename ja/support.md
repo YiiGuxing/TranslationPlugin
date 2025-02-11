@@ -64,9 +64,10 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 </div>
 <div class="sponsors">
 
-[![Mybatis Code Helper Pro](/img/sponsor/logo_mybatis_code_helper_pro.svg ':class=active')](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
-[![Fast Request](/img/sponsor/logo_fast_request.svg ':class=active')](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
+[![Smart Input Pro](/img/sponsor/logo_smart_input_pro.svg ':class=active')](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
 [![Targeted Web Traffic](/img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
+[![Mybatis Code Helper Pro](/img/sponsor/logo_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
+[![Fast Request](/img/sponsor/logo_fast_request.svg)](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
 [![Atom Material Themes & Plugins](/img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
 [![Intellij Rainbow Brackets](/img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
 
