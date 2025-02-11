@@ -223,10 +223,15 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                     it
                 ).asWarning().withOKEnabled()
 
-                !endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI) -> ValidationInfo(
-                    message("openai.settings.dialog.error.invalid.endpoint"),
-                    it
-                )
+                !endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI) -> {
+                    @Suppress("HttpUrlsUsage")
+                    val containPath = endpoint.replace("http://", "").replace("https://", "").contains('/')
+                    val messageSuffix = if (containPath) {
+                        message("openai.settings.dialog.error.invalid.endpoint.no.path")
+                    } else ""
+                    val message = message("openai.settings.dialog.error.invalid.endpoint", messageSuffix)
+                    ValidationInfo(message, it)
+                }
 
                 else -> null
             }
@@ -234,7 +239,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
         installValidator(ui.apiPathField) {
             if (it.text.isValidPath()) null else ValidationInfo(
-                message("openai.settings.dialog.error.invalid.endpoint"),
+                message("openai.settings.dialog.error.invalid.endpoint", ""),
                 it
             )
         }
