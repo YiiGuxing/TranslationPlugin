@@ -35,30 +35,27 @@ interface OpenAiService {
     @RequiresBackgroundThread
     fun speech(text: String, indicator: ProgressIndicator? = null): ByteArray
 
-    interface TTSOptions {
+    interface TTSBaseOptions {
         val ttsModel: OpenAiTTSModel
         val ttsVoice: OpenAiTtsVoice
         val ttsSpeed: Int
-    }
-
-    interface TTSApiOptions {
-        val ttsEndpoint: String?
     }
 
     sealed interface Options {
         val endpoint: String?
     }
 
-    interface OpenAIOptions : Options, TTSOptions, TTSApiOptions {
+    interface OpenAIOptions : Options, TTSBaseOptions {
         val model: OpenAiGPTModel
         val customModel: String?
         val useCustomModel: Boolean
         val apiPath: String?
+        val ttsEndpoint: String?
         val ttsApiPath: String?
         val useSeparateTtsApiSettings: Boolean
     }
 
-    interface AzureOptions : Options, TTSOptions {
+    interface AzureOptions : Options, TTSBaseOptions {
         val deployment: String?
         val ttsDeployment: String?
         val apiVersion: AzureServiceVersion
@@ -94,7 +91,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             this.model = model
             this.messages = prompt.messages
         }
-        val path = options.apiPath?.takeIf { it.isNotBlank() } ?: OPEN_AI_API_PATH
+        val path = options.apiPath?.trim()?.takeIf { it.isNotEmpty() } ?: OPEN_AI_API_PATH
         return OpenAiHttp.post(getApiUrl(options.endpoint, path), request) {
             auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
         }
@@ -108,7 +105,7 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
         val endpoint = with(options) { if (useSeparateTtsApiSettings) ttsEndpoint else endpoint }
-        val path = options.ttsApiPath?.takeIf { it.isNotBlank() } ?: OPEN_AI_SPEECH_API_PATH
+        val path = options.ttsApiPath?.trim()?.takeIf { it.isNotEmpty() } ?: OPEN_AI_SPEECH_API_PATH
         return OpenAiHttp.post(getApiUrl(endpoint, path)) {
             auth(OpenAiCredentials.manager(ServiceProvider.OpenAI, options.useSeparateTtsApiSettings).credential)
             sendJson(request) { it.readBytes(indicator) }

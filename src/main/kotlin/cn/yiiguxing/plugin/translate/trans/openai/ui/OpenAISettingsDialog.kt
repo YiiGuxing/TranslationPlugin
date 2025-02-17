@@ -47,9 +47,10 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private val azureCommonState = AzureCommonState(azureState, configType)
 
     private var apiEndpoint: String?
-        get() = ui.apiEndpointField.text?.trim()?.takeIf { it.isNotEmpty() }
+        get() = ui.apiEndpointField.text?.trim()?.trimEnd('/')?.takeIf { it.isNotEmpty() }
         set(value) {
-            ui.apiEndpointField.text = if (value.isNullOrEmpty()) null else value
+            val fixedValue = value?.trim()?.trimEnd('/')?.takeIf { it.isNotEmpty() }
+            ui.apiEndpointField.text = fixedValue
         }
 
     init {
@@ -217,23 +218,26 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
         installValidator(ui.apiEndpointField) {
             val endpoint = it.text
-            when {
-                provider != ServiceProvider.OpenAI && endpoint.isNullOrEmpty() -> ValidationInfo(
-                    message("openai.settings.dialog.error.missing.endpoint"),
-                    it
-                ).asWarning().withOKEnabled()
-
-                !endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI) -> {
-                    @Suppress("HttpUrlsUsage")
-                    val containPath = endpoint.replace("http://", "").replace("https://", "").contains('/')
-                    val messageSuffix = if (containPath) {
-                        message("openai.settings.dialog.error.invalid.endpoint.no.path")
-                    } else ""
-                    val message = message("openai.settings.dialog.error.invalid.endpoint", messageSuffix)
-                    ValidationInfo(message, it)
+            when (provider) {
+                ServiceProvider.OpenAI -> {
+                    if (!endpoint.isValidUrl(canBeNullAndEmpty = true, withoutPaths = true)) {
+                        val messageSuffix = message("openai.settings.dialog.error.invalid.endpoint.no.path")
+                        val message = message("openai.settings.dialog.error.invalid.endpoint", messageSuffix)
+                        ValidationInfo(message, it)
+                    } else null
                 }
 
-                else -> null
+                ServiceProvider.Azure -> {
+                    if (endpoint.isNullOrEmpty()) {
+                        ValidationInfo(
+                            message("openai.settings.dialog.error.missing.endpoint"),
+                            it
+                        ).asWarning().withOKEnabled()
+                    } else if (!endpoint.isValidUrl(canBeNullAndEmpty = false, withoutPaths = false)) {
+                        val message = message("openai.settings.dialog.error.invalid.endpoint", "")
+                        ValidationInfo(message, it)
+                    } else null
+                }
             }
         }
 
@@ -326,11 +330,13 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
     private fun apiEndpointChanged() {
         val endpoint = apiEndpoint
-            ?.takeIf { it.isValidEndpoint(true) }
+        if (!endpoint.isValidUrl(canBeNullAndEmpty = true, withoutPaths = provider == ServiceProvider.OpenAI)) {
+            return
+        }
         if (configType == ConfigType.TTS && openAiState.useSeparateTtsApiSettings) {
-            openAiState.ttsEndpoint = endpoint ?: settings.openAi.ttsEndpoint
+            openAiState.ttsEndpoint = endpoint
         } else {
-            commonStates.endpoint = endpoint ?: settings.getOptions(provider).endpoint
+            commonStates.endpoint = endpoint
         }
     }
 
@@ -397,11 +403,14 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     private companion object {
-        val ENDPOINT_REGEX = "^https?://[^/?#\\s]+$".toRegex()
+        val URL_REGEX = "^https?://([^/?#\\s]+)([^?#;\\s]*)$".toRegex()
+        val URL_WITHOUT_PATH_REGEX = "^https?://[^/?#\\s]+$".toRegex()
         val PATH_REGEX = "^/[^?#;\\s]*$".toRegex()
 
-        fun String?.isValidEndpoint(canBeNullAndEmpty: Boolean = true): Boolean {
-            return this?.takeIf { it.isNotEmpty() }?.let { ENDPOINT_REGEX.matches(it) } ?: canBeNullAndEmpty
+        fun String?.isValidUrl(canBeNullAndEmpty: Boolean, withoutPaths: Boolean): Boolean {
+            return this?.takeIf { it.isNotEmpty() }
+                ?.let { (if (withoutPaths) URL_WITHOUT_PATH_REGEX else URL_REGEX).matches(it) }
+                ?: canBeNullAndEmpty
         }
 
         fun String?.isValidPath(): Boolean {
