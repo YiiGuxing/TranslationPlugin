@@ -1,5 +1,5 @@
 (function () {
-    var lastPluginVersion = "v3.6";
+    var lastPluginVersion = "v3.7";
     var activeSponsors = [
         {
             name: "Smart Input Pro",
@@ -9,29 +9,6 @@
             },
             links: {
                 default: "https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/",
-            }
-        },
-        {
-            name: "Mybatis Code Helper Pro",
-            logo: "mybatis_code_helper_pro.svg",
-            description: {
-                "/": "Mybatis 写 sql 从未如此轻松",
-                default: "Intellij best mybatis plugin"
-            },
-            links: {
-                default: "https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin",
-            }
-        },
-        {
-            name: "Fast Request",
-            logo: "fast_request_2.svg",
-            description: {
-                "/": "为简化调试API而生",
-                default: "Born to simplify debugging APIs"
-            },
-            links: {
-                "/": "https://api-buddy.cn?from=TranslationPlugin",
-                default: "https://api-buddy.com/en?from=TranslationPlugin",
             }
         },
     ];
