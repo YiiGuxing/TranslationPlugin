@@ -104,14 +104,19 @@
                 var path = (vm.route.path || "").replace(pathRegex, "")
                 if (!path || path === "docs") {
                     return "_sidebar.md"
-                } else if (path.indexOf("updates/") === 0) {
+                }
+                if (path.indexOf("updates/") === 0) {
                     if (vm.route.query.compact && path.indexOf("updates/v") === 0) {
                         return path.substring(8) + "_sidebar.md"
                     }
 
                     return "_sidebar.md"
-                } else if (path === "updates") {
+                }
+                if (path === "updates") {
                     return "updates/_sidebar.md"
+                }
+                if (path.indexOf("tutorial/") === 0) {
+                    return "_sidebar.md"
                 }
 
                 return false;
@@ -219,7 +224,7 @@
     }
 
     function updateSidebar(vm) {
-        var showSidebar = /^\/((en|ja|ko)\/)?(docs|updates(\/.*)?)?$/.test(vm.route.path);
+        var showSidebar = /^\/((en|ja|ko)\/)?((docs|tutorial|updates)(\/.*)?)?$/.test(vm.route.path);
         var main = document.querySelector("main");
         main && main.classList.toggle("hide-sidebar", !showSidebar);
 
