@@ -80,7 +80,7 @@ class OpenAiSettings : BaseState(), PersistentStateComponent<OpenAiSettings> {
         override var ttsApiPath: String? by string()
 
         @get:OptionTag("USE_SEPARATE_TTS_API_SETTINGS")
-        override var useSeparateTtsApiSettings: Boolean by property(false)
+        override var useSeparateTtsApiSettings: Boolean by property(true)
     }
 
     @Tag("azure")
