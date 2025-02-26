@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.7.0] (2025/02/26)
+
 - Added prompt template support for OpenAI Translator engine.
 - Added custom model naming for OpenAI Translator engine.
 - OpenAI Translator engine and TTS engine support custom API paths.
@@ -539,7 +541,9 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.7...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.0...HEAD
+[3.7.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.8...v3.7.0
+[3.6.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.7...v3.6.8
 [3.6.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.6...v3.6.7
 [3.6.6]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.5...v3.6.6
 [3.6.5]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.4...v3.6.5
