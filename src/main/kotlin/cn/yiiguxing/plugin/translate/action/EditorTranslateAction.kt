@@ -24,7 +24,7 @@ class EditorTranslateAction : TranslateAction(true) {
         get() = Settings.getInstance().autoSelectionMode
 
     companion object {
-        const val ACTION_ID = "\$EditorTranslateAction"
+        const val ACTION_ID = "Translation.EditorTranslateAction"
     }
 
 }

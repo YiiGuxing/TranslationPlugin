@@ -2,12 +2,9 @@
 
 package cn.yiiguxing.plugin.translate.util
 
-import com.intellij.notification.Notification
-import com.intellij.notification.Notifications
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.Condition
 import java.util.concurrent.Future
@@ -152,11 +149,4 @@ fun invokeLaterIfNeeded(
     } else {
         app.invokeLater(action, modalityState, expired)
     }
-}
-
-/**
- * Shows the notification[Notification].
- */
-fun Notification.show(project: Project? = null) {
-    Notifications.Bus.notify(this, project)
 }

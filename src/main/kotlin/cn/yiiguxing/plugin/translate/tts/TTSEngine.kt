@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
+import cn.yiiguxing.plugin.translate.trans.openai.ServiceProvider
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.tts.microsoft.EdgeTTSSettingsDialog
 import com.intellij.openapi.components.service
@@ -24,8 +25,9 @@ enum class TTSEngine(
             EDGE,
             GOOGLE -> true
 
-            OPENAI -> service<OpenAiSettings>().let {
-                it.isConfigured(ConfigType.TTS) && OpenAiCredentials.isCredentialSet(it.provider)
+            OPENAI -> with(service<OpenAiSettings>()) {
+                val openAiTTS = provider == ServiceProvider.OpenAI && openAi.useSeparateTtsApiSettings
+                isConfigured(ConfigType.TTS) && OpenAiCredentials.isCredentialSet(provider, openAiTTS)
             }
         }
     }
@@ -41,7 +43,6 @@ enum class TTSEngine(
                 GoogleSettingsDialog().show()
                 true
             }
-
 
             OPENAI -> OpenAISettingsDialog(ConfigType.TTS).showAndGet()
         }

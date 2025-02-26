@@ -71,9 +71,9 @@ dependencies {
     testImplementation(libs.junit)
 }
 
-// Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
+// Set the JVM language level used to build the project.
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
@@ -106,10 +106,10 @@ kover {
 tasks {
     runIde {
         systemProperty("idea.is.internal", true)
+        systemProperty("idea.log.trace.categories", "cn.yiiguxing.plugin.translate")
+        systemProperty("idea.log.debug.categories", "cn.yiiguxing.plugin.translate")
 
         jvmArgs = listOf(
-            // Enable hotswap, requires JBR 17+ or JBR 11 with DCEVM, and run in debug mode.
-            "-XX:+AllowEnhancedClassRedefinition",
             // Run the IDE in a specified language.
             // "-Duser.language=en"
         )

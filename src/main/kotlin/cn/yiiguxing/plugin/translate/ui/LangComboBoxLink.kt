@@ -53,7 +53,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
     fun onItemChosen(lang: Lang?, fromUser: Boolean = false) {
         val oldLang = selected
         setListener(LangComboBoxLinkListener, lang)
-        text = lang?.langName ?: "No language"
+        text = lang?.localeName ?: "No language"
         if (lang != oldLang) {
             model.selected = lang
         }
@@ -90,7 +90,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
                 .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
                 .setItemChosenCallback { langLink.onItemChosen(it, true) }
                 .setRenderer(SimpleListCellRenderer.create { label, value: Lang, _ ->
-                    label.text = value.langName
+                    label.text = value.localeName
                     label.border = langLink.border
                     label.font = langLink.font
                 })

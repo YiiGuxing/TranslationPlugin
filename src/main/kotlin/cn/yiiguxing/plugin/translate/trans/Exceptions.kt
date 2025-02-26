@@ -10,7 +10,7 @@ class TranslateException(
 
 class UnsupportedLanguageException(
     val lang: Lang,
-    message: String = "Unsupported language: ${lang.langName}"
+    message: String = "Unsupported language: ${lang.localeName}"
 ) : RuntimeException(message)
 
 open class TranslationResultException(val code: Int) : RuntimeException("Translation result code: $code")

@@ -1,12 +1,12 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatComboBoxAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.concurrent.*
 import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.JBPopup
@@ -14,13 +14,12 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.AnimatedIcon
 import org.jetbrains.concurrency.runAsync
 import java.awt.event.ActionEvent
-import javax.swing.JComponent
 
 
 /**
  * Switch engine action
  */
-class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, PopupAction {
+class SwitchEngineAction : ComboBoxAction(), DumbAware, PopupAction {
 
     private var disposable: Disposable? = null
 
@@ -40,6 +39,8 @@ class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, 
         disposable?.let { Disposer.dispose(it) }
         return Disposer.newDisposable("${javaClass.name}#Disposable").also { disposable = it }
     }
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
         TranslateService.getInstance().translator.let { translator ->
@@ -75,10 +76,6 @@ class SwitchEngineAction : UpdateInBackgroundCompatComboBoxAction(), DumbAware, 
                 }
                 .finishOnUiThread(ModalityState.any()) { isActionPerforming = false }
         }
-    }
-
-    override fun createPopupActionGroup(button: JComponent): DefaultActionGroup {
-        throw UnsupportedOperationException()
     }
 
     override fun createComboBoxButton(presentation: Presentation): ComboBoxButton {

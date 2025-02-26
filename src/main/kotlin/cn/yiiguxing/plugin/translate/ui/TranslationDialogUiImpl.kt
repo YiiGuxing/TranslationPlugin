@@ -75,7 +75,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
 
     override val dictViewer: StyledViewer = StyledViewer().apply {
         isOpaque = true
-        background = JBColor {
+        background = JBColor.lazy {
             JBUI.CurrentTheme.CustomFrameDecorations.paneBackground().alphaBlend(inputTextArea.background, 0.65f)
         }
     }

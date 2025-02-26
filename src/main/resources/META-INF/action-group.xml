@@ -1,8 +1,8 @@
 <idea-plugin>
     <actions>
-        <group id="TranslationNavBarToolBar" text="Translation Navigation Bar Actions">
+        <group id="Translation.NavBarToolBarGroup" text="Translation Navigation Bar Actions">
             <separator/>
-            <reference ref="$ShowTranslationDialogAction"/>
+            <reference ref="Translation.ShowTranslationDialogAction"/>
             <separator/>
 
             <!--suppress PluginXmlValidity -->

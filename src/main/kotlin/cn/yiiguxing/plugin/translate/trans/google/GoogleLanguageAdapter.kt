@@ -9,7 +9,8 @@ import cn.yiiguxing.plugin.translate.trans.SupportedLanguages
  */
 object GoogleLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
-    private val UNSUPPORTED_LANGUAGES: Set<Lang> = setOf(
+    private val unsupportedLanguages: Set<Lang> = setOf(
+        Lang.UNKNOWN,
         Lang.ASSAMESE,
         Lang.BASHKIR,
         Lang.CHINESE, // 己俱体分为 `中文（简体）`
@@ -37,9 +38,13 @@ object GoogleLanguageAdapter : BaseLanguageAdapter(), SupportedLanguages {
 
     override fun getAdaptedLanguages(): Map<String, Lang> = mapOf()
 
-    override val sourceLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES).toList()
+    override val sourceLanguages: List<Lang> by lazy {
+        (Lang.sortedLanguages - unsupportedLanguages).toList()
+    }
 
-    override val targetLanguages: List<Lang> = (Lang.sortedLanguages - UNSUPPORTED_LANGUAGES - Lang.AUTO).toList()
+    override val targetLanguages: List<Lang> by lazy {
+        (Lang.sortedLanguages - unsupportedLanguages.toMutableSet().apply { add(Lang.AUTO) }).toList()
+    }
 }
 
 

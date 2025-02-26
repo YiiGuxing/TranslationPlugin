@@ -131,7 +131,7 @@ class WordOfTheDayDialog(project: Project?, words: List<WordBookItem>) : DialogW
         ttsButton.dataSource { word.word to word.sourceLanguage }
         explanationView.text = word.explanation
         explanationView.caretPosition = 0
-        explanationLabel.text = message("word.language.explanation", word.targetLanguage.langName)
+        explanationLabel.text = message("word.language.explanation", word.targetLanguage.localeName)
 
         explanationLayout.show(
             explainsCard,

@@ -4,8 +4,6 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.SettingsChangeListener
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
-import cn.yiiguxing.plugin.translate.compat.ui.GotItTooltipPosition
-import cn.yiiguxing.plugin.translate.compat.ui.show
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
@@ -131,7 +129,7 @@ class TranslationWidget(private val project: Project) : WithIconAndArrows(), Ico
         val message = message("got.it.tooltip.text.new.engines")
         GotItTooltip(id, message, this)
             .withHeader(message("got.it.tooltip.title.new.engines"))
-            .show(this, GotItTooltipPosition.TOP)
+            .show(this, GotItTooltip.TOP_MIDDLE)
     }
 
     private fun showPopup() {

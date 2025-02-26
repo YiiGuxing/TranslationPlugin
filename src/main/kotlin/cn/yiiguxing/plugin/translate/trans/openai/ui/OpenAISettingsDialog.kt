@@ -6,21 +6,13 @@ import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.DisposableRef
-import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
-import cn.yiiguxing.plugin.translate.util.concurrent.disposeAfterProcessing
-import cn.yiiguxing.plugin.translate.util.concurrent.expireWith
-import cn.yiiguxing.plugin.translate.util.concurrent.successOnUiThread
-import cn.yiiguxing.plugin.translate.util.invokeLater
-import com.intellij.icons.AllIcons
+import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.DocumentAdapter
-import com.intellij.ui.components.fields.ExtendableTextComponent.Extension
 import com.intellij.util.containers.orNull
-import org.jetbrains.concurrency.runAsync
 import java.awt.event.ItemEvent
 import java.util.function.Supplier
 import javax.swing.JComponent
@@ -32,8 +24,11 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private val settings = service<OpenAiSettings>()
     private val openAiState = OpenAiSettings.OpenAi().apply { copyFrom(settings.openAi) }
     private val azureState = OpenAiSettings.Azure().apply { copyFrom(settings.azure) }
-    private val apiKeys: ApiKeys = ApiKeys()
-    private var isApiKeySet: Boolean = false
+
+    private val openAiApiKeyEditor = createAiApiKeyEditor(ServiceProvider.OpenAI)
+    private val openAiTTSApiKeyEditor = createAiApiKeyEditor(ServiceProvider.OpenAI, true)
+    private val azureApiKeyEditor = createAiApiKeyEditor(ServiceProvider.Azure)
+    private var currentApiKeyEditor: CredentialEditor? = null
 
     private val ui: OpenAISettingsUI = OpenAISettingsUiImpl(configType)
 
@@ -52,13 +47,14 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private val azureCommonState = AzureCommonState(azureState, configType)
 
     private var apiEndpoint: String?
-        get() = ui.apiEndpointField.text?.trim()?.takeIf { it.isNotEmpty() }
+        get() = ui.apiEndpointField.text?.trim()?.trimEnd('/')?.takeIf { it.isNotEmpty() }
         set(value) {
-            ui.apiEndpointField.text = if (value.isNullOrEmpty()) null else value
+            val fixedValue = value?.trim()?.trimEnd('/')?.takeIf { it.isNotEmpty() }
+            ui.apiEndpointField.text = fixedValue
         }
 
     init {
-        setResizable(false)
+        isResizable = false
         init()
         initListeners()
         initValidators()
@@ -68,21 +64,31 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             ConfigType.TTS -> initForTTS()
         }
         provider = settings.provider
-        providerUpdated(settings.provider, false)
+        updateUiComponents()
     }
 
     private fun initForTranslator() {
         title = message("openai.settings.dialog.title")
         ui.modelComboBox.selected = openAiState.model
+        ui.customModelField.text = openAiState.customModel
+        ui.customModelCheckbox.isSelected = openAiState.useCustomModel
+        ui.apiPathField.text = openAiState.apiPath
+        ui.apiPathField.emptyText.text = OPEN_AI_API_PATH
         ui.azureDeploymentField.text = settings.azure.deployment.orEmpty()
         ui.azureApiVersionComboBox.selected = settings.azure.apiVersion
     }
 
     private fun initForTTS() {
         title = message("openai.settings.dialog.title.tts")
-        ui.modelComboBox.selected = commonStates.ttsModel
-        ui.azureDeploymentField.text = settings.azure.ttsDeployment.orEmpty()
-        ui.azureApiVersionComboBox.selected = settings.azure.ttsApiVersion
+        ui.apiPathField.text = openAiState.ttsApiPath
+        ui.apiPathField.emptyText.text = OPEN_AI_SPEECH_API_PATH
+        ui.azureDeploymentField.text = azureState.ttsDeployment.orEmpty()
+        ui.azureApiVersionComboBox.selected = azureState.ttsApiVersion
+        ui.ttsApiSettingsTypeComboBox.selected = if (openAiState.useSeparateTtsApiSettings) {
+            OpenAISettingsUI.TtsApiSettingsType.SEPARATE
+        } else {
+            OpenAISettingsUI.TtsApiSettingsType.SAME_AS_TRANSLATOR
+        }
     }
 
     override fun createCenterPanel(): JComponent = ui.component
@@ -90,43 +96,71 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     private fun initListeners() {
         ui.providerComboBox.addItemListener { event ->
             if (event.stateChange == ItemEvent.SELECTED) {
-                providerUpdated(event.item as ServiceProvider)
+                providerUpdated()
             }
         }
 
         ui.apiKeyField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                apiKeys[provider] = String(ui.apiKeyField.password)
                 verify(ui.apiKeyField)
             }
         })
 
-        ui.apiEndpointField.apply {
-            val extension = Extension.create(AllIcons.General.Reset, message("set.as.default.action.name")) {
-                text = null
-                setErrorText(null)
-                getButton(okAction)?.requestFocus()
+        ui.apiEndpointField.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                apiEndpointChanged()
+                verify(ui.apiEndpointField)
             }
-            document.addDocumentListener(object : DocumentAdapter() {
-                override fun textChanged(e: DocumentEvent) {
-                    apiEndpointChanged()
-                    if (apiEndpoint.isNullOrEmpty()) {
-                        removeExtension(extension)
-                    } else if (provider == ServiceProvider.OpenAI) {
-                        addExtension(extension)
-                    }
+        })
 
-                    verify(this@OpenAISettingsDialog.ui.apiEndpointField)
+        ui.apiPathField.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                val path = ui.apiPathField.text?.trim()?.takeIf { it.isNotBlank() }
+                when (configType) {
+                    ConfigType.TRANSLATOR -> openAiState.apiPath = path
+                    ConfigType.TTS -> openAiState.ttsApiPath = path
                 }
-            })
-        }
+                verify(ui.apiPathField)
+            }
+        })
 
         ui.modelComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
-                val model = it.item as OpenAiModel
                 when (configType) {
-                    ConfigType.TRANSLATOR -> openAiState.model = model
-                    ConfigType.TTS -> commonStates.ttsModel = model
+                    ConfigType.TRANSLATOR -> openAiState.model =
+                        it.item as? OpenAiGPTModel ?: OpenAiGPTModel.values().first()
+
+                    ConfigType.TTS -> commonStates.ttsModel =
+                        it.item as? OpenAiTTSModel ?: OpenAiTTSModel.values().first()
+                }
+            }
+        }
+
+        ui.customModelCheckbox.addItemListener {
+            val selected = it.stateChange == ItemEvent.SELECTED
+            openAiState.useCustomModel = selected
+            if (configType == ConfigType.TRANSLATOR && provider == ServiceProvider.OpenAI) {
+                ui.customModelField.isVisible = selected
+                ui.modelComboBox.isVisible = !selected
+            }
+        }
+
+        ui.customModelField.document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                val text = ui.customModelField.text.takeUnless { it.isNullOrBlank() }?.trim()
+                openAiState.customModel = text
+                verify(ui.customModelField)
+            }
+        })
+
+        ui.ttsApiSettingsTypeComboBox.addItemListener {
+            if (it.stateChange == ItemEvent.SELECTED && provider == ServiceProvider.OpenAI) {
+                val useSeparate = it.item == OpenAISettingsUI.TtsApiSettingsType.SEPARATE
+                if (openAiState.useSeparateTtsApiSettings != useSeparate) {
+                    openAiState.useSeparateTtsApiSettings = useSeparate
+                    ui.apiEndpointField.isEnabled = useSeparate
+                    updateApiKeyEditor()
+                    updateApiEndpoint()
                 }
             }
         }
@@ -157,6 +191,19 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     private fun initValidators() {
+        installValidator(ui.customModelField) {
+            val customModel = it.text
+            when {
+                ui.customModelCheckbox.isSelected && customModel.isNullOrBlank() -> ValidationInfo(
+                    message("openai.settings.dialog.error.missing.custom.model"),
+                    it
+                )
+
+                else -> null
+            }
+        }
+
+
         installValidator(ui.apiKeyField) {
             val password = it.password
             when {
@@ -171,19 +218,34 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
         installValidator(ui.apiEndpointField) {
             val endpoint = it.text
-            when {
-                provider != ServiceProvider.OpenAI && endpoint.isNullOrEmpty() -> ValidationInfo(
-                    message("openai.settings.dialog.error.missing.endpoint"),
-                    it
-                ).asWarning().withOKEnabled()
+            when (provider) {
+                ServiceProvider.OpenAI -> {
+                    if (!endpoint.isValidUrl(canBeNullAndEmpty = true, withoutPaths = true)) {
+                        val messageSuffix = message("openai.settings.dialog.error.invalid.endpoint.no.path")
+                        val message = message("openai.settings.dialog.error.invalid.endpoint", messageSuffix)
+                        ValidationInfo(message, it)
+                    } else null
+                }
 
-                !endpoint.isValidEndpoint(provider == ServiceProvider.OpenAI) -> ValidationInfo(
-                    message("openai.settings.dialog.error.invalid.endpoint"),
-                    it
-                )
-
-                else -> null
+                ServiceProvider.Azure -> {
+                    if (endpoint.isNullOrEmpty()) {
+                        ValidationInfo(
+                            message("openai.settings.dialog.error.missing.endpoint"),
+                            it
+                        ).asWarning().withOKEnabled()
+                    } else if (!endpoint.isValidUrl(canBeNullAndEmpty = false, withoutPaths = false)) {
+                        val message = message("openai.settings.dialog.error.invalid.endpoint", "")
+                        ValidationInfo(message, it)
+                    } else null
+                }
             }
+        }
+
+        installValidator(ui.apiPathField) {
+            if (it.text.isValidPath()) null else ValidationInfo(
+                message("openai.settings.dialog.error.invalid.endpoint", ""),
+                it
+            )
         }
 
         installValidator(ui.azureDeploymentField) {
@@ -207,64 +269,85 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         ServiceProvider.Azure -> HelpTopic.AZURE_OPEN_AI.id
     }
 
-    override fun isOK(): Boolean = isApiKeySet && settings.isConfigured(configType)
+    override fun isOK(): Boolean = currentApiKeyEditor?.isCredentialSet == true && settings.isConfigured(configType)
 
-    private fun providerUpdated(newProvider: ServiceProvider, repack: Boolean = true) {
-        val isAzure = newProvider == ServiceProvider.Azure
+    private fun providerUpdated() {
+        updateUiComponents()
+        updateApiKeyEditor()
+        verify()
+        pack()
+    }
+
+    private fun updateUiComponents() {
+        val isAzure = provider == ServiceProvider.Azure
         if (isAzure) {
-            ui.apiEndpointField.setExtensions(emptyList())
             ui.apiEndpointField.emptyText.text = ""
         } else {
             ui.apiEndpointField.emptyText.text = DEFAULT_OPEN_AI_API_ENDPOINT
         }
-        ui.setOpenAiFormComponentsVisible(!isAzure)
-        ui.setAzureFormComponentsVisible(isAzure)
 
-        apiEndpoint = commonStates.endpoint
-        ui.apiKeyField.text = apiKeys[newProvider]
+        updateApiEndpoint()
         if (configType == ConfigType.TTS) {
-            ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
             ui.modelComboBox.selected = commonStates.ttsModel
             ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
+            ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
+            ui.apiEndpointField.isEnabled = isAzure ||
+                    ui.ttsApiSettingsTypeComboBox.selected === OpenAISettingsUI.TtsApiSettingsType.SEPARATE
+        } else {
+            ui.apiEndpointField.isEnabled = true
         }
 
-        invokeLater(expired = { isDisposed }) {
-            verify()
-            if (repack) {
-                pack()
+        val componentType = when {
+            isAzure -> OpenAISettingsUI.ComponentType.AZURE
+            else -> OpenAISettingsUI.ComponentType.OPEN_AI
+        }
+        ui.showComponents(componentType)
+    }
+
+    private fun updateApiKeyEditor() {
+        currentApiKeyEditor?.stopEditing()
+        currentApiKeyEditor = when (provider) {
+            ServiceProvider.OpenAI -> if (configType == ConfigType.TTS && openAiState.useSeparateTtsApiSettings) {
+                openAiTTSApiKeyEditor
+            } else {
+                openAiApiKeyEditor.apply { enabled = configType == ConfigType.TRANSLATOR }
             }
+
+            ServiceProvider.Azure -> azureApiKeyEditor
+        }
+        currentApiKeyEditor?.startEditing(ui.apiKeyField)
+    }
+
+    private fun updateApiEndpoint() {
+        apiEndpoint = when {
+            configType == ConfigType.TRANSLATOR ||
+                    provider == ServiceProvider.Azure ||
+                    !openAiState.useSeparateTtsApiSettings -> commonStates.endpoint
+
+            else -> openAiState.ttsEndpoint
         }
     }
 
     private fun apiEndpointChanged() {
         val endpoint = apiEndpoint
-            ?.takeIf { it.isValidEndpoint(true) }
-            ?: settings.getOptions(provider).endpoint
-        commonStates.endpoint = endpoint
+        if (!endpoint.isValidUrl(canBeNullAndEmpty = true, withoutPaths = provider == ServiceProvider.OpenAI)) {
+            return
+        }
+        if (configType == ConfigType.TTS && openAiState.useSeparateTtsApiSettings) {
+            openAiState.ttsEndpoint = endpoint
+        } else {
+            commonStates.endpoint = endpoint
+        }
     }
 
-    private fun verify(component: JComponent): ValidationInfo? {
-        return ComponentValidator.getInstance(component).map {
-            it.revalidate()
-            it.validationInfo
-        }.orNull()
-    }
 
     private fun verify(): Boolean {
         var valid = true
-        var focusTarget: JComponent? = null
-        listOf(ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
+        listOf(ui.customModelField, ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
             verify(it)?.let { info ->
-                // 校验不通过的聚焦优先级最高
-                if (valid && it.isShowing) {
-                    focusTarget = it
-                }
                 valid = valid && info.okEnabled
             }
         }
-
-        focusTarget?.requestFocus()
-
         return valid
     }
 
@@ -273,13 +356,14 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             return
         }
 
-        OpenAiCredentials.manager(ServiceProvider.OpenAI).credential = apiKeys.openAi
-        OpenAiCredentials.manager(ServiceProvider.Azure).credential = apiKeys.azure
+        applyApiKeys()
 
         val oldProvider = settings.provider
         val newProvider = provider
         if (oldProvider != newProvider ||
-            openAiState.model != settings.openAi.model ||
+            openAiState.useCustomModel != settings.openAi.useCustomModel ||
+            (!openAiState.useCustomModel && openAiState.model != settings.openAi.model) ||
+            (openAiState.useCustomModel && openAiState.customModel != settings.openAi.customModel) ||
             azureState.deployment != settings.azure.deployment
         ) {
             service<CacheService>().removeMemoryCache { key, _ ->
@@ -290,64 +374,54 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         settings.provider = newProvider
         settings.openAi.copyFrom(openAiState)
         settings.azure.copyFrom(azureState)
-        isApiKeySet = OpenAiCredentials.manager(provider).isCredentialSet
 
         super.doOKAction()
+    }
+
+    private fun applyApiKeys() {
+        openAiApiKeyEditor.applyEditing()
+        openAiTTSApiKeyEditor.applyEditing()
+        azureApiKeyEditor.applyEditing()
     }
 
     override fun show() {
         // This is a modal dialog, so it needs to be invoked later.
         SwingUtilities.invokeLater {
-            val dialogRef = DisposableRef.create(disposable, this)
-            asyncLatch { latch ->
-                runAsync {
-                    latch.await()
-                    ApiKeys(
-                        OpenAiCredentials.manager(ServiceProvider.OpenAI).credential,
-                        OpenAiCredentials.manager(ServiceProvider.Azure).credential
-                    )
-                }
-                    .expireWith(disposable)
-                    .successOnUiThread(dialogRef) { dialog, apiKeys ->
-                        dialog.apiKeys.copyFrom(apiKeys)
-                        dialog.ui.apiKeyField.text = apiKeys[dialog.provider]
-                        dialog.isApiKeySet = !apiKeys[dialog.provider].isNullOrEmpty()
-                        dialog.verify()
-                    }
-                    .disposeAfterProcessing(dialogRef)
-            }
+            // Since the API Key is loaded asynchronously,
+            // it needs to be loaded after the window is
+            // displayed to ensure that the load completion
+            // callback runs in the correct window modality state.
+            updateApiKeyEditor()
+            verify()
         }
 
         super.show()
     }
 
-    private companion object {
-        val URL_REGEX = "^https?://([^/?#\\s]+)([^?#;\\s]*)$".toRegex()
-
-        fun String?.isValidEndpoint(canBeNullAndEmpty: Boolean = true): Boolean {
-            return this?.takeIf { it.isNotEmpty() }?.let { URL_REGEX.matches(it) } ?: canBeNullAndEmpty
-        }
+    private fun createAiApiKeyEditor(provider: ServiceProvider, forTTS: Boolean = false): CredentialEditor {
+        return CredentialEditor(disposable) { OpenAiCredentials.manager(provider, forTTS) }
     }
 
-    private data class ApiKeys(var openAi: String? = null, var azure: String? = null) {
+    private companion object {
+        val URL_REGEX = "^https?://([^/?#\\s]+)([^?#;\\s]*)$".toRegex()
+        val URL_WITHOUT_PATH_REGEX = "^https?://[^/?#\\s]+$".toRegex()
+        val PATH_REGEX = "^/[^?#;\\s]*$".toRegex()
 
-        operator fun get(provider: ServiceProvider): String? {
-            return when (provider) {
-                ServiceProvider.OpenAI -> openAi
-                ServiceProvider.Azure -> azure
-            }
+        fun String?.isValidUrl(canBeNullAndEmpty: Boolean, withoutPaths: Boolean): Boolean {
+            return this?.takeIf { it.isNotEmpty() }
+                ?.let { (if (withoutPaths) URL_WITHOUT_PATH_REGEX else URL_REGEX).matches(it) }
+                ?: canBeNullAndEmpty
         }
 
-        operator fun set(provider: ServiceProvider, value: String?) {
-            when (provider) {
-                ServiceProvider.OpenAI -> openAi = value
-                ServiceProvider.Azure -> azure = value
-            }
+        fun String?.isValidPath(): Boolean {
+            return this?.takeIf { it.isNotEmpty() }?.let { PATH_REGEX.matches(it) } ?: true
         }
 
-        fun copyFrom(apiKeys: ApiKeys) {
-            openAi = apiKeys.openAi
-            azure = apiKeys.azure
+        private fun verify(component: JComponent): ValidationInfo? {
+            return ComponentValidator.getInstance(component).map {
+                it.revalidate()
+                it.validationInfo
+            }.orNull()
         }
     }
 

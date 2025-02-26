@@ -1,7 +1,8 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.util.*
+import com.intellij.openapi.actionSystem.ActionUpdateThread
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
@@ -14,7 +15,7 @@ import com.intellij.openapi.util.TextRange
 abstract class AutoSelectAction(
     private val checkSelection: Boolean,
     private val wordPartCondition: CharCondition = DEFAULT_CONDITION
-) : UpdateInBackgroundCompatAction(), ImportantTranslationAction {
+) : AnAction(), ImportantTranslationAction {
 
     protected abstract val selectionMode: SelectionMode
 
@@ -35,6 +36,8 @@ abstract class AutoSelectAction(
     protected open fun onActionPerformed(event: AnActionEvent, editor: Editor, selectionRange: TextRange) {}
 
     protected open val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
         val active = e.editor?.run {

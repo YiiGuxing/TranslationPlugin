@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.wordbook
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.Popups
@@ -11,9 +10,7 @@ import cn.yiiguxing.plugin.translate.util.concurrent.asyncLatch
 import cn.yiiguxing.plugin.translate.wordbook.exports.WordBookExporter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionGroup
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
@@ -22,15 +19,13 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ex.ToolWindowEx
-import com.intellij.tools.SimpleActionGroup
 import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentManager
 import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.ui.content.ContentManagerListener
 import com.intellij.ui.scale.JBUIScale
-import com.intellij.util.containers.ContainerUtil
 import org.jetbrains.concurrency.runAsync
+import java.util.*
 import javax.swing.Icon
 
 /**
@@ -54,8 +49,8 @@ class WordBookView {
 
     val wordTags: Set<String> get() = groupedWords.keys
 
-    private val windows: MutableMap<Project, ToolWindow> = ContainerUtil.createWeakMap()
-    private val components: MutableMap<Project, WordBookWindowComponent> = ContainerUtil.createWeakMap()
+    private val windows: MutableMap<Project, ToolWindow> = WeakHashMap()
+    private val components: MutableMap<Project, WordBookWindowComponent> = WeakHashMap()
 
     fun setup(project: Project, toolWindow: ToolWindow) {
         assertIsDispatchThread()
@@ -64,8 +59,8 @@ class WordBookView {
 
         val contentManager = toolWindow.contentManager
         if (!Application.isUnitTestMode) {
-            (toolWindow as ToolWindowEx).apply {
-                val gearActions = SimpleActionGroup().apply {
+            toolWindow.apply {
+                val gearActions = DefaultActionGroup().apply {
                     add(ImportAction())
                     add(ExportActionGroup())
                 }
@@ -326,7 +321,9 @@ class WordBookView {
     }
 
     private abstract inner class WordBookAction(text: String, description: String? = text, icon: Icon? = null) :
-        UpdateInBackgroundCompatAction(text, description, icon), DumbAware {
+        AnAction(text, description, icon), DumbAware {
+
+        override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
         final override fun actionPerformed(e: AnActionEvent) {
             if (service.isInitialized) {

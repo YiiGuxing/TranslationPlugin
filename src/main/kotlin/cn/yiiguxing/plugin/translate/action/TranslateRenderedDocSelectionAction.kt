@@ -1,14 +1,10 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
-import com.intellij.openapi.actionSystem.ActionManager
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.PopupAction
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.project.DumbAware
@@ -20,7 +16,7 @@ import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
 
-class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), ImportantTranslationAction, PopupAction, DumbAware {
+class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationAction, PopupAction, DumbAware {
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
@@ -33,6 +29,8 @@ class TranslateRenderedDocSelectionAction : UpdateInBackgroundCompatAction(), Im
             .getAction(EditorTranslateAction.ACTION_ID)
             ?.let { copyShortcutFrom(it) }
     }
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
         val editor = e.editor

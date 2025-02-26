@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.util.credential
 
-import cn.yiiguxing.plugin.translate.util.PasswordSafeDelegate
 import com.intellij.credentialStore.generateServiceName
 
 /**

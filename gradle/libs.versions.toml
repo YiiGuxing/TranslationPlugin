@@ -1,17 +1,17 @@
 [versions]
 # libraries
-jsoup = "1.17.2"
+jsoup = "1.18.3"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 ideaCompat = "0.0.4"
 junit = "4.13.2"
-websocket = "1.5.6"
+websocket = "1.6.0"
 
 # plugins
-kotlin = "1.9.24"
-kover = "0.8.0"
-changelog = "2.2.0"
-gradleIntelliJPlugin = "1.17.3"
+kotlin = "2.1.10"
+kover = "0.9.1"
+changelog = "2.2.1"
+gradleIntelliJPlugin = "1.17.4"
 
 [libraries]
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }

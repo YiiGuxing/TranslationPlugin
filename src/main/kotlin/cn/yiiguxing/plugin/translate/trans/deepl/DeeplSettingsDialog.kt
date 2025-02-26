@@ -4,13 +4,13 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.concurrent.*
 import cn.yiiguxing.plugin.translate.util.getCommonMessage
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -27,7 +27,6 @@ import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
-import javax.swing.event.DocumentEvent
 
 class DeeplSettingsDialog : DialogWrapper(false) {
 
@@ -44,16 +43,7 @@ class DeeplSettingsDialog : DialogWrapper(false) {
     private var currentService: DeeplService? = null
     private val alarm: Alarm = Alarm(disposable)
 
-    private var isOK: Boolean = false
-
-    private var authKey: String?
-        get() = authKeyField.password
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { String(it) }
-        set(value) {
-            authKeyField.text = if (value.isNullOrEmpty()) null else value
-        }
-
+    private val authKeyEditor = CredentialEditor(DeeplCredential.service, disposable)
 
     init {
         title = message("deepl.settings.dialog.title")
@@ -65,12 +55,10 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
     private fun initListeners() {
         val getUsageInfoAction = ::doGetUsageInfo
-        authKeyField.document.addDocumentListener(object : DocumentAdapter() {
-            override fun textChanged(event: DocumentEvent) {
-                alarm.cancelAllRequests()
-                alarm.addRequest(getUsageInfoAction, 500)
-            }
-        })
+        authKeyEditor.credentialBinding.observe(disposable) { _, _ ->
+            alarm.cancelAllRequests()
+            alarm.addRequest(getUsageInfoAction, 500)
+        }
     }
 
     override fun createCenterPanel(): JComponent {
@@ -132,7 +120,7 @@ class DeeplSettingsDialog : DialogWrapper(false) {
     }
 
     private fun doGetUsageInfo() {
-        val authKey = authKey
+        val authKey = authKeyEditor.credential
         if (authKey.isNullOrEmpty()) {
             currentService = null
             updateUsageInfo(null)
@@ -190,32 +178,16 @@ class DeeplSettingsDialog : DialogWrapper(false) {
 
     override fun show() {
         // This is a modal dialog, so it needs to be invoked later.
-        SwingUtilities.invokeLater {
-            val dialogRef = DisposableRef.create(disposable, this)
-            asyncLatch { latch ->
-                runAsync {
-                    latch.await()
-                    DeeplCredential.authKey to DeeplCredential.isAuthKeySet
-                }
-                    .expireWith(disposable)
-                    .successOnUiThread(dialogRef) { dialog, (key, isAuthKeySet) ->
-                        dialog.authKey = key
-                        dialog.isOK = isAuthKeySet
-                        dialog.doGetUsageInfo()
-                    }
-                    .disposeAfterProcessing(dialogRef)
-            }
-        }
+        SwingUtilities.invokeLater { authKeyEditor.startEditing(authKeyField) }
         super.show()
     }
 
     override fun getHelpId(): String = HelpTopic.DEEPL.id
 
-    override fun isOK(): Boolean = isOK
+    override fun isOK(): Boolean = authKeyEditor.isCredentialSet
 
     override fun doOKAction() {
-        DeeplCredential.authKey = authKey
-        isOK = DeeplCredential.isAuthKeySet
+        authKeyEditor.applyEditing()
         super.doOKAction()
     }
 }

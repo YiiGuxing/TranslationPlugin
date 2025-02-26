@@ -19,439 +19,454 @@ data class LanguagePair(
 
 
 /**
- * 语言
+ * 语言枚举
+ *
+ * @property languageName 语言英文名称
+ * @property code 语言代码
  */
 @Suppress("SpellCheckingInspection", "unused")
 enum class Lang(
+    @Suppress("MemberVisibilityCanBePrivate")
+    val languageName: String,
     @PropertyKey(resourceBundle = LANGUAGE_BUNDLE)
-    namePropertyKey: String,
+    localeNameKey: String,
     val code: String
 ) {
 
     /** 自动检测 */
-    AUTO("auto", "auto"),
+    AUTO("Auto", "auto", "auto"),
 
     /** 未知语言 */
-    UNKNOWN("unknown", "_unknown_"),
+    UNKNOWN("Unknown", "unknown", "_unknown_"),
 
     // region ================ LANGUAGES ================
 
     /** 布尔语(南非荷兰语) */
-    AFRIKAANS("afrikaans", "af"),
+    AFRIKAANS("Afrikaans", "afrikaans", "af"),
 
     /** 阿尔巴尼亚语 */
-    ALBANIAN("albanian", "sq"),
+    ALBANIAN("Albanian", "albanian", "sq"),
 
     /** 阿姆哈拉语 */
-    AMHARIC("amharic", "am"),
+    AMHARIC("Amharic", "amharic", "am"),
 
     /** 阿拉伯语 */
-    ARABIC("arabic", "ar"),
+    ARABIC("Arabic", "arabic", "ar"),
 
     /** 亚美尼亚语 */
-    ARMENIAN("armenian", "hy"),
+    ARMENIAN("Armenian", "armenian", "hy"),
 
     /** 阿萨姆语 */
-    ASSAMESE("assamese", "as"),
+    ASSAMESE("Assamese", "assamese", "as"),
 
     /** 阿塞拜疆语 */
-    AZERBAIJANI("azerbaijani", "az"),
+    AZERBAIJANI("Azerbaijani", "azerbaijani", "az"),
 
     /** 巴什基尔语 */
-    BASHKIR("bashkir", "ba"),
+    BASHKIR("Bashkir", "bashkir", "ba"),
 
     /** 巴斯克语 */
-    BASQUE("basque", "eu"),
+    BASQUE("Basque", "basque", "eu"),
 
     /** 白俄罗斯语 */
-    BELARUSIAN("belarusian", "be"),
+    BELARUSIAN("Belarusian", "belarusian", "be"),
 
     /** 孟加拉语 */
-    BENGALI("bengali", "bn"),
+    BENGALI("Bengali", "bengali", "bn"),
 
     /** 波斯尼亚语 */
-    BOSNIAN("bosnian", "bs"),
+    BOSNIAN("Bosnian", "bosnian", "bs"),
 
     /** 保加利亚语 */
-    BULGARIAN("bulgarian", "bg"),
+    BULGARIAN("Bulgarian", "bulgarian", "bg"),
 
     /** 加泰罗尼亚语 */
-    CATALAN("catalan", "ca"),
+    CATALAN("Catalan", "catalan", "ca"),
 
     /** 宿务语 */
-    CEBUANO("cebuano", "ceb"),
+    CEBUANO("Cebuano", "cebuano", "ceb"),
 
     /** 齐切瓦语 */
-    CHICHEWA("chichewa", "ny"),
+    CHICHEWA("Chichewa", "chichewa", "ny"),
 
     /** 中文 */
-    CHINESE("chinese", "zh"),
+    CHINESE("Chinese", "chinese", "zh"),
 
     /** 粤语 */
-    CHINESE_CANTONESE("chinese.cantonese", "zh-CANTONESE"),
+    CHINESE_CANTONESE("Chinese (Cantonese)", "chinese.cantonese", "zh-CANTONESE"),
 
     /** 文言文 */
-    CHINESE_CLASSICAL("chinese.classical", "zh-CLASSICAL"),
+    CHINESE_CLASSICAL("Chinese (Classical)", "chinese.classical", "zh-CLASSICAL"),
 
     /** 中文(简体) */
-    CHINESE_SIMPLIFIED("chinese.simplified", "zh-CN"),
+    CHINESE_SIMPLIFIED("Chinese (Simplified)", "chinese.simplified", "zh-CN"),
 
     /** 中文(繁体) */
-    CHINESE_TRADITIONAL("chinese.traditional", "zh-TW"),
+    CHINESE_TRADITIONAL("Chinese (Traditional)", "chinese.traditional", "zh-TW"),
 
     /** 科西嘉语 */
-    CORSICAN("corsican", "co"),
+    CORSICAN("Corsican", "corsican", "co"),
 
     /** 克罗地亚语 */
-    CROATIAN("croatian", "hr"),
+    CROATIAN("Croatian", "croatian", "hr"),
 
     /** 捷克语 */
-    CZECH("czech", "cs"),
+    CZECH("Czech", "czech", "cs"),
 
     /** 丹麦语 */
-    DANISH("danish", "da"),
+    DANISH("Danish", "danish", "da"),
 
     /** 达里语 */
-    DARI("dari", "prs"),
+    DARI("Dari", "dari", "prs"),
 
     /** 迪维希语 */
-    DIVEHI("divehi", "dv"),
+    DIVEHI("Divehi", "divehi", "dv"),
 
     /** 荷兰语 */
-    DUTCH("dutch", "nl"),
+    DUTCH("Dutch", "dutch", "nl"),
 
     /** 英语 */
-    ENGLISH("english", "en"),
+    ENGLISH("English", "english", "en"),
 
     /** 英语(美国) */
-    ENGLISH_AMERICAN("english.american", "en-US"),
+    ENGLISH_AMERICAN("English (American)", "english.american", "en-US"),
 
     /** 英语(英国) */
-    ENGLISH_BRITISH("english.british", "en-GB"),
+    ENGLISH_BRITISH("English (British)", "english.british", "en-GB"),
 
     /** 世界语 */
-    ESPERANTO("esperanto", "eo"),
+    ESPERANTO("Esperanto", "esperanto", "eo"),
 
     /** 爱沙尼亚语 */
-    ESTONIAN("estonian", "et"),
+    ESTONIAN("Estonian", "estonian", "et"),
 
     /** 法罗语 */
-    FAROESE("faroese", "fo"),
+    FAROESE("Faroese", "faroese", "fo"),
 
     /** 斐济语 */
-    FIJIAN("fijian", "fj"),
+    FIJIAN("Fijian", "fijian", "fj"),
 
     /** 菲律宾语 */
-    FILIPINO("filipino", "tl"),
+    FILIPINO("Filipino", "filipino", "tl"),
 
     /** 芬兰语 */
-    FINNISH("finnish", "fi"),
+    FINNISH("Finnish", "finnish", "fi"),
 
     /** 法语 */
-    FRENCH("french", "fr"),
+    FRENCH("French", "french", "fr"),
 
     /** 法语 (加拿大) */
-    FRENCH_CANADA("french.canada", "fr-CA"),
+    FRENCH_CANADA("French (Canada)", "french.canada", "fr-CA"),
 
     /** 弗里西语 */
-    FRISIAN("frisian", "fy"),
+    FRISIAN("Frisian", "frisian", "fy"),
 
     /** 加利西亚语 */
-    GALICIAN("galician", "gl"),
+    GALICIAN("Galician", "galician", "gl"),
 
     /** 格鲁吉亚语 */
-    GEORGIAN("georgian", "ka"),
+    GEORGIAN("Georgian", "georgian", "ka"),
 
     /** 德语 */
-    GERMAN("german", "de"),
+    GERMAN("German", "german", "de"),
 
     /** 希腊语 */
-    GREEK("greek", "el"),
+    GREEK("Greek", "greek", "el"),
 
     /** 古吉拉特语 */
-    GUJARATI("gujarati", "gu"),
+    GUJARATI("Gujarati", "gujarati", "gu"),
 
     /** 海地克里奥尔语 */
-    HAITIAN_CREOLE("haitianCreole", "ht"),
+    HAITIAN_CREOLE("Haitian Creole", "haitianCreole", "ht"),
 
     /** 豪萨语 */
-    HAUSA("hausa", "ha"),
+    HAUSA("Hausa", "hausa", "ha"),
 
     /** 夏威夷语 */
-    HAWAIIAN("hawaiian", "haw"),
+    HAWAIIAN("Hawaiian", "hawaiian", "haw"),
 
     /** 希伯来语 */
-    HEBREW("hebrew", "iw"),
+    HEBREW("Hebrew", "hebrew", "iw"),
 
     /** 印地语 */
-    HINDI("hindi", "hi"),
+    HINDI("Hindi", "hindi", "hi"),
 
     /** 苗语 */
-    HMONG("hmong", "hmn"),
+    HMONG("Hmong", "hmong", "hmn"),
 
     /** 匈牙利语 */
-    HUNGARIAN("hungarian", "hu"),
+    HUNGARIAN("Hungarian", "hungarian", "hu"),
 
     /** 冰岛语 */
-    ICELANDIC("icelandic", "is"),
+    ICELANDIC("Icelandic", "icelandic", "is"),
 
     /** 伊博语 */
-    IGBO("igbo", "ig"),
+    IGBO("Igbo", "igbo", "ig"),
 
     /** 印尼语 */
-    INDONESIAN("indonesian", "id"),
+    INDONESIAN("Indonesian", "indonesian", "id"),
 
     /** 爱尔兰语 */
-    IRISH("irish", "ga"),
+    IRISH("Irish", "irish", "ga"),
 
     /** 意大利语 */
-    ITALIAN("italian", "it"),
+    ITALIAN("Italian", "italian", "it"),
 
     /** 日语 */
-    JAPANESE("japanese", "ja"),
+    JAPANESE("Japanese", "japanese", "ja"),
 
     /** 印尼爪哇语 */
-    JAVANESE("javanese", "jw"),
+    JAVANESE("Javanese", "javanese", "jw"),
 
     /** 卡纳达语 */
-    KANNADA("kannada", "kn"),
+    KANNADA("Kannada", "kannada", "kn"),
 
     /** 哈萨克语 */
-    KAZAKH("kazakh", "kk"),
+    KAZAKH("Kazakh", "kazakh", "kk"),
 
     /** 高棉语 */
-    KHMER("khmer", "km"),
+    KHMER("Khmer", "khmer", "km"),
 
     /** 卢旺达语 */
-    KINYARWANDA("kinyarwanda", "rw"),
+    KINYARWANDA("Kinyarwanda", "kinyarwanda", "rw"),
 
     /** 韩语 */
-    KOREAN("korean", "ko"),
+    KOREAN("Korean", "korean", "ko"),
 
     /** 库尔德语 */
-    KURDISH("kurdish", "ku"),
+    KURDISH("Kurdish", "kurdish", "ku"),
 
     /** 库尔德语（库尔曼吉语） */
-    KURDISH_KURMANJI("kurdish.kurmanji", "ku"),
+    KURDISH_KURMANJI("Kurdish (Kurmanji)", "kurdish.kurmanji", "ku"),
 
     /** 库尔德语（索拉尼） */
-    KURDISH_SORANI("kurdish.sorani", "ckb"),
+    KURDISH_SORANI("Kurdish (Sorani)", "kurdish.sorani", "ckb"),
 
     /** 吉尔吉斯语 */
-    KYRGYZ("kyrgyz", "ky"),
+    KYRGYZ("Kyrgyz", "kyrgyz", "ky"),
 
     /** 老挝语 */
-    LAO("lao", "lo"),
+    LAO("Lao", "lao", "lo"),
 
     /** 拉丁语 */
-    LATIN("latin", "la"),
+    LATIN("Latin", "latin", "la"),
 
     /** 拉脱维亚语 */
-    LATVIAN("latvian", "lv"),
+    LATVIAN("Latvian", "latvian", "lv"),
 
     /** 立陶宛语 */
-    LITHUANIAN("lithuanian", "lt"),
+    LITHUANIAN("Lithuanian", "lithuanian", "lt"),
 
     /** 卢森堡语 */
-    LUXEMBOURGISH("luxembourgish", "lb"),
+    LUXEMBOURGISH("Luxembourgish", "luxembourgish", "lb"),
 
     /** 马其顿语 */
-    MACEDONIAN("macedonian", "mk"),
+    MACEDONIAN("Macedonian", "macedonian", "mk"),
 
     /** 马尔加什语 */
-    MALAGASY("malagasy", "mg"),
+    MALAGASY("Malagasy", "malagasy", "mg"),
 
     /** 马来语 */
-    MALAY("malay", "ms"),
+    MALAY("Malay", "malay", "ms"),
 
     /** 马拉雅拉姆语 */
-    MALAYALAM("malayalam", "ml"),
+    MALAYALAM("Malayalam", "malayalam", "ml"),
 
     /** 马耳他语 */
-    MALTESE("maltese", "mt"),
+    MALTESE("Maltese", "maltese", "mt"),
 
     /** 毛利语 */
-    MAORI("maori", "mi"),
+    MAORI("Maori", "maori", "mi"),
 
     /** 马拉地语 */
-    MARATHI("marathi", "mr"),
+    MARATHI("Marathi", "marathi", "mr"),
 
     /** 蒙古语 */
-    MONGOLIAN("mongolian", "mn"),
+    MONGOLIAN("Mongolian", "mongolian", "mn"),
 
     /** 缅甸语 */
-    MYANMAR("myanmar", "my"),
+    MYANMAR("Myanmar", "myanmar", "my"),
 
     /** 尼泊尔语 */
-    NEPALI("nepali", "ne"),
+    NEPALI("Nepali", "nepali", "ne"),
 
     /** 挪威语 */
-    NORWEGIAN("norwegian", "no"),
+    NORWEGIAN("Norwegian", "norwegian", "no"),
 
     /** 奥利亚语 */
-    ORIYA("oriya", "or"),
+    ORIYA("Oriya", "oriya", "or"),
 
     /** 普什图语 */
-    PASHTO("pashto", "ps"),
+    PASHTO("Pashto", "pashto", "ps"),
 
     /** 波斯语 */
-    PERSIAN("persian", "fa"),
+    PERSIAN("Persian", "persian", "fa"),
 
     /** 波兰语 */
-    POLISH("polish", "pl"),
+    POLISH("Polish", "polish", "pl"),
 
     /** 葡萄牙语 */
-    PORTUGUESE("portuguese", "pt"),
+    PORTUGUESE("Portuguese", "portuguese", "pt"),
 
     /** 葡萄牙语(巴西) */
-    PORTUGUESE_BRAZILIAN("portuguese.brazilian", "pt-BR"),
+    PORTUGUESE_BRAZILIAN("Portuguese (Brazilian)", "portuguese.brazilian", "pt-BR"),
 
     /** 葡萄牙语(葡萄牙) */
-    PORTUGUESE_PORTUGUESE("portuguese.portugal", "pt-PT"),
+    PORTUGUESE_PORTUGUESE("Portuguese (Portugal)", "portuguese.portugal", "pt-PT"),
 
     /** 旁遮普语 */
-    PUNJABI("punjabi", "pa"),
+    PUNJABI("Punjabi", "punjabi", "pa"),
 
     /** 罗马尼亚语 */
-    ROMANIAN("romanian", "ro"),
+    ROMANIAN("Romanian", "romanian", "ro"),
 
     /** 俄语 */
-    RUSSIAN("russian", "ru"),
+    RUSSIAN("Russian", "russian", "ru"),
 
     /** 萨摩亚语 */
-    SAMOAN("samoan", "sm"),
+    SAMOAN("Samoan", "samoan", "sm"),
 
     /** 苏格兰盖尔语 */
-    SCOTS_GAELIC("scotsGaelic", "gd"),
+    SCOTS_GAELIC("ScotsGaelic", "scotsGaelic", "gd"),
 
     /** 塞尔维亚语 */
-    SERBIAN("serbian", "sr"),
+    SERBIAN("Serbian", "serbian", "sr"),
 
     /** 塞尔维亚语 (西里尔文) */
-    SERBIAN_CYRILLIC("serbian.cyrillic", "sr-Cyrl"),
+    SERBIAN_CYRILLIC("Serbian (cyrillic)", "serbian.cyrillic", "sr-Cyrl"),
 
     /** 塞尔维亚语 (拉丁文) */
-    SERBIAN_LATIN("serbian.latin", "sr-Latn"),
+    SERBIAN_LATIN("Serbian (Latin)", "serbian.latin", "sr-Latn"),
 
     /** 塞索托语 */
-    SESOTHO("sesotho", "st"),
+    SESOTHO("Sesotho", "sesotho", "st"),
 
     /** 修纳语 */
-    SHONA("shona", "sn"),
+    SHONA("Shona", "shona", "sn"),
 
     /** 信德语 */
-    SINDHI("sindhi", "sd"),
+    SINDHI("Sindhi", "sindhi", "sd"),
 
     /** 僧伽罗语 */
-    SINHALA("sinhala", "si"),
+    SINHALA("Sinhala", "sinhala", "si"),
 
     /** 斯洛伐克语 */
-    SLOVAK("slovak", "sk"),
+    SLOVAK("Slovak", "slovak", "sk"),
 
     /** 斯洛文尼亚语 */
-    SLOVENIAN("slovenian", "sl"),
+    SLOVENIAN("Slovenian", "slovenian", "sl"),
 
     /** 索马里语 */
-    SOMALI("somali", "so"),
+    SOMALI("Somali", "somali", "so"),
 
     /** 西班牙语 */
-    SPANISH("spanish", "es"),
+    SPANISH("Spanish", "spanish", "es"),
 
     /** 印尼巽他语 */
-    SUNDANESE("sundanese", "su"),
+    SUNDANESE("Sundanese", "sundanese", "su"),
 
     /** 斯瓦希里语 */
-    SWAHILI("swahili", "sw"),
+    SWAHILI("Swahili", "swahili", "sw"),
 
     /** 瑞典语 */
-    SWEDISH("swedish", "sv"),
+    SWEDISH("Swedish", "swedish", "sv"),
 
     /** 塔希提语 */
-    TAHITIAN("tahitian", "ty"),
+    TAHITIAN("Tahitian", "tahitian", "ty"),
 
     /** 塔吉克语 */
-    TAJIK("tajik", "tg"),
+    TAJIK("Tajik", "tajik", "tg"),
 
     /** 泰米尔语 */
-    TAMIL("tamil", "ta"),
+    TAMIL("Tamil", "tamil", "ta"),
 
     /** 鞑靼语 */
-    TATAR("tatar", "tt"),
+    TATAR("Tatar", "tatar", "tt"),
 
     /** 泰卢固语 */
-    TELUGU("telugu", "te"),
+    TELUGU("Telugu", "telugu", "te"),
 
     /** 泰语 */
-    THAI("thai", "th"),
+    THAI("Thai", "thai", "th"),
 
     /** 藏语 */
-    TIBETAN("tibetan", "bo"),
+    TIBETAN("Tibetan", "tibetan", "bo"),
 
     /** 提格利尼亚语 */
-    TIGRINYA("tigrinya", "ti"),
+    TIGRINYA("Tigrinya", "tigrinya", "ti"),
 
     /** 汤加语 */
-    TONGAN("tongan", "to"),
+    TONGAN("Tongan", "tongan", "to"),
 
     /** 土耳其语 */
-    TURKISH("turkish", "tr"),
+    TURKISH("Turkish", "turkish", "tr"),
 
     /** 土库曼语 */
-    TURKMEN("turkmen", "tk"),
+    TURKMEN("Turkmen", "turkmen", "tk"),
 
     /** 乌克兰语 */
-    UKRAINIAN("ukrainian", "uk"),
+    UKRAINIAN("Ukrainian", "ukrainian", "uk"),
 
     /** 上索布语 */
-    UPPER_SORBIAN("upperSorbian", "hsb"),
+    UPPER_SORBIAN("Upper Sorbian", "upperSorbian", "hsb"),
 
     /** 乌尔都语 */
-    URDU("urdu", "ur"),
+    URDU("Urdu", "urdu", "ur"),
 
     /** 维吾尔语 */
-    UYGHUR("uyghur", "ug"),
+    UYGHUR("Uyghur", "uyghur", "ug"),
 
     /** 乌兹别克语(乌孜别克语) */
-    UZBEK("uzbek", "uz"),
+    UZBEK("Uzbek", "uzbek", "uz"),
 
     /** 越南语 */
-    VIETNAMESE("vietnamese", "vi"),
+    VIETNAMESE("Vietnamese", "vietnamese", "vi"),
 
     /** 威尔士语 */
-    WELSH("welsh", "cy"),
+    WELSH("Welsh", "welsh", "cy"),
 
     /** 南非科萨语 */
-    XHOSA("xhosa", "xh"),
+    XHOSA("Xhosa", "xhosa", "xh"),
 
     /** 意第绪语 */
-    YIDDISH("yiddish", "yi"),
+    YIDDISH("Yiddish", "yiddish", "yi"),
 
     /** 约鲁巴语 */
-    YORUBA("yoruba", "yo"),
+    YORUBA("Yoruba", "yoruba", "yo"),
 
     /** 尤卡特克玛雅语 */
-    YUCATEC_MAYA("yucatecMaya", "yua"),
+    YUCATEC_MAYA("Yucatec Maya", "yucatecMaya", "yua"),
 
     /** 南非祖鲁语 */
-    ZULU("zulu", "zu"),
+    ZULU("Zulu", "zulu", "zu"),
 
     ; // endregion
 
 
-    val langName: String by lazy { LanguageBundle.getMessage(namePropertyKey) }
+    /** Localized name based on system locale */
+    val localeName: String by lazy { LanguageBundle.getMessage(localeNameKey) }
+
+    /** Localized name based on IDE locale */
+    val adaptiveLocalName: String by lazy { LanguageBundle.getAdaptedMessage(localeNameKey) }
 
     companion object {
-        private val mapping: Map<String, Lang> by lazy { values().asSequence().map { it.code to it }.toMap() }
+        private val mapping: Map<String, Lang> by lazy { values().associateBy { it.code } }
 
+        /**
+         * Sorted languages (excluding [UNKNOWN]) by their locale names.
+         */
         val sortedLanguages: List<Lang> by lazy {
             values()
                 .asSequence()
                 .filter { it != UNKNOWN }
-                .sortedBy { if (it == AUTO) "" else it.langName }
+                .sortedBy { if (it == AUTO) "" else it.localeName }
                 .toList()
                 .let { Collections.unmodifiableList(it) }
         }
 
+        /**
+         * Returns the default language.
+         */
         val default: Lang
             get() {
                 val dynamicBundleLanguage = (TranslationDynamicBundle.dynamicLocale ?: Locale.ENGLISH).language

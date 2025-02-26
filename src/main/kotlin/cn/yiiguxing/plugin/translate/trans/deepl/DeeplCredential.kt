@@ -16,7 +16,7 @@ internal class DeeplCredential private constructor() :
         private val SERVICE_NAME =
             generateServiceName("DeepL Credentials", "${TranslationPlugin.PLUGIN_ID}.DEEPL_AUTH_KEY")
 
-        private val service: DeeplCredential get() = service()
+        val service: DeeplCredential get() = service()
 
         val isAuthKeySet: Boolean get() = service.isCredentialSet
 

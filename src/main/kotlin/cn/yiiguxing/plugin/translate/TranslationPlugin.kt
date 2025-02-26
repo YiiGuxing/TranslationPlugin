@@ -15,11 +15,9 @@ object TranslationPlugin {
     val version: String by lazy { descriptor.version }
 
     /**
-     * Generate an id with the specified [postfix].
-     * The generated id is in the format of `<PLUGIN_ID>.<postfix>`.
+     * Generate an id with the specified [key].
+     * The generated id is in the format of `<PLUGIN_ID>.<key>`.
      */
-    fun generateId(postfix: String): String {
-        return "$PLUGIN_ID.$postfix"
-    }
+    fun generateId(key: String): String = "$PLUGIN_ID.$key"
 
 }

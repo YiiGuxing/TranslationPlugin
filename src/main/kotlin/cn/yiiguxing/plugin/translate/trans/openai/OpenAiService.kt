@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.trans.openai
 
 import cn.yiiguxing.plugin.translate.trans.openai.audio.SpeechRequest
 import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatCompletion
-import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatMessage
 import cn.yiiguxing.plugin.translate.trans.openai.chat.chatCompletionRequest
+import cn.yiiguxing.plugin.translate.trans.openai.prompt.Prompt
 import cn.yiiguxing.plugin.translate.util.Http.sendJson
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
@@ -18,13 +18,14 @@ private const val AZURE_OPEN_AI_BASE_API_PATH = "openai/deployments"
 private const val AZURE_OPEN_AI_CHAT_API_PATH = "chat/completions"
 private const val AZURE_OPEN_AI_SPEECH_API_PATH = "audio/speech"
 
+//TODO [Refactor] Separate translation service and TTS service
 interface OpenAiService {
 
     /**
      * [Chat Completion](https://platform.openai.com/docs/api-reference/chat/create)
      */
     @RequiresBackgroundThread
-    fun chatCompletion(messages: List<ChatMessage>): ChatCompletion
+    fun chatCompletion(prompt: Prompt): ChatCompletion
 
     /**
      * Generates audio from the input text.
@@ -34,18 +35,27 @@ interface OpenAiService {
     @RequiresBackgroundThread
     fun speech(text: String, indicator: ProgressIndicator? = null): ByteArray
 
-    sealed interface Options {
-        val endpoint: String?
-        val ttsModel: OpenAiModel
+    interface TTSBaseOptions {
+        val ttsModel: OpenAiTTSModel
         val ttsVoice: OpenAiTtsVoice
         val ttsSpeed: Int
     }
 
-    interface OpenAIOptions : Options {
-        val model: OpenAiModel
+    sealed interface Options {
+        val endpoint: String?
     }
 
-    interface AzureOptions : Options {
+    interface OpenAIOptions : Options, TTSBaseOptions {
+        val model: OpenAiGPTModel
+        val customModel: String?
+        val useCustomModel: Boolean
+        val apiPath: String?
+        val ttsEndpoint: String?
+        val ttsApiPath: String?
+        val useSeparateTtsApiSettings: Boolean
+    }
+
+    interface AzureOptions : Options, TTSBaseOptions {
         val deployment: String?
         val ttsDeployment: String?
         val apiVersion: AzureServiceVersion
@@ -64,32 +74,40 @@ interface OpenAiService {
 
 
 class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
-    private fun getApiUrl(path: String): String {
-        return (options.endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + path
+    private fun getApiUrl(endpoint: String?, path: String): String {
+        return (endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + path
     }
 
-    private fun RequestBuilder.auth() {
-        val apiKey = OpenAiCredentials.manager(ServiceProvider.OpenAI).credential
-        tuner { it.setRequestProperty("Authorization", "Bearer $apiKey") }
+    private fun RequestBuilder.auth(apiKey: String?) {
+        tuner { it.setRequestProperty("Authorization", "Bearer ${apiKey ?: ""}") }
     }
 
-    override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
-        val request = chatCompletionRequest {
-            model = options.model.value
-            this.messages = messages
+    override fun chatCompletion(prompt: Prompt): ChatCompletion {
+        val model = when {
+            options.useCustomModel -> options.customModel
+            else -> options.model.modelId
         }
-        return OpenAiHttp.post(getApiUrl(OPEN_AI_API_PATH), request) { auth() }
+        val request = chatCompletionRequest {
+            this.model = model
+            this.messages = prompt.messages
+        }
+        val path = options.apiPath?.trim()?.takeIf { it.isNotEmpty() } ?: OPEN_AI_API_PATH
+        return OpenAiHttp.post(getApiUrl(options.endpoint, path), request) {
+            auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
+        }
     }
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
         val request = SpeechRequest(
-            module = options.ttsModel.value,
+            model = options.ttsModel.modelId,
             input = text,
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
-        return OpenAiHttp.post(getApiUrl(OPEN_AI_SPEECH_API_PATH)) {
-            auth()
+        val endpoint = with(options) { if (useSeparateTtsApiSettings) ttsEndpoint else endpoint }
+        val path = options.ttsApiPath?.trim()?.takeIf { it.isNotEmpty() } ?: OPEN_AI_SPEECH_API_PATH
+        return OpenAiHttp.post(getApiUrl(endpoint, path)) {
+            auth(OpenAiCredentials.manager(ServiceProvider.OpenAI, options.useSeparateTtsApiSettings).credential)
             sendJson(request) { it.readBytes(indicator) }
         }
     }
@@ -102,16 +120,16 @@ class Azure(private val options: OpenAiService.AzureOptions) : OpenAiService {
         tuner { it.setRequestProperty("api-key", apiKey) }
     }
 
-    override fun chatCompletion(messages: List<ChatMessage>): ChatCompletion {
+    override fun chatCompletion(prompt: Prompt): ChatCompletion {
         val request = chatCompletionRequest(false) {
-            this.messages = messages
+            this.messages = prompt.messages
         }
         return OpenAiHttp.post(options.getApiUrl(false), request) { auth() }
     }
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
         val request = SpeechRequest(
-            module = options.ttsModel.value,
+            model = options.ttsModel.modelId,
             input = text,
             voice = options.ttsVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)

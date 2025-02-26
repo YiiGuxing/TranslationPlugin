@@ -14,7 +14,8 @@ import java.awt.Point
  */
 class BalloonPositionTracker(
     private val editor: Editor,
-    private val caretRangeMarker: RangeMarker
+    private val caretRangeMarker: RangeMarker,
+    val position: Balloon.Position = Balloon.Position.below
 ) : PositionTracker<Balloon>(editor.contentComponent) {
 
     private var lastLocation: RelativePoint? = null
@@ -28,7 +29,7 @@ class BalloonPositionTracker(
 
     override fun recalculateLocation(balloon: Balloon): RelativePoint {
         val last = lastLocation
-        val location = editor.getBalloonLocation(caretRangeMarker)
+        val location = editor.getBalloonLocation(balloon as? BalloonImpl, caretRangeMarker, position)
         (balloon as? BalloonImpl)?.setLostPointer(location == null)
         if (last != null && location == null) {
             return last
@@ -40,7 +41,11 @@ class BalloonPositionTracker(
     }
 }
 
-private fun Editor.getBalloonLocation(caretRangeMarker: RangeMarker): Point? {
+private fun Editor.getBalloonLocation(
+    balloon: BalloonImpl?,
+    caretRangeMarker: RangeMarker,
+    position: Balloon.Position
+): Point? {
     if (isDisposed || !caretRangeMarker.isValid) {
         return null
     }
@@ -50,10 +55,15 @@ private fun Editor.getBalloonLocation(caretRangeMarker: RangeMarker): Point? {
     val startPoint = visualPositionToXY(startPosition)
     val endPoint = visualPositionToXY(endPosition)
 
-    val lineHeight = lineHeight
     val centerX = ((startPoint.x + endPoint.x) * 0.5f).toInt()
     val x = minOf(centerX, endPoint.x)
-    val y = endPoint.y + lineHeight
+
+    @Suppress("INACCESSIBLE_TYPE")
+    val y = if (position === Balloon.Position.below && balloon?.position === BalloonImpl.ABOVE) {
+        endPoint.y
+    } else {
+        endPoint.y + lineHeight
+    }
 
     return scrollingModel.visibleArea.let {
         if (it.contains(x, y)) Point(x, y) else null

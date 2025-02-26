@@ -6,6 +6,7 @@ import com.intellij.ui.BrowserHyperlinkListener
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.IconUtil
+import com.intellij.util.ui.HTMLEditorKitBuilder
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -113,7 +114,7 @@ object UI {
             isOpaque = false
             foreground = JBUI.CurrentTheme.Label.disabledForeground()
             font = JBFont.label().lessOn(1f)
-            editorKit = UIUtil.getHTMLEditorKit()
+            editorKit = HTMLEditorKitBuilder.simple()
             border = hintForComponent?.insets.let {
                 JBUI.Borders.empty(2, it?.left ?: 0, 0, it?.right ?: 0)
             }

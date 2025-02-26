@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.ui.JBColor;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.util.NlsContexts;
+import com.intellij.ui.ClientProperty;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,10 +34,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class BalloonPopupBuilder implements BalloonBuilder {
 
-    private static final Map<Disposable, List<Balloon>> DEFAULT_STORAGE = ContainerUtil.createWeakMap();
+    private static final Map<Disposable, List<Balloon>> DEFAULT_STORAGE = new WeakHashMap<>();
 
     @Nullable
     private final Map<Disposable, List<Balloon>> myStorage;
@@ -46,7 +47,7 @@ public class BalloonPopupBuilder implements BalloonBuilder {
 
     private final JComponent myContent;
 
-    private Color myBorder = JBColor.namedColor("ToolTip.borderColor", new JBColor(0xadadad, 0x636569));
+    private Color myBorder = MessageType.INFO.getBorderColor();
     @Nullable
     private Insets myBorderInsets;
     private Color myFill = MessageType.INFO.getPopupBackground();
@@ -68,7 +69,7 @@ public class BalloonPopupBuilder implements BalloonBuilder {
     private boolean myHideOnAction = true;
     private boolean myHideOnCloseClick = true;
     private boolean myDialogMode;
-    private String myTitle;
+    private @NlsContexts.PopupTitle String myTitle;
     private Insets myContentInsets = JBUI.insets(2);
     private boolean myShadow = true;
     private boolean mySmallVariant;
@@ -78,6 +79,7 @@ public class BalloonPopupBuilder implements BalloonBuilder {
 
     private Dimension myPointerSize;
     private int myCornerToPointerDistance = -1;
+    private int myCornerRadius = -1;
 
 
     public BalloonPopupBuilder(@NotNull final JComponent content) {
@@ -87,6 +89,9 @@ public class BalloonPopupBuilder implements BalloonBuilder {
     public BalloonPopupBuilder(@Nullable Map<Disposable, List<Balloon>> storage, @NotNull final JComponent content) {
         myStorage = storage;
         myContent = content;
+        if (ClientProperty.isTrue(myContent, com.intellij.ui.BalloonImpl.FORCED_NO_SHADOW)) {
+            myShadow = false;
+        }
     }
 
     @NotNull
@@ -231,7 +236,7 @@ public class BalloonPopupBuilder implements BalloonBuilder {
 
     @NotNull
     @Override
-    public BalloonBuilder setTitle(@Nullable String title) {
+    public BalloonBuilder setTitle(@Nullable @NlsContexts.PopupTitle String title) {
         myTitle = title;
         return this;
     }
@@ -287,12 +292,20 @@ public class BalloonPopupBuilder implements BalloonBuilder {
 
     @NotNull
     @Override
+    public BalloonBuilder setCornerRadius(int radius) {
+        myCornerRadius = radius;
+        return this;
+    }
+
+    @NotNull
+    @Override
     public Balloon createBalloon() {
         final BalloonImpl result = new BalloonImpl(
                 myContent, myBorder, myBorderInsets, myFill, myHideOnMouseOutside, myHideOnKeyOutside, myHideOnAction, myHideOnCloseClick,
                 myShowCallout, myCloseButtonEnabled, myFadeoutTime, myHideOnFrameResize, myHideOnLinkClick, myClickHandler, myCloseOnClick,
                 myAnimationCycle, myCalloutShift, myPositionChangeXShift, myPositionChangeYShift, myDialogMode, myTitle, myContentInsets, myShadow,
                 mySmallVariant, myBlockClicks, myLayer, myRequestFocus, myPointerSize, myCornerToPointerDistance);
+        result.setCornerRadius(myCornerRadius);
 
         if (myStorage != null && myAnchor != null) {
             List<Balloon> balloons = myStorage.get(myAnchor);

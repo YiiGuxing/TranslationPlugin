@@ -1,14 +1,17 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.CompatDumbAwareAction
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.project.DumbAwareAction
 
-class PinBalloonAction : CompatDumbAwareAction(), ImportantTranslationAction {
+class PinBalloonAction : DumbAwareAction(), ImportantTranslationAction {
     init {
         templatePresentation.text = message("action.PinBalloonAction.text")
     }
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.EDT
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabled = TranslationUIManager.instance(e.project).currentBalloon() != null

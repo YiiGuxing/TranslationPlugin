@@ -48,7 +48,7 @@ internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
 
     init {
         title = message("microsoft.edge.tts.settings.dialog.title")
-        setResizable(false)
+        isResizable = false
         initVoiceComboBox()
         init()
     }

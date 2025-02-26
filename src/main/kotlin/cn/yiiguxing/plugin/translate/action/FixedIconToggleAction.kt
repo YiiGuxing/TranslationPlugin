@@ -1,16 +1,12 @@
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatToggleAction
-import com.intellij.openapi.actionSystem.ActionPlaces
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.actionSystem.Toggleable
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.util.NlsActions.ActionDescription
 import com.intellij.openapi.util.NlsActions.ActionText
 import java.util.function.Supplier
 import javax.swing.Icon
 
-abstract class FixedIconToggleAction : UpdateInBackgroundCompatToggleAction {
+abstract class FixedIconToggleAction : ToggleAction {
 
     protected val icon: Icon
 
@@ -29,6 +25,8 @@ abstract class FixedIconToggleAction : UpdateInBackgroundCompatToggleAction {
     ) : super(text, description, icon) {
         this.icon = icon
     }
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
         super.update(e)

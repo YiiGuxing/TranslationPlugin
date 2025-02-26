@@ -67,11 +67,10 @@ class WordBookService : Disposable {
     /**
      * The observable state binding of service, state changes will be notified in the EDT.
      */
-    val stateBinding: Observable<WordBookState> =
-        object : ObservableValue.ReadOnlyWrapper<WordBookState>(observableState) {
-            override val value: WordBookState
-                get() = synchronized(this@WordBookService) { super.value }
-        }
+    val stateBinding: Observable<WordBookState> = object : ReadOnlyObservableWrapper<WordBookState>(observableState) {
+        override val value: WordBookState
+            get() = synchronized(this@WordBookService) { super.value }
+    }
 
     var state: WordBookState by observableState
         @Synchronized get

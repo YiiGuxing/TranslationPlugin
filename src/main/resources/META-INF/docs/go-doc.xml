@@ -1,10 +1,4 @@
 <idea-plugin>
-    <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <documentationElementProvider
-                language="go"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.GoDocumentationElementProvider"/>
-    </extensions>
-
     <extensions defaultExtensionNs="com.intellij">
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.Go"

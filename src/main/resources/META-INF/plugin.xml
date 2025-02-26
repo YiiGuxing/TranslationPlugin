@@ -44,12 +44,6 @@
             <with attribute="implementationClass"
                   implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider"/>
         </extensionPoint>
-        <extensionPoint name="documentationElementProvider"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint"
-                        dynamic="true">
-            <with attribute="implementationClass"
-                  implements="cn.yiiguxing.plugin.translate.provider.DocumentationElementProvider"/>
-        </extensionPoint>
     </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -73,10 +67,11 @@
                     doNotActivateOnStart="true"
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactoryImpl"/>
 
-        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
-        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>
-        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.CheckGoogleNetworkStartupActivity"/>
-        <postStartupActivity implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
+        <backgroundPostStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
+        <!--<backgroundPostStartupActivity
+                implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>-->
+        <backgroundPostStartupActivity
+                implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
         <documentationActionProvider
                 implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
@@ -92,81 +87,73 @@
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="cn.yiiguxing.plugin.translate.action.TitleBarActionRegistrar"
-                  topic="com.intellij.ide.AppLifecycleListener"/>
-        <listener class="cn.yiiguxing.plugin.translate.action.TitleBarActionRegistrar"
-                  topic="com.intellij.ide.plugins.DynamicPluginListener"/>
-    </applicationListeners>
-
     <actions>
-        <action id="$ShowTranslationDialogAction"
+        <action id="Translation.ShowTranslationDialogAction"
                 icon="TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
+            <add-to-group group-id="MainToolbarRight" relative-to-action="SearchEverywhere" anchor="before"/>
         </action>
 
-        <action id="$SwitchEngineAction"
+        <action id="Translation.SwitchEngineAction"
                 class="cn.yiiguxing.plugin.translate.action.SwitchEngineAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift S"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta Y" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta Y" replace-all="true"/>
         </action>
-        <action id="$EditorTranslateAction" class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
+        <action id="Translation.EditorTranslateAction"
+                class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
                 icon="TranslationIcons.Translation">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
         </action>
-        <action id="$TranslateAndReplaceAction" class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+        <action id="Translation.TranslateAndReplaceAction"
+                class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
                 icon="TranslationIcons.TranslationReplace">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
         </action>
-        <action id="$TranslateDocumentationAction"
-                icon="TranslationIcons.Documentation"
-                class="cn.yiiguxing.plugin.translate.action.TranslateDocumentationAction"/>
-        <action id="$InclusiveTranslateAction"
+        <action id="Translation.InclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"/>
-        <action id="$ExclusiveTranslateAction"
+        <action id="Translation.ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
-        <action id="$TranslateQuickDocAction"
+        <action id="Translation.TranslateQuickDocAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction"
-                use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$ToggleQuickDocTranslationAction"
+                use-shortcut-of="Translation.EditorTranslateAction"/>
+        <action id="Translation.ToggleQuickDocTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
-                use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$TranslateRenderedDocSelectionAction"
+                use-shortcut-of="Translation.EditorTranslateAction"/>
+        <action id="Translation.TranslateRenderedDocSelectionAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction"
-                use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$TranslateTextComponent"
+                use-shortcut-of="Translation.EditorTranslateAction"/>
+        <action id="Translation.TranslateTextComponentAction"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
-                use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$TerminalTranslationAction"
+                use-shortcut-of="Translation.EditorTranslateAction"/>
+        <action id="Translation.TerminalTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
                 icon="TranslationIcons.Translation"
-                use-shortcut-of="$EditorTranslateAction"/>
-        <action id="$ShowWordOfTheDayAction"
+                use-shortcut-of="Translation.EditorTranslateAction"/>
+        <action id="Translation.ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"/>
 
-        <action id="$WhatsNewInTranslationAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
-        <action id="$TranslationGettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
+        <action id="Translation.WhatsNewAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
+        <action id="Translation.GettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
         <action id="Translation.SupportAction" class="cn.yiiguxing.plugin.translate.action.SupportAction"/>
 
-        <action id="PinBalloonAction"
+        <action id="Translation.PinBalloonAction"
                 class="cn.yiiguxing.plugin.translate.action.PinBalloonAction"
-                use-shortcut-of="$EditorTranslateAction">
+                use-shortcut-of="Translation.EditorTranslateAction">
         </action>
 
-        <group id="TranslationPopupMenu" text="Translation Popup Menu Actions">
+        <group id="Translation.PopupMenuGroup" text="Translation Popup Menu Actions">
             <separator/>
-            <reference ref="$EditorTranslateAction"/>
-            <reference ref="$TranslateAndReplaceAction"/>
-            <reference ref="$TranslateDocumentationAction"/>
+            <reference ref="Translation.EditorTranslateAction"/>
+            <reference ref="Translation.TranslateAndReplaceAction"/>
             <separator/>
 
             <add-to-group group-id="BasicEditorPopupMenu" anchor="first"/>
@@ -174,43 +161,40 @@
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="first"/>
             <add-to-group group-id="Diff.EditorPopupMenu" anchor="first"/>
         </group>
-        <group id="TranslationToolBar" text="Translation Toolbar Actions">
+        <group id="Translation.ToolBarGroup" text="Translation Toolbar Actions">
             <separator/>
-            <reference ref="$ShowTranslationDialogAction"/>
+            <reference ref="Translation.ShowTranslationDialogAction"/>
             <separator/>
 
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </group>
-        <group id="TranslationTitleBar" text="Translation Title Bar Actions">
-            <reference ref="$ShowTranslationDialogAction"/>
+        <group id="Translation.ExpandedGroup" popup="true" text="Expanded">
+            <reference ref="Translation.ShowTranslationDialogAction"/>
+            <reference ref="Translation.InclusiveTranslateAction"/>
+            <reference ref="Translation.ExclusiveTranslateAction"/>
         </group>
-        <group id="TranslationGroup.Expanded" popup="true" text="Expanded">
-            <reference ref="$ShowTranslationDialogAction"/>
-            <reference ref="$InclusiveTranslateAction"/>
-            <reference ref="$ExclusiveTranslateAction"/>
-        </group>
-        <group id="TranslationGroup" text="Translation Actions">
+        <group id="Translation.ActionGroup" text="Translation Actions">
             <separator/>
-            <reference ref="$EditorTranslateAction"/>
-            <reference ref="$TranslateAndReplaceAction"/>
-            <reference ref="TranslationGroup.Expanded"/>
+            <reference ref="Translation.EditorTranslateAction"/>
+            <reference ref="Translation.TranslateAndReplaceAction"/>
+            <reference ref="Translation.ExpandedGroup"/>
             <separator/>
         </group>
-        <group id="Documentation.PrimaryTranslationGroup">
+        <group id="Translation.Documentation.PrimaryGroup">
             <separator/>
-            <reference ref="$TranslateQuickDocAction"/>
-            <reference ref="$ToggleQuickDocTranslationAction"/>
+            <reference ref="Translation.TranslateQuickDocAction"/>
+            <reference ref="Translation.ToggleQuickDocTranslationAction"/>
 
             <add-to-group group-id="Documentation.PrimaryGroup"/>
         </group>
-        <group id="TranslationHelpGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
-            <reference ref="$WhatsNewInTranslationAction"/>
-            <reference ref="$TranslationGettingStartAction"/>
+        <group id="Translation.HelpActionGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
+            <reference ref="Translation.WhatsNewAction"/>
+            <reference ref="Translation.GettingStartAction"/>
             <reference ref="Translation.SupportAction"/>
         </group>
-        <group id="$TranslationHelpGroup" text="TranslationHelpGroup">
+        <group id="Translation.HelpGroup" text="Translation Help Group">
             <separator/>
-            <reference ref="TranslationHelpGroup"/>
+            <reference ref="Translation.HelpActionGroup"/>
             <separator/>
 
             <add-to-group group-id="HelpMenu" anchor="before" relative-to-action="WhatsNewAction"/>

@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+- Added prompt template support for OpenAI Translator engine.
+- Added custom model naming for OpenAI Translator engine.
+- OpenAI Translator engine and TTS engine support custom API paths.
+- Introduced independent API configuration for OpenAI TTS engine.
+- OpenAI 翻译引擎现已支持自定义模型和提示词模板功能
+- OpenAI 翻译引擎和 TTS 引擎现已支持自定义 API 路径
+- OpenAI TTS 引擎新增独立的 API 配置选项
+
 ## [3.6.8] (2024/12/24)
 
 - Bug fixes.

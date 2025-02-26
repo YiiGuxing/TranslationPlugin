@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.wordbook
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.Notifications
-import cn.yiiguxing.plugin.translate.util.e
 import cn.yiiguxing.plugin.translate.util.w
 import cn.yiiguxing.plugin.translate.wordbook.exports.*
 import cn.yiiguxing.plugin.translate.wordbook.imports.JsonWordBookImporter
