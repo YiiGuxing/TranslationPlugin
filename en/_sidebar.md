@@ -11,3 +11,4 @@
 * [FAQ](/en/faq)
 * [Updates](/en/updates)
 * [Support/Sponsor ❤️](/en/support)
+* [Tutorial: How to Customize OpenAI Translation Prompts](/en/tutorial/how_to_customize_translation_prompts.md)

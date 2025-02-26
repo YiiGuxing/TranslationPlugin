@@ -11,3 +11,4 @@
 * [FAQ](/ja/faq)
 * [更新](/ja/updates)
 * [サポートとスポンサー ❤️](/ja/support)
+* [Tutorial: How to Customize OpenAI Translation Prompts](/ja/tutorial/how_to_customize_translation_prompts.md)
