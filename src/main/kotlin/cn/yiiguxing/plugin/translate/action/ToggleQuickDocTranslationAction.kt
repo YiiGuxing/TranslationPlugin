@@ -27,6 +27,8 @@ open class ToggleQuickDocTranslationAction :
     HintManagerImpl.ActionToIgnore,
     ImportantTranslationAction {
 
+    override val priority: Int = 1
+
     init {
         // Enable in hovering documentation popup
         isEnabledInModalContext = true

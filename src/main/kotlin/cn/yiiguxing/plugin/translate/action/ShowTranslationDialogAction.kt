@@ -13,6 +13,8 @@ import com.intellij.openapi.application.ApplicationManager
  */
 class ShowTranslationDialogAction : TranslateAction(true) {
 
+    override val priority: Int = ACTION_LOW_PRIORITY
+
     init {
         isEnabledInModalContext = true
         templatePresentation.text = adaptedMessage("action.ShowTranslationDialogAction.text")

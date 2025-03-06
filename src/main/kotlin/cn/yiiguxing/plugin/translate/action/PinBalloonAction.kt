@@ -7,6 +7,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 
 class PinBalloonAction : DumbAwareAction(), ImportantTranslationAction {
+
+    override val priority: Int = 1
+
     init {
         templatePresentation.text = message("action.PinBalloonAction.text")
     }
