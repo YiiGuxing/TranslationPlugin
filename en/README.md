@@ -156,8 +156,8 @@ Click the engine widget in the status bar or use the shortcut <kbd>**Ctrl + Shif
 #### 1. Show Translation Dialog... :id=show-trans-dialog-action
 
 Open the translation dialog, which appears by default on the toolbar. Default shortcut:
-- Windows - <kbd>**Ctrl + Shift + O**</kbd>
-- macOS - <kbd>**Control + Meta + I**</kbd>
+- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
+- macOS - <kbd>**Control + Meta + U**</kbd>
 
 ![Translation dialog](/img/translation_dialog.png ':size=550x250')
 

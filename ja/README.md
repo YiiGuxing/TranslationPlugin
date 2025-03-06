@@ -135,8 +135,8 @@ _エディタ内レイドキュメンテーションレンダリングビュー�
 #### 1. 翻訳ダイアログを表示... :id=show-trans-dialog-action
 
 翻訳ダイアログを開きます。デフォルトでは、ツールバーに表示されます。デフォルトのショートカットキー：
-- Windows - <kbd>**Ctrl + Shift + O**</kbd>
-- macOS - <kbd>**Control + Meta + I**</kbd>
+- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
+- macOS - <kbd>**Control + Meta + U**</kbd>
 
 ![翻訳ダイアログを](/img/translation_dialog.png ':size=550x250')
 
