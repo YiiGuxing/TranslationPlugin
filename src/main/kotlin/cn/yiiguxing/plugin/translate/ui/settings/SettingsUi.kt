@@ -172,8 +172,8 @@ abstract class SettingsUi {
     protected val resetWordbookStoragePathButton: JButton = JButton(message("settings.button.restore.default"))
     protected val showExplanationCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showExplanation"))
 
-    protected val maxHistoriesSizeComboBox: ComboBox<Int> = comboBox(50, 30, 20, 10, 0).apply {
-        editor = TypedComboBoxEditor { (it.toDoubleOrNull()?.toInt() ?: 50).coerceIn(50, 5000) }
+    protected val maxHistoriesSizeComboBox: ComboBox<Int> = comboBox(50, 30, 20, 10).apply {
+        editor = TypedComboBoxEditor { (it.toDoubleOrNull()?.toInt() ?: 50).coerceIn(10, 5000) }
         isEditable = true
     }
 
