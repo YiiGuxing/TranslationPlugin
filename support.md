@@ -65,10 +65,10 @@
 </div>
 <div class="sponsors">
 
-[<!-- ￥256.00,2025/02/11 -->![Smart Input Pro](/img/sponsor/logo_smart_input_pro.svg ':class=active')](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
 [<!-- $200.00,2021/10/28 -->![Targeted Web Traffic](/img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
 [<!-- ￥500.00,2024/05/20 -->![Mybatis Code Helper Pro](/img/sponsor/logo_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
 [<!-- ￥500.00,2024/05/20 -->![Fast Request](/img/sponsor/logo_fast_request.svg)](https://api-buddy.com?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
+[<!-- ￥256.00,2025/02/11 -->![Smart Input Pro](/img/sponsor/logo_smart_input_pro.svg)](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
 [<!-- $20.00,2022/04/01 -->![Atom Material Themes & Plugins](/img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
 [<!-- $5.00,2023/01/01 -->![Intellij Rainbow Brackets](/img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
 

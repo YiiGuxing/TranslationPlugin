@@ -1,17 +1,6 @@
 (function () {
     var lastPluginVersion = "v3.7";
-    var activeSponsors = [
-        {
-            name: "Smart Input Pro",
-            logo: "smart_input_pro.svg",
-            description: {
-                default: "自动切换输入法插件，写代码从未如此丝滑"
-            },
-            links: {
-                default: "https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/",
-            }
-        },
-    ];
+    var activeSponsors = [];
 
     var RESOURCES_BASE_URL = "";
     var __DEV__ = localStorage.getItem("dev") === "true";
