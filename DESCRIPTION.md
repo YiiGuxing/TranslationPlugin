@@ -22,9 +22,11 @@
             <li>OpenAI Translator, compatible with:
                 <ul>
                     <li>DeepSeek</li>
+                    <li>Doubao</li>
                     <li>Gemini</li>
                     <li>Kimi</li>
                     <li>Ollama</li>
+                    <li>Qwen</li>
                     <li>...</li>
                 </ul>
             </li>
