@@ -38,7 +38,7 @@
 
 ## Ollama :id=ollama
 
-- **模型**：*\<你正在运行的模型，例如：`llama3.2:1b`>*
+- **模型**：*\<正在运行的模型，例如：`llama3.2:1b`>*
 - **API 端点**：`http://localhost:11434` `/v1/chat/completions`
 - **API 密钥**：*\<必须但忽略>*
 
