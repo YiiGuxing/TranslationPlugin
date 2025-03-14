@@ -10,13 +10,20 @@ and code documents, etc. You want to translate in your IDE at any time.
 ## Features :id=features
 
 - Multiple Translation Engines
-    - Google Translate
-    - Microsoft Translator
-    - OpenAI Translator
-    - DeepL Translator
-    - Youdao Translate
-    - Baidu Translate
-    - Alibaba Translate
+  - Google Translate
+  - Microsoft Translator
+  - DeepL Translator
+  - Youdao Translate
+  - Baidu Translate
+  - Alibaba Translate
+  - OpenAI Translator, compatible with:
+    - DeepSeek
+    - Doubao
+    - Gemini
+    - Kimi
+    - Ollama
+    - Qwen
+    - ...
 - Multiple languages inter-translation
 - Text-to-speech
   - Microsoft Edge TTS

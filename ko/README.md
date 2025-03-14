@@ -7,13 +7,20 @@ TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인�
 ## 특성 :id=features
 
 - 여러 번역 엔진
-    - Google 번역
-    - Microsoft 번역
-    - OpenAI 번역
-    - DeepL 번역
-    - Youdao 번역
-    - Baidu 번역
-    - Alibaba 번역
+  - Google 번역
+  - Microsoft 번역
+  - DeepL 번역
+  - Youdao 번역
+  - Baidu 번역
+  - Alibaba 번역
+  - OpenAI 번역, 호환성:
+    - DeepSeek
+    - Doubao
+    - Gemini
+    - Kimi
+    - Ollama
+    - Qwen
+    - ...
 - 다국어 번역
 - 음성 읽기
   - Microsoft Edge TTS

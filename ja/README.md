@@ -7,13 +7,20 @@
 ## 特徴 :id=features
 
 - マルチ翻訳エンジン
-    - Google 翻訳
-    - Microsoft 翻訳
-    - OpenAI 翻訳
-    - DeepL 翻訳
-    - Youdao 翻訳
-    - Baidu 翻訳
-    - Alibaba 翻訳
+  - Google 翻訳
+  - Microsoft 翻訳
+  - DeepL 翻訳
+  - Youdao 翻訳
+  - Baidu 翻訳
+  - Alibaba 翻訳
+  - OpenAI 翻訳，互換性あり：
+    - DeepSeek
+    - Doubao
+    - Gemini
+    - Kimi
+    - Ollama
+    - Qwen
+    - ...
 - 多言語翻訳
 - 音声読み上げ
   - Microsoft Edge TTS

@@ -13,7 +13,14 @@
   - 百度翻译
   - 阿里翻译
   - DeepL 翻译
-  - OpenAI 翻译
+  - OpenAI 翻译，兼容：
+    - DeepSeek
+    - Doubao
+    - Gemini
+    - Kimi
+    - Ollama
+    - Qwen
+    - ...
 - 多语言互译
 - 语音朗读
   - 微软 Edge TTS
