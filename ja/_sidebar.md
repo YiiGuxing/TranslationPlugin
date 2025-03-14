@@ -11,4 +11,5 @@
 * [FAQ](/ja/faq)
 * [更新](/ja/updates)
 * [サポートとスポンサー ❤️](/ja/support)
+* [Tutorial: Configuring Third-Party AI in OpenAI Translator](/ja/tutorial/configuring_3party_ai_in_openai_translator.md)
 * [Tutorial: How to Customize OpenAI Translation Prompts](/ja/tutorial/how_to_customize_translation_prompts.md)

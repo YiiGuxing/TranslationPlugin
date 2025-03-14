@@ -11,4 +11,5 @@
 * [FAQ](/en/faq)
 * [Updates](/en/updates)
 * [Support/Sponsor ❤️](/en/support)
+* [Tutorial: Configuring Third-Party AI in OpenAI Translator](/en/tutorial/configuring_3party_ai_in_openai_translator.md)
 * [Tutorial: How to Customize OpenAI Translation Prompts](/en/tutorial/how_to_customize_translation_prompts.md)

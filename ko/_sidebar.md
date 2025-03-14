@@ -11,4 +11,5 @@
 * [FAQ](/ko/faq)
 * [업데이트](/ko/updates)
 * [지원 및 기부 ❤️](/ko/support)
+* [Tutorial: Configuring Third-Party AI in OpenAI Translator](/ko/tutorial/configuring_3party_ai_in_openai_translator.md)
 * [Tutorial: How to Customize OpenAI Translation Prompts](/ko/tutorial/how_to_customize_translation_prompts.md)
