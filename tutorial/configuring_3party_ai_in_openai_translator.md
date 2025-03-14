@@ -42,7 +42,7 @@
 - **API 端点**：`http://localhost:11434` `/v1/chat/completions`
 - **API 密钥**：*\<必须但忽略>*
 
-?> 提示：API 密钥配置项必须的，但 Ollama 会忽略它，因此可以填写任意非空值。
+?> 提示：API 密钥配置项是必须的，但 Ollama 会忽略它，因此可以填写任意非空值。
 
 ## Qwen :id=qwen
 
