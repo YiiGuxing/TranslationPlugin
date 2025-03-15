@@ -20,6 +20,8 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
+    override val priority: Int = ACTION_HIGH_PRIORITY
+
     init {
         templatePresentation.icon = TranslationIcons.Translation
         templatePresentation.text = adaptedMessage("action.TranslateRenderedDocSelectionAction.text")

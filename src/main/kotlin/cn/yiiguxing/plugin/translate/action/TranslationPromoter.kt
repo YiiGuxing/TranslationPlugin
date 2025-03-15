@@ -6,15 +6,8 @@ import com.intellij.openapi.actionSystem.DataContext
 
 private val COMPARATOR = Comparator.comparingInt { action: AnAction ->
     when (action) {
-        is TranslateRenderedDocSelectionAction,
-        is TranslateQuickDocSelectionAction -> 0
-
-        is PinBalloonAction,
-        is EditorTranslateAction,
-        is ToggleQuickDocTranslationAction -> 1
-
-        is ImportantTranslationAction -> 2
-        else -> 3
+        is ImportantTranslationAction -> -action.priority.also { checkActionPriority(it) }
+        else -> Int.MAX_VALUE
     }
 }
 

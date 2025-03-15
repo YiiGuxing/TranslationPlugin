@@ -7,9 +7,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 
 
-interface ImportantTranslationAction
-
-
 val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
 fun hasEditorSelection(e: AnActionEvent): Boolean = e.editor?.selectionModel?.hasSelection() ?: false

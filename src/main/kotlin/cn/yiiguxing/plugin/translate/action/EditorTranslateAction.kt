@@ -10,6 +10,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent
  */
 class EditorTranslateAction : TranslateAction(true) {
 
+    override val priority: Int = 1
+
     init {
         isEnabledInModalContext = true
         templatePresentation.text = adaptedMessage("action.EditorTranslateAction.text")

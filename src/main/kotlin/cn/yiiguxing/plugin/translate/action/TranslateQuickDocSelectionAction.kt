@@ -21,6 +21,8 @@ class TranslateQuickDocSelectionAction :
     ImportantTranslationAction,
     HintManagerImpl.ActionToIgnore {
 
+    override val priority: Int = ACTION_HIGH_PRIORITY
+
     init {
         isEnabledInModalContext = true
         templatePresentation.text = adaptedMessage("action.TranslateQuickDocSelectionAction.text")

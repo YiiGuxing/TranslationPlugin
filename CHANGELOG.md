@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- The translation dialog action now uses the same shortcut as the translation action.
+- Removed the error report handler.
+- Bug fixes.
+- 翻译对话框操作现在使用与翻译操作相同的快捷方式
+- 移除了错误报告处理程序
+- Bug 修复
+
 ## [3.7.0] (2025/02/26)
 
 - Added prompt template support for OpenAI Translator engine.

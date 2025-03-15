@@ -77,8 +77,6 @@
                 implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
-        <errorHandler implementation="cn.yiiguxing.plugin.translate.diagnostic.ReportSubmitter"/>
-
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
@@ -90,10 +88,8 @@
     <actions>
         <action id="Translation.ShowTranslationDialogAction"
                 icon="TranslationIcons.Translation"
-                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction">
-            <keyboard-shortcut keymap="$default" first-keystroke="control shift O"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta I" replace-all="true"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta I" replace-all="true"/>
+                class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
+                use-shortcut-of="Translation.EditorTranslateAction">
             <add-to-group group-id="MainToolbarRight" relative-to-action="SearchEverywhere" anchor="before"/>
         </action>
 

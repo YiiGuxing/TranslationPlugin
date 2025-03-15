@@ -1,4 +1,4 @@
-<p><b>Translation plugin for IntelliJ based IDEs.</b></p>
+<p><b>Translation plugin for IntelliJ-based IDEs.</b></p>
 <br/>
 <p>
     <b>
@@ -16,10 +16,20 @@
             <li>Microsoft Translator.</li>
             <li>Google Translate.</li>
             <li>DeepL Translator.</li>
-            <li>OpenAI Translator.</li>
             <li>Youdao Translate.</li>
             <li>Alibaba Translate.</li>
             <li>Baidu Translate.</li>
+            <li>OpenAI Translator, compatible with:
+                <ul>
+                    <li>DeepSeek</li>
+                    <li>Doubao</li>
+                    <li>Gemini</li>
+                    <li>Kimi</li>
+                    <li>Ollama</li>
+                    <li>Qwen</li>
+                    <li>...</li>
+                </ul>
+            </li>
         </ul>
     </li>
     <li>Multiple languages inter-translation.</li>
