@@ -139,8 +139,8 @@ _编辑器内嵌文档视图：_
 #### 1. 显示翻译对话框... :id=show-trans-dialog-action
 
 打开翻译对话框。默认显示在工具栏上。默认快捷键：
-- Windows - <kbd>**Ctrl + Shift + O**</kbd>
-- macOS - <kbd>**Control + Meta + I**</kbd>
+- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
+- macOS - <kbd>**Control + Meta + U**</kbd>
 
 ![翻译对话框](/img/translation_dialog.png ':size=550x250')
 

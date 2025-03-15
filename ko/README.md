@@ -142,8 +142,8 @@ _Editor inlay documentation rendered view:_
 #### 1. 번역 대화상자 표시... :id=show-trans-dialog-action
 
 번역 대화상자를 엽니다.기본적으로 도구 모음에 표시됩니다.디폴트 단축키:
-- Windows - <kbd>**Ctrl + Shift + O**</kbd>
-- macOS - <kbd>**Control + Meta + I**</kbd>
+- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
+- macOS - <kbd>**Control + Meta + U**</kbd>
 
 ![Translation dialog](/img/translation_dialog.png ':size=550x250')
 
