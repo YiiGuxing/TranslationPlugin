@@ -1,6 +1,6 @@
 # 简介 :id=introduction
 
-**IntelliJ Translation Plugin** 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、OpenAI 翻译、有道翻译等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
+**IntelliJ Translation Plugin** 是一个适用于基于 IntelliJ 的 IDE 的翻译插件。它集成了谷歌翻译、微软翻译、DeepL 翻译、OpenAI 翻译、有道翻译等众多翻译引擎，允许您随时在 IDE 中直接翻译代码中的任何文本，如代码注释和代码文档。
 
 ![IntelliJ Translation Plugin](/img/translation_plugin.png)
 
