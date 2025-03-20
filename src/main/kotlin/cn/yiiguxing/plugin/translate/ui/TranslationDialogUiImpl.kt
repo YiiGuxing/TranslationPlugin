@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
+import com.intellij.ide.plugins.newui.EmptyCaret
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
@@ -358,6 +359,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
         init {
             isEditable = false
             this.background = background
+            caret = EmptyCaret.INSTANCE
         }
 
         override fun paintComponent(g: Graphics) {
