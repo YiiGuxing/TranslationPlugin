@@ -470,7 +470,7 @@ class TranslationDialog(
 
     private fun updateStarButton(translation: Translation?) {
         fun updatePresentation(favoriteId: Long?) {
-            val icon = if (favoriteId == null) TranslationIcons.GrayStarOff else TranslationIcons.StarOn
+            val icon = if (favoriteId == null) TranslationIcons.StarOffGray else TranslationIcons.StarOn
             starButton.setIcons(icon)
             starButton.toolTipText = StarButtons.toolTipText(favoriteId)
         }

@@ -288,7 +288,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
         copyButton.setIcons(AllIcons.Actions.Copy)
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
-        starButton.setIcons(TranslationIcons.GrayStarOff)
+        starButton.setIcons(TranslationIcons.StarOffGray)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =
