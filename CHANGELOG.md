@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.7.1] (2025/03/15)
+
 - The translation dialog action now uses the same shortcut as the translation action.
 - Removed the error report handler.
 - Bug fixes.
@@ -548,7 +550,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.0...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.1...HEAD
+[3.7.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.8...v3.7.0
 [3.6.8]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.7...v3.6.8
 [3.6.7]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.6...v3.6.7
