@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Updated the model list and voice list of the OpenAI TTS engine.
+- 更新了 OpenAI TTS 引擎的模型列表和声音列表
+
 ## [3.7.1] (2025/03/15)
 
 - The translation dialog action now uses the same shortcut as the translation action.
