@@ -31,4 +31,5 @@ enum class OpenAiGPTModel(override val modelId: String, override val modelName: 
 enum class OpenAiTTSModel(override val modelId: String, override val modelName: String) : OpenAiModel {
     TTS_1("tts-1", "TTS-1"),
     TTS_1_HD("tts-1-hd", "TTS-1 HD"),
+    GPT_4O_MINI_TTS("gpt-4o-mini-tts", "GPT-4o mini TTS"),
 }
