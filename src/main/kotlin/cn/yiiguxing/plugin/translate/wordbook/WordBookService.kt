@@ -269,11 +269,16 @@ class WordBookService : Disposable {
         indicator.checkCanceled()
 
         TranslationStorages.createDataDirectoriesIfNotExists()
-        lock {
+        val hasDriverFile = lock {
             if (checkDriverFile()) {
-                return
+                true
+            } else {
+                Files.deleteIfExists(DRIVER_JAR)
+                false
             }
-            Files.deleteIfExists(DRIVER_JAR)
+        }
+        if (hasDriverFile) {
+            return
         }
 
         var downloadedFile: Path? = null
@@ -633,7 +638,7 @@ class WordBookService : Disposable {
 
         fun getStorageFile(dir: Path = TranslationStorages.DATA_DIRECTORY): Path = dir.resolve(STORAGE_FILE_NAME)
 
-        private inline fun <T> lock(block: () -> T): T {
+        private fun <T> lock(block: () -> T): T {
             return RandomAccessFile(LOCK_FILE.toFile(), "rw").use { lockFile ->
                 synchronized(LOCK_FILE) {
                     val lock = lockFile.channel.lock()
