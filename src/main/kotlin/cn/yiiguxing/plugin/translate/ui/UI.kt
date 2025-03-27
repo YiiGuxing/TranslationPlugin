@@ -50,7 +50,7 @@ object UI {
     data class FontPair(val primary: JBFont, val phonetic: JBFont)
 
     @JvmStatic
-    fun Icon.disabled(): Icon = IconUtil.filterIcon(this, { DisabledFilter() }, null)
+    fun Icon.disabled(): Icon = IconLoader.filterIcon(this) { DisabledFilter() }
 
     private class DisabledFilter(color: Color = JBUI.CurrentTheme.Label.disabledForeground()) : RGBImageFilter() {
         private val rgb = color.rgb

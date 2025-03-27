@@ -8,12 +8,12 @@ import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.openapi.components.*
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.io.delete
-import com.intellij.util.io.readText
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
+import kotlin.io.path.readText
 
 @Service
 @State(name = "Translation.Cache", storages = [(Storage(TranslationStorages.PREFERENCES_STORAGE_NAME))])
