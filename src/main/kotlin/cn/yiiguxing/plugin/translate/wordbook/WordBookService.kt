@@ -1,4 +1,4 @@
-@file:Suppress("SqlResolve", "SqlNoDataSourceInspection", "ConvertTryFinallyToUseCall", "SqlDialectInspection")
+@file:Suppress("SqlNoDataSourceInspection")
 
 package cn.yiiguxing.plugin.translate.wordbook
 
@@ -562,25 +562,9 @@ class WordBookService : Disposable {
         }
     }
 
-    fun hasWords(): Boolean {
-        checkIsInitialized()
-
-        val sql = "SELECT COUNT(*) FROM wordbook"
-        return try {
-            queryRunner.query(sql, BooleanHandler)
-        } catch (e: SQLException) {
-            LOGGER.w(e.message ?: "", e)
-            false
-        }
-    }
-
     override fun dispose() {
     }
 
-
-    private object BooleanHandler : ResultSetHandler<Boolean> {
-        override fun handle(rs: ResultSet): Boolean = rs.takeIf { it.next() }?.getBoolean(1) ?: false
-    }
 
     private object WordIdHandler : ResultSetHandler<Long?> {
         override fun handle(rs: ResultSet): Long? = rs.takeIf { it.next() }?.getLong(1)
