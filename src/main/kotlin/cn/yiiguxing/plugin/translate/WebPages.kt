@@ -9,8 +9,8 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.impl.HTMLEditorProvider
 import com.intellij.openapi.project.Project
+import com.intellij.ui.JBColor
 import com.intellij.ui.jcef.JBCefApp
-import com.intellij.util.ui.UIUtil
 import org.jetbrains.concurrency.runAsync
 import java.util.*
 
@@ -100,7 +100,7 @@ object WebPages {
                             const config = {
                               fragment: "$pageFragment",
                               intellijPlatform: "${IdeVersion.buildNumber.productCode}",
-                              dark: ${UIUtil.isUnderDarcula()},
+                              dark: ${!JBColor.isBright()},
                             };
                             """.trimIndent()
                         )
