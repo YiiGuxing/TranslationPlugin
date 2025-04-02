@@ -1,6 +1,15 @@
 (function () {
     var lastPluginVersion = "v3.7";
-    var activeSponsors = [];
+    var activeSponsors = [{
+        name: "DeerAPI",
+        logo: "deer_api.svg",
+        description: {
+            default: "AI聚合平台，一键调用500+模型，7折特惠，最新GPT4o、Grok3、Gemini2.5pro全支持!"
+        },
+        links: {
+            default: "https://api.deerapi.com/",
+        }
+    },];
 
     var RESOURCES_BASE_URL = "";
     var __DEV__ = localStorage.getItem("dev") === "true";
