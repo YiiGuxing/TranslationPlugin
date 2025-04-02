@@ -7,7 +7,7 @@
             default: "AI大模型API聚合平台，一键调用500+模型，7折特惠，最新GPT4o、Grok3、Gemini2.5pro全支持！"
         },
         links: {
-            default: "https://api.deerapi.com/",
+            default: "https://api.deerapi.com/?from=IntelliJTranslationPlugin",
         }
     },];
 
