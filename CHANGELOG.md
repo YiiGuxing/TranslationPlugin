@@ -3,7 +3,9 @@
 ## [Unreleased]
 
 - Updated the model list and voice list of the OpenAI TTS engine.
+- Fixed an issue that could cause the IDE to freeze when opening a new project.
 - 更新了 OpenAI TTS 引擎的模型列表和声音列表
+- 修复了可能导致 IDE 在打开新项目时冻结的问题
 
 ## [3.7.1] (2025/03/15)
 
