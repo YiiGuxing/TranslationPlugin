@@ -4,8 +4,11 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.WindowLocation
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
-import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.util.SelectionMode
 import cn.yiiguxing.plugin.translate.util.credential.SimpleStringCredentialManager
+import cn.yiiguxing.plugin.translate.util.d
+import cn.yiiguxing.plugin.translate.util.toRegexOrNull
+import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
@@ -323,6 +326,7 @@ interface SettingsChangeListener {
     fun onWordbookStoragePathChanged(settings: Settings) {}
 
     companion object {
+        @Topic.AppLevel
         val TOPIC: Topic<SettingsChangeListener> =
             Topic.create("TranslationSettingsChanged", SettingsChangeListener::class.java)
     }
