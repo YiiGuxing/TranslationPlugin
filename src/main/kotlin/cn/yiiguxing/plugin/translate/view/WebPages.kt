@@ -1,9 +1,9 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+package cn.yiiguxing.plugin.translate.view
 
-package cn.yiiguxing.plugin.translate
-
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.view.WebPages.updates
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.logger

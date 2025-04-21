@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.BUNDLE
-import cn.yiiguxing.plugin.translate.WebPages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
+import cn.yiiguxing.plugin.translate.view.WebPages
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.DialogWrapper

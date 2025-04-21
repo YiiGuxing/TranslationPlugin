@@ -1,13 +1,13 @@
 package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.WebPages
 import cn.yiiguxing.plugin.translate.action.GettingStartedAction
 import cn.yiiguxing.plugin.translate.action.SupportAction
 import cn.yiiguxing.plugin.translate.activity.BaseStartupActivity
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.*
+import cn.yiiguxing.plugin.translate.view.WebPages
 import com.intellij.icons.AllIcons
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.util.PropertiesComponent
