@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.view.WebPages.updates
 import com.intellij.ide.BrowserUtil
+import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.impl.HTMLEditorProvider
@@ -160,6 +161,9 @@ object WebPages {
 
         override fun toString(): String {
             val queryPart = StringBuilder("utm_source=intellij")
+                .append("&utm_medium=plugin")
+                .append("&utm_campaign=", IdeVersion.buildNumber.productCode)
+                .append("&utm_content=", ApplicationInfo.getInstance().shortVersion)
             if (compact) {
                 queryPart.append("&compact=true")
             }
