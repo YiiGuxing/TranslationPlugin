@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 - New LLMs in OpenAI Translator engine: GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, o4-mini, o3.
-- New LLMs in OpenAI TTS engine: GPT-4o mini TTS.
+- New LLM in OpenAI TTS engine: GPT-4o mini TTS.
 - New voices in OpenAI TTS engine: Ash, Ballad, Coral, Sage.
 - Fixed an issue that could cause the IDE to freeze when opening a new project.
 - OpenAI 翻译引擎新模型：GPT-4.1、GPT-4.1 mini、GPT-4.1 nano、o4-mini、o3
