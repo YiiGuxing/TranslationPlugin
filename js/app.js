@@ -434,14 +434,21 @@
         },
     };
 
-
-    var params = new URLSearchParams(window.location.search);
-    window.$intellij = params.get("intellij") || params.has("intellij");
-
-    var searchParams = new URLSearchParams(window.location.hash.split("?")[1]);
-    if (searchParams.get('compact')) {
+    function setCompactMode() {
         document.body.classList.add("compact-mode");
         var nav = document.querySelector(".app-nav");
         nav && nav.classList.add("hide");
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    window.$intellij = params.get("intellij") || params.has("intellij");
+    var compact = !!params.get("compact");
+    if (compact) {
+        setCompactMode();
+    } else {
+        var searchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+        if (searchParams.get('compact')) {
+            setCompactMode();
+        }
     }
 })();
