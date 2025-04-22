@@ -135,19 +135,31 @@
     const config = {
         fragment: "",
         intellijPlatform: "",
+        intellijPlatformVersion: "",
         dark: false,
+        compact: undefined,
     };
     // Config End
 
+    // Here will be matched and replaced, DO NOT MODIFY!!!
+    // ERROR config.error = true;
+
     const BASE_URL = "https://intellij-translation.yiiguxing.top";
 
-    function getTargetUrl(baseURL) {
+    function getTargetUrl(baseURL, compact) {
         const parameters = [];
         if (config.intellijPlatform) {
             parameters.push(`intellij=${config.intellijPlatform}`);
+            parameters.push(`utm_source=intellij`);
+            parameters.push(`utm_medium=plugin`);
+            parameters.push(`utm_campaign=${config.intellijPlatform}`);
+            config.intellijPlatformVersion && parameters.push(`utm_content=${config.intellijPlatformVersion}`);
         }
         if (config.dark) {
             parameters.push('dark=true');
+        }
+        if (compact && config.compact) {
+            parameters.push('compact=true');
         }
         const query = parameters.length > 0 ? `?${parameters.join('&')}` : '';
         return `${baseURL}/${query}${config.fragment}`
@@ -161,9 +173,12 @@
     }
 
     (function () {
-        const fragment = config.fragment.replace('&compact=true', '');
-        updateLink(`${BASE_URL}/${fragment}`);
-        window.location.replace(getTargetUrl(BASE_URL))
+        updateLink(getTargetUrl(BASE_URL, false));
+        if (config.error) {
+            document.querySelector('#loading-text').textContent = "Loading failed. Please try later.";
+        } else {
+            window.location.replace(getTargetUrl(BASE_URL, true))
+        }
     })();
 </script>
 </body>

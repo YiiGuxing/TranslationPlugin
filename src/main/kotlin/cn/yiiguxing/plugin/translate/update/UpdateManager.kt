@@ -116,7 +116,7 @@ class UpdateManager : BaseStartupActivity(true, false) {
             plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 
-        val canBrowseWhatsNewInHTMLEditor = WebPages.canBrowseInHTMLEditor()
+        val canBrowseWhatsNewInHTMLEditor = WebPages.canBrowseInWebView()
         val notificationGroup = NotificationGroupManager.getInstance()
             .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID) ?: return false
         val gettingStartedAction = MyGettingStartedAction()

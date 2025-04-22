@@ -2,17 +2,12 @@ package cn.yiiguxing.plugin.translate.view
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.util.IdeVersion
-import cn.yiiguxing.plugin.translate.util.invokeLater
+import cn.yiiguxing.plugin.translate.util.urlEncode
 import cn.yiiguxing.plugin.translate.view.WebPages.updates
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.application.ApplicationInfo
-import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.fileEditor.impl.HTMLEditorProvider
 import com.intellij.openapi.project.Project
-import com.intellij.ui.JBColor
 import com.intellij.ui.jcef.JBCefApp
-import org.jetbrains.concurrency.runAsync
 import java.util.*
 
 /**
@@ -20,9 +15,7 @@ import java.util.*
  */
 object WebPages {
 
-    private const val BASE_URL = "https://intellij-translation.yiiguxing.top"
-
-    private val LOG = logger<WebPages>()
+    const val BASE_URL = "https://intellij-translation.yiiguxing.top"
 
     /**
      * Get a [PageFragment] for the specified path.
@@ -76,49 +69,34 @@ object WebPages {
      * Get the full URL for the specified [PageFragment].
      */
     fun getUrl(pageFragment: PageFragment): String {
-        return "${BASE_URL}/${pageFragment.copy(compact = false)}"
+        val queryPart = StringBuilder("utm_source=intellij")
+            .append("&utm_medium=plugin")
+            .append("&utm_campaign=", IdeVersion.buildNumber.productCode)
+            .append("&utm_content=", ApplicationInfo.getInstance().shortVersion)
+        if (pageFragment.compact) {
+            queryPart.append("&compact=true")
+        }
+
+        return "${BASE_URL}/?$queryPart${pageFragment.copy(compact = false)}"
     }
 
     /**
-     * Whether the IDE can browse in the HTML editor.
+     * Whether the IDE can browse in the webview.
      */
-    fun canBrowseInHTMLEditor(): Boolean = JBCefApp.isSupported()
+    fun canBrowseInWebView(): Boolean = JBCefApp.isSupported()
 
     /**
      * Browse the specified [PageFragment].
      */
-    fun browse(project: Project?, pageFragment: PageFragment, title: String = TranslationPlugin.name) {
-        if (project != null && !project.isDefault && !project.isDisposed && canBrowseInHTMLEditor()) {
-            val modalityState = ModalityState.defaultModalityState()
-            runAsync {
-                val html = try {
-                    WebPages::class.java.classLoader
-                        .getResourceAsStream("website.html")
-                        ?.use { it.reader().readText() }
-                        ?.replace(
-                            "// Config Start(.*)// Config End".toRegex(RegexOption.DOT_MATCHES_ALL),
-                            """
-                            const config = {
-                              fragment: "$pageFragment",
-                              intellijPlatform: "${IdeVersion.buildNumber.productCode}",
-                              dark: ${!JBColor.isBright()},
-                            };
-                            """.trimIndent()
-                        )
-                } catch (e: Exception) {
-                    LOG.warn("Failed to load website.html", e)
-                    null
-                }
-                if (html != null) {
-                    invokeLater(modalityState, expired = project.disposed) {
-                        try {
-                            HTMLEditorProvider.openEditor(project, title, html)
-                        } catch (e: Throwable) {
-                            LOG.warn("Failed to open website", e)
-                            BrowserUtil.browse(pageFragment.getUrl())
-                        }
-                    }
-                } else {
+    fun browse(
+        project: Project?,
+        pageFragment: PageFragment = home(),
+        title: String = TranslationPlugin.name,
+        browseInWebView: Boolean = true
+    ) {
+        if (browseInWebView && project != null && !project.isDefault && !project.isDisposed && canBrowseInWebView()) {
+            WebViewProvider.open(project, pageFragment, title) { _, editor ->
+                if (editor == null) {
                     BrowserUtil.browse(pageFragment.getUrl())
                 }
             }
@@ -157,19 +135,11 @@ object WebPages {
     ) {
         /** The path of the fragment. */
         val path: String
-            get() = paths.joinToString("/")
+            get() = paths.joinToString("/") { it.urlEncode() }
 
         override fun toString(): String {
-            val queryPart = StringBuilder("utm_source=intellij")
-                .append("&utm_medium=plugin")
-                .append("&utm_campaign=", IdeVersion.buildNumber.productCode)
-                .append("&utm_content=", ApplicationInfo.getInstance().shortVersion)
-            if (compact) {
-                queryPart.append("&compact=true")
-            }
-            id?.let { queryPart.append("&id=$it") }
-
-            return "#${language.path}/${path.trimStart('/')}?$queryPart"
+            val idPart = if (id.isNullOrBlank()) "" else "?id=${id.urlEncode()}"
+            return "#${language.path}/${path.trimStart('/')}?$idPart"
         }
 
         /**
