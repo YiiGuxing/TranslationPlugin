@@ -437,12 +437,12 @@
 
     var params = new URLSearchParams(window.location.search);
     window.$intellij = params.get("intellij") || params.has("intellij");
-    window.$compactMode = !!params.get("compact");
+    window.$compactMode = params.get("compact") === "true";
     if (window.$compactMode) {
         setCompactMode();
     } else {
         var searchParams = new URLSearchParams(window.location.hash.split("?")[1]);
-        if (searchParams.get('compact') || searchParams.has('compact')) {
+        if (searchParams.get("compact") === "true") {
             window.$compactMode = true;
             setCompactMode();
         }
