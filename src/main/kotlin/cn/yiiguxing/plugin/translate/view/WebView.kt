@@ -74,20 +74,24 @@ internal class WebView(
 
 
     private fun browse(url: String) {
-        val augmented = if (!url.startsWith(WebPages.BASE_URL)) try {
-            URIBuilder(url)
-                .setParameter("utm_source", "plugin")
-                .setParameter("utm_medium", "link")
-                .setParameter("utm_campaign", TranslationPlugin.adName)
-                .setParameter("utm_content", TranslationPlugin.version)
-                .build()
-                .toString()
+        val targetUrl = try {
+            val urlBuilder = URIBuilder(url)
+            if (url.startsWith(WebPages.BASE_URL)) {
+                urlBuilder.setParameter("compact", false.toString())
+            } else {
+                urlBuilder
+                    .setParameter("utm_source", "plugin")
+                    .setParameter("utm_medium", "link")
+                    .setParameter("utm_campaign", TranslationPlugin.adName)
+                    .setParameter("utm_content", TranslationPlugin.version)
+            }
+            urlBuilder.build().toString()
         } catch (e: URISyntaxException) {
-            thisLogger().warn(url, e);
-            null
-        } else null
+            thisLogger().warn(url, e)
+            url
+        }
 
-        BrowserUtil.browse(augmented ?: url)
+        BrowserUtil.browse(targetUrl)
     }
 
 
