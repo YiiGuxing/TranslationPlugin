@@ -63,9 +63,8 @@
         });
 
         hook.mounted(function () {
-            if (vm.route.query.compact) {
+            if (window.$compactMode) {
                 vm.config.topMargin = 0;
-                vm.customConfig.compact = true;
             }
 
             initNavBar(vm);
@@ -104,7 +103,7 @@
                     return "_sidebar.md"
                 }
                 if (path.indexOf("updates/") === 0) {
-                    if (vm.route.query.compact && path.indexOf("updates/v") === 0) {
+                    if (window.$compactMode && path.indexOf("updates/v") === 0) {
                         return path.substring(8) + "_sidebar.md"
                     }
 
@@ -120,10 +119,6 @@
                 return false;
             }
         });
-
-        vm.customConfig = {
-            compact: false
-        };
     }
 
     function getTitle(vm) {
@@ -157,7 +152,7 @@
         initNavTranslations(vm);
 
         var nav = document.querySelector(".app-nav");
-        if (nav && vm.customConfig.compact) {
+        if (nav && window.$compactMode) {
             nav.classList.add("hide")
         }
     }
@@ -293,7 +288,7 @@
                 becomeASponsorLabelLink.classList.add("label-link");
                 becomeASponsorLabelLink.href = becomeASponsorUrl;
                 becomeASponsorLabelLink.innerText = labels[languagePath];
-                if (vm.customConfig.compact) {
+                if (window.$compactMode) {
                     becomeASponsorLabelLink.target = "_blank";
                 }
                 container.appendChild(becomeASponsorLabelLink);
@@ -302,7 +297,7 @@
                 becomeASponsorLink.classList.add("sponsor");
                 becomeASponsorLink.href = becomeASponsorUrl;
                 becomeASponsorLink.innerText = labels[languagePath];
-                if (vm.customConfig.compact) {
+                if (window.$compactMode) {
                     becomeASponsorLink.target = "_blank";
                 }
 
@@ -442,12 +437,13 @@
 
     var params = new URLSearchParams(window.location.search);
     window.$intellij = params.get("intellij") || params.has("intellij");
-    var compact = !!params.get("compact");
-    if (compact) {
+    window.$compactMode = !!params.get("compact");
+    if (window.$compactMode) {
         setCompactMode();
     } else {
         var searchParams = new URLSearchParams(window.location.hash.split("?")[1]);
-        if (searchParams.get('compact')) {
+        if (searchParams.get('compact') || searchParams.has('compact')) {
+            window.$compactMode = true;
             setCompactMode();
         }
     }
