@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsUI.TtsApiSettingsType
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
+import cn.yiiguxing.plugin.translate.view.WebPages
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.ui.ComboBox
@@ -122,7 +123,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
         }
     private val azureApiKeyHelpLabel: JComponent = azureHelpLabel()
     private val azureEndpointHelpLabel: JComponent = azureHelpLabel()
-    private val openAiEndpointHelpLabel:JComponent = apiEndpointHelpLabel()
+    private val openAiEndpointHelpLabel: JComponent = apiEndpointHelpLabel()
 
 
     init {
@@ -143,7 +144,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
             message("link.learn.more")
         ) {
             val url = when (configType) {
-                ConfigType.TRANSLATOR -> "https://platform.openai.com/docs/api-reference/chat"
+                ConfigType.TRANSLATOR -> WebPages.get("tutorial", "configuring_3party_ai_in_openai_translator").getUrl()
                 ConfigType.TTS -> "https://platform.openai.com/docs/api-reference/audio/createSpeech"
             }
             BrowserUtil.open(url)
