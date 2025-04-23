@@ -139,7 +139,7 @@ object WebPages {
 
         override fun toString(): String {
             val idPart = if (id.isNullOrBlank()) "" else "?id=${id.urlEncode()}"
-            return "#${language.path}/${path.trimStart('/')}?$idPart"
+            return "#${language.path}/${path.trimStart('/')}$idPart"
         }
 
         /**
