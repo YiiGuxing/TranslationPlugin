@@ -21,7 +21,10 @@ data class DeeplxTranslations (
         check(isSuccessful) { "Cannot convert to Translation: errorCode=$code" }
         check(data != null) { "Cannot convert to Translation: trans=null" }
         val translation = data
-
+        //如果srcLang 值为空
+        if (srcLang == null) {
+            srcLang = Lang.CHINESE_SIMPLIFIED
+        }
         return Translation(original!!, translation, srcLang, targetLang, listOf(srcLang))
     }
 }

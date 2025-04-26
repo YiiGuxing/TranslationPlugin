@@ -11,6 +11,7 @@ import cn.yiiguxing.plugin.translate.trans.baidu.BaiduTranslator
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplCredential
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
+import cn.yiiguxing.plugin.translate.trans.deeplx.DeeplxSettings
 import cn.yiiguxing.plugin.translate.trans.deeplx.DeeplxSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.deeplx.DeeplxTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
@@ -99,7 +100,7 @@ enum class TranslationEngine(
             BAIDU -> isConfigured(settings.baiduTranslateSettings)
             ALI -> isConfigured(settings.aliTranslateSettings)
             DEEPL -> DeeplCredential.isAuthKeySet
-            DEEPLX -> DeeplCredential.isAuthKeySet
+            DEEPLX -> service<DeeplxSettings>().isConfigured(ConfigType.TRANSLATOR)
             OPEN_AI -> service<OpenAiSettings>().let {
                 it.isConfigured(ConfigType.TRANSLATOR) && OpenAiCredentials.isCredentialSet(it.provider)
             }
