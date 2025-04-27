@@ -87,6 +87,10 @@ jobs:
       #   run: ./gradlew publishPlugin
 
       # Upload artifact as a release asset
+
+      # Build plugin
+      - name: Build plugin
+        run: ./gradlew buildPlugin
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
