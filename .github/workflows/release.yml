@@ -78,13 +78,13 @@ jobs:
           ./gradlew patchChangelog --release-note="$CHANGELOG"
 
       # Publish the plugin to the Marketplace
-      - name: Publish Plugin
-        env:
-          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-        run: ./gradlew publishPlugin
+      # - name: Publish Plugin
+      #   env:
+      #     PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+      #     CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+      #     PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      #     PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+      #   run: ./gradlew publishPlugin
 
       # Upload artifact as a release asset
       - name: Upload Release Asset
