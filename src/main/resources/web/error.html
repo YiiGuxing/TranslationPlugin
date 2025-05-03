@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Translation</title>
+    <link rel="stylesheet" href="http://itp/base.css">
+    <link rel="stylesheet" href="http://itp/scrollbars.css">
     <style>
         html, body {
             margin: 0;
@@ -21,7 +23,6 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            background: #fafafa;
             overflow: auto;
         }
 
@@ -93,17 +94,22 @@
 
         .loading .content {
             margin: 30px auto auto;
-            font-size: 26px;
-            color: #333;
+            font-size: 28px;
+            font-weight: 300;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         a#link {
-            color: #666;
-            text-decoration: none;
             margin-top: 1rem;
+            font-size: 20px;
+            color: var(--base-color-a90);
+            text-decoration-color: var(--base-color-a40);
+        }
+
+        a#link:hover {
+            text-decoration-color: var(--base-color-a90);
         }
     </style>
 </head>
@@ -125,61 +131,9 @@
         </svg>
     </div>
     <div class="content">
-        <span id="loading-text">Loading...</span>
-        <a id="link" href="https://intellij-translation.yiiguxing.top" target="_blank">OPEN IN BROWSER</a>
+        <span id="loading-text">Loading failed. Please try again later.</span>
+        <a id="link" href="{{url}}" target="_blank">OPEN IN BROWSER</a>
     </div>
 </div>
-<script>
-    // Here will be matched and replaced, DO NOT MODIFY!!!
-    // Config Start
-    const config = {
-        fragment: "",
-        intellijPlatform: "",
-        intellijPlatformVersion: "",
-        dark: false,
-        compact: undefined,
-    };
-    // Config End
-
-    // Here will be matched and replaced, DO NOT MODIFY!!!
-    // ERROR config.error = true;
-
-    const BASE_URL = "https://intellij-translation.yiiguxing.top";
-
-    function getTargetUrl(baseURL, compact) {
-        const parameters = [];
-        if (config.intellijPlatform) {
-            parameters.push(`intellij=${config.intellijPlatform}`);
-            parameters.push(`utm_source=intellij`);
-            parameters.push(`utm_medium=plugin`);
-            parameters.push(`utm_campaign=${config.intellijPlatform}`);
-            config.intellijPlatformVersion && parameters.push(`utm_content=${config.intellijPlatformVersion}`);
-        }
-        if (config.dark) {
-            parameters.push('dark=true');
-        }
-        if (compact && config.compact) {
-            parameters.push('compact=true');
-        }
-        const query = parameters.length > 0 ? `?${parameters.join('&')}` : '';
-        return `${baseURL}/${query}${config.fragment}`
-    }
-
-    function updateLink(url) {
-        const a = document.querySelector('#link');
-        if (a) {
-            a.href = url
-        }
-    }
-
-    (function () {
-        updateLink(getTargetUrl(BASE_URL, false));
-        if (config.error) {
-            document.querySelector('#loading-text').textContent = "Loading failed. Please try later.";
-        } else {
-            window.location.replace(getTargetUrl(BASE_URL, true))
-        }
-    })();
-</script>
 </body>
 </html>

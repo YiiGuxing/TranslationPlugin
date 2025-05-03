@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.view
+package cn.yiiguxing.plugin.translate.view.utils
 
 import com.intellij.ide.ui.UISettings
 import com.intellij.ide.ui.UISettingsUtils
@@ -164,7 +164,7 @@ internal object JBCefScrollbarsHelper {
         get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 3 else 1) * UISettingsUtils.instance.currentIdeScale).toInt()
 
     private val thumbRadiusPx: Int
-        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 7 else 0) * UISettingsUtils.instance.currentIdeScale).toInt()
+        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 7 else 5) * UISettingsUtils.instance.currentIdeScale).toInt()
 
 
     private fun getScrollbarAlpha(colorKey: ColorKey?): Int? {

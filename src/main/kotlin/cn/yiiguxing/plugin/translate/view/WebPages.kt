@@ -1,11 +1,10 @@
 package cn.yiiguxing.plugin.translate.view
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.util.IdeVersion
+import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import cn.yiiguxing.plugin.translate.view.WebPages.updates
 import com.intellij.ide.BrowserUtil
-import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.project.Project
 import com.intellij.ui.jcef.JBCefApp
 import java.util.*
@@ -69,15 +68,10 @@ object WebPages {
      * Get the full URL for the specified [PageFragment].
      */
     fun getUrl(pageFragment: PageFragment): String {
-        val queryPart = StringBuilder("utm_source=intellij")
-            .append("&utm_medium=plugin")
-            .append("&utm_campaign=", IdeVersion.buildNumber.productCode)
-            .append("&utm_content=", ApplicationInfo.getInstance().shortVersion)
-        if (pageFragment.compact) {
-            queryPart.append("&compact=true")
-        }
-
-        return "${BASE_URL}/?$queryPart${pageFragment.copy(compact = false)}"
+        return UrlTrackingParametersProvider.augmentIdeUrl(
+            "${BASE_URL}/${pageFragment}",
+            "compact" to pageFragment.compact.toString()
+        )
     }
 
     /**
@@ -94,12 +88,8 @@ object WebPages {
         title: String = TranslationPlugin.name,
         browseInWebView: Boolean = true
     ) {
-        if (browseInWebView && project != null && !project.isDefault && !project.isDisposed && canBrowseInWebView()) {
-            WebViewProvider.open(project, pageFragment, title) { _, editor ->
-                if (editor == null) {
-                    BrowserUtil.browse(pageFragment.getUrl())
-                }
-            }
+        if (browseInWebView && project != null && canBrowseInWebView()) {
+            WebViewProvider.open(project, pageFragment, title)
         } else {
             BrowserUtil.browse(pageFragment.getUrl())
         }
