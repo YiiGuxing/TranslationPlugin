@@ -1,8 +1,11 @@
 package cn.yiiguxing.plugin.translate.view
 
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
 import cn.yiiguxing.plugin.translate.view.utils.*
+import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
@@ -11,6 +14,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.testFramework.LightVirtualFile
+import com.intellij.ui.jcef.JBCefBrowserBase.Properties.NO_CONTEXT_MENU
 import com.intellij.ui.jcef.JCEFHtmlPanel
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
@@ -118,6 +122,7 @@ internal class WebView(
             ERROR_PAGE_READER?.replace("{{url}}", failedUrl)
         }
 
+        contentPanel.setProperty(NO_CONTEXT_MENU, true)
         contentPanel.loadURL(loadingUrl)
     }
 
@@ -131,6 +136,15 @@ internal class WebView(
         BrowserUtil.browse(targetUrl)
     }
 
+    override fun getTabActions(): ActionGroup {
+        val group = DefaultActionGroup()
+        group.add(ReloadAction())
+        group.addSeparator()
+        group.add(BackAction())
+        group.add(ForwardAction())
+        return group
+    }
+
 
     override fun getComponent(): JComponent = contentPanel.component
     override fun getPreferredFocusedComponent(): JComponent = contentPanel.component
@@ -142,4 +156,29 @@ internal class WebView(
     override fun addPropertyChangeListener(listener: PropertyChangeListener) = Unit
     override fun removePropertyChangeListener(listener: PropertyChangeListener) = Unit
     override fun dispose() = Unit
+
+
+    private inner class ReloadAction :
+        AnAction({ message("webview.reload.action.name") }, AllIcons.Actions.Refresh) {
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
+        override fun actionPerformed(e: AnActionEvent) = contentPanel.cefBrowser.reload()
+    }
+
+    private inner class BackAction :
+        AnAction({ message("webview.go.back.action.name") }, AllIcons.Actions.Back) {
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
+        override fun actionPerformed(e: AnActionEvent) = contentPanel.cefBrowser.goBack()
+        override fun update(e: AnActionEvent) {
+            e.presentation.isEnabled = contentPanel.cefBrowser.canGoBack()
+        }
+    }
+
+    private inner class ForwardAction :
+        AnAction({ message("webview.forward.action.name") }, AllIcons.Actions.Forward) {
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
+        override fun actionPerformed(e: AnActionEvent) = contentPanel.cefBrowser.goForward()
+        override fun update(e: AnActionEvent) {
+            e.presentation.isEnabled = contentPanel.cefBrowser.canGoForward()
+        }
+    }
 }
