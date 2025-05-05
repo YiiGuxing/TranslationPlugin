@@ -84,7 +84,9 @@ class TranslationWidget(private val project: Project) : IconLikeCustomStatusBarW
             setupClickListener()
             subscribeToSettingsChangeEvents()
             update()
-            scheduleGotItTooltip()
+
+            // Do not show tooltips again until the next time they are needed
+            // scheduleGotItTooltip()
         }
 
         private fun setupClickListener() {
@@ -123,6 +125,7 @@ class TranslationWidget(private val project: Project) : IconLikeCustomStatusBarW
             icon.icon = translator.icon
         }
 
+        @Suppress("unused")
         private fun scheduleGotItTooltip() {
             val disposable = Disposer.newDisposable(widget, "GotItTooltip Scheduler Disposable")
             widget.project.messageBus
