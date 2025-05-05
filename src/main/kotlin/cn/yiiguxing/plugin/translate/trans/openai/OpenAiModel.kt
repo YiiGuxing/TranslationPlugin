@@ -26,8 +26,6 @@ enum class OpenAiGPTModel(override val modelId: String, override val modelName: 
     O3("o3", "o3"),
     O3_MINI("o3-mini", "o3-mini"),
     O1("o1", "o1"),
-    // o1-mini does not support system role messages.
-    // O1_MINI("o1-mini", "o1-mini"),
 }
 
 /**
