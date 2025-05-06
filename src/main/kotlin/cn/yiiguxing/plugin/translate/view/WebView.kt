@@ -16,12 +16,11 @@ import com.intellij.openapi.wm.StatusBar
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.jcef.JBCefBrowserBase.Properties.NO_CONTEXT_MENU
 import com.intellij.ui.jcef.JCEFHtmlPanel
+import com.intellij.util.ui.UIUtil
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
-import org.cef.handler.CefDisplayHandlerAdapter
-import org.cef.handler.CefLifeSpanHandlerAdapter
-import org.cef.handler.CefRequestHandlerAdapter
+import org.cef.handler.*
 import org.cef.network.CefRequest
 import org.jetbrains.annotations.Nls
 import java.beans.PropertyChangeListener
@@ -35,6 +34,7 @@ internal class WebView(
 ) : UserDataHolderBase(), FileEditor {
 
     private val contentPanel = JCEFHtmlPanel(true, null, null)
+    private var lastRequestedUrl: String = ""
 
     companion object {
         private val LOG = logger<WebView>()
@@ -42,12 +42,15 @@ internal class WebView(
         private const val PROTOCOL = "http"
         private const val HOST_NAME = "itp"
 
-        private const val LOADING_PATH = "/loading.html"
+        private const val LOADING_PATH = "/web/loading.html"
         private const val ERROR_PAGE_PATH = "/web/error.html"
         private const val BASE_CSS_PATH = "/base.css"
         private const val SCROLLBARS_CSS_PATH = "/scrollbars.css"
 
         private const val JS_FUNCTION_NAME: String = "itpCefQuery"
+
+        // com.intellij.ui.jcef.JBCefFileSchemeHandlerFactory
+        private const val LOAD_HTML_URL_PREFIX = "file:///jbcefbrowser/"
 
         private val ERROR_PAGE_READER: String? by lazy {
             try {
@@ -63,7 +66,7 @@ internal class WebView(
     init {
         val jbCefClient = contentPanel.jbCefClient
         val resourceRequestHandler = CefLocalRequestHandler(PROTOCOL, HOST_NAME)
-        val loadingUrl = resourceRequestHandler.addWebResource(LOADING_PATH, "text/html", this)
+        val loadingUrl = resourceRequestHandler.addResource(LOADING_PATH, "text/html", this)
         resourceRequestHandler.addResource(SCROLLBARS_CSS_PATH) {
             CefStreamResourceHandler(
                 ByteArrayInputStream(
@@ -87,12 +90,40 @@ internal class WebView(
                 request: CefRequest,
                 userGesture: Boolean,
                 isRedirect: Boolean
-            ): Boolean = if (userGesture) {
-                browse(request.url)
-                true
-            } else false
+            ): Boolean {
+                synchronized(this@WebView) {
+                    lastRequestedUrl = request.url ?: ""
+                }
+
+                return if (userGesture) {
+                    browse(request.url)
+                    true
+                } else false
+            }
         }, contentPanel.cefBrowser)
         jbCefClient.addRequestHandler(resourceRequestHandler, contentPanel.cefBrowser)
+        jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
+            override fun onLoadError(
+                browser: CefBrowser,
+                frame: CefFrame,
+                errorCode: CefLoadHandler.ErrorCode,
+                errorText: String?,
+                failedUrl: String
+            ) {
+                if (lastRequestedUrl != failedUrl) {
+                    return
+                }
+
+                val html = ERROR_PAGE_READER?.replace("{{url}}", failedUrl) ?: return
+                UIUtil.invokeLaterIfNeeded {
+                    synchronized(this@WebView) {
+                        if (lastRequestedUrl == failedUrl) {
+                            contentPanel.loadHTML(html, failedUrl)
+                        }
+                    }
+                }
+            }
+        }, contentPanel.cefBrowser)
         jbCefClient.addDisplayHandler(object : CefDisplayHandlerAdapter() {
             override fun onStatusMessage(browser: CefBrowser, text: String) {
                 StatusBar.Info.set(text, project)
@@ -117,10 +148,6 @@ internal class WebView(
             .registerHandler("page-url") { _, _ -> url }
         jsRouter.addHandler(jsQuery, true)
         jbCefClient.cefClient.addMessageRouter(jsRouter)
-
-        contentPanel.setErrorPage { _, _, failedUrl ->
-            ERROR_PAGE_READER?.replace("{{url}}", failedUrl)
-        }
 
         contentPanel.setProperty(NO_CONTEXT_MENU, true)
         contentPanel.loadURL(loadingUrl)
@@ -161,7 +188,17 @@ internal class WebView(
     private inner class ReloadAction :
         AnAction({ message("webview.reload.action.name") }, AllIcons.Actions.Refresh) {
         override fun getActionUpdateThread() = ActionUpdateThread.EDT
-        override fun actionPerformed(e: AnActionEvent) = contentPanel.cefBrowser.reload()
+        override fun actionPerformed(e: AnActionEvent) {
+            val url = contentPanel.cefBrowser.url
+            if (url?.startsWith(LOAD_HTML_URL_PREFIX) == true) {
+                url.split("#url=").getOrNull(1)?.let {
+                    contentPanel.cefBrowser.loadURL(it)
+                    return
+                }
+            }
+
+            contentPanel.cefBrowser.reload()
+        }
     }
 
     private inner class BackAction :

@@ -32,10 +32,9 @@ internal class CefLocalRequestHandler(
         return "$protocol://$authority/$normalisedPath"
     }
 
-    fun addWebResource(resourcePath: String, mimeType: String, parent: Disposable): String {
+    fun addResource(resourcePath: String, mimeType: String, parent: Disposable): String {
         return addResource(resourcePath) {
-            val resolvedPath = "/web/${resourcePath.trim('/')}"
-            CefLocalRequestHandler::class.java.getResourceAsStream(resolvedPath)?.let {
+            CefLocalRequestHandler::class.java.getResourceAsStream(resourcePath)?.let {
                 CefStreamResourceHandler(it, mimeType, parent)
             }
         }
