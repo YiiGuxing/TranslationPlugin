@@ -3,13 +3,14 @@ package cn.yiiguxing.plugin.translate.view.utils
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.ui.JBColor
 
 object CefStylesheetHelper {
 
     fun buildBaseStyle(): String {
         val scheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
         val background = scheme.defaultBackground
-        val foreground = scheme.defaultForeground
+        val foreground = JBColor(0x19191C, 0xFFFFFF)
 
         val backgroundHex = background.toRGBHex()
         val foregroundHex = foreground.toRGBHex()
@@ -18,11 +19,14 @@ object CefStylesheetHelper {
             "--base-color-a$it: " + foreground.alphaBlend(background, it / 100f).toRGBHex() + ";"
         }.joinToString("\n                ")
 
+        val linkColor = JBColor(0x0269E1, 0x56A8F5).toRGBHex()
+
         return """
             :root {
                 --base-color: $foregroundHex;
                 $foregroundAlpha
                 --base-background-color: $backgroundHex;
+                --base-link-color: $linkColor;
             }
             
             body {
@@ -31,12 +35,12 @@ object CefStylesheetHelper {
             }
             
             a {
-                color: var(--base-color, $foregroundHex);
-                text-decoration-color: var(--base-color-a50);
+                color: var(--base-link-color, $linkColor);
+                text-decoration: none;
             }
             
             a:hover {
-                text-decoration-color: var(--base-color, $foregroundHex);
+                text-decoration: underline;
             }
         """.trimIndent()
     }
