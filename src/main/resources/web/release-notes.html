@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="http://itp/scrollbars.css">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            color: var(--base-color-a80);
+            font-family: -apple-system, BlinkMacSystemFont, "JetBrains Sans", Helvetica, Arial, sans-serif;
         }
 
         main {
@@ -20,7 +21,11 @@
         header {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-top: 10px !important;
+        }
+
+        header > * + * {
+            margin-left: 10px;
         }
 
         .logo {
@@ -28,6 +33,8 @@
             width: 32px;
             height: 32px;
             position: relative;
+            flex-shrink: 0;
+            margin-left: 5px;
         }
 
         .logo > svg {
@@ -90,23 +97,24 @@
             }
         }
 
+        h1,
         .title {
-            margin-left: 10px;
-            font-size: 24px;
-            font-weight: bold;
+            padding-bottom: 12px;
+            margin: 26px 0 16px;
+            font-size: 1.6rem;
+            font-weight: normal;
             color: var(--base-color);
+            border-bottom: 1px solid var(--base-color-a10, rgba(0, 0, 0, 0.1));
         }
 
-        hr {
-            border-style: solid;
-            border-color: var(--base-color-a10);
-            border-width: 0 0 1px 0;
+        ul {
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 <main>
-    <header>
+    <header class="title">
         <div class="logo">
             <div class="bg shader"></div>
             <div class="bg"></div>
@@ -123,13 +131,33 @@
             </svg>
         </div>
 
-        <div class="title">
-            <span lang="en">Thanks for installing Translation.</span>
+        <div>
+            <span lang="en">Thank you for installing Translation</span>
             <span lang="zh">感谢安装 Translation.</span>
         </div>
     </header>
-    <hr/>
-    <p><span lang="zh">如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我<b><a href="itp:///dialog/support">捐赠</a></b> ❤️，这将极大地激励我继续开发此项目。</span></p>
+    <p><span lang="zh">如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我<b><a
+            href="itp:///dialog/support">捐赠</a></b> ❤️，这将极大地激励我继续开发此项目。</span></p>
+    <p><span lang="en">Support continued development by <b><a href="itp:///dialog/support">buying me a coffee</a></b> ❤️.</span>
+    </p>
+
+    <h1>✨ Change Notes</h1>
+    <div id="change-notes"></div>
 </main>
+
+<script>
+    window.itpCefQuery = window.itpCefQuery || function () {
+    }
+
+    window.itpCefQuery({
+        request: "plugin-info",
+        onSuccess: (pluginInfo) => {
+            pluginInfo = JSON.parse(pluginInfo);
+            if (pluginInfo['changeNotes']) {
+                document.querySelector("#change-notes").innerHTML = pluginInfo['changeNotes'];
+            }
+        }
+    });
+</script>
 </body>
 </html>
