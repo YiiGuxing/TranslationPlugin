@@ -94,11 +94,7 @@ internal class WebView(
                 synchronized(this@WebView) {
                     lastRequestedUrl = request.url ?: ""
                 }
-
-                return if (userGesture) {
-                    browse(request.url)
-                    true
-                } else false
+                return false
             }
         }, contentPanel.cefBrowser)
         jbCefClient.addRequestHandler(resourceRequestHandler, contentPanel.cefBrowser)

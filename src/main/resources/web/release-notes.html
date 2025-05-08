@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="http://itp/base.css">
     <link rel="stylesheet" href="http://itp/scrollbars.css">
     <style>
+        html:lang(zh-CN) span:not(:lang(zh-CN)),
+        html:lang(en) span:not(:lang(en)) {
+            display: none;
+        }
+
         body {
             color: var(--base-color-a80);
             font-family: -apple-system, BlinkMacSystemFont, "JetBrains Sans", Helvetica, Arial, sans-serif;
@@ -13,7 +18,7 @@
 
         main {
             margin: 0 auto;
-            max-width: 70vw;
+            max-width: 60vw;
             min-width: 400px;
             padding: 20px;
         }
@@ -110,6 +115,23 @@
         ul {
             line-height: 1.5;
         }
+
+        a.whats-new {
+            color: white;
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px 20px;
+            outline: none;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: 100px;
+            background-color: #0047fd;
+            transition: opacity 0.2s;
+        }
+
+        a.whats-new:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -133,16 +155,24 @@
 
         <div>
             <span lang="en">Thank you for installing Translation</span>
-            <span lang="zh">感谢安装 Translation.</span>
+            <span lang="zh-CN">感谢安装 Translation</span>
         </div>
     </header>
-    <p><span lang="zh">如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我<b><a
-            href="itp:///dialog/support">捐赠</a></b> ❤️，这将极大地激励我继续开发此项目。</span></p>
+    <p>
+        <span lang="zh-CN">如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我
+            <b><a href="itp:///dialog/support">捐赠</a></b> ❤️，这将极大地激励我继续开发此项目。</span>
+    </p>
     <p><span lang="en">Support continued development by <b><a href="itp:///dialog/support">buying me a coffee</a></b> ❤️.</span>
     </p>
 
-    <h1>✨ Change Notes</h1>
+    <h1>✨ <span lang="en">Change Notes</span><span lang="zh-CN">更新说明</span></h1>
     <div id="change-notes"></div>
+    <div>
+        <a class="whats-new" href="https://intellij-translation.yiiguxing.top/#/updates" target="_blank">
+            <span lang="en">What's New in Translation</span>
+            <span lang="zh-CN">Translation 最新变化</span>
+        </a>
+    </div>
 </main>
 
 <script>
@@ -153,8 +183,25 @@
         request: "plugin-info",
         onSuccess: (pluginInfo) => {
             pluginInfo = JSON.parse(pluginInfo);
+
+            const language = pluginInfo.language || "en"
+            if (language === "zh-CN") {
+                document.querySelector("html").setAttribute("lang", "zh-CN")
+            }
+
             if (pluginInfo['changeNotes']) {
                 document.querySelector("#change-notes").innerHTML = pluginInfo['changeNotes'];
+            }
+
+            const version = pluginInfo['featureVersion'] || "";
+            const whatsNewEn = document.querySelector(".whats-new > span[lang=en]");
+            whatsNewEn && (whatsNewEn.innerHTML = `What's New in Translation ${version}`);
+            const whatsNewZh = document.querySelector(".whats-new > span[lang=zh-CN]");
+            whatsNewZh && (whatsNewZh.innerHTML = `Translation ${version} 最新变化`);
+            const whatsNewLink = document.querySelector(".whats-new");
+            if (whatsNewLink && pluginInfo['whatsNewUrl']) {
+                whatsNewLink.href = pluginInfo['whatsNewUrl'];
+                whatsNewLink.removeAttribute("target");
             }
         }
     });

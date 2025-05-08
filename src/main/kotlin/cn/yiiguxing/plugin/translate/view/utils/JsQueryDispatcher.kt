@@ -1,7 +1,9 @@
 package cn.yiiguxing.plugin.translate.view.utils
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
+import cn.yiiguxing.plugin.translate.update.Version
 import cn.yiiguxing.plugin.translate.util.IdeVersion
+import cn.yiiguxing.plugin.translate.view.WebPages
 import com.google.gson.Gson
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationNamesInfo
@@ -9,6 +11,7 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.CefMessageRouterHandlerAdapter
+import java.util.*
 
 open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
     private val resources: MutableMap<String, JsQueryHandler> = HashMap()
@@ -72,11 +75,15 @@ open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
         const val REQUEST = "plugin-info"
 
         override fun query(id: Long, request: String): String {
+            val version = Version(TranslationPlugin.version)
             val info = mapOf(
                 "name" to TranslationPlugin.name,
                 "adName" to TranslationPlugin.adName,
                 "version" to TranslationPlugin.version,
-                "changeNotes" to TranslationPlugin.descriptor.changeNotes
+                "featureVersion" to version.getFeatureUpdateVersion(),
+                "changeNotes" to TranslationPlugin.descriptor.changeNotes,
+                "whatsNewUrl" to WebPages.releaseNote(version.getFeatureUpdateVersion()).getUrl(),
+                "language" to Locale.getDefault().toLanguageTag(),
             )
             return Gson().toJson(info)
         }
