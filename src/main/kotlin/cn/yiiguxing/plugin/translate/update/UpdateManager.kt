@@ -16,6 +16,8 @@ import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.notification.impl.NotificationsManagerImpl
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.EDT
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
@@ -30,6 +32,8 @@ import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.awt.Color
 import java.awt.Point
 import java.util.concurrent.atomic.AtomicBoolean
@@ -62,7 +66,7 @@ class UpdateManager : BaseStartupActivity(true, false) {
         checkUpdate(project)
     }
 
-    private fun checkUpdate(project: Project) {
+    private suspend fun checkUpdate(project: Project) {
         val plugin = TranslationPlugin.descriptor
         val versionString = plugin.version
         val properties: PropertiesComponent = PropertiesComponent.getInstance()
@@ -81,9 +85,10 @@ class UpdateManager : BaseStartupActivity(true, false) {
 
         val isFirstInstallation = lastVersionString == Version.INITIAL_VERSION
         val isFeatureVersion = version.isFeatureUpdateOf(lastVersion)
-        if (showUpdateNotification(project, plugin, version, isFeatureVersion, isFirstInstallation)) {
-            properties.setValue(VERSION_PROPERTY, versionString)
+        withContext(Dispatchers.EDT) {
+            showUpdateNotification(project, plugin, version, isFeatureVersion, isFirstInstallation)
         }
+        properties.setValue(VERSION_PROPERTY, versionString)
     }
 
     private fun showUpdateNotification(
@@ -92,7 +97,7 @@ class UpdateManager : BaseStartupActivity(true, false) {
         version: Version,
         isFeatureVersion: Boolean,
         isFirstInstallation: Boolean
-    ): Boolean {
+    ) {
         val title = message(
             "plugin.name.updated.to.version.notification.title",
             plugin.name,
@@ -116,9 +121,10 @@ class UpdateManager : BaseStartupActivity(true, false) {
             plugin.changeNotes ?: "<ul><li></li></ul>"
         )
 
+        val modalityState = ModalityState.current()
         val canBrowseWhatsNewInHTMLEditor = WebPages.canBrowseInWebView()
         val notificationGroup = NotificationGroupManager.getInstance()
-            .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID) ?: return false
+            .getNotificationGroup(UPDATE_NOTIFICATION_GROUP_ID)
         val gettingStartedAction = MyGettingStartedAction()
         val notification = notificationGroup
             .createNotification(content, NotificationType.INFORMATION)
@@ -136,22 +142,20 @@ class UpdateManager : BaseStartupActivity(true, false) {
             .addAction(SupportAction())
             .whenExpired {
                 if (canBrowseWhatsNewInHTMLEditor) {
-                    if (isFirstInstallation && !gettingStartedAction.isPerformed.get()) {
-                        GettingStartedAction.browse(project)
-                    } else if (!version.isRreRelease && isFeatureVersion) {
-                        WhatsNew.browse(project, version)
+                    invokeLater(modalityState, expired = project.disposed) {
+                        if (isFirstInstallation && !gettingStartedAction.isPerformed.get()) {
+                            GettingStartedAction.browse(project)
+                        } else if (!version.isRreRelease && isFeatureVersion) {
+                            WhatsNew.browse(project, version)
+                        }
                     }
                 }
                 onPostUpdate(true)
             }
 
-        invokeLaterIfNeeded(expired = project.disposed) {
-            if (!notification.notifyByBalloon(project)) {
-                notification.notify(project)
-            }
+        if (!project.isDisposed && !notification.notifyByBalloon(project)) {
+            notification.notify(project)
         }
-
-        return true
     }
 
     private fun Notification.notifyByBalloon(project: Project): Boolean {
