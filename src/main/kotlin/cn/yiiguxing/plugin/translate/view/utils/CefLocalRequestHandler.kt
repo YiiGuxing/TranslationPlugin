@@ -20,7 +20,7 @@ import java.net.URL
  * @param protocol The protocol to handle (e.g., "http", "file").
  * @param authority The authority of the requests (e.g., "localhost", "mydomain").
  */
-internal class CefLocalRequestHandler(
+internal open class CefLocalRequestHandler(
     private val protocol: String,
     private val authority: String
 ) : CefRequestHandlerAdapter() {

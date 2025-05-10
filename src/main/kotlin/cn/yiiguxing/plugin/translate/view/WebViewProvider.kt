@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.view
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.view.WebPages.PageFragment
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorPolicy
@@ -44,14 +43,14 @@ class WebViewProvider : FileEditorProvider, DumbAware {
         @JvmStatic
         fun open(
             project: Project,
-            pageFragment: PageFragment,
+            url: String,
             @DialogTitle title: String = TranslationPlugin.name,
         ): Boolean {
             if (!project.isDefault && !project.isDisposed && JBCefApp.isSupported()) {
                 val file = object : LightVirtualFile(title, WebViewFileType, "") {
                     override fun getPath(): String = title
                 }
-                URL_KEY.set(file, pageFragment.getUrl())
+                URL_KEY.set(file, url)
                 val editors = FileEditorManager.getInstance(project).openFile(file, true)
                 return editors.find { it is WebView } != null
             }

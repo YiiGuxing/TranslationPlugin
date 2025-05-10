@@ -74,6 +74,10 @@ object WebPages {
         )
     }
 
+    fun getLocalReleaseNotesUrl(): String {
+        return ITP.RELEASE_NOTES_PAGE_URL
+    }
+
     /**
      * Whether the IDE can browse in the webview.
      */
@@ -86,13 +90,41 @@ object WebPages {
         project: Project?,
         pageFragment: PageFragment = home(),
         title: String = TranslationPlugin.name,
-        browseInWebView: Boolean = true
-    ) {
-        if (browseInWebView && project != null && canBrowseInWebView()) {
-            WebViewProvider.open(project, pageFragment, title)
-        } else {
-            BrowserUtil.browse(pageFragment.getUrl())
+        browseInWebView: Boolean = true,
+        fallbackToBrowser: Boolean = true
+    ): Boolean {
+        if (browseInWebView) {
+            val url = pageFragment.getUrl()
+            val success = project != null && canBrowseInWebView() && WebViewProvider.open(project, url, title)
+            if (success || !fallbackToBrowser) {
+                return success
+            }
         }
+
+        val target = if (pageFragment.compact) pageFragment.copy(compact = false) else pageFragment
+        BrowserUtil.browse(target.getUrl())
+        return true
+    }
+
+    /**
+     * Browse the specified [url].
+     */
+    fun browse(
+        project: Project?,
+        url: String,
+        title: String = TranslationPlugin.name,
+        browseInWebView: Boolean = true,
+        fallbackToBrowser: Boolean = true
+    ): Boolean {
+        if (browseInWebView) {
+            val success = project != null && canBrowseInWebView() && WebViewProvider.open(project, url, title)
+            if (success || !fallbackToBrowser) {
+                return success
+            }
+        }
+
+        BrowserUtil.browse(url)
+        return true
     }
 
 

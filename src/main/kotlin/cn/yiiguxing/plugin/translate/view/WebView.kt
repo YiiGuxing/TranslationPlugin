@@ -2,11 +2,10 @@ package cn.yiiguxing.plugin.translate.view
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
-import cn.yiiguxing.plugin.translate.view.utils.*
+import cn.yiiguxing.plugin.translate.view.utils.JsQueryDispatcher
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
@@ -16,7 +15,6 @@ import com.intellij.openapi.wm.StatusBar
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.jcef.JBCefBrowserBase.Properties.NO_CONTEXT_MENU
 import com.intellij.ui.jcef.JCEFHtmlPanel
-import com.intellij.util.ui.UIUtil
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
@@ -24,7 +22,6 @@ import org.cef.handler.*
 import org.cef.network.CefRequest
 import org.jetbrains.annotations.Nls
 import java.beans.PropertyChangeListener
-import java.io.ByteArrayInputStream
 import javax.swing.JComponent
 
 internal class WebView(
@@ -34,55 +31,17 @@ internal class WebView(
 ) : UserDataHolderBase(), FileEditor {
 
     private val contentPanel = JCEFHtmlPanel(true, null, null)
+    private val itpResources = ITP.createCefResources(this)
     private var lastRequestedUrl: String = ""
 
     companion object {
-        private val LOG = logger<WebView>()
-
-        private const val PROTOCOL = "http"
-        private const val HOST_NAME = "itp"
-
-        private const val LOADING_PATH = "/web/loading.html"
-        private const val ERROR_PAGE_PATH = "/web/error.html"
-        private const val BASE_CSS_PATH = "/base.css"
-        private const val SCROLLBARS_CSS_PATH = "/scrollbars.css"
-
         private const val JS_FUNCTION_NAME: String = "itpCefQuery"
-
-        // com.intellij.ui.jcef.JBCefFileSchemeHandlerFactory
-        private const val LOAD_HTML_URL_PREFIX = "file:///jbcefbrowser/"
-
-        private val ERROR_PAGE_READER: String? by lazy {
-            try {
-                WebView::class.java.getResourceAsStream(ERROR_PAGE_PATH)
-                    ?.use { it.reader().readText() }
-            } catch (e: Exception) {
-                LOG.warn("couldn't find $ERROR_PAGE_PATH", e)
-                null
-            }
-        }
     }
 
     init {
         val jbCefClient = contentPanel.jbCefClient
-        val resourceRequestHandler = CefLocalRequestHandler(PROTOCOL, HOST_NAME)
-        val loadingUrl = resourceRequestHandler.addResource(LOADING_PATH, "text/html", this)
-        resourceRequestHandler.addResource(SCROLLBARS_CSS_PATH) {
-            CefStreamResourceHandler(
-                ByteArrayInputStream(
-                    JBCefScrollbarsHelper.buildScrollbarsStyle().toByteArray(Charsets.UTF_8)
-                ), "text/css", this
-            )
-        }
-        resourceRequestHandler.addResource(BASE_CSS_PATH) {
-            CefStreamResourceHandler(
-                ByteArrayInputStream(
-                    CefStylesheetHelper.buildBaseStyle().toByteArray(Charsets.UTF_8)
-                ), "text/css", this
-            )
-        }
 
-        // must be called before add `resourceRequestHandler`
+        // must be called before add `itpResources`
         jbCefClient.addRequestHandler(object : CefRequestHandlerAdapter() {
             override fun onBeforeBrowse(
                 browser: CefBrowser,
@@ -97,7 +56,7 @@ internal class WebView(
                 return false
             }
         }, contentPanel.cefBrowser)
-        jbCefClient.addRequestHandler(resourceRequestHandler, contentPanel.cefBrowser)
+        jbCefClient.addRequestHandler(itpResources, contentPanel.cefBrowser)
         jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
             override fun onLoadError(
                 browser: CefBrowser,
@@ -106,16 +65,12 @@ internal class WebView(
                 errorText: String?,
                 failedUrl: String
             ) {
-                if (lastRequestedUrl != failedUrl) {
+                if (!frame.isMain) {
                     return
                 }
-
-                val html = ERROR_PAGE_READER?.replace("{{url}}", failedUrl) ?: return
-                UIUtil.invokeLaterIfNeeded {
-                    synchronized(this@WebView) {
-                        if (lastRequestedUrl == failedUrl) {
-                            contentPanel.loadHTML(html, failedUrl)
-                        }
+                synchronized(this@WebView) {
+                    if (lastRequestedUrl == failedUrl && !itpResources.isErrorPage(failedUrl)) {
+                        loadWithReplace(itpResources.getErrorPage(failedUrl))
                     }
                 }
             }
@@ -125,16 +80,18 @@ internal class WebView(
                 StatusBar.Info.set(text, project)
             }
         }, contentPanel.cefBrowser)
+
+        val hyperlinkHandler = ITP.createCefHyperlinkHandler(project) {
+            browse(it)
+            true
+        }
         jbCefClient.addLifeSpanHandler(object : CefLifeSpanHandlerAdapter() {
             override fun onBeforePopup(
                 browser: CefBrowser,
                 frame: CefFrame,
                 targetUrl: String,
                 targetFrameName: String?
-            ): Boolean {
-                browse(targetUrl)
-                return true
-            }
+            ): Boolean = hyperlinkHandler.onHyperlinkActivated(targetUrl)
         }, contentPanel.cefBrowser)
 
         val config = CefMessageRouter.CefMessageRouterConfig(JS_FUNCTION_NAME, "${JS_FUNCTION_NAME}Cancel")
@@ -146,9 +103,13 @@ internal class WebView(
         jbCefClient.cefClient.addMessageRouter(jsRouter)
 
         contentPanel.setProperty(NO_CONTEXT_MENU, true)
-        contentPanel.loadURL(loadingUrl)
+        contentPanel.loadURL(if (itpResources.isMyResource(url)) url else itpResources.loadingPage)
     }
 
+    private fun loadWithReplace(url: String) {
+        val code = "window.location.replace('$url');"
+        contentPanel.cefBrowser.executeJavaScript(code, null, 0)
+    }
 
     private fun browse(url: String) {
         val targetUrl = if (url.startsWith(WebPages.BASE_URL)) {
@@ -185,12 +146,9 @@ internal class WebView(
         AnAction({ message("webview.reload.action.name") }, AllIcons.Actions.Refresh) {
         override fun getActionUpdateThread() = ActionUpdateThread.EDT
         override fun actionPerformed(e: AnActionEvent) {
-            val url = contentPanel.cefBrowser.url
-            if (url?.startsWith(LOAD_HTML_URL_PREFIX) == true) {
-                url.split("#url=").getOrNull(1)?.let {
-                    contentPanel.cefBrowser.loadURL(it)
-                    return
-                }
+            itpResources.getFailedUrl(contentPanel.cefBrowser.url)?.let {
+                loadWithReplace(it)
+                return
             }
 
             contentPanel.cefBrowser.reload()

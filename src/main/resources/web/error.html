@@ -134,8 +134,18 @@
     </div>
     <div class="content">
         <span id="loading-text">Loading failed. Please try again later.</span>
-        <a id="link" href="{{url}}" target="_blank">OPEN IN BROWSER</a>
+        <a id="link" href="{{url}}" target="_blank" style="display: none">OPEN IN BROWSER</a>
     </div>
 </div>
+<script>
+    (function () {
+        const failedUrl = window.location.hash.split("#url=")[1];
+        const link = document.getElementById("link");
+        if (link && failedUrl) {
+            link.href = failedUrl;
+            link.style.display = "block";
+        }
+    })();
+</script>
 </body>
 </html>
