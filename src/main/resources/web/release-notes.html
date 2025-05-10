@@ -16,6 +16,10 @@
             font-family: -apple-system, BlinkMacSystemFont, "JetBrains Sans", Helvetica, Arial, sans-serif;
         }
 
+        ::-webkit-scrollbar {
+            background-color: var(--primary-color-a10, rgba(0, 0, 0, 0.1));
+        }
+
         main {
             margin: 0 auto;
             max-width: 60vw;
@@ -116,7 +120,7 @@
             line-height: 1.5;
         }
 
-        a.whats-new {
+        a.button {
             color: white;
             display: inline-block;
             padding: 12px 24px;
@@ -126,11 +130,63 @@
             white-space: nowrap;
             border-radius: 100px;
             background-color: #0047fd;
-            transition: opacity 0.2s;
         }
 
-        a.whats-new:hover {
-            opacity: 0.8;
+        a.button:hover {
+            background-color: rgba(0, 71, 253, 0.8);
+        }
+
+        kbd {
+            line-height: 25px;
+            margin-top: -2px;
+            display: inline-block;
+            padding: 0 8px;
+            vertical-align: middle;
+            border: none;
+            border-radius: 3px;
+            font-size: inherit;
+            font-family: inherit;
+            background-color: var(--base-background-color, #fff);
+            box-shadow: inset 0 -1px 0 var(--primary-color-a50, #bbb), 0 0 0 1px var(--primary-color-a50, #bbb);
+        }
+
+        kbd.action {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        kbd.action svg {
+            width: 18px;
+            height: 18px;
+            margin-right: 4px;
+            color: var(--base-color-a70, rgba(0, 0, 0, 0.7));
+        }
+
+        .feedback {
+            position: fixed;
+            right: 0;
+            top: 50vh;
+            transform: rotate(270deg);
+        }
+
+        .feedback > a {
+            color: #fff;
+            right: 0;
+            position: absolute;
+            display: inline-flex;
+            padding: 10px 16px 10px 14px;
+            align-items: center;
+            transform: translateY(-100%);
+            text-decoration: none;
+            border-radius: 6px 6px 0 0;
+            background: rgb(39, 40, 44);
+        }
+
+        .feedback > a > svg {
+            width: 16px;
+            margin-right: 8px;
+            margin-top: -1px;
+            transform: rotate(90deg);
         }
     </style>
 </head>
@@ -159,24 +215,98 @@
         </div>
     </header>
     <p>
-        <span lang="zh-CN">如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我
-            <b><a href="itp:///dialog/support">捐赠</a></b> ❤️，这将极大地激励我继续开发此项目。</span>
+        <span lang="en">
+            Please consider donating if you think Translation is helpful to you or that my work is valuable.
+            Support continued development by ❤️ <a href="itp:///dialog/support">buying me a coffee</a> ❤️.
+        </span>
+        <span lang="zh-CN">
+            如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我
+            ❤️<a href="itp:///dialog/support">捐赠</a>❤️，这将极大地激励我继续开发此项目。
+        </span>
     </p>
-    <p><span lang="en">Support continued development by <b><a href="itp:///dialog/support">buying me a coffee</a></b> ❤️.</span>
+    <p>👋
+        <span lang="en">Quick Start: Select a text or hover the mouse over the text &gt; <kbd>Right-click</kbd></span>
+        <span lang="zh-CN">快速开始：选择文本或者鼠标指向文本 &gt; <kbd>鼠标右键</kbd></span>
+        <span lang="zh-CN"></span>
+        &gt; <kbd class="action">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <path fill="currentColor"
+                      d="M6.1,1V2.5h4.6V4H9.2A13.32,13.32,0,0,1,6.4,8.9a20.28,20.28,0,0,0,1.8,1.3l-.6,1.4A12.42,12.42,
+                      0,0,1,5.3,9.9,12.69,12.69,0,0,1,.5,12.6L.1,11.1A12.75,12.75,0,0,0,4.2,8.8,14.61,14.61,0,0,1,2,
+                      5.5H3.7A10.71,10.71,0,0,0,5.2,7.7,11.71,11.71,0,0,0,7.4,4H0V2.5H4.6V1Z"/>
+                <path fill="#1E88E5"
+                      d="M16,15H14.11l-.75-2H9.93l-.71,2H7.38l3.35-8.59h1.83Zm-3.19-3.4L11.62,8.41,10.46,11.6Z"/>
+            </svg>
+            <span lang="en">Translate</span><span lang="zh-CN">翻译</span></kbd>
+    </p>
+    <div>
+        <a id="getting-started" class="button" href="https://intellij-translation.yiiguxing.top/#/docs"
+           target="_blank">
+            <span lang="en">Getting Started</span>
+            <span lang="zh-CN">入门指南</span>
+        </a>
+    </div>
+
+    <h1>✨ <span lang="en">Features</span><span lang="zh-CN">功能</span></h1>
+    <p>
+        👉 <span lang="en">Multiple languages inter-translation.</span><span lang="zh-CN">多语言互译</span><br/>
+        👉 <span lang="en">Multiple Translation Engines.</span><span lang="zh-CN">多翻译引擎</span><br/>
+        👉 <span lang="en">Document translation.</span><span lang="zh-CN">文档翻译</span><br/>
+        👉 <span lang="en">Text-to-speech.</span><span lang="zh-CN">语音朗读</span><br/>
+        👉 <span lang="en">Word Book.</span><span lang="zh-CN">单词本</span>
     </p>
 
     <h1>✨ <span lang="en">Change Notes</span><span lang="zh-CN">更新说明</span></h1>
     <div id="change-notes"></div>
     <div>
-        <a class="whats-new" href="https://intellij-translation.yiiguxing.top/#/updates" target="_blank">
+        <a id="whats-new" class="button" href="https://intellij-translation.yiiguxing.top/#/updates" target="_blank">
             <span lang="en">What's New in Translation</span>
             <span lang="zh-CN">Translation 最新变化</span>
+        </a>
+        <a id="historical-changes" class="button" href="https://intellij-translation.yiiguxing.top/#/updates"
+           target="_blank">
+            <span lang="en">Historical Changes</span>
+            <span lang="zh-CN">历史变更</span>
         </a>
     </div>
 </main>
 
+<div class="feedback">
+    <a href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22"
+             data-testid="icon-buddy">
+            <path fill="currentColor" fill-rule="evenodd"
+                  d="M22.362.827C21.72.5 20.88.5 19.2.5H3.3C1.755.5.983.5.575.819A1.5 1.5 0 000 1.969c-.01.517.453
+                  1.135 1.38 2.371l1.14 1.52c.178.237.267.356.33.487a1.5 1.5 0 01.122.365C3 6.855 3 7.003 3 7.3v9.4c0
+                  1.68 0 2.52.327 3.162a3 3 0 001.311 1.311c.642.327 1.482.327 3.162.327h11.4c1.68 0 2.52 0 3.162-.327a3
+                  3 0 001.311-1.311C24 19.22 24 18.38 24 16.7V5.3c0-1.68 0-2.52-.327-3.162a3 3 0 00-1.31-1.311zM9.277
+                  11.937a1.125 1.125 0 00-1.948 1.126 7.123 7.123 0 006.171 3.562 7.123 7.123 0 006.171-3.562 1.125
+                  1.125 0 10-1.947-1.126 4.872 4.872 0 01-4.224 2.438 4.873 4.873 0 01-4.223-2.438zM10.5 8a1.5 1.5 0
+                  11-3 0 1.5 1.5 0 013 0zM18 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
+                  clip-rule="evenodd"></path>
+        </svg>
+        <span lang="en">Feedback</span>
+        <span lang="zh-CN">Feedback</span>
+    </a>
+</div>
+
 <script>
     window.itpCefQuery = window.itpCefQuery || function () {
+    }
+
+    function updateContent(id, content) {
+        const el = document.querySelector(id);
+        if (el && content) {
+            el.innerHTML = content;
+        }
+    }
+
+    function updateLink(id, url) {
+        const gettingStartedLink = document.querySelector(id);
+        if (gettingStartedLink && url) {
+            gettingStartedLink.href = url;
+            gettingStartedLink.removeAttribute("target");
+        }
     }
 
     window.itpCefQuery({
@@ -189,20 +319,13 @@
                 document.querySelector("html").setAttribute("lang", "zh-CN")
             }
 
-            if (pluginInfo['changeNotes']) {
-                document.querySelector("#change-notes").innerHTML = pluginInfo['changeNotes'];
-            }
-
+            updateLink("#getting-started", pluginInfo["gettingStartedUrl"]);
+            updateContent("#change-notes", pluginInfo["changeNotes"]);
+            updateLink("#whats-new", pluginInfo["whatsNewUrl"]);
+            updateLink("#historical-changes", pluginInfo["historicalChangesUrl"]);
             const version = pluginInfo['featureVersion'] || "";
-            const whatsNewEn = document.querySelector(".whats-new > span[lang=en]");
-            whatsNewEn && (whatsNewEn.innerHTML = `What's New in Translation ${version}`);
-            const whatsNewZh = document.querySelector(".whats-new > span[lang=zh-CN]");
-            whatsNewZh && (whatsNewZh.innerHTML = `Translation ${version} 最新变化`);
-            const whatsNewLink = document.querySelector(".whats-new");
-            if (whatsNewLink && pluginInfo['whatsNewUrl']) {
-                whatsNewLink.href = pluginInfo['whatsNewUrl'];
-                whatsNewLink.removeAttribute("target");
-            }
+            updateContent("#whats-new > span[lang=en]", `What's New in Translation ${version}`);
+            updateContent("#whats-new > span[lang=zh-CN]", `Translation ${version} 最新变化`);
         }
     });
 </script>

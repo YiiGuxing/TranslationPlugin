@@ -82,7 +82,9 @@ open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
                 "version" to TranslationPlugin.version,
                 "featureVersion" to version.getFeatureUpdateVersion(),
                 "changeNotes" to TranslationPlugin.descriptor.changeNotes,
+                "gettingStartedUrl" to WebPages.docs().getUrl(),
                 "whatsNewUrl" to WebPages.releaseNote(version.getFeatureUpdateVersion()).getUrl(),
+                "historicalChangesUrl" to WebPages.updates().getUrl(),
                 "language" to Locale.getDefault().toLanguageTag(),
             )
             return Gson().toJson(info)
