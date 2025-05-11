@@ -574,10 +574,6 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     background: transparent;
 }
 
-.sponsor-container a.sponsor:last-child {
-    margin-bottom: 1rem;
-}
-
 .sidebar .sponsor-container {
     border: none;
     display: flex;
