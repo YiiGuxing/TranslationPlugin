@@ -534,6 +534,10 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     animation-timing-function: linear;
 }
 
+.sponsor-container a.sponsor.become-a-sponsor::after {
+    content: none;
+}
+
 @keyframes fade-in {
     0% {
         opacity: 0;
@@ -558,13 +562,16 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     padding: 0 10px;
 }
 
-.sponsor-container a.label-link {
+.sponsor-container a.sponsor.become-a-sponsor.not-empty {
     font-size: 11px;
     height: 1rem;
+    width: auto;
     display: inline-block;
     line-height: 1rem;
     color: rgba(60, 60, 60, .33);
     text-decoration: none;
+    text-align: right;
+    background: transparent;
 }
 
 .sponsor-container a.sponsor:last-child {
@@ -583,7 +590,8 @@ body[data-page$="/changelog.md"] .markdown-section h2#unreleased {
     margin-top: 0;
 }
 
-.sidebar .sponsor-container a.label-link {
+.sidebar .sponsor-container a.sponsor.become-a-sponsor.not-empty {
+    width: auto;
     margin-right: 3px;
 }
 
