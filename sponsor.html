@@ -10,6 +10,7 @@
       --bg: #ffffff;
       --bg-color: #f7f7f7;
       --text-color: rgba(60, 60, 60, .33);
+      --ad-text-color: #19191C;
       --border-color: rgba(25, 25, 28, 0.1);
       --tips-color: #222222;
       --tips-bg-color: #ffffff;
@@ -20,6 +21,7 @@
       --bg: #19191C;
       --bg-color: #3c3f41;
       --text-color: #dfe1e6;
+      --ad-text-color: #dfe1e6;
       --border-color: rgba(223, 225, 230, 0.1);
       --tips-color: #dfe1e6;
       --tips-bg-color: #2b2d30;
@@ -119,6 +121,40 @@
       font-size: 14px;
       padding: 0 10px;
     }
+
+    .ww-ads {
+      min-height: unset !important;
+      box-sizing: border-box;
+      margin-top: 12px !important;
+      background: var(--bg-color) !important;
+    }
+
+    .ww-ads .wwads-img {
+      height: 70px;
+      margin: 0 !important;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .ww-ads .wwads-img img {
+      height: 100%;
+      width: auto !important;
+      display: block;
+    }
+
+    .ww-ads .wwads-content {
+      height: fit-content;
+      min-height: 70px;
+      display: flex;
+      flex: 1 !important;
+      margin: 0 0 0 8px !important;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ww-ads .wwads-content .wwads-text {
+      color: var(--ad-text-color);
+    }
   </style>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -134,7 +170,7 @@
 <body>
 <main>
   <div class="sponsor-container"></div>
-  <div class="wwads-cn wwads-horizontal" data-id="327"></div>
+  <div class="ww-ads wwads-cn wwads-horizontal" data-id="327"></div>
 </main>
 
 <script src="js/sponsor.js?v1.0"></script>
