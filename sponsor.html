@@ -1,21 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sponsors • IntelliJ Translation Plugin</title>
-    <script src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP" async></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
+  <meta charset="UTF-8">
+  <title>Sponsors • IntelliJ Translation Plugin</title>
+  <script src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP" async></script>
+  <script type="text/javascript" charset="UTF-8" src="https://cdn.wwads.cn/js/makemoney.js" async></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-color: #f7f7f7;
+      --text-color: rgba(60, 60, 60, .33);
+      --border-color: rgba(25, 25, 28, 0.1);
+      --tips-color: #222222;
+      --tips-bg-color: #ffffff;
+      --tips-border-color: #cccccc;
+    }
 
-      function gtag() {
-        dataLayer.push(arguments);
+    [data-theme="dark"] {
+      --bg: #19191C;
+      --bg-color: #3c3f41;
+      --text-color: #dfe1e6;
+      --border-color: rgba(223, 225, 230, 0.1);
+      --tips-color: #dfe1e6;
+      --tips-bg-color: #2b2d30;
+      --tips-border-color: #232427;
+    }
+
+    html {
+      padding: 30px;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "JetBrains Sans", Helvetica, Arial, sans-serif;
+    }
+
+    .sponsor-container {
+      display: grid;
+      grid-gap: 3px;
+      grid-template-columns: repeat(auto-fit, 250px);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sponsor-container a.sponsor {
+      height: 40px;
+      width: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 12px;
+      border-radius: 3px;
+      background: var(--bg-color);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .sponsor-container a.sponsor::after {
+      content: attr(data-description);
+      display: none;
+      padding: 5px;
+      margin-top: 2px;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 86px;
+      z-index: 1;
+      color: var(--tips-color);
+      font-size: 12px;
+      line-height: normal;
+      text-align: initial;
+      border-radius: 3px;
+      border: 1px solid var(--tips-border-color);
+      background-color: var(--tips-bg-color);
+      white-space: normal;
+      opacity: 0;
+      animation-delay: 1s;
+      animation-name: fade-in;
+      animation-duration: 0s;
+      animation-fill-mode: forwards;
+      animation-timing-function: linear;
+      overflow-y: auto;
+    }
+
+    .sponsor-container a.sponsor.become-a-sponsor::after {
+      content: none;
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
       }
+      100% {
+        opacity: 0.9;
+      }
+    }
 
-      gtag('js', new Date());
-      gtag('config', 'G-RMH8BJ3BGP');
-    </script>
+    .sponsor-container a.sponsor:hover::after {
+      display: block;
+    }
+
+    .sponsor-container a.sponsor img {
+      color: red;
+      border: none;
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden;
+      line-height: normal;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      padding: 0 10px;
+    }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-RMH8BJ3BGP');
+  </script>
 </head>
 <body>
+<main>
+  <div class="sponsor-container"></div>
+  <div class="wwads-cn wwads-vertical" data-id="327" style="max-width:200px"></div>
+</main>
 
+<script src="js/sponsor.js?v1.0"></script>
+<script>
+  (function () {
+    let dark = false;
+    let language = "en";
+    try {
+      const params = new URLSearchParams(window.location.search);
+      language = params.get("language") || language;
+      dark = params.get("dark") === "true";
+    } catch (e) {
+    }
+
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    window.$sponsorManager.install(".sponsor-container", {language, becomeASponsorLinkTarget: "_blank"});
+  })();
+</script>
 </body>
 </html>
