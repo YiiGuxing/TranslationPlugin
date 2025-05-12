@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.diagnostic.logger
 import org.apache.http.client.utils.URIBuilder
-import org.apache.http.message.BasicNameValuePair
 import java.net.URISyntaxException
 
 object UrlTrackingParametersProvider {
@@ -12,7 +11,12 @@ object UrlTrackingParametersProvider {
     fun augmentIdeUrl(originalUrl: String, vararg extra: Pair<String, String>): String {
         try {
             return URIBuilder(originalUrl)
-                .setParameters(extra.map { (name, value) -> BasicNameValuePair(name, value) })
+                .apply {
+                    // Do not use `setParameters` here, because it will clear all existing query parameters.
+                    for ((key, value) in extra) {
+                        setParameter(key, value)
+                    }
+                }
                 .setParameter("utm_source", "intellij")
                 .setParameter("utm_medium", "plugin")
                 .setParameter("utm_campaign", IdeVersion.buildNumber.productCode)
@@ -28,7 +32,12 @@ object UrlTrackingParametersProvider {
     fun augmentUrl(originalUrl: String, vararg extra: Pair<String, String>): String {
         try {
             return URIBuilder(originalUrl)
-                .setParameters(extra.map { (name, value) -> BasicNameValuePair(name, value) })
+                .apply {
+                    // Do not use `setParameters` here, because it will clear all existing query parameters.
+                    for ((key, value) in extra) {
+                        setParameter(key, value)
+                    }
+                }
                 .setParameter("utm_source", "intellij-plugin")
                 .setParameter("utm_medium", "link")
                 .setParameter("utm_campaign", TranslationPlugin.adName)
