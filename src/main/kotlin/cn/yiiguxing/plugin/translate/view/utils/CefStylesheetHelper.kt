@@ -8,6 +8,7 @@ object CefStylesheetHelper {
     private val BASE_COLOR = JBColor(0x19191C, 0xDFE1E6)
     private val PRIMARY_COLOR = JBColor(0x000000, 0xFFFFFF)
     private val LINK_COLOR = JBColor(0x0000EE, 0x2196F3)
+    private val CARD_BG_COLOR = JBColor(0xF7F7F7, 0x3C3F41)
 
     fun buildBaseStyle(): String {
         val baseColorAlpha = (10..90 step 10).asSequence().map {
@@ -29,6 +30,7 @@ object CefStylesheetHelper {
                 $primaryColorAlpha
                 --base-background-color: $backgroundHex;
                 --base-link-color: $linkColorHex;
+                --base-card-bg-color: ${CARD_BG_COLOR.toRGBHex()};
             }
             
             body {

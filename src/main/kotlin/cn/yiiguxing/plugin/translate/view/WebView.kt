@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.view
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
+import cn.yiiguxing.plugin.translate.view.WebViewProvider.LoadingPageStrategy
 import cn.yiiguxing.plugin.translate.view.utils.JsQueryDispatcher
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
@@ -19,6 +20,7 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
 import org.cef.handler.*
+import org.cef.misc.BoolRef
 import org.cef.network.CefRequest
 import org.jetbrains.annotations.Nls
 import java.beans.PropertyChangeListener
@@ -27,7 +29,7 @@ import javax.swing.JComponent
 internal class WebView(
     private val project: Project,
     private val file: LightVirtualFile,
-    url: String,
+    request: WebViewProvider.Request,
 ) : UserDataHolderBase(), FileEditor {
 
     private val contentPanel = JCEFHtmlPanel(true, null, null)
@@ -35,6 +37,7 @@ internal class WebView(
     private var lastRequestedUrl: String = ""
 
     companion object {
+        private const val DEVTOOLS = false
         private const val JS_FUNCTION_NAME: String = "itpCefQuery"
     }
 
@@ -56,7 +59,21 @@ internal class WebView(
                 return false
             }
         }, contentPanel.cefBrowser)
-        jbCefClient.addRequestHandler(itpResources, contentPanel.cefBrowser)
+        val originRequest = request
+        jbCefClient.addRequestHandler(object : CefRequestHandlerAdapter() {
+            override fun getResourceRequestHandler(
+                browser: CefBrowser?,
+                frame: CefFrame?,
+                request: CefRequest,
+                isNavigation: Boolean,
+                isDownload: Boolean,
+                requestInitiator: String?,
+                disableDefaultHandling: BoolRef?
+            ): CefResourceRequestHandler? {
+                return originRequest.resourceRequestHandler?.invoke(browser, frame, request, this@WebView)
+                    ?: itpResources
+            }
+        }, contentPanel.cefBrowser)
         jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
             override fun onLoadError(
                 browser: CefBrowser,
@@ -98,12 +115,24 @@ internal class WebView(
         val jsRouter = CefMessageRouter.create(config)
         val jsQuery = JsQueryDispatcher()
             .withDefaultHandlers()
-            .registerHandler("page-url") { _, _ -> url }
+            .registerHandlerWithRequest("page-url") { _, _ -> request.url }
+        request.queryHandler?.let { jsQuery.setHandler(it) }
         jsRouter.addHandler(jsQuery, true)
         jbCefClient.cefClient.addMessageRouter(jsRouter)
 
         contentPanel.setProperty(NO_CONTEXT_MENU, true)
-        contentPanel.loadURL(if (itpResources.isMyResource(url)) url else itpResources.loadingPage)
+
+        val targetUrl = when (request.loadingPageStrategy) {
+            LoadingPageStrategy.AUTO -> if (itpResources.isMyResource(request.url)) {
+                request.url
+            } else {
+                itpResources.loadingPage
+            }
+
+            LoadingPageStrategy.ALWAYS -> itpResources.loadingPage
+            LoadingPageStrategy.SKIP -> request.url
+        }
+        contentPanel.loadURL(targetUrl)
     }
 
     private fun loadWithReplace(url: String) {
@@ -126,6 +155,15 @@ internal class WebView(
         group.addSeparator()
         group.add(BackAction())
         group.add(ForwardAction())
+
+        if (DEVTOOLS) {
+            group.add(object : AnAction("DevTools") {
+                override fun actionPerformed(e: AnActionEvent) {
+                    contentPanel.openDevtools()
+                }
+            })
+        }
+
         return group
     }
 

@@ -4,9 +4,16 @@ import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
 import cn.yiiguxing.plugin.translate.util.urlEncode
 import cn.yiiguxing.plugin.translate.view.WebPages.updates
+import cn.yiiguxing.plugin.translate.view.utils.CefStreamResourceHandler
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.project.Project
+import com.intellij.ui.JBColor
 import com.intellij.ui.jcef.JBCefApp
+import org.cef.browser.CefBrowser
+import org.cef.browser.CefFrame
+import org.cef.handler.CefResourceHandler
+import org.cef.handler.CefResourceRequestHandlerAdapter
+import org.cef.network.CefRequest
 import java.util.*
 
 /**
@@ -15,6 +22,10 @@ import java.util.*
 object WebPages {
 
     const val BASE_URL = "https://intellij-translation.yiiguxing.top"
+
+    private const val RELEASE_NOTES_PAGE_URL = "$BASE_URL/release-notes"
+    private const val SPONSORS_PAGE_URL = "$BASE_URL/sponsor"
+    private const val RELEASE_NOTES_PAGE_PATH = "/web/release-notes.html"
 
     /**
      * Get a [PageFragment] for the specified path.
@@ -74,14 +85,46 @@ object WebPages {
         )
     }
 
-    fun getLocalReleaseNotesUrl(): String {
-        return ITP.RELEASE_NOTES_PAGE_URL
+    fun getSponsorsPageUrl(locale: Locale = Locale.getDefault()): String {
+        return UrlTrackingParametersProvider.augmentIdeUrl(
+            SPONSORS_PAGE_URL,
+            "language" to locale.toLanguageTag(),
+            "dark" to JBColor.isBright().not().toString()
+        )
     }
 
     /**
      * Whether the IDE can browse in the webview.
      */
     fun canBrowseInWebView(): Boolean = JBCefApp.isSupported()
+
+    fun browseReleaseNotesPage(project: Project?, title: String = TranslationPlugin.name): Boolean {
+        if (project == null || !canBrowseInWebView()) {
+            return false
+        }
+
+        val request = WebViewProvider.Request(
+            url = UrlTrackingParametersProvider.augmentIdeUrl(RELEASE_NOTES_PAGE_URL),
+            loadingPageStrategy = WebViewProvider.LoadingPageStrategy.SKIP,
+            resourceRequestHandler = { _, _, request, parent ->
+                if (request.url?.startsWith(RELEASE_NOTES_PAGE_URL) == true) {
+                    object : CefResourceRequestHandlerAdapter() {
+                        override fun getResourceHandler(
+                            browser: CefBrowser?,
+                            frame: CefFrame?,
+                            request: CefRequest
+                        ): CefResourceHandler? {
+                            return WebPages::class.java.getResourceAsStream(RELEASE_NOTES_PAGE_PATH)?.let {
+                                CefStreamResourceHandler(it, "text/html", parent)
+                            }
+                        }
+                    }
+                } else null
+            },
+        )
+
+        return WebViewProvider.open(project, request, title)
+    }
 
     /**
      * Browse the specified [PageFragment].

@@ -86,7 +86,7 @@ class UpdateManager : BaseStartupActivity(true, false) {
         val isFirstInstallation = lastVersionString == Version.INITIAL_VERSION
         val isFeatureVersion = version.isFeatureUpdateOf(lastVersion)
         withContext(Dispatchers.EDT) {
-            if (WebPages.browse(project, WebPages.getLocalReleaseNotesUrl(), fallbackToBrowser = false)) {
+            if (WebPages.browseReleaseNotesPage(project)) {
                 onPostUpdate(true)
             } else {
                 showUpdateNotification(project, plugin, version, isFeatureVersion, isFirstInstallation)

@@ -14,15 +14,20 @@ import org.cef.handler.CefMessageRouterHandlerAdapter
 import java.util.*
 
 open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
-    private val resources: MutableMap<String, JsQueryHandler> = HashMap()
+    private val requestHandlerMap: MutableMap<String, JsQueryHandler> = HashMap()
+    private var handler: JsQueryHandler? = null
 
-    fun registerHandler(request: String, handler: JsQueryHandler): JsQueryDispatcher = apply {
-        resources[request] = handler
+    fun setHandler(handler: JsQueryHandler) {
+        this.handler = handler
+    }
+
+    fun registerHandlerWithRequest(request: String, handler: JsQueryHandler): JsQueryDispatcher = apply {
+        requestHandlerMap[request] = handler
     }
 
     fun withDefaultHandlers(): JsQueryDispatcher = apply {
-        registerHandler(IdeInfoQueryHandler.REQUEST, IdeInfoQueryHandler)
-        registerHandler(PluginInfoQueryHandler.REQUEST, PluginInfoQueryHandler)
+        registerHandlerWithRequest(IdeInfoQueryHandler.REQUEST, IdeInfoQueryHandler)
+        registerHandlerWithRequest(PluginInfoQueryHandler.REQUEST, PluginInfoQueryHandler)
     }
 
     override fun onQuery(
@@ -37,19 +42,31 @@ open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
             return false
         }
 
-        val handler = resources[request] ?: return false
+        requestHandlerMap[request]?.let {
+            handleQuery(it, queryId, request, callback)
+            return true
+        }
+        handler?.let {
+            handleQuery(it, queryId, request, callback)
+            return true
+        }
+
+        return false
+    }
+
+    private fun handleQuery(handler: JsQueryHandler, queryId: Long, request: String, callback: CefQueryCallback) {
         try {
             callback.success(handler.query(queryId, request))
         } catch (e: Throwable) {
             callback.failure(-1, "${e.javaClass}: ${e.message}")
         }
-
-        return true
     }
+
 
     fun interface JsQueryHandler {
         fun query(id: Long, request: String): String
     }
+
 
     object IdeInfoQueryHandler : JsQueryHandler {
         const val REQUEST = "ide-info"
@@ -85,6 +102,7 @@ open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
                 "gettingStartedUrl" to WebPages.docs().getUrl(),
                 "whatsNewUrl" to WebPages.releaseNote(version.getFeatureUpdateVersion()).getUrl(),
                 "historicalChangesUrl" to WebPages.updates().getUrl(),
+                "sponsorsPageUrl" to WebPages.getSponsorsPageUrl(),
                 "language" to Locale.getDefault().toLanguageTag(),
             )
             return Gson().toJson(info)

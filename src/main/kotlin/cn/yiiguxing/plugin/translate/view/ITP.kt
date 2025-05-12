@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.view
 
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.util.invokeLaterIfNeeded
-import cn.yiiguxing.plugin.translate.view.utils.CefLocalRequestHandler
+import cn.yiiguxing.plugin.translate.view.utils.CefLocalResourceRequestHandler
 import cn.yiiguxing.plugin.translate.view.utils.CefStreamResourceHandler
 import cn.yiiguxing.plugin.translate.view.utils.CefStylesheetHelper
 import cn.yiiguxing.plugin.translate.view.utils.JBCefScrollbarsHelper
@@ -18,16 +18,13 @@ internal object ITP {
 
     const val SUPPORT_DIALOG_URI = DIALOG_URI_PREFIX + "support"
 
-    private const val LOCAL_REQUEST_PROTOCOL = "http"
+    private const val LOCAL_REQUEST_PROTOCOL = "https"
     private const val LOCAL_REQUEST_HOST_NAME = "itp"
 
     private const val LOADING_PATH = "/web/loading.html"
-    private const val RELEASE_NOTES_PAGE_PATH = "/web/release-notes.html"
     private const val ERROR_PAGE_PATH = "/web/error.html"
     private const val BASE_CSS_PATH = "/base.css"
     private const val SCROLLBARS_CSS_PATH = "/scrollbars.css"
-
-    const val RELEASE_NOTES_PAGE_URL = "$LOCAL_REQUEST_PROTOCOL://$LOCAL_REQUEST_HOST_NAME/$RELEASE_NOTES_PAGE_PATH"
 
     fun createCefHyperlinkHandler(project: Project, handler: CefHyperlinkHandler? = null): CefHyperlinkHandler {
         return object : DefaultCefHyperlinkHandler(project) {
@@ -44,13 +41,12 @@ internal object ITP {
     fun createCefResources(parent: Disposable): CefResources = CefResources(parent)
 
     @Suppress("unused")
-    class CefResources(parent: Disposable) : CefLocalRequestHandler(
+    class CefResources(parent: Disposable) : CefLocalResourceRequestHandler(
         LOCAL_REQUEST_PROTOCOL,
         LOCAL_REQUEST_HOST_NAME
     ) {
         private val errorPage: String = addResource(ERROR_PAGE_PATH, "text/html", parent)
         val loadingPage: String = addResource(LOADING_PATH, "text/html", parent)
-        val releaseNotesPage: String = addResource(RELEASE_NOTES_PAGE_PATH, "text/html", parent)
         val baseCss: String = addResource(BASE_CSS_PATH) {
             CefStreamResourceHandler(
                 ByteArrayInputStream(
