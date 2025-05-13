@@ -72,7 +72,7 @@
           sponsorLink.href = "/sponsor/click?id=" + sponsor.id +
           "&name=" + encodeURIComponent(sponsor.name) +
           "&url=" + encodeURIComponent(link) +
-          options.place ? "&place=" + encodeURIComponent(options.place) : "";
+          (options.place ? "&place=" + encodeURIComponent(options.place) : "");
 
           const description = typeof sponsor.description === "string"
             ? sponsor.description
