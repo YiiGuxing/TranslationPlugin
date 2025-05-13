@@ -40,7 +40,7 @@ object UrlTrackingParametersProvider {
                 }
                 .setParameter("utm_source", "intellij-plugin")
                 .setParameter("utm_medium", "link")
-                .setParameter("utm_campaign", TranslationPlugin.adName)
+                .setParameter("utm_campaign", TranslationPlugin.adName.lowercase().replace(' ', '-'))
                 .setParameter("utm_content", TranslationPlugin.version)
                 .build()
                 .toString()

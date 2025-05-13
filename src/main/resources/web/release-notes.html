@@ -436,9 +436,12 @@
       const sponsorsPageUrl = pluginInfo["sponsorsPageUrl"];
       const sponsors = document.querySelector("#sponsors");
       if (sponsorsPageUrl && sponsors) {
+        const fixedSponsorsPageUrl = new URL(sponsorsPageUrl);
+        fixedSponsorsPageUrl.searchParams.set("place", "release-notes");
+
         const sponsorsFrame = document.querySelector("#sponsors-frame");
         sponsorsFrame.onload = () => resizeIframe(sponsorsFrame);
-        sponsorsFrame.src = sponsorsPageUrl;
+        sponsorsFrame.src = fixedSponsorsPageUrl.toString();
         sponsors.style.display = "block";
         window.addEventListener('resize', () => resizeIframe(sponsorsFrame));
       }

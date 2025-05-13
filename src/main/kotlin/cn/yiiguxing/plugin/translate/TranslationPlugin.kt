@@ -8,7 +8,7 @@ object TranslationPlugin {
 
     const val PLUGIN_ID = "cn.yiiguxing.plugin.translate"
 
-    private const val PLUGIN_AD_NAME = "IntelliJTranslationPlugin"
+    private const val PLUGIN_AD_NAME = "IntelliJ Translation Plugin"
 
     val descriptor: IdeaPluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))!!
 
