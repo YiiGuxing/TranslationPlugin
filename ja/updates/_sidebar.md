@@ -3,6 +3,7 @@
 
 <h2 class="versions">バージョン</h2>
 
+* [v3.7 (2025-02-26)](/ja/updates/v3.7.md)
 * [v3.6 (2024-05-20)](/ja/updates/v3.6.md)
 * [v3.5 (2023-06-01)](/ja/updates/v3.5.md)
 * [v3.4 (2022-11-30)](/ja/updates/v3.4.md)
