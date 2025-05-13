@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sponsor • IntelliJ Translation Plugin</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP"></script>
+  <style>
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      overflow: auto;
+      box-sizing: border-box;
+    }
+
+    .dialog {
+      margin: auto;
+      padding: 30px 80px;
+      border-radius: 10px;
+      text-align: center;
+      background: #F0F0F0;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+    }
+
+    .dialog h1 {
+      margin: 0;
+      color: #333333;
+      font-size: 24px;
+      font-weight: 300;
+    }
+
+    .dialog button {
+      padding: 6px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      border-radius: 50px;
+      background-color: #66BB6A;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .dialog button:hover {
+      background-color: #43A047;
+    }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-RMH8BJ3BGP');
+  </script>
+</head>
+<body>
+<div class="dialog">
+  <h1>正在自动跳转中……</h1>
+  <button id="jump" style="display: none">手动前往</button>
+</div>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const targetUrl = params.get('url');
+
+    if (targetUrl) {
+      const jumpButton = document.getElementById('jump');
+      jumpButton.style.display = 'inline-block';
+      jumpButton.addEventListener('click', () => {
+        window.location.replace(targetUrl);
+      });
+
+      window.location.replace(targetUrl);
+    }
+  })();
+</script>
+</body>
+</html>

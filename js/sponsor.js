@@ -1,6 +1,7 @@
 (function () {
   /**
    * @type {{
+   *   id: string,
    *   name: string,
    *   logo: string,
    *   description: string | {[lang:string]: string, default: string}
@@ -9,10 +10,11 @@
    */
   const activeSponsors = [
     {
+      id: "deer-api",
       name: "DeerAPI",
       logo: "deer_api.svg",
       description: "AI大模型API聚合平台，一键调用500+模型，7折特惠，最新GPT4o、Grok3、Gemini2.5pro全支持！",
-      link: "https://api.deerapi.com/?from=IntelliJTranslationPlugin"
+      link: "https://api.deerapi.com/?utm_source=intellij-plugin&utm_medium=link&utm_campaign=IntelliJTranslationPlugin"
     }
   ];
 
@@ -62,9 +64,12 @@
           const sponsorLink = document.createElement("a");
           sponsorLink.classList.add("sponsor");
           sponsorLink.target = "_blank";
-          sponsorLink.href = typeof sponsor.link === "string"
+
+          const link = typeof sponsor.link === "string"
             ? sponsor.link
             : (sponsor.link[options.language] || sponsor.link.default);
+          sponsorLink.href = "/sponsor/click?id=" + sponsor.id +
+            "&name=" + encodeURIComponent(sponsor.name) + "&url=" + encodeURIComponent(link);
 
           const description = typeof sponsor.description === "string"
             ? sponsor.description
