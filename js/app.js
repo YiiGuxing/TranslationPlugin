@@ -228,15 +228,10 @@
   }
 
   function updateSponsors(vm) {
-    var sponsors = document.querySelectorAll(".sponsor-container");
-    if (!sponsors) {
-      return;
-    }
-
     var language = getLanguagePath(vm).replace(/\//g, "") || "zh-CN";
-    console.log("===",language)
     window.$sponsorManager.install(".sponsor-container", {
       language,
+      place: "sidebar-logo",
       becomeASponsorLinkTarget: window.$compactMode ? "_blank" : null
     })
   }

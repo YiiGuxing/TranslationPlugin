@@ -112,20 +112,26 @@
 <body>
 <div class="sponsor-container"></div>
 
-<script src="/js/sponsor.js?v1.0"></script>
+<script src="/js/sponsor.js?v1.0.1"></script>
 <script>
   (function () {
     let dark = false;
     let language = "en";
+    let place;
     try {
       const params = new URLSearchParams(window.location.search);
       language = params.get("language") || language;
+      place = params.get("place");
       dark = params.get("dark") === "true";
     } catch (e) {
     }
 
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-    window.$sponsorManager.install(".sponsor-container", {language, becomeASponsorLinkTarget: "_blank"});
+    window.$sponsorManager.install(".sponsor-container", {
+      language,
+      place: place ? place + "-logo" : undefined,
+      becomeASponsorLinkTarget: "_blank"
+    });
   })();
 </script>
 </body>

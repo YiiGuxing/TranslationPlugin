@@ -70,9 +70,21 @@
 <script>
   (function () {
     const params = new URLSearchParams(window.location.search);
-    const targetUrl = params.get('url');
+    const url = params.get('url');
 
-    if (targetUrl) {
+    if (url) {
+      const targetUrl = new URL(url);
+      try {
+        const searchParams = targetUrl.searchParams;
+        searchParams.set("utm_source", "intellij-translation-plugin");
+        searchParams.set("utm_medium", "logo");
+        searchParams.set("utm_campaign", "sponsorship");
+
+        const place = params.get("place");
+        place && searchParams.set("utm_content", place);
+      } catch (e) {
+      }
+
       const jumpButton = document.getElementById('jump');
       jumpButton.style.display = 'inline-block';
       jumpButton.addEventListener('click', () => {
