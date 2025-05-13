@@ -231,7 +231,7 @@
     var language = getLanguagePath(vm).replace(/\//g, "") || "zh-CN";
     window.$sponsorManager.install(".sponsor-container", {
       language,
-      place: "sidebar-logo",
+      place: "sidebar",
       becomeASponsorLinkTarget: window.$compactMode ? "_blank" : null
     })
   }

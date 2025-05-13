@@ -129,7 +129,7 @@
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
     window.$sponsorManager.install(".sponsor-container", {
       language,
-      place: place ? place + "-logo" : undefined,
+      place,
       becomeASponsorLinkTarget: "_blank"
     });
   })();
