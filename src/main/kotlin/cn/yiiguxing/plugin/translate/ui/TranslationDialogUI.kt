@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import com.intellij.openapi.Disposable
 import com.intellij.ui.components.labels.LinkLabel
@@ -18,7 +17,7 @@ interface TranslationDialogUI : Disposable {
     val translationTTSButton: TTSButton
     val clearButton: LinkLabel<Void>
     val copyButton: LinkLabel<Void>
-    val starButton: LinkLabel<Translation>
+    val starButton: LinkLabel<Void>
     val historyButton: LinkLabel<Void>
     val detectedLanguageLabel: JLabel
     val lightningLabel: JLabel
