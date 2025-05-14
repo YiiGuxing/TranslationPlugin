@@ -3,27 +3,28 @@ package cn.yiiguxing.plugin.translate.view
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
-import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.view.WebViewProvider.LoadingPageStrategy
 import cn.yiiguxing.plugin.translate.view.utils.CefStylesheetHelper
 import cn.yiiguxing.plugin.translate.view.utils.JsQueryDispatcher
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
-import com.intellij.openapi.Disposable
+import com.intellij.ide.plugins.MultiPanel
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.ActionCallback
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.util.registry.RegistryManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.testFramework.LightVirtualFile
-import com.intellij.ui.components.JBLayeredPane
 import com.intellij.ui.components.JBLoadingPanel
 import com.intellij.ui.jcef.JBCefBrowserBase.Properties.NO_CONTEXT_MENU
 import com.intellij.ui.jcef.JCEFHtmlPanel
+import com.intellij.util.ui.EdtInvocationManager
+import com.intellij.util.ui.UIUtil
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
@@ -32,9 +33,17 @@ import org.cef.misc.BoolRef
 import org.cef.network.CefRequest
 import org.jetbrains.annotations.Nls
 import java.awt.BorderLayout
-import java.awt.Color
 import java.beans.PropertyChangeListener
+import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.JComponent
+
+private const val LOADING_KEY = 1
+private const val CONTENT_KEY = 0
+private const val IDLE_STATE = 0
+private const val LOADING_STATE = 1
+private const val LOADED_STATE = 2
+
+private const val JS_FUNCTION_NAME: String = "itpCefQuery"
 
 internal class WebView(
     private val project: Project,
@@ -43,20 +52,41 @@ internal class WebView(
 ) : UserDataHolderBase(), FileEditor {
 
     private val cefPanel = JCEFHtmlPanel(true, null, null)
-    private val contentPanel = MyContentPanel(cefPanel.component, this)
     private val itpResources = ITP.createCefResources(this)
+    private val jsRouter: CefMessageRouter
+    private val requestHandler: CefRequestHandler
     private var lastRequestedUrl: String = ""
 
-    companion object {
-        private const val JS_FUNCTION_NAME: String = "itpCefQuery"
+    private val state = AtomicInteger(IDLE_STATE)
+    private val loadingDisposable = Disposer.newDisposable(this)
+    private var loadingPanel: JBLoadingPanel? = JBLoadingPanel(BorderLayout(), loadingDisposable)
+
+    private val multiPanel = object : MultiPanel() {
+        override fun create(key: Int): JComponent {
+            return when (key) {
+                CONTENT_KEY -> cefPanel.component
+                LOADING_KEY -> loadingPanel ?: throw IllegalStateException("Loading panel is disposed")
+                else -> throw IllegalArgumentException("Unknown key: $key")
+            }
+        }
+
+        override fun select(key: Int, now: Boolean): ActionCallback {
+            val callback = super.select(key, now)
+            if (key == CONTENT_KEY) {
+                UIUtil.invokeLaterIfNeeded { cefPanel.component.requestFocusInWindow() }
+            }
+            return callback
+        }
     }
 
     init {
         Disposer.register(this, cefPanel)
-        contentPanel.background = CefStylesheetHelper.BACKGROUND
+        cefPanel.component.background = CefStylesheetHelper.BACKGROUND
+        loadingPanel!!.background = CefStylesheetHelper.BACKGROUND
+        multiPanel.background = CefStylesheetHelper.BACKGROUND
 
         val jbCefClient = cefPanel.jbCefClient
-        jbCefClient.addRequestHandler(object : CefRequestHandlerAdapter() {
+        requestHandler = object : CefRequestHandlerAdapter() {
             override fun onBeforeBrowse(
                 browser: CefBrowser,
                 frame: CefFrame,
@@ -79,14 +109,27 @@ internal class WebView(
                 requestInitiator: String?,
                 disableDefaultHandling: BoolRef?
             ): CefResourceRequestHandler? {
-                return request.resourceRequestHandler?.invoke(browser, frame, cefRequest, this@WebView)
+                return request.resourceRequestHandler
+                    ?.invoke(browser, frame, cefRequest, this@WebView)
                     ?: itpResources
             }
-        }, cefPanel.cefBrowser)
+        }
+        jbCefClient.addRequestHandler(requestHandler, cefPanel.cefBrowser)
         jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
+            override fun onLoadingStateChange(
+                browser: CefBrowser,
+                isLoading: Boolean,
+                canGoBack: Boolean,
+                canGoForward: Boolean
+            ) {
+                if (isLoading) {
+                    startLoading()
+                }
+            }
+
             override fun onLoadEnd(browser: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
                 if (frame.isMain) {
-                    invokeLater { contentPanel.stopLoading() }
+                    stopLoading()
                 }
             }
 
@@ -98,7 +141,7 @@ internal class WebView(
                 failedUrl: String
             ) {
                 if (frame.isMain) {
-                    invokeLater { contentPanel.stopLoading() }
+                    stopLoading()
                     synchronized(this@WebView) {
                         if (lastRequestedUrl == failedUrl && !itpResources.isErrorPage(failedUrl)) {
                             loadWithReplace(itpResources.getErrorPage(failedUrl))
@@ -127,7 +170,7 @@ internal class WebView(
         }, cefPanel.cefBrowser)
 
         val config = CefMessageRouter.CefMessageRouterConfig(JS_FUNCTION_NAME, "${JS_FUNCTION_NAME}Cancel")
-        val jsRouter = CefMessageRouter.create(config)
+        jsRouter = CefMessageRouter.create(config)
         val jsQuery = JsQueryDispatcher()
             .withDefaultHandlers()
             .registerHandlerWithRequest("page-url") { _, _ -> request.url }
@@ -136,6 +179,7 @@ internal class WebView(
         jbCefClient.cefClient.addMessageRouter(jsRouter)
 
         cefPanel.setProperty(NO_CONTEXT_MENU, true)
+        multiPanel.select(CONTENT_KEY, true)
 
         val targetUrl = when (request.loadingPageStrategy) {
             LoadingPageStrategy.AUTO -> if (itpResources.isMyResource(request.url)) {
@@ -148,6 +192,33 @@ internal class WebView(
             LoadingPageStrategy.SKIP -> request.url
         }
         cefPanel.loadURL(targetUrl)
+    }
+
+    private fun startLoading() {
+        if (!state.compareAndSet(IDLE_STATE, LOADING_STATE)) {
+            return
+        }
+
+        EdtInvocationManager.getInstance().invokeLater {
+            loadingPanel?.startLoading()
+            multiPanel.select(LOADING_KEY, true)
+        }
+    }
+
+    private fun stopLoading() {
+        if (!state.compareAndSet(LOADING_STATE, LOADED_STATE)) {
+            return
+        }
+
+        EdtInvocationManager.getInstance().invokeLater {
+            multiPanel.select(CONTENT_KEY, true)
+            loadingPanel?.let {
+                it.stopLoading()
+                multiPanel.remove(it)
+                Disposer.dispose(loadingDisposable)
+                loadingPanel = null
+            }
+        }
     }
 
     private fun loadWithReplace(url: String) {
@@ -183,9 +254,17 @@ internal class WebView(
         return group
     }
 
+    override fun dispose() {
+        cefPanel.jbCefClient.let {
+            it.removeRequestHandler(requestHandler, cefPanel.cefBrowser)
+            it.cefClient.removeMessageRouter(jsRouter)
+        }
+        jsRouter.dispose()
+    }
 
-    override fun getComponent(): JComponent = contentPanel
-    override fun getPreferredFocusedComponent(): JComponent = contentPanel
+
+    override fun getComponent(): JComponent = multiPanel
+    override fun getPreferredFocusedComponent(): JComponent = multiPanel
     override fun getName(): @Nls(capitalization = Nls.Capitalization.Title) String = "WebView"
     override fun getFile(): VirtualFile = file
     override fun setState(state: FileEditorState) = Unit
@@ -193,43 +272,7 @@ internal class WebView(
     override fun isValid(): Boolean = true
     override fun addPropertyChangeListener(listener: PropertyChangeListener) = Unit
     override fun removePropertyChangeListener(listener: PropertyChangeListener) = Unit
-    override fun dispose() = Unit
 
-
-    private class MyContentPanel(private val cefPanel: JComponent, parent: Disposable) : JBLayeredPane() {
-
-        private val disposable = Disposer.newDisposable(parent)
-        private var loadingPanel: JBLoadingPanel? = JBLoadingPanel(BorderLayout(), disposable)
-
-        init {
-            add(cefPanel, DEFAULT_LAYER, 0)
-            add(loadingPanel, DRAG_LAYER, 1)
-            loadingPanel!!.startLoading()
-        }
-
-        override fun setBackground(color: Color) {
-            super.setBackground(color)
-            loadingPanel?.background = color
-            cefPanel.background = color
-        }
-
-        fun stopLoading() {
-            loadingPanel?.let {
-                it.stopLoading()
-                it.isVisible = false
-                remove(it)
-                repaint()
-                Disposer.dispose(disposable)
-                loadingPanel = null
-            }
-        }
-
-        override fun doLayout() {
-            super.doLayout()
-            loadingPanel?.setBounds(0, 0, width, height)
-            cefPanel.setBounds(0, 0, width, height)
-        }
-    }
 
     private inner class ReloadAction :
         AnAction({ message("webview.reload.action.name") }, AllIcons.Actions.Refresh) {
