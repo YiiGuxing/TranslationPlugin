@@ -73,8 +73,8 @@ Thank you to all our backers! ❤️
 </div>
 <div class="sponsors">
 
-[![DeerAPI](/img/sponsor/logo_deer_api.svg ':class=active')](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'DeerAPI')
 [![Targeted Web Traffic](/img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
+[![DeerAPI](/img/sponsor/logo_deer_api.svg)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'DeerAPI')
 [![Mybatis Code Helper Pro](/img/sponsor/logo_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
 [![Fast Request](/img/sponsor/logo_fast_request.svg)](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
 [![Smart Input Pro](/img/sponsor/logo_smart_input_pro.svg)](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
