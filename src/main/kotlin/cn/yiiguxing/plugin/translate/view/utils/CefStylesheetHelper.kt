@@ -4,11 +4,11 @@ import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.ui.JBColor
 
 object CefStylesheetHelper {
-    private val BACKGROUND = JBColor(0xFFFFFF, 0x19191C)
-    private val BASE_COLOR = JBColor(0x19191C, 0xDFE1E6)
-    private val PRIMARY_COLOR = JBColor(0x000000, 0xFFFFFF)
-    private val LINK_COLOR = JBColor(0x0000EE, 0x2196F3)
-    private val CARD_BG_COLOR = JBColor(0xF7F7F7, 0x3C3F41)
+    val BACKGROUND = JBColor(0xFFFFFF, 0x19191C)
+    val BASE_COLOR = JBColor(0x19191C, 0xDFE1E6)
+    val PRIMARY_COLOR = JBColor(0x000000, 0xFFFFFF)
+    val LINK_COLOR = JBColor(0x0000EE, 0x2196F3)
+    val CARD_BG_COLOR = JBColor(0xF7F7F7, 0x3C3F41)
 
     fun buildBaseStyle(): String {
         val baseColorAlpha = (10..90 step 10).asSequence().map {

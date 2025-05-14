@@ -30,9 +30,8 @@ class WebViewProvider : FileEditorProvider, DumbAware {
         JBCefApp.isSupported() && file.fileType === WebViewFileType
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor =
-        file.getUserData(WEBVIEW_KEY) ?: WebView(project, file as LightVirtualFile, REQUEST_KEY.get(file)).also {
-            file.putUserData(WEBVIEW_KEY, it)
-        }
+        // Create a new instance of WebView with every request, do not cache it.
+        WebView(project, file as LightVirtualFile, REQUEST_KEY.get(file))
 
     override fun getEditorTypeId(): @NonNls String = "translation.webview"
 
@@ -50,10 +49,6 @@ class WebViewProvider : FileEditorProvider, DumbAware {
     companion object {
         @JvmStatic
         private val REQUEST_KEY: Key<Request> = Key.create("translation.webview.request.key")
-
-        @JvmStatic
-        private val WEBVIEW_KEY: Key<FileEditor> = Key.create("translation.webview.component.key")
-
 
         @JvmStatic
         fun open(

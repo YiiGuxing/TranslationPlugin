@@ -1,8 +1,10 @@
 package cn.yiiguxing.plugin.translate.view
 
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
 import cn.yiiguxing.plugin.translate.view.WebViewProvider.LoadingPageStrategy
+import cn.yiiguxing.plugin.translate.view.utils.CefStylesheetHelper
 import cn.yiiguxing.plugin.translate.view.utils.JsQueryDispatcher
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
@@ -10,7 +12,9 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.UserDataHolderBase
+import com.intellij.openapi.util.registry.RegistryManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.testFramework.LightVirtualFile
@@ -37,40 +41,38 @@ internal class WebView(
     private var lastRequestedUrl: String = ""
 
     companion object {
-        private const val DEVTOOLS = false
         private const val JS_FUNCTION_NAME: String = "itpCefQuery"
     }
 
     init {
-        val jbCefClient = contentPanel.jbCefClient
+        Disposer.register(this, contentPanel)
+        contentPanel.component.background = CefStylesheetHelper.BACKGROUND
 
-        // must be called before add `itpResources`
+        val jbCefClient = contentPanel.jbCefClient
         jbCefClient.addRequestHandler(object : CefRequestHandlerAdapter() {
             override fun onBeforeBrowse(
                 browser: CefBrowser,
                 frame: CefFrame,
-                request: CefRequest,
+                cefRequest: CefRequest,
                 userGesture: Boolean,
                 isRedirect: Boolean
             ): Boolean {
                 synchronized(this@WebView) {
-                    lastRequestedUrl = request.url ?: ""
+                    lastRequestedUrl = cefRequest.url ?: ""
                 }
                 return false
             }
-        }, contentPanel.cefBrowser)
-        val originRequest = request
-        jbCefClient.addRequestHandler(object : CefRequestHandlerAdapter() {
+
             override fun getResourceRequestHandler(
                 browser: CefBrowser?,
                 frame: CefFrame?,
-                request: CefRequest,
+                cefRequest: CefRequest,
                 isNavigation: Boolean,
                 isDownload: Boolean,
                 requestInitiator: String?,
                 disableDefaultHandling: BoolRef?
             ): CefResourceRequestHandler? {
-                return originRequest.resourceRequestHandler?.invoke(browser, frame, request, this@WebView)
+                return request.resourceRequestHandler?.invoke(browser, frame, cefRequest, this@WebView)
                     ?: itpResources
             }
         }, contentPanel.cefBrowser)
@@ -156,7 +158,8 @@ internal class WebView(
         group.add(BackAction())
         group.add(ForwardAction())
 
-        if (DEVTOOLS) {
+        if (RegistryManager.getInstance().`is`(TranslationPlugin.generateId("webview.debug"))) {
+            group.addSeparator()
             group.add(object : AnAction("DevTools") {
                 override fun actionPerformed(e: AnActionEvent) {
                     contentPanel.openDevtools()
