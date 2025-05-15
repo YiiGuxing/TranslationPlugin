@@ -79,7 +79,7 @@
       margin-right: 5px;
     }
 
-    .version {
+    .thanks .version {
       font-size: 0.6em;
       padding: 3px 8px;
       border-radius: 5px;
@@ -290,8 +290,15 @@
   <div id="change-notes"></div>
   <div>
     <a id="whats-new" class="button" href="https://intellij-translation.yiiguxing.top/#/updates" target="_blank">
-      <span lang="en">What's New in Translation</span>
-      <span lang="zh-CN">Translation 最新变化</span>
+      <span lang="en">
+        What's New in Translation
+        <span class="feature-version"></span>
+      </span>
+      <span lang="zh-CN">
+        Translation
+        <span class="feature-version"></span>
+        最新变化
+      </span>
     </a>
     <a id="historical-changes" class="button" href="https://intellij-translation.yiiguxing.top/#/updates"
        target="_blank">
@@ -334,10 +341,19 @@
   window.itpCefQuery = window.itpCefQuery || function () {
   }
 
-  function updateContent(id, content) {
-    const el = document.querySelector(id);
+  function updateContent(selector, content) {
+    const el = document.querySelector(selector);
     if (el && content) {
       el.innerHTML = content;
+    }
+  }
+
+  function updateContentAll(selector, content) {
+    const elList = document.querySelectorAll(selector);
+    if (elList && content) {
+      elList.forEach((el) => {
+        el.innerHTML = content;
+      });
     }
   }
 
@@ -373,9 +389,7 @@
       updateContent("#change-notes", pluginInfo["changeNotes"]);
       updateLink("#whats-new", pluginInfo["whatsNewUrl"]);
       updateLink("#historical-changes", pluginInfo["historicalChangesUrl"]);
-      const version = pluginInfo['featureVersion'] || "";
-      updateContent("#whats-new > span[lang=en]", `What's New in Translation ${version}`);
-      updateContent("#whats-new > span[lang=zh-CN]", `Translation ${version} 最新变化`);
+      updateContentAll("#whats-new .feature-version", pluginInfo['featureVersion']);
 
       const sponsorsPageUrl = pluginInfo["sponsorsPageUrl"];
       const sponsors = document.querySelector("#sponsors");
