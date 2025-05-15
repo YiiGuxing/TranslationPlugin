@@ -8,6 +8,9 @@ object CefStylesheetHelper {
     val BASE_COLOR = JBColor(0x19191C, 0xDFE1E6)
     val PRIMARY_COLOR = JBColor(0x000000, 0xFFFFFF)
     val LINK_COLOR = JBColor(0x0000EE, 0x2196F3)
+    val BUTTON_COLOR = JBColor(0xFFFFFF, 0xFFFFFF)
+    val BUTTON_BG_COLOR = JBColor(0x0047FD, 0x0047FD)
+    val BUTTON_HOVER_BG_COLOR = JBColor(0x053ED0, 0x053ED0)
     val CARD_BG_COLOR = JBColor(0xF7F7F7, 0x3C3F41)
 
     fun buildBaseStyle(): String {
@@ -30,6 +33,9 @@ object CefStylesheetHelper {
                 $primaryColorAlpha
                 --base-background-color: $backgroundHex;
                 --base-link-color: $linkColorHex;
+                --base-button-color: ${BUTTON_COLOR.toRGBHex()};
+                --base-button-bg-color: ${BUTTON_BG_COLOR.toRGBHex()};
+                --base-button-hover-bg-color: ${BUTTON_HOVER_BG_COLOR.toRGBHex()};
                 --base-card-bg-color: ${CARD_BG_COLOR.toRGBHex()};
             }
             
@@ -49,7 +55,12 @@ object CefStylesheetHelper {
         """.trimIndent()
     }
 
+    private fun JBColor.toRGBA(alpha: Float): String {
+        return "rgba(${red}, ${green}, ${blue}, ${alpha.coerceIn(0f..1f)})"
+    }
+
     private fun buildAlphaProperty(name: String, color: JBColor, transparency: Int): String {
-        return "$name-a$transparency: rgba(${color.red}, ${color.green}, ${color.blue}, ${transparency / 100f});"
+        check(transparency in 0..100)
+        return "$name-a$transparency: ${color.toRGBA(transparency / 100f)};"
     }
 }

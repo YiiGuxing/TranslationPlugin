@@ -60,19 +60,20 @@
     }
 
     a.button {
-      color: white;
-      display: inline-block;
-      padding: 12px 24px;
+      padding: 5px 24px;
       margin: 10px 20px;
+      display: inline-block;
       outline: none;
+      line-height: 30px;
       text-decoration: none;
       white-space: nowrap;
       border-radius: 100px;
-      background-color: #0047fd;
+      color: var(--base-button-color, white);
+      background-color: var(--base-button-bg-color, #0047FD);
     }
 
     a.button:hover {
-      background-color: rgba(0, 71, 253, 0.8);
+      background-color: var(--base-button-hover-bg-color, #053ED0);
     }
 
     .thanks span {
@@ -148,6 +149,10 @@
       margin-right: 8px;
       margin-top: -1px;
       transform: rotate(90deg);
+    }
+
+    .sponsor-content {
+      min-height: 132px;
     }
 
     .sponsor-loader {
@@ -269,10 +274,13 @@
       <span lang="en">Translate</span><span lang="zh-CN">翻译</span></kbd>
   </p>
   <div>
-    <a id="getting-started" class="button" href="https://intellij-translation.yiiguxing.top/#/docs"
-       target="_blank">
+    <a id="getting-started" class="button" href="https://intellij-translation.yiiguxing.top/#/docs" target="_blank">
       <span lang="en">Getting Started</span>
       <span lang="zh-CN">入门指南</span>
+    </a>
+    <a class="button" href="itp:///dialog/support" target="_blank">
+      <span lang="en">Buy me a coffee</span>
+      <span lang="zh-CN">支持一下</span>
     </a>
   </div>
 
@@ -308,14 +316,16 @@
   </div>
 
   <h1>✨ <span lang="en">Sponsor</span><span lang="zh-CN">赞助</span></h1>
-  <div class="sponsor-loader">
-    <span lang="en">Loading...</span>
-    <span lang="zh-CN">加载中...</span>
+  <div class="sponsor-content">
+    <div class="sponsor-loader">
+      <span lang="en">Loading...</span>
+      <span lang="zh-CN">加载中...</span>
+    </div>
+    <div id="sponsors" style="display: none">
+      <iframe id="sponsors-frame"></iframe>
+    </div>
+    <div class="ww-ads wwads-cn wwads-horizontal" data-id="327"></div>
   </div>
-  <div id="sponsors" style="display: none">
-    <iframe id="sponsors-frame"></iframe>
-  </div>
-  <div class="ww-ads wwads-cn wwads-horizontal" data-id="327"></div>
 </main>
 
 <div class="feedback">
