@@ -10,8 +10,8 @@ import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactory
 import cn.yiiguxing.plugin.translate.wordbook.toWordBookItem
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.project.Project
 import com.intellij.ui.components.labels.LinkLabel
-import com.intellij.ui.components.labels.LinkListener
 import java.lang.ref.WeakReference
 
 object StarButtons {
@@ -24,35 +24,37 @@ object StarButtons {
         }
     }
 
-    val listener: LinkListener<Translation> = object : LinkListener<Translation> {
-        override fun linkSelected(starLabel: LinkLabel<Translation>, translation: Translation?) {
-            val wordBookService = WordBookService.getInstance()
-            if (!wordBookService.isInitialized) {
-                WordBookToolWindowFactory.requireWordBook()
-                return
+    fun toggleStar(project: Project?, starLabel: LinkLabel<*>, translation: Translation) {
+        val wordBookService = WordBookService.getInstance()
+        if (!wordBookService.isInitialized) {
+            if (project != null) {
+                WordBookToolWindowFactory.requireWordBook(project)
+            } else {
+                starLabel.isEnabled = false
             }
-            translation ?: return
-            starLabel.isEnabled = false
-            if (!wordBookService.canAddToWordbook(translation.original)) {
-                return
-            }
+            return
+        }
 
-            val starLabelRef = WeakReference(starLabel)
-            val currentModalityState = ModalityState.current()
-            executeOnPooledThread {
-                val favoriteId = translation.favoriteId
-                if (favoriteId == null) {
-                    val newFavoriteId = addToWordBook(translation)
-                    invokeLater(currentModalityState) {
-                        if (translation.favoriteId == null) {
-                            translation.favoriteId = newFavoriteId
-                        }
-                        starLabelRef.get()?.isEnabled = true
+        starLabel.isEnabled = false
+        if (!wordBookService.canAddToWordbook(translation.original)) {
+            return
+        }
+
+        val starLabelRef = WeakReference(starLabel)
+        val currentModalityState = ModalityState.current()
+        executeOnPooledThread {
+            val favoriteId = translation.favoriteId
+            if (favoriteId == null) {
+                val newFavoriteId = addToWordBook(translation)
+                invokeLater(currentModalityState) {
+                    if (translation.favoriteId == null) {
+                        translation.favoriteId = newFavoriteId
                     }
-                } else {
-                    removeWordFromWordBook(favoriteId)
-                    invokeLater(currentModalityState) { starLabelRef.get()?.isEnabled = true }
+                    starLabelRef.get()?.isEnabled = true
                 }
+            } else {
+                removeWordFromWordBook(favoriteId)
+                invokeLater(currentModalityState) { starLabelRef.get()?.isEnabled = true }
             }
         }
     }

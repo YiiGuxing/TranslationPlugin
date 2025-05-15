@@ -16,7 +16,6 @@ import net.miginfocom.layout.LayoutUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.Dimension
-import java.awt.image.RGBImageFilter
 import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JEditorPane
@@ -50,15 +49,7 @@ object UI {
     data class FontPair(val primary: JBFont, val phonetic: JBFont)
 
     @JvmStatic
-    fun Icon.disabled(): Icon = IconUtil.filterIcon(this, { DisabledFilter() }, null)
-
-    private class DisabledFilter(color: Color = JBUI.CurrentTheme.Label.disabledForeground()) : RGBImageFilter() {
-        private val rgb = color.rgb
-
-        override fun filterRGB(x: Int, y: Int, argb: Int): Int {
-            return argb and -0x1000000 or (rgb and 0x00ffffff)
-        }
-    }
+    fun Icon.disabled(): Icon = IconLoader.getDisabledIcon(this)
 
     @JvmStatic
     fun getBorderColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)

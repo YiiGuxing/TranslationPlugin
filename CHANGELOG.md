@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+- New LLMs in OpenAI Translator engine: GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, o4-mini, o3.
+- New LLM in OpenAI TTS engine: GPT-4o mini TTS.
+- New voices in OpenAI TTS engine: Ash, Ballad, Coral, Sage.
+- Fixed an issue that could cause the IDE to freeze when opening a new project.
+- OpenAI 翻译引擎新模型：GPT-4.1、GPT-4.1 mini、GPT-4.1 nano、o4-mini、o3
+- OpenAI TTS 引擎新模型：GPT-4o mini TTS
+- OpenAI TTS 引擎新声音：Ash、Ballad、Coral、Sage
+- 修复了可能导致 IDE 在打开新项目时冻结的问题
+
 ## [3.7.1] (2025/03/15)
 
 - The translation dialog action now uses the same shortcut as the translation action.
