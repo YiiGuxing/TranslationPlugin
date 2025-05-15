@@ -384,6 +384,36 @@
     }
   }
 
+  function setupSponsors(sponsorsPageUrl) {
+    if (!sponsorsPageUrl) {
+      return;
+    }
+
+    const sponsors = document.querySelector("#sponsors");
+    if (sponsors) {
+      const fixedSponsorsPageUrl = new URL(sponsorsPageUrl);
+      fixedSponsorsPageUrl.searchParams.set("place", "release-notes");
+
+      const sponsorsFrame = document.querySelector("#sponsors-frame");
+      sponsorsFrame.onload = function () {
+        document.querySelector(".sponsor-loader")?.remove();
+        resizeIframe(sponsorsFrame);
+      }
+      sponsorsFrame.src = fixedSponsorsPageUrl.toString();
+      sponsors.style.display = "flex";
+      window.addEventListener('resize', () => resizeIframe(sponsorsFrame));
+    }
+  }
+
+  const sponsorInstaller = {
+    setupSponsorsWhenReady() {
+      this.setupSponsorsWhenLoaded = setupSponsors;
+    },
+    setupSponsorsWhenLoaded(sponsorsPageUrl) {
+      this.setupSponsorsWhenReady = () => setupSponsors(sponsorsPageUrl);
+    }
+  }
+
   window.itpCefQuery({
     request: "plugin-info",
     onSuccess: (pluginInfo) => {
@@ -401,21 +431,8 @@
       updateLink("#historical-changes", pluginInfo["historicalChangesUrl"]);
       updateContentAll("#whats-new .feature-version", pluginInfo['featureVersion']);
 
-      const sponsorsPageUrl = pluginInfo["sponsorsPageUrl"];
-      const sponsors = document.querySelector("#sponsors");
-      if (sponsorsPageUrl && sponsors) {
-        const fixedSponsorsPageUrl = new URL(sponsorsPageUrl);
-        fixedSponsorsPageUrl.searchParams.set("place", "release-notes");
-
-        const sponsorsFrame = document.querySelector("#sponsors-frame");
-        sponsorsFrame.onload = function () {
-          document.querySelector(".sponsor-loader")?.remove();
-          resizeIframe(sponsorsFrame);
-        }
-        sponsorsFrame.src = fixedSponsorsPageUrl.toString();
-        sponsors.style.display = "flex";
-        window.addEventListener('resize', () => resizeIframe(sponsorsFrame));
-      }
+      // 页面加载完成后再设置赞助商，确保其在统计脚本广告脚本安装完成后执行
+      sponsorInstaller.setupSponsorsWhenLoaded(pluginInfo["sponsorsPageUrl"]);
     }
   });
 
@@ -430,6 +447,8 @@
   window.onload = function () {
     loadScript("https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP", true);
     loadScript("https://cdn.wwads.cn/js/makemoney.js", true);
+
+    sponsorInstaller.setupSponsorsWhenReady();
   }
 </script>
 </body>
