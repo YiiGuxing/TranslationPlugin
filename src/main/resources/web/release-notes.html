@@ -5,8 +5,6 @@
   <title>Release Notes • IntelliJ Translation Plugin</title>
   <link rel="stylesheet" href="https://itp/base.css">
   <link rel="stylesheet" href="https://itp/scrollbars.css">
-  <script src="https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP" async></script>
-  <script type="text/javascript" charset="UTF-8" src="https://cdn.wwads.cn/js/makemoney.js" async></script>
   <style>
     html:lang(zh-CN) span[lang]:not(:lang(zh-CN)),
     html:lang(en) span[lang]:not(:lang(en)) {
@@ -150,6 +148,13 @@
       margin-right: 8px;
       margin-top: -1px;
       transform: rotate(90deg);
+    }
+
+    .sponsor-loader {
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+      color: var(--base-color-a70, rgba(25, 25, 28, 0.7));
     }
 
     iframe {
@@ -296,6 +301,10 @@
   </div>
 
   <h1>✨ <span lang="en">Sponsor</span><span lang="zh-CN">赞助</span></h1>
+  <div class="sponsor-loader">
+    <span lang="en">Loading...</span>
+    <span lang="zh-CN">加载中...</span>
+  </div>
   <div id="sponsors" style="display: none">
     <iframe id="sponsors-frame"></iframe>
   </div>
@@ -354,7 +363,7 @@
     onSuccess: (pluginInfo) => {
       pluginInfo = JSON.parse(pluginInfo);
 
-      const language = pluginInfo.language || "en"
+      const language = pluginInfo.language || "zh-CN"
       if (language === "zh-CN") {
         document.querySelector("html").setAttribute("lang", "zh-CN")
       }
@@ -375,13 +384,29 @@
         fixedSponsorsPageUrl.searchParams.set("place", "release-notes");
 
         const sponsorsFrame = document.querySelector("#sponsors-frame");
-        sponsorsFrame.onload = () => resizeIframe(sponsorsFrame);
+        sponsorsFrame.onload = function () {
+          document.querySelector(".sponsor-loader")?.remove();
+          resizeIframe(sponsorsFrame);
+        }
         sponsorsFrame.src = fixedSponsorsPageUrl.toString();
-        sponsors.style.display = "block";
+        sponsors.style.display = "flex";
         window.addEventListener('resize', () => resizeIframe(sponsorsFrame));
       }
     }
   });
+
+  function loadScript(src, async) {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = src
+    script.async = !!async
+    document.body.appendChild(script);
+  }
+
+  window.onload = function () {
+    loadScript("https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP", true);
+    loadScript("https://cdn.wwads.cn/js/makemoney.js", true);
+  }
 </script>
 </body>
 </html>
