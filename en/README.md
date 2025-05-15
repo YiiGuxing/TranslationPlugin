@@ -30,6 +30,7 @@ and code documents, etc. You want to translate in your IDE at any time.
   - Google TTS
   - OpenAI TTS
 - Document translation
+- Text translation and replacement
 - Automatic word selection
 - Automatic word breaks
 - Word Book

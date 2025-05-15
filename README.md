@@ -4,7 +4,7 @@
 
 ![IntelliJ Translation Plugin](/img/translation_plugin.png)
 
-## 特征 :id=features
+## 功能 :id=features
 
 - 多翻译引擎
   - 谷歌翻译
@@ -27,6 +27,7 @@
   - 谷歌 TTS
   - OpenAI TTS
 - 文档翻译
+- 文本翻译与替换
 - 自动选词
 - 自动单词拆分
 - 单词本
