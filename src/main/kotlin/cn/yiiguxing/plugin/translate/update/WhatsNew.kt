@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.update
 
 import cn.yiiguxing.plugin.translate.TranslationPlugin
-import cn.yiiguxing.plugin.translate.WebPages
+import cn.yiiguxing.plugin.translate.view.WebPages
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnActionEvent

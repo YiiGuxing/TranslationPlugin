@@ -329,6 +329,7 @@ interface SettingsChangeListener {
     fun onWordbookStoragePathChanged(settings: Settings) {}
 
     companion object {
+        @Topic.AppLevel
         val TOPIC: Topic<SettingsChangeListener> =
             Topic.create("TranslationSettingsChanged", SettingsChangeListener::class.java)
     }

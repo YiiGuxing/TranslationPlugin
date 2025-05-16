@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Release Notes • IntelliJ Translation Plugin</title>
+  <link rel="stylesheet" href="https://itp/base.css">
+  <link rel="stylesheet" href="https://itp/scrollbars.css">
+  <style>
+    html:lang(zh-CN) span[lang]:not(:lang(zh-CN)),
+    html:lang(en) span[lang]:not(:lang(en)) {
+      display: none;
+    }
+
+    body {
+      color: var(--base-color-a80);
+      font-family: -apple-system, BlinkMacSystemFont, "JetBrains Sans", Helvetica, Arial, sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      background-color: var(--primary-color-a10, rgba(0, 0, 0, 0.1));
+    }
+
+    main {
+      margin: 0 auto;
+      max-width: 60vw;
+      min-width: 400px;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      margin-top: 10px !important;
+    }
+
+    header > * + * {
+      margin-left: 10px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      margin-left: 5px;
+    }
+
+    h1,
+    .title {
+      padding-bottom: 12px;
+      margin: 26px 0 16px;
+      font-size: 1.6rem;
+      line-height: 1.5;
+      font-weight: normal;
+      color: var(--base-color);
+      border-bottom: 1px solid var(--base-color-a10, rgba(0, 0, 0, 0.1));
+    }
+
+    ul {
+      line-height: 1.5;
+    }
+
+    a.button {
+      padding: 5px 24px;
+      margin: 10px 20px;
+      display: inline-block;
+      outline: none;
+      line-height: 30px;
+      text-decoration: none;
+      white-space: nowrap;
+      border-radius: 100px;
+      color: var(--base-button-color, white);
+      background-color: var(--base-button-bg-color, #0047FD);
+    }
+
+    a.button:hover {
+      background-color: var(--base-button-hover-bg-color, #053ED0);
+    }
+
+    .thanks span {
+      margin-right: 5px;
+    }
+
+    .thanks .version {
+      font-size: 0.6em;
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      vertical-align: middle;
+      color: var(--base-color-a70, rgba(0, 0, 0, 0.7));
+      background: var(--primary-color-a10, rgba(0, 0, 0, 0.1));
+    }
+
+    kbd {
+      line-height: 25px;
+      margin-top: -2px;
+      display: inline-block;
+      padding: 0 8px;
+      vertical-align: middle;
+      border: none;
+      border-radius: 3px;
+      font-size: inherit;
+      font-family: inherit;
+      background-color: var(--base-background-color, #fff);
+      box-shadow: inset 0 -1px 0 var(--primary-color-a50, #bbb), 0 0 0 1px var(--primary-color-a50, #bbb);
+    }
+
+    kbd.action {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    kbd.action svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+      color: var(--base-color-a70, rgba(0, 0, 0, 0.7));
+    }
+
+    ul.features {
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-column-gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    }
+
+    .feedback {
+      position: fixed;
+      right: 0;
+      top: 50vh;
+      transform: rotate(270deg);
+    }
+
+    .feedback > a {
+      color: #fff;
+      right: 0;
+      position: absolute;
+      display: inline-flex;
+      padding: 10px 16px 10px 14px;
+      align-items: center;
+      transform: translateY(-100%);
+      text-decoration: none;
+      border-radius: 6px 6px 0 0;
+      background: rgb(39, 40, 44);
+    }
+
+    .feedback > a > svg {
+      width: 16px;
+      margin-right: 8px;
+      margin-top: -1px;
+      transform: rotate(90deg);
+    }
+
+    .sponsor-content {
+      min-height: 132px;
+    }
+
+    .sponsor-loader {
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+      color: var(--base-color-a70, rgba(25, 25, 28, 0.7));
+    }
+
+    iframe {
+      width: 100%;
+      height: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+    }
+
+    .ww-ads {
+      min-height: unset !important;
+      box-sizing: border-box;
+      margin-top: 12px !important;
+      background: var(--base-card-bg-color) !important;
+    }
+
+    .ww-ads .wwads-img {
+      height: 70px;
+      margin: 0 !important;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .ww-ads .wwads-img img {
+      height: 100%;
+      width: auto !important;
+      display: block;
+    }
+
+    .ww-ads .wwads-content {
+      height: fit-content;
+      min-height: 70px;
+      display: flex;
+      flex: 1 !important;
+      margin: 0 0 0 8px !important;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ww-ads .wwads-content .wwads-text {
+      color: var(--base-color);
+      flex: 1;
+      padding-bottom: 1em;
+    }
+
+    .ww-ads .wwads-content .wwads-poweredby {
+      margin-top: 0 !important;
+    }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-RMH8BJ3BGP');
+  </script>
+</head>
+<body>
+<main>
+  <header class="title">
+    <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+      <defs>
+        <linearGradient id="bg" x1="-0.473" y1="16.473" x2="14.871" y2="1.129"
+                        gradientTransform="matrix(1, 0, 0, -1, 0, 16)" gradientUnits="userSpaceOnUse">
+          <stop offset="0.17" stop-color="#07c3f2"/>
+          <stop offset="0.97" stop-color="#087cfa"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#bg)"
+            d="M0,0V16H16V0ZM5.835,9.224l-.113-.113s-.828.564-1.2.79a14.393,14.393,0,0,1-2.259,1.243l-.9-1.506A13.033,
+              13.033,0,0,0,4.367,8.282l.188-.113-.113-.15A6.147,6.147,0,0,1,3.388,
+              6.362c-.113-.226-.188-.489-.3-.753H4.631c.037.113.113.226.15.339a6.379,6.379,0,0,0,.791,1.167l.113.151L5.8,
+              7.115a4.907,4.907,0,0,0,.79-1.167A5.2,5.2,0,0,0,7.04,
+              4.593l.038-.3H1.431V2.861H5.007V1.129H6.438V2.861h3.576V4.292H8.659l-.038.339a6.877,6.877,0,0,1-.527,
+              1.731A8.722,8.722,0,0,1,7.04,8.019l-.113.15.3.189c.414.226.828.489,1.318.753l-.715,1.43A13,13,0,0,1,5.835,
+              9.224Zm7.454,4.705-.828-2.258H9.675l-.828,2.258H7.04l3.2-7.9H11.9l3.2,7.905Zm-2.221-5.91.9,2.3H10.165Z"/>
+    </svg>
+
+    <div class="thanks">
+      <span lang="en">Thank you for installing Translation</span><span lang="zh-CN">感谢安装 Translation</span><span
+        id="version" class="version"></span>
+    </div>
+  </header>
+  <p>
+        <span lang="en">
+            Please consider donating if you think Translation is helpful to you or that my work is valuable.
+            Support continued development by
+            ❤️ <a href="itp:///dialog/support" target="_blank">buying me a coffee</a> ❤️.
+        </span>
+    <span lang="zh-CN">
+            如果您觉得 Translation 对您有帮助，或者想对我微小的工作的一点支持，欢迎给我
+            ❤️<a href="itp:///dialog/support" target="_blank">捐赠</a>❤️，这将极大地激励我继续开发此项目。
+        </span>
+  </p>
+  <p>👋
+    <span lang="en">Quick Start: Select a text in the editor &gt; <kbd>Right-click</kbd></span>
+    <span lang="zh-CN">快速开始：在编辑器中选择一段文本 &gt; <kbd>鼠标右键</kbd></span>
+    <span lang="zh-CN"></span>
+    &gt; <kbd class="action">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+        <path fill="currentColor"
+              d="M6.1,1V2.5h4.6V4H9.2A13.32,13.32,0,0,1,6.4,8.9a20.28,20.28,0,0,0,1.8,1.3l-.6,1.4A12.42,12.42,
+                      0,0,1,5.3,9.9,12.69,12.69,0,0,1,.5,12.6L.1,11.1A12.75,12.75,0,0,0,4.2,8.8,14.61,14.61,0,0,1,2,
+                      5.5H3.7A10.71,10.71,0,0,0,5.2,7.7,11.71,11.71,0,0,0,7.4,4H0V2.5H4.6V1Z"/>
+        <path fill="#1E88E5"
+              d="M16,15H14.11l-.75-2H9.93l-.71,2H7.38l3.35-8.59h1.83Zm-3.19-3.4L11.62,8.41,10.46,11.6Z"/>
+      </svg>
+      <span lang="en">Translate</span><span lang="zh-CN">翻译</span></kbd>
+  </p>
+  <div>
+    <a id="getting-started" class="button" href="https://intellij-translation.yiiguxing.top/#/docs" target="_blank">
+      <span lang="en">Getting Started</span>
+      <span lang="zh-CN">入门指南</span>
+    </a>
+    <a class="button" href="itp:///dialog/support" target="_blank">
+      <span lang="en">Buy me a coffee</span>
+      <span lang="zh-CN">支持一下</span>
+    </a>
+  </div>
+
+  <h1>✨ <span lang="en">Features</span><span lang="zh-CN">功能</span></h1>
+  <ul class="features">
+    <li>👉 <span lang="en">Multiple languages inter-translation.</span><span lang="zh-CN">多语言互译</span></li>
+    <li>👉 <span lang="en">Multiple Translation Engines.</span><span lang="zh-CN">多翻译引擎</span><br/></li>
+    <li>👉 <span lang="en">Code documentation translation.</span><span lang="zh-CN">代码文档翻译</span><br/></li>
+    <li>👉 <span lang="en">Text translation and replacement.</span><span lang="zh-CN">文本翻译与替换</span><br/></li>
+    <li>👉 <span lang="en">Text-to-Speech.</span><span lang="zh-CN">语音朗读</span><br/></li>
+    <li>👉 <span lang="en">Word Book.</span><span lang="zh-CN">单词本</span></li>
+  </ul>
+
+  <h1>✨ <span lang="en">Change Notes</span><span lang="zh-CN">更新说明</span></h1>
+  <div id="change-notes"></div>
+  <div>
+    <a id="whats-new" class="button" href="https://intellij-translation.yiiguxing.top/#/updates" target="_blank">
+      <span lang="en">
+        What's New in Translation
+        <span class="feature-version"></span>
+      </span>
+      <span lang="zh-CN">
+        Translation
+        <span class="feature-version"></span>
+        最新变化
+      </span>
+    </a>
+    <a id="historical-changes" class="button" href="https://intellij-translation.yiiguxing.top/#/updates"
+       target="_blank">
+      <span lang="en">Historical Changes</span>
+      <span lang="zh-CN">历史变更</span>
+    </a>
+  </div>
+
+  <h1>✨ <span lang="en">Sponsor</span><span lang="zh-CN">赞助</span></h1>
+  <div class="sponsor-content">
+    <div class="sponsor-loader">
+      <span lang="en">Loading...</span>
+      <span lang="zh-CN">加载中...</span>
+    </div>
+    <div id="sponsors" style="display: none">
+      <iframe id="sponsors-frame"></iframe>
+    </div>
+    <div class="ww-ads wwads-cn wwads-horizontal" data-id="327"></div>
+  </div>
+</main>
+
+<div class="feedback">
+  <a href="https://github.com/YiiGuxing/TranslationPlugin/issues" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22"
+         data-testid="icon-buddy">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M22.362.827C21.72.5 20.88.5 19.2.5H3.3C1.755.5.983.5.575.819A1.5 1.5 0 000 1.969c-.01.517.453
+                  1.135 1.38 2.371l1.14 1.52c.178.237.267.356.33.487a1.5 1.5 0 01.122.365C3 6.855 3 7.003 3 7.3v9.4c0
+                  1.68 0 2.52.327 3.162a3 3 0 001.311 1.311c.642.327 1.482.327 3.162.327h11.4c1.68 0 2.52 0 3.162-.327a3
+                  3 0 001.311-1.311C24 19.22 24 18.38 24 16.7V5.3c0-1.68 0-2.52-.327-3.162a3 3 0 00-1.31-1.311zM9.277
+                  11.937a1.125 1.125 0 00-1.948 1.126 7.123 7.123 0 006.171 3.562 7.123 7.123 0 006.171-3.562 1.125
+                  1.125 0 10-1.947-1.126 4.872 4.872 0 01-4.224 2.438 4.873 4.873 0 01-4.223-2.438zM10.5 8a1.5 1.5 0
+                  11-3 0 1.5 1.5 0 013 0zM18 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
+            clip-rule="evenodd"></path>
+    </svg>
+    <span lang="en">Feedback</span>
+    <span lang="zh-CN">Feedback</span>
+  </a>
+</div>
+
+<script>
+  window.itpCefQuery = window.itpCefQuery || function () {
+  }
+
+  function updateContent(selector, content) {
+    const el = document.querySelector(selector);
+    if (el && content) {
+      el.innerHTML = content;
+    }
+  }
+
+  function updateContentAll(selector, content) {
+    const elList = document.querySelectorAll(selector);
+    if (elList && content) {
+      elList.forEach((el) => {
+        el.innerHTML = content;
+      });
+    }
+  }
+
+  function updateLink(id, url) {
+    const gettingStartedLink = document.querySelector(id);
+    if (gettingStartedLink && url) {
+      gettingStartedLink.href = url;
+      gettingStartedLink.removeAttribute("target");
+    }
+  }
+
+  function resizeIframe(iframe) {
+    try {
+      const height = iframe.contentWindow.document.body.scrollHeight;
+      iframe.style.height = height + 'px';
+    } catch (e) {
+      console.warn("无法调整 iframe 高度:", e);
+    }
+  }
+
+  function setupSponsors(sponsorsPageUrl) {
+    if (!sponsorsPageUrl) {
+      return;
+    }
+
+    const sponsors = document.querySelector("#sponsors");
+    if (sponsors) {
+      const fixedSponsorsPageUrl = new URL(sponsorsPageUrl);
+      fixedSponsorsPageUrl.searchParams.set("place", "release-notes");
+
+      const sponsorsFrame = document.querySelector("#sponsors-frame");
+      sponsorsFrame.onload = function () {
+        document.querySelector(".sponsor-loader")?.remove();
+        resizeIframe(sponsorsFrame);
+      }
+      sponsorsFrame.src = fixedSponsorsPageUrl.toString();
+      sponsors.style.display = "flex";
+      window.addEventListener('resize', () => resizeIframe(sponsorsFrame));
+    }
+  }
+
+  const sponsorInstaller = {
+    setupSponsorsWhenReady() {
+      this.setupSponsorsWhenLoaded = setupSponsors;
+    },
+    setupSponsorsWhenLoaded(sponsorsPageUrl) {
+      this.setupSponsorsWhenReady = () => setupSponsors(sponsorsPageUrl);
+    }
+  }
+
+  window.itpCefQuery({
+    request: "plugin-info",
+    onSuccess: (pluginInfo) => {
+      pluginInfo = JSON.parse(pluginInfo);
+
+      const language = pluginInfo.language || "zh-CN"
+      if (language === "zh-CN") {
+        document.querySelector("html").setAttribute("lang", "zh-CN")
+      }
+
+      updateContent("#version", pluginInfo["version"])
+      updateLink("#getting-started", pluginInfo["gettingStartedUrl"]);
+      updateContent("#change-notes", pluginInfo["changeNotes"]);
+      updateLink("#whats-new", pluginInfo["whatsNewUrl"]);
+      updateLink("#historical-changes", pluginInfo["historicalChangesUrl"]);
+      updateContentAll("#whats-new .feature-version", pluginInfo['featureVersion']);
+
+      // 页面加载完成后再设置赞助商，确保其在统计脚本广告脚本安装完成后执行
+      sponsorInstaller.setupSponsorsWhenLoaded(pluginInfo["sponsorsPageUrl"]);
+    }
+  });
+
+  function loadScript(src, async) {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = src
+    script.async = !!async
+    document.body.appendChild(script);
+  }
+
+  window.onload = function () {
+    loadScript("https://www.googletagmanager.com/gtag/js?id=G-RMH8BJ3BGP", true);
+    loadScript("https://cdn.wwads.cn/js/makemoney.js", true);
+
+    sponsorInstaller.setupSponsorsWhenReady();
+  }
+</script>
+</body>
+</html>

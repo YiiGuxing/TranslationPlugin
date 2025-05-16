@@ -481,7 +481,13 @@ class TranslationDialog(
         starButton.isEnabled = translation != null
                 && (project != null || wordBookService.isInitialized)
                 && wordBookService.canAddToWordbook(translation.original)
-        starButton.setListener(StarButtons.listener, translation)
+        if (starButton.isEnabled) {
+            starButton.setListener({ starLabel, _ ->
+                StarButtons.toggleStar(project, starLabel, translation!!)
+            }, null)
+        } else {
+            starButton.setListener(null, null)
+        }
 
         translation?.observableFavoriteId?.observe(this@TranslationDialog) { favoriteId, _ ->
             updatePresentation(favoriteId)

@@ -75,12 +75,16 @@
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
         <documentationActionProvider
                 implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
+        <fileEditorProvider implementation="cn.yiiguxing.plugin.translate.view.WebViewProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Translation Plugin updated" displayType="STICKY_BALLOON" isLogByDefault="false"/>
+
+        <registryKey defaultValue="false" description="Enable DevTools menu item in WebView."
+                     key="cn.yiiguxing.plugin.translate.webview.debug"/>
 
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Translation</title>
+    <link rel="stylesheet" href="/base.css">
+    <link rel="stylesheet" href="/scrollbars.css">
     <style>
         html, body {
             margin: 0;
@@ -21,7 +23,6 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            background: #fafafa;
             overflow: auto;
         }
 
@@ -93,17 +94,24 @@
 
         .loading .content {
             margin: 30px auto auto;
-            font-size: 26px;
-            color: #333;
+            font-size: 28px;
+            font-weight: 300;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         a#link {
-            color: #666;
-            text-decoration: none;
             margin-top: 1rem;
+            font-size: 20px;
+            color: var(--base-color-a90);
+            text-decoration: underline;
+            text-decoration-color: var(--base-color-a40);
+        }
+
+        a#link:hover {
+            color: var(--base-color);
+            text-decoration-color: var(--base-color-a90);
         }
     </style>
 </head>
@@ -125,45 +133,18 @@
         </svg>
     </div>
     <div class="content">
-        <span id="loading-text">Loading...</span>
-        <a id="link" href="https://intellij-translation.yiiguxing.top" target="_blank">OPEN IN BROWSER</a>
+        <span id="loading-text">Loading failed. Please try again later.</span>
+        <a id="link" href="{{url}}" target="_blank" style="display: none">OPEN IN BROWSER</a>
     </div>
 </div>
 <script>
-    // Here will be matched and replaced, DO NOT MODIFY!!!
-    // Config Start
-    const config = {
-        fragment: "",
-        intellijPlatform: "",
-        dark: false,
-    };
-    // Config End
-
-    const BASE_URL = "https://intellij-translation.yiiguxing.top";
-
-    function getTargetUrl(baseURL) {
-        const parameters = [];
-        if (config.intellijPlatform) {
-            parameters.push(`intellij=${config.intellijPlatform}`);
-        }
-        if (config.dark) {
-            parameters.push('dark=true');
-        }
-        const query = parameters.length > 0 ? `?${parameters.join('&')}` : '';
-        return `${baseURL}/${query}${config.fragment}`
-    }
-
-    function updateLink(url) {
-        const a = document.querySelector('#link');
-        if (a) {
-            a.href = url
-        }
-    }
-
     (function () {
-        const fragment = config.fragment.replace('&compact=true', '');
-        updateLink(`${BASE_URL}/${fragment}`);
-        window.location.replace(getTargetUrl(BASE_URL))
+        const failedUrl = window.location.hash.split("#url=")[1];
+        const link = document.getElementById("link");
+        if (link && failedUrl) {
+            link.href = failedUrl;
+            link.style.display = "block";
+        }
     })();
 </script>
 </body>

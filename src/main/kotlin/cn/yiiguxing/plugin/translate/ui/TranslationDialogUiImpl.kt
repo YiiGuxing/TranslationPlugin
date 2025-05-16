@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
@@ -61,7 +60,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
     override val translationTTSButton: TTSButton = TTSButton(project)
     override val clearButton: LinkLabel<Void> = LinkLabel()
     override val copyButton: LinkLabel<Void> = LinkLabel()
-    override val starButton: LinkLabel<Translation> = LinkLabel()
+    override val starButton: LinkLabel<Void> = LinkLabel()
     override val historyButton: LinkLabel<Void> = LinkLabel()
     override val detectedLanguageLabel: JLabel = JLabel()
     override val lightningLabel: JLabel = JLabel().apply {
