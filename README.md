@@ -370,7 +370,7 @@ website. [[Become a sponsor][open-collective-contribute]]
 
 | **Name**   | **Website**                                            | **Amount** |
 |------------|--------------------------------------------------------|------------|
-| 丿初音        |                                                        | 425.00 CNY |
+| 丿初音        |                                                        | 475.00 CNY |
 | 剑平         |                                                        | 120.00 CNY |
 | 山有扶苏       | [github.com/fobgochod](https://github.com/fobgochod)   | 110.00 CNY |
 | 朱振山        |                                                        | 100.00 CNY |
