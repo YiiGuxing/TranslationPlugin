@@ -1,4 +1,4 @@
-@file:Suppress("SqlResolve", "SqlNoDataSourceInspection", "ConvertTryFinallyToUseCall", "SqlDialectInspection")
+@file:Suppress("SqlNoDataSourceInspection")
 
 package cn.yiiguxing.plugin.translate.wordbook
 
@@ -269,11 +269,16 @@ class WordBookService : Disposable {
         indicator.checkCanceled()
 
         TranslationStorages.createDataDirectoriesIfNotExists()
-        lock {
+        val hasDriverFile = lock {
             if (checkDriverFile()) {
-                return
+                true
+            } else {
+                Files.deleteIfExists(DRIVER_JAR)
+                false
             }
-            Files.deleteIfExists(DRIVER_JAR)
+        }
+        if (hasDriverFile) {
+            return
         }
 
         var downloadedFile: Path? = null
@@ -557,25 +562,9 @@ class WordBookService : Disposable {
         }
     }
 
-    fun hasWords(): Boolean {
-        checkIsInitialized()
-
-        val sql = "SELECT COUNT(*) FROM wordbook"
-        return try {
-            queryRunner.query(sql, BooleanHandler)
-        } catch (e: SQLException) {
-            LOGGER.w(e.message ?: "", e)
-            false
-        }
-    }
-
     override fun dispose() {
     }
 
-
-    private object BooleanHandler : ResultSetHandler<Boolean> {
-        override fun handle(rs: ResultSet): Boolean = rs.takeIf { it.next() }?.getBoolean(1) ?: false
-    }
 
     private object WordIdHandler : ResultSetHandler<Long?> {
         override fun handle(rs: ResultSet): Long? = rs.takeIf { it.next() }?.getLong(1)
@@ -633,7 +622,7 @@ class WordBookService : Disposable {
 
         fun getStorageFile(dir: Path = TranslationStorages.DATA_DIRECTORY): Path = dir.resolve(STORAGE_FILE_NAME)
 
-        private inline fun <T> lock(block: () -> T): T {
+        private fun <T> lock(block: () -> T): T {
             return RandomAccessFile(LOCK_FILE.toFile(), "rw").use { lockFile ->
                 synchronized(LOCK_FILE) {
                     val lock = lockFile.channel.lock()

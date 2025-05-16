@@ -1,13 +1,13 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.plus
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.icon.SmallProgressIcon
 import cn.yiiguxing.plugin.translate.ui.util.ScrollSynchronizer
 import cn.yiiguxing.plugin.translate.util.alphaBlend
 import com.intellij.icons.AllIcons
+import com.intellij.ide.plugins.newui.EmptyCaret
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
@@ -60,7 +60,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
     override val translationTTSButton: TTSButton = TTSButton(project)
     override val clearButton: LinkLabel<Void> = LinkLabel()
     override val copyButton: LinkLabel<Void> = LinkLabel()
-    override val starButton: LinkLabel<Translation> = LinkLabel()
+    override val starButton: LinkLabel<Void> = LinkLabel()
     override val historyButton: LinkLabel<Void> = LinkLabel()
     override val detectedLanguageLabel: JLabel = JLabel()
     override val lightningLabel: JLabel = JLabel().apply {
@@ -287,7 +287,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
         copyButton.setIcons(AllIcons.Actions.Copy)
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
-        starButton.setIcons(TranslationIcons.GrayStarOff)
+        starButton.setIcons(TranslationIcons.StarOffGray)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =
@@ -358,6 +358,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
         init {
             isEditable = false
             this.background = background
+            caret = EmptyCaret.INSTANCE
         }
 
         override fun paintComponent(g: Graphics) {

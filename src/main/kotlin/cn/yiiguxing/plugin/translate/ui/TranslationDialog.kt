@@ -470,7 +470,7 @@ class TranslationDialog(
 
     private fun updateStarButton(translation: Translation?) {
         fun updatePresentation(favoriteId: Long?) {
-            val icon = if (favoriteId == null) TranslationIcons.GrayStarOff else TranslationIcons.StarOn
+            val icon = if (favoriteId == null) TranslationIcons.StarOffGray else TranslationIcons.StarOn
             starButton.setIcons(icon)
             starButton.toolTipText = StarButtons.toolTipText(favoriteId)
         }
@@ -481,7 +481,13 @@ class TranslationDialog(
         starButton.isEnabled = translation != null
                 && (project != null || wordBookService.isInitialized)
                 && wordBookService.canAddToWordbook(translation.original)
-        starButton.setListener(StarButtons.listener, translation)
+        if (starButton.isEnabled) {
+            starButton.setListener({ starLabel, _ ->
+                StarButtons.toggleStar(project, starLabel, translation!!)
+            }, null)
+        } else {
+            starButton.setListener(null, null)
+        }
 
         translation?.observableFavoriteId?.observe(this@TranslationDialog) { favoriteId, _ ->
             updatePresentation(favoriteId)

@@ -426,7 +426,9 @@ abstract class TranslationPane<T : JComponent>(
     @Suppress("DuplicatedCode")
     private fun Viewer.appendStarButton(translation: Translation) {
         val starIcon = if (translation.favoriteId == null) TranslationIcons.StarOff else TranslationIcons.StarOn
-        val starLabel = LinkLabel("", starIcon, StarButtons.listener, translation)
+        val starLabel = LinkLabel("", starIcon, { starLabel, _ ->
+            StarButtons.toggleStar(project, starLabel, translation)
+        }, null)
         starLabel.alignmentY = 0.9f
         starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
         translation.observableFavoriteId.observe(this@TranslationPane) { favoriteId, _ ->

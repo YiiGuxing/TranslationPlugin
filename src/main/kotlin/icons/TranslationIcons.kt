@@ -6,7 +6,46 @@ import javax.swing.Icon
 object TranslationIcons {
 
     @JvmField
+    val ArrowDownExpand: Icon = load("/icons/arrowDownExpand.svg")
+
+    @JvmField
+    val ArrowUpCollapse: Icon = load("/icons/arrowUpCollapse.svg")
+
+    @JvmField
+    val AutoAwesome: Icon = load("/icons/autoAwesome.svg")
+
+    @JvmField
+    val Documentation: Icon = load("/icons/documentation.svg")
+
+    @JvmField
+    val Lightning: Icon = load("/icons/lightning.svg")
+
+    @JvmField
     val Logo: Icon = load("/icons/logo.svg")
+
+    @JvmField
+    val Quote: Icon = load("/icons/quote.svg")
+
+    @JvmField
+    val Speech: Icon = load("/icons/speech.svg")
+
+    @JvmField
+    val StarOff: Icon = load("/icons/starOff.svg")
+
+    @JvmField
+    val StarOffGray: Icon = load("/icons/starOffGray.svg")
+
+    @JvmField
+    val StarOn: Icon = load("/icons/starOn.svg")
+
+    @JvmField
+    val Stop: Icon = load("/icons/stop.svg")
+
+    @JvmField
+    val Support: Icon = load("/icons/support.svg")
+
+    @JvmField
+    val Swap: Icon = load("/icons/swap.svg")
 
     @JvmField
     val Translation: Icon = load("/icons/translation.svg")
@@ -19,42 +58,6 @@ object TranslationIcons {
 
     @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")
-
-    @JvmField
-    val StarOff: Icon = load("/icons/starOff.svg")
-
-    @JvmField
-    val StarOn: Icon = load("/icons/starOn.svg")
-
-    @JvmField
-    val GrayStarOff: Icon = load("/icons/grayStarOff.svg")
-
-    @JvmField
-    val Stop: Icon = load("/icons/stop.svg")
-
-    @JvmField
-    val Swap: Icon = load("/icons/swap.svg")
-
-    @JvmField
-    val Support: Icon = load("/icons/support.svg")
-
-    @JvmField
-    val AutoAwesome: Icon = load("/icons/autoAwesome.svg")
-
-    @JvmField
-    val ArrowDownExpand: Icon = load("/icons/arrowDownExpand.svg")
-
-    @JvmField
-    val ArrowUpCollapse: Icon = load("/icons/arrowUpCollapse.svg")
-
-    @JvmField
-    val Lightning: Icon = load("/icons/lightning.svg")
-
-    @JvmField
-    val Documentation: Icon = load("/icons/documentation.svg")
-
-    @JvmField
-    val Quote: Icon = load("/icons/quote.svg")
 
 
     /** Translation engine logos. */

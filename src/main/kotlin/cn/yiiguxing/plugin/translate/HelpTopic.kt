@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate
 
+import cn.yiiguxing.plugin.translate.view.WebPages
+
 enum class HelpTopic(id: String, val url: String) {
 
     /** Default help */

@@ -1,6 +1,6 @@
 [versions]
 # libraries
-jsoup = "1.19.1"
+jsoup = "1.20.1"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 ideaCompat = "0.0.4"
@@ -8,7 +8,7 @@ junit = "4.13.2"
 websocket = "1.6.0"
 
 # plugins
-kotlin = "2.1.10"
+kotlin = "2.1.21"
 kover = "0.9.1"
 changelog = "2.2.1"
 gradleIntelliJPlugin = "1.17.4"
