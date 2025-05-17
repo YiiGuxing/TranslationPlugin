@@ -21,6 +21,10 @@
   };
 
   function normalizeLanguage(language) {
+    if (!language) {
+      return defaultLanguage;
+    }
+
     const [lang, country] = language.split("-")
     if (lang === "zh") {
       return country === "CN" ? language : defaultLanguage;
@@ -51,7 +55,7 @@
     }
 
     options = {...options};
-    options.language = options.language ? normalizeLanguage(options.language) : defaultLanguage;
+    options.language = normalizeLanguage(options.language);
 
     const languagePath = options.language === "zh-CN" ? "" : ("/" + options.language);
     const becomeASponsorUrl = "/#" + languagePath + "/support?id=sponsor-translation-plugin";
