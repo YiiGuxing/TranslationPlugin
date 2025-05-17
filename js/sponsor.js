@@ -8,8 +8,7 @@
    *   link: string | {[lang:string]: string, default: string}
    * }[]}
    */
-  const activeSponsors = [
-  ];
+  const activeSponsors = [];
 
   const shuffleSponsors = false;
 
@@ -20,6 +19,15 @@
     "ja": "❤️スポンサーになる",
     "ko": "❤️후원자가 되다",
   };
+
+  function normalizeLanguage(language) {
+    const [lang, country] = language.split("-")
+    if (lang === "zh") {
+      return country === "CN" ? language : defaultLanguage;
+    } else {
+      return lang;
+    }
+  }
 
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -42,8 +50,8 @@
       return;
     }
 
-    options = options || {};
-    options.language = options.language || defaultLanguage;
+    options = {...options};
+    options.language = options.language ? normalizeLanguage(options.language) : defaultLanguage;
 
     const languagePath = options.language === "zh-CN" ? "" : ("/" + options.language);
     const becomeASponsorUrl = "/#" + languagePath + "/support?id=sponsor-translation-plugin";
@@ -63,9 +71,9 @@
             ? sponsor.link
             : (sponsor.link[options.language] || sponsor.link.default);
           sponsorLink.href = "/sponsor/click?id=" + sponsor.id +
-          "&name=" + encodeURIComponent(sponsor.name) +
-          "&url=" + encodeURIComponent(link) +
-          (options.place ? "&place=" + encodeURIComponent(options.place) : "");
+            "&name=" + encodeURIComponent(sponsor.name) +
+            "&url=" + encodeURIComponent(link) +
+            (options.place ? "&place=" + encodeURIComponent(options.place) : "");
 
           const description = typeof sponsor.description === "string"
             ? sponsor.description
