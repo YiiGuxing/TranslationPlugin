@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fixed the issue where the translation result could not be selected.
+- 修复了译文无法选择的问题
+
 ## [3.7.2] (2025/05/15)
 
 - New LLMs in OpenAI Translator engine: GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, o4-mini, o3.
