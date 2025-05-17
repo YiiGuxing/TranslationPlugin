@@ -9,7 +9,8 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
-    <depends optional="true" config-file="action-group.xml">com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="actions/lang.xml">com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="actions/jupyter.xml">intellij.jupyter</depends>
     <depends optional="true" config-file="docs/csharp-doc.xml">com.intellij.modules.rider</depends>
     <depends optional="true" config-file="docs/css-doc.xml">com.intellij.css</depends>
     <depends optional="true" config-file="docs/dart-doc.xml">Dart</depends>
@@ -131,6 +132,7 @@
                 class="cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TranslateTextComponentAction"
+                icon="TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TerminalTranslationAction"
@@ -173,7 +175,7 @@
             <reference ref="Translation.InclusiveTranslateAction"/>
             <reference ref="Translation.ExclusiveTranslateAction"/>
         </group>
-        <group id="Translation.ActionGroup" text="Translation Actions">
+        <group id="Translation.ActionGroup">
             <separator/>
             <reference ref="Translation.EditorTranslateAction"/>
             <reference ref="Translation.TranslateAndReplaceAction"/>
@@ -187,14 +189,13 @@
 
             <add-to-group group-id="Documentation.PrimaryGroup"/>
         </group>
-        <group id="Translation.HelpActionGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
-            <reference ref="Translation.WhatsNewAction"/>
-            <reference ref="Translation.GettingStartAction"/>
-            <reference ref="Translation.SupportAction"/>
-        </group>
-        <group id="Translation.HelpGroup" text="Translation Help Group">
+        <group id="Translation.HelpGroup">
             <separator/>
-            <reference ref="Translation.HelpActionGroup"/>
+            <group id="Translation.HelpActionGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
+                <reference ref="Translation.WhatsNewAction"/>
+                <reference ref="Translation.GettingStartAction"/>
+                <reference ref="Translation.SupportAction"/>
+            </group>
             <separator/>
 
             <add-to-group group-id="HelpMenu" anchor="before" relative-to-action="WhatsNewAction"/>

@@ -32,6 +32,7 @@ open class ToggleQuickDocTranslationAction :
     init {
         // Enable in hovering documentation popup
         isEnabledInModalContext = true
+        templatePresentation.text = adaptedMessage("action.ToggleQuickDocTranslationAction.text")
     }
 
     private val isDocumentationV2: Boolean
