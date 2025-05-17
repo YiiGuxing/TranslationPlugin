@@ -351,6 +351,16 @@
   window.itpCefQuery = window.itpCefQuery || function () {
   }
 
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest('a');
+    if (!link) return;
+
+    gtag("event", "click", {
+      link_url: link.href,
+      link_text: link.innerText.trim(),
+    });
+  });
+
   function updateContent(selector, content) {
     const el = document.querySelector(selector);
     if (el && content) {
