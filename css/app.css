@@ -99,7 +99,7 @@ section.cover .buttons a.github-button:hover > .icon {
 }
 
 .app-nav {
-    display: flex !important;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
