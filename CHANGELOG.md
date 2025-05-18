@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Added translation actions to the Jupyter Notebook context menu.
+- Jupyter Notebook 现在支持右键菜单翻译操作
+
 ## [3.7.2] (2025/05/15)
 
 - New LLMs in OpenAI Translator engine: GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, o4-mini, o3.
