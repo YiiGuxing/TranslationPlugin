@@ -19,12 +19,15 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.messages.Topic
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
 import org.jetbrains.concurrency.runAsync
 import kotlin.properties.Delegates
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 /**
  * Settings
@@ -56,6 +59,11 @@ class Settings : PersistentStateComponent<Settings> {
      * 主要语言
      */
     var primaryLanguage: Lang? = null
+
+    /**
+     * 目标语言选择
+     */
+    var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
     /**
      * 有道翻译选项
@@ -154,11 +162,6 @@ class Settings : PersistentStateComponent<Settings> {
      * 打开翻译对话框时取词翻译
      */
     var takeWordWhenDialogOpens: Boolean = false
-
-    /**
-     * 目标语言选择
-     */
-    var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
     var translateDocumentation: Boolean = false
 
@@ -331,3 +334,65 @@ interface SettingsChangeListener {
             Topic.create("TranslationSettingsChanged", SettingsChangeListener::class.java)
     }
 }
+
+
+sealed interface LanguageSelection {
+    enum class Implied(nameSupplier: () -> String) : LanguageSelection {
+        MAIN_LANGUAGE_OR_ENGLISH({ message("settings.item.main.or.english") }),
+        MAIN_LANGUAGE({ message("settings.item.primaryLanguage") }),
+        LAST_USED({ message("settings.item.last") });
+
+        val displayName: String by lazy(nameSupplier)
+    }
+
+    data class Explicit(val lang: Lang) : LanguageSelection
+}
+
+private class LanguageSelectionProperty(private val initialValue: LanguageSelection) :
+    ReadWriteProperty<Settings, LanguageSelection> {
+    private var languageSelection: LanguageSelection = initialValue
+    private var stringValue: String = initialValue.toString()
+
+    val stringProperty = object : ReadWriteProperty<Settings, String> {
+        override fun getValue(thisRef: Settings, property: KProperty<*>): String = stringValue
+
+        override fun setValue(thisRef: Settings, property: KProperty<*>, value: String) {
+            val selection = try {
+                parse(value)
+            } catch (e: Throwable) {
+                logger<LanguageSelectionProperty>().warn("Failed to parse language selection: $value", e)
+                initialValue
+            }
+
+            stringValue = stringify(selection)
+            languageSelection = selection
+        }
+    }
+
+    override fun getValue(thisRef: Settings, property: KProperty<*>): LanguageSelection = languageSelection
+
+    override fun setValue(thisRef: Settings, property: KProperty<*>, value: LanguageSelection) {
+        stringValue = stringify(value)
+        languageSelection = value
+    }
+
+    private fun stringify(languageSelection: LanguageSelection): String = when (languageSelection) {
+        is LanguageSelection.Implied -> languageSelection.name
+        is LanguageSelection.Explicit -> "EXPLICIT:${languageSelection.lang.name}"
+    }
+
+    private fun parse(from: String): LanguageSelection {
+        if (from.isEmpty()) {
+            return initialValue
+        }
+
+        val parts = from.split(":")
+        return if (parts.size > 1) {
+            assert(parts[0] == "EXPLICIT")
+            LanguageSelection.Explicit(Lang.valueOf(parts[1]))
+        } else {
+            LanguageSelection.Implied.valueOf(parts[0])
+        }
+    }
+}
+
