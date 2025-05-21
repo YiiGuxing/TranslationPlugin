@@ -60,7 +60,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
     override val translationTTSButton: TTSButton = TTSButton(project)
     override val clearButton: LinkLabel<Void> = LinkLabel()
     override val copyButton: LinkLabel<Void> = LinkLabel()
-    override val starButton: LinkLabel<Void> = LinkLabel()
+    override val starButton = WordFavoritesUi.createStarLabel()
     override val historyButton: LinkLabel<Void> = LinkLabel()
     override val detectedLanguageLabel: JLabel = JLabel()
     override val lightningLabel: JLabel = JLabel().apply {
@@ -287,7 +287,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
         copyButton.setIcons(AllIcons.Actions.Copy)
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
-        starButton.setIcons(TranslationIcons.StarOffGray)
+        starButton.setIcons(TranslationIcons.StarOff)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =

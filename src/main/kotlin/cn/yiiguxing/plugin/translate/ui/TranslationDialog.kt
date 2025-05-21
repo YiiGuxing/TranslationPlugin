@@ -14,12 +14,10 @@ import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.ui.StyledViewer.Companion.setupActions
 import cn.yiiguxing.plugin.translate.ui.UI.disabled
-import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.text.clear
-import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
@@ -395,7 +393,6 @@ class TranslationDialog(
             setListener({ _, _ -> showHistoryPopup() }, null)
         }
 
-        updateStarButton(null)
         initSwapButton()
 
         spellComponent.onSpellFixed {
@@ -459,39 +456,13 @@ class TranslationDialog(
     }
 
     private fun updateOnTranslation(translation: Translation?) {
-        updateStarButton(translation)
         updateDetectedLangLabel(translation)
         updateTransliterations(translation)
         updateDictViewer(translation?.dictDocument, translation?.extraDocuments ?: emptyList())
+        WordFavoritesUi.updateStarLabel(project, starButton, translation, this)
         spellComponent.spell = translation?.spell
         fixLangComponent.updateOnTranslation(translation)
         fixWindowHeight()
-    }
-
-    private fun updateStarButton(translation: Translation?) {
-        fun updatePresentation(favoriteId: Long?) {
-            val icon = if (favoriteId == null) TranslationIcons.StarOffGray else TranslationIcons.StarOn
-            starButton.setIcons(icon)
-            starButton.toolTipText = StarButtons.toolTipText(favoriteId)
-        }
-
-        updatePresentation(translation?.favoriteId)
-
-        val wordBookService = WordBookService.getInstance()
-        starButton.isEnabled = translation != null
-                && (project != null || wordBookService.isInitialized)
-                && wordBookService.canAddToWordbook(translation.original)
-        if (starButton.isEnabled) {
-            starButton.setListener({ starLabel, _ ->
-                StarButtons.toggleStar(project, starLabel, translation!!)
-            }, null)
-        } else {
-            starButton.setListener(null, null)
-        }
-
-        translation?.observableFavoriteId?.observe(this@TranslationDialog) { favoriteId, _ ->
-            updatePresentation(favoriteId)
-        }
     }
 
     private fun updateDetectedLangLabel(translation: Translation?) {
