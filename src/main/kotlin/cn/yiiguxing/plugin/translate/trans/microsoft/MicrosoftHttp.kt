@@ -43,7 +43,7 @@ internal object MicrosoftHttp {
             CacheService.getInstance().getDiskCache(cacheKey)?.let {
                 try {
                     return Http.defaultGson.fromJson(it, typeOfT)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     // Ignore
                 }
             }
@@ -53,7 +53,7 @@ internal object MicrosoftHttp {
         val result: T = try {
             Http.defaultGson.fromJson(resultJson, typeOfT)
         } catch (e: JsonParseException) {
-            logJsonParseError(e, url, json, resultJson)
+            logJsonParseError(e, json, resultJson)
             throw e
         }
 
@@ -100,26 +100,13 @@ internal object MicrosoftHttp {
 
     private fun String.toJsonError(): MicrosoftError? = try {
         Http.defaultGson.fromJson(this, MicrosoftError::class.java)
-    } catch (jse: JsonParseException) {
+    } catch (_: JsonParseException) {
         null
     }
 
-    private fun logJsonParseError(e: JsonParseException, url: String, requestJson: String, responseJson: String) {
-        val request = Attachment(
-            "request.json",
-            """
-            |URL: $url
-            |Request JSON:
-            |$requestJson
-            """.trimMargin()
-        ).apply { isIncluded = true }
-        val response = Attachment(
-            "response.json",
-            """
-            |Response JSON:
-            |$responseJson
-            """.trimMargin()
-        ).apply { isIncluded = true }
-        LOG.error("Failed to parse JSON", e, request, response)
+    private fun logJsonParseError(e: JsonParseException, requestJson: String, responseJson: String) {
+        val request = Attachment("request.json", requestJson).apply { isIncluded = true }
+        val response = Attachment("response.json", responseJson).apply { isIncluded = true }
+        LOG.error("Failed to parse JSON. ", e, request, response)
     }
 }
