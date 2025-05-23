@@ -125,17 +125,16 @@ class TranslationBalloon(
         with(translationPane) {
             onRevalidate { if (!disposed) balloon.revalidate() }
             onLanguageChanged { src, target ->
-                run {
-                    presenter.updateLastLanguages(src, target)
-                    translate(src, target)
-                }
+                presenter.updateLastLanguages(src, target)
+                translate(src, target)
             }
             onNewTranslate { text, src, target ->
                 invokeLater { showOnTranslationDialog(text, src, target) }
             }
             onSpellFixed { spell ->
-                val targetLang = presenter.getTargetLang(spell)
-                invokeLater { showOnTranslationDialog(spell, Lang.AUTO, targetLang) }
+                val sourceLang = presenter.getSourceLang(spell)
+                val targetLang = presenter.getTargetLang(sourceLang, spell)
+                invokeLater { showOnTranslationDialog(spell, sourceLang, targetLang) }
             }
         }
 
@@ -195,8 +194,9 @@ class TranslationBalloon(
     }
 
     private fun onTranslate() {
-        val targetLang = presenter.getTargetLang(text)
-        translate(Lang.AUTO, targetLang)
+        val sourceLang = presenter.getSourceLang(text)
+        val targetLang = presenter.getTargetLang(sourceLang, text)
+        translate(sourceLang, targetLang)
     }
 
     private fun translate(srcLang: Lang, targetLang: Lang) = presenter.translate(text, srcLang, targetLang)

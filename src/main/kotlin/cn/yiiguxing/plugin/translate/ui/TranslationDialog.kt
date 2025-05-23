@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.*
 import cn.yiiguxing.plugin.translate.action.SettingsAction
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.LanguagePair
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
@@ -79,7 +78,7 @@ class TranslationDialog(
     private var ignoreInputEvent: Boolean = false
 
     // If the user selects a specific target language, the value is true
-    private var unequivocalTargetLang: Boolean by Delegates.observable(false) { _, _, _ ->
+    private var hasUserSetTargetLang: Boolean by Delegates.observable(false) { _, _, _ ->
         updateLightningLabel()
     }
 
@@ -279,28 +278,38 @@ class TranslationDialog(
     }
 
     private fun initLangComboBoxes() {
-        fun addListener(comboBox: LangComboBoxLink) {
-            comboBox.addItemListener { _, _, fromUser ->
-                if (comboBox === sourceLangComboBox) {
-                    updateLightningLabel()
-                }
-                if (fromUser && comboBox === targetLangComboBox) {
-                    unequivocalTargetLang = true
-                }
-
-                states.lastLanguages.let { pair ->
-                    pair.source = sourceLang
-                    pair.target = targetLang
-                }
-                if (!ignoreLanguageEvent) {
-                    requestTranslate()
-                }
+        updateLanguages()
+        updateLightningLabel()
+        initLangComboBoxLinkListener(sourceLangComboBox) { fromUser ->
+            if (fromUser && inputTextArea.text.isNullOrBlank()) {
+                targetLangComboBox.setSelectLangIgnoreEvent(
+                    presenter.getTargetLang(
+                        sourceLang,
+                        inputTextArea.text
+                    )
+                )
             }
         }
+        initLangComboBoxLinkListener(targetLangComboBox) { fromUser ->
+            if (fromUser) {
+                hasUserSetTargetLang = true
+            }
+        }
+    }
 
-        updateLanguages()
-        addListener(sourceLangComboBox)
-        addListener(targetLangComboBox)
+    private inline fun initLangComboBoxLinkListener(
+        comboBox: LangComboBoxLink,
+        crossinline action: (fromUser: Boolean) -> Unit
+    ) {
+        comboBox.addItemListener { _, _, fromUser ->
+            action(fromUser)
+            if (fromUser) {
+                presenter.updateLastLanguages(sourceLang, targetLang)
+            }
+            if (!ignoreLanguageEvent) {
+                requestTranslate()
+            }
+        }
     }
 
     private fun initTextAreas() {
@@ -315,8 +324,8 @@ class TranslationDialog(
         inputTextArea.addListener { e ->
             clearButton.isEnabled = e.document.length > 0
             if (!ignoreInputEvent) {
-                if (!unequivocalTargetLang && sourceLang == Lang.AUTO) {
-                    targetLangComboBox.setSelectLangIgnoreEvent(presenter.getTargetLang(inputTextArea.text))
+                if (!hasUserSetTargetLang && !presenter.isExplicitTargetLanguage) {
+                    targetLangComboBox.setSelectLangIgnoreEvent(presenter.getTargetLang(sourceLang, inputTextArea.text))
                 }
                 requestTranslate()
             }
@@ -397,13 +406,14 @@ class TranslationDialog(
 
         spellComponent.onSpellFixed {
             inputTextArea.text = it
-            sourceLangComboBox.selected = Lang.AUTO
+            sourceLangComboBox.selected = presenter.getSourceLang(it)
             spellComponent.isVisible = false
         }
 
         fixLangComponent.onFixLanguage {
             sourceLangComboBox.selected = it
             fixLangComponent.isVisible = false
+            presenter.updateLastLanguages(it, targetLang)
         }
     }
 
@@ -414,14 +424,19 @@ class TranslationDialog(
             val targetLang = lastTranslation?.targetLang ?: targetLang
 
             if (srcLang != targetLang) {
+                val text = lastTranslation?.translation ?: ""
                 ignoreLanguageEvent = true
-                sourceLangComboBox.selected =
-                    targetLang.takeIf { presenter.isSupportedSourceLanguage(it) } ?: presenter.primaryLanguage
-                targetLangComboBox.selected =
-                    srcLang.takeIf { presenter.isSupportedTargetLanguage(it) } ?: presenter.primaryLanguage
+                val newSourceLang = targetLang.takeIf { presenter.isSupportedSourceLanguage(it) }
+                    ?: presenter.getSourceLang(text)
+                val newTargetLang = srcLang.takeIf { presenter.isSupportedTargetLanguage(it) }
+                    ?: presenter.getTargetLang(newSourceLang, text)
+                sourceLangComboBox.selected = newSourceLang
+                targetLangComboBox.selected = newTargetLang
                 ignoreLanguageEvent = false
 
-                lastTranslation?.translation?.let { inputTextArea.text = it }
+                presenter.updateLastLanguages(newSourceLang, newTargetLang)
+
+                inputTextArea.text = text
                 detectedLanguageLabel.isVisible = false
             }
         }, null)
@@ -474,7 +489,7 @@ class TranslationDialog(
     }
 
     private fun updateLightningLabel() {
-        lightningLabel.isVisible = sourceLang == Lang.AUTO && !unequivocalTargetLang
+        lightningLabel.isVisible = !hasUserSetTargetLang && !presenter.isExplicitTargetLanguage
     }
 
     private fun updateTransliterations(translation: Translation?) {
@@ -594,7 +609,7 @@ class TranslationDialog(
             ignoreLanguageEvent = false
             ignoreInputEvent = false
         }
-        unequivocalTargetLang = true
+        hasUserSetTargetLang = true
         onTranslationFinished(translation)
     }
 
@@ -620,7 +635,7 @@ class TranslationDialog(
     }
 
     override fun onTranslatorChanged(settings: Settings, translationEngine: TranslationEngine) {
-        updateLanguages()
+        updateLanguages(sourceLang, targetLang)
         requestTranslate(0)
     }
 
@@ -630,18 +645,15 @@ class TranslationDialog(
         translationTTSButton.isEnabled = lastTranslation?.targetLang?.let { tts.isSupportLanguage(it) } ?: false
     }
 
-    private fun updateLanguages(languagePair: LanguagePair? = null) {
+    private fun updateLanguages(sourceLang: Lang? = null, targetLang: Lang? = null) {
         presenter.supportedLanguages.let { (src, target) ->
-            sourceLangComboBox.apply {
-                val srcSelected = (languagePair?.source ?: selected ?: Lang.AUTO).takeIf { src.contains(it) }
-                model = LanguageListModel.sorted(src, srcSelected)
-            }
-            targetLangComboBox.apply {
-                val targetSelected = (languagePair?.target ?: selected)
-                    ?.takeIf { target.contains(it) }
-                    ?: presenter.getTargetLang(inputTextArea.text)
-                model = LanguageListModel.sorted(target, targetSelected)
-            }
+            val text = inputTextArea.text ?: ""
+            val sourceSelected = sourceLang?.takeIf { src.contains(it) }
+                ?: presenter.getSourceLang(text)
+            val targetSelected = targetLang?.takeIf { target.contains(it) }
+                ?: presenter.getTargetLang(sourceSelected, text)
+            sourceLangComboBox.model = LanguageListModel.sorted(src, sourceSelected)
+            targetLangComboBox.model = LanguageListModel.sorted(target, targetSelected)
         }
     }
 
@@ -678,10 +690,10 @@ class TranslationDialog(
             return
         }
 
-        val srcLang: Lang = Lang.AUTO
-        val targetLang = presenter.getTargetLang(text)
-        unequivocalTargetLang = false
-        translateInternal(text, srcLang, targetLang)
+        val sourceLang: Lang = presenter.getSourceLang(text)
+        val targetLang = presenter.getTargetLang(sourceLang, text)
+        hasUserSetTargetLang = false
+        translateInternal(text, sourceLang, targetLang)
     }
 
     /**
@@ -696,17 +708,20 @@ class TranslationDialog(
             return
         }
 
-        lateinit var srcLang: Lang
+        lateinit var sourceLang: Lang
         lateinit var targetLang: Lang
 
         presenter.supportedLanguages.let { (sourceList, targetList) ->
-            srcLang = src.takeIf { sourceList.contains(it) } ?: sourceLangComboBox.selected ?: sourceList.first()
-            targetLang =
-                target.takeIf { targetList.contains(it) } ?: targetLangComboBox.selected ?: presenter.primaryLanguage
+            sourceLang = src.takeIf { sourceList.contains(it) }
+                ?: sourceLangComboBox.selected
+                        ?: presenter.getSourceLang(text)
+            targetLang = target.takeIf { targetList.contains(it) }
+                ?: targetLangComboBox.selected
+                        ?: presenter.getTargetLang(sourceLang, text)
         }
 
-        unequivocalTargetLang = true
-        translateInternal(text, srcLang, targetLang)
+        hasUserSetTargetLang = true
+        translateInternal(text, sourceLang, targetLang)
     }
 
     private fun translateInternal(text: String, srcLang: Lang, targetLang: Lang) {

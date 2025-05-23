@@ -85,6 +85,7 @@ enum class TranslationEngine(
             else -> true
         }
 
+    fun supportedSourceLanguages(): List<Lang> = translator.supportedSourceLanguages
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
 
     fun isConfigured(): Boolean {

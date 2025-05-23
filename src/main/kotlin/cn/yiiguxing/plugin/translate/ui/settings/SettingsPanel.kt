@@ -1,6 +1,9 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
-import cn.yiiguxing.plugin.translate.*
+import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TTSSource
+import cn.yiiguxing.plugin.translate.TranslationStates
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.ui.SupportDialog
 import cn.yiiguxing.plugin.translate.ui.UI
@@ -34,7 +37,7 @@ import kotlin.math.max
 /**
  * SettingsPanel
  */
-class SettingsPanel(
+internal class SettingsPanel(
     private val settings: Settings,
     private val states: TranslationStates
 ) : SettingsUi(), ConfigurableUi {
@@ -48,7 +51,7 @@ class SettingsPanel(
     init {
         primaryFontComboBox.fixFontComboBoxSize()
         phoneticFontComboBox.fixFontComboBoxSize()
-        resetPrimaryLanguageComboBox(settings.translator)
+        resetLanguageComboBox(settings.translator)
         ignoreRegExp = createRegexEditorField()
         doLayout()
         setListeners()
@@ -119,7 +122,7 @@ class SettingsPanel(
             if (event.stateChange != ItemEvent.SELECTED) {
                 return@addItemListener
             }
-            resetPrimaryLanguageComboBox(event.item as TranslationEngine)
+            resetLanguageComboBox(event.item as TranslationEngine)
         }
         primaryFontComboBox.addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
@@ -183,8 +186,17 @@ class SettingsPanel(
         FileTypeManager.getInstance().findFileTypeByName("RegExp") ?: FileTypes.PLAIN_TEXT
     )
 
-    private fun resetPrimaryLanguageComboBox(engine: TranslationEngine) {
+    private fun resetLanguageComboBox(engine: TranslationEngine) {
+        val supportedSourceLanguages = engine.supportedSourceLanguages()
         val supportedTargetLanguages = engine.supportedTargetLanguages()
+
+        sourceLanguageComboBox.setLanguages(supportedSourceLanguages)
+        targetLanguageComboBox.setLanguages(supportedTargetLanguages)
+        sourceLanguageComboBox.selected = settings.sourceLanguageSelection
+            ?: settings.sourceLanguage?.takeIf { it in supportedSourceLanguages }
+        targetLanguageComboBox.selected = settings.targetLanguageSelection
+            ?: settings.targetLanguage?.takeIf { it in supportedTargetLanguages }
+
         primaryLanguageComboBox.model = CollectionComboBoxModel(supportedTargetLanguages)
         primaryLanguageComboBox.selected = settings.primaryLanguage
             ?.takeIf { it in supportedTargetLanguages }
@@ -197,7 +209,10 @@ class SettingsPanel(
             return settings.translator != translationEngineComboBox.selected
                     || settings.ttsEngine != ttsEngineComboBox.selected
                     || settings.translator.primaryLanguage != primaryLanguageComboBox.selected
-                    || settings.targetLanguageSelection != targetLangSelectionComboBox.selected
+                    || settings.sourceLanguageSelection != sourceLanguageComboBox.languageSelection
+                    || settings.sourceLanguage != sourceLanguageComboBox.language
+                    || settings.targetLanguageSelection != targetLanguageComboBox.languageSelection
+                    || settings.targetLanguage != targetLanguageComboBox.language
                     || settings.autoSelectionMode != SelectionMode.takeNearestWord(takeNearestWordCheckBox.isSelected)
                     || settings.takeWordWhenDialogOpens != takeWordCheckBox.isSelected
                     || settings.separators != separatorTextField.text
@@ -253,7 +268,10 @@ class SettingsPanel(
             translator = selectedTranslator
             ttsEngine = selectedTtsEngine
             translator.primaryLanguage = primaryLanguageComboBox.selected ?: translator.primaryLanguage
-            targetLanguageSelection = targetLangSelectionComboBox.selected ?: TargetLanguageSelection.DEFAULT
+            sourceLanguageSelection = sourceLanguageComboBox.languageSelection
+            sourceLanguage = sourceLanguageComboBox.language
+            targetLanguageSelection = targetLanguageComboBox.languageSelection
+            targetLanguage = targetLanguageComboBox.language
             primaryFontFamily = primaryFontComboBox.fontName
             primaryFontPreviewText = primaryFontPreview.text
             phoneticFontFamily = phoneticFontComboBox.fontName
@@ -282,11 +300,10 @@ class SettingsPanel(
 
     @Suppress("Duplicates")
     override fun reset() {
-        resetPrimaryLanguageComboBox(settings.translator)
+        resetLanguageComboBox(settings.translator)
 
         translationEngineComboBox.selected = settings.translator
         ttsEngineComboBox.selected = settings.ttsEngine
-        targetLangSelectionComboBox.selected = settings.targetLanguageSelection
         ignoreRegExp.text = settings.ignoreRegex
         separatorTextField.text = settings.separators
         foldOriginalCheckBox.isSelected = settings.foldOriginal

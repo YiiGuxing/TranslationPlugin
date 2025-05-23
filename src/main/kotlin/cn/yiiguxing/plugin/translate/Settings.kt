@@ -56,6 +56,10 @@ class Settings : PersistentStateComponent<Settings> {
      * 主要语言
      */
     var primaryLanguage: Lang? = null
+    var sourceLanguageSelection: LanguageSelection? = null
+    var sourceLanguage: Lang? = Lang.AUTO
+    var targetLanguageSelection: LanguageSelection? = LanguageSelection.MAIN_OR_ENGLISH
+    var targetLanguage: Lang? = null
 
     /**
      * 有道翻译选项
@@ -154,11 +158,6 @@ class Settings : PersistentStateComponent<Settings> {
      * 打开翻译对话框时取词翻译
      */
     var takeWordWhenDialogOpens: Boolean = false
-
-    /**
-     * 目标语言选择
-     */
-    var targetLanguageSelection: TargetLanguageSelection = TargetLanguageSelection.DEFAULT
 
     var translateDocumentation: Boolean = false
 
@@ -309,10 +308,10 @@ enum class TTSSource(val displayName: String) {
     TRANSLATION(message("settings.item.translation"))
 }
 
-enum class TargetLanguageSelection(val displayName: String) {
-    DEFAULT(message("settings.item.main.or.english")),
-    PRIMARY_LANGUAGE(message("settings.item.primaryLanguage")),
-    LAST(message("settings.item.last"))
+enum class LanguageSelection(val displayName: String) {
+    MAIN_OR_ENGLISH(message("settings.item.main.or.english")),
+    PRIMARY(message("settings.item.primaryLanguage")),
+    LAST_USED(message("settings.item.last"))
 }
 
 interface SettingsChangeListener {

@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.TTSSource
-import cn.yiiguxing.plugin.translate.TargetLanguageSelection
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
@@ -48,7 +47,7 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
-abstract class SettingsUi {
+internal abstract class SettingsUi {
     protected val wholePanel: JPanel = JPanel()
 
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
@@ -103,10 +102,8 @@ abstract class SettingsUi {
         }
     }
 
-    protected val targetLangSelectionComboBox: ComboBox<TargetLanguageSelection> =
-        comboBox<TargetLanguageSelection>().apply {
-            renderer = SimpleListCellRenderer.create("") { it.displayName }
-        }
+    protected val sourceLanguageComboBox = LanguageSelectionComboBox()
+    protected val targetLanguageComboBox = LanguageSelectionComboBox()
 
     protected val takeWordCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.take.word.when.translation.dialog.opens"))
@@ -220,8 +217,11 @@ abstract class SettingsUi {
             add(JLabel(message("settings.label.primaryLanguage")))
             add(primaryLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
 
+            add(JLabel(message("settings.label.source.language")))
+            add(sourceLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
+
             add(JLabel(message("settings.label.targetLanguage")))
-            add(targetLangSelectionComboBox, wrap().sizeGroupX(comboboxGroup))
+            add(targetLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
         }
         val textSelectionPanel = titledPanel(message("settings.panel.title.text.selection"), true) {
             add(keepFormatCheckBox, wrap().span(4))
