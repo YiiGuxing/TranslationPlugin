@@ -760,14 +760,16 @@ class TranslationDialog(
 
                 override fun onClosed(event: LightweightWindowEvent) {
                     historyShowing = false
-                    invokeLater {
-                        translate(chosen ?: currentInput)
+                    val text = chosen ?: currentInput ?: ""
+                    if (text.isNotBlank()) {
+                        invokeLater { translate(text) }
+                    } else {
+                        inputTextArea.text = ""
                     }
                 }
             })
             .createPopup()
             .show(historyButton)
-
     }
 
     private fun fixWindowHeight(width: Int = window.width) {
