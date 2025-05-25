@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.7.3] (2025/05/25)
+
 - Fixed the issue where the translation result could not be selected.
 - 修复了译文无法选择的问题
 
@@ -564,7 +566,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.2...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.3...HEAD
+[3.7.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.1...v3.7.2
 [3.7.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.6.8...v3.7.0
