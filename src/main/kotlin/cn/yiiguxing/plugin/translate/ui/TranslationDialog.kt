@@ -757,7 +757,7 @@ class TranslationDialog(
             .setVisibleRowCount(7)
             .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
             .setItemChosenCallback { translate(it) }
-            .setRenderer(HistoryRenderer({ sourceLangComboBox.selected }, { targetLangComboBox.selected }, presenter))
+            .setRenderer(HistoryRenderer(presenter, { sourceLang }, { targetLang }))
             .addListener(object : JBPopupListener {
                 override fun beforeShown(event: LightweightWindowEvent) {
                     val popup = event.asPopup()
