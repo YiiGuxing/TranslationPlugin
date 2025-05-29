@@ -72,7 +72,6 @@ class TranslationDialog(
 
     private var currentRequest: Presenter.Request? = null
     private var lastTranslation: Translation? = null
-    private var historyShowing: Boolean = false
 
     private var ignoreLanguageEvent: Boolean = false
     private var ignoreInputEvent: Boolean = false
@@ -82,11 +81,25 @@ class TranslationDialog(
         updateLightningLabel()
     }
 
-    private var _disposed = false
-    override val disposed get() = _disposed
-
     private inline val sourceLang: Lang get() = sourceLangComboBox.selected!!
     private inline val targetLang: Lang get() = targetLangComboBox.selected!!
+
+    private var translateImmediately: Boolean = false
+    private var sourceText: String
+        get() = inputTextArea.text ?: ""
+        set(value) {
+            translateImmediately = true
+            inputTextArea.text = value
+            translateImmediately = false
+        }
+    private var translationText: String
+        get() = translationTextArea.text ?: ""
+        set(value) {
+            translationTextArea.text = value
+        }
+
+    private var _disposed = false
+    override val disposed get() = _disposed
 
 
     init {
@@ -281,11 +294,11 @@ class TranslationDialog(
         updateLanguages()
         updateLightningLabel()
         initLangComboBoxLinkListener(sourceLangComboBox) { fromUser ->
-            if (fromUser && inputTextArea.text.isNullOrBlank()) {
+            if (fromUser && sourceText.isBlank()) {
                 targetLangComboBox.setSelectLangIgnoreEvent(
                     presenter.getTargetLang(
                         sourceLang,
-                        inputTextArea.text
+                        sourceText
                     )
                 )
             }
@@ -325,7 +338,7 @@ class TranslationDialog(
             clearButton.isEnabled = e.document.length > 0
             if (!ignoreInputEvent) {
                 if (!hasUserSetTargetLang && !presenter.isExplicitTargetLanguage) {
-                    targetLangComboBox.setSelectLangIgnoreEvent(presenter.getTargetLang(sourceLang, inputTextArea.text))
+                    targetLangComboBox.setSelectLangIgnoreEvent(presenter.getTargetLang(sourceLang, sourceText))
                 }
                 requestTranslate()
             }
@@ -351,7 +364,7 @@ class TranslationDialog(
                     addActionListener {
                         selectedText.takeUnless { txt -> txt.isNullOrBlank() }?.let { selectedText ->
                             if (this@setupPopupMenu === inputTextArea) {
-                                inputTextArea.text = selectedText
+                                sourceText = selectedText
                             } else lastTranslation?.let { translation ->
                                 translate(selectedText, translation.targetLang, translation.srcLang)
                             }
@@ -405,7 +418,7 @@ class TranslationDialog(
         initSwapButton()
 
         spellComponent.onSpellFixed {
-            inputTextArea.text = it
+            sourceText = it
             sourceLangComboBox.selected = presenter.getSourceLang(it)
             spellComponent.isVisible = false
         }
@@ -436,7 +449,7 @@ class TranslationDialog(
 
                 presenter.updateLastLanguages(newSourceLang, newTargetLang)
 
-                inputTextArea.text = text
+                sourceText = text
                 detectedLanguageLabel.isVisible = false
             }
         }, null)
@@ -527,23 +540,24 @@ class TranslationDialog(
             return
         }
 
-        alarm.apply {
-            cancelAllRequests()
-            addRequest(translateAction, maxOf(delay, 500))
+        alarm.cancelAllRequests()
+        if (translateImmediately || sourceText.isBlank()) {
+            translateAction.run()
+        } else {
+            alarm.addRequest(translateAction, maxOf(delay, 500))
         }
     }
 
     private fun onTranslate() {
-        inputTextArea.text.takeUnless { it.isNullOrBlank() }?.let {
-            if (!historyShowing) {
-                presenter.translate(it, sourceLang, targetLang)
-            }
-        } ?: clearTranslation()
+        sourceText
+            .takeUnless { it.isBlank() }
+            ?.let { presenter.translate(it, sourceLang, targetLang) }
+            ?: clearTranslation()
     }
 
     private fun clearText() {
-        inputTextArea.text = ""
-        translationTextArea.text = ""
+        sourceText = ""
+        translationText = ""
         clearTranslation()
     }
 
@@ -551,8 +565,8 @@ class TranslationDialog(
         val textToCopy = translationTextArea
             .selectedText
             .takeUnless { it.isNullOrEmpty() }
-            ?: translationTextArea.text
-        if (!textToCopy.isNullOrEmpty()) {
+            ?: translationText
+        if (textToCopy.isNotEmpty()) {
             CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
         }
     }
@@ -563,7 +577,8 @@ class TranslationDialog(
         translationTTSButton.isEnabled = false
         currentRequest = null
         lastTranslation = null
-        translationTextArea.text = null
+        translationText = ""
+        ui.hideProgress()
         updateOnTranslation(null)
     }
 
@@ -572,7 +587,7 @@ class TranslationDialog(
         swapButton.isEnabled = false
         inputTTSButton.isEnabled = false
         translationTTSButton.isEnabled = false
-        translationTextArea.text = "${lastTranslation?.translation ?: ""}..."
+        translationText = "..."
         ui.showProgress()
         ui.showTranslationPanel()
         ui.translationFailedComponent.update(null as Throwable?)
@@ -602,7 +617,7 @@ class TranslationDialog(
         ignoreLanguageEvent = true
         ignoreInputEvent = true
         try {
-            inputTextArea.text = translation.original
+            sourceText = translation.original
             sourceLangComboBox.selected = translation.srcLang.takeIf { it != Lang.UNKNOWN } ?: Lang.AUTO
             targetLangComboBox.selected = translation.targetLang
         } finally {
@@ -621,7 +636,7 @@ class TranslationDialog(
             inputTTSButton.isEnabled = tts.isSupportLanguage(translation.srcLang)
             translationTTSButton.isEnabled = tts.isSupportLanguage(translation.targetLang)
         }
-        translationTextArea.text = translation.translation
+        translationText = translation.translation ?: ""
         updateOnTranslation(translation)
     }
 
@@ -647,7 +662,7 @@ class TranslationDialog(
 
     private fun updateLanguages(sourceLang: Lang? = null, targetLang: Lang? = null) {
         presenter.supportedLanguages.let { (src, target) ->
-            val text = inputTextArea.text ?: ""
+            val text = sourceText
             val sourceSelected = sourceLang?.takeIf { src.contains(it) }
                 ?: presenter.getSourceLang(text)
             val targetSelected = targetLang?.takeIf { target.contains(it) }
@@ -727,7 +742,7 @@ class TranslationDialog(
     private fun translateInternal(text: String, srcLang: Lang, targetLang: Lang) {
         sourceLangComboBox.setSelectLangIgnoreEvent(srcLang)
         targetLangComboBox.setSelectLangIgnoreEvent(targetLang)
-        inputTextArea.text = text
+        sourceText = text
         detectedLanguageLabel.isVisible = false
     }
 
@@ -738,34 +753,19 @@ class TranslationDialog(
     }
 
     private fun showHistoryPopup() {
-        val currentInput = inputTextArea.text
-        var chosen: String? = null
-
         return JBPopupFactory.getInstance().createPopupChooserBuilder(presenter.histories)
             .setVisibleRowCount(7)
             .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-            .setItemSelectedCallback { inputTextArea.text = it }
-            .setItemChosenCallback { chosen = it }
+            .setItemChosenCallback { translate(it) }
             .setRenderer(HistoryRenderer({ sourceLangComboBox.selected }, { targetLangComboBox.selected }, presenter))
             .addListener(object : JBPopupListener {
                 override fun beforeShown(event: LightweightWindowEvent) {
-                    historyShowing = true
                     val popup = event.asPopup()
                     popup.size = Dimension(300, popup.size.height)
                     val relativePoint = RelativePoint(historyButton, Point(0, -JBUI.scale(3)))
                     val screenPoint = Point(relativePoint.screenPoint).apply { translate(0, -popup.size.height) }
 
                     popup.setLocation(screenPoint)
-                }
-
-                override fun onClosed(event: LightweightWindowEvent) {
-                    historyShowing = false
-                    val text = chosen ?: currentInput ?: ""
-                    if (text.isNotBlank()) {
-                        invokeLater { translate(text) }
-                    } else {
-                        inputTextArea.text = ""
-                    }
                 }
             })
             .createPopup()
