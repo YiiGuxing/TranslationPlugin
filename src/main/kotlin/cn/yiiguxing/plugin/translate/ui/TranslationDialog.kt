@@ -399,21 +399,9 @@ class TranslationDialog(
         inputTTSButton.dataSource { lastTranslation?.run { original to srcLang } }
         translationTTSButton.dataSource { lastTranslation?.run { translation?.let { it to targetLang } } }
 
-        clearButton.apply {
-            isEnabled = false
-            toolTipText = message("translation.dialog.clear.text")
-            setListener({ _, _ -> clearText() }, null)
-        }
-        copyButton.apply {
-            isEnabled = false
-            toolTipText = message("translation.dialog.copy.translation")
-            setListener({ _, _ -> copyTranslation() }, null)
-        }
-
-        historyButton.apply {
-            toolTipText = message("translation.dialog.history")
-            setListener({ _, _ -> showHistoryPopup() }, null)
-        }
+        clearButton.setListener({ _, _ -> clearText() }, null)
+        copyButton.setListener({ _, _ -> copyTranslation() }, null)
+        historyButton.setListener({ _, _ -> showHistoryPopup() }, null)
 
         initSwapButton()
 
@@ -431,7 +419,6 @@ class TranslationDialog(
     }
 
     private fun initSwapButton() = with(swapButton) {
-        toolTipText = message("translation.dialog.swap.languages")
         setListener({ _, _ ->
             val srcLang = lastTranslation?.srcLang ?: sourceLang
             val targetLang = lastTranslation?.targetLang ?: targetLang

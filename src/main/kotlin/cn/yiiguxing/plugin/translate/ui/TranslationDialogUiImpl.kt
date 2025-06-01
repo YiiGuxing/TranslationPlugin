@@ -35,7 +35,9 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
 
     override val sourceLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val targetLangComboBox: LangComboBoxLink = LangComboBoxLink()
-    override val swapButton: LinkLabel<Void> = LinkLabel()
+    override val swapButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        toolTipText = message("translation.dialog.swap.languages")
+    }
     override val inputTextArea: JTextArea = JBTextArea(1, 1)
     override val translationTextArea: JTextArea = TranslationTextArea(topPanel.background)
 
@@ -58,10 +60,18 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
 
     override val inputTTSButton: TTSButton = TTSButton(project)
     override val translationTTSButton: TTSButton = TTSButton(project)
-    override val clearButton: LinkLabel<Void> = LinkLabel()
-    override val copyButton: LinkLabel<Void> = LinkLabel()
+    override val clearButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        isEnabled = false
+        toolTipText = message("translation.dialog.clear.text")
+    }
+    override val copyButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        isEnabled = false
+        toolTipText = message("translation.dialog.copy.translation")
+    }
     override val starButton = WordFavoritesUi.createStarLabel()
-    override val historyButton: LinkLabel<Void> = LinkLabel()
+    override val historyButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        toolTipText = message("translation.dialog.history")
+    }
     override val detectedLanguageLabel: JLabel = JLabel()
     override val lightningLabel: JLabel = JLabel().apply {
         isOpaque = false
