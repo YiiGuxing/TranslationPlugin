@@ -145,6 +145,11 @@ class Settings : PersistentStateComponent<Settings> {
     var replacementTranslateLanguageSelection: Boolean = false
 
     /**
+     * 使用上次选择的翻译替换的语言
+     */
+    var useLastReplacementTranslateLanguages: Boolean = false
+
+    /**
      * 折叠原文
      */
     var foldOriginal: Boolean = false

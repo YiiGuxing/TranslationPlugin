@@ -155,11 +155,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }, modalityState)
         }
 
+        val preferableTargetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
         if (Settings.getInstance().replacementTranslateLanguageSelection) {
-            editor.showLanguagesPopup { source, target -> translate(source, target) }
+            editor.showLanguagesPopup(preferableTargetLang) { source, target -> translate(source, target) }
         } else {
-            val targetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
-            translate(Lang.AUTO, targetLang, true)
+            translate(Lang.AUTO, preferableTargetLang, true)
         }
     }
 
@@ -233,7 +233,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         fun String.fixWhitespace() = replace(SPACES, " ")
 
-        fun Editor.showLanguagesPopup(onChosen: (source: Lang, target: Lang) -> Unit) {
+        fun Editor.showLanguagesPopup(preferableTargetLang: Lang, onChosen: (source: Lang, target: Lang) -> Unit) {
             val states = TranslationStates.getInstance()
             val presentation = Presentation.newTemplatePresentation().apply {
                 icon = TranslationIcons.TranslationReplace
@@ -247,11 +247,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             val translator = TranslateService.getInstance().translator
             val sourceLanguages = translator.supportedSourceLanguages
             val targetLanguages = translator.supportedTargetLanguages
-            val (source, target) = states.lastReplacementLanguages?.let { (source, target) ->
-                val sourceLang = source.takeIf { it in sourceLanguages } ?: Lang.AUTO
-                val targetLang = target.takeIf { it in targetLanguages } ?: translator.primaryLanguage
-                sourceLang to targetLang
-            } ?: (Lang.AUTO to translator.primaryLanguage)
+            val preferableLanguages = states.lastReplacementLanguages
+                ?.takeIf { Settings.getInstance().useLastReplacementTranslateLanguages }
+                ?: LanguagePair(Lang.AUTO, preferableTargetLang)
+            val source = preferableLanguages.source.takeIf { it in sourceLanguages } ?: Lang.AUTO
+            val target = preferableLanguages.target.takeIf { it in targetLanguages } ?: translator.primaryLanguage
 
             ui.setSourceLanguages(sourceLanguages, source)
             ui.setTargetLanguages(targetLanguages, target)

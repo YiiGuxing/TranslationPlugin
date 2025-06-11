@@ -53,7 +53,7 @@ class LangaugeSelectPopupUI(
 
         component.border = JBUI.Borders.empty(3, 3, 3, 6)
         component.add(sourceLangComboBox)
-        component.add(JBLabel().apply { icon = TranslationIcons.Right })
+        component.add(JBLabel().apply { icon = TranslationIcons.Transform })
         component.add(targetLangComboBox)
         component.add(actionButton)
 

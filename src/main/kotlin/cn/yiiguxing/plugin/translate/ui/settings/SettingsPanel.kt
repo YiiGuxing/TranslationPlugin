@@ -144,6 +144,13 @@ internal class SettingsPanel(
             states.clearHistories()
         }
 
+        useLastReplacementTranslateLanguageCheckBox.isEnabled =
+            replacementTranslateLanguageSelectionCheckBox.isSelected
+        replacementTranslateLanguageSelectionCheckBox.addItemListener {
+            useLastReplacementTranslateLanguageCheckBox.isEnabled =
+                replacementTranslateLanguageSelectionCheckBox.isSelected
+        }
+
         onConfigureTranslationEngine {
             translationEngineComboBox.selected?.showConfigurationDialog()
         }
@@ -226,6 +233,7 @@ internal class SettingsPanel(
                     || settings.ttsSource != ttsSourceComboBox.selected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
                     || settings.replacementTranslateLanguageSelection != replacementTranslateLanguageSelectionCheckBox.isSelected
+                    || settings.useLastReplacementTranslateLanguages != useLastReplacementTranslateLanguageCheckBox.isSelected
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
                     || settings.showExplanation != showExplanationCheckBox.isSelected
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
@@ -283,6 +291,7 @@ internal class SettingsPanel(
             autoPlayTTS = autoPlayTTSCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
             replacementTranslateLanguageSelection = replacementTranslateLanguageSelectionCheckBox.isSelected
+            useLastReplacementTranslateLanguages = useLastReplacementTranslateLanguageCheckBox.isSelected
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
             showExplanation = showExplanationCheckBox.isSelected
             translateDocumentation = translateDocumentationCheckBox.isSelected
@@ -311,6 +320,7 @@ internal class SettingsPanel(
         autoPlayTTSCheckBox.isSelected = settings.autoPlayTTS
         autoReplaceCheckBox.isSelected = settings.autoReplace
         replacementTranslateLanguageSelectionCheckBox.isSelected = settings.replacementTranslateLanguageSelection
+        useLastReplacementTranslateLanguageCheckBox.isSelected = settings.useLastReplacementTranslateLanguages
         showWordsOnStartupCheckBox.isSelected = settings.showWordsOnStartup
         showExplanationCheckBox.isSelected = settings.showExplanation
         primaryFontComboBox.fontName = settings.primaryFontFamily
