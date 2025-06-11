@@ -2,8 +2,12 @@
 
 ## [Unreleased]
 
-- Added translation actions to the Jupyter Notebook context menu.
-- Jupyter Notebook 现在支持右键菜单翻译操作
+- Added the source language selection mode option, making the strategy for choosing source languages more flexible.
+- Jupyter Notebook now supports context menu translation operations.
+- "Translation and Replacement" action now supports selecting source and target languages.
+- 新增源语言选择模式选项，源语言的选择策略更加灵活
+- Jupyter Notebook 现在支持上下文菜单翻译操作
+- “翻译与替换”操作现在支持选择源语言和目标语言
 
 ## [3.7.2] (2025/05/15)
 
