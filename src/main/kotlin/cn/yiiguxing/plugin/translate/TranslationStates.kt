@@ -30,7 +30,7 @@ class TranslationStates : PersistentStateComponent<TranslationStates> {
 
     var lastLanguages: LanguagePair = LanguagePair()
 
-    var lastReplacementTargetLanguage: Lang? = null
+    var lastReplacementLanguages: LanguagePair? = null
 
     var pinTranslationDialog: Boolean = false
     var translationDialogLocationX: Int? = null

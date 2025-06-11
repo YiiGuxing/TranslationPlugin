@@ -159,7 +159,8 @@ internal abstract class SettingsUi {
     protected val autoReplaceCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoReplace"))
     protected val showReplacementActionCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.show.replacement.action"))
-    protected val selectTargetLanguageCheckBox: JBCheckBox = JBCheckBox(message("settings.options.selectLanguage"))
+    protected val replacementTranslateLanguageSelectionCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.options.replacement.translate.language.selection"))
     protected val showWordsOnStartupCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordsOnStartup"))
     protected val wordbookStoragePathField: TextFieldWithBrowseButton = TextFieldWithBrowseButton().apply {
         isEditable = false
@@ -289,8 +290,8 @@ internal abstract class SettingsUi {
         }
 
         val translateAndReplacePanel = titledPanel(message("settings.panel.title.translate.and.replace")) {
+            add(replacementTranslateLanguageSelectionCheckBox, wrap().span(3))
             add(showReplacementActionCheckBox, wrap().span(3))
-            add(selectTargetLanguageCheckBox, wrap().span(3))
             add(autoReplaceCheckBox, wrap().span(3))
             add(JLabel(message("settings.label.separators")))
             add(separatorTextField)

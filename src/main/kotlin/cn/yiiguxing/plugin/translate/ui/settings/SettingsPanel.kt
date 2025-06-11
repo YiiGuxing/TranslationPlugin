@@ -225,7 +225,7 @@ internal class SettingsPanel(
                     || settings.autoPlayTTS != autoPlayTTSCheckBox.isSelected
                     || settings.ttsSource != ttsSourceComboBox.selected
                     || settings.autoReplace != autoReplaceCheckBox.isSelected
-                    || settings.selectTargetLanguageBeforeReplacement != selectTargetLanguageCheckBox.isSelected
+                    || settings.replacementTranslateLanguageSelection != replacementTranslateLanguageSelectionCheckBox.isSelected
                     || settings.showWordsOnStartup != showWordsOnStartupCheckBox.isSelected
                     || settings.showExplanation != showExplanationCheckBox.isSelected
                     || settings.translateDocumentation != translateDocumentationCheckBox.isSelected
@@ -282,7 +282,7 @@ internal class SettingsPanel(
             keepFormat = keepFormatCheckBox.isSelected
             autoPlayTTS = autoPlayTTSCheckBox.isSelected
             autoReplace = autoReplaceCheckBox.isSelected
-            selectTargetLanguageBeforeReplacement = selectTargetLanguageCheckBox.isSelected
+            replacementTranslateLanguageSelection = replacementTranslateLanguageSelectionCheckBox.isSelected
             showWordsOnStartup = showWordsOnStartupCheckBox.isSelected
             showExplanation = showExplanationCheckBox.isSelected
             translateDocumentation = translateDocumentationCheckBox.isSelected
@@ -310,7 +310,7 @@ internal class SettingsPanel(
         keepFormatCheckBox.isSelected = settings.keepFormat
         autoPlayTTSCheckBox.isSelected = settings.autoPlayTTS
         autoReplaceCheckBox.isSelected = settings.autoReplace
-        selectTargetLanguageCheckBox.isSelected = settings.selectTargetLanguageBeforeReplacement
+        replacementTranslateLanguageSelectionCheckBox.isSelected = settings.replacementTranslateLanguageSelection
         showWordsOnStartupCheckBox.isSelected = settings.showWordsOnStartup
         showExplanationCheckBox.isSelected = settings.showExplanation
         primaryFontComboBox.fontName = settings.primaryFontFamily

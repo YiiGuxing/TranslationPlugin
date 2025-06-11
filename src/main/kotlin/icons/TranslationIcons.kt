@@ -27,6 +27,9 @@ object TranslationIcons {
     val Quote: Icon = load("/icons/quote.svg")
 
     @JvmField
+    val Right: Icon = load("/icons/right.svg")
+
+    @JvmField
     val Speech: Icon = load("/icons/speech.svg")
 
     @JvmField

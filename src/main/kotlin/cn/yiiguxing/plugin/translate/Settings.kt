@@ -140,9 +140,9 @@ class Settings : PersistentStateComponent<Settings> {
     var autoReplace: Boolean = false
 
     /**
-     * 翻译替换前选择目标语言
+     * 翻译替换前选择语言
      */
-    var selectTargetLanguageBeforeReplacement: Boolean = false
+    var replacementTranslateLanguageSelection: Boolean = false
 
     /**
      * 折叠原文

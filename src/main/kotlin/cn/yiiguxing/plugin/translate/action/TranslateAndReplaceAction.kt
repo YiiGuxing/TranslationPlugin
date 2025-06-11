@@ -5,6 +5,8 @@ import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.ui.LangaugeSelectPopupUI
+import cn.yiiguxing.plugin.translate.ui.LangaugeSelectPopups
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
@@ -31,6 +33,7 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.ReadonlyStatusHandler
 import com.intellij.ui.JBColor
 import com.intellij.util.concurrency.EdtScheduledExecutorService
+import icons.TranslationIcons
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -82,7 +85,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val isWritable = project
             ?.let { ReadonlyStatusHandler.ensureDocumentWritable(it, document) }
             ?: document.isWritable
-        if (!isWritable) {
+        if (!isWritable || editor.isViewer) {
             return
         }
         val translateService = TranslateService.getInstance()
@@ -102,13 +105,15 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val processedText = text.trim().splitCamelCaseWords()
         val primaryLanguage = translateService.translator.primaryLanguage
 
-        val indicator = Indicator(project, editorRef).apply { setProgressText(processedText) }
+        val indicator: Indicator by lazy {
+            Indicator(project, editorRef).apply { setProgressText(processedText) }
+        }
         val modalityState = ModalityState.current()
-        fun translate(targetLang: Lang, reTranslate: Boolean = false) {
+        fun translate(sourceLang: Lang, targetLang: Lang, reTranslate: Boolean = false) {
             if (indicator.checkProcessCanceledAndEditorDisposed()) {
                 return
             }
-            translateService.translate(processedText, Lang.AUTO, targetLang, object : TranslateListener {
+            translateService.translate(processedText, sourceLang, targetLang, object : TranslateListener {
                 override fun onSuccess(translation: Translation) {
                     if (indicator.checkProcessCanceledAndEditorDisposed()) {
                         return
@@ -120,10 +125,14 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                     ) {
                         val delay = translateService.translator.intervalLimit
                         if (delay <= 0) {
-                            translate(primaryLanguage)
+                            translate(translation.srcLang, primaryLanguage)
                         } else {
                             EdtScheduledExecutorService.getInstance()
-                                .schedule({ translate(primaryLanguage) }, delay.toLong(), TimeUnit.MILLISECONDS)
+                                .schedule(
+                                    { translate(translation.srcLang, primaryLanguage) },
+                                    delay.toLong(),
+                                    TimeUnit.MILLISECONDS
+                                )
                         }
                     } else {
                         indicator.processFinish()
@@ -146,11 +155,11 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             }, modalityState)
         }
 
-        if (Settings.getInstance().selectTargetLanguageBeforeReplacement) {
-            editor.showTargetLanguagesPopup { translate(it) }
+        if (Settings.getInstance().replacementTranslateLanguageSelection) {
+            editor.showLanguagesPopup { source, target -> translate(source, target) }
         } else {
             val targetLang = if (processedText.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
-            translate(targetLang, true)
+            translate(Lang.AUTO, targetLang, true)
         }
     }
 
@@ -224,28 +233,31 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
         fun String.fixWhitespace() = replace(SPACES, " ")
 
-        fun Editor.showTargetLanguagesPopup(onChosen: (Lang) -> Unit) {
+        fun Editor.showLanguagesPopup(onChosen: (source: Lang, target: Lang) -> Unit) {
             val states = TranslationStates.getInstance()
-            val translateService = TranslateService.getInstance()
-            val languages = translateService.translator.supportedTargetLanguages.sortedByDescending {
-                if (it == Lang.AUTO) Int.MAX_VALUE else states.getLanguageScore(it)
+            val presentation = Presentation.newTemplatePresentation().apply {
+                icon = TranslationIcons.TranslationReplace
+                text = message("action.TranslateAndReplaceAction.description")
             }
-            val index = languages.indexOf(states.lastReplacementTargetLanguage)
-
-            val step = object : SpeedSearchListPopupStep<Lang>(languages, title = message("title.targetLanguage")) {
-                override fun getTextFor(value: Lang): String = value.localeName
-                override fun onChosen(selectedValue: Lang, finalChoice: Boolean): PopupStep<*>? {
-                    onChosen(selectedValue)
-                    states.accumulateLanguageScore(selectedValue)
-                    states.lastReplacementTargetLanguage = selectedValue
-                    return super.onChosen(selectedValue, true)
-                }
-            }
-            if (index >= 0) {
-                step.defaultOptionIndex = index
+            val ui = LangaugeSelectPopupUI(presentation) { source, target ->
+                states.lastReplacementLanguages = LanguagePair(source, target)
+                onChosen(source, target)
             }
 
-            showListPopup(step, 10)
+            val translator = TranslateService.getInstance().translator
+            val sourceLanguages = translator.supportedSourceLanguages
+            val targetLanguages = translator.supportedTargetLanguages
+            val (source, target) = states.lastReplacementLanguages?.let { (source, target) ->
+                val sourceLang = source.takeIf { it in sourceLanguages } ?: Lang.AUTO
+                val targetLang = target.takeIf { it in targetLanguages } ?: translator.primaryLanguage
+                sourceLang to targetLang
+            } ?: (Lang.AUTO to translator.primaryLanguage)
+
+            ui.setSourceLanguages(sourceLanguages, source)
+            ui.setTargetLanguages(targetLanguages, target)
+            val popup = LangaugeSelectPopups.createPopup(ui)
+            check(popup.canShow())
+            popup.showInBestPositionFor(this)
         }
 
         fun Editor.canShowPopup(selectionRange: TextRange, targetText: String): Boolean {
