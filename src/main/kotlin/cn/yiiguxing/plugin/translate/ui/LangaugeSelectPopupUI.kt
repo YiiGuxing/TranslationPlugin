@@ -50,17 +50,8 @@ class LangaugeSelectPopupUI(
     init {
         initComboBoxes()
         initFocusTraversalPolicy()
-
-        component.border = JBUI.Borders.empty(3, 3, 3, 6)
-        component.add(sourceLangComboBox)
-        component.add(JBLabel().apply { icon = TranslationIcons.Transform })
-        component.add(targetLangComboBox)
-        component.add(actionButton)
-
-        val keyStroke = KeyStroke.getKeyStroke("ENTER")
-        sourceLangComboBox.registerComboBoxKeyboardAction(keyStroke)
-        targetLangComboBox.registerComboBoxKeyboardAction(keyStroke)
-        actionButton.addKeyboardAction(keyStroke) { actionButton.click() }
+        initKeyboardActions()
+        layout()
     }
 
     private fun initComboBoxes() {
@@ -98,7 +89,20 @@ class LangaugeSelectPopupUI(
         }
     }
 
-    private fun ComboBox<*>.registerComboBoxKeyboardAction(keyStroke: KeyStroke) {
+    private fun initKeyboardActions() {
+        val enterKeyStroke = KeyStroke.getKeyStroke("ENTER")
+        sourceLangComboBox.registerComboBoxKeyboard(enterKeyStroke)
+        targetLangComboBox.registerComboBoxKeyboard(enterKeyStroke)
+        actionButton.addKeyboardAction(enterKeyStroke) { actionButton.click() }
+        val rightKeyStroke = KeyStroke.getKeyStroke("RIGHT")
+        sourceLangComboBox.registerTransferFocusKeyboards(rightKeyStroke)
+        targetLangComboBox.registerTransferFocusKeyboards(rightKeyStroke)
+        val leftKeyStroke = KeyStroke.getKeyStroke("LEFT")
+        targetLangComboBox.registerTransferFocusBackwardKeyboards(leftKeyStroke)
+        actionButton.registerTransferFocusBackwardKeyboards(leftKeyStroke)
+    }
+
+    private fun ComboBox<*>.registerComboBoxKeyboard(keyStroke: KeyStroke) {
         addKeyboardAction(keyStroke) {
             if (!isPopupVisible) {
                 showPopup()
@@ -106,6 +110,14 @@ class LangaugeSelectPopupUI(
                 transferFocus()
             }
         }
+    }
+
+    private fun layout() {
+        component.border = JBUI.Borders.empty(3, 3, 3, 6)
+        component.add(sourceLangComboBox)
+        component.add(JBLabel().apply { icon = TranslationIcons.Transform })
+        component.add(targetLangComboBox)
+        component.add(actionButton)
     }
 
     internal fun setPopup(popup: JBPopup) {
