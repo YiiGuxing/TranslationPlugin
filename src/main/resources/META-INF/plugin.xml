@@ -53,6 +53,10 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
+        <projectService
+                overrides="true"
+                serviceInterface="com.intellij.lang.documentation.ide.IdeDocumentationTargetProvider"
+                serviceImplementation="cn.yiiguxing.plugin.translate.documentation.TranslatableIdeDocumentationTargetProvider"/>
 
         <applicationConfigurable groupId="tools"
                                  displayName="Translation"
