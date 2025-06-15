@@ -105,7 +105,7 @@ open class ToggleQuickDocTranslationAction :
                 val target = browserFacade.targetPointer.dereference() as? TranslatableDocumentationTarget
                     ?: return
 
-                // FIXME: Don't work...
+                // FIXME: It doesn't work...
                 target.shouldTranslate = state
                 browserFacade.reload()
             }
