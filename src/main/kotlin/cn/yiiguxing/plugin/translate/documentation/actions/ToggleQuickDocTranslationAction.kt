@@ -1,8 +1,10 @@
-package cn.yiiguxing.plugin.translate.action
+package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.intellij.compat.DocumentationBrowserCompat
 import cn.yiiguxing.intellij.compat.get
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
+import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager

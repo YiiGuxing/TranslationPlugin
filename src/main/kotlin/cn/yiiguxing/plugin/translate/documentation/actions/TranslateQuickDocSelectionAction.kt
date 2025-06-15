@@ -1,10 +1,11 @@
-package cn.yiiguxing.plugin.translate.action
+package cn.yiiguxing.plugin.translate.documentation.actions
 
+import cn.yiiguxing.plugin.translate.action.ACTION_HIGH_PRIORITY
+import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
-import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
@@ -34,12 +35,12 @@ class TranslateQuickDocSelectionAction :
     override fun update(e: AnActionEvent) {
         //don't show in toolbar, invoke via context menu or with keyboard shortcut
         //to not clash with "Translate documentation" toggle
-        e.presentation.isEnabledAndVisible = quickDocHasSelection(e) && !e.isFromActionToolbar
+        e.presentation.isEnabledAndVisible = hasQuickDocSelection(e) && !e.isFromActionToolbar
         e.presentation.icon = TranslationIcons.Translation
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)
+        getSelectedQuickDocText(e)
             ?.processBeforeTranslate()
             ?.let {
                 e.project.let { project ->
@@ -49,7 +50,11 @@ class TranslateQuickDocSelectionAction :
     }
 
     companion object {
-        fun quickDocHasSelection(e: AnActionEvent): Boolean =
-            !e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT).isNullOrBlank()
+        private const val SELECTED_QUICK_DOC_TEXT = "QUICK_DOC.SELECTED_TEXT"
+
+        fun getSelectedQuickDocText(e: AnActionEvent): String? =
+            (e.dataContext.getData(SELECTED_QUICK_DOC_TEXT) as? String)?.takeIf { it.isNotBlank() }
+
+        fun hasQuickDocSelection(e: AnActionEvent): Boolean = getSelectedQuickDocText(e) != null
     }
 }

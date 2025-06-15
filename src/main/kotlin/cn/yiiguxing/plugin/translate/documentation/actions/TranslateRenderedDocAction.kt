@@ -1,9 +1,10 @@
-package cn.yiiguxing.plugin.translate.documentation
+package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.intellij.compat.DocumentationRenderingCompat
 import cn.yiiguxing.intellij.compat.instance
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
+import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.util.concurrent.finishOnUiThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
@@ -15,7 +16,7 @@ internal class TranslateRenderedDocAction(
     private val docComment: PsiDocCommentBase
 ) : ToggleableTranslationAction() {
 
-    private val isEnabled: Boolean by lazy { DocTranslationService.isSupportedForPsiElement(docComment) }
+    private val isEnabled: Boolean by lazy { DocTranslationService.Companion.isSupportedForPsiElement(docComment) }
 
     override fun update(event: AnActionEvent, isSelected: Boolean) {
         val presentation = event.presentation
@@ -27,20 +28,20 @@ internal class TranslateRenderedDocAction(
     }
 
     override fun isSelected(event: AnActionEvent): Boolean {
-        return DocTranslationService.isInlayDocTranslated(docComment)
+        return DocTranslationService.Companion.isInlayDocTranslated(docComment)
     }
 
     override fun setSelected(event: AnActionEvent, state: Boolean) {
         val editor = editor.takeUnless { it.isDisposed } ?: return
         val file = docComment.containingFile ?: return
 
-        DocTranslationService.setInlayDocTranslated(docComment, state)
-        DocumentationRenderingCompat
+        DocTranslationService.Companion.setInlayDocTranslated(docComment, state)
+        DocumentationRenderingCompat.Companion
             .instance()
             .update(editor, file)
             .finishOnUiThread(ModalityState.current()) {
                 if (it != true) {
-                    DocTranslationService.setInlayDocTranslated(docComment, !state)
+                    DocTranslationService.Companion.setInlayDocTranslated(docComment, !state)
                     event.presentation.isTranslationSelected = !state
                 }
             }

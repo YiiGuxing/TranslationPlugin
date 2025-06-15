@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction
+import cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocAction
+import cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocSelectionAction
 import com.intellij.codeInsight.documentation.DocumentationActionProvider
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.Separator

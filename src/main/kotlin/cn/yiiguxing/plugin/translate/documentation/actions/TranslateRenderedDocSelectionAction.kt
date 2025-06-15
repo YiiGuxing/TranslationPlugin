@@ -1,5 +1,8 @@
-package cn.yiiguxing.plugin.translate.action
+package cn.yiiguxing.plugin.translate.documentation.actions
 
+import cn.yiiguxing.plugin.translate.action.ACTION_HIGH_PRIORITY
+import cn.yiiguxing.plugin.translate.action.EditorTranslateAction
+import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
@@ -28,7 +31,7 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
 
         // 为了在菜单项上显示快捷键提示
         ActionManager.getInstance()
-            .getAction(EditorTranslateAction.ACTION_ID)
+            .getAction(EditorTranslateAction.Companion.ACTION_ID)
             ?.let { copyShortcutFrom(it) }
     }
 

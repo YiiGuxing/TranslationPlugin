@@ -94,7 +94,7 @@
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
 
-    <actions>
+    <actions resource-bundle="messages.TranslationBundle">
         <action id="Translation.ShowTranslationDialogAction"
                 icon="TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
@@ -126,14 +126,14 @@
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"/>
         <action id="Translation.ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
-        <action id="Translation.TranslateQuickDocAction"
-                class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction"
+        <action id="Translation.TranslateQuickDocSelectionAction"
+                class="cn.yiiguxing.plugin.translate.documentation.actions.TranslateQuickDocSelectionAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.ToggleQuickDocTranslationAction"
-                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
+                class="cn.yiiguxing.plugin.translate.documentation.actions.ToggleQuickDocTranslationAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TranslateRenderedDocSelectionAction"
-                class="cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction"
+                class="cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocSelectionAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TranslateTextComponentAction"
                 icon="TranslationIcons.Translation"
@@ -188,7 +188,7 @@
         </group>
         <group id="Translation.Documentation.PrimaryGroup">
             <separator/>
-            <reference ref="Translation.TranslateQuickDocAction"/>
+            <reference ref="Translation.TranslateQuickDocSelectionAction"/>
             <reference ref="Translation.ToggleQuickDocTranslationAction"/>
 
             <add-to-group group-id="Documentation.PrimaryGroup"/>
