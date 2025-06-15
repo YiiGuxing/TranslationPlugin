@@ -1,12 +1,11 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
-import cn.yiiguxing.intellij.compat.DocumentationBrowserCompat
-import cn.yiiguxing.intellij.compat.get
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
+import cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationTarget
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -19,11 +18,13 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.platform.ide.documentation.DOCUMENTATION_BROWSER
+import com.intellij.platform.ide.documentation.DocumentationBrowserFacade
 import com.intellij.util.concurrency.AppExecutorUtil
 
+@Suppress("UnstableApiUsage")
 open class ToggleQuickDocTranslationAction :
     ToggleableTranslationAction(),
     HintManagerImpl.ActionToIgnore,
@@ -37,10 +38,7 @@ open class ToggleQuickDocTranslationAction :
         templatePresentation.text = adaptedMessage("action.ToggleQuickDocTranslationAction.text")
     }
 
-    private val isDocumentationV2: Boolean
-        get() = IdeVersion >= IdeVersion.IDE2023_2 || Registry.`is`("documentation.v2")
-
-    private fun documentationBrowser(dc: DataContext): DocumentationBrowserCompat? = DocumentationBrowserCompat.get(dc)
+    private fun documentationBrowser(dc: DataContext): DocumentationBrowserFacade? = dc.getData(DOCUMENTATION_BROWSER)
 
     final override fun update(event: AnActionEvent, isSelected: Boolean) {
         val presentation = event.presentation
@@ -55,10 +53,10 @@ open class ToggleQuickDocTranslationAction :
             return
         }
 
-        if (isDocumentationV2) {
+        if (DocTranslationService.isDocumentationV2) {
             presentation.isEnabledAndVisible = documentationBrowser(event.dataContext)
-                ?.targetElement
-                .let { it != null && DocTranslationService.isSupportedForPsiElement(it) }
+                ?.targetPointer
+                ?.dereference() is TranslatableDocumentationTarget
             return
         }
 
@@ -85,10 +83,12 @@ open class ToggleQuickDocTranslationAction :
 
     override fun isSelected(event: AnActionEvent): Boolean {
         val project = event.project ?: return false
-        val state = if (isDocumentationV2) {
-            documentationBrowser(event.dataContext)?.targetElement?.let {
-                DocTranslationService.getTranslationState(it)
-            }
+        val state = if (DocTranslationService.isDocumentationV2) {
+            documentationBrowser(event.dataContext)
+                ?.targetPointer
+                ?.dereference()
+                ?.let { it as? TranslatableDocumentationTarget }
+                ?.shouldTranslate
         } else {
             QuickDocUtil.getActiveDocComponent(project)?.element?.let {
                 DocTranslationService.getTranslationState(it)
@@ -100,10 +100,14 @@ open class ToggleQuickDocTranslationAction :
 
     override fun setSelected(event: AnActionEvent, state: Boolean) {
         val project = event.project ?: return
-        if (isDocumentationV2) {
-            documentationBrowser(event.dataContext)?.apply {
-                targetElement?.let { DocTranslationService.setTranslationState(it, state) }
-                reload()
+        if (DocTranslationService.isDocumentationV2) {
+            documentationBrowser(event.dataContext)?.let { browserFacade ->
+                val target = browserFacade.targetPointer.dereference() as? TranslatableDocumentationTarget
+                    ?: return
+
+                // FIXME: Don't work...
+                target.shouldTranslate = state
+                browserFacade.reload()
             }
         } else {
             toggleTranslation(project, state)
