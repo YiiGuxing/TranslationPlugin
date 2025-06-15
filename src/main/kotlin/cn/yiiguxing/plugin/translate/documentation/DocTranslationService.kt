@@ -1,16 +1,20 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider
+import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.CompositeDocumentationProvider
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.registry.Registry
+import com.intellij.platform.ide.documentation.DOCUMENTATION_TARGETS
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.SmartPointerManager
@@ -94,6 +98,9 @@ internal class DocTranslationService : Disposable {
         }
 
 
+        val isDocumentationV2: Boolean
+            get() = IdeVersion >= IdeVersion.IDE2023_2 || Registry.`is`("documentation.v2")
+
         /**
          * Sets the [translation state][translationState] of the specified [PSI element][element].
          */
@@ -167,6 +174,19 @@ internal class DocTranslationService : Disposable {
                 } else {
                     inlayDocTranslations.remove(pointer)
                 }
+            }
+        }
+
+        fun isSupportedForDataContext(dataContext: DataContext): Boolean {
+            return isDocumentationV2 &&
+                    dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() is TranslatableDocumentationTarget
+        }
+
+        fun getTranslatableDocumentationTarget(dataContext: DataContext): TranslatableDocumentationTarget? {
+            return if (isDocumentationV2) {
+                dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() as? TranslatableDocumentationTarget
+            } else {
+                null
             }
         }
 
