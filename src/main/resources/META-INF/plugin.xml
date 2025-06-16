@@ -58,6 +58,11 @@
                 serviceInterface="com.intellij.lang.documentation.ide.IdeDocumentationTargetProvider"
                 serviceImplementation="cn.yiiguxing.plugin.translate.documentation.TranslatableIdeDocumentationTargetProvider"/>
 
+        <platform.backend.documentation.linkHandler
+                id="Translation.TranslatableDocumentationLinkHandler"
+                order="first"
+                implementation="cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationLinkHandler"/>
+
         <applicationConfigurable groupId="tools"
                                  displayName="Translation"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurableImpl"/>
