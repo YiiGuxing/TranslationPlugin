@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
  */
 @Suppress("UnstableApiUsage")
 class TranslatableDocumentationTarget(
-    private val delegate: DocumentationTarget,
+    internal val delegate: DocumentationTarget,
     @Volatile var shouldTranslate: Boolean = false
 ) : DocumentationTarget by delegate {
 
