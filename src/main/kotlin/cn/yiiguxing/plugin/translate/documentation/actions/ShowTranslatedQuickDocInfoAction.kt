@@ -29,8 +29,7 @@ class ShowTranslatedQuickDocInfoAction : AnAction(),
         val project = CommonDataKeys.PROJECT.getData(dataContext) ?: return
         val editor = CommonDataKeys.EDITOR.getData(dataContext) ?: return
 
-
-        target.shouldTranslate = true
+        target.translate = true
         @Suppress("UnstableApiUsage")
         DocumentationManagementHelper.instance(project).showQuickDoc(editor, target)
     }

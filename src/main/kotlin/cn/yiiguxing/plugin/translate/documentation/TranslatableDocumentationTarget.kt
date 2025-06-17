@@ -6,16 +6,29 @@ import com.intellij.platform.backend.documentation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * A [DocumentationTarget] that supports translation.
+ * The [translate] state will be shared among all instances created via the [createPointer] method.
  */
 @Suppress("UnstableApiUsage")
-class TranslatableDocumentationTarget(
+internal class TranslatableDocumentationTarget private constructor(
     private val project: Project,
-    internal val delegate: DocumentationTarget,
-    @Volatile var shouldTranslate: Boolean = false
+    val delegate: DocumentationTarget,
+    private val translateRef: AtomicBoolean
 ) : DocumentationTarget by delegate {
+
+    /**
+     * Indicates whether the documentation target should be translated.
+     *
+     * **Note**: This property is shared among all instances created via the [createPointer] method.
+     */
+    var translate: Boolean
+        get() = translateRef.get()
+        set(value) {
+            translateRef.set(value)
+        }
 
     init {
         check(delegate !is TranslatableDocumentationTarget) {
@@ -23,17 +36,22 @@ class TranslatableDocumentationTarget(
         }
     }
 
+    constructor(project: Project, delegate: DocumentationTarget, translate: Boolean = false) : this(
+        project, delegate, AtomicBoolean(translate)
+    )
+
     override fun createPointer(): Pointer<out DocumentationTarget> {
         val originalPointer = delegate.createPointer()
         return Pointer {
             val target = originalPointer.dereference() ?: return@Pointer null
-            TranslatableDocumentationTarget(project, target, shouldTranslate)
+            // Passing `translateRef` to ensure the state is preserved and shared cross instances.
+            TranslatableDocumentationTarget(project, target, translateRef)
         }
     }
 
     override fun computeDocumentation(): DocumentationResult? {
         val originalResult = delegate.computeDocumentation()
-        if (!shouldTranslate ||
+        if (!translate ||
             originalResult == null ||
             !(originalResult is AsyncDocumentation || originalResult is DocumentationData)
         ) {

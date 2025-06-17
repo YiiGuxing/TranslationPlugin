@@ -88,7 +88,7 @@ open class ToggleQuickDocTranslationAction :
                 ?.targetPointer
                 ?.dereference()
                 ?.let { it as? TranslatableDocumentationTarget }
-                ?.shouldTranslate
+                ?.translate
         } else {
             QuickDocUtil.getActiveDocComponent(project)?.element?.let {
                 DocTranslationService.getTranslationState(it)
@@ -105,8 +105,7 @@ open class ToggleQuickDocTranslationAction :
                 val target = browserFacade.targetPointer.dereference() as? TranslatableDocumentationTarget
                     ?: return
 
-                // FIXME: It doesn't work...
-                target.shouldTranslate = state
+                target.translate = state
                 browserFacade.reload()
             }
         } else {
