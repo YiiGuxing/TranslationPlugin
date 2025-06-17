@@ -52,8 +52,6 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationStates"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
 
-        <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
-
         <applicationConfigurable groupId="tools"
                                  displayName="Translation"
                                  instance="cn.yiiguxing.plugin.translate.ui.settings.TranslationConfigurableImpl"/>
