@@ -10,7 +10,9 @@ import com.intellij.platform.backend.documentation.DocumentationTarget
 import com.intellij.psi.PsiFile
 
 @Suppress("UnstableApiUsage")
-class TranslatableIdeDocumentationTargetProvider(project: Project) : IdeDocumentationTargetProviderImpl(project) {
+class TranslatableIdeDocumentationTargetProvider(
+    private val project: Project
+) : IdeDocumentationTargetProviderImpl(project) {
 
     private val settings: Settings by lazy { service<Settings>() }
 
@@ -20,12 +22,12 @@ class TranslatableIdeDocumentationTargetProvider(project: Project) : IdeDocument
         lookupElement: LookupElement
     ): DocumentationTarget? {
         return super.documentationTarget(editor, file, lookupElement)
-            ?.let { TranslatableDocumentationTarget(it, settings.translateDocumentation) }
+            ?.let { TranslatableDocumentationTarget(project, it, settings.translateDocumentation) }
     }
 
     override fun documentationTargets(editor: Editor, file: PsiFile, offset: Int): List<DocumentationTarget> {
         val shouldTranslate = settings.translateDocumentation
         return super.documentationTargets(editor, file, offset)
-            .map { TranslatableDocumentationTarget(it, shouldTranslate) }
+            .map { TranslatableDocumentationTarget(project, it, shouldTranslate) }
     }
 }

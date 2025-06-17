@@ -1,10 +1,8 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import com.intellij.model.Pointer
-import com.intellij.platform.backend.documentation.AsyncDocumentation
-import com.intellij.platform.backend.documentation.DocumentationContent
-import com.intellij.platform.backend.documentation.DocumentationResult
-import com.intellij.platform.backend.documentation.DocumentationTarget
+import com.intellij.openapi.project.Project
+import com.intellij.platform.backend.documentation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -14,6 +12,7 @@ import kotlinx.coroutines.withContext
  */
 @Suppress("UnstableApiUsage")
 class TranslatableDocumentationTarget(
+    private val project: Project,
     internal val delegate: DocumentationTarget,
     @Volatile var shouldTranslate: Boolean = false
 ) : DocumentationTarget by delegate {
@@ -28,21 +27,27 @@ class TranslatableDocumentationTarget(
         val originalPointer = delegate.createPointer()
         return Pointer {
             val target = originalPointer.dereference() ?: return@Pointer null
-            TranslatableDocumentationTarget(target, shouldTranslate)
+            TranslatableDocumentationTarget(project, target, shouldTranslate)
         }
     }
 
     override fun computeDocumentation(): DocumentationResult? {
         val originalResult = delegate.computeDocumentation()
-        if (!shouldTranslate || originalResult == null) {
+        if (!shouldTranslate ||
+            originalResult == null ||
+            !(originalResult is AsyncDocumentation || originalResult is DocumentationData)
+        ) {
             return originalResult
         }
 
         return DocumentationResult.asyncDocumentation {
             val documentation = when (originalResult) {
                 is AsyncDocumentation -> originalResult.supplier()
-                else -> originalResult as DocumentationResult.Documentation
-            } ?: return@asyncDocumentation null
+                is DocumentationResult.Documentation -> originalResult
+            }
+            if (documentation !is DocumentationData) {
+                return@asyncDocumentation documentation
+            }
 
             val translatedDocumentationFlow = flow {
                 val translatedDocumentation = withContext(Dispatchers.IO) {
