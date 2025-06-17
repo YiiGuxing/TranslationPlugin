@@ -65,7 +65,7 @@ class TranslationUIManager private constructor() : Disposable {
         }
 
         fun instance(project: Project?): TranslationUIManager {
-            return project?.service<AppService>() ?: service<AppService>()
+            return project?.service<TranslationUIManager>() ?: service<TranslationUIManager>()
         }
 
         /**
