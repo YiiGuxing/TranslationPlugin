@@ -25,7 +25,6 @@ import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import com.intellij.openapi.components.service
 import icons.TranslationIcons
-import java.util.*
 import javax.swing.Icon
 
 enum class TranslationEngine(
@@ -137,8 +136,6 @@ enum class TranslationEngine(
     }
 
     companion object {
-        val DEFAULT: TranslationEngine by lazy {
-            if (Locale.getDefault() == Locale.CHINA) MICROSOFT else GOOGLE
-        }
+        val DEFAULT: TranslationEngine = MICROSOFT
     }
 }
