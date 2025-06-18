@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage", "DEPRECATION")
+
 package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.plugin.translate.Settings
@@ -24,7 +26,6 @@ import com.intellij.platform.ide.documentation.DOCUMENTATION_BROWSER
 import com.intellij.platform.ide.documentation.DocumentationBrowserFacade
 import com.intellij.util.concurrency.AppExecutorUtil
 
-@Suppress("UnstableApiUsage")
 open class ToggleQuickDocTranslationAction :
     ToggleableTranslationAction(),
     HintManagerImpl.ActionToIgnore,
@@ -89,13 +90,14 @@ open class ToggleQuickDocTranslationAction :
                 ?.dereference()
                 ?.let { it as? TranslatableDocumentationTarget }
                 ?.translate
+                ?: false
         } else {
             QuickDocUtil.getActiveDocComponent(project)?.element?.let {
                 DocTranslationService.getTranslationState(it)
-            }
+            } ?: Settings.getInstance().translateDocumentation
         }
 
-        return state ?: Settings.getInstance().translateDocumentation
+        return state
     }
 
     override fun setSelected(event: AnActionEvent, state: Boolean) {
