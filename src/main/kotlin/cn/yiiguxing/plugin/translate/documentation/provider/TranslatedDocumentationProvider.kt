@@ -1,12 +1,12 @@
-package cn.yiiguxing.plugin.translate.provider
+package cn.yiiguxing.plugin.translate.documentation.provider
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.DocNotifications
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider.Companion.nullIfRecursive
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider.Companion.nullIfRecursive
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.runReadAction

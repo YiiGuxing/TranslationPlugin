@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.scaled
 import com.intellij.codeInsight.documentation.DocumentationComponent

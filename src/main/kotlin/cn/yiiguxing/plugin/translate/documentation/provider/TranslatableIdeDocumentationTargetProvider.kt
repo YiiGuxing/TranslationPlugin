@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate.documentation
+package cn.yiiguxing.plugin.translate.documentation.provider
 
+import cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationTarget
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.lang.documentation.ide.impl.IdeDocumentationTargetProviderImpl
 import com.intellij.openapi.editor.Editor

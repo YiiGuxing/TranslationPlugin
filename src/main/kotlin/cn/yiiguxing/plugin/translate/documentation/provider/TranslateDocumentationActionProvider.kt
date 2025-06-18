@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.documentation
+package cn.yiiguxing.plugin.translate.documentation.provider
 
 import cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocAction
 import cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocSelectionAction

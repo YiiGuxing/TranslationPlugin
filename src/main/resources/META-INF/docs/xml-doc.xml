@@ -4,21 +4,21 @@
                 id="Translation.TranslatedDocumentationProvider.XML"
                 order="first"
                 language="XML"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.HTML"
                 order="first"
                 language="HTML"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.DTD"
                 order="first"
                 language="DTD"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.XHTML"
                 order="first"
                 language="XHTML"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

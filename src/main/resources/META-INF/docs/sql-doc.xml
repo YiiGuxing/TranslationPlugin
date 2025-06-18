@@ -4,6 +4,6 @@
                 id="Translation.TranslatedDocumentationProvider.SQL"
                 order="first"
                 language="SQL"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

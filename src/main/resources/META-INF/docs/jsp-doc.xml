@@ -4,11 +4,11 @@
                 id="Translation.TranslatedDocumentationProvider.JSP"
                 order="first"
                 language="JSP"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.JSPX"
                 order="first"
                 language="JSPX"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

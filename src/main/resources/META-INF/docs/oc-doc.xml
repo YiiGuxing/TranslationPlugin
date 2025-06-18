@@ -4,6 +4,6 @@
                 id="Translation.TranslatedDocumentationProvider.ObjectiveC"
                 order="first"
                 language="ObjectiveC"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

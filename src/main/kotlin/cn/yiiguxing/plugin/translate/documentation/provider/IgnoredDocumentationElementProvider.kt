@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.provider
+package cn.yiiguxing.plugin.translate.documentation.provider
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension

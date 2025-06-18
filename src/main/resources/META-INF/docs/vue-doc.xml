@@ -4,11 +4,11 @@
                 id="Translation.TranslatedDocumentationProvider.Vue"
                 order="first"
                 language="Vue"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.VueJS"
                 order="first"
                 language="VueJS"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

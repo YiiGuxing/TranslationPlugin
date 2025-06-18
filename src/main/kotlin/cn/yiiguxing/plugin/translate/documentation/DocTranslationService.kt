@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider
+import cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.w
