@@ -13,11 +13,11 @@ interface IgnoredDocumentationElementProvider {
     companion object {
         private val DEFAULT_PROVIDER = object : IgnoredDocumentationElementProvider {}
 
-        private val PROVIDERS = LanguageExtension<IgnoredDocumentationElementProvider>(
-            "cn.yiiguxing.plugin.translate.ignoredDocumentationElementProvider",
+        private val EP_NAME = LanguageExtension<IgnoredDocumentationElementProvider>(
+            "cn.yiiguxing.plugin.translate.documentation.ignoredElementProvider",
             DEFAULT_PROVIDER
         )
 
-        fun forLanguage(language: Language): IgnoredDocumentationElementProvider = PROVIDERS.forLanguage(language)
+        fun forLanguage(language: Language): IgnoredDocumentationElementProvider = EP_NAME.forLanguage(language)
     }
 }

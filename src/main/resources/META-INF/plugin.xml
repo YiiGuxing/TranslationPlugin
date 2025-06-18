@@ -39,7 +39,7 @@
     <depends optional="true" config-file="docs/yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
-        <extensionPoint name="ignoredDocumentationElementProvider"
+        <extensionPoint name="documentation.ignoredElementProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
