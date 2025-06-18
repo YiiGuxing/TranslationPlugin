@@ -1,33 +1,33 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.Settings
 import com.intellij.model.Pointer
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.platform.backend.documentation.*
+import com.intellij.psi.PsiElement
+import com.intellij.refactoring.suggested.createSmartPointer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * A [DocumentationTarget] that supports translation.
- * The [translate] state will be shared among all instances created via the [createPointer] method.
  */
 @Suppress("UnstableApiUsage")
 internal class TranslatableDocumentationTarget private constructor(
-    private val project: Project,
     val delegate: DocumentationTarget,
-    private val translateRef: AtomicBoolean
+    private val pointer: TranslatableDocumentationTargetPointer
 ) : DocumentationTarget by delegate {
 
     /**
      * Indicates whether the documentation target should be translated.
-     *
-     * **Note**: This property is shared among all instances created via the [createPointer] method.
      */
     var translate: Boolean
-        get() = translateRef.get()
+        get() = pointer.translate
         set(value) {
-            translateRef.set(value)
+            pointer.translate = value
         }
 
     init {
@@ -36,18 +36,33 @@ internal class TranslatableDocumentationTarget private constructor(
         }
     }
 
-    constructor(project: Project, delegate: DocumentationTarget, translate: Boolean = false) : this(
-        project, delegate, AtomicBoolean(translate)
+    constructor(
+        project: Project,
+        delegate: DocumentationTarget,
+        translate: Boolean = service<Settings>().translateDocumentation
+    ) : this(
+        delegate,
+        DefaultTranslatableDocumentationTargetPointer(
+            project,
+            createPointer(delegate),
+            translate
+        )
     )
 
-    override fun createPointer(): Pointer<out DocumentationTarget> {
-        val originalPointer = delegate.createPointer()
-        return Pointer {
-            val target = originalPointer.dereference() ?: return@Pointer null
-            // Passing `translateRef` to ensure the state is preserved and shared cross instances.
-            TranslatableDocumentationTarget(project, target, translateRef)
-        }
-    }
+    constructor(
+        project: Project,
+        delegate: DocumentationTarget,
+        psiElement: PsiElement
+    ) : this(
+        delegate,
+        TranslatablePsiDocumentationTargetPointer(
+            project,
+            createPointer(delegate),
+            psiElement.createSmartPointer()
+        )
+    )
+
+    override fun createPointer(): Pointer<out DocumentationTarget> = pointer
 
     override fun computeDocumentation(): DocumentationResult? {
         val originalResult = delegate.computeDocumentation()
@@ -80,4 +95,54 @@ internal class TranslatableDocumentationTarget private constructor(
             documentation.updates(translatedDocumentationFlow)
         }
     }
+
+
+    private sealed interface TranslatableDocumentationTargetPointer : Pointer<TranslatableDocumentationTarget> {
+        val project: Project
+        var translate: Boolean
+    }
+
+    private class DefaultTranslatableDocumentationTargetPointer(
+        override val project: Project,
+        private val delegatePointer: Pointer<out DocumentationTarget>,
+        @Volatile override var translate: Boolean
+    ) : TranslatableDocumentationTargetPointer {
+        override fun dereference(): TranslatableDocumentationTarget? {
+            val target = delegatePointer.dereference() ?: return null
+            return TranslatableDocumentationTarget(target, this)
+        }
+    }
+
+    private class TranslatablePsiDocumentationTargetPointer(
+        override val project: Project,
+        private val delegatePointer: Pointer<out DocumentationTarget>,
+        private val psiElementPointer: Pointer<out PsiElement>
+    ) : TranslatableDocumentationTargetPointer {
+
+        private val settings: Settings by lazy { service<Settings>() }
+
+        override var translate: Boolean
+            get() = psiElementPointer.dereference()
+                ?.let { DocTranslationService.getTranslationState(it) ?: settings.translateDocumentation }
+                ?: false
+            set(value) {
+                psiElementPointer.dereference()?.let {
+                    DocTranslationService.setTranslationState(it, value)
+                }
+            }
+
+        override fun dereference(): TranslatableDocumentationTarget? {
+            val target = delegatePointer.dereference() ?: return null
+            psiElementPointer.dereference() ?: return null
+
+            return TranslatableDocumentationTarget(target, this)
+        }
+    }
+}
+
+
+@Suppress("OverrideOnly", "UnstableApiUsage")
+private fun createPointer(target: DocumentationTarget): Pointer<out DocumentationTarget> {
+    ApplicationManager.getApplication().assertReadAccessAllowed()
+    return target.createPointer()
 }
