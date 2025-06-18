@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider.Companion.nullIfRecursive
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.runReadAction
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeoutException
 class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (!isTranslateDocumentation(element)) {
+        if (DocTranslationService.isDocumentationV2 || !isTranslateDocumentation(element)) {
             return null
         }
 
@@ -46,6 +47,10 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         docUrls: MutableList<String>?,
         onHover: Boolean
     ): String? {
+        if (DocTranslationService.isDocumentationV2) {
+            return null
+        }
+
         val isTranslated = runReadAction { isTranslateDocumentation(element) }
         if (!isTranslated) {
             return null
