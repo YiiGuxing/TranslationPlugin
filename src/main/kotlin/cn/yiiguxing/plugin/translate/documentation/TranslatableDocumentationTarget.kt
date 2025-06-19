@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
+import com.intellij.lang.Language
 import com.intellij.model.Pointer
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
@@ -38,27 +39,31 @@ internal class TranslatableDocumentationTarget private constructor(
 
     constructor(
         project: Project,
+        language: Language,
         delegate: DocumentationTarget,
         translate: Boolean = service<Settings>().translateDocumentation
     ) : this(
-        delegate,
-        DefaultTranslatableDocumentationTargetPointer(
-            project,
-            createPointer(delegate),
-            translate
+        delegate = delegate,
+        pointer = DefaultTranslatableDocumentationTargetPointer(
+            project = project,
+            language = language,
+            delegatePointer = createPointer(delegate),
+            translate = translate
         )
     )
 
     constructor(
         project: Project,
+        language: Language,
         delegate: DocumentationTarget,
         psiElement: PsiElement
     ) : this(
-        delegate,
-        TranslatablePsiDocumentationTargetPointer(
-            project,
-            createPointer(delegate),
-            psiElement.createSmartPointer()
+        delegate = delegate,
+        pointer = TranslatablePsiDocumentationTargetPointer(
+            project = project,
+            language = language,
+            delegatePointer = createPointer(delegate),
+            psiElementPointer = psiElement.createSmartPointer()
         )
     )
 
@@ -86,7 +91,7 @@ internal class TranslatableDocumentationTarget private constructor(
                 val translatedDocumentation = withContext(Dispatchers.IO) {
                     // TODO: 1. Implement translation logic here.
                     //       2. Return the translated version of the documentation.
-                    "<html><body>Translated Documentation</body></html>"
+                    "<html><body>[${pointer.language}]Translated Documentation</body></html>"
                 }
                 emit(DocumentationContent.content(translatedDocumentation))
             }
@@ -99,11 +104,13 @@ internal class TranslatableDocumentationTarget private constructor(
 
     private sealed interface TranslatableDocumentationTargetPointer : Pointer<TranslatableDocumentationTarget> {
         val project: Project
+        val language: Language
         var translate: Boolean
     }
 
     private class DefaultTranslatableDocumentationTargetPointer(
         override val project: Project,
+        override val language: Language,
         private val delegatePointer: Pointer<out DocumentationTarget>,
         @Volatile override var translate: Boolean
     ) : TranslatableDocumentationTargetPointer {
@@ -115,6 +122,7 @@ internal class TranslatableDocumentationTarget private constructor(
 
     private class TranslatablePsiDocumentationTargetPointer(
         override val project: Project,
+        override val language: Language,
         private val delegatePointer: Pointer<out DocumentationTarget>,
         private val psiElementPointer: Pointer<out PsiElement>
     ) : TranslatableDocumentationTargetPointer {

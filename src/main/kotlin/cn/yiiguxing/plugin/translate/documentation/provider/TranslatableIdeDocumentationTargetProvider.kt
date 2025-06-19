@@ -19,11 +19,11 @@ class TranslatableIdeDocumentationTargetProvider(
         lookupElement: LookupElement
     ): DocumentationTarget? {
         return super.documentationTarget(editor, file, lookupElement)
-            ?.let { TranslatableDocumentationTarget(project, it) }
+            ?.let { TranslatableDocumentationTarget(project, file.language, it) }
     }
 
     override fun documentationTargets(editor: Editor, file: PsiFile, offset: Int): List<DocumentationTarget> {
         return super.documentationTargets(editor, file, offset)
-            .map { TranslatableDocumentationTarget(project, it) }
+            .map { TranslatableDocumentationTarget(project, file.language, it) }
     }
 }
