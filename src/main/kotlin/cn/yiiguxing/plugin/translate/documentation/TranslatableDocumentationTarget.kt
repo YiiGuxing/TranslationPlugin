@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.util.toImage
 import com.intellij.lang.Language
 import com.intellij.model.Pointer
 import com.intellij.openapi.application.ApplicationManager
@@ -9,9 +10,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.platform.backend.documentation.*
 import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.createSmartPointer
+import icons.TranslationIcons
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.awt.Image
+
 
 /**
  * A [DocumentationTarget] that supports translation.
@@ -91,9 +95,11 @@ internal class TranslatableDocumentationTarget private constructor(
                 val translatedDocumentation = withContext(Dispatchers.IO) {
                     // TODO: 1. Implement translation logic here.
                     //       2. Return the translated version of the documentation.
-                    "<html><body>[${pointer.language}]Translated Documentation</body></html>"
+                    // language=HTML
+                    "<html><body><table><tbody><tr><td><img src='$ICON_URL'></td><td>Translated Documentation</td></tr></tbody></table></body></html>"
                 }
-                emit(DocumentationContent.content(translatedDocumentation))
+
+                emit(DocumentationContent.content(translatedDocumentation, ICON_MAP))
             }
 
             // TODO: Append the translating status to the original documentation
@@ -146,11 +152,17 @@ internal class TranslatableDocumentationTarget private constructor(
             return TranslatableDocumentationTarget(target, this)
         }
     }
-}
 
+    companion object {
+        private const val ICON_URL = "http://img/TranslationIcons.Translation"
+        private val ICON_MAP: Map<String, Image> by lazy {
+            TranslationIcons.Translation.toImage()?.let { mapOf(ICON_URL to it) } ?: emptyMap()
+        }
 
-@Suppress("OverrideOnly", "UnstableApiUsage")
-private fun createPointer(target: DocumentationTarget): Pointer<out DocumentationTarget> {
-    ApplicationManager.getApplication().assertReadAccessAllowed()
-    return target.createPointer()
+        @Suppress("OverrideOnly", "UnstableApiUsage")
+        private fun createPointer(target: DocumentationTarget): Pointer<out DocumentationTarget> {
+            ApplicationManager.getApplication().assertReadAccessAllowed()
+            return target.createPointer()
+        }
+    }
 }
