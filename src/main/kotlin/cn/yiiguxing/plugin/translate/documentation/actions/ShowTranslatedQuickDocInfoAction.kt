@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import com.intellij.codeInsight.hint.HintManagerImpl.ActionToIgnore
 import com.intellij.lang.documentation.ide.impl.DocumentationManagementHelper
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 
 class ShowTranslatedQuickDocInfoAction : AnAction(),
@@ -31,6 +32,6 @@ class ShowTranslatedQuickDocInfoAction : AnAction(),
 
         target.translate = true
         @Suppress("UnstableApiUsage")
-        DocumentationManagementHelper.instance(project).showQuickDoc(editor, target)
+        project.service<DocumentationManagementHelper>().showQuickDoc(editor, target)
     }
 }
