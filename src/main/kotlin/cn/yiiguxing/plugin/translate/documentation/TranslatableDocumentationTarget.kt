@@ -97,26 +97,39 @@ internal class TranslatableDocumentationTarget private constructor(
                 return@asyncDocumentation documentation
             }
 
+            // TODO: 1. Reuse the original image map of `DocumentationData.content`.
+            //       2. Translate the updates from `DocumentationData.updates`.
+            val document: Document = Documentations.parseDocumentation(documentation.html)
+            val documentToTranslate = document.clone()
+
             val contentUpdates = MutableSharedFlow<DocumentationContent>(
                 extraBufferCapacity = 1,
                 onBufferOverflow = BufferOverflow.DROP_OLDEST
             )
             val translationJob = TranslationCoroutineService.projectScope(pointer.project).launch {
-                // TODO: 1. Reuse the original image map of `DocumentationData.content`.
-                //       2. Translate the updates from `DocumentationData.updates`.
-                val document: Document = Documentations.parseDocumentation(documentation.html)
-                document.setMessage("Translating...")
-                contentUpdates.tryEmit(DocumentationContent.content(document.documentationString, getIconMap()))
+                doTranslate(documentToTranslate, pointer.language)?.let {
+                    contentUpdates.tryEmit(DocumentationContent.content(it.documentationString))
+                    return@launch
+                }
 
-                // TODO: Implement translation logic here.
-                // doTranslate(document.clone(), pointer.language)
-
-                delay(3000)
+                // TODO: Use message bundle to replace hardcoded strings.
                 document.setMessage("Translation failed. Please try again later.", true)
-                contentUpdates.tryEmit(DocumentationContent.content(document.documentationString, getIconMap()))
+                val failedContent = DocumentationContent.content(
+                    document.documentationString,
+                    getIconMap()
+                )
+                if (contentUpdates.tryEmit(failedContent)) {
+                    pointer.translate = false
+                }
             }
 
-            documentation.updates(contentUpdates.onCompletion { translationJob.cancel() })
+            // TODO: Use message bundle to replace hardcoded strings.
+            document.setMessage("Translating...")
+            val content = DocumentationContent.content(
+                document.documentationString,
+                getIconMap()
+            )
+            DocumentationResult.documentation(content).updates(contentUpdates.onCompletion { translationJob.cancel() })
         }
     }
 
@@ -195,6 +208,12 @@ internal class TranslatableDocumentationTarget private constructor(
                 TranslationIcons.Translation.toImage()?.let { put(ICON_URL_TRANSLATION, it) }
                 TranslationIcons.TranslationFailed.toImage()?.let { put(ICON_URL_TRANSLATION_FAILED, it) }
             }
+        }
+
+        private suspend fun doTranslate(document: Document, language: Language): Document? {
+            // TODO: Implement translation logic here.
+            delay(3000)
+            return null
         }
 
         private fun Document.setMessage(message: String, isError: Boolean = false): Document = apply {
