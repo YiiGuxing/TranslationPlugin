@@ -108,8 +108,7 @@ internal class TranslatableDocumentationTarget private constructor(
                 document.setMessage("Translating...")
                 contentUpdates.tryEmit(DocumentationContent.content(document.documentationString, getIconMap()))
 
-                // TODO: 1. Implement translation logic here.
-                //       2. Return the translated version of the documentation.
+                // TODO: Implement translation logic here.
                 // doTranslate(document.clone(), pointer.language)
 
                 delay(3000)
