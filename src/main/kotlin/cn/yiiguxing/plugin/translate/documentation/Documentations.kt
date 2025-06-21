@@ -4,7 +4,6 @@ import cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.ui.scaled
-import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
 import com.intellij.ui.ColorUtil
 import com.intellij.util.ui.JBUI
@@ -33,7 +32,7 @@ internal object Documentations {
      */
     fun getDocumentationString(documentation: Document, prettyPrint: Boolean = false): String {
         documentation.outputSettings().prettyPrint(prettyPrint)
-        return documentation.outerHtml().fixHtml()
+        return documentation.html()
     }
 
     /**
@@ -48,14 +47,11 @@ internal object Documentations {
 }
 
 
-private const val CSS_QUERY_DEFINITION = ".definition"
-private const val CSS_QUERY_CONTENT = ".content"
+internal const val CSS_QUERY_DEFINITION = ".definition"
+internal const val CSS_QUERY_CONTENT = ".content"
 
 private const val TAG_PRE = "pre"
 private const val ATTR_TRANSLATED = "translated"
-
-private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
-private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
 
 
 /**
@@ -98,7 +94,7 @@ private fun Document.addLimitHint(): Document {
 }
 
 private fun Document.addMessage(message: String, color: Color): Document = apply {
-    val colorHex = ColorUtil.toHex(color)
+    val colorHex = ColorUtil.toHtmlColor(color)
     val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
     val messageEl = contentEl.prependElement("div")
         .attr("style", "color: $colorHex; margin: ${3.scaled}px 0px;")
@@ -106,12 +102,6 @@ private fun Document.addMessage(message: String, color: Color): Document = apply
         .attr("src", "AllIcons.General.Information")
     messageEl.append("&nbsp;").appendText(message)
 }
-
-/**
- * 修复HTML格式。[DocumentationComponent]识别不了 `class="class"` 的表达形式，
- * 只识别 `class='class'`，导致样式显示异常。
- */
-private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_HTML_CLASS_EXPRESSION_REPLACEMENT)
 
 private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
 

@@ -1,7 +1,10 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.service.TranslationCoroutineService
+import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.toImage
+import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.lang.Language
 import com.intellij.model.Pointer
 import com.intellij.openapi.application.ApplicationManager
@@ -10,10 +13,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.platform.backend.documentation.*
 import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.createSmartPointer
+import com.intellij.ui.JBColor
 import icons.TranslationIcons
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.onCompletion
+import org.jsoup.nodes.Document
 import java.awt.Image
 
 
@@ -91,19 +97,27 @@ internal class TranslatableDocumentationTarget private constructor(
                 return@asyncDocumentation documentation
             }
 
-            val translatedDocumentationFlow = flow {
-                val translatedDocumentation = withContext(Dispatchers.IO) {
-                    // TODO: 1. Implement translation logic here.
-                    //       2. Return the translated version of the documentation.
-                    // language=HTML
-                    "<html><body><table><tbody><tr><td><img src='$ICON_URL'></td><td>Translated Documentation</td></tr></tbody></table></body></html>"
-                }
+            val contentUpdates = MutableSharedFlow<DocumentationContent>(
+                extraBufferCapacity = 1,
+                onBufferOverflow = BufferOverflow.DROP_OLDEST
+            )
+            val translationJob = TranslationCoroutineService.projectScope(pointer.project).launch {
+                // TODO: 1. Reuse the original image map of `DocumentationData.content`.
+                //       2. Translate the updates from `DocumentationData.updates`.
+                val document: Document = Documentations.parseDocumentation(documentation.html)
+                document.setMessage("Translating...")
+                contentUpdates.tryEmit(DocumentationContent.content(document.documentationString, getIconMap()))
 
-                emit(DocumentationContent.content(translatedDocumentation, ICON_MAP))
+                // TODO: 1. Implement translation logic here.
+                //       2. Return the translated version of the documentation.
+                // doTranslate(document.clone(), pointer.language)
+
+                delay(3000)
+                document.setMessage("Translation failed. Please try again later.", true)
+                contentUpdates.tryEmit(DocumentationContent.content(document.documentationString, getIconMap()))
             }
 
-            // TODO: Append the translating status to the original documentation
-            documentation.updates(translatedDocumentationFlow)
+            documentation.updates(contentUpdates.onCompletion { translationJob.cancel() })
         }
     }
 
@@ -154,15 +168,70 @@ internal class TranslatableDocumentationTarget private constructor(
     }
 
     companion object {
-        private const val ICON_URL = "http://img/TranslationIcons.Translation"
-        private val ICON_MAP: Map<String, Image> by lazy {
-            TranslationIcons.Translation.toImage()?.let { mapOf(ICON_URL to it) } ?: emptyMap()
-        }
+        private const val ICON_URL_TRANSLATION = "http://img/TranslationIcons.Translation"
+        private const val ICON_URL_TRANSLATION_FAILED = "http://img/TranslationIcons.TranslationFailed"
+
+        private const val MESSAGE_WRAPPER_ID = "translation-msg-wrapper"
+        private const val ICON_ELEMENT_ID = "translation-icon"
+        private const val MESSAGE_ELEMENT_ID = "translation-msg"
+
+        private val ICON_MAPS: Array<Map<String, Image>?> = Array(2) { null }
+
 
         @Suppress("OverrideOnly", "UnstableApiUsage")
         private fun createPointer(target: DocumentationTarget): Pointer<out DocumentationTarget> {
             ApplicationManager.getApplication().assertReadAccessAllowed()
             return target.createPointer()
+        }
+
+        private fun getIconMap(): Map<String, Image> {
+            return synchronized(ICON_MAPS) {
+                val index = if (JBColor.isBright()) 0 else 1
+                ICON_MAPS[index] ?: createIconMap().also { ICON_MAPS[index] = it }
+            }
+        }
+
+        private fun createIconMap(): Map<String, Image> {
+            return HashMap<String, Image>().apply {
+                TranslationIcons.Translation.toImage()?.let { put(ICON_URL_TRANSLATION, it) }
+                TranslationIcons.TranslationFailed.toImage()?.let { put(ICON_URL_TRANSLATION_FAILED, it) }
+            }
+        }
+
+        private fun Document.setMessage(message: String, isError: Boolean = false): Document = apply {
+            val color = JBColor(0x5E5E5E, 0xAFB1B3).toRGBHex()
+            val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
+            val messageWrapperEl = contentEl.selectFirst("#$MESSAGE_WRAPPER_ID")
+            if (messageWrapperEl == null) {
+                val trEl = contentEl.prependElement("div")
+                    .id(MESSAGE_WRAPPER_ID)
+                    .attr(
+                        "style",
+                        "color: $color;" +
+                                "padding-left: ${3.scaled}px;" +
+                                "margin: ${5.scaled}px 0;" +
+                                "border-left: 2px rgba(128,128,128,0.3) solid;"
+                    )
+                    .appendElement("table")
+                    .appendElement("tbody")
+                    .appendElement("tr")
+
+                val iconUrl = if (isError) ICON_URL_TRANSLATION_FAILED else ICON_URL_TRANSLATION
+                trEl.appendElement("td")
+                    .attr("style", "margin: 0 ${2.scaled}px 0 0; padding: 0;")
+                    .appendElement("img")
+                    .id(ICON_ELEMENT_ID)
+                    .attr("src", iconUrl)
+
+                trEl.appendElement("td")
+                    .id(MESSAGE_ELEMENT_ID)
+                    .attr("style", "margin: 0; padding: 0;")
+                    .text(message)
+            } else {
+                val iconUrl = if (isError) ICON_URL_TRANSLATION_FAILED else ICON_URL_TRANSLATION
+                messageWrapperEl.selectFirst("#$ICON_ELEMENT_ID")?.attr("src", iconUrl)
+                messageWrapperEl.selectFirst("#$MESSAGE_ELEMENT_ID")?.text(message)
+            }
         }
     }
 }
