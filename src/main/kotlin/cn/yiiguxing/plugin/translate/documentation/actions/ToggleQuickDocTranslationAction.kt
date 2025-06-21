@@ -25,6 +25,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.platform.ide.documentation.DOCUMENTATION_BROWSER
 import com.intellij.platform.ide.documentation.DocumentationBrowserFacade
 import com.intellij.util.concurrency.AppExecutorUtil
+import org.jetbrains.annotations.ApiStatus
 
 open class ToggleQuickDocTranslationAction :
     ToggleableTranslationAction(),
@@ -64,6 +65,8 @@ open class ToggleQuickDocTranslationAction :
         update(project, event)
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "4.0")
+    @Deprecated("Will be removed in v4.0")
     private fun update(project: Project, e: AnActionEvent) {
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)
         val editorMouseHoverPopupManager = EditorMouseHoverPopupManager.getInstance()
@@ -115,6 +118,9 @@ open class ToggleQuickDocTranslationAction :
         }
     }
 
+    // TODO: Remove in v4.0
+    @ApiStatus.ScheduledForRemoval(inVersion = "4.0")
+    @Deprecated("Will be removed in v4.0")
     private fun toggleTranslation(project: Project, state: Boolean) {
         val docComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
         val element = docComponent.element ?: return
@@ -141,6 +147,9 @@ open class ToggleQuickDocTranslationAction :
         )
     }
 
+    // TODO: Remove in v4.0
+    @ApiStatus.ScheduledForRemoval(inVersion = "4.0")
+    @Deprecated("Will be removed in v4.0")
     private fun replaceActiveComponentText(project: Project, currentText: String?, newText: String) {
         invokeLater {
             val component = QuickDocUtil.getActiveDocComponent(project)
