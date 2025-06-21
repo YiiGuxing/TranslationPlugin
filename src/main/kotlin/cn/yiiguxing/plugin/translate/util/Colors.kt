@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.util
 
+import com.intellij.ui.ColorUtil
 import java.awt.Color
 
 
@@ -14,4 +15,4 @@ fun Color.alphaBlend(background: Color, alpha: Float): Color {
     return Color(r.toInt(), g.toInt(), b.toInt())
 }
 
-fun Color.toRGBHex(): String = "#" + (rgb and 0xffffff).toString(16).padStart(6, '0')
+fun Color.toRGBHex(): String = ColorUtil.toHtmlColor(this)
