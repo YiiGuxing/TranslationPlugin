@@ -63,34 +63,43 @@ internal val Document.documentationString: String
 
 internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
     val document: Document = Documentations.parseDocumentation(documentation)
-    if (document.body().hasAttr(ATTR_TRANSLATED)) {
-        return documentation
-    }
-
     val translatedDocumentation = try {
-        if (this is DocumentationTranslator) {
-            getTranslatedDocumentation(document, language)
-        } else {
-            getTranslatedDocumentation(document)
-        }
-    } catch (e: ContentLengthLimitException) {
+        translateDocumentation(document, language)
+    } catch (_: ContentLengthLimitException) {
         document.addLimitHint()
-    } catch (e: TranslateException) {
-        if (e.cause is ContentLengthLimitException) {
-            document.addLimitHint()
-        } else {
-            throw e
-        }
     }
-
-    translatedDocumentation.body().attributes().put(ATTR_TRANSLATED, true)
 
     return translatedDocumentation.documentationString
 }
 
+internal fun Translator.translateDocumentation(documentation: Document, language: Language?): Document {
+    if (documentation.body().hasAttr(ATTR_TRANSLATED)) {
+        return documentation
+    }
+
+    return try {
+        if (this is DocumentationTranslator) {
+            getTranslatedDocumentation(documentation, language)
+        } else {
+            getTranslatedDocumentation(documentation)
+        }.also {
+            it.body().attributes().put(ATTR_TRANSLATED, true)
+        }
+    } catch (e: ContentLengthLimitException) {
+        throw e
+    } catch (e: TranslateException) {
+        val cause = e.cause
+        if (cause is ContentLengthLimitException) {
+            throw cause
+        } else {
+            throw e
+        }
+    }
+}
+
 private fun Document.addLimitHint(): Document {
     val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
-    return addMessage(message("translate.documentation.limitHint"), hintColor)
+    return addMessage(message("documentation.message.limit.hint"), hintColor)
 }
 
 private fun Document.addMessage(message: String, color: Color): Document = apply {

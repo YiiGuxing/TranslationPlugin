@@ -1,7 +1,10 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationCoroutineService
+import cn.yiiguxing.plugin.translate.trans.ContentLengthLimitException
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.toImage
 import cn.yiiguxing.plugin.translate.util.toRGBHex
@@ -9,6 +12,7 @@ import com.intellij.lang.Language
 import com.intellij.model.Pointer
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.platform.backend.documentation.*
 import com.intellij.psi.PsiElement
@@ -16,7 +20,6 @@ import com.intellij.refactoring.suggested.createSmartPointer
 import com.intellij.ui.JBColor
 import icons.TranslationIcons
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onCompletion
 import org.jsoup.nodes.Document
@@ -101,35 +104,42 @@ internal class TranslatableDocumentationTarget private constructor(
             //       2. Translate the updates from `DocumentationData.updates`.
             val document: Document = Documentations.parseDocumentation(documentation.html)
             val documentToTranslate = document.clone()
-
             val contentUpdates = MutableSharedFlow<DocumentationContent>(
                 extraBufferCapacity = 1,
                 onBufferOverflow = BufferOverflow.DROP_OLDEST
             )
             val translationJob = TranslationCoroutineService.projectScope(pointer.project).launch {
-                doTranslate(documentToTranslate, pointer.language)?.let {
-                    contentUpdates.tryEmit(DocumentationContent.content(it.documentationString))
-                    return@launch
+                var translatedContent: DocumentationContent? = null
+                var failedContent: DocumentationContent? = null
+                try {
+                    val translatedDocument = TranslateService.getInstance()
+                        .translator
+                        .translateDocumentation(documentToTranslate, pointer.language)
+                    translatedContent = DocumentationContent.content(translatedDocument.documentationString)
+                } catch (e: Throwable) {
+                    val message = if (e is ContentLengthLimitException) {
+                        message("documentation.message.limit.hint")
+                    } else {
+                        message("documentation.message.translation.failed")
+                    }
+                    failedContent = getTranslationFailedDocumentationContent(document, message)
+
+                    LOG.warn("Failed to translate documentation", e)
                 }
 
-                // TODO: Use message bundle to replace hardcoded strings.
-                document.setMessage("Translation failed. Please try again later.", true)
-                val failedContent = DocumentationContent.content(
-                    document.documentationString,
-                    getIconMap()
-                )
-                if (contentUpdates.tryEmit(failedContent)) {
+                translatedContent?.let { contentUpdates.tryEmit(it) }
+                if (failedContent != null && contentUpdates.tryEmit(failedContent)) {
                     pointer.translate = false
                 }
             }
 
-            // TODO: Use message bundle to replace hardcoded strings.
-            document.setMessage("Translating...")
+            document.setMessage(message("documentation.message.translating"))
             val content = DocumentationContent.content(
                 document.documentationString,
                 getIconMap()
             )
-            DocumentationResult.documentation(content).updates(contentUpdates.onCompletion { translationJob.cancel() })
+            DocumentationResult.documentation(content)
+                .updates(contentUpdates.onCompletion { translationJob.cancel() })
         }
     }
 
@@ -189,6 +199,8 @@ internal class TranslatableDocumentationTarget private constructor(
 
         private val ICON_MAPS: Array<Map<String, Image>?> = Array(2) { null }
 
+        private val LOG = logger<TranslatableDocumentationTarget>()
+
 
         @Suppress("OverrideOnly", "UnstableApiUsage")
         private fun createPointer(target: DocumentationTarget): Pointer<out DocumentationTarget> {
@@ -210,10 +222,12 @@ internal class TranslatableDocumentationTarget private constructor(
             }
         }
 
-        private suspend fun doTranslate(document: Document, language: Language): Document? {
-            // TODO: Implement translation logic here.
-            delay(3000)
-            return null
+        private fun getTranslationFailedDocumentationContent(
+            document: Document,
+            errorMessage: String
+        ): DocumentationContent {
+            val html = document.setMessage(errorMessage, true).documentationString
+            return DocumentationContent.content(html, getIconMap())
         }
 
         private fun Document.setMessage(message: String, isError: Boolean = false): Document = apply {

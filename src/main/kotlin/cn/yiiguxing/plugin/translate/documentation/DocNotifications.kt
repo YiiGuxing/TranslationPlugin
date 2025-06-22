@@ -16,7 +16,7 @@ object DocNotifications {
     fun showTranslationTimeoutWarning(project: Project?) {
         Notifications.showWarningNotification(
             title = "",
-            message = message("doc.message.translation.timeout.please.try.again"),
+            message = message("documentation.message.translation.timeout"),
             project = project,
             groupId = GROUP_ID,
 
@@ -26,8 +26,8 @@ object DocNotifications {
     fun showError(e: Throwable, project: Project?) {
         TranslationNotifications.showTranslationErrorNotification(
             project = project,
-            title = message("translate.documentation.notification.title"),
-            content = message("translate.documentation.error"),
+            title = message("documentation.notification.title"),
+            content = message("documentation.notification.translation.failed"),
             throwable = e,
             groupId = GROUP_ID,
         ) { register(it) }
