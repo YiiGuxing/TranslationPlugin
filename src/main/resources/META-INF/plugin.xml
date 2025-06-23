@@ -138,8 +138,8 @@
                 icon="TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.documentation.actions.ShowTranslatedQuickDocInfoAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Q"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="shift F1"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="shift F1" replace-all="true"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control Q" replace-all="true"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control Q" replace-all="true"/>
         </action>
         <action id="Translation.ToggleQuickDocTranslationAction"
                 class="cn.yiiguxing.plugin.translate.documentation.actions.ToggleQuickDocTranslationAction"
