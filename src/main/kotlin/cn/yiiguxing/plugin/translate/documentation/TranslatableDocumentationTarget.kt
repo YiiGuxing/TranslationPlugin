@@ -253,6 +253,8 @@ internal class TranslatableDocumentationTarget private constructor(
                     .attr("style", "margin: 0 ${2.scaled}px 0 0; padding: 0;")
                     .appendElement("img")
                     .id(ICON_ELEMENT_ID)
+                    .attr("width", "${16.scaled}")
+                    .attr("height", "${16.scaled}")
                     .attr("src", iconUrl)
 
                 trEl.appendElement("td")
