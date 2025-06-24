@@ -35,6 +35,12 @@ internal class TranslatableDocumentationTarget private constructor(
     private val pointer: TranslatableDocumentationTargetPointer
 ) : DocumentationTarget by delegate {
 
+    val project: Project
+        get() = pointer.project
+
+    val language: Language
+        get() = pointer.language
+
     /**
      * Indicates whether the documentation target should be translated.
      */
