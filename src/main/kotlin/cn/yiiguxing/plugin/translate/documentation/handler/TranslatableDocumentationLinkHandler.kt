@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate.documentation
+package cn.yiiguxing.plugin.translate.documentation.handler
 
+import cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationTarget
 import com.intellij.model.Pointer
 import com.intellij.openapi.application.readAction
 import com.intellij.openapi.diagnostic.logger

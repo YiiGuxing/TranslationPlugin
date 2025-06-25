@@ -61,7 +61,7 @@
         <platform.backend.documentation.linkHandler
                 id="Translation.TranslatableDocumentationLinkHandler"
                 order="first"
-                implementation="cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationLinkHandler"/>
+                implementation="cn.yiiguxing.plugin.translate.documentation.handler.TranslatableDocumentationLinkHandler"/>
 
         <applicationConfigurable groupId="tools"
                                  displayName="Translation"
