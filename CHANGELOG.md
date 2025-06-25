@@ -2,11 +2,11 @@
 
 ## [Unreleased]
 
-- Added a one-click Quick Documentation translation feature. Use the shortcut <kbd>Ctrl + Shift + Q</kbd> (macOS: <kbd>Ctrl + Q</kbd>) to show and toggle translations.
+- Added a one-click Quick Documentation translation feature. Use the shortcut <kbd>Ctrl + Shift + Q</kbd> (macOS: <kbd>^Q</kbd>) to show and toggle translations.
 - Added the source language selection mode option, making the strategy for choosing source languages more flexible.
 - Jupyter Notebook now supports context menu translation operations.
 - "Translation and Replacement" action now supports selecting source and target languages.
-- 新增一键翻译快速文档功能，通过 <kbd>Ctrl + Shift + Q</kbd>（macOS：<kbd>Ctrl + Q</kbd>）快捷键显示/切换快速文档的翻译。
+- 新增一键翻译快速文档功能，通过 <kbd>Ctrl + Shift + Q</kbd>（macOS：<kbd>^Q</kbd>）快捷键显示/切换快速文档的翻译。
 - 新增源语言选择模式选项，源语言的选择策略更加灵活
 - Jupyter Notebook 现在支持上下文菜单翻译操作
 - “翻译与替换”操作现在支持选择源语言和目标语言
