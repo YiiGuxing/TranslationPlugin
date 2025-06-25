@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
+import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import com.intellij.codeInsight.hint.HintManagerImpl.ActionToIgnore
 import com.intellij.lang.documentation.ide.impl.DocumentationManagementHelper
@@ -11,7 +12,8 @@ class ShowTranslatedQuickDocInfoAction : AnAction(),
     ActionToIgnore,
     DumbAware,
     PopupAction,
-    PerformWithDocumentsCommitted {
+    PerformWithDocumentsCommitted,
+    ImportantTranslationAction {
 
     init {
         isEnabledInModalContext = true
