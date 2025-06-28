@@ -144,6 +144,7 @@ private suspend fun handleAsyncResolvedTarget(
 
 private class PropertyGetter(private val name: String) {
 
+    @Volatile
     private var property: KCallable<*>? = null
 
     @Volatile
