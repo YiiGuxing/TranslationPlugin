@@ -58,6 +58,10 @@
                 serviceInterface="com.intellij.lang.documentation.ide.IdeDocumentationTargetProvider"
                 serviceImplementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatableIdeDocumentationTargetProvider"/>
 
+        <platform.backend.documentation.psiTargetProvider
+                id="Translation.TranslatablePsiDocumentationTargetProvider"
+                order="first"
+                implementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatablePsiDocumentationTargetProvider"/>
         <platform.backend.documentation.linkHandler
                 id="Translation.TranslatableDocumentationLinkHandler"
                 order="first"
