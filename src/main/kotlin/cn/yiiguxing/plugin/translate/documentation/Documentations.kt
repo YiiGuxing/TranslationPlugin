@@ -49,7 +49,11 @@ internal object Documentations {
 
 internal const val CSS_QUERY_DEFINITION = ".definition"
 internal const val CSS_QUERY_CONTENT = ".content"
+internal const val CSS_QUERY_BOTTOM = ".bottom"
 
+private const val ID_BOTTOM = "bottom"
+
+private const val TAG_DIV = "div"
 private const val TAG_PRE = "pre"
 private const val ATTR_TRANSLATED = "translated"
 
@@ -132,6 +136,12 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
         ?.takeIf { it.isEmptyParagraph() }
         ?.remove()
 
+    // Remove the `bottom` section of the documentation and replace it with an empty element
+    // so that it can be restored after translation. Whether the `bottom` section of all
+    // documentation should be excluded from translation still needs to be confirmed.
+    val bottom = body.selectFirst(CSS_QUERY_BOTTOM)
+    bottom?.replaceWith(Element(TAG_DIV).attr("id", ID_BOTTOM))
+
     val preElements = body.select(TAG_PRE)
     preElements.forEachIndexed { index, element ->
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
@@ -143,6 +153,7 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
 
+    bottom?.let { translatedBody.selectFirst("#$ID_BOTTOM")?.replaceWith(it) }
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
