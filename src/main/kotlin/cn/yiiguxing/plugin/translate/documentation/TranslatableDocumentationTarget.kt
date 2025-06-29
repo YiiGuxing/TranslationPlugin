@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationCoroutineService
 import cn.yiiguxing.plugin.translate.trans.ContentLengthLimitException
+import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.toImage
@@ -11,9 +12,11 @@ import cn.yiiguxing.plugin.translate.util.toRGBHex
 import com.intellij.lang.Language
 import com.intellij.model.Pointer
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.readAction
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import com.intellij.platform.backend.documentation.*
 import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.createSmartPointer
@@ -126,7 +129,11 @@ internal class TranslatableDocumentationTarget private constructor(
                     val message = if (e is ContentLengthLimitException) {
                         message("documentation.message.limit.hint")
                     } else {
-                        message("documentation.message.translation.failed")
+                        val errorMessage = when (e) {
+                            is TranslateException -> e.errorInfo.message
+                            else -> e.message
+                        }?.takeIf { it.isNotBlank() } ?: message("error.unknown")
+                        message("documentation.message.translation.failed.with.message", errorMessage)
                     }
                     failedContent = getTranslationFailedDocumentationContent(document, message)
 
@@ -135,7 +142,7 @@ internal class TranslatableDocumentationTarget private constructor(
 
                 translatedContent?.let { contentUpdates.tryEmit(it) }
                 if (failedContent != null && contentUpdates.tryEmit(failedContent)) {
-                    pointer.translate = false
+                    readAction { pointer.translate = false }
                 }
             }
 
@@ -179,12 +186,10 @@ internal class TranslatableDocumentationTarget private constructor(
 
         override var translate: Boolean
             get() = psiElementPointer.dereference()
-                ?.let { DocTranslationService.getTranslationState(it) ?: settings.translateDocumentation }
+                ?.let { it.getUserData(TRANSLATION_FLAG_KEY) ?: settings.translateDocumentation }
                 ?: false
             set(value) {
-                psiElementPointer.dereference()?.let {
-                    DocTranslationService.setTranslationState(it, value)
-                }
+                psiElementPointer.dereference()?.putUserData(TRANSLATION_FLAG_KEY, value)
             }
 
         override fun dereference(): TranslatableDocumentationTarget? {
@@ -196,6 +201,8 @@ internal class TranslatableDocumentationTarget private constructor(
     }
 
     companion object {
+        val TRANSLATION_FLAG_KEY = Key.create<Boolean>("translation.documentation.translationFlag")
+
         private const val ICON_URL_TRANSLATION = "http://img/TranslationIcons.Translation"
         private const val ICON_URL_TRANSLATION_FAILED = "http://img/TranslationIcons.TranslationFailed"
 
