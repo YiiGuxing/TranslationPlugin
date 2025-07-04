@@ -343,7 +343,7 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 The CDN acceleration and security protection for this project are sponsored by [Tencent EdgeOne](https://edgeone.ai/?from=github).
 
-[<img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" height="30" alt="Tencent EdgeOne">](https://edgeone.ai/?from=github)
+[<img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" height="50" alt="Tencent EdgeOne">](https://edgeone.ai/?from=github)
 
 ### Financial Contributors
 
