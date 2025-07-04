@@ -21,6 +21,27 @@ import javax.swing.text.html.HTMLEditorKit
 internal object Documentations {
 
     /**
+     * Checks whether the specified [documentation] is translated.
+     *
+     * @param parse Whether to parse the [documentation] string into a [Document] before checking.
+     */
+    fun isTranslated(documentation: String, parse: Boolean = false): Boolean {
+        return if (parse) {
+            isTranslated(parseDocumentation(documentation))
+        } else {
+            documentation.startsWith("<html $ATTR_TRANSLATED>", ignoreCase = true) ||
+                    TRANSLATED_DOCUMENTATION_REGEX.containsMatchIn(documentation)
+        }
+    }
+
+    /**
+     * Checks whether the specified [documentation] is translated.
+     */
+    fun isTranslated(documentation: Document): Boolean {
+        return documentation.htmlEl?.hasAttr(ATTR_TRANSLATED) ?: false
+    }
+
+    /**
      * Parses the specified [documentation] string.
      */
     fun parseDocumentation(documentation: String): Document = Jsoup.parse(documentation)
@@ -53,9 +74,15 @@ internal const val CSS_QUERY_BOTTOM = ".bottom"
 
 private const val ID_BOTTOM = "bottom"
 
+private const val TAG_HTML = "html"
 private const val TAG_DIV = "div"
 private const val TAG_PRE = "pre"
 private const val ATTR_TRANSLATED = "translated"
+
+private val TRANSLATED_DOCUMENTATION_REGEX = Regex(
+    """<html.+?$ATTR_TRANSLATED(=("true"|'true'))?.*?>""",
+    RegexOption.IGNORE_CASE
+)
 
 
 /**
@@ -77,7 +104,7 @@ internal fun Translator.getTranslatedDocumentation(documentation: String, langua
 }
 
 internal fun Translator.translateDocumentation(documentation: Document, language: Language?): Document {
-    if (documentation.body().hasAttr(ATTR_TRANSLATED)) {
+    if (Documentations.isTranslated(documentation)) {
         return documentation
     }
 
@@ -87,7 +114,7 @@ internal fun Translator.translateDocumentation(documentation: Document, language
         } else {
             getTranslatedDocumentation(documentation)
         }.also {
-            it.body().attributes().put(ATTR_TRANSLATED, true)
+            it.htmlEl?.attributes()?.put(ATTR_TRANSLATED, true)
         }
     } catch (e: ContentLengthLimitException) {
         throw e
@@ -100,6 +127,11 @@ internal fun Translator.translateDocumentation(documentation: Document, language
         }
     }
 }
+
+private val Document.htmlEl: Element?
+    get() = firstElementChild()
+        ?.takeIf { it.nodeName().equals(TAG_HTML, true) }
+        ?: selectFirst(TAG_HTML)
 
 private fun Document.addLimitHint(): Document {
     val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
