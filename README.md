@@ -339,6 +339,12 @@ You can contribute and support this project by doing any of the following:
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/YiiGuxing/TranslationPlugin/graphs/contributors"><img src="https://opencollective.com/translation-plugin/contributors.svg?width=890&button=false" /></a>
 
+### Technology Contributors
+
+The CDN acceleration and security protection for this project are sponsored by [Tencent EdgeOne](https://edgeone.ai/?from=github).
+
+[<img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" height="30" alt="Tencent EdgeOne">](https://edgeone.ai/?from=github)
+
 ### Financial Contributors
 
 Become a financial contributor and help us sustain our
