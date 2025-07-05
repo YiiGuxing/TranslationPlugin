@@ -10,6 +10,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsActions
 import icons.TranslationIcons
 import java.util.function.Supplier
+import javax.swing.Icon
 
 
 abstract class ToggleableTranslationAction : AnAction {
@@ -29,7 +30,7 @@ abstract class ToggleableTranslationAction : AnAction {
     constructor(
         dynamicText: Supplier<@NlsActions.ActionText String?>,
         dynamicDescription: Supplier<@NlsActions.ActionDescription String?> = Presentation.NULL_STRING,
-    ) : super(dynamicText, dynamicDescription, null)
+    ) : super(dynamicText, dynamicDescription, null as Icon?)
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
