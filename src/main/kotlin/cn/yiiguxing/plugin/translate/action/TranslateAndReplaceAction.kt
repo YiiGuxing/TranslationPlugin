@@ -5,8 +5,8 @@ import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.ui.LangaugeSelectPopupUI
-import cn.yiiguxing.plugin.translate.ui.LangaugeSelectPopups
+import cn.yiiguxing.plugin.translate.ui.LanguageSelectPopupUI
+import cn.yiiguxing.plugin.translate.ui.LanguageSelectPopups
 import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
 import cn.yiiguxing.plugin.translate.ui.showListPopup
 import cn.yiiguxing.plugin.translate.util.*
@@ -239,7 +239,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                 icon = TranslationIcons.TranslationReplace
                 text = message("action.TranslateAndReplaceAction.description")
             }
-            val ui = LangaugeSelectPopupUI(presentation) { source, target ->
+            val ui = LanguageSelectPopupUI(presentation) { source, target ->
                 states.lastReplacementLanguages = LanguagePair(source, target)
                 onChosen(source, target)
             }
@@ -255,7 +255,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
             ui.setSourceLanguages(sourceLanguages, source)
             ui.setTargetLanguages(targetLanguages, target)
-            val popup = LangaugeSelectPopups.createPopup(ui)
+            val popup = LanguageSelectPopups.createPopup(ui)
             check(popup.canShow())
             popup.showInBestPositionFor(this)
         }

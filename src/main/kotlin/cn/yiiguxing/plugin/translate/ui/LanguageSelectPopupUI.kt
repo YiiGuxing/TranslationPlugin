@@ -21,7 +21,7 @@ import javax.swing.JPanel
 import javax.swing.KeyStroke
 import javax.swing.SwingConstants
 
-class LangaugeSelectPopupUI(
+class LanguageSelectPopupUI(
     presentation: Presentation,
     private val callback: (source: Lang, target: Lang) -> Unit
 ) : Disposable {
