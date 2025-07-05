@@ -26,8 +26,9 @@ class TranslateQuickDocSelectionAction :
 
     init {
         isEnabledInModalContext = true
+        templatePresentation.icon = TranslationIcons.Translation
         templatePresentation.text = adaptedMessage("action.TranslateQuickDocSelectionAction.text")
-        templatePresentation.description = message("action.description.quickDoc")
+        templatePresentation.description = message("action.TranslateQuickDocSelectionAction.description")
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
@@ -36,7 +37,6 @@ class TranslateQuickDocSelectionAction :
         //don't show in toolbar, invoke via context menu or with keyboard shortcut
         //to not clash with "Translate documentation" toggle
         e.presentation.isEnabledAndVisible = hasQuickDocSelection(e) && !e.isFromActionToolbar
-        e.presentation.icon = TranslationIcons.Translation
     }
 
     override fun actionPerformed(e: AnActionEvent) {

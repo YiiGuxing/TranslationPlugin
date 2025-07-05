@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  *
  * [documentation](https://platform.openai.com/docs/api-reference/chat/create)
  */
-data class ChatCompletion internal constructor(
+data class ChatCompletion(
     /**
      * A unique id assigned to this completion
      */

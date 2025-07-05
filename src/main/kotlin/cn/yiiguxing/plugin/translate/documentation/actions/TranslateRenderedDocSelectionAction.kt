@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.plugin.translate.action.ACTION_HIGH_PRIORITY
-import cn.yiiguxing.plugin.translate.action.EditorTranslateAction
 import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
@@ -19,7 +18,7 @@ import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane
 
-class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationAction, PopupAction, DumbAware {
+internal class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationAction, PopupAction, DumbAware {
 
     private val AnActionEvent.editor: Editor? get() = CommonDataKeys.EDITOR.getData(dataContext)
 
@@ -28,10 +27,10 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
     init {
         templatePresentation.icon = TranslationIcons.Translation
         templatePresentation.text = adaptedMessage("action.TranslateRenderedDocSelectionAction.text")
+        templatePresentation.description = adaptedMessage("action.TranslateRenderedDocSelectionAction.description")
 
-        // 为了在菜单项上显示快捷键提示
         ActionManager.getInstance()
-            .getAction(EditorTranslateAction.Companion.ACTION_ID)
+            .getAction(ACTION_ID)
             ?.let { copyShortcutFrom(it) }
     }
 
@@ -103,11 +102,13 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
     }
 
     companion object {
+        private const val ACTION_ID = "Translation.TranslateTextComponentAction"
+
         private val getPaneWithSelectionMethod: Method? by lazy {
             try {
                 val clazz = Class.forName("com.intellij.codeInsight.documentation.render.DocRenderSelectionManager")
                 clazz.getDeclaredMethod("getPaneWithSelection", Editor::class.java)
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 null
             }
         }
@@ -124,7 +125,7 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
             if (!isSelectionPositionMethodInitialized) {
                 selectionPositionMethod = try {
                     obj.javaClass.getDeclaredMethod("getSelectionPositionInEditor")
-                } catch (e: Throwable) {
+                } catch (_: Throwable) {
                     null
                 } finally {
                     isSelectionPositionMethodInitialized = true

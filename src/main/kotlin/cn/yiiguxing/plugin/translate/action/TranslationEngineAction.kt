@@ -18,7 +18,7 @@ class TranslationEngineAction(private val translator: TranslationEngine) :
 
     fun isAvailable(): Boolean = settings.translator == translator || try {
         translator.isConfigured()
-    } catch (e: Throwable) {
+    } catch (_: Throwable) {
         false
     }
 
@@ -37,7 +37,7 @@ class TranslationEngineAction(private val translator: TranslationEngine) :
          * Returns available - unavailable actions pair.
          */
         fun actionsGroupedByAvailability(): Pair<List<TranslationEngineAction>, List<TranslationEngineAction>> {
-            return TranslationEngine.values().toList()
+            return TranslationEngine.entries
                 .map { TranslationEngineAction(it) }
                 .groupBy { it.isAvailable() }
                 .let { it.getOrDefault(true, emptyList()) to it.getOrDefault(false, emptyList()) }
