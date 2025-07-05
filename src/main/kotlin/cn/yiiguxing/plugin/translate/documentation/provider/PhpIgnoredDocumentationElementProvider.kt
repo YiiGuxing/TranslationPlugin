@@ -1,12 +1,11 @@
 package cn.yiiguxing.plugin.translate.documentation.provider
 
-import cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider
 import org.jsoup.nodes.Element
 
 class PhpIgnoredDocumentationElementProvider : IgnoredDocumentationElementProvider {
 
     override fun ignoreElements(body: Element): List<Element> {
-        val ignoredElements = body.select(CSS_QUERY_SOURCE) ?: return emptyList()
+        val ignoredElements = body.select(CSS_QUERY_SOURCE)
 
         ignoredElements.forEachIndexed { index, element ->
             element.replaceWith(Element("span").attr("id", "php-ignored-$index"))
