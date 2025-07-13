@@ -11,8 +11,6 @@ import com.intellij.psi.util.PsiTreeUtil
 private val PREV_SIBLING: PsiElement.() -> PsiElement? = { prevSibling }
 private val NEXT_SIBLING: PsiElement.() -> PsiElement? = { nextSibling }
 
-val SKIP_WHITE_SPACE: (PsiElement) -> Boolean = { it is PsiWhiteSpace }
-
 
 /**
  * 元素类型
@@ -28,6 +26,8 @@ val PsiElement.startOffset: Int get() = textRange.startOffset
  * 结束偏移
  */
 val PsiElement.endOffset: Int get() = textRange.endOffset
+
+val PsiElement.isWhitespace: Boolean get() = this is PsiWhiteSpace
 
 /**
  * 从[PsiFile]中在指定[offset]处查找类型为[type]的元素并返回，如果未找到则返回`null`

@@ -1,10 +1,8 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider
-import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.LruCache
 import cn.yiiguxing.plugin.translate.util.w
-import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.documentation.CompositeDocumentationProvider
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.openapi.Disposable
@@ -13,7 +11,6 @@ import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.registry.Registry
 import com.intellij.platform.ide.documentation.DOCUMENTATION_TARGETS
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
@@ -24,7 +21,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-@Service
+@Service(Service.Level.PROJECT)
 internal class DocTranslationService : Disposable {
 
     private val lastCleanupTime: AtomicLong = AtomicLong(System.currentTimeMillis())
@@ -98,8 +95,7 @@ internal class DocTranslationService : Disposable {
         }
 
 
-        val isDocumentationV2: Boolean
-            get() = IdeVersion >= IdeVersion.IDE2023_2 || Registry.`is`("documentation.v2")
+        val isDocumentationV2: Boolean = true
 
         /**
          * Sets the [translation state][translationState] of the specified [PSI element][element].
@@ -178,38 +174,11 @@ internal class DocTranslationService : Disposable {
         }
 
         fun isSupportedForDataContext(dataContext: DataContext): Boolean {
-            return isDocumentationV2 &&
-                    dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() is TranslatableDocumentationTarget
+            return dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() is TranslatableDocumentationTarget
         }
 
         fun getTranslatableDocumentationTarget(dataContext: DataContext): TranslatableDocumentationTarget? {
-            return if (isDocumentationV2) {
-                dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() as? TranslatableDocumentationTarget
-            } else {
-                null
-            }
-        }
-
-        /**
-         * Returns `true` if the specified [PSI element][element] supports
-         * documentation translation, otherwise returns `false`.
-         */
-        fun isSupportedForPsiElement(element: PsiElement): Boolean {
-            if (!element.isValid) {
-                return false
-            }
-
-            val originalElement = DocumentationManager.getOriginalElement(element)
-            val provider = try {
-                ReadAction.compute<DocumentationProvider, Throwable> {
-                    DocumentationManager.getProviderFromElement(element, originalElement)
-                }
-            } catch (e: Throwable) {
-                LOG.w("Cannot get documentation provider from element", e)
-                return false
-            }
-
-            return includesTranslatedDocumentationProvider(provider)
+            return dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() as? TranslatableDocumentationTarget
         }
 
         /**

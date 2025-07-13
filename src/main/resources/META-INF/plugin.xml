@@ -55,13 +55,23 @@
         <projectService serviceImplementation="cn.yiiguxing.plugin.translate.service.TranslationUIManager"/>
         <projectService
                 overrides="true"
+                id="Translation.TranslatableDocumentationTargetProvider"
                 serviceInterface="com.intellij.lang.documentation.ide.IdeDocumentationTargetProvider"
                 serviceImplementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatableIdeDocumentationTargetProvider"/>
+        <projectService
+                overrides="true"
+                id="Translation.TranslatableInlineDocumentationFinder"
+                serviceInterface="com.intellij.codeInsight.documentation.render.InlineDocumentationFinder"
+                serviceImplementation="cn.yiiguxing.plugin.translate.documentation.service.TranslatableInlineDocumentationFinder"/>
 
         <platform.backend.documentation.psiTargetProvider
-                id="Translation.TranslatablePsiDocumentationTargetProvider"
                 order="first"
+                id="Translation.TranslatablePsiDocumentationTargetProvider"
                 implementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatablePsiDocumentationTargetProvider"/>
+        <platform.backend.documentation.inlineDocumentationProvider
+                order="last"
+                id="Translation.TranslatableInlineDocumentationProvider"
+                implementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatableInlineDocumentationProvider"/>
         <platform.backend.documentation.linkHandler
                 id="Translation.TranslatableDocumentationLinkHandler"
                 order="first"
