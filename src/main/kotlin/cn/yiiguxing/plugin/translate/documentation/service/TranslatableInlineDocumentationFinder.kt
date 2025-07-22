@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.service
 
-import cn.yiiguxing.plugin.translate.documentation.PsiTranslatableInlineDocumentation
+import cn.yiiguxing.plugin.translate.documentation.TranslatableInlineDocumentation
 import com.intellij.codeInsight.documentation.render.DocRenderItem
 import com.intellij.codeInsight.documentation.render.InlineDocumentationFinder
 import com.intellij.codeInsight.documentation.render.InlineDocumentationFinderImpl
@@ -16,6 +16,6 @@ class TranslatableInlineDocumentationFinder(
         val originDocumentation = delegate.getInlineDocumentation(item) ?: return null
         val psiDocumentManager = PsiDocumentManager.getInstance(item.editor.project ?: return originDocumentation)
         val file = psiDocumentManager.getPsiFile(item.editor.document) ?: return originDocumentation
-        return PsiTranslatableInlineDocumentation(file, originDocumentation)
+        return TranslatableInlineDocumentation(file, originDocumentation)
     }
 }

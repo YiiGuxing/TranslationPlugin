@@ -35,12 +35,26 @@ internal fun isPsiInlineDocumentationTranslationEnabled(comment: PsiDocCommentBa
 }
 
 @Suppress("UnstableApiUsage")
-internal abstract class TranslatableInlineDocumentation(
-    protected val file: PsiFile,
+internal class TranslatableInlineDocumentation(
+    private val file: PsiFile,
     private val delegate: InlineDocumentation
 ) : InlineDocumentation by delegate {
 
-    protected abstract fun isTranslationEnabled(): Boolean
+    private fun isTranslationEnabled(): Boolean {
+        if (LOCAL_TRANSLATION_STATE.get()) {
+            // If local translation is enabled, return true
+            return true
+        }
+
+        @Suppress("OverrideOnly", "UnstableApiUsage")
+        val comment = PsiTreeUtil.getParentOfType(
+            file.findElementAt(documentationRange.startOffset),
+            PsiDocCommentBase::class.java,
+            false
+        ) ?: return false
+
+        return isPsiInlineDocumentationTranslationEnabled(comment) ?: false
+    }
 
     override fun renderText(): @Nls String? {
         val renderText = delegate.renderText() ?: return null
@@ -52,32 +66,8 @@ internal abstract class TranslatableInlineDocumentation(
         return translateText(renderText)
     }
 
-    protected open fun translateText(text: String): @Nls String? {
-        return "<html translated><body>renderText</body></html>"
-    }
-}
-
-@Suppress("UnstableApiUsage")
-internal class PsiTranslatableInlineDocumentation(file: PsiFile, delegate: InlineDocumentation) :
-    TranslatableInlineDocumentation(file, delegate) {
-
-    override fun isTranslationEnabled(): Boolean {
-        @Suppress("OverrideOnly", "UnstableApiUsage")
-        val comment = PsiTreeUtil.getParentOfType(
-            file.findElementAt(documentationRange.startOffset),
-            PsiDocCommentBase::class.java,
-            false
-        ) ?: return false
-
-        return isPsiInlineDocumentationTranslationEnabled(comment) ?: false
-    }
-}
-
-@Suppress("UnstableApiUsage")
-internal class LocalTranslatableInlineDocumentation(file: PsiFile, delegate: InlineDocumentation) :
-    TranslatableInlineDocumentation(file, delegate) {
-
-    override fun isTranslationEnabled(): Boolean {
-        return LOCAL_TRANSLATION_STATE.get()
+    private fun translateText(text: String): @Nls String? {
+        Thread.sleep(5000)
+        return "<html translated><body>Rendered Text.</body></html>"
     }
 }

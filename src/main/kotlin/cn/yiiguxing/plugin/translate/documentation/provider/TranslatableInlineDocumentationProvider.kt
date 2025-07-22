@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.provider
 
-import cn.yiiguxing.plugin.translate.documentation.LocalTranslatableInlineDocumentation
+import cn.yiiguxing.plugin.translate.documentation.TranslatableInlineDocumentation
 import com.intellij.openapi.util.TextRange
 import com.intellij.platform.backend.documentation.InlineDocumentation
 import com.intellij.platform.backend.documentation.InlineDocumentationProvider
@@ -12,14 +12,14 @@ class TranslatableInlineDocumentationProvider : InlineDocumentationProvider {
     override fun inlineDocumentationItems(file: PsiFile): Collection<InlineDocumentation> {
         return resolve {
             inlineDocumentationItems(file).map {
-                LocalTranslatableInlineDocumentation(file, it)
+                TranslatableInlineDocumentation(file, it)
             }
         } ?: emptyList()
     }
 
     override fun findInlineDocumentation(file: PsiFile, textRange: TextRange): InlineDocumentation? = resolve {
         findInlineDocumentation(file, textRange)?.let {
-            LocalTranslatableInlineDocumentation(file, it)
+            TranslatableInlineDocumentation(file, it)
         }
     }
 }
