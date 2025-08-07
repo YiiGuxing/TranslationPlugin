@@ -34,6 +34,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | 丿初音 |  | 475.00 CNY |
 | 剑平 |  | 120.00 CNY |
 | 山有扶苏 | [github.com/fobgochod](https://github.com/fobgochod) | 110.00 CNY |
+| xudley | [xudley.cn](https://xudley.cn) | 100.00 CNY |
 | 朱振山 |  | 100.00 CNY |
 | 丁云波 |  | 100.00 CNY |
 | 逆行 |  | 100.00 CNY |
