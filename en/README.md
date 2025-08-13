@@ -149,7 +149,7 @@ _Editor inlay documentation rendered view:_
 Click the engine widget in the status bar or use the shortcut <kbd>**Ctrl + Shift + S**</kbd>
 (macOS: <kbd>**Control + Meta + Y**</kbd>) to switch between the translation engine and the TTS engine quickly.
 
-![Translation engines](/img/translation_engines.png ':size=233x314')
+![Translation engines](/en/img/translation_engines.png ':size=233x314')
 
 [gh:releases]: https://github.com/YiiGuxing/TranslationPlugin/releases
 [plugin:versions]: https://plugins.jetbrains.com/plugin/8579-translation/versions
@@ -257,13 +257,13 @@ Quickly switch between translation engine and TTS engine. Default shortcut:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
-![Translation Engines](/img/translation_engines.png ':size=233x314')
+![Translation Engines](/en/img/translation_engines.png ':size=233x314')
 
 #### 9. Word of the Day :id=word-of-the-day-action
 
 Display the "**Word of the Day**" dialog. Default shortcut: (None)
 
-![Word of the Day](/img/word_of_the_day.png ':size=552x478 :class=round')
+![Word of the Day](/en/img/word_of_the_day.png ':size=552x478 :class=round')
 
 #### 10. Other :id=other-actions
 
