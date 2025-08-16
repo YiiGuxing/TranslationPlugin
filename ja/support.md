@@ -58,19 +58,19 @@ WeChat Reward/Alipay を使用して寄付をされたら、コメントまた�
 
 <div class="sponsors gold">
 
-[![New Relic CodeStream](/img/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
+[![New Relic CodeStream](/img/logo/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
 [![JetBrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
 
 </div>
 <div class="sponsors">
 
-[![Targeted Web Traffic](/img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
-[![DeerAPI](/img/sponsor/logo_deer_api.svg)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'DeerAPI')
-[![Mybatis Code Helper Pro](/img/sponsor/logo_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
-[![Fast Request](/img/sponsor/logo_fast_request.svg)](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
-[![Smart Input Pro](/img/sponsor/logo_smart_input_pro.svg)](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
-[![Atom Material Themes & Plugins](/img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
-[![Intellij Rainbow Brackets](/img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
+[![Targeted Web Traffic](/img/logo/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
+[![DeerAPI](/img/logo/sponsor_deer_api.svg)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'DeerAPI')
+[![Mybatis Code Helper Pro](/img/logo/sponsor_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
+[![Fast Request](/img/logo/sponsor_fast_request.svg)](https://api-buddy.com/en?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
+[![Smart Input Pro](/img/logo/sponsor_smart_input_pro.svg)](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
+[![Atom Material Themes & Plugins](/img/logo/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
+[![Intellij Rainbow Brackets](/img/logo/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
 
 </div>
 

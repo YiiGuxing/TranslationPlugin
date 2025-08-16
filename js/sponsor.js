@@ -87,7 +87,7 @@
           }
 
           const img = document.createElement("img");
-          img.src = "/img/sponsor/" + sponsor.logo;
+          img.src = "/img/logo/" + sponsor.logo;
           img.alt = sponsor.name;
 
           sponsorLink.appendChild(img);

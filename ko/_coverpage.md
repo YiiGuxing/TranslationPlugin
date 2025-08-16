@@ -69,19 +69,19 @@
 
 <div class="translator-logo">
 
-[![Microsoft Translator](/img/microsoft_translator_logo.svg ':size=252x30')](https://www.bing.com/translator 'Microsoft Translator')
-[![Google Translate](/img/google_translate_logo.svg ':size=215x30')](https://translate.google.com 'Google Translate')
-[![OpenAI Translator](/img/openai_logo.svg ':size=110x30')](https://openai.com 'OpenAI Translator')
-[![DeepL Translator](/img/deepl_translate_logo.svg ':size=86x30')](https://www.deepl.com 'DeepL Translator')
-[![Youdao Translate](/img/youdao_translate_logo.svg ':size=155x30')](https://ai.youdao.com 'Youdao Translate')
-[![Baidu Translate](/img/baidu_translate_logo.svg ':size=98x30')](https://fanyi-api.baidu.com 'Baidu Translate')
-[![Alibaba Translate](/img/ali_translate_logo.png ':size=124x30')](https://translate.alibaba.com 'Alibaba Translate')
+[![Microsoft Translator](/img/logo/microsoft_translator.svg ':size=252x30')](https://www.bing.com/translator 'Microsoft Translator')
+[![Google Translate](/img/logo/google_translate.svg ':size=215x30')](https://translate.google.com 'Google Translate')
+[![OpenAI Translator](/img/logo/openai.svg ':size=110x30')](https://openai.com 'OpenAI Translator')
+[![DeepL Translator](/img/logo/deepl_translate.svg ':size=86x30')](https://www.deepl.com 'DeepL Translator')
+[![Youdao Translate](/img/logo/youdao_translate.svg ':size=155x30')](https://ai.youdao.com 'Youdao Translate')
+[![Baidu Translate](/img/logo/baidu_translate.svg ':size=98x30')](https://fanyi-api.baidu.com 'Baidu Translate')
+[![Alibaba Translate](/img/logo/ali_translate.png ':size=124x30')](https://translate.alibaba.com 'Alibaba Translate')
 
 </div>
 
 <div class="jetbrains-logo">
 
-[![JetBrains](/img/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163')
+[![JetBrains](/img/logo/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin ':size=150x163')
 
 </div>
 

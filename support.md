@@ -59,19 +59,19 @@
 
 <div class="sponsors gold">
 
-[<!-- $2000.00,2020/05/22 -->![New Relic CodeStream](/img/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
+[<!-- $2000.00,2020/05/22 -->![New Relic CodeStream](/img/logo/sponsor_new_relic_code_stream.svg)](https://sponsorlink.codestream.com/?utm_source=jbmarket&utm_campaign=translation&utm_medium=banner 'New Relic CodeStream')
 [<!-- $696.00,2021/07/05 -->![JetBrains](https://resources.jetbrains.com.cn/storage/products/company/brand/logos/jetbrains.svg)](https://www.jetbrains.com/?from=TranslationPlugin 'JetBrains')
 
 </div>
 <div class="sponsors">
 
-[<!-- $200.00,2021/10/28 -->![Targeted Web Traffic](/img/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
-[<!-- $512.00,2025/04/02 -->![DeerAPI](/img/sponsor/logo_deer_api.svg)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'DeerAPI')
-[<!-- ￥500.00,2024/05/20 -->![Mybatis Code Helper Pro](/img/sponsor/logo_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
-[<!-- ￥500.00,2024/05/20 -->![Fast Request](/img/sponsor/logo_fast_request.svg)](https://api-buddy.com?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
-[<!-- ￥256.00,2025/02/11 -->![Smart Input Pro](/img/sponsor/logo_smart_input_pro.svg)](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
-[<!-- $20.00,2022/04/01 -->![Atom Material Themes & Plugins](/img/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
-[<!-- $5.00,2023/01/01 -->![Intellij Rainbow Brackets](/img/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
+[<!-- $200.00,2021/10/28 -->![Targeted Web Traffic](/img/logo/sponsor_targeted_web_traffic.png)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'Targeted Web Traffic')
+[<!-- $512.00,2025/04/02 -->![DeerAPI](/img/logo/sponsor_deer_api.svg)](https://www.targetedwebtraffic.com/?from=TranslationPlugin 'DeerAPI')
+[<!-- ￥500.00,2024/05/20 -->![Mybatis Code Helper Pro](/img/logo/sponsor_mybatis_code_helper_pro.svg)](https://brucege.com/pay/view?code=fBp2YWB&utm_source=TranslationPlugin 'Mybatis Code Helper Pro')
+[<!-- ￥500.00,2024/05/20 -->![Fast Request](/img/logo/sponsor_fast_request.svg)](https://api-buddy.com?utm_source=TranslationPlugin&utm_campaign=product 'Fast Request')
+[<!-- ￥256.00,2025/02/11 -->![Smart Input Pro](/img/logo/sponsor_smart_input_pro.svg)](https://xiaolvpuzi.cn/docs/smart-input-pro-doc.html?from=TranslationPlugin#/ 'Smart Input Pro')
+[<!-- $20.00,2022/04/01 -->![Atom Material Themes & Plugins](/img/logo/sponsor_atom_material_themes.svg)](https://material-theme.com/?utm_source=opencollective&utm_medium=github&utm_campaign=translation-plugin 'Atom Material Themes & Plugins')
+[<!-- $5.00,2023/01/01 -->![Intellij Rainbow Brackets](/img/logo/sponsor_intellij_rainbow_brackets.svg)](https://github.com/izhangzhihao/intellij-rainbow-brackets 'Intellij Rainbow Brackets')
 
 </div>
 
