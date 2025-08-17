@@ -1,9 +1,0 @@
-<idea-plugin>
-    <extensions defaultExtensionNs="com.intellij">
-        <lang.documentationProvider
-                id="Translation.TranslatedDocumentationProvider.Swift"
-                order="first"
-                language="Swift"
-                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
-    </extensions>
-</idea-plugin>
