@@ -42,6 +42,24 @@ internal object Documentations {
     }
 
     /**
+     * Sets the translated attribute of the specified [documentation] to the given [translated] value.
+     */
+    fun setTranslated(documentation: Document, translated: Boolean): Document {
+        documentation.htmlEl?.attributes()?.apply {
+            if (translated) {
+                put(ATTR_TRANSLATED, "true")
+            } else {
+                remove(ATTR_TRANSLATED)
+            }
+        } ?: run {
+            // If the html element does not exist, create it and set the translated attribute.
+            val htmlEl = Element(TAG_HTML).attr(ATTR_TRANSLATED, translated.toString())
+            documentation.appendChild(htmlEl)
+        }
+        return documentation
+    }
+
+    /**
      * Parses the specified [documentation] string.
      */
     fun parseDocumentation(documentation: String): Document = Jsoup.parse(documentation)
@@ -59,12 +77,26 @@ internal object Documentations {
     /**
      * Adds the specified inline [message] to the [documentation].
      */
-    fun addMessage(documentation: String, message: String, color: Color): String {
-        return parseDocumentation(documentation)
-            .addMessage(message, color)
-            .documentationString
+    fun addMessage(
+        documentation: String,
+        message: String,
+        color: Color,
+        icon: String = "AllIcons.General.Information"
+    ): String {
+        return addMessage(parseDocumentation(documentation), message, color, icon).documentationString
     }
 
+    /**
+     * Adds the specified inline [message] to the [documentation].
+     */
+    fun addMessage(
+        documentation: Document,
+        message: String,
+        color: Color,
+        icon: String = "AllIcons.General.Information"
+    ): Document {
+        return documentation.addMessage(message, color, icon)
+    }
 }
 
 
@@ -114,6 +146,7 @@ internal fun Translator.translateDocumentation(documentation: Document, language
         } else {
             getTranslatedDocumentation(documentation)
         }.also {
+            Documentations.setTranslated(it, true)
             it.htmlEl?.attributes()?.put(ATTR_TRANSLATED, true)
         }
     } catch (e: ContentLengthLimitException) {
@@ -138,13 +171,16 @@ private fun Document.addLimitHint(): Document {
     return addMessage(message("documentation.message.limit.hint"), hintColor)
 }
 
-private fun Document.addMessage(message: String, color: Color): Document = apply {
+private fun Document.addMessage(
+    message: String,
+    color: Color,
+    icon: String = "AllIcons.General.Information"
+): Document = apply {
     val colorHex = ColorUtil.toHtmlColor(color)
     val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
     val messageEl = contentEl.prependElement("div")
         .attr("style", "color: $colorHex; margin: ${3.scaled}px 0px;")
-    messageEl.appendElement("icon")
-        .attr("src", "AllIcons.General.Information")
+    messageEl.appendElement("icon").attr("src", icon)
     messageEl.append("&nbsp;").appendText(message)
 }
 

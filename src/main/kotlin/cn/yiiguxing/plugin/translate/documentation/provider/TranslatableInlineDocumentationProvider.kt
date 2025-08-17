@@ -5,34 +5,34 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.platform.backend.documentation.InlineDocumentation
 import com.intellij.platform.backend.documentation.InlineDocumentationProvider
 import com.intellij.psi.PsiFile
+import com.intellij.util.SmartList
 
 @Suppress("UnstableApiUsage")
 class TranslatableInlineDocumentationProvider : InlineDocumentationProvider {
 
     override fun inlineDocumentationItems(file: PsiFile): Collection<InlineDocumentation> {
-        return resolve {
-            inlineDocumentationItems(file).map {
-                TranslatableInlineDocumentation(file, it)
+        val result = SmartList<InlineDocumentation>()
+        for (provider in InlineDocumentationProvider.EP_NAME.extensionList) {
+            if (provider is TranslatableInlineDocumentationProvider) {
+                continue
             }
-        } ?: emptyList()
-    }
-
-    override fun findInlineDocumentation(file: PsiFile, textRange: TextRange): InlineDocumentation? = resolve {
-        findInlineDocumentation(file, textRange)?.let {
-            TranslatableInlineDocumentation(file, it)
-        }
-    }
-}
-
-private inline fun <T> resolve(block: InlineDocumentationProvider.() -> T?): T? {
-    @Suppress("UnstableApiUsage")
-    for (provider in InlineDocumentationProvider.EP_NAME.extensionList) {
-        if (provider is TranslatableInlineDocumentationProvider) {
-            continue
+            result.addAll(provider.inlineDocumentationItems(file))
         }
 
-        return provider.block() ?: continue
+        return result.map { TranslatableInlineDocumentation(file, it) }
     }
 
-    return null
+    override fun findInlineDocumentation(file: PsiFile, textRange: TextRange): InlineDocumentation? {
+        for (provider in InlineDocumentationProvider.EP_NAME.extensionList) {
+            if (provider is TranslatableInlineDocumentationProvider) {
+                continue
+            }
+
+            return provider.findInlineDocumentation(file, textRange)
+                ?.let { TranslatableInlineDocumentation(file, it) }
+                ?: continue
+        }
+
+        return null
+    }
 }

@@ -3,9 +3,8 @@ package cn.yiiguxing.plugin.translate.documentation
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationCoroutineService
-import cn.yiiguxing.plugin.translate.trans.ContentLengthLimitException
-import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.trans.getTranslationErrorMessage
 import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.toImage
 import cn.yiiguxing.plugin.translate.util.toRGBHex
@@ -126,15 +125,7 @@ internal class TranslatableDocumentationTarget private constructor(
                         .translateDocumentation(documentToTranslate, pointer.language)
                     translatedContent = DocumentationContent.content(translatedDocument.documentationString)
                 } catch (e: Throwable) {
-                    val message = if (e is ContentLengthLimitException) {
-                        message("documentation.message.limit.hint")
-                    } else {
-                        val errorMessage = when (e) {
-                            is TranslateException -> e.errorInfo.message
-                            else -> e.message
-                        }?.takeIf { it.isNotBlank() } ?: message("error.unknown")
-                        message("documentation.message.translation.failed.with.message", errorMessage)
-                    }
+                    val message = getTranslationErrorMessage(e)
                     failedContent = getTranslationFailedDocumentationContent(document, message)
 
                     LOG.warn("Failed to translate documentation", e)

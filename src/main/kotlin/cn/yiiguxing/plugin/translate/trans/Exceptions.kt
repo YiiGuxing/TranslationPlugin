@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.message
+
 class TranslateException(
     @Suppress("MemberVisibilityCanBePrivate")
     val translatorId: String,
@@ -24,4 +26,16 @@ fun checkContentLength(value: String, limit: Int): String {
         throw ContentLengthLimitException(limit, value.length)
     }
     return value
+}
+
+fun getTranslationErrorMessage(cause: Throwable): String {
+    return if (cause is ContentLengthLimitException) {
+        message("documentation.message.limit.hint")
+    } else {
+        val errorMessage = when (cause) {
+            is TranslateException -> cause.errorInfo.message
+            else -> cause.message
+        }?.takeIf { it.isNotBlank() } ?: message("error.unknown")
+        message("documentation.message.translation.failed.with.message", errorMessage)
+    }
 }
