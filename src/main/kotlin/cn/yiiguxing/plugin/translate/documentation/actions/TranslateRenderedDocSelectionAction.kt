@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.plugin.translate.action.ACTION_HIGH_PRIORITY
+import cn.yiiguxing.plugin.translate.action.EditorTranslateAction
 import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
@@ -30,7 +31,7 @@ internal class TranslateRenderedDocSelectionAction : AnAction(), ImportantTransl
         templatePresentation.description = adaptedMessage("action.TranslateRenderedDocSelectionAction.description")
 
         ActionManager.getInstance()
-            .getAction(ACTION_ID)
+            .getAction(EditorTranslateAction.ACTION_ID)
             ?.let { copyShortcutFrom(it) }
     }
 
@@ -102,8 +103,6 @@ internal class TranslateRenderedDocSelectionAction : AnAction(), ImportantTransl
     }
 
     companion object {
-        private const val ACTION_ID = "Translation.TranslateTextComponentAction"
-
         private val getPaneWithSelectionMethod: Method? by lazy {
             try {
                 val clazz = Class.forName("com.intellij.codeInsight.documentation.render.DocRenderSelectionManager")
