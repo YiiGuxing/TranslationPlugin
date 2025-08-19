@@ -16,6 +16,16 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.TextRange
 import com.intellij.ui.JBColor
 
+private val EFFECT_COLOR = JBColor(0xFFEE6000.toInt(), 0xFFCC7832.toInt())
+private val HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
+    effectType = EffectType.LINE_UNDERSCORE
+    effectColor = EFFECT_COLOR
+}
+private val MULTILINE_HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
+    effectType = EffectType.BOXED
+    effectColor = EFFECT_COLOR
+}
+
 /**
  * 翻译动作
  *
@@ -86,29 +96,15 @@ open class TranslateAction(checkSelection: Boolean = false) :
             } else {
                 Disposer.register(balloon) { markupModel.removeHighlighters(highlighters) }
             }
-        } catch (thr: Throwable) {
+        } catch (_: Throwable) {
             markupModel.removeHighlighters(highlighters)
         }
     }
 
-    private companion object {
-        val EFFECT_COLOR = JBColor(0xFFEE6000.toInt(), 0xFFCC7832.toInt())
-
-        val HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
-            effectType = EffectType.LINE_UNDERSCORE
-            effectColor = EFFECT_COLOR
-        }
-
-        val MULTILINE_HIGHLIGHT_ATTRIBUTES: TextAttributes = TextAttributes().apply {
-            effectType = EffectType.BOXED
-            effectColor = EFFECT_COLOR
-        }
-
-        private fun MarkupModel.removeHighlighters(highlighters: Collection<RangeHighlighter>) {
-            for (highlighter in highlighters) {
-                removeHighlighter(highlighter)
-                highlighter.dispose()
-            }
+    private fun MarkupModel.removeHighlighters(highlighters: Collection<RangeHighlighter>) {
+        for (highlighter in highlighters) {
+            removeHighlighter(highlighter)
+            highlighter.dispose()
         }
     }
 }

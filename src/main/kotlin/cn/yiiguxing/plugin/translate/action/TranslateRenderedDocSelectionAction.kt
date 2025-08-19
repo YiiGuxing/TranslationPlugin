@@ -99,12 +99,13 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
         }
     }
 
+    @Suppress("CompanionObjectInExtension")
     companion object {
         private val getPaneWithSelectionMethod: Method? by lazy {
             try {
                 val clazz = Class.forName("com.intellij.codeInsight.documentation.render.DocRenderSelectionManager")
                 clazz.getDeclaredMethod("getPaneWithSelection", Editor::class.java)
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 null
             }
         }
@@ -121,7 +122,7 @@ class TranslateRenderedDocSelectionAction : AnAction(), ImportantTranslationActi
             if (!isSelectionPositionMethodInitialized) {
                 selectionPositionMethod = try {
                     obj.javaClass.getDeclaredMethod("getSelectionPositionInEditor")
-                } catch (e: Throwable) {
+                } catch (_: Throwable) {
                     null
                 } finally {
                     isSelectionPositionMethodInitialized = true
