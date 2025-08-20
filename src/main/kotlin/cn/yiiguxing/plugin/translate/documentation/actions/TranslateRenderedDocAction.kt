@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.documentation.actions
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
-import cn.yiiguxing.plugin.translate.service.TranslationCoroutineService
+import cn.yiiguxing.plugin.translate.service.ITPApplicationService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.getTranslationErrorMessage
 import cn.yiiguxing.plugin.translate.util.getNextSiblingSkippingCondition
@@ -76,7 +76,7 @@ internal class TranslateRenderedDocAction(
         if (newInfo?.isLoading == true) {
             val language = psiFile.language
             val modalityState: ModalityState = ModalityState.current()
-            TranslationCoroutineService.projectScope(psiFile.project).launch(Dispatchers.IO) {
+            ITPApplicationService.projectScope(psiFile.project).launch(Dispatchers.IO) {
                 val (translatedDoc, hasError) = translate(renderedText, language)
                 val translatedInfo = readAction {
                     @Suppress("UnstableApiUsage")

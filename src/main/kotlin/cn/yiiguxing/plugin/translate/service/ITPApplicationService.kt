@@ -11,8 +11,11 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 
+/**
+ * IntelliJ Translate Plugin Application Service
+ */
 @Service(Service.Level.APP, Service.Level.PROJECT)
-class TranslationCoroutineService private constructor(private val coroutineScope: CoroutineScope) {
+class ITPApplicationService private constructor(private val coroutineScope: CoroutineScope) {
 
     fun launch(
         context: CoroutineContext = EmptyCoroutineContext,
@@ -24,13 +27,13 @@ class TranslationCoroutineService private constructor(private val coroutineScope
 
     companion object {
         @JvmStatic
-        fun appScope(): TranslationCoroutineService {
-            return service<TranslationCoroutineService>()
+        fun appScope(): ITPApplicationService {
+            return service<ITPApplicationService>()
         }
 
         @JvmStatic
-        fun projectScope(project: Project): TranslationCoroutineService {
-            return project.service<TranslationCoroutineService>()
+        fun projectScope(project: Project): ITPApplicationService {
+            return project.service<ITPApplicationService>()
         }
     }
 }
