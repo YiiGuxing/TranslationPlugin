@@ -88,7 +88,7 @@ private val TARGET_PROPERTY = PropertyGetter("target")
 private fun handleResolvedTarget(
     originTarget: TranslatableDocumentationTarget,
     resolved: LinkResolveResult
-): LinkResolveResult? {
+): LinkResolveResult {
     val target: DocumentationTarget = TARGET_PROPERTY.getAs(resolved) ?: return resolved
     return LinkResolveResult.resolvedTarget(createTranslatableDocumentationTarget(originTarget, target))
 }
@@ -99,13 +99,10 @@ private val SUPPLIER_PROPERTY = PropertyGetter("supplier")
 private fun handleAsyncLinkResolveResult(
     originTarget: TranslatableDocumentationTarget,
     resolved: LinkResolveResult
-): LinkResolveResult? {
+): LinkResolveResult {
     return LinkResolveResult.asyncResult {
         val supplier: AsyncSupplier<*> = SUPPLIER_PROPERTY.getAs(resolved) ?: return@asyncResult null
-        val asyncResolvedTarget = supplier.invoke()
-        if (asyncResolvedTarget == null) {
-            return@asyncResult null
-        }
+        val asyncResolvedTarget = supplier.invoke() ?: return@asyncResult null
         if (asyncResolvedTarget !is LinkResolveResult.Async) {
             val className = asyncResolvedTarget::class.qualifiedName
             LOG.warn("Async supplier did not return an LinkResolveResult.Async: $className")
@@ -129,7 +126,7 @@ private var POINTER_PROPERTY = PropertyGetter("pointer")
 private suspend fun handleAsyncResolvedTarget(
     originTarget: TranslatableDocumentationTarget,
     resolved: LinkResolveResult.Async
-): LinkResolveResult.Async? {
+): LinkResolveResult.Async {
     @Suppress("UnstableApiUsage")
     val pointer: Pointer<*> = POINTER_PROPERTY.getAs(resolved) ?: return resolved
     return readAction {
