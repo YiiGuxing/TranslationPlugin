@@ -75,6 +75,8 @@
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
         <documentationActionProvider
                 implementation="cn.yiiguxing.plugin.translate.documentation.actions.TranslateDocumentationActionProvider"/>
+        <iw.actionProvider
+                implementation="cn.yiiguxing.plugin.translate.documentation.actions.FileInlineDocumentationTranslateActionProvider"/>
         <fileEditorProvider implementation="cn.yiiguxing.plugin.translate.view.WebViewProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
