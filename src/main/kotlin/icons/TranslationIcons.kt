@@ -60,6 +60,9 @@ object TranslationIcons {
     val TranslationReplace: Icon = load("/icons/translationReplace.svg")
 
     @JvmField
+    val TranslationSmall: Icon = load("/icons/translationSmall.svg")
+
+    @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")
 
 
