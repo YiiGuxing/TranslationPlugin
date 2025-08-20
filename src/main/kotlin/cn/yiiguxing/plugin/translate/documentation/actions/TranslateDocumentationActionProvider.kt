@@ -1,7 +1,5 @@
-package cn.yiiguxing.plugin.translate.documentation.provider
+package cn.yiiguxing.plugin.translate.documentation.actions
 
-import cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocAction
-import cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocSelectionAction
 import com.intellij.codeInsight.documentation.DocumentationActionProvider
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.Separator
@@ -24,4 +22,3 @@ class TranslateDocumentationActionProvider : DocumentationActionProvider {
         return actions
     }
 }
-
