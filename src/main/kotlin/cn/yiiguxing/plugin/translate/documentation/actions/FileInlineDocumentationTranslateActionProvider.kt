@@ -1,9 +1,12 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.plugin.translate.action.editor
+import cn.yiiguxing.plugin.translate.documentation.DocumentationNotifications
+import cn.yiiguxing.plugin.translate.documentation.DocumentationNotifications.BannerInfo
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.ITPApplicationService
 import com.intellij.codeInsight.actions.ReaderModeSettings
+import com.intellij.codeInsight.documentation.render.DocRenderItemManager
 import com.intellij.codeInsight.documentation.render.DocRenderManager
 import com.intellij.ide.ActivityTracker
 import com.intellij.openapi.actionSystem.ActionUpdateThread
@@ -15,13 +18,17 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.markup.InspectionWidgetActionProvider
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.ui.AnimatedIcon
 import icons.TranslationIcons
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
+
+private const val TRANSLATION_ITEM_LIMIT = 100
 private val FILE_TRANSLATION_JOB_KEY = Key.create<Job>("translation.inlineDocumentation.fileTranslationJob")
+
 
 class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionProvider {
     override fun createAction(editor: Editor): AnAction? {
@@ -75,8 +82,6 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
 
         override fun actionPerformed(e: AnActionEvent) {
             val editor = e.editor ?: return
-            val project = e.project ?: return
-
             editor.translationJob?.let { job ->
                 if (job.isActive) {
                     job.cancel()
@@ -86,9 +91,44 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
                 return@actionPerformed
             }
 
-            //TODO notify the user if there are too many comments to translate.
+            val renderItems = getRenderItems(editor)
+            if (renderItems.size > TRANSLATION_ITEM_LIMIT) {
+                val bannerInfo = BannerInfo(
+                    message("documentation.banner.too.many.items.to.translate"),
+                    message("documentation.banner.action.continue.translate")
+                ) {
+                    translate(editor, getRenderItems(editor))
+                    DocumentationNotifications.setEditorBanner(editor, null)
+                }
+                DocumentationNotifications.setEditorBanner(editor, bannerInfo)
+                return
+            }
 
-            editor.translationJob = ITPApplicationService.projectScope(project).launch {
+            translate(editor, renderItems)
+        }
+
+        private data class RenderItem(val textToRender: String, val range: TextRange)
+
+        @Suppress("UnstableApiUsage")
+        private fun getRenderItems(editor: Editor): List<RenderItem> {
+            return DocRenderItemManager.getInstance().getItems(editor)
+                ?.mapNotNull { item ->
+                    val textToRender = item.textToRender
+                    val foldRegion = item.foldRegion
+                    if (!textToRender.isNullOrEmpty() && foldRegion != null) {
+                        RenderItem(textToRender, foldRegion.textRange)
+                    } else null
+                }
+                ?.takeIf { it.isNotEmpty() }
+                ?: emptyList()
+        }
+
+        private fun translate(editor: Editor, renderItems: List<RenderItem>) {
+            if (renderItems.isEmpty()) {
+                return
+            }
+
+            editor.translationJob = ITPApplicationService.projectScope(editor.project ?: return).launch {
                 //TODO implement actual translation logic
                 println("Translating...")
                 delay(5000)
