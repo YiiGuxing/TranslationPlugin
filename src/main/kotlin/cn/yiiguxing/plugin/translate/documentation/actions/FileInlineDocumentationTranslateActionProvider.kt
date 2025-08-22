@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.plugin.translate.action.editor
-import cn.yiiguxing.plugin.translate.documentation.DocumentationNotifications
-import cn.yiiguxing.plugin.translate.documentation.DocumentationNotifications.BannerInfo
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.ITPApplicationService
+import cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBanner
+import cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBannerManager
 import com.intellij.codeInsight.actions.ReaderModeSettings
 import com.intellij.codeInsight.documentation.render.DocRenderItemManager
 import com.intellij.codeInsight.documentation.render.DocRenderManager
@@ -26,7 +26,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
 
-private const val TRANSLATION_ITEM_LIMIT = 100
+private const val TRANSLATION_ITEM_LIMIT = 50
 private val FILE_TRANSLATION_JOB_KEY = Key.create<Job>("translation.inlineDocumentation.fileTranslationJob")
 
 
@@ -93,14 +93,17 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
 
             val renderItems = getRenderItems(editor)
             if (renderItems.size > TRANSLATION_ITEM_LIMIT) {
-                val bannerInfo = BannerInfo(
-                    message("documentation.banner.too.many.items.to.translate"),
-                    message("documentation.banner.action.continue.translate")
-                ) {
-                    translate(editor, getRenderItems(editor))
-                    DocumentationNotifications.setEditorBanner(editor, null)
+                EditorBannerManager.setEditorBanner(editor) {
+                    status = EditorBanner.Status.WARNING
+                    message = message("documentation.banner.too.many.items.to.translate")
+                    action(
+                        text = message("documentation.banner.action.continue.translate"),
+                        icon = TranslationIcons.TranslationSmall
+                    ) {
+                        translate(editor, getRenderItems(editor))
+                        EditorBannerManager.setEditorBanner(editor, null)
+                    }
                 }
-                DocumentationNotifications.setEditorBanner(editor, bannerInfo)
                 return
             }
 
