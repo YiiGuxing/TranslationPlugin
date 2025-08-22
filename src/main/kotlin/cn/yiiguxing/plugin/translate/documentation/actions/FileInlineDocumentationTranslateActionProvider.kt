@@ -95,7 +95,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
             if (renderItems.size > TRANSLATION_ITEM_LIMIT) {
                 EditorBannerManager.setEditorBanner(editor) {
                     status = EditorBanner.Status.WARNING
-                    message = message("documentation.banner.too.many.items.to.translate")
+                    message = message("documentation.banner.too.many.items.to.translate", TRANSLATION_ITEM_LIMIT)
                     action(
                         text = message("documentation.banner.action.continue.translate"),
                         icon = TranslationIcons.TranslationSmall
