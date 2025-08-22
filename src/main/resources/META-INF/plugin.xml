@@ -77,6 +77,8 @@
                 implementation="cn.yiiguxing.plugin.translate.documentation.actions.TranslateDocumentationActionProvider"/>
         <iw.actionProvider
                 implementation="cn.yiiguxing.plugin.translate.documentation.actions.FileInlineDocumentationTranslateActionProvider"/>
+        <editorNotificationProvider
+                implementation="cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBannerProvider"/>
         <fileEditorProvider implementation="cn.yiiguxing.plugin.translate.view.WebViewProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
