@@ -5,15 +5,15 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.documentation.utils.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.service.ITPApplicationService
-import cn.yiiguxing.plugin.translate.util.getNextSiblingSkippingCondition
-import cn.yiiguxing.plugin.translate.util.isWhitespace
-import cn.yiiguxing.plugin.translate.util.startOffset
+import cn.yiiguxing.plugin.translate.util.findElementAroundOffset
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.readAction
 import com.intellij.openapi.editor.Editor
-import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.PsiDocCommentBase
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiFile
+import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.refactoring.suggested.createSmartPointer
 import com.intellij.ui.AnimatedIcon
 import com.intellij.util.concurrency.ThreadingAssertions
@@ -112,12 +112,6 @@ internal class TranslateRenderedDocAction(
 
     private fun getPsiDocComment(editor: Editor, psiFile: PsiFile): PsiDocCommentBase? {
         val offset = editor.takeUnless { it.isDisposed }?.caretModel?.offset ?: return null
-        var element = psiFile.findElementAt(offset) ?: return null
-        if (element.isWhitespace) {
-            element = element.getNextSiblingSkippingCondition(PsiElement::isWhitespace) ?: return null
-        }
-        element = psiFile.findElementAt(element.startOffset) ?: return null
-
-        return PsiTreeUtil.getParentOfType(element, PsiDocCommentBase::class.java, false)
+        return psiFile.findElementAroundOffset<PsiDocCommentBase>(offset)
     }
 }

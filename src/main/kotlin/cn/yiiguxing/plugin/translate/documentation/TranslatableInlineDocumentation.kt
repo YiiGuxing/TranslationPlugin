@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.util.findElementOfTypeAt
 import com.intellij.openapi.util.Key
 import com.intellij.platform.backend.documentation.InlineDocumentation
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.annotations.Nls
 
 private val TRANSLATION_INFO_KEY = Key.create<InlineDocTranslationInfo>("translation.inlineDocumentation.info")
@@ -71,11 +71,8 @@ internal class TranslatableInlineDocumentation(
         val renderText = delegate.renderText() ?: return null
 
         @Suppress("OverrideOnly")
-        val comment = PsiTreeUtil.getParentOfType(
-            file.findElementAt(documentationRange.startOffset),
-            PsiDocCommentBase::class.java,
-            false
-        ) ?: return renderText
+        val offset = documentationRange.startOffset
+        val comment = file.findElementOfTypeAt<PsiDocCommentBase>(offset) ?: return renderText
 
         return getPsiInlineDocumentationTranslationInfo(comment)?.let { info ->
             info.translatedText?.takeIf { !info.isDisabled }
