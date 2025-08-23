@@ -8,14 +8,15 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
- * A rate limiter that limits the rate of executing a block of code.
+ * A rate limiter that limits the rate of executing coroutines.
  */
 interface RateLimiter {
 
     /**
-     * Run the given [block] with rate limiting.
+     * Acquires permission to proceed. If the rate limit has been reached,
+     * this function will suspend until permission is granted.
      */
-    suspend fun <T> run(block: suspend () -> T): T
+    suspend fun acquire()
 
     companion object {
         private val NONE = NoneRateLimiter()
@@ -28,7 +29,6 @@ interface RateLimiter {
          */
         fun withInterval(interval: Duration): RateLimiter {
             val intervalInMilliseconds = interval.inWholeMilliseconds
-            require(intervalInMilliseconds >= 0) { "interval must be greater than or equal to 0 milliseconds" }
             return if (intervalInMilliseconds == 0L) NONE else RateLimiterImpl(intervalInMilliseconds)
         }
 
@@ -61,7 +61,7 @@ private class RateLimiterImpl(private val interval: Long) : RateLimiter {
         require(interval > 0) { "interval must be greater than 0" }
     }
 
-    override suspend fun <T> run(block: suspend () -> T): T {
+    override suspend fun acquire() {
         mutex.withLock {
             val now = System.currentTimeMillis()
             val elapsed = now - lastCallTime
@@ -70,11 +70,9 @@ private class RateLimiterImpl(private val interval: Long) : RateLimiter {
             }
             lastCallTime = System.currentTimeMillis()
         }
-
-        return block()
     }
 }
 
 private class NoneRateLimiter : RateLimiter {
-    override suspend fun <T> run(block: suspend () -> T): T = block()
+    override suspend fun acquire() = Unit
 }
