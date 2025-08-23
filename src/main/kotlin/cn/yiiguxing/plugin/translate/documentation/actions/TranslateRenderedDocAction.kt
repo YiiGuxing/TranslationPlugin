@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.documentation.utils.translateInlineDocumentation
-import cn.yiiguxing.plugin.translate.service.ITPApplicationService
+import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
 import cn.yiiguxing.plugin.translate.util.findElementAroundOffset
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
@@ -72,7 +72,7 @@ internal class TranslateRenderedDocAction(
         if (newInfo?.isLoading == true) {
             val language = psiFile.language
             val modalityState: ModalityState = ModalityState.current()
-            ITPApplicationService.projectScope(psiFile.project).launch(Dispatchers.IO) {
+            ITPCoroutineService.projectScope(psiFile.project).launch(Dispatchers.IO) {
                 val (translatedDoc, hasError) = translateInlineDocumentation(renderedText, language)
                 val translatedInfo = readAction {
                     @Suppress("UnstableApiUsage")

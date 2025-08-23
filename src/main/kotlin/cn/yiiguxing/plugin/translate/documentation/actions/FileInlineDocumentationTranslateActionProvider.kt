@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.action.editor
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.utils.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.service.ITPApplicationService
+import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
 import cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBanner
 import cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBannerManager
 import com.intellij.codeInsight.actions.ReaderModeSettings
@@ -148,7 +148,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
             val project = editor.project ?: return
             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return
             val language = psiFile.language
-            editor.translationJob = ITPApplicationService.projectScope(project)
+            editor.translationJob = ITPCoroutineService.projectScope(project)
                 .launch(Dispatchers.IO) {
                     val result = ArrayList<RenderItem>(renderItems.size)
                     for (item in renderItems) {
