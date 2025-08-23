@@ -19,6 +19,7 @@ interface Translator {
 
     val supportedTargetLanguages: List<Lang>
 
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     val intervalLimit: Int
 
     val contentLengthLimit: Int
