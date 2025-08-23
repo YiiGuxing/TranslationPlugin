@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.service.TranslationCoroutineService
+import cn.yiiguxing.plugin.translate.service.ITPApplicationService
 import cn.yiiguxing.plugin.translate.trans.ContentLengthLimitException
 import cn.yiiguxing.plugin.translate.trans.TranslateException
 import cn.yiiguxing.plugin.translate.trans.TranslateService
@@ -117,7 +117,7 @@ internal class TranslatableDocumentationTarget private constructor(
                 extraBufferCapacity = 1,
                 onBufferOverflow = BufferOverflow.DROP_OLDEST
             )
-            val translationJob = TranslationCoroutineService.projectScope(pointer.project).launch {
+            val translationJob = ITPApplicationService.projectScope(pointer.project).launch {
                 var translatedContent: DocumentationContent? = null
                 var failedContent: DocumentationContent? = null
                 try {
