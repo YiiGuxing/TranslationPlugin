@@ -3,13 +3,11 @@ package cn.yiiguxing.plugin.translate.documentation.actions
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
+import cn.yiiguxing.plugin.translate.documentation.utils.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.service.ITPApplicationService
-import cn.yiiguxing.plugin.translate.trans.TranslateService
-import cn.yiiguxing.plugin.translate.trans.getTranslationErrorMessage
 import cn.yiiguxing.plugin.translate.util.getNextSiblingSkippingCondition
 import cn.yiiguxing.plugin.translate.util.isWhitespace
 import cn.yiiguxing.plugin.translate.util.startOffset
-import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.readAction
@@ -19,10 +17,8 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.createSmartPointer
 import com.intellij.ui.AnimatedIcon
 import com.intellij.util.concurrency.ThreadingAssertions
-import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import kotlinx.coroutines.Dispatchers
-import org.jsoup.nodes.Document
 
 internal class TranslateRenderedDocAction(
     private val editor: Editor,
@@ -77,7 +73,7 @@ internal class TranslateRenderedDocAction(
             val language = psiFile.language
             val modalityState: ModalityState = ModalityState.current()
             ITPApplicationService.projectScope(psiFile.project).launch(Dispatchers.IO) {
-                val (translatedDoc, hasError) = translate(renderedText, language)
+                val (translatedDoc, hasError) = translateInlineDocumentation(renderedText, language)
                 val translatedInfo = readAction {
                     @Suppress("UnstableApiUsage")
                     val element = pointer.dereference() ?: return@readAction null
@@ -107,27 +103,6 @@ internal class TranslateRenderedDocAction(
             val element = pointer.dereference() ?: return@updateRendering true
             getPsiInlineDocumentationTranslationInfo(element) !== info
         }
-    }
-
-    private fun translate(text: String, language: Language): Pair<String, Boolean> {
-        var hasError = false
-        val document: Document = Documentations.parseDocumentation(text)
-        val translatedDocument = try {
-            TranslateService.getInstance()
-                .translator
-                .translateDocumentation(document, language)
-        } catch (e: Throwable) {
-            hasError = true
-            val message = getTranslationErrorMessage(e)
-            Documentations.addMessage(
-                Documentations.setTranslated(document, true),
-                message,
-                JBUI.CurrentTheme.NotificationError.foregroundColor(),
-                "AllIcons.General.Error"
-            )
-        }
-
-        return Documentations.getDocumentationString(translatedDocument) to hasError
     }
 
     private fun getPsiFile(editor: Editor): PsiFile? {
