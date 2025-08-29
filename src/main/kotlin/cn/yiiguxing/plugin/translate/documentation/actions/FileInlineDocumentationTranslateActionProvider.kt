@@ -11,6 +11,7 @@ import cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBanner
 import cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBannerManager
 import cn.yiiguxing.plugin.translate.util.RateLimiter
 import cn.yiiguxing.plugin.translate.util.findElementAroundOffset
+import cn.yiiguxing.plugin.translate.util.psiFile
 import com.intellij.codeInsight.actions.ReaderModeSettings
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.codeInsight.documentation.render.DocRenderItemManager
@@ -21,6 +22,7 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
+import com.intellij.openapi.actionSystem.ex.TooltipLinkProvider
 import com.intellij.openapi.application.Experiments
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
@@ -33,13 +35,14 @@ import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiDocCommentBase
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.ui.AnimatedIcon
 import icons.TranslationIcons
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.isActive
+import javax.swing.JComponent
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -53,14 +56,14 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
     override fun createAction(editor: Editor): AnAction? {
         val project: Project? = editor.project
         return if (project == null || project.isDefault) null
-        else FileInlineDocumentationTranslateAction()
+        else FileInlineDocumentationTranslateAction(editor)
     }
 
-    private class FileInlineDocumentationTranslateAction : AnAction(
+    private class FileInlineDocumentationTranslateAction(private val editor: Editor) : AnAction(
         { message("action.FileInlineDocumentationTranslateAction.text") },
         Presentation.NULL_STRING,
         TranslationIcons.TranslationSmall
-    ) {
+    ), TooltipLinkProvider {
 
         private var Editor.translationJob: Job?
             get() = getUserData(FILE_TRANSLATION_JOB_KEY)
@@ -70,6 +73,41 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
             }
 
         override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
+
+        override fun getTooltipLink(owner: JComponent?) = TooltipLinkProvider.TooltipLink(
+            message("action.FileInlineDocumentationTranslateAction.tooltip.link")
+        ) {
+            val project = editor.project ?: return@TooltipLink
+
+            ITPCoroutineService.projectScope(project).launch {
+                editor.translationJob?.cancelAndJoin()
+
+                readAction {
+                    if (!isAvailable(project, editor)) {
+                        return@readAction
+                    }
+
+                    val psiFile = editor.psiFile ?: return@readAction
+                    val items = getRenderItems(editor)
+                        .filter { Documentations.isTranslated(it.textToRender) }
+                        .takeIf { it.isNotEmpty() }
+                        ?: return@readAction
+
+                    for (item in items) {
+                        getPsiDocComment(item, psiFile)?.let { comment ->
+                            getPsiInlineDocumentationTranslationInfo(comment)?.let { info ->
+                                val newInfo = when {
+                                    info.translatedText != null && !info.hasError -> info.disabled(true)
+                                    else -> null
+                                }
+                                setPsiInlineDocumentationTranslationInfo(comment, newInfo)
+                            }
+                        }
+                    }
+                    updateRendering(editor, psiFile, ModalityState.any())
+                }
+            }
+        }
 
         override fun update(e: AnActionEvent) {
             val presentation = e.presentation
@@ -84,7 +122,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
                 return
             }
 
-            val file = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)?.virtualFile ?: return
+            val file = editor.psiFile?.virtualFile ?: return
             if (!ReaderModeSettings.matchMode(project, file, editor)) {
                 return
             }
@@ -156,7 +194,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
             }
 
             val project = editor.project ?: return
-            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return
+            val psiFile = editor.psiFile ?: return
             val language = psiFile.language
             editor.translationJob = ITPCoroutineService.projectScope(project)
                 .launch(Dispatchers.IO) {
@@ -216,13 +254,18 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
 
         private suspend fun getTranslationCache(psiFile: PsiFile, item: RenderItem): InlineDocTranslationInfo? {
             return readAction {
-                val offset = item.range.takeIf { it.isValid }?.startOffset ?: return@readAction null
-                psiFile.takeIf { it.isValid }
-                    ?.findElementAroundOffset<PsiDocCommentBase>(offset)
-                    ?.let { comment -> getPsiInlineDocumentationTranslationInfo(comment) }
+                getPsiDocComment(item, psiFile)?.let { comment ->
+                    getPsiInlineDocumentationTranslationInfo(comment)
+                }
             }
                 ?.takeIf { !it.isLoading && it.translatedText != null && it.isDisabled }
                 ?.disabled(false)
+        }
+
+        private fun getPsiDocComment(item: RenderItem, psiFile: PsiFile): PsiDocCommentBase? {
+            val offset = item.range.takeIf { it.isValid }?.startOffset ?: return null
+            return psiFile.takeIf { it.isValid }
+                ?.findElementAroundOffset<PsiDocCommentBase>(offset)
         }
 
         private fun applyTranslationResult(

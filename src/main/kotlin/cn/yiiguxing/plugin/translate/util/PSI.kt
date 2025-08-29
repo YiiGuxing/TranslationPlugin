@@ -2,6 +2,8 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import com.intellij.openapi.editor.Editor
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
@@ -11,6 +13,10 @@ import com.intellij.psi.util.PsiTreeUtil
 private val PREV_SIBLING: PsiElement.() -> PsiElement? = { prevSibling }
 private val NEXT_SIBLING: PsiElement.() -> PsiElement? = { nextSibling }
 
+val Editor.psiFile: PsiFile?
+    get() {
+        return PsiDocumentManager.getInstance(project ?: return null).getPsiFile(document)
+    }
 
 /**
  * 元素类型
