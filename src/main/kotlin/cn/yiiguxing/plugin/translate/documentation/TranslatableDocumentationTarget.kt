@@ -129,7 +129,7 @@ internal class TranslatableDocumentationTarget private constructor(
 
                 translatedContent?.let { contentUpdates.tryEmit(it) }
                 if (failedContent != null && contentUpdates.tryEmit(failedContent)) {
-                    readAction { pointer.translate = false }
+                    readAction { pointer.translate = service<Settings>().translateDocumentation }
                 }
             }
 
