@@ -28,6 +28,17 @@ import org.jsoup.nodes.Document
 import java.awt.Image
 
 
+internal interface TranslatableTarget {
+    val project: Project
+    val language: Language
+
+    /**
+     * Indicates whether the target should be translated.
+     */
+    var translate: Boolean
+}
+
+
 /**
  * A [DocumentationTarget] that supports translation.
  */
@@ -35,22 +46,7 @@ import java.awt.Image
 internal class TranslatableDocumentationTarget private constructor(
     val delegate: DocumentationTarget,
     private val pointer: TranslatableDocumentationTargetPointer
-) : DocumentationTarget by delegate {
-
-    val project: Project
-        get() = pointer.project
-
-    val language: Language
-        get() = pointer.language
-
-    /**
-     * Indicates whether the documentation target should be translated.
-     */
-    var translate: Boolean
-        get() = pointer.translate
-        set(value) {
-            pointer.translate = value
-        }
+) : DocumentationTarget by delegate, TranslatableTarget by pointer {
 
     init {
         check(delegate !is TranslatableDocumentationTarget) {
@@ -148,11 +144,8 @@ internal class TranslatableDocumentationTarget private constructor(
     }
 
 
-    private sealed interface TranslatableDocumentationTargetPointer : Pointer<TranslatableDocumentationTarget> {
-        val project: Project
-        val language: Language
-        var translate: Boolean
-    }
+    private sealed interface TranslatableDocumentationTargetPointer
+        : Pointer<TranslatableDocumentationTarget>, TranslatableTarget
 
     private class DefaultTranslatableDocumentationTargetPointer(
         override val project: Project,
