@@ -246,12 +246,13 @@ internal class TranslatableDocumentationTarget private constructor(
                     .appendElement("tr")
 
                 val iconUrl = if (isError) ICON_URL_TRANSLATION_FAILED else ICON_URL_TRANSLATION
+                val iconSize = 16.scaled
                 trEl.appendElement("td")
-                    .attr("style", "width: ${16.scaled}px; margin: 0 ${2.scaled}px 0 0; padding: 0;")
+                    .attr("style", "width: ${iconSize}px; margin: 0 ${2.scaled}px 0 0; padding: 0;")
                     .appendElement("img")
                     .id(ICON_ELEMENT_ID)
-                    .attr("width", "${16.scaled}")
-                    .attr("height", "${16.scaled}")
+                    .attr("width", "$iconSize")
+                    .attr("height", "$iconSize")
                     .attr("src", iconUrl)
 
                 trEl.appendElement("td")
