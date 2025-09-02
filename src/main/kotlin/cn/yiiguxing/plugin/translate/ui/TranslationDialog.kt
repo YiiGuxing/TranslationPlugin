@@ -522,7 +522,7 @@ class TranslationDialog(
         dictViewer.caretPosition = 0
     }
 
-    private fun requestTranslate(delay: Int = presenter.translator.intervalLimit) {
+    private fun requestTranslate(@Suppress("DEPRECATION") delay: Int = presenter.translator.intervalLimit) {
         if (isDisposed) {
             return
         }

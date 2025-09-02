@@ -31,6 +31,7 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override val icon: Icon = YOUDAO.icon
 
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = YOUDAO.intervalLimit
 
     override val contentLengthLimit: Int = YOUDAO.contentLengthLimit

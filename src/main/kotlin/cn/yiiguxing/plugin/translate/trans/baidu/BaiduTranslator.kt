@@ -34,6 +34,7 @@ object BaiduTranslator : AbstractTranslator() {
 
     override val icon: Icon = BAIDU.icon
 
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = BAIDU.intervalLimit
 
     override val contentLengthLimit: Int = BAIDU.contentLengthLimit

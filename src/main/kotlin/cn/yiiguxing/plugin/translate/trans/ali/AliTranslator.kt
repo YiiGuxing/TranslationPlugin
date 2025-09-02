@@ -40,6 +40,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override val icon: Icon = ALI.icon
 
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = ALI.intervalLimit
 
     override val contentLengthLimit: Int = ALI.contentLengthLimit

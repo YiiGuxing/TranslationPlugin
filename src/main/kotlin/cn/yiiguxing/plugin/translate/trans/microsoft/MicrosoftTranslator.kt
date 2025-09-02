@@ -25,6 +25,8 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     override val id: String = MICROSOFT.id
     override val name: String = MICROSOFT.translatorName
     override val icon: Icon = MICROSOFT.icon
+
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = MICROSOFT.intervalLimit
     override val contentLengthLimit: Int = MICROSOFT.contentLengthLimit
     override val primaryLanguage: Lang get() = MICROSOFT.primaryLanguage

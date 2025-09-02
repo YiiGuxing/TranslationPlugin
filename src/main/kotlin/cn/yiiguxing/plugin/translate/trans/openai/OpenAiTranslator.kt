@@ -21,6 +21,8 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
     override val id: String = OPEN_AI.id
     override val name: String = OPEN_AI.translatorName
     override val icon: Icon = OPEN_AI.icon
+
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = OPEN_AI.intervalLimit
     override val contentLengthLimit: Int = OPEN_AI.contentLengthLimit
     override val primaryLanguage: Lang get() = OPEN_AI.primaryLanguage
