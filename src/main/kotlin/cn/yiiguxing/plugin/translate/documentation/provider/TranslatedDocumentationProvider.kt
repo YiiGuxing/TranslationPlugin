@@ -1,23 +1,17 @@
 package cn.yiiguxing.plugin.translate.documentation.provider
 
-import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.DocNotifications
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
-import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
 import cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider.Companion.nullIfRecursive
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
-import cn.yiiguxing.plugin.translate.util.runReadAction
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.lang.Language
 import com.intellij.lang.documentation.DocumentationProviderEx
 import com.intellij.lang.documentation.ExternalDocumentationProvider
-import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
-import com.intellij.util.ui.JBUI
 import java.util.concurrent.TimeoutException
 
 /**
@@ -29,54 +23,11 @@ import java.util.concurrent.TimeoutException
  */
 class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
-    override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (DocTranslationService.isDocumentationV2 || !isTranslateDocumentation(element)) {
-            return null
-        }
-
-        return nullIfRecursive {
-            val providerFromElement = DocumentationManager.getProviderFromElement(element, originalElement)
-            val originalDoc = nullIfError { providerFromElement.generateDoc(element, originalElement) }
-            translate(originalDoc, element.language)
-        }
-    }
-
-    override fun fetchExternalDocumentation(
-        project: Project,
-        element: PsiElement,
-        docUrls: MutableList<String>?,
-        onHover: Boolean
-    ): String? {
-        if (DocTranslationService.isDocumentationV2) {
-            return null
-        }
-
-        val isTranslated = runReadAction { isTranslateDocumentation(element) }
-        if (!isTranslated) {
-            return null
-        }
-
-        return nullIfRecursive {
-            val (language, providerFromElement) = runReadAction {
-                element.takeIf { it.isValid }?.language to DocumentationManager.getProviderFromElement(element, null)
-            }
-            val originalDoc = when (providerFromElement) {
-                is ExternalDocumentationProvider -> nullIfError {
-                    providerFromElement.fetchExternalDocumentation(project, element, docUrls, onHover)
-                }
-
-                else -> null
-            }
-
-            translate(originalDoc, language)
-        }
-    }
-
-    @Suppress("UnstableApiUsage")
     override fun generateRenderedDoc(docComment: PsiDocCommentBase): String? {
         val translationResult = DocTranslationService.getInlayDocTranslation(docComment) ?: return null
 
         return nullIfRecursive {
+            @Suppress("DEPRECATION")
             val providerFromElement = DocumentationManager.getProviderFromElement(docComment)
             val originalDoc = nullIfError { providerFromElement.generateRenderedDoc(docComment) }
 
@@ -122,10 +73,6 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         // To reuse long-running translation task
         private var lastTranslationTask: TranslateDocumentationTask? = null
 
-        private fun isTranslateDocumentation(element: PsiElement): Boolean {
-            return DocTranslationService.getTranslationState(element) ?: Settings.getInstance().translateDocumentation
-        }
-
         /**
          * 用于[DocumentationProviderEx]和[ExternalDocumentationProvider]生成文档方法的包装调用，
          * 此方法应该在[nullIfRecursive]方法的`computation`参数中调用：
@@ -148,7 +95,7 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         private fun <T> nullIfError(block: () -> T?): T? {
             return try {
                 block()
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 null
             }
         }
@@ -183,24 +130,6 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
             lastTranslationTask = task
 
             return task
-        }
-
-        private fun translate(text: String?, language: Language?): String? {
-            return translateTask(text, language)?.nonBlockingGetOrDefault {
-                val message = if (it is TimeoutException) {
-                    message("documentation.message.translation.timeout")
-                } else {
-                    message("documentation.message.translation.failed")
-                }
-                addTranslationFailureMessage(text, message)
-            }
-        }
-
-        private fun addTranslationFailureMessage(doc: String?, message: String): String? {
-            doc ?: return null
-
-            val color = JBUI.CurrentTheme.Label.disabledForeground()
-            return Documentations.addMessage(doc, message, color)
         }
     }
 }
