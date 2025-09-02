@@ -31,13 +31,16 @@ object WebPages {
      * Get a [PageFragment] for the specified path.
      */
     fun get(vararg path: String, locale: Locale = Locale.getDefault()): PageFragment {
-        val lang = when (locale.language) {
-            Locale.CHINESE.language -> Language.CHINESE
+        return PageFragment(*path, language = getSupportedLanguage(locale))
+    }
+
+    fun getSupportedLanguage(locale: Locale = Locale.getDefault()): Language {
+        return when (locale.language) {
+            Locale.CHINESE.language -> if (locale.country == "CN") Language.CHINESE else Language.ENGLISH
             Locale.JAPANESE.language -> Language.JAPANESE
             Locale.KOREAN.language -> Language.KOREAN
             else -> Language.ENGLISH
         }
-        return PageFragment(*path, language = lang)
     }
 
     /**
@@ -88,7 +91,7 @@ object WebPages {
     fun getSponsorsPageUrl(locale: Locale = Locale.getDefault()): String {
         return UrlTrackingParametersProvider.augmentIdeUrl(
             SPONSORS_PAGE_URL,
-            "language" to locale.toLanguageTag(),
+            "language" to getSupportedLanguage(locale).code,
             "dark" to JBColor.isBright().not().toString()
         )
     }
@@ -174,16 +177,14 @@ object WebPages {
     /**
      * Supported languages.
      */
-    enum class Language {
-        CHINESE, ENGLISH, JAPANESE, KOREAN;
+    enum class Language(val code: String) {
+        CHINESE("zh-CN"), ENGLISH("en"), JAPANESE("ja"), KOREAN("ko");
     }
 
     private val Language.path: String
         get() = when (this) {
             Language.CHINESE -> ""
-            Language.ENGLISH -> "/en"
-            Language.JAPANESE -> "/ja"
-            Language.KOREAN -> "/ko"
+            else -> "/$code"
         }
 
     /**

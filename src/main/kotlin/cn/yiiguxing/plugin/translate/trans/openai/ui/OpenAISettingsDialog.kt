@@ -142,6 +142,8 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             if (configType == ConfigType.TRANSLATOR && provider == ServiceProvider.OpenAI) {
                 ui.customModelField.isVisible = selected
                 ui.modelComboBox.isVisible = !selected
+                // To fix: https://github.com/YiiGuxing/TranslationPlugin/issues/6322
+                pack()
             }
         }
 

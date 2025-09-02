@@ -258,7 +258,7 @@
             ❤️<a href="itp:///dialog/support" target="_blank">捐赠</a>❤️，这将极大地激励我继续开发此项目。
         </span>
   </p>
-  <p>👋
+  <p>🎉
     <span lang="en">Quick Start: Select a text in the editor &gt; <kbd>Right-click</kbd></span>
     <span lang="zh-CN">快速开始：在编辑器中选择一段文本 &gt; <kbd>鼠标右键</kbd></span>
     <span lang="zh-CN"></span>
@@ -286,12 +286,12 @@
 
   <h1>✨ <span lang="en">Features</span><span lang="zh-CN">功能</span></h1>
   <ul class="features">
-    <li>👉 <span lang="en">Multiple languages inter-translation.</span><span lang="zh-CN">多语言互译</span></li>
-    <li>👉 <span lang="en">Multiple Translation Engines.</span><span lang="zh-CN">多翻译引擎</span><br/></li>
-    <li>👉 <span lang="en">Code documentation translation.</span><span lang="zh-CN">代码文档翻译</span><br/></li>
-    <li>👉 <span lang="en">Text translation and replacement.</span><span lang="zh-CN">文本翻译与替换</span><br/></li>
-    <li>👉 <span lang="en">Text-to-Speech.</span><span lang="zh-CN">语音朗读</span><br/></li>
-    <li>👉 <span lang="en">Word Book.</span><span lang="zh-CN">单词本</span></li>
+    <li>🌟 <span lang="en">Multiple languages inter-translation.</span><span lang="zh-CN">多语言互译</span></li>
+    <li>🌟 <span lang="en">Multiple Translation Engines.</span><span lang="zh-CN">多翻译引擎</span><br/></li>
+    <li>🌟 <span lang="en">Code documentation translation.</span><span lang="zh-CN">代码文档翻译</span><br/></li>
+    <li>🌟 <span lang="en">Text translation and replacement.</span><span lang="zh-CN">文本翻译与替换</span><br/></li>
+    <li>🌟 <span lang="en">Text-to-Speech.</span><span lang="zh-CN">语音朗读</span><br/></li>
+    <li>🌟 <span lang="en">Word Book.</span><span lang="zh-CN">单词本</span></li>
   </ul>
 
   <h1>✨ <span lang="en">Change Notes</span><span lang="zh-CN">更新说明</span></h1>
@@ -350,6 +350,16 @@
 <script>
   window.itpCefQuery = window.itpCefQuery || function () {
   }
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest('a');
+    if (!link) return;
+
+    gtag("event", "click", {
+      link_url: link.href,
+      link_text: link.innerText.trim(),
+    });
+  });
 
   function updateContent(selector, content) {
     const el = document.querySelector(selector);

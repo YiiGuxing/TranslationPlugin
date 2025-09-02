@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import com.intellij.ide.plugins.newui.EmptyCaret
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil
 import java.awt.Graphics
 import javax.swing.JTextPane
@@ -16,7 +15,7 @@ open class Viewer : JTextPane() {
         isEditable = false
         editorKit = WarpEditorKit()
         font = UI.defaultFont
-        caret = EmptyCaret.INSTANCE
+        caret = EmptyCaret()
     }
 
     fun disableSelection() {
