@@ -2,13 +2,13 @@
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
         <ignoredDocumentationElementProvider
                 language="JavaScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.JavaScriptIgnoredDocumentationElementProvider"/>
         <ignoredDocumentationElementProvider
                 language="TypeScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.JavaScriptIgnoredDocumentationElementProvider"/>
         <ignoredDocumentationElementProvider
                 language="Flow JS"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.JavaScriptIgnoredDocumentationElementProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -16,16 +16,16 @@
                 id="Translation.TranslatedDocumentationProvider.JavaScript"
                 order="first"
                 language="JavaScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.TypeScript"
                 order="first"
                 language="TypeScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
         <lang.documentationProvider
                 id="Translation.TranslatedDocumentationProvider.FlowJS"
                 order="first"
                 language="Flow JS"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider"/>
     </extensions>
 </idea-plugin>

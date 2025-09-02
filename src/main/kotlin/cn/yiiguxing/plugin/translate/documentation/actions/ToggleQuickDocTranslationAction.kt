@@ -1,10 +1,13 @@
-package cn.yiiguxing.plugin.translate.action
+@file:Suppress("UnstableApiUsage", "DEPRECATION")
 
-import cn.yiiguxing.intellij.compat.DocumentationBrowserCompat
-import cn.yiiguxing.intellij.compat.get
+package cn.yiiguxing.plugin.translate.documentation.actions
+
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
+import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
+import cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationTarget
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.IdeVersion
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -17,10 +20,12 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.platform.ide.documentation.DOCUMENTATION_BROWSER
+import com.intellij.platform.ide.documentation.DocumentationBrowserFacade
 import com.intellij.util.concurrency.AppExecutorUtil
+import org.jetbrains.annotations.ApiStatus
 
 open class ToggleQuickDocTranslationAction :
     ToggleableTranslationAction(),
@@ -35,10 +40,7 @@ open class ToggleQuickDocTranslationAction :
         templatePresentation.text = adaptedMessage("action.ToggleQuickDocTranslationAction.text")
     }
 
-    private val isDocumentationV2: Boolean
-        get() = IdeVersion >= IdeVersion.IDE2023_2 || Registry.`is`("documentation.v2")
-
-    private fun documentationBrowser(dc: DataContext): DocumentationBrowserCompat? = DocumentationBrowserCompat.get(dc)
+    private fun documentationBrowser(dc: DataContext): DocumentationBrowserFacade? = dc.getData(DOCUMENTATION_BROWSER)
 
     final override fun update(event: AnActionEvent, isSelected: Boolean) {
         val presentation = event.presentation
@@ -53,16 +55,18 @@ open class ToggleQuickDocTranslationAction :
             return
         }
 
-        if (isDocumentationV2) {
+        if (DocTranslationService.isDocumentationV2) {
             presentation.isEnabledAndVisible = documentationBrowser(event.dataContext)
-                ?.targetElement
-                .let { it != null && DocTranslationService.isSupportedForPsiElement(it) }
+                ?.targetPointer
+                ?.dereference() is TranslatableDocumentationTarget
             return
         }
 
         update(project, event)
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "4.0")
+    @Deprecated("Will be removed in v4.0")
     private fun update(project: Project, e: AnActionEvent) {
         val activeDocComponent = QuickDocUtil.getActiveDocComponent(project)
         val editorMouseHoverPopupManager = EditorMouseHoverPopupManager.getInstance()
@@ -83,31 +87,40 @@ open class ToggleQuickDocTranslationAction :
 
     override fun isSelected(event: AnActionEvent): Boolean {
         val project = event.project ?: return false
-        val state = if (isDocumentationV2) {
-            documentationBrowser(event.dataContext)?.targetElement?.let {
-                DocTranslationService.getTranslationState(it)
-            }
+        val state = if (DocTranslationService.isDocumentationV2) {
+            documentationBrowser(event.dataContext)
+                ?.targetPointer
+                ?.dereference()
+                ?.let { it as? TranslatableDocumentationTarget }
+                ?.translate
+                ?: false
         } else {
             QuickDocUtil.getActiveDocComponent(project)?.element?.let {
                 DocTranslationService.getTranslationState(it)
-            }
+            } ?: Settings.getInstance().translateDocumentation
         }
 
-        return state ?: Settings.getInstance().translateDocumentation
+        return state
     }
 
     override fun setSelected(event: AnActionEvent, state: Boolean) {
         val project = event.project ?: return
-        if (isDocumentationV2) {
-            documentationBrowser(event.dataContext)?.apply {
-                targetElement?.let { DocTranslationService.setTranslationState(it, state) }
-                reload()
+        if (DocTranslationService.isDocumentationV2) {
+            documentationBrowser(event.dataContext)?.let { browserFacade ->
+                val target = browserFacade.targetPointer.dereference() as? TranslatableDocumentationTarget
+                    ?: return
+
+                target.translate = state
+                browserFacade.reload()
             }
         } else {
             toggleTranslation(project, state)
         }
     }
 
+    // TODO: Remove in v4.0
+    @ApiStatus.ScheduledForRemoval(inVersion = "4.0")
+    @Deprecated("Will be removed in v4.0")
     private fun toggleTranslation(project: Project, state: Boolean) {
         val docComponent = QuickDocUtil.getActiveDocComponent(project) ?: return
         val element = docComponent.element ?: return
@@ -134,6 +147,9 @@ open class ToggleQuickDocTranslationAction :
         )
     }
 
+    // TODO: Remove in v4.0
+    @ApiStatus.ScheduledForRemoval(inVersion = "4.0")
+    @Deprecated("Will be removed in v4.0")
     private fun replaceActiveComponentText(project: Project, currentText: String?, newText: String) {
         invokeLater {
             val component = QuickDocUtil.getActiveDocComponent(project)

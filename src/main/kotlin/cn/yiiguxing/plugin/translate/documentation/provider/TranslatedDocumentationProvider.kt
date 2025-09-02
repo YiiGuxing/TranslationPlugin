@@ -1,10 +1,11 @@
-package cn.yiiguxing.plugin.translate.provider
+package cn.yiiguxing.plugin.translate.documentation.provider
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.documentation.DocNotifications
 import cn.yiiguxing.plugin.translate.documentation.DocTranslationService
 import cn.yiiguxing.plugin.translate.documentation.Documentations
 import cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationTask
+import cn.yiiguxing.plugin.translate.documentation.provider.TranslatedDocumentationProvider.Companion.nullIfRecursive
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeoutException
 class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocumentationProvider {
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (!isTranslateDocumentation(element)) {
+        if (DocTranslationService.isDocumentationV2 || !isTranslateDocumentation(element)) {
             return null
         }
 
@@ -46,6 +47,10 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         docUrls: MutableList<String>?,
         onHover: Boolean
     ): String? {
+        if (DocTranslationService.isDocumentationV2) {
+            return null
+        }
+
         val isTranslated = runReadAction { isTranslateDocumentation(element) }
         if (!isTranslated) {
             return null
@@ -183,9 +188,9 @@ class TranslatedDocumentationProvider : DocumentationProviderEx(), ExternalDocum
         private fun translate(text: String?, language: Language?): String? {
             return translateTask(text, language)?.nonBlockingGetOrDefault {
                 val message = if (it is TimeoutException) {
-                    message("doc.message.translation.timeout.please.try.again")
+                    message("documentation.message.translation.timeout")
                 } else {
-                    message("doc.message.translation.failure.please.try.again")
+                    message("documentation.message.translation.failed")
                 }
                 addTranslationFailureMessage(text, message)
             }
