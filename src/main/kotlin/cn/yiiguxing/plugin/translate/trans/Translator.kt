@@ -22,8 +22,6 @@ interface Translator {
     @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     val intervalLimit: Int
 
-    val contentLengthLimit: Int
-
     fun checkConfiguration(force: Boolean = false): Boolean = true
 
     fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation

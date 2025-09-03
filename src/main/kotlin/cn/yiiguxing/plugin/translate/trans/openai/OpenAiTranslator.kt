@@ -24,7 +24,6 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
 
     @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = OPEN_AI.intervalLimit
-    override val contentLengthLimit: Int = OPEN_AI.contentLengthLimit
     override val primaryLanguage: Lang get() = OPEN_AI.primaryLanguage
     override val supportedSourceLanguages: List<Lang> get() = OpenAiSupportedLanguages.sourceLanguages
     override val supportedTargetLanguages: List<Lang> get() = OpenAiSupportedLanguages.targetLanguages
@@ -55,7 +54,6 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
         targetLang: Lang
     ): Document = checkError {
         documentation.translateBody { bodyHTML ->
-            checkContentLength(bodyHTML, contentLengthLimit)
             val prompt = promptService.let { service ->
                 service.getDocumentPromptTemplate(bodyHTML, srcLang, targetLang).let(service::render)
             }

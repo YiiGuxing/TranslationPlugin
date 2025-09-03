@@ -18,7 +18,6 @@ abstract class AbstractTranslator : Translator {
     }
 
     final override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation = checkError {
-        checkContentLength(text, contentLengthLimit)
         doTranslate(text, srcLang, targetLang)
     }
 
@@ -39,7 +38,6 @@ abstract class AbstractTranslator : Translator {
     protected open fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         val errorMessage = when (throwable) {
             is UnsupportedLanguageException -> message("error.unsupportedLanguage", throwable.lang.localeName)
-            is ContentLengthLimitException -> message("error.text.too.long")
             is HttpRequests.HttpStatusException -> when (throwable.statusCode) {
                 HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE.code() -> message("error.text.too.long")
                 else -> throwable.getCommonMessage()

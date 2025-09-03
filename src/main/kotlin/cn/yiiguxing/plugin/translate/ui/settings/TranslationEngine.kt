@@ -31,7 +31,6 @@ enum class TranslationEngine(
     val id: String,
     val translatorName: String,
     val icon: Icon,
-    val contentLengthLimit: Int = -1,
     val intervalLimit: Int = 500
 ) {
 
@@ -43,15 +42,14 @@ enum class TranslationEngine(
     ),
     GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Engines.Google),
     YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
+    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000),
     ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
-    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072),
     OPEN_AI(
         "translate.openai",
         message("translation.engine.openai.name"),
         TranslationIcons.Engines.OpenAI,
-        10000,
-        1000
+        10000
     );
 
     var primaryLanguage: Lang

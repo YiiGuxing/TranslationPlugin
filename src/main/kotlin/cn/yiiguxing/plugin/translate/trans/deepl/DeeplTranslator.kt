@@ -29,8 +29,6 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = DEEPL.intervalLimit
 
-    override val contentLengthLimit: Int = DEEPL.contentLengthLimit
-
     override val primaryLanguage: Lang
         get() = DEEPL.primaryLanguage
 

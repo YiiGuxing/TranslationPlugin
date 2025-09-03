@@ -28,7 +28,6 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
 
     @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = MICROSOFT.intervalLimit
-    override val contentLengthLimit: Int = MICROSOFT.contentLengthLimit
     override val primaryLanguage: Lang get() = MICROSOFT.primaryLanguage
     override val supportedSourceLanguages: List<Lang> = MicrosoftLanguageAdapter.sourceLanguages
     override val supportedTargetLanguages: List<Lang> = MicrosoftLanguageAdapter.targetLanguages
@@ -109,14 +108,13 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
         // https://learn.microsoft.com/zh-cn/azure/cognitive-services/translator/reference/v3-0-reference#errors
-        when (throwable) {
-            is MicrosoftAuthenticationException -> return ErrorInfo(throwable.message ?: "Authentication failed")
-            is MicrosoftStatusException -> return if (throwable.error?.code == 400050) {
-                onError(ContentLengthLimitException())
-            } else {
-                ErrorInfo(throwable.error?.presentableError ?: throwable.message ?: message("error.unknown"))
-            }
+        return when (throwable) {
+            is MicrosoftAuthenticationException -> ErrorInfo(throwable.message ?: "Authentication failed")
+            is MicrosoftStatusException -> ErrorInfo(
+                throwable.error?.presentableError ?: throwable.message ?: message("error.unknown")
+            )
+
+            else -> super.createErrorInfo(throwable)
         }
-        return super.createErrorInfo(throwable)
     }
 }

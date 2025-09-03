@@ -40,8 +40,6 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = GOOGLE.intervalLimit
 
-    override val contentLengthLimit: Int = GOOGLE.contentLengthLimit
-
     override val primaryLanguage: Lang
         get() = GOOGLE.primaryLanguage
 
