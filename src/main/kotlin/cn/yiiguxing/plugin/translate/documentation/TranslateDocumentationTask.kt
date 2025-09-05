@@ -31,7 +31,7 @@ class TranslateDocumentationTask(
         return asyncLatch { latch ->
             runAsync {
                 latch.await(TIME_TO_BLOCK_IN_MILLIS.toLong(), TimeUnit.MILLISECONDS)
-                translator.getTranslatedDocumentation(text, language)
+                translator.translateDocumentation(text, language)
             }.onError { e ->
                 invokeLater(ModalityState.NON_MODAL) { DocNotifications.showError(e, null) }
             }

@@ -92,7 +92,7 @@ internal val Document.documentationString: String
     get() = Documentations.getDocumentationString(this, false)
 
 
-internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
+internal fun Translator.translateDocumentation(documentation: String, language: Language?): String {
     val document: Document = Documentations.parseDocumentation(documentation)
     val translatedDocumentation = translateDocumentation(document, language)
 
