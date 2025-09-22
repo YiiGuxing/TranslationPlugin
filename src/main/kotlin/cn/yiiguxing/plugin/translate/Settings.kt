@@ -73,6 +73,11 @@ class Settings : PersistentStateComponent<Settings> {
     var aliTranslateSettings: AliTranslateSettings = AliTranslateSettings()
 
     /**
+     * 腾讯云翻译选项
+     */
+    var tencentTranslateSettings: TencentTranslateSettings = TencentTranslateSettings()
+
+    /**
      * 主要字体
      */
     var primaryFontFamily: String? by Delegates.observable(null) { _, oldValue: String?, newValue: String? ->
@@ -223,6 +228,7 @@ class Settings : PersistentStateComponent<Settings> {
                 migratePassword(youdaoTranslateSettings, YOUDAO_SERVICE_NAME, YOUDAO_APP_KEY)
                 migratePassword(baiduTranslateSettings, BAIDU_SERVICE_NAME, BAIDU_APP_KEY)
                 migratePassword(aliTranslateSettings, ALI_SERVICE_NAME, ALI_APP_KEY)
+                migratePassword(tencentTranslateSettings, TENCENT_SERVICE_NAME, TENCENT_SECRET_KEY)
             }
             LOG.d("===== Migration End =====")
         }
@@ -259,6 +265,8 @@ private const val BAIDU_SERVICE_NAME = "YIIGUXING.TRANSLATION.BAIDU"
 private const val BAIDU_APP_KEY = "BAIDU_APP_KEY"
 private const val ALI_SERVICE_NAME = "YIIGUXING.TRANSLATION.ALI"
 private const val ALI_APP_KEY = "ALI_APP_KEY"
+private const val TENCENT_SERVICE_NAME = "YIIGUXING.TRANSLATION.TENCENT"
+private const val TENCENT_SECRET_KEY = "TENCENT_SECRET_KEY"
 
 private val SETTINGS_REPOSITORY_SERVICE = generateServiceName("Settings Repository", TranslationPlugin.PLUGIN_ID)
 
@@ -303,6 +311,11 @@ class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY)
  * 阿里云翻译选项
  */
 class AliTranslateSettings : AppKeySettings(ALI_APP_KEY)
+
+/**
+ * 腾讯云翻译选项
+ */
+class TencentTranslateSettings : AppKeySettings(TENCENT_SECRET_KEY)
 
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),

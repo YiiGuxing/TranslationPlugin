@@ -19,6 +19,7 @@ import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiTranslator
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
+import cn.yiiguxing.plugin.translate.trans.tencent.TencentTranslator
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
@@ -53,6 +54,12 @@ enum class TranslationEngine(
         TranslationIcons.Engines.OpenAI,
         10000,
         1000
+    ),
+    TENCENT(
+        "translate.tencent",
+        message("translation.engine.tencent.name"),
+        TranslationIcons.Engines.Tencent,
+        5000
     );
 
     var primaryLanguage: Lang
@@ -76,6 +83,7 @@ enum class TranslationEngine(
                 ALI -> AliTranslator
                 DEEPL -> DeeplTranslator
                 OPEN_AI -> OpenAiTranslator
+                TENCENT -> TencentTranslator
             }
         }
 
@@ -98,6 +106,7 @@ enum class TranslationEngine(
             OPEN_AI -> service<OpenAiSettings>().let {
                 it.isConfigured(ConfigType.TRANSLATOR) && OpenAiCredentials.isCredentialSet(it.provider)
             }
+            TENCENT -> isConfigured(settings.tencentTranslateSettings)
         }
     }
 
@@ -130,6 +139,16 @@ enum class TranslationEngine(
             GOOGLE -> GoogleSettingsDialog().showAndGet()
             DEEPL -> DeeplSettingsDialog().showAndGet()
             OPEN_AI -> OpenAISettingsDialog(ConfigType.TRANSLATOR).showAndGet()
+
+            TENCENT -> AppKeySettingsDialog(
+                message("settings.tencent.title"),
+                AppKeySettingsPanel(
+                    TranslationIcons.Engines.Tencent,
+                    "https://console.cloud.tencent.com/cam/capi",
+                    Settings.getInstance().tencentTranslateSettings
+                ),
+                HelpTopic.TENCENT
+            ).showAndGet()
 
             else -> true
         }

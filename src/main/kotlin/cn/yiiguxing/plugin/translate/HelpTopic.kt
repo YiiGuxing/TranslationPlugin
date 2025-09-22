@@ -23,7 +23,10 @@ enum class HelpTopic(id: String, val url: String) {
     OPEN_AI("openai", "https://platform.openai.com"),
 
     /** Azure OpenAI */
-    AZURE_OPEN_AI("azure_openai", "https://learn.microsoft.com/en-us/azure/ai-services/openai");
+    AZURE_OPEN_AI("azure_openai", "https://learn.microsoft.com/en-us/azure/ai-services/openai"),
+
+    /** 腾讯机器翻译 */
+    TENCENT("tencent", "https://cloud.tencent.com/product/tmt");
 
     val id: String = TranslationPlugin.generateId("help.$id")
 

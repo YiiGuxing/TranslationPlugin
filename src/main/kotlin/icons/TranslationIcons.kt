@@ -81,6 +81,9 @@ object TranslationIcons {
         val OpenAI: Icon = load("/icons/engines/openai.svg")
 
         @JvmField
+        val Tencent: Icon = load("/icons/engines/tencent.svg")
+
+        @JvmField
         val Youdao: Icon = load("/icons/engines/youdao.svg")
     }
 
