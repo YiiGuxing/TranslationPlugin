@@ -26,9 +26,13 @@ class DocumentationTranslationService private constructor() {
     /**
      * Translates the specified [documentation] to the main language.
      *
-     * @param documentation The documentation content to translate, it should be in HTML format.
-     * @param language The programming language of the documentation. If null, the language will be auto-detected.
-     * @return The translated documentation string. If the documentation is already translated, return the original.
+     * @param documentation The documentation content to translate, in HTML format.
+     * @param language The programming language of the documentation.
+     *   Used to get [IgnoredDocumentationElementProvider] for language-specific element ignoring.
+     *   If `null`, no ignoring is performed.
+     * @return The translated documentation string, or the original if already translated.
+     *
+     * @see IgnoredDocumentationElementProvider
      */
     @RequiresBackgroundThread
     fun translate(documentation: String, language: Language? = null): String {
@@ -42,11 +46,14 @@ class DocumentationTranslationService private constructor() {
     /**
      * Translates the specified [documentation] to the main language.
      *
-     * @param documentation The documentation in [Document] format to translate.
-     * @param language The programming language of the documentation. If `null`, the language will be auto-detected.
-     * @param copyBeforeTranslate If `true`, clones the document before translation to avoid modifying the original.
-     * @return The translated [Document]. If the document is already translated, return the original.
-     *   If [copyBeforeTranslate] is `false`, the original document may be modified and returned.
+     * @param documentation The documentation in [Document] format.
+     * @param language The programming language of the documentation.
+     *   Used to get [IgnoredDocumentationElementProvider] for language-specific element ignoring.
+     *   If `null`, no ignoring is performed.
+     * @param copyBeforeTranslate If `true`, clones the document before translation.
+     * @return The translated [Document], or the original if already translated.
+     *
+     * @see IgnoredDocumentationElementProvider
      */
     @RequiresBackgroundThread
     fun translate(
