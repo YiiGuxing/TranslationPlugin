@@ -43,7 +43,7 @@
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
-                  implements="cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider"/>
+                  implements="cn.yiiguxing.plugin.translate.openapi.documentation.IgnoredDocumentationElementProvider"/>
         </extensionPoint>
     </extensionPoints>
 

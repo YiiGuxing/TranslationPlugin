@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.provider
 
-import cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider
+import cn.yiiguxing.plugin.translate.openapi.documentation.IgnoredDocumentationElementProvider
 import org.jsoup.nodes.Element
 
 class JavaScriptIgnoredDocumentationElementProvider : IgnoredDocumentationElementProvider {

@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider
+import cn.yiiguxing.plugin.translate.openapi.documentation.IgnoredDocumentationElementProvider
 import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
@@ -160,7 +160,7 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     }
 
     val ignoredElementProvider = language?.let { IgnoredDocumentationElementProvider.forLanguage(it) }
-    val ignoredElements = ignoredElementProvider?.ignoreElements(body)
+    val ignoredElements = ignoredElementProvider?.ignoreElements(document)
 
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
