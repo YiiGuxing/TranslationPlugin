@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation.utils
 
 import cn.yiiguxing.plugin.translate.documentation.Documentations
+import cn.yiiguxing.plugin.translate.documentation.InlineDocTranslationInfo
 import cn.yiiguxing.plugin.translate.documentation.translateDocumentation
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.Translator
@@ -14,7 +15,7 @@ internal fun translateInlineDocumentation(
     text: String,
     language: Language,
     translator: Translator = TranslateService.getInstance().translator
-): Pair<String, Boolean> {
+): InlineDocTranslationInfo {
     var hasError = false
     val document: Document = Documentations.parseDocumentation(text)
     val translatedDocument = try {
@@ -30,5 +31,6 @@ internal fun translateInlineDocumentation(
         )
     }
 
-    return Documentations.getDocumentationString(translatedDocument) to hasError
+    val translatedText = Documentations.getDocumentationString(translatedDocument)
+    return InlineDocTranslationInfo.translated(translatedText, translator.id, hasError)
 }

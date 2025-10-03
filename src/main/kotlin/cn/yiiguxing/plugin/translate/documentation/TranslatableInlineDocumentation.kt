@@ -29,12 +29,11 @@ internal fun getPsiInlineDocumentationTranslationInfo(comment: PsiDocCommentBase
 
 internal data class InlineDocTranslationInfo(
     val translatedText: String? = null,
+    val translatorId: String? = null,
     val isLoading: Boolean = false,
     val isDisabled: Boolean = false,
     val hasError: Boolean = false,
 ) {
-
-    fun loading(isLoading: Boolean): InlineDocTranslationInfo = copy(isLoading = isLoading)
 
     fun disabled(disabled: Boolean): InlineDocTranslationInfo {
         check(!isLoading && !hasError && translatedText != null) {
@@ -43,18 +42,17 @@ internal data class InlineDocTranslationInfo(
         return copy(isDisabled = disabled)
     }
 
-    fun translated(translatedText: String, hasError: Boolean = false): InlineDocTranslationInfo = copy(
-        translatedText = translatedText,
-        isLoading = false,
-        hasError = hasError,
-    )
-
     companion object {
         fun loading(): InlineDocTranslationInfo = InlineDocTranslationInfo(isLoading = true)
 
-        fun translated(translatedText: String, hasError: Boolean = false): InlineDocTranslationInfo {
+        fun translated(
+            translatedText: String,
+            translatorId: String,
+            hasError: Boolean = false
+        ): InlineDocTranslationInfo {
             return InlineDocTranslationInfo(
                 translatedText = translatedText,
+                translatorId = translatorId,
                 hasError = hasError
             )
         }

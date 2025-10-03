@@ -238,7 +238,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
             language: Language,
             translator: Translator
         ): InlineDocTranslationInfo {
-            getTranslationCache(psiFile, item)?.let { cache ->
+            getTranslationCache(psiFile, item, translator)?.let { cache ->
                 return cache
             }
 
@@ -247,18 +247,22 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
                 text = item.textToRender,
                 language = language,
                 translator = translator
-            ).let { (translatedText, hasError) ->
-                InlineDocTranslationInfo.translated(translatedText, hasError)
-            }
+            )
         }
 
-        private suspend fun getTranslationCache(psiFile: PsiFile, item: RenderItem): InlineDocTranslationInfo? {
+        private suspend fun getTranslationCache(
+            psiFile: PsiFile,
+            item: RenderItem,
+            translator: Translator
+        ): InlineDocTranslationInfo? {
             return readAction {
                 getPsiDocComment(item, psiFile)?.let { comment ->
                     getPsiInlineDocumentationTranslationInfo(comment)
                 }
             }
-                ?.takeIf { !it.isLoading && it.translatedText != null && it.isDisabled }
+                ?.takeIf {
+                    !it.isLoading && it.translatedText != null && it.isDisabled && it.translatorId == translator.id
+                }
                 ?.disabled(false)
         }
 

@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.documentation.utils.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
+import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.findElementAroundOffset
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
@@ -58,7 +59,8 @@ internal class TranslateRenderedDocAction(
         val newInfo = when {
             info?.isLoading == true -> null
             info?.translatedText != null && !info.hasError -> when {
-                state -> info.disabled(false)
+                state && info.translatorId == TranslateService.getInstance().translator.id -> info.disabled(false)
+                state -> InlineDocTranslationInfo.loading()
                 info.translatedText == renderedText -> info.disabled(true)
                 else -> null
             }
@@ -73,13 +75,13 @@ internal class TranslateRenderedDocAction(
             val language = psiFile.language
             val modalityState: ModalityState = ModalityState.current()
             ITPCoroutineService.projectScope(psiFile.project).launch(Dispatchers.IO) {
-                val (translatedDoc, hasError) = translateInlineDocumentation(renderedText, language)
-                val translatedInfo = readAction {
+                var translatedInfo: InlineDocTranslationInfo? = translateInlineDocumentation(renderedText, language)
+                translatedInfo = readAction {
                     @Suppress("UnstableApiUsage")
                     val element = pointer.dereference() ?: return@readAction null
                     val originInfo = getPsiInlineDocumentationTranslationInfo(element)
                     if (originInfo === newInfo) {
-                        originInfo.translated(translatedDoc, hasError).also {
+                        translatedInfo.also {
                             setPsiInlineDocumentationTranslationInfo(element, it)
                         }
                     } else null
