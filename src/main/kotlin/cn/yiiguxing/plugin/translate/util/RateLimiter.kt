@@ -29,7 +29,7 @@ interface RateLimiter {
          */
         fun withInterval(interval: Duration): RateLimiter {
             val intervalInMilliseconds = interval.inWholeMilliseconds
-            return if (intervalInMilliseconds == 0L) NONE else RateLimiterImpl(intervalInMilliseconds)
+            return if (intervalInMilliseconds <= 0L) NONE else RateLimiterImpl(intervalInMilliseconds)
         }
 
         /**

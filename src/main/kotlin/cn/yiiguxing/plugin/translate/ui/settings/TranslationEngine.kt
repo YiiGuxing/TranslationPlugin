@@ -38,18 +38,17 @@ enum class TranslationEngine(
         "translate.microsoft",
         message("translation.engine.microsoft.name"),
         TranslationIcons.Engines.Microsoft,
-        50000
     ),
     GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Engines.Google),
-    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000),
-    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
-    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072),
+    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao),
+    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 1000),
+    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali),
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 1000),
     OPEN_AI(
         "translate.openai",
         message("translation.engine.openai.name"),
         TranslationIcons.Engines.OpenAI,
-        10000
+        1000
     );
 
     var primaryLanguage: Lang
