@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.openai.ui
 
 import cn.yiiguxing.plugin.translate.HelpTopic
+import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.openai.*
@@ -12,6 +13,7 @@ import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.DocumentAdapter
+import com.intellij.ui.GotItTooltip
 import com.intellij.util.containers.orNull
 import java.awt.event.ItemEvent
 import java.util.function.Supplier
@@ -193,6 +195,17 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     private fun initValidators() {
+        installValidator(ui.providerComboBox) {
+            when (it.selected) {
+                ServiceProvider.Azure -> ValidationInfo(
+                    message("openai.settings.dialog.azure.tips"),
+                    ui.azureDeploymentField
+                ).asWarning().withOKEnabled()
+
+                else -> null
+            }
+        }
+
         installValidator(ui.customModelField) {
             val customModel = it.text
             when {
@@ -278,6 +291,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         updateApiKeyEditor()
         verify()
         pack()
+        showTipsIfAzureChecked()
     }
 
     private fun updateUiComponents() {
@@ -304,6 +318,16 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             else -> OpenAISettingsUI.ComponentType.OPEN_AI
         }
         ui.showComponents(componentType)
+    }
+
+    private fun showTipsIfAzureChecked() {
+        if (provider == ServiceProvider.Azure) {
+            val id = TranslationPlugin.generateId("tooltip.openai.azure")
+            val message = message("openai.settings.dialog.azure.tips")
+            GotItTooltip(id, message, disposable)
+                .withShowCount(Int.MAX_VALUE)
+                .show(ui.providerComboBox, GotItTooltip.BOTTOM_MIDDLE)
+        }
     }
 
     private fun updateApiKeyEditor() {
@@ -345,7 +369,13 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
     private fun verify(): Boolean {
         var valid = true
-        listOf(ui.customModelField, ui.apiKeyField, ui.apiEndpointField, ui.azureDeploymentField).forEach {
+        listOf(
+            ui.providerComboBox,
+            ui.customModelField,
+            ui.apiKeyField,
+            ui.apiEndpointField,
+            ui.azureDeploymentField
+        ).forEach {
             verify(it)?.let { info ->
                 valid = valid && info.okEnabled
             }
