@@ -123,6 +123,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                         && primaryLanguage != Lang.ENGLISH
                         && targetLang == Lang.ENGLISH
                     ) {
+                        @Suppress("DEPRECATION")
                         val delay = translateService.translator.intervalLimit
                         if (delay <= 0) {
                             translate(translation.srcLang, primaryLanguage)

@@ -1,10 +1,11 @@
-package cn.yiiguxing.plugin.translate.documentation.provider
+package cn.yiiguxing.plugin.translate.documentation.filter
 
+import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter
 import org.jsoup.nodes.Element
 
-class JavaScriptIgnoredDocumentationElementProvider : IgnoredDocumentationElementProvider {
+class JavaScriptDocumentationElementFilter : DocumentationElementFilter {
 
-    override fun ignoreElements(body: Element): List<Element> {
+    override fun filterElements(body: Element): List<Element> {
         val ignoredElement = body.selectFirst(CSS_QUERY)
             ?.parent()
             ?: return emptyList()
@@ -14,8 +15,8 @@ class JavaScriptIgnoredDocumentationElementProvider : IgnoredDocumentationElemen
         return listOf(ignoredElement)
     }
 
-    override fun restoreIgnoredElements(body: Element, ignoredElements: List<Element>) {
-        val element = ignoredElements.firstOrNull() ?: return
+    override fun restoreElements(body: Element, elements: List<Element>) {
+        val element = elements.firstOrNull() ?: return
         body.selectFirst(RESTORE_CSS_QUERY)?.replaceWith(element)
     }
 

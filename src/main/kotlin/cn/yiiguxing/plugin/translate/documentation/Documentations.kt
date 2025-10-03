@@ -1,12 +1,12 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider
-import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter
+import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.ui.scaled
 import com.intellij.lang.Language
 import com.intellij.ui.ColorUtil
-import com.intellij.util.ui.JBUI
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -124,13 +124,9 @@ internal val Document.documentationString: String
     get() = Documentations.getDocumentationString(this, false)
 
 
-internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
+internal fun Translator.translateDocumentation(documentation: String, language: Language?): String {
     val document: Document = Documentations.parseDocumentation(documentation)
-    val translatedDocumentation = try {
-        translateDocumentation(document, language)
-    } catch (_: ContentLengthLimitException) {
-        document.addLimitHint()
-    }
+    val translatedDocumentation = translateDocumentation(document, language)
 
     return translatedDocumentation.documentationString
 }
@@ -140,24 +136,14 @@ internal fun Translator.translateDocumentation(documentation: Document, language
         return documentation
     }
 
-    return try {
-        if (this is DocumentationTranslator) {
-            getTranslatedDocumentation(documentation, language)
-        } else {
-            getTranslatedDocumentation(documentation)
-        }.also {
-            Documentations.setTranslated(it, true)
+    return if (this is DocumentationTranslator) {
+        getTranslatedDocumentation(documentation, language)
+    } else {
+        getTranslatedDocumentation(documentation)
+    }.also {
+        Documentations.setTranslated(it, true)
             it.htmlEl?.attributes()?.put(ATTR_TRANSLATED, true)
-        }
-    } catch (e: ContentLengthLimitException) {
-        throw e
-    } catch (e: TranslateException) {
-        val cause = e.cause
-        if (cause is ContentLengthLimitException) {
-            throw cause
-        } else {
-            throw e
-        }
+
     }
 }
 
@@ -165,11 +151,6 @@ private val Document.htmlEl: Element?
     get() = firstElementChild()
         ?.takeIf { it.nodeName().equals(TAG_HTML, true) }
         ?: selectFirst(TAG_HTML)
-
-private fun Document.addLimitHint(): Document {
-    val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
-    return addMessage(message("documentation.message.limit.hint"), hintColor)
-}
 
 private fun Document.addMessage(
     message: String,
@@ -215,8 +196,8 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
     }
 
-    val ignoredElementProvider = language?.let { IgnoredDocumentationElementProvider.forLanguage(it) }
-    val ignoredElements = ignoredElementProvider?.ignoreElements(body)
+    val ignoredElementProvider = language?.let { DocumentationElementFilter.forLanguage(it) }
+    val ignoredElements = ignoredElementProvider?.filterElements(document)
 
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
@@ -225,7 +206,7 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
-    ignoredElements?.let { ignoredElementProvider.restoreIgnoredElements(translatedBody, it) }
+    ignoredElements?.let { ignoredElementProvider.restoreElements(translatedBody, it) }
     definitions?.let { translatedBody.prependChildren(it) }
 
     return translatedDocument
@@ -237,13 +218,7 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     val htmlDocument = HTMLDocument().also { HTMLEditorKit().read(StringReader(body.html()), it, 0) }
-    val formatted = try {
-        val content = htmlDocument.getText(0, htmlDocument.length).trim()
-        checkContentLength(content, contentLengthLimit)
-    } catch (e: ContentLengthLimitException) {
-        definition?.let { body.insertChildren(0, it) }
-        throw e
-    }
+    val formatted = htmlDocument.getText(0, htmlDocument.length).trim()
     val translation =
         if (formatted.isEmpty()) ""
         else translate(formatted, Lang.AUTO, primaryLanguage).translation ?: ""

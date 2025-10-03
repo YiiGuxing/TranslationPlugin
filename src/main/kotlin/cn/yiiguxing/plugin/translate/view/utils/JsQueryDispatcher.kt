@@ -11,7 +11,6 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.CefMessageRouterHandlerAdapter
-import java.util.*
 
 open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
     private val requestHandlerMap: MutableMap<String, JsQueryHandler> = HashMap()
@@ -103,7 +102,7 @@ open class JsQueryDispatcher : CefMessageRouterHandlerAdapter() {
                 "whatsNewUrl" to WebPages.releaseNote(version.getFeatureUpdateVersion()).getUrl(),
                 "historicalChangesUrl" to WebPages.updates().getUrl(),
                 "sponsorsPageUrl" to WebPages.getSponsorsPageUrl(),
-                "language" to Locale.getDefault().toLanguageTag(),
+                "language" to WebPages.getSupportedLanguage().code,
             )
             return Gson().toJson(info)
         }

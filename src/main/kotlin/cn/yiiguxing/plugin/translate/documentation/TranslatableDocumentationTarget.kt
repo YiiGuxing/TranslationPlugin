@@ -2,8 +2,8 @@ package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationTranslationService
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
-import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.trans.getTranslationErrorMessage
 import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.toImage
@@ -116,9 +116,8 @@ internal class TranslatableDocumentationTarget private constructor(
                 var translatedContent: DocumentationContent? = null
                 var failedContent: DocumentationContent? = null
                 try {
-                    val translatedDocument = TranslateService.getInstance()
-                        .translator
-                        .translateDocumentation(documentToTranslate, pointer.language)
+                    val translatedDocument = DocumentationTranslationService.getInstance()
+                        .translate(documentToTranslate, pointer.language)
                     translatedContent = DocumentationContent.content(translatedDocument.documentationString)
                 } catch (e: Throwable) {
                     val message = getTranslationErrorMessage(e)

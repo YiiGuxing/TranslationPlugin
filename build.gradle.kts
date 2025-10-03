@@ -176,6 +176,27 @@ tasks {
         distributionType = Wrapper.DistributionType.ALL
     }
 
+    val createOpenApiSourceJar by registering(Jar::class) {
+        // Kotlin source
+        from(kotlin.sourceSets.main.get().kotlin) {
+            include("**/cn/yiiguxing/plugin/translate/openapi/**/*.kt")
+        }
+        manifest {
+            attributes(
+                "OpenApi-Version" to properties("openApiVersion")
+            )
+        }
+
+        includeEmptyDirs = false
+        destinationDirectory.set(layout.buildDirectory.dir("libs"))
+        archiveClassifier.set("src")
+    }
+
+    buildPlugin {
+        dependsOn(createOpenApiSourceJar)
+        from(createOpenApiSourceJar) { into("lib/src") }
+    }
+
     processResources {
         filesMatching("**/*.properties") {
             filter(EscapeUnicode::class)

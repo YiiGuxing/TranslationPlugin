@@ -102,6 +102,7 @@ internal class TranslateRenderedDocSelectionAction : AnAction(), ImportantTransl
         }
     }
 
+    @Suppress("CompanionObjectInExtension")
     companion object {
         private val getPaneWithSelectionMethod: Method? by lazy {
             try {
