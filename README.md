@@ -194,8 +194,8 @@ Restart the **IDE** after installation.
   the Quick Documentation pop-up window or the documentation tool window. Default shortcut (same as **translation**
   shortcut):
 
-    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+    - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Q</kbd>
+    - Mac OS - <kbd>Control</kbd> + <kbd>Q</kbd>
 
 - **Translate Text Component**
 

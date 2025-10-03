@@ -11,39 +11,15 @@
     <depends>com.intellij.modules.platform</depends>
     <depends optional="true" config-file="actions/lang.xml">com.intellij.modules.lang</depends>
     <depends optional="true" config-file="actions/jupyter.xml">intellij.jupyter</depends>
-    <depends optional="true" config-file="docs/csharp-doc.xml">com.intellij.modules.rider</depends>
-    <depends optional="true" config-file="docs/css-doc.xml">com.intellij.css</depends>
-    <depends optional="true" config-file="docs/dart-doc.xml">Dart</depends>
-    <depends optional="true" config-file="docs/go-doc.xml">org.jetbrains.plugins.go</depends>
-    <depends optional="true" config-file="docs/groovy-doc.xml">org.intellij.groovy</depends>
-    <depends optional="true" config-file="docs/java-doc.xml">com.intellij.modules.java</depends>
     <depends optional="true" config-file="docs/javaScript-doc.xml">JavaScript</depends>
-    <depends optional="true" config-file="docs/json-doc.xml">com.intellij.modules.json</depends>
-    <depends optional="true" config-file="docs/jsp-doc.xml">com.intellij.jsp</depends>
-    <depends optional="true" config-file="docs/kotlin-doc.xml">org.jetbrains.kotlin</depends>
-    <depends optional="true" config-file="docs/oc-doc.xml">com.intellij.modules.cidr.lang</depends>
     <depends optional="true" config-file="docs/php-doc.xml">com.jetbrains.php</depends>
-    <depends optional="true" config-file="docs/properties-doc.xml">com.intellij.properties</depends>
-    <depends optional="true" config-file="docs/python-doc.xml">com.intellij.modules.python</depends>
-    <depends optional="true" config-file="docs/rest-doc.xml">com.jetbrains.restClient</depends>
-    <depends optional="true" config-file="docs/ruby-doc.xml">com.intellij.modules.ruby</depends>
-    <depends optional="true" config-file="docs/rust-doc.xml">com.jetbrains.rust</depends>
-    <depends optional="true" config-file="docs/rust-doc2.xml">org.rust.lang</depends>
-    <depends optional="true" config-file="docs/scala-doc.xml">org.intellij.scala</depends>
-    <depends optional="true" config-file="docs/shell-doc.xml">com.jetbrains.sh</depends>
-    <depends optional="true" config-file="docs/sql-doc.xml">com.intellij.modules.sql</depends>
-    <depends optional="true" config-file="docs/swift-doc.xml">com.intellij.modules.swift.lang</depends>
-    <depends optional="true" config-file="docs/vue-doc.xml">org.jetbrains.plugins.vue</depends>
-    <depends optional="true" config-file="docs/xml-doc.xml">com.intellij.modules.xml</depends>
-    <depends optional="true" config-file="docs/xpath-doc.xml">XPathView</depends>
-    <depends optional="true" config-file="docs/yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
-        <extensionPoint name="ignoredDocumentationElementProvider"
+        <extensionPoint name="documentation.ignoredElementProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
-                  implements="cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider"/>
+                  implements="cn.yiiguxing.plugin.translate.documentation.provider.IgnoredDocumentationElementProvider"/>
         </extensionPoint>
     </extensionPoints>
 
@@ -51,6 +27,30 @@
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.Settings"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.TranslationStates"/>
         <applicationService serviceImplementation="cn.yiiguxing.plugin.translate.wordbook.WordBookView"/>
+
+        <projectService
+                overrides="true"
+                id="Translation.TranslatableDocumentationTargetProvider"
+                serviceInterface="com.intellij.lang.documentation.ide.IdeDocumentationTargetProvider"
+                serviceImplementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatableIdeDocumentationTargetProvider"/>
+        <projectService
+                overrides="true"
+                id="Translation.TranslatableInlineDocumentationFinder"
+                serviceInterface="com.intellij.codeInsight.documentation.render.InlineDocumentationFinder"
+                serviceImplementation="cn.yiiguxing.plugin.translate.documentation.service.TranslatableInlineDocumentationFinder"/>
+
+        <platform.backend.documentation.psiTargetProvider
+                order="first"
+                id="Translation.TranslatablePsiDocumentationTargetProvider"
+                implementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatablePsiDocumentationTargetProvider"/>
+        <platform.backend.documentation.inlineDocumentationProvider
+                order="last"
+                id="Translation.TranslatableInlineDocumentationProvider"
+                implementation="cn.yiiguxing.plugin.translate.documentation.provider.TranslatableInlineDocumentationProvider"/>
+        <platform.backend.documentation.linkHandler
+                id="Translation.TranslatableDocumentationLinkHandler"
+                order="first"
+                implementation="cn.yiiguxing.plugin.translate.documentation.handler.TranslatableDocumentationLinkHandler"/>
 
         <applicationConfigurable groupId="tools"
                                  displayName="Translation"
@@ -73,7 +73,11 @@
                 implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
         <documentationActionProvider
-                implementation="cn.yiiguxing.plugin.translate.documentation.TranslateDocumentationActionProvider"/>
+                implementation="cn.yiiguxing.plugin.translate.documentation.actions.TranslateDocumentationActionProvider"/>
+        <iw.actionProvider
+                implementation="cn.yiiguxing.plugin.translate.documentation.actions.FileInlineDocumentationTranslateActionProvider"/>
+        <editorNotificationProvider
+                implementation="cn.yiiguxing.plugin.translate.ui.notification.banner.EditorBannerProvider"/>
         <fileEditorProvider implementation="cn.yiiguxing.plugin.translate.view.WebViewProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
@@ -88,7 +92,7 @@
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
 
-    <actions>
+    <actions resource-bundle="messages.TranslationBundle">
         <action id="Translation.ShowTranslationDialogAction"
                 icon="TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
@@ -120,14 +124,21 @@
                 class="cn.yiiguxing.plugin.translate.action.InclusiveTranslateAction"/>
         <action id="Translation.ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
-        <action id="Translation.TranslateQuickDocAction"
-                class="cn.yiiguxing.plugin.translate.action.TranslateQuickDocSelectionAction"
+        <action id="Translation.TranslateQuickDocSelectionAction"
+                class="cn.yiiguxing.plugin.translate.documentation.actions.TranslateQuickDocSelectionAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
+        <action id="Translation.ShowTranslatedQuickDocInfoAction"
+                icon="TranslationIcons.Translation"
+                class="cn.yiiguxing.plugin.translate.documentation.actions.ShowTranslatedQuickDocInfoAction">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift Q"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control Q" replace-all="true"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control Q" replace-all="true"/>
+        </action>
         <action id="Translation.ToggleQuickDocTranslationAction"
-                class="cn.yiiguxing.plugin.translate.action.ToggleQuickDocTranslationAction"
-                use-shortcut-of="Translation.EditorTranslateAction"/>
+                class="cn.yiiguxing.plugin.translate.documentation.actions.ToggleQuickDocTranslationAction"
+                use-shortcut-of="Translation.ShowTranslatedQuickDocInfoAction"/>
         <action id="Translation.TranslateRenderedDocSelectionAction"
-                class="cn.yiiguxing.plugin.translate.action.TranslateRenderedDocSelectionAction"
+                class="cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocSelectionAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TranslateTextComponentAction"
                 icon="TranslationIcons.Translation"
@@ -182,7 +193,7 @@
         </group>
         <group id="Translation.Documentation.PrimaryGroup">
             <separator/>
-            <reference ref="Translation.TranslateQuickDocAction"/>
+            <reference ref="Translation.TranslateQuickDocSelectionAction"/>
             <reference ref="Translation.ToggleQuickDocTranslationAction"/>
 
             <add-to-group group-id="Documentation.PrimaryGroup"/>

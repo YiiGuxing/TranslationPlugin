@@ -2,6 +2,8 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import com.intellij.openapi.editor.Editor
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
@@ -11,8 +13,10 @@ import com.intellij.psi.util.PsiTreeUtil
 private val PREV_SIBLING: PsiElement.() -> PsiElement? = { prevSibling }
 private val NEXT_SIBLING: PsiElement.() -> PsiElement? = { nextSibling }
 
-val SKIP_WHITE_SPACE: (PsiElement) -> Boolean = { it is PsiWhiteSpace }
-
+val Editor.psiFile: PsiFile?
+    get() {
+        return PsiDocumentManager.getInstance(project ?: return null).getPsiFile(document)
+    }
 
 /**
  * 元素类型
@@ -29,12 +33,48 @@ val PsiElement.startOffset: Int get() = textRange.startOffset
  */
 val PsiElement.endOffset: Int get() = textRange.endOffset
 
+val PsiElement.isWhitespace: Boolean get() = this is PsiWhiteSpace
+
+
+/**
+ * 从[PsiFile]中在指定[offset]处查找类型为[T]的元素并返回，如果未找到则返回`null`
+ */
+inline fun <reified T : PsiElement> PsiFile.findElementOfTypeAt(offset: Int): T? {
+    return findElementOfTypeAt(offset, T::class.java)
+}
+
 /**
  * 从[PsiFile]中在指定[offset]处查找类型为[type]的元素并返回，如果未找到则返回`null`
  */
 fun <T : PsiElement> PsiFile.findElementOfTypeAt(offset: Int, type: Class<T>): T? {
     val offsetElement = findElementAt(offset) ?: return null
     return PsiTreeUtil.getParentOfType(offsetElement, type, false)
+}
+
+/**
+ * 从[PsiFile]中在指定[offset]处查找类型为[T]的元素并返回，如果未找到则返回`null`。
+ * 如果[skipWhitespace]为`true`（默认值），则会跳过空白符元素。
+ */
+inline fun <reified T : PsiElement> PsiFile.findElementAroundOffset(offset: Int, skipWhitespace: Boolean = true): T? {
+    return findElementAroundOffset(offset, T::class.java, skipWhitespace)
+}
+
+/**
+ * 从[PsiFile]中在指定[offset]处查找类型为[type]的元素并返回，如果未找到则返回`null`。
+ * 如果[skipWhitespace]为`true`（默认值），则会跳过空白符元素。
+ */
+fun <T : PsiElement> PsiFile.findElementAroundOffset(
+    offset: Int,
+    type: Class<T>,
+    skipWhitespace: Boolean = true,
+): T? {
+    var element = findElementAt(offset) ?: return null
+    if (skipWhitespace && element.isWhitespace) {
+        element = element.getNextSiblingSkippingCondition(PsiElement::isWhitespace) ?: return null
+        element = findElementAt(element.startOffset) ?: return null
+    }
+
+    return PsiTreeUtil.getParentOfType(element, type, false)
 }
 
 /**

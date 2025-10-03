@@ -51,10 +51,16 @@ object TranslationIcons {
     val Translation: Icon = load("/icons/translation.svg")
 
     @JvmField
+    val TranslationFailed: Icon = load("/icons/translationFailed.svg")
+
+    @JvmField
     val TranslationInactivated: Icon = load("/icons/translationInactivated.svg")
 
     @JvmField
     val TranslationReplace: Icon = load("/icons/translationReplace.svg")
+
+    @JvmField
+    val TranslationSmall: Icon = load("/icons/translationSmall.svg")
 
     @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")

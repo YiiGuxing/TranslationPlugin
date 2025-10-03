@@ -28,6 +28,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.panel.ComponentPanelBuilder
+import com.intellij.openapi.ui.popup.ListSeparator
 import com.intellij.ui.*
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
@@ -51,10 +52,13 @@ internal abstract class SettingsUi {
     protected val wholePanel: JPanel = JPanel()
 
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
-        renderer = SimpleListCellRenderer.create { label, value, _ ->
-            label.text = value.translatorName
-            label.icon = value.icon
+        isSwingPopup = false
+        renderer = object : GroupedComboBoxRenderer<TranslationEngine>() {
+            override fun getIcon(item: TranslationEngine): Icon = item.icon
+            override fun getText(item: TranslationEngine): String = item.translatorName
+            override fun separatorFor(value: TranslationEngine): ListSeparator? = null
         }
+
         addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
                 fixEngineConfigurationComponent()
@@ -74,9 +78,11 @@ internal abstract class SettingsUi {
     }
 
     protected val ttsEngineComboBox: ComboBox<TTSEngine> = comboBox<TTSEngine>().apply {
-        renderer = SimpleListCellRenderer.create { label, value, _ ->
-            label.text = value.ttsName
-            label.icon = value.icon
+        isSwingPopup = false
+        renderer = object : GroupedComboBoxRenderer<TTSEngine>() {
+            override fun getIcon(item: TTSEngine): Icon = item.icon
+            override fun getText(item: TTSEngine): String = item.ttsName
+            override fun separatorFor(value: TTSEngine): ListSeparator? = null
         }
         addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
@@ -97,8 +103,10 @@ internal abstract class SettingsUi {
     }
 
     protected val primaryLanguageComboBox: ComboBox<Lang> = comboBox<Lang>().apply {
-        renderer = SimpleListCellRenderer.create { label, lang, _ ->
-            label.text = lang.localeName
+        isSwingPopup = false
+        renderer = object : GroupedComboBoxRenderer<Lang>() {
+            override fun getText(item: Lang): String = item.localeName
+            override fun separatorFor(value: Lang): ListSeparator? = null
         }
     }
 
@@ -146,7 +154,7 @@ internal abstract class SettingsUi {
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
 
     protected val ttsSourceComboBox: ComboBox<TTSSource> =
-        ComboBox(CollectionComboBoxModel(TTSSource.values().asList())).apply {
+        ComboBox(CollectionComboBoxModel(TTSSource.entries)).apply {
             renderer = SimpleListCellRenderer.create("") { it.displayName }
         }
 

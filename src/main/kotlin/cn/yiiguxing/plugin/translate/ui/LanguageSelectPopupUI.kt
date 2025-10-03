@@ -7,8 +7,9 @@ import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.addKeyboardAction
 import com.intellij.openapi.ui.popup.JBPopup
+import com.intellij.openapi.ui.popup.ListSeparator
 import com.intellij.openapi.util.Disposer
-import com.intellij.ui.SimpleListCellRenderer
+import com.intellij.ui.GroupedComboBoxRenderer
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.util.ui.JBUI
@@ -55,12 +56,17 @@ class LanguageSelectPopupUI(
     }
 
     private fun initComboBoxes() {
-        sourceLangComboBox.model = LanguageListModel.sorted(Lang.values().toList(), Lang.AUTO)
-        targetLangComboBox.model = LanguageListModel.sorted(Lang.values().toList(), Lang.default)
+        sourceLangComboBox.isSwingPopup = false
+        targetLangComboBox.isSwingPopup = false
+        sourceLangComboBox.model = LanguageListModel.sorted(Lang.entries, Lang.AUTO)
+        targetLangComboBox.model = LanguageListModel.sorted(Lang.entries, Lang.default)
+        sourceLangComboBox.renderer = createRenderer()
+        targetLangComboBox.renderer = createRenderer()
+    }
 
-        val customizer: (JBLabel, Lang, Int) -> Unit = { label, value, _ -> label.text = value.localeName }
-        sourceLangComboBox.renderer = SimpleListCellRenderer.create(customizer)
-        targetLangComboBox.renderer = SimpleListCellRenderer.create(customizer)
+    private fun createRenderer() = object : GroupedComboBoxRenderer<Lang>() {
+        override fun getText(item: Lang): String = item.localeName
+        override fun separatorFor(value: Lang): ListSeparator? = null
     }
 
     private fun initFocusTraversalPolicy() {

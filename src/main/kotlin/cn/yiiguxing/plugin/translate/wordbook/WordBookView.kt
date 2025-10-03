@@ -330,7 +330,7 @@ class WordBookView {
                 doAction(e)
             } else if (service.state == WordBookState.NO_DRIVER) {
                 Popups.showBalloonForComponent(
-                    e.inputEvent.component,
+                    e.inputEvent!!.component,
                     message("wordbook.window.message.missing.driver"),
                     MessageType.INFO,
                     e.project,
@@ -370,7 +370,7 @@ class WordBookView {
                 }
             } else {
                 Popups.showBalloonForComponent(
-                    e.inputEvent.component,
+                    e.inputEvent!!.component,
                     message("wordbook.window.message.empty"),
                     MessageType.INFO,
                     project,

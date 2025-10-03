@@ -65,7 +65,6 @@ repositories {
 dependencies {
     implementation(libs.jsoup)
     implementation(libs.dbutils)
-    implementation(libs.ideaCompat)
     implementation(libs.websocket) { exclude(module = "slf4j-api") }
     implementation(libs.mp3spi) { exclude(module = "junit") }
     testImplementation(libs.junit)
