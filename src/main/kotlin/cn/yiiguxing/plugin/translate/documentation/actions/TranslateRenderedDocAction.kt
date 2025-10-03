@@ -16,7 +16,7 @@ internal class TranslateRenderedDocAction(
     private val docComment: PsiDocCommentBase
 ) : ToggleableTranslationAction() {
 
-    private val isEnabled: Boolean by lazy { DocTranslationService.Companion.isSupportedForPsiElement(docComment) }
+    private val isEnabled: Boolean by lazy { DocTranslationService.isSupportedForPsiElement(docComment) }
 
     override fun update(event: AnActionEvent, isSelected: Boolean) {
         val presentation = event.presentation
@@ -28,20 +28,20 @@ internal class TranslateRenderedDocAction(
     }
 
     override fun isSelected(event: AnActionEvent): Boolean {
-        return DocTranslationService.Companion.isInlayDocTranslated(docComment)
+        return DocTranslationService.isInlayDocTranslated(docComment)
     }
 
     override fun setSelected(event: AnActionEvent, state: Boolean) {
         val editor = editor.takeUnless { it.isDisposed } ?: return
         val file = docComment.containingFile ?: return
 
-        DocTranslationService.Companion.setInlayDocTranslated(docComment, state)
-        DocumentationRenderingCompat.Companion
+        DocTranslationService.setInlayDocTranslated(docComment, state)
+        DocumentationRenderingCompat
             .instance()
             .update(editor, file)
             .finishOnUiThread(ModalityState.current()) {
                 if (it != true) {
-                    DocTranslationService.Companion.setInlayDocTranslated(docComment, !state)
+                    DocTranslationService.setInlayDocTranslated(docComment, !state)
                     event.presentation.isTranslationSelected = !state
                 }
             }
