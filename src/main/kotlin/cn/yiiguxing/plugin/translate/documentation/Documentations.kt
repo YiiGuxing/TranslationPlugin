@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.openapi.documentation.IgnoredDocumentationElementProvider
+import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter
 import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
@@ -159,8 +159,8 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
     }
 
-    val ignoredElementProvider = language?.let { IgnoredDocumentationElementProvider.forLanguage(it) }
-    val ignoredElements = ignoredElementProvider?.ignoreElements(document)
+    val ignoredElementProvider = language?.let { DocumentationElementFilter.forLanguage(it) }
+    val ignoredElements = ignoredElementProvider?.filterElements(document)
 
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
@@ -169,7 +169,7 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
-    ignoredElements?.let { ignoredElementProvider.restoreIgnoredElements(translatedBody, it) }
+    ignoredElements?.let { ignoredElementProvider.restoreElements(translatedBody, it) }
     definitions?.let { translatedBody.prependChildren(it) }
 
     return translatedDocument

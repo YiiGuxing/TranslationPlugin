@@ -39,11 +39,11 @@
     <depends optional="true" config-file="docs/yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
     <extensionPoints>
-        <extensionPoint name="documentation.ignoredElementProvider"
+        <extensionPoint name="documentation.elementFilter"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
                         dynamic="true">
             <with attribute="implementationClass"
-                  implements="cn.yiiguxing.plugin.translate.openapi.documentation.IgnoredDocumentationElementProvider"/>
+                  implements="cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter"/>
         </extensionPoint>
     </extensionPoints>
 

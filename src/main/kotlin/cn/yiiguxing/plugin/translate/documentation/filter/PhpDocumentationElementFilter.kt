@@ -1,11 +1,11 @@
-package cn.yiiguxing.plugin.translate.documentation.provider
+package cn.yiiguxing.plugin.translate.documentation.filter
 
-import cn.yiiguxing.plugin.translate.openapi.documentation.IgnoredDocumentationElementProvider
+import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter
 import org.jsoup.nodes.Element
 
-class PhpIgnoredDocumentationElementProvider : IgnoredDocumentationElementProvider {
+class PhpDocumentationElementFilter : DocumentationElementFilter {
 
-    override fun ignoreElements(body: Element): List<Element> {
+    override fun filterElements(body: Element): List<Element> {
         val ignoredElements = body.select(CSS_QUERY_SOURCE) ?: return emptyList()
 
         ignoredElements.forEachIndexed { index, element ->
@@ -15,8 +15,8 @@ class PhpIgnoredDocumentationElementProvider : IgnoredDocumentationElementProvid
         return ignoredElements
     }
 
-    override fun restoreIgnoredElements(body: Element, ignoredElements: List<Element>) {
-        ignoredElements.forEachIndexed { index, element ->
+    override fun restoreElements(body: Element, elements: List<Element>) {
+        elements.forEachIndexed { index, element ->
             body.selectFirst("""table.sections td > span[id="php-ignored-$index"]""")?.replaceWith(element)
         }
     }
