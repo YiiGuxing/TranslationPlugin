@@ -5,7 +5,10 @@ import cn.yiiguxing.plugin.translate.documentation.TranslatableDocumentationTarg
 import com.intellij.codeInsight.hint.HintManagerImpl.ActionToIgnore
 import com.intellij.lang.documentation.ide.impl.DocumentationManagementHelper
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.Project
+import com.intellij.platform.backend.documentation.DocumentationTarget
 import com.intellij.platform.ide.documentation.DOCUMENTATION_TARGETS
 
 class ShowTranslatedQuickDocInfoAction : AnAction(),
@@ -33,8 +36,7 @@ class ShowTranslatedQuickDocInfoAction : AnAction(),
         val editor = CommonDataKeys.EDITOR.getData(dataContext) ?: return
 
         target.translate = true
-        @Suppress("UnstableApiUsage")
-        DocumentationManagementHelper.getInstance(project).showQuickDoc(editor, target)
+        showQuickDoc(project, editor, target)
     }
 
     private fun isSupportedForDataContext(dataContext: DataContext): Boolean {
@@ -43,5 +45,26 @@ class ShowTranslatedQuickDocInfoAction : AnAction(),
 
     private fun getTranslatableDocumentationTarget(dataContext: DataContext): TranslatableDocumentationTarget? {
         return dataContext.getData(DOCUMENTATION_TARGETS)?.firstOrNull() as? TranslatableDocumentationTarget
+    }
+}
+
+@Suppress("UnstableApiUsage")
+private val showQuickDoc: (Project, Editor, DocumentationTarget) -> Unit by lazy {
+    // The showQuickDoc method added a new parameter in version 2025.3,
+    // so reflection is required for compatibility.
+    val method = DocumentationManagementHelper::class.java.methods.firstOrNull { it.name == "showQuickDoc" }
+    return@lazy { project, editor, target ->
+        method ?: throw NoSuchMethodException("Method showQuickDoc not found in DocumentationManagementHelper")
+
+        val helper = DocumentationManagementHelper.getInstance(project)
+        val args = Array<Any?>(method.parameterCount) { null }
+        args[0] = editor
+        args[1] = target
+        method.isAccessible = true
+        try {
+            method.invoke(helper, *args)
+        } finally {
+            method.isAccessible = false
+        }
     }
 }
