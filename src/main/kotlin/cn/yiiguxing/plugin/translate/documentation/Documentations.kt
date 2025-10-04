@@ -48,28 +48,28 @@ internal object Documentations {
     /**
      * Sets the translated status of the specified [documentation].
      *
-     * @param translatorId The ID of the translator used. If `null`, the translated status is removed.
+     * @param provider The translation provider. If `null`, the translated status will be removed.
      * @return The modified [documentation] object.
      */
-    fun setTranslated(documentation: Document, translatorId: String?): Document {
+    fun setTranslated(documentation: Document, provider: String?): Document {
         val htmlEl = documentation.htmlEl ?: Element(TAG_HTML).also { documentation.appendChild(it) }
         val attributes = htmlEl.attributes()
-        if (translatorId != null) {
+        if (provider != null) {
             attributes.put(ATTR_TRANSLATED, null)
-            attributes.put(ATTR_TRANSLATOR_ID, translatorId)
+            attributes.put(ATTR_TRANSLATION_PROVIDER, provider)
         } else {
             attributes.remove(ATTR_TRANSLATED)
-            attributes.remove(ATTR_TRANSLATOR_ID)
+            attributes.remove(ATTR_TRANSLATION_PROVIDER)
         }
 
         return documentation
     }
 
     /**
-     * Returns the translator ID of the specified [documentation], or `null` if not set.
+     * Returns the translation provider of the specified [documentation], or `null` if not set.
      */
-    fun getTranslatorId(documentation: Document): String? {
-        return documentation.htmlEl?.attr(ATTR_TRANSLATOR_ID)
+    fun getTranslationProvider(documentation: Document): String? {
+        return documentation.htmlEl?.attr(ATTR_TRANSLATION_PROVIDER)
     }
 
     /**
@@ -123,10 +123,10 @@ private const val TAG_HTML = "html"
 private const val TAG_DIV = "div"
 private const val TAG_PRE = "pre"
 private const val ATTR_TRANSLATED = "translated"
-private const val ATTR_TRANSLATOR_ID = "translator-id"
+private const val ATTR_TRANSLATION_PROVIDER = "translation-provider"
 
 private val TRANSLATED_DOCUMENTATION_REGEX = Regex(
-    """^<html\b[^>]*\btranslated\b(\s*=\s*(['"]?)true\2)?(?=\s|>|/)[^>]*>""",
+    """^<html\b[^>]*\b$ATTR_TRANSLATED\b(\s*=\s*(['"]?)true\2)?(?=\s|>|/)[^>]*>""",
     RegexOption.IGNORE_CASE
 )
 
