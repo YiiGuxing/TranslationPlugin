@@ -40,11 +40,11 @@ class DocumentationTranslationService private constructor() {
     }
 
     /**
-     * Returns the ID of the translator used for translating the specified [documentation],
-     * or `null` if the [documentation] is not translated or the translator ID is not set.
+     * Returns the translation provider used for the specified [documentation],
+     * or `null` if the [documentation] is not translated or the provider is unset.
      */
-    fun getTranslatorId(documentation: Document): String? {
-        return Documentations.getTranslatorId(documentation)
+    fun getTranslationProvider(documentation: Document): String? {
+        return Documentations.getTranslationProvider(documentation)
     }
 
     /**
