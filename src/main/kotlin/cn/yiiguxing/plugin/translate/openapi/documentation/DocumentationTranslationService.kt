@@ -24,6 +24,30 @@ class DocumentationTranslationService private constructor() {
     }
 
     /**
+     * Checks whether the specified [documentation] is translated.
+     *
+     * @param parse Whether to parse the [documentation] string into a [Document] before checking.
+     */
+    fun isTranslated(documentation: String, parse: Boolean = false): Boolean {
+        return Documentations.isTranslated(documentation, parse)
+    }
+
+    /**
+     * Checks whether the specified [documentation] is translated.
+     */
+    fun isTranslated(documentation: Document): Boolean {
+        return Documentations.isTranslated(documentation)
+    }
+
+    /**
+     * Returns the ID of the translator used for translating the specified [documentation],
+     * or `null` if the [documentation] is not translated or the translator ID is not set.
+     */
+    fun getTranslatorId(documentation: Document): String? {
+        return Documentations.getTranslatorId(documentation)
+    }
+
+    /**
      * Translates the specified [documentation] to the main language.
      *
      * @param documentation The documentation content to translate, in HTML format.
@@ -36,7 +60,7 @@ class DocumentationTranslationService private constructor() {
      */
     @RequiresBackgroundThread
     fun translate(documentation: String, language: Language? = null): String {
-        if (Documentations.isTranslated(documentation, false)) {
+        if (isTranslated(documentation, false)) {
             return documentation
         }
 
@@ -61,7 +85,7 @@ class DocumentationTranslationService private constructor() {
         language: Language? = null,
         copyBeforeTranslate: Boolean = false
     ): Document {
-        if (Documentations.isTranslated(documentation)) {
+        if (isTranslated(documentation)) {
             return documentation
         }
 

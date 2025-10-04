@@ -24,7 +24,7 @@ internal fun translateInlineDocumentation(
         hasError = true
         val message = getTranslationErrorMessage(e)
         Documentations.addMessage(
-            Documentations.setTranslated(document, true),
+            Documentations.setTranslated(document, translator.id),
             message,
             JBUI.CurrentTheme.NotificationError.foregroundColor(),
             "AllIcons.General.Error"

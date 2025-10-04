@@ -29,7 +29,7 @@ internal object Documentations {
         return if (parse) {
             isTranslated(parseDocumentation(documentation))
         } else {
-            documentation.startsWith("<html $ATTR_TRANSLATED>", ignoreCase = true) ||
+            documentation.startsWith("<html $ATTR_TRANSLATED ", ignoreCase = true) ||
                     TRANSLATED_DOCUMENTATION_REGEX.containsMatchIn(documentation)
         }
     }
@@ -38,25 +38,38 @@ internal object Documentations {
      * Checks whether the specified [documentation] is translated.
      */
     fun isTranslated(documentation: Document): Boolean {
-        return documentation.htmlEl?.hasAttr(ATTR_TRANSLATED) ?: false
+        val htmlAttributes = documentation.htmlEl?.attributes() ?: return false
+        return htmlAttributes.hasKeyIgnoreCase(ATTR_TRANSLATED) &&
+                htmlAttributes.getIgnoreCase(ATTR_TRANSLATED).let {
+                    it.isEmpty() || it.equals("true", true)
+                }
     }
 
     /**
-     * Sets the translated attribute of the specified [documentation] to the given [translated] value.
+     * Sets the translated status of the specified [documentation].
+     *
+     * @param translatorId The ID of the translator used. If `null`, the translated status is removed.
+     * @return The modified [documentation] object.
      */
-    fun setTranslated(documentation: Document, translated: Boolean): Document {
-        documentation.htmlEl?.attributes()?.apply {
-            if (translated) {
-                put(ATTR_TRANSLATED, "true")
-            } else {
-                remove(ATTR_TRANSLATED)
-            }
-        } ?: run {
-            // If the html element does not exist, create it and set the translated attribute.
-            val htmlEl = Element(TAG_HTML).attr(ATTR_TRANSLATED, translated.toString())
-            documentation.appendChild(htmlEl)
+    fun setTranslated(documentation: Document, translatorId: String?): Document {
+        val htmlEl = documentation.htmlEl ?: Element(TAG_HTML).also { documentation.appendChild(it) }
+        val attributes = htmlEl.attributes()
+        if (translatorId != null) {
+            attributes.put(ATTR_TRANSLATED, null)
+            attributes.put(ATTR_TRANSLATOR_ID, translatorId)
+        } else {
+            attributes.remove(ATTR_TRANSLATED)
+            attributes.remove(ATTR_TRANSLATOR_ID)
         }
+
         return documentation
+    }
+
+    /**
+     * Returns the translator ID of the specified [documentation], or `null` if not set.
+     */
+    fun getTranslatorId(documentation: Document): String? {
+        return documentation.htmlEl?.attr(ATTR_TRANSLATOR_ID)
     }
 
     /**
@@ -110,9 +123,10 @@ private const val TAG_HTML = "html"
 private const val TAG_DIV = "div"
 private const val TAG_PRE = "pre"
 private const val ATTR_TRANSLATED = "translated"
+private const val ATTR_TRANSLATOR_ID = "translator-id"
 
 private val TRANSLATED_DOCUMENTATION_REGEX = Regex(
-    """<html.+?$ATTR_TRANSLATED(=("true"|'true'))?.*?>""",
+    """^<html\b[^>]*\btranslated\b(\s*=\s*(['"]?)true\2)?(?=\s|>|/)[^>]*>""",
     RegexOption.IGNORE_CASE
 )
 
@@ -141,9 +155,7 @@ internal fun Translator.translateDocumentation(documentation: Document, language
     } else {
         getTranslatedDocumentation(documentation)
     }.also {
-        Documentations.setTranslated(it, true)
-            it.htmlEl?.attributes()?.put(ATTR_TRANSLATED, true)
-
+        Documentations.setTranslated(it, id)
     }
 }
 
