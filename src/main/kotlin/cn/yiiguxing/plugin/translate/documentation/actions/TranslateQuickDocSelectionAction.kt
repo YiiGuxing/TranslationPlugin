@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
+import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
@@ -50,10 +51,8 @@ class TranslateQuickDocSelectionAction :
     }
 
     companion object {
-        private const val SELECTED_QUICK_DOC_TEXT = "QUICK_DOC.SELECTED_TEXT"
-
         fun getSelectedQuickDocText(e: AnActionEvent): String? =
-            (e.dataContext.getData(SELECTED_QUICK_DOC_TEXT) as? String)?.takeIf { it.isNotBlank() }
+            e.dataContext.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT)?.takeIf { it.isNotBlank() }
 
         fun hasQuickDocSelection(e: AnActionEvent): Boolean = getSelectedQuickDocText(e) != null
     }
