@@ -104,24 +104,24 @@ _Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translat
 
 #### 4. 문서 번역 :id=usage-translate-doc
 
-- Right-click within a documentation view (including editor inlay documentation rendered view) or within a documentation comment block > <kbd>**Translate Documentation**</kbd> (or click the Translate Documentation icon on the documentation view toolbar) to toggle the translation status of the documentation.
-- When the "**Automatically translate documentation**" option is enabled, the documentation will be automatically translated when you view the Quick Documentation.
+- 문서 보기(에디터 인레이 문서 렌더링 뷰 포함) 또는 문서 주석 블록 내에서 마우스 오른쪽 버튼 클릭 > <kbd>**문서 번역**</kbd> (또는 문서 보기 도구 모음의 문서 번역 아이콘 클릭)으로 문서의 번역 상태를 전환할 수 있습니다.
+- "**문서 자동 번역**" 옵션을 활성화하면 빠른 문서 보기 시 문서가 자동으로 번역됩니다.
 
-_Quick documentation:_
+_빠른 문서:_
 
-![Quick documentation](/img/docs_translation.gif ':size=302x162 :class=round')
+![빠른 문서](/img/docs_translation.gif ':size=302x162 :class=round')
 
-_Documentation comment:_
+_문서 주석:_
 
-![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
+![문서 주석](/img/doc_comment_translation.gif ':size=400x380')
 
-_Editor inlay documentation rendered view:_
+_에디터 인레이 문서 렌더링 뷰:_
 
-![Editor inlay documentation rendered view](/img/docs_inlay_comment_translation.gif ':size=400x300')
+![에디터 인레이 문서 렌더링 뷰](/img/docs_inlay_comment_translation.gif ':size=400x300')
 
-?> _Enable the "**Automatically translate documentation**" option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Other**</kbd> > <kbd>**Automatically translate documentation**</kbd>.
+?> "**문서 자동 번역**" 옵션 활성화: <kbd>**번역 설정**</kbd> > <kbd>**기타**</kbd> > <kbd>**문서 자동 번역**</kbd>.
 
-!> *Note:* Editor inlay documentation do not support automatic translation.
+!> *참고:* 에디터 인레이 문서는 자동 번역을 지원하지 않습니다.
 
 #### 5. 엔진 전환 :id=usage-switch-engines
 
@@ -136,20 +136,19 @@ _Editor inlay documentation rendered view:_
 [baidu-dev]: https://fanyi-api.baidu.com/manage/developer
 [ali-mt]: https://www.aliyun.com/product/ai/base_alimt
 
-
 # 액션 :id=actions
 
 #### 1. 번역 대화상자 표시... :id=show-trans-dialog-action
 
-번역 대화상자를 엽니다.기본적으로 도구 모음에 표시됩니다.디폴트 단축키:
+번역 대화상자를 엽니다. 기본적으로 도구 모음에 표시됩니다. 기본 단축키:
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
-![Translation dialog](/img/translation_dialog.png ':size=550x250')
+![번역 대화상자](/img/translation_dialog.png ':size=550x250')
 
 #### 2. 번역 :id=translate-action
 
-단어를 가져오고 번역합니다.선택한 텍스트가 있는 경우 해당 텍스트에서 우선하여 단어를 가져오며, 그렇지 않을 경우 기본적으로 최대 범위에서 자동으로 단어를 가져옵니다(해당 단어 가져오기 모드는 Settings에서 설정 가능).이 액션은 기본적으로 에디터에서 마우스 오른쪽을 클릭하여 나타나는 컨텍스트 메뉴에 표시됩니다. 디폴트 단축키:
+단어를 가져와 번역합니다. 선택한 텍스트가 있으면 해당 텍스트에서 우선적으로 단어를 가져오고, 없으면 최대 범위에서 자동으로 단어를 가져옵니다(단어 가져오기 모드는 설정에서 변경 가능). 이 액션은 기본적으로 에디터에서 마우스 오른쪽 클릭 시 나타나는 컨텍스트 메뉴에 표시됩니다. 기본 단축키:
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
@@ -157,13 +156,13 @@ _Editor inlay documentation rendered view:_
 
 #### 3. 번역 (포괄적) :id=translate-inclusive-action
 
-단어를 가져와서 번역합니다.가장 가까운 모든 단어를 최대 범위로 자동으로 가져오며, 수동 선택한 텍스트는 무시합니다.디폴트 단축키: (없음)
+단어를 가져와 번역합니다. 가장 가까운 모든 단어를 최대 범위로 자동으로 가져오며, 수동 선택한 텍스트는 무시합니다. 기본 단축키: (없음)
 
 ![번역 (포괄적)](/img/translate_inclusive.gif ':size=300x250')
 
 #### 4. 번역 (배타적) :id=translate-exclusive-action
 
-단어를 가져와서 번역합니다.가장 가까운 개별 단어를 자동으로 가져오며, 수동으로 선택한 텍스트는 무시합니다.디폴트 단축키: (없음)
+단어를 가져와 번역합니다. 가장 가까운 개별 단어를 자동으로 가져오며, 수동으로 선택한 텍스트는 무시합니다. 기본 단축키: (없음)
 
 ![번역 (배타적)](/img/translate_exclusive.gif ':size=300x250')
 
