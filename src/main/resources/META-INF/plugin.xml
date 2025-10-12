@@ -113,8 +113,8 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
         </action>
-        <action id="Translation.TranslateAndReplaceAction"
-                class="cn.yiiguxing.plugin.translate.action.TranslateAndReplaceAction"
+        <action id="Translation.ReplaceWithTranslationAction"
+                class="cn.yiiguxing.plugin.translate.action.ReplaceWithTranslationAction"
                 icon="TranslationIcons.TranslationReplace">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
@@ -164,7 +164,7 @@
         <group id="Translation.PopupMenuGroup" text="Translation Popup Menu Actions">
             <separator/>
             <reference ref="Translation.EditorTranslateAction"/>
-            <reference ref="Translation.TranslateAndReplaceAction"/>
+            <reference ref="Translation.ReplaceWithTranslationAction"/>
             <separator/>
 
             <add-to-group group-id="BasicEditorPopupMenu" anchor="first"/>
@@ -187,7 +187,7 @@
         <group id="Translation.ActionGroup">
             <separator/>
             <reference ref="Translation.EditorTranslateAction"/>
-            <reference ref="Translation.TranslateAndReplaceAction"/>
+            <reference ref="Translation.ReplaceWithTranslationAction"/>
             <reference ref="Translation.ExpandedGroup"/>
             <separator/>
         </group>

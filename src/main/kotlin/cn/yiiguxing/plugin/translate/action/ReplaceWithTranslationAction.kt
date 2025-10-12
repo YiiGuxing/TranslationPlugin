@@ -42,12 +42,11 @@ import javax.swing.text.JTextComponent
 /**
  * 翻译并替换
  */
-class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITION), PopupAction {
+class ReplaceWithTranslationAction : AutoSelectAction(true, NON_WHITESPACE_CONDITION), PopupAction {
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = adaptedMessage("action.TranslateAndReplaceAction.text")
-        templatePresentation.description = message("action.TranslateAndReplaceAction.description")
+        templatePresentation.text = adaptedMessage("action.ReplaceWithTranslationAction.text")
     }
 
     override val selectionMode: SelectionMode
@@ -150,7 +149,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
                     indicator.processFinish()
                     editorRef.get()?.showResultsIfNeeds(selectionRange, text, emptyList())
                     TranslationNotifications.showTranslationErrorNotification(
-                        project, message("translate.and.replace.notification.title"), null, throwable
+                        project, message("replace.with.translation.notification.title"), null, throwable
                     )
                 }
             }, modalityState)
@@ -170,7 +169,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         val editorRef: WeakReference<Editor>
     ) : BackgroundableProcessIndicator(
         project,
-        message("action.TranslateAndReplaceAction.description"),
+        message("action.ReplaceWithTranslationAction.text"),
         null,
         null,
         true
@@ -180,7 +179,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             initDelegate()
             start()
             isIndeterminate = true
-            text = message("action.TranslateAndReplaceAction.task.text")
+            text = message("action.ReplaceWithTranslationAction.task.text")
         }
 
         private fun initDelegate() {
@@ -193,7 +192,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
         }
 
         fun setProgressText(text: String) {
-            text2 = message("action.TranslateAndReplaceAction.task.text2", text)
+            text2 = message("action.ReplaceWithTranslationAction.task.text2", text)
         }
 
         fun checkProcessCanceledAndEditorDisposed(): Boolean {
@@ -220,7 +219,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
 
     private companion object {
 
-        val logger = logger<TranslateAndReplaceAction>()
+        val logger = logger<ReplaceWithTranslationAction>()
 
         /** 谷歌翻译的空格符：`  -   　` */
         val SPACES = Regex("[\u00a0\u2000-\u200a\u202f\u205f\u3000]")
@@ -238,7 +237,7 @@ class TranslateAndReplaceAction : AutoSelectAction(true, NON_WHITESPACE_CONDITIO
             val states = TranslationStates.getInstance()
             val presentation = Presentation.newTemplatePresentation().apply {
                 icon = TranslationIcons.TranslationReplace
-                text = message("action.TranslateAndReplaceAction.description")
+                text = message("action.ReplaceWithTranslationAction.text")
             }
             val ui = LanguageSelectPopupUI(presentation) { source, target ->
                 states.lastReplacementLanguages = LanguagePair(source, target)

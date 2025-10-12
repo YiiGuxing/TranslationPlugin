@@ -2,16 +2,18 @@
 
 ## [Unreleased]
 
-- Added a one-click Quick Documentation translation feature. Use the shortcut <kbd>Ctrl + Shift + Q</kbd> (macOS: <kbd>^Q</kbd>) to show and toggle translations.
-- Supports one-click translation of all rendered documentation comments in Reader Mode.
-- Added the source language selection mode option, making the strategy for choosing source languages more flexible.
-- Jupyter Notebook now supports context menu translation operations.
-- "Translation and Replacement" action now supports selecting source and target languages.
-- 新增一键翻译快速文档功能，通过 <kbd>Ctrl + Shift + Q</kbd>（macOS：<kbd>^Q</kbd>）快捷键显示/切换快速文档的翻译。
-- 支持在阅读器模式下对所有渲染文档注释的一键翻译
-- 新增源语言选择模式选项，源语言的选择策略更加灵活
-- Jupyter Notebook 现在支持上下文菜单翻译操作
-- “翻译与替换”操作现在支持选择源语言和目标语言
+- Added quick documentation translation shortcut: <kbd>Ctrl + Shift + Q</kbd> (macOS: <kbd>^Q</kbd>).
+- Added batch translation for inline rendered documentation in Reader Mode (IDE 2024.1+ required).
+- Added configurable default source language strategy for translations.
+- Added context menu translation actions for Jupyter Notebook.
+- "Replace with Translation" action now supports pre-translation language selection.
+- New LLMs in OpenAI Translator engine: GPT-5, GPT-5 mini, GPT-5 nano.
+- 新增文档翻译快捷键：<kbd>Ctrl + Shift + Q</kbd>（macOS：<kbd>^Q</kbd>）
+- 支持阅读器模式下批量翻译内联文档（需要 IDE 2024.1 及以上版本）
+- 可配置翻译默认源语言策略
+- Jupyter Notebook 支持上下文菜单翻译
+- “翻译并替换”操作支持预选语言
+- OpenAI 翻译引擎新模型：GPT-5, GPT-5 mini, GPT-5 nano
 
 ## [3.7.3] (2025/05/25)
 
