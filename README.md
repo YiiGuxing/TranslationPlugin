@@ -165,9 +165,9 @@ _编辑器内嵌文档视图：_
 
 ![翻译（独占）](/img/translate_exclusive.gif ':size=300x250')
 
-#### 5. 翻译和替换... :id=translate-and-replace-action
+#### 5. 翻译并替换... :id=translate-and-replace-action
 
-翻译并替换。在编辑器和文本输入框内可用，取词方式同[翻译操作](#translate-action)。默认快捷键：
+翻译文本并替换。在编辑器和文本输入框内可用，取词方式同[翻译操作](#translate-action)。默认快捷键：
 - Windows - <kbd>**Ctrl + Shift + X**</kbd>
 - macOS - <kbd>**Control + Meta + O**</kbd>
 
@@ -182,9 +182,9 @@ _文本输入框：_
 #### 6. 翻译文档 :id=translate-doc-action
 ##### 6.1. 切换快速文档翻译 :id=toggle-quick-doc-translation-action
 
-快速文档中将文档内容在译文和原文之间切换。默认显示在文档视图的右键菜单和工具栏上，窗口聚焦于快速文档弹出窗或者文档工具窗口时可用。默认快捷键(同[翻译操作](#translate-action))：
-- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
-- macOS - <kbd>**Control + Meta + U**</kbd>
+快速文档中将文档内容在译文和原文之间切换。默认显示在文档视图的右键菜单和工具栏上，窗口聚焦于快速文档弹出窗或者文档工具窗口时可用。默认快捷键：
+- Windows - <kbd>**Ctrl + Shift + Q**</kbd>
+- macOS - <kbd>**Control + Q**</kbd>
 
 ![文档翻译](/img/docs_translation.gif ':size=302x162 :class=round')
 

@@ -184,9 +184,9 @@ _입력 상자:_
 #### 6. 문서 번역 :id=translate-doc-action
 ##### 6.1. 빠른 문서 번역 간 전환 :id=toggle-quick-doc-translation-action
 
-빠른 문서에서 문서 내용을 번역 내용과 원본 텍스트 간에 전환합니다.이 옵션은 빠른 문서 팝업 창 또는 문서 도구 창에 초점이 맞춰져 있을 때 사용할 수 있습니다.디폴트 단축키(번역 단축키와 동일):
-- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
-- macOS - <kbd>**Control + Meta + U**</kbd>
+빠른 문서에서 문서 내용을 번역 내용과 원본 텍스트 간에 전환합니다.이 옵션은 빠른 문서 팝업 창 또는 문서 도구 창에 초점이 맞춰져 있을 때 사용할 수 있습니다.디폴트 단축키:
+- Windows - <kbd>**Ctrl + Shift + Q**</kbd>
+- macOS - <kbd>**Control + Q**</kbd>
 
 ![Documentation translation](/img/docs_translation.gif ':size=302x162 :class=round')
 

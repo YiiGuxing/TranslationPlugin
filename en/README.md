@@ -95,27 +95,27 @@ Select a text or hover the mouse over the text > <kbd>**Right-click**</kbd> > <k
 
 ?> Or use shortcuts for translation, as detailed in [Actions](#translate-action).
 
-#### 3. Translate and replace :id=usage-translate-and-replace
+#### 3. Replace with Translation :id=usage-translate-and-replace
 
 Translate the target text and replace it.
 If the target language is English, the output has several formats: `in the camel case`,
 `with a word separator` (when the output contains multiple words) and `in the original format`.
 
 ?> *Instructions:* Select a text or hover the mouse over the text > <kbd>**Right-click**</kbd> >
-<kbd>**Translate and replace...**</kbd> (editor only, please use shortcuts for Input box,
+<kbd>**Replace with Translation**</kbd> (editor only, please use shortcuts for Input box,
 as detailed in [Actions](#translate-and-replace-action)).
 
 _Editor:_
 
-![Editor: plugin settings](/img/translation_replacement.gif ':size=400x380')
+![Editor: Replace with Translation](/img/translation_replacement.gif ':size=400x380')
 
 _Input box:_
 
-![Input box: translate and replace](/img/translation_replacement_component.gif ':size=460x400')
+![Input box: Replace with Translation](/img/translation_replacement_component.gif ':size=460x400')
 
-?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> >
+?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Replace with Translation**</kbd> >
 Enables the <kbd>**Add to context menu**</kbd> option.  
-_Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> >
+_Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Replace with Translation**</kbd> >
 <kbd>**Separators**</kbd>.
 
 #### 4. Translate documentation :id=usage-translate-doc
@@ -198,9 +198,9 @@ Default shortcut: (None)
 
 ![Translate (exclusive) Action](/img/translate_exclusive.gif ':size=300x250')
 
-#### 5. Translate and Replace... :id=translate-and-replace-action
+#### 5. Replace with Translation :id=translate-and-replace-action
 
-Translate and replace.
+Replace the text with translation.
 Available in editors and input boxes,
 the word extraction method works the same as the [Translate Action](#translate-action).
 Default shortcut:
@@ -209,11 +209,11 @@ Default shortcut:
 
 _Editor:_
 
-![Editor: Translate and Replace](/img/translation_replacement_by_shortcut.gif ':size=260x380')
+![Editor: Replace with Translation](/img/translation_replacement_by_shortcut.gif ':size=260x380')
 
 _Input box:_
 
-![Input box: Translate and Replace](/img/translation_replacement_component.gif ':size=460x400')
+![Input box: Replace with Translation](/img/translation_replacement_component.gif ':size=460x400')
 
 #### 6. Translate Documentation :id=translate-doc-action
 ##### 6.1. Toggle between Quick Documentation translations :id=toggle-quick-doc-translation-action
@@ -247,9 +247,9 @@ _Editor inlay documentation rendered view:_
 
 Translate selected text in some text components (such as Quick Docs, popup hints, input boxes, etc.).
 This action does not support automatic word extraction.
-Default shortcut (same as the [Translate Action](#translate-action)):
-- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
-- macOS - <kbd>**Control + Meta + U**</kbd>
+Default shortcut:
+- Windows - <kbd>**Ctrl + Shift + Q**</kbd>
+- macOS - <kbd>**Control + Q**</kbd>
 
 #### 8. Switch Engine :id=switch-engine-action
 

@@ -184,9 +184,9 @@ _入力ボックス：_
 #### 6. ドキュメントの翻訳 :id=translate-doc-action
 ##### 6.1. クイックドキュメント翻訳に切り替える :id=toggle-quick-doc-translation-action
 
-クイックドキュメント中のテキスト表示を翻訳文と原文に切り替えます。クイックドキュメントのポップアップまたはドキュメントツールのウィンドウを選択している場合に使用できます。デフォルトのショートカットキー（翻訳と同じ）：
-- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
-- macOS - <kbd>**Control + Meta + U**</kbd>
+クイックドキュメント中のテキスト表示を翻訳文と原文に切り替えます。クイックドキュメントのポップアップまたはドキュメントツールのウィンドウを選択している場合に使用できます。デフォルトのショートカットキー：
+- Windows - <kbd>**Ctrl + Shift + Q**</kbd>
+- macOS - <kbd>**Control + Q**</kbd>
 
 ![ドキュメンテーションの翻訳](/img/docs_translation.gif ':size=302x162 :class=round')
 
