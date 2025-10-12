@@ -160,7 +160,7 @@ internal abstract class SettingsUi {
     protected val showReplacementActionCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.show.replacement.action"))
     protected val replacementTranslateLanguageSelectionCheckBox: JBCheckBox =
-        JBCheckBox(message("settings.options.replacement.translate.language.selection"))
+        JBCheckBox(message("settings.options.pre-translation.language.selection"))
     protected val useLastReplacementTranslateLanguageCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.use.last.replacement.translate.languages"))
     protected val showWordsOnStartupCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordsOnStartup"))
