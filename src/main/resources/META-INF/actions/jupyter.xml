@@ -3,7 +3,7 @@
         <group id="Translation.JupyterEditorPopupActions">
             <separator/>
             <reference ref="Translation.EditorTranslateAction"/>
-            <reference ref="Translation.TranslateAndReplaceAction"/>
+            <reference ref="Translation.ReplaceWithTranslationAction"/>
             <separator/>
 
             <add-to-group group-id="JupyterEditorPopupActions" relative-to-action="EditorCopy" anchor="before"/>

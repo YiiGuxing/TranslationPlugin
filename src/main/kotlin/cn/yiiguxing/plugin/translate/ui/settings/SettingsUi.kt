@@ -291,7 +291,7 @@ internal abstract class SettingsUi {
             )
         }
 
-        val translateAndReplacePanel = titledPanel(message("settings.panel.title.translate.and.replace")) {
+        val translateAndReplacePanel = titledPanel(message("settings.panel.title.replace.with.translation")) {
             add(replacementTranslateLanguageSelectionCheckBox, wrap().span(3))
             add(useLastReplacementTranslateLanguageCheckBox, wrap().span(3).gapBefore(migSize(20)))
             add(showReplacementActionCheckBox, wrap().span(3))
