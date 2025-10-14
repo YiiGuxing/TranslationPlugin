@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.documentation.actions
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
-import cn.yiiguxing.plugin.translate.documentation.utils.translateInlineDocumentation
+import cn.yiiguxing.plugin.translate.documentation.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.findElementAroundOffset
