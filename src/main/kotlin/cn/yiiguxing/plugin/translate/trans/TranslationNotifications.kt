@@ -32,7 +32,7 @@ object TranslationNotifications {
         vararg actions: AnAction,
         notificationCustomizer: (Notification) -> Unit = {}
     ) {
-        val errorInfo = (throwable as? TranslateException)?.errorInfo
+        val errorInfo = (throwable as? TranslationException)?.errorInfo
         val errorMessage = errorInfo?.message ?: message("error.unknown")
         val message = content
             ?.takeIf { it.isNotBlank() }
@@ -45,7 +45,7 @@ object TranslationNotifications {
         actionList.addAll(actions)
         actionList.add(SwitchTranslationEngineAction())
 
-        if (throwable !is TranslateException) {
+        if (throwable !is TranslationException) {
             // 将异常写入IDE异常池，以便用户反馈
             logger.e("Translation error: ${throwable.message}", throwable)
         }

@@ -4,7 +4,7 @@ import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationTranslationService
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
-import cn.yiiguxing.plugin.translate.trans.TranslateException
+import cn.yiiguxing.plugin.translate.trans.TranslationException
 import cn.yiiguxing.plugin.translate.ui.scaled
 import cn.yiiguxing.plugin.translate.util.toImage
 import cn.yiiguxing.plugin.translate.util.toRGBHex
@@ -120,7 +120,7 @@ internal class TranslatableDocumentationTarget private constructor(
                     translatedContent = DocumentationContent.content(documentToTranslate.documentationString)
                 } catch (e: Throwable) {
                     val errorMessage = when (e) {
-                        is TranslateException -> e.errorInfo.message
+                        is TranslationException -> e.translationErrorMessage
                         else -> e.message
                     }?.takeIf { it.isNotBlank() } ?: message("error.unknown")
                     val message = message("documentation.message.translation.failed.with.message", errorMessage)

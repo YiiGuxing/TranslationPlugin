@@ -56,6 +56,7 @@ class DocumentationTranslationService private constructor() {
      *   If `null`, no ignoring is performed.
      * @return The translated documentation string, or the original if already translated.
      *
+     * @throws TranslationException if translation fails.
      * @see DocumentationElementFilter
      */
     @RequiresBackgroundThread
@@ -75,6 +76,7 @@ class DocumentationTranslationService private constructor() {
      *   Used to get [DocumentationElementFilter] for language-specific element ignoring.
      *   If `null`, no ignoring is performed.
      *
+     * @throws TranslationException if translation fails.
      * @see DocumentationElementFilter
      */
     @RequiresBackgroundThread
@@ -95,6 +97,7 @@ class DocumentationTranslationService private constructor() {
      *   If `null`, no ignoring is performed.
      * @return A new [Document] containing the translated documentation,
      *
+     * @throws TranslationException if translation fails.
      * @see DocumentationElementFilter
      */
     @RequiresBackgroundThread

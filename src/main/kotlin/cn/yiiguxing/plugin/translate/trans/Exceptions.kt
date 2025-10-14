@@ -1,12 +1,14 @@
 package cn.yiiguxing.plugin.translate.trans
 
-class TranslateException(
+class TranslationException(
     @Suppress("MemberVisibilityCanBePrivate")
     val translatorId: String,
     val translatorName: String,
     val errorInfo: ErrorInfo,
     cause: Throwable? = null
-) : RuntimeException("$translatorName[$translatorId] :: ${errorInfo.message}", cause)
+) : RuntimeException("$translatorName[$translatorId] :: ${errorInfo.message}", cause) {
+    val translationErrorMessage: String get() = errorInfo.message
+}
 
 class UnsupportedLanguageException(
     val lang: Lang,
