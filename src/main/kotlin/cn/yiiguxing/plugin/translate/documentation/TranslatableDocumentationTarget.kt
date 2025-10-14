@@ -116,9 +116,8 @@ internal class TranslatableDocumentationTarget private constructor(
                 var translatedContent: DocumentationContent? = null
                 var failedContent: DocumentationContent? = null
                 try {
-                    val translatedDocument = DocumentationTranslationService.getInstance()
-                        .translate(documentToTranslate, pointer.language)
-                    translatedContent = DocumentationContent.content(translatedDocument.documentationString)
+                    DocumentationTranslationService.getInstance().translate(documentToTranslate, pointer.language)
+                    translatedContent = DocumentationContent.content(documentToTranslate.documentationString)
                 } catch (e: Throwable) {
                     val message = getTranslationErrorMessage(e)
                     failedContent = getTranslationFailedDocumentationContent(document, message)

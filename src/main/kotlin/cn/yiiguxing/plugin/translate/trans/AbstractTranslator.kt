@@ -52,7 +52,7 @@ abstract class AbstractTranslator : Translator {
 
     protected fun onError(throwable: Throwable): Nothing {
         val errorInfo = createErrorInfo(throwable) ?: throw throwable
-        throw TranslateException(id, name, errorInfo, throwable)
+        throw TranslationException(id, name, errorInfo, throwable)
     }
 
 }

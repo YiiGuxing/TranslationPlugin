@@ -56,6 +56,7 @@ class DocumentationTranslationService private constructor() {
      *   If `null`, no ignoring is performed.
      * @return The translated documentation string, or the original if already translated.
      *
+     * @throws TranslationException if translation fails.
      * @see DocumentationElementFilter
      */
     @RequiresBackgroundThread
@@ -74,22 +75,33 @@ class DocumentationTranslationService private constructor() {
      * @param language The programming language of the documentation.
      *   Used to get [DocumentationElementFilter] for language-specific element ignoring.
      *   If `null`, no ignoring is performed.
-     * @param copyBeforeTranslate If `true`, clones the document before translation.
-     * @return The translated [Document], or the original if already translated.
      *
+     * @throws TranslationException if translation fails.
      * @see DocumentationElementFilter
      */
     @RequiresBackgroundThread
-    fun translate(
-        documentation: Document,
-        language: Language? = null,
-        copyBeforeTranslate: Boolean = false
-    ): Document {
+    fun translate(documentation: Document, language: Language? = null) {
         if (isTranslated(documentation)) {
-            return documentation
+            return
         }
 
-        val docToTranslate = if (copyBeforeTranslate) documentation.clone() else documentation
-        return TranslateService.getInstance().translator.translateDocumentation(docToTranslate, language)
+        TranslateService.getInstance().translator.translateDocumentation(documentation, language)
+    }
+
+    /**
+     * Translates the specified [documentation] to the main language and returns a new [Document].
+     *
+     * @param documentation The documentation in [Document] format.
+     * @param language The programming language of the documentation.
+     *   Used to get [DocumentationElementFilter] for language-specific element ignoring.
+     *   If `null`, no ignoring is performed.
+     * @return A new [Document] containing the translated documentation,
+     *
+     * @throws TranslationException if translation fails.
+     * @see DocumentationElementFilter
+     */
+    @RequiresBackgroundThread
+    fun getTranslatedDocumentation(documentation: Document, language: Language? = null): Document {
+        return documentation.clone().also { translate(it, language) }
     }
 }
