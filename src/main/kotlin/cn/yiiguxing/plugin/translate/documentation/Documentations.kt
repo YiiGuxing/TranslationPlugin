@@ -140,23 +140,22 @@ internal val Document.documentationString: String
 
 internal fun Translator.translateDocumentation(documentation: String, language: Language?): String {
     val document: Document = Documentations.parseDocumentation(documentation)
-    val translatedDocumentation = translateDocumentation(document, language)
+    translateDocumentation(document, language)
 
-    return translatedDocumentation.documentationString
+    return document.documentationString
 }
 
-internal fun Translator.translateDocumentation(documentation: Document, language: Language?): Document {
+internal fun Translator.translateDocumentation(documentation: Document, language: Language?) {
     if (Documentations.isTranslated(documentation)) {
-        return documentation
+        return
     }
 
-    return if (this is DocumentationTranslator) {
-        getTranslatedDocumentation(documentation, language)
+    if (this is DocumentationTranslator) {
+        translateDocumentationInner(documentation, language)
     } else {
-        getTranslatedDocumentation(documentation)
-    }.also {
-        Documentations.setTranslated(it, id)
+        translateDocumentationInner(documentation)
     }
+    Documentations.setTranslated(documentation, id)
 }
 
 private val Document.htmlEl: Element?
@@ -179,7 +178,7 @@ private fun Document.addMessage(
 
 private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
 
-private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
+private fun DocumentationTranslator.translateDocumentationInner(document: Document, language: Language?) {
     val body = document.body()
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)
     val definitions = definition
@@ -220,11 +219,10 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
     }
     ignoredElements?.let { ignoredElementProvider.restoreElements(translatedBody, it) }
     definitions?.let { translatedBody.prependChildren(it) }
-
-    return translatedDocument
+    body.replaceWith(translatedBody)
 }
 
-private fun Translator.getTranslatedDocumentation(document: Document): Document {
+private fun Translator.translateDocumentationInner(document: Document) {
     val body = document.body()
 
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
@@ -241,8 +239,5 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
     val contentEl = Element("div").addClass("content")
     translation.lines().forEach { contentEl.appendElement("p").appendText(it) }
     newBody.appendChild(contentEl)
-
     body.replaceWith(newBody)
-
-    return document
 }
