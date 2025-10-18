@@ -2,12 +2,14 @@
 
 ## [Unreleased]
 
+- Added Kotlin K2 mode documentation translation support.
 - Added quick documentation translation shortcut: <kbd>Ctrl + Shift + Q</kbd> (macOS: <kbd>^Q</kbd>).
 - Added batch translation for inline rendered documentation in Reader Mode (IDE 2024.1+ required).
 - Added configurable default source language strategy for translations.
 - Added context menu translation actions for Jupyter Notebook.
 - "Replace with Translation" action now supports pre-translation language selection.
 - New LLMs in OpenAI Translator engine: GPT-5, GPT-5 mini, GPT-5 nano.
+- 支持 Kotlin K2 模式下的文档翻译
 - 新增文档翻译快捷键：<kbd>Ctrl + Shift + Q</kbd>（macOS：<kbd>^Q</kbd>）
 - 支持阅读器模式下批量翻译内联文档（需要 IDE 2024.1 及以上版本）
 - 可配置翻译默认源语言策略
