@@ -27,6 +27,7 @@ TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인�
   - Google TTS
   - OpenAI TTS
 - 문서 번역
+- 텍스트 번역 및 바꾸기
 - 자동 단어 선택
 - 자동 단어 분할
 - 단어장
@@ -87,39 +88,48 @@ TranslationPlugin은 IntelliJ 기반의 IDEs/Android Studio 번역 플러그인�
 
 #### 3. 번역 및 바꾸기 :id=usage-translate-and-replace
 
-대상 텍스트를 번역하고 바꿉니다.번역 대상 언어가 영어인 경우, 출력 결과의 형식은 다음과 같습니다. `낙타 표기법`, `단어 구분 기호 포함` (출력 결과에 여러 단어가 포함된 경우 플러그인 설정 페이지에서 구분 기호 설정 가능: 번역 설정 > 구분 기호) 및 `원래 형식`.
+대상 텍스트를 번역하고 바꿉니다. 번역 대상 언어가 영어인 경우, 출력 결과의 형식은 다음과 같습니다: `낙타 표기법`, `단어 구분 기호 포함` (출력 결과에 여러 단어가 포함된 경우) 및 `원래 형식`.
 
-?> *사용법:* 텍스트 선택 또는 마우스로 텍스트 가리킴 > 마우스 오른쪽 클릭 > 번역 및 바꾸기... (또는 단축키를 사용하여 번역, 자세한 내용은 [액션](#translate-and-replace-action) 참고).
+?> *사용법:* 텍스트 선택 또는 마우스로 텍스트 가리킴 > 마우스 오른쪽 클릭 > <kbd>**번역 및 바꾸기...**</kbd> (에디터만 해당, 입력 상자는 단축키 사용, 자세한 내용은 [액션](#translate-and-replace-action) 참고).
 
-_편집자:_
+_편집기:_
 
-![편집자](/img/translation_replacement.gif ':size=400x380')
+![편집기: 번역 및 바꾸기](/img/translation_replacement.gif ':size=400x380')
 
 _입력 상자:_
 
-![입력 상자](/img/translation_replacement_component.gif ':size=460x400')
+![입력 상자: 번역 및 바꾸기](/img/translation_replacement_component.gif ':size=460x400')
 
-?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> > Enables the <kbd>**Add to context menu**</kbd> option.  
-_Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Translate and Replace**</kbd> > <kbd>**Separators**</kbd>.
+_번역 전에 언어 선택:_
+
+![번역 전에 언어 선택](/img/language_selection.gif ':size=680x620')
+
+?> _마우스 오른쪽 메뉴 옵션 활성화:_ <kbd>**번역 설정**</kbd> > <kbd>**번역 및 바꾸기**</kbd> > <kbd>**컨텍스트 메뉴에 추가**</kbd> 옵션 활성화.  
+_"번역 전에 언어 선택" 활성화:_ <kbd>**번역 설정**</kbd> > <kbd>**번역 및 바꾸기**</kbd> > <kbd>**번역 전에 언어 선택**</kbd> 체크.  
+_구분 기호 설정:_ <kbd>**번역 설정**</kbd> > <kbd>**번역 및 바꾸기**</kbd> > <kbd>**구분 기호**</kbd>.
 
 #### 4. 문서 번역 :id=usage-translate-doc
 
-- 문서 보기(에디터 인레이 문서 렌더링 뷰 포함) 또는 문서 주석 블록 내에서 마우스 오른쪽 버튼 클릭 > <kbd>**문서 번역**</kbd> (또는 문서 보기 도구 모음의 문서 번역 아이콘 클릭)으로 문서의 번역 상태를 전환할 수 있습니다.
+- 문서 보기(에디터 인레이 문서 렌더링 뷰 포함) 또는 문서 주석 블록 내에서 마우스 오른쪽 버튼 클릭 > <kbd>**문서 번역**</kbd> 으로 문서의 번역 상태를 전환할 수 있습니다. 또는 단축키 <kbd>**Ctrl + Shift + Q**</kbd> (macOS: <kbd>**Control + Q**</kbd>)를 사용합니다.
 - "**문서 자동 번역**" 옵션을 활성화하면 빠른 문서 보기 시 문서가 자동으로 번역됩니다.
 
 _빠른 문서:_
 
-![빠른 문서](/img/docs_translation.gif ':size=302x162 :class=round')
+![빠른 문서](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-_문서 주석:_
+_단축키 조작:_
 
-![문서 주석](/img/doc_comment_translation.gif ':size=400x380')
+![단축키로 문서 번역](/img/docs_translation2.gif ':size=680x520')
 
 _에디터 인레이 문서 렌더링 뷰:_
 
-![에디터 인레이 문서 렌더링 뷰](/img/docs_inlay_comment_translation.gif ':size=400x300')
+![에디터 인레이 문서 렌더링 뷰](/img/docs_inline_doc_translation.gif ':size=500x350')
 
-?> "**문서 자동 번역**" 옵션 활성화: <kbd>**번역 설정**</kbd> > <kbd>**기타**</kbd> > <kbd>**문서 자동 번역**</kbd>.
+_인라인 문서 보기 일괄 번역:_
+
+![인라인 문서 보기 일괄 번역](/img/batch-inline-doc-translation.gif ':size=550x350')
+
+?> _"**문서 자동 번역**" 옵션 활성화:_ <kbd>**번역 설정**</kbd> > <kbd>**기타**</kbd> > <kbd>**문서 자동 번역**</kbd>.
 
 !> *참고:* 에디터 인레이 문서는 자동 번역을 지원하지 않습니다.
 
@@ -168,49 +178,58 @@ _에디터 인레이 문서 렌더링 뷰:_
 
 #### 5. 번역 및 바꾸기... :id=translate-and-replace-action
 
-번역 및 바꾸기.단어를 가져오는 방법은 [번역](#translate-action)할 때와 동일하게 작동합니다.디폴트 단축키:
+텍스트를 번역하고 바꿉니다. 에디터와 입력 상자에서 사용할 수 있으며, 단어 추출 방식은 [번역](#translate-action)과 동일합니다. 기본 단축키:
 - Windows - <kbd>**Ctrl + Shift + X**</kbd>
 - macOS - <kbd>**Control + Meta + O**</kbd>
 
-_편집자:_
+_편집기:_
 
-![편집자](/img/translation_replacement_by_shortcut.gif ':size=260x380')
+![편집기: 번역 및 바꾸기](/img/translation_replacement_by_shortcut.gif ':size=260x380')
 
 _입력 상자:_
 
-![입력 상자](/img/translation_replacement_component.gif ':size=460x400')
+![입력 상자: 번역 및 바꾸기](/img/translation_replacement_component.gif ':size=460x400')
+
+_번역 전에 언어 선택:_
+
+![번역 전에 언어 선택](/img/language_selection.gif ':size=680x620')
+
+?> _팁:_ "번역 전에 언어 선택" 기능은 기본적으로 비활성화되어 있습니다. 활성화하려면 다음으로 이동하세요: <kbd>**번역 설정**</kbd> > <kbd>**번역 및 바꾸기**</kbd> > <kbd>**번역 전에 언어 선택**</kbd> 체크.
 
 #### 6. 문서 번역 :id=translate-doc-action
-##### 6.1. 빠른 문서 번역 간 전환 :id=toggle-quick-doc-translation-action
+##### 6.1. 빠른 문서 번역 :id=translated-quick-documentation-action
 
-빠른 문서에서 문서 내용을 번역 내용과 원본 텍스트 간에 전환합니다.이 옵션은 빠른 문서 팝업 창 또는 문서 도구 창에 초점이 맞춰져 있을 때 사용할 수 있습니다.디폴트 단축키:
+커서 위치 심볼의 문서를 빠르게 표시하고 번역합니다. 문서 팝업에서 사용하면 번역된 텍스트와 원문을 전환할 수 있습니다. 기본 단축키:
 - Windows - <kbd>**Ctrl + Shift + Q**</kbd>
 - macOS - <kbd>**Control + Q**</kbd>
 
-![Documentation translation](/img/docs_translation.gif ':size=302x162 :class=round')
+![문서 번역](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-##### 6.2. Translate Documentation Comment :id=translate-doc-comment-action
+_단축키 조작:_
 
-Translate documentation comment content. Appears on the editor right-click context menu by default, and is available when inside a documentation comment block. Default shortcut: (None)
+![단축키로 문서 번역](/img/docs_translation2.gif ':size=680x520')
 
-_Documentation comment:_
+##### 6.2. 인라인 문서 번역 :id=translate-inline-doc-action
 
-![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
+에디터의 인라인 문서 렌더링 보기 내용을 번역합니다. 인라인 문서 보기의 컨텍스트 메뉴에 기본 표시되며, 인라인 문서 보기 내에서 사용할 수 있습니다. 기본 단축키: (없음)
 
+![에디터 인레이 문서 렌더링 뷰](/img/docs_inline_doc_translation.gif ':size=500x350')
 
-_Editor inlay documentation rendered view:_
+##### 6.3. 인라인 문서 일괄 번역 :id=batch-inline-doc-translation
 
-![Editor inlay documentation rendered view:](/img/docs_inlay_comment_translation.gif ':size=400x300')
+에디터의 모든 인라인 문서를 일괄 번역합니다. 에디터 검사 위젯의 도구 모음에 기본 표시되며, 리더 모드에서 사용할 수 있습니다. 기본 단축키: (없음)
+
+![인라인 문서 보기 일괄 번역](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 #### 7. 번역 텍스트 구성 요소 :id=translate-text-component-action
 
-텍스트 구성 요소(빠른 문서, 알림 말풍선, 입력창...) 중 선택한 텍스트를 번역하며, 자동으로 단어를 가져오기는 지원하지 않습니다.디폴트 단축키:
+텍스트 구성 요소(빠른 문서, 알림 말풍선, 입력창 등)에서 선택한 텍스트를 번역합니다. 자동 단어 추출은 지원하지 않습니다. 기본 단축키:
 - Windows - <kbd>**Ctrl + Shift + Y**</kbd>
 - macOS - <kbd>**Control + Meta + U**</kbd>
 
 #### 8. 엔진 전환 :id=switch-engine-action
 
-번역 엔진과 TTS 엔진을 빠르게 전환합니다.디폴트 단축키:
+번역 엔진과 TTS 엔진을 빠르게 전환합니다. 기본 단축키:
 - Windows - <kbd>**Ctrl + Shift + S**</kbd>
 - macOS - <kbd>**Control + Meta + Y**</kbd>
 
@@ -218,7 +237,7 @@ _Editor inlay documentation rendered view:_
 
 #### 9. 오늘의 단어 :id=word-of-the-day-action
 
-오늘의 단어 대화상자를 표시합니다.디폴트 단축키: (없음)
+오늘의 단어 대화상자를 표시합니다. 기본 단축키: (없음)
 
 ![오늘의 단어](/en/img/word_of_the_day.png ':size=552x478 :class=round')
 

@@ -124,7 +124,7 @@ _快捷键操作：_
 
 _编辑器内联文档视图：_
 
-![编辑器内嵌文档翻译](/img/docs_inlay_comment_translation.gif?v1.0 ':size=500x350')
+![编辑器内嵌文档翻译](/img/docs_inline_doc_translation.gif ':size=500x350')
 
 _批量翻译内联文档视图：_
 
@@ -195,26 +195,29 @@ _翻译前选择语言：_
 ?> _提示：_ 翻译前选择语言功能默认不启用，您需要前往配置页面开启：<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > 勾选<kbd>**翻译前选择语言**</kbd>。
 
 #### 6. 翻译文档 :id=translate-doc-action
-##### 6.1. 切换快速文档翻译 :id=toggle-quick-doc-translation-action
+##### 6.1. 翻译快速文档 :id=translated-quick-documentation-action
 
-快速文档中将文档内容在译文和原文之间切换。默认显示在文档视图的右键菜单和工具栏上，窗口聚焦于快速文档弹出窗或者文档工具窗口时可用。默认快捷键：
+快速展示当前光标处符号的文档并对其进行翻译。若在文档弹窗中使用，则可切换显示文档的译文和原文。默认快捷键：
 - Windows - <kbd>**Ctrl + Shift + Q**</kbd>
 - macOS - <kbd>**Control + Q**</kbd>
 
-![文档翻译](/img/docs_translation.gif ':size=302x162 :class=round')
+![文档翻译](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-##### 6.2. 翻译文档注释 :id=translate-doc-comment-action
+_快捷键操作：_
 
-翻译文档注释内容。默认显示在编辑器右键菜单上，在文档注释块内时可用。默认快捷键：（无）
+![文档翻译](/img/docs_translation2.gif ':size=680x520')
 
-_文档注释：_
+##### 6.2. 翻译内联文档 :id=translate-inline-doc-action
 
-![文档翻译](/img/doc_comment_translation.gif ':size=400x380')
+翻译编辑器内联文档视图的内容。默认显示在编辑器内联文档视图上下文菜单上，在内联文档视图内可用。默认快捷键：（无）
 
+![编辑器内嵌文档翻译](/img/docs_inline_doc_translation.gif ':size=500x350')
 
-_编辑器内嵌文档视图：_
+##### 6.3. 批量翻译内联文档 :id=batch-inline-doc-translation
 
-![编辑器内嵌文档翻译](/img/docs_inlay_comment_translation.gif ':size=400x300')
+批量翻译编辑器里所有内联文档。默认显示在编辑器检查小部件工具栏上，在阅读器模式下可用。默认快捷键：（无）
+
+![批量翻译内联文档视图](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 #### 7. 翻译文本组件 :id=translate-text-component-action
 

@@ -113,36 +113,46 @@ _Input box:_
 
 ![Input box: Replace with Translation](/img/translation_replacement_component.gif ':size=460x400')
 
+_Select language before translation:_
+
+![Select language before translation](/img/language_selection.gif ':size=680x620')
+
 ?> _Enable right-click menu option:_ <kbd>**Translation Settings**</kbd> > <kbd>**Replace with Translation**</kbd> >
-Enables the <kbd>**Add to context menu**</kbd> option.  
+Check the <kbd>**Add to context menu**</kbd> option.  
+_Enable "Select language before translation":_ <kbd>**Translation Settings**</kbd> >
+<kbd>**Replace with Translation**</kbd> > Check the <kbd>**Select language before translation**</kbd> option.  
 _Separator configuration:_ <kbd>**Translation Settings**</kbd> > <kbd>**Replace with Translation**</kbd> >
 <kbd>**Separators**</kbd>.
 
 #### 4. Translate documentation :id=usage-translate-doc
 
-- Right-click within a documentation view (including editor inlay documentation rendered view)
+- Right-click within a documentation view (including editor inline documentation rendered view)
   or within a documentation comment block > <kbd>**Translate Documentation**</kbd>
-  (or click the Translate Documentation icon on the documentation view toolbar)
-  to toggle the translation status of the documentation.
+  to toggle the translation status of the documentation. Or use the shortcut
+  <kbd>**Ctrl + Shift + Q**</kbd> (macOS: <kbd>**Control + Q**</kbd>).
 - When the "**Automatically translate documentation**" option is enabled,
   the documentation will be automatically translated when you view the Quick Documentation.
 
 _Quick documentation:_
 
-![Quick documentation](/img/docs_translation.gif ':size=302x162 :class=round')
+![Quick documentation](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-_Documentation comment:_
+_Keyboard shortcuts:_
 
-![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
+![Documentation translation with shortcuts](/img/docs_translation2.gif ':size=680x520')
 
-_Editor inlay documentation rendered view:_
+_Editor inline documentation rendered view:_
 
-![Editor inlay documentation rendered view](/img/docs_inlay_comment_translation.gif ':size=400x300')
+![Editor inline documentation rendered view](/img/docs_inline_doc_translation.gif ':size=500x350')
+
+_Batch translate editor inline documentation view:_
+
+![Batch translate inline documentation view](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 ?> _Enable the "**Automatically translate documentation**" option:_ <kbd>**Translation Settings**</kbd> >
 <kbd>**Other**</kbd> > <kbd>**Automatically translate documentation**</kbd>.
 
-!> *Note:* Editor inlay documentation does not support automatic translation.
+!> *Note:* Editor inline documentation does not support automatic translation.
 
 #### 5. Switch engines :id=usage-switch-engines
 
@@ -215,41 +225,50 @@ _Input box:_
 
 ![Input box: Replace with Translation](/img/translation_replacement_component.gif ':size=460x400')
 
+_Select language before translation:_
+
+![Select language before translation](/img/language_selection.gif ':size=680x620')
+
+?> _Tip:_ The "Select language before translation" feature is disabled by default. To enable it, go to:
+<kbd>**Translation Settings**</kbd> > <kbd>**Replace with Translation**</kbd> > Check <kbd>**Select language before translation**</kbd>.
+
 #### 6. Translate Documentation :id=translate-doc-action
-##### 6.1. Toggle between Quick Documentation translations :id=toggle-quick-doc-translation-action
+##### 6.1. Translate Quick Documentation :id=translated-quick-documentation-action
 
-Toggle between the original and translated texts in Quick Documentation.
-Displayed by default on the right-click menu and toolbar of the documentation view.
-This action is available when the focus is on the Quick Documentation pop-up window or the documentation tool window.
-Default shortcut (same as the [Translate Action](#translate-action)):
-- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
-- macOS - <kbd>**Control + Meta + U**</kbd>
+Quickly display and translate the documentation of the symbol at the caret. When used in the
+Quick Documentation popup, you can toggle between the translated text and the original.
+Default shortcut:
+- Windows - <kbd>**Ctrl + Shift + Q**</kbd>
+- macOS - <kbd>**Control + Q**</kbd>
 
-![Documentation translation](/img/docs_translation.gif ':size=302x162 :class=round')
+![Documentation translation](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-##### 6.2. Translate Documentation Comment :id=translate-doc-comment-action
+_Keyboard shortcuts:_
 
-Translate the contents of document comments.
-This action is displayed by default in the editor's context menu (right-click to access)
-and is available when the cursor is in the document's comment block.
-Default shortcut: (None)
+![Documentation translation with shortcuts](/img/docs_translation2.gif ':size=680x520')
 
-_Documentation comment:_
+##### 6.2. Translate Inline Documentation :id=translate-inline-doc-action
 
-![Documentation comment](/img/doc_comment_translation.gif ':size=400x380')
+Translate the contents of the editor's inline documentation rendered view.
+Displayed by default in the context menu of the inline documentation view
+and available within the inline documentation view. Default shortcut: (None)
 
+![Editor inline documentation rendered view](/img/docs_inline_doc_translation.gif ':size=500x350')
 
-_Editor inlay documentation rendered view:_
+##### 6.3. Batch Translate Inline Documentation :id=batch-inline-doc-translation
 
-![Editor inlay documentation rendered view:](/img/docs_inlay_comment_translation.gif ':size=400x300')
+Batch translate all inline documentation in the editor. Displayed by default on the
+editor inspections widget toolbar and available in Reader mode. Default shortcut: (None)
+
+![Batch translate inline documentation view](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 #### 7. Translate the Text Component :id=translate-text-component-action
 
 Translate selected text in some text components (such as Quick Docs, popup hints, input boxes, etc.).
 This action does not support automatic word extraction.
 Default shortcut:
-- Windows - <kbd>**Ctrl + Shift + Q**</kbd>
-- macOS - <kbd>**Control + Q**</kbd>
+- Windows - <kbd>**Ctrl + Shift + Y**</kbd>
+- macOS - <kbd>**Control + Meta + U**</kbd>
 
 #### 8. Switch Engine :id=switch-engine-action
 

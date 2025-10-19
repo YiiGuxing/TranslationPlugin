@@ -27,6 +27,7 @@
   - Google TTS
   - OpenAI TTS
 - ドキュメントの翻訳
+- テキストの翻訳と置き換え
 - 単語の自動選択
 - 単語の自動分割
 - 単語帳
@@ -99,25 +100,34 @@ _入力ボックス：_
 
 ![入力ボックス](/img/translation_replacement_component.gif ':size=460x400')
 
+_翻訳前に言語を選択：_
+
+![翻訳前に言語を選択](/img/language_selection.gif ':size=680x620')
+
 ?> _右クリックメニューオプションを有効にする：_ <kbd>**Translation 設定**</kbd> > <kbd>**翻訳と置換**</kbd> > <kbd>**コンテキストメニューに追加**</kbd> オプションを有効にする。  
+_翻訳前に言語を選択を有効化：_ <kbd>**Translation 設定**</kbd> > <kbd>**翻訳と置換**</kbd> > <kbd>**翻訳前に言語を選択**</kbd> にチェック。  
 _セパレータ設定：_ <kbd>**Translation 設定**</kbd> > <kbd>**翻訳と置換**</kbd> > <kbd>**セパレータ**</kbd>.
 
 #### 4. ドキュメントの翻訳 :id=usage-translate-doc
 
-- ドキュメンテーションビュー（エディタ内レイドキュメンテーションレンダリングビューを含む）またはドキュメンテーションコメントブロック内で右クリックします > <kbd>**ドキュメントの翻訳**</kbd>（または、ドキュメンテーションビューツールバーのドキュメンテーション翻訳アイコンをクリックして）ドキュメンテーションの翻訳ステータスを切り替えます。
+- ドキュメンテーションビュー（エディタ内レイドキュメンテーションレンダリングビューを含む）またはドキュメンテーションコメントブロック内で右クリックします > <kbd>**ドキュメントの翻訳**</kbd> ドキュメンテーションの翻訳ステータスを切り替えます。 またはショートカット <kbd>**Ctrl + Shift + Q**</kbd>（macOS: <kbd>**Control + Q**</kbd>）を使用します。
 - "**自動的にドキュメンテーションを翻訳する**"オプションが有効になっている場合、クイックドキュメンテーションを表示するときにドキュメンテーションが自動的に翻訳されます。
 
 _クイックドキュメンテーション：_
 
-![クイックドキュメンテーション](/img/docs_translation.gif ':size=302x162 :class=round')
+![クイックドキュメンテーション](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-_ドキュメンテーションコメント：_
+_キーボードショートカット：_
 
-![ドキュメンテーションコメント](/img/doc_comment_translation.gif ':size=400x380')
+![キーボードショートカットでのドキュメント翻訳](/img/docs_translation2.gif ':size=680x520')
 
 _エディタ内レイドキュメンテーションレンダリングビュー：_
 
-![エディタ内レイドキュメンテーションレンダリングビュー](/img/docs_inlay_comment_translation.gif ':size=400x300')
+![エディタ内レイドキュメンテーションレンダリングビュー](/img/docs_inline_doc_translation.gif ':size=500x350')
+
+_エディタ内インラインドキュメントの一括翻訳：_
+
+![エディタ内インラインドキュメンテーションの一括翻訳](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 ?> _"**自動的にドキュメンテーションを翻訳する**"オプションを有効にする：_ <kbd>**Translation 設定**</kbd> > <kbd>**その他**</kbd> > <kbd>**自動的にドキュメンテーションを翻訳する**</kbd>.
 
@@ -181,27 +191,36 @@ _入力ボックス：_
 
 ![入力ボックス](/img/translation_replacement_component.gif ':size=460x400')
 
-#### 6. ドキュメントの翻訳 :id=translate-doc-action
-##### 6.1. クイックドキュメント翻訳に切り替える :id=toggle-quick-doc-translation-action
+_翻訳前に言語を選択：_
 
-クイックドキュメント中のテキスト表示を翻訳文と原文に切り替えます。クイックドキュメントのポップアップまたはドキュメントツールのウィンドウを選択している場合に使用できます。デフォルトのショートカットキー：
+![翻訳前に言語を選択](/img/language_selection.gif ':size=680x620')
+
+?> _ヒント：_ 「翻訳前に言語を選択」はデフォルトで無効です。有効化するには、次の設定に移動してください：<kbd>**Translation 設定**</kbd> > <kbd>**翻訳と置換**</kbd> > <kbd>**翻訳前に言語を選択**</kbd> にチェック。
+
+#### 6. ドキュメントの翻訳 :id=translate-doc-action
+##### 6.1. クイックドキュメントを翻訳 :id=translated-quick-documentation-action
+
+カーソル位置のシンボルのドキュメントを素早く表示して翻訳します。ドキュメントのポップアップで使用すると、訳文と原文を切り替えて表示できます。デフォルトのショートカットキー：
 - Windows - <kbd>**Ctrl + Shift + Q**</kbd>
 - macOS - <kbd>**Control + Q**</kbd>
 
-![ドキュメンテーションの翻訳](/img/docs_translation.gif ':size=302x162 :class=round')
+![ドキュメンテーションの翻訳](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-##### 6.2. Translate Documentation Comment :id=translate-doc-comment-action
+_キーボードショートカット：_
 
-ドキュメンテーションコメントの内容を翻訳します。デフォルトでは、エディタの右クリックコンテキストメニューに表示され、ドキュメンテーションコメントブロック内にいるときに利用可能です。デフォルトのショートカットキー：（なし）
+![キーボードショートカットでのドキュメント翻訳](/img/docs_translation2.gif ':size=680x520')
 
-_ドキュメンテーションコメント：_
+##### 6.2. インラインドキュメントを翻訳 :id=translate-inline-doc-action
 
-![ドキュメンテーションコメント](/img/doc_comment_translation.gif ':size=400x380')
+エディタのインラインドキュメンテーションレンダリングビューの内容を翻訳します。インラインドキュメントビューのコンテキストメニューにデフォルトで表示され、インラインドキュメントビュー内で使用できます。デフォルトのショートカットキー：（なし）
 
+![エディタ内レイドキュメンテーションレンダリングビュー](/img/docs_inline_doc_translation.gif ':size=500x350')
 
-_エディタインレイドキュメンテーションレンダリングビュー：_
+##### 6.3. インラインドキュメントを一括翻訳 :id=batch-inline-doc-translation
 
-![エディタインレイドキュメンテーションレンダリングビュー](/img/docs_inlay_comment_translation.gif ':size=400x300')
+エディタ内のすべてのインラインドキュメントを一括翻訳します。エディタの検査ウィジェットのツールバーにデフォルトで表示され、リーダーモードで使用できます。デフォルトのショートカットキー：（なし）
+
+![エディタ内インラインドキュメンテーションの一括翻訳](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 #### 7. テキストコンポーネントの翻訳 :id=translate-text-component-action
 
