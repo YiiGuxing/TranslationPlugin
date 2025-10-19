@@ -101,25 +101,34 @@ _文本输入框：_
 
 ![文本输入框：翻译和替换](/img/translation_replacement_component.gif ':size=460x400')
 
+_翻译前选择语言：_
+
+![翻译前选择语言](/img/language_selection.gif ':size=680x620')
+
 ?> _开启右键菜单项：_<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > 勾选<kbd>**在右键菜单显示替换操作**</kbd>；  
+_开启翻译前选择语言：_<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > 勾选<kbd>**翻译前选择语言**</kbd>；  
 _分隔符配置：_<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > <kbd>**分隔符**</kbd>。
 
 #### 4. 翻译文档 :id=usage-translate-doc
 
-- 在文档视图（包括编辑器内嵌文档视图）或文档注释块内单击<kbd>**鼠标右键**</kbd> > <kbd>**翻译文档**</kbd>（或者点击文档视图工具栏上的翻译文档图标），即可切换翻译文档。
+- 在文档视图（包括编辑器内嵌文档视图）或文档注释块内单击<kbd>**鼠标右键**</kbd> > <kbd>**翻译文档**</kbd>，或者使用快捷键 <kbd>**Ctrl + Shift + Q**</kbd>（macOS：<kbd>**Control + Q**</kbd>），即可切换翻译文档。
 - 当开启**自动翻译文档**后，在你查看文档时文档会被自动翻译。
 
 _快速文档：_
 
-![文档翻译](/img/docs_translation.gif ':size=302x162 :class=round')
+![文档翻译](/img/docs_translation.gif?v1.0 ':size=580x380')
 
-_文档注释：_
+_快捷键操作：_
 
-![文档翻译](/img/doc_comment_translation.gif ':size=400x380')
+![文档翻译](/img/docs_translation2.gif ':size=680x520')
 
-_编辑器内嵌文档视图：_
+_编辑器内联文档视图：_
 
-![编辑器内嵌文档翻译](/img/docs_inlay_comment_translation.gif ':size=400x300')
+![编辑器内嵌文档翻译](/img/docs_inlay_comment_translation.gif?v1.0 ':size=500x350')
+
+_批量翻译内联文档视图：_
+
+![批量翻译内联文档视图](/img/batch-inline-doc-translation.gif ':size=550x350')
 
 ?> _开启自动翻译文档：_<kbd>**插件设置**</kbd> > <kbd>**其他**</kbd> > 勾选<kbd>**自动翻译文档**</kbd>。
 
@@ -178,6 +187,12 @@ _编辑器：_
 _文本输入框：_
 
 ![文本输入框：翻译和替换](/img/translation_replacement_component.gif ':size=460x400')
+
+_翻译前选择语言：_
+
+![翻译前选择语言](/img/language_selection.gif ':size=680x620')
+
+?> _提示：_ 翻译前选择语言功能默认不启用，您需要前往配置页面开启：<kbd>**插件设置**</kbd> > <kbd>**翻译并替换**</kbd> > 勾选<kbd>**翻译前选择语言**</kbd>。
 
 #### 6. 翻译文档 :id=translate-doc-action
 ##### 6.1. 切换快速文档翻译 :id=toggle-quick-doc-translation-action
