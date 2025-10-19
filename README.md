@@ -96,8 +96,7 @@
 </a>
 
 - **Installing from the plugin repository within the IDE:**
-    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"
-      Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
+    - <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search and find <b>"Translation"</b></kbd> > <kbd>Install Plugin</kbd>.
 
 - **Installing manually:**
     - Download the plugin package on [GitHub Releases][gh:releases] or in
@@ -124,15 +123,14 @@ Restart the **IDE** after installation.
 
    Or use shortcuts for translation, as detailed in **[Actions](#actions)**.
 
-3. **Translate and replace**
+3. **Replace with Translation**
 
    Translate the target text and replace it. If the target language is English, the output has several formats: **in
    camel case, with a word separator** (when the output contains multiple words, the separator can be configured in the
-   plugin configuration page: <kbd>Translation Settings</kbd> > <kbd>Translate and replace</kbd> > <kbd>Separator</kbd>)
+   plugin configuration page: <kbd>Translation Settings</kbd> > <kbd>Replace with Translation</kbd> > <kbd>Separator</kbd>)
    and in the **original format**.
 
-   Instructions: <kbd>Select a text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Translate and
-   Replace...</kbd> (Or use shortcuts for translation, as detailed in **[Actions](#actions)**).
+   Instructions: <kbd>Select a text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Replace with Translation</kbd> (Or use shortcuts for translation, as detailed in **[Actions](#actions)**).
 
 4. **Translate documents**
 
@@ -142,7 +140,7 @@ Restart the **IDE** after installation.
 5. **Switch engines**
 
    Click the engine widget in the status bar or use the shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-   (Mac OS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to switch between 
+   (macOS: <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>) to switch between 
    the translation engine and the TTS engine quickly.
 
 ## Actions
@@ -152,7 +150,7 @@ Restart the **IDE** after installation.
   Open the translation dialog, which appears by default on the toolbar. Default shortcut:
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd>
+    - macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>I</kbd>
 
 - **Translate**
 
@@ -162,7 +160,7 @@ Restart the **IDE** after installation.
   shortcut:
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+    - macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 - **Translate(Inclusive)**
 
@@ -174,28 +172,27 @@ Restart the **IDE** after installation.
   Extract words and translate them. Automatically extract the nearest single word, ignoring manually selected text.
   Default shortcut: (None)
 
-- **Translate and Replace...**
+- **Replace with Translation**
 
-  Translate and replace. The word extraction method works the same as when **translating**. Default shortcut:
+  Replace the text with translation. The word extraction method works the same as when **translating**. Default shortcut:
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd>
+    - macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>O</kbd>
 
-- **Translate Documentation**
+- **Translate Quick Documentation**
 
-  Translate the contents of document comments.
-  This option is displayed by default in the editor's context menu (right-click to access)
-  and is available when the cursor is in the document's comment block.
-  Default shortcut: (None)
-
-- **Toggle Quick Documentation Translation**
-
-  Toggle between the original and translated texts in Quick Documentation. This option is available when the focus is on
-  the Quick Documentation pop-up window or the documentation tool window. Default shortcut (same as **translation**
-  shortcut):
+  Quickly display and translate the documentation of the symbol at the caret. When used in the Quick Documentation popup, you can toggle between the translated text and the original. Default shortcut:
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Q</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Q</kbd>
+    - macOS - <kbd>Control</kbd> + <kbd>Q</kbd>
+
+- **Translate Inline Documentation**
+
+  Translate the contents of the editor's inline documentation rendered view. Displayed by default in the context menu of the inline documentation view and available within the inline documentation view. Default shortcut: (None)
+
+- **Batch Translate Inline Documentation**
+
+  Batch translate all inline documentation in the editor. Displayed by default on the editor inspections widget toolbar and available in Reader mode. Default shortcut: (None)
 
 - **Translate Text Component**
 
@@ -203,14 +200,14 @@ Restart the **IDE** after installation.
   automatic word extraction. Default shortcut (same as **translation** shortcut):
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
+    - macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>U</kbd>
 
 - **Switch Engine**
 
   Quickly switch between translation engine and TTS engine. Default shortcut:
 
     - Windows - <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-    - Mac OS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
+    - macOS - <kbd>Control</kbd> + <kbd>Meta</kbd> + <kbd>Y</kbd>
 
 - **Word of the Day**
 
