@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.8.0] (2025/10/20)
+
 - Added Kotlin K2 mode documentation translation support.
 - Added quick documentation translation shortcut: <kbd>Ctrl + Shift + Q</kbd> (macOS: <kbd>^Q</kbd>).
 - Added batch translation for inline rendered documentation in Reader Mode (IDE 2024.1+ required).
@@ -581,7 +583,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.3...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.0...HEAD
+[3.8.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.3...v3.8.0
 [3.7.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.1...v3.7.2
 [3.7.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.0...v3.7.1
