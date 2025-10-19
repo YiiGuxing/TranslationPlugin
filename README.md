@@ -132,10 +132,11 @@ Restart the **IDE** after installation.
 
    Instructions: <kbd>Select a text or hover the mouse over the text</kbd> > <kbd>Right-click</kbd> > <kbd>Replace with Translation</kbd> (Or use shortcuts for translation, as detailed in **[Actions](#actions)**).
 
-4. **Translate documents**
+4. **Translate Documentation**
 
-   <kbd>Preferences(Settings)</kbd> > <kbd>Tools</kbd> > <kbd>Translation</kbd> > <kbd>Other</kbd> > <kbd>Translate
-   documents</kbd>: When you check this option, the document will be automatically translated when you view it.
+   Quick Documentation and Inline Documentation can be translated via the context menu or shortcuts (detailed in **[Actions](#actions)**).
+
+    <kbd>Translation Settings</kbd> > <kbd>Other</kbd> > <kbd>Automatically translate documentation</kbd>: When you check this option, the Quick Documentation will be automatically translated when you view it.
 
 5. **Switch engines**
 
