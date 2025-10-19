@@ -16,7 +16,6 @@ import cn.yiiguxing.plugin.translate.util.splitSentence
 import cn.yiiguxing.plugin.translate.util.text.appendString
 import cn.yiiguxing.plugin.translate.util.text.clear
 import cn.yiiguxing.plugin.translate.util.text.replace
-import cn.yiiguxing.plugin.translate.wordbook.WordBookService
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
@@ -27,7 +26,6 @@ import com.intellij.openapi.ui.VerticalFlowLayout
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.ui.PopupMenuListenerAdapter
-import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
@@ -73,8 +71,6 @@ abstract class TranslationPane<T : JComponent>(
     private lateinit var extraComponent: JComponent
 
     private var onNewTranslateHandler: ((String, Lang, Lang) -> Unit)? = null
-
-    private var onSpellFixedHandler: ((String) -> Unit)? = null
 
     private var onRevalidateHandler: (() -> Unit)? = null
     private var onFixLanguageHandler: ((Lang) -> Unit)? = null
@@ -414,30 +410,8 @@ abstract class TranslationPane<T : JComponent>(
             viewer.text = text
         }
 
-        val wordBookService = WordBookService.getInstance()
-        if ((project != null || wordBookService.isInitialized) && wordBookService.canAddToWordbook(text)) {
-            viewer.appendStarButton(translation)
-        }
-
         viewer.caretPosition = 0
         originalComponent.isVisible = true
-    }
-
-    @Suppress("DuplicatedCode")
-    private fun Viewer.appendStarButton(translation: Translation) {
-        val starIcon = if (translation.favoriteId == null) TranslationIcons.StarOff else TranslationIcons.StarOn
-        val starLabel = LinkLabel("", starIcon, { starLabel, _ ->
-            StarButtons.toggleStar(project, starLabel, translation)
-        }, null)
-        starLabel.alignmentY = 0.9f
-        starLabel.toolTipText = getStarButtonToolTipText(translation.favoriteId)
-        translation.observableFavoriteId.observe(this@TranslationPane) { favoriteId, _ ->
-            starLabel.icon = if (favoriteId == null) TranslationIcons.StarOff else TranslationIcons.StarOn
-            starLabel.toolTipText = getStarButtonToolTipText(favoriteId)
-        }
-
-        val starAttribute = SimpleAttributeSet().also { StyleConstants.setComponent(it, starLabel) }
-        styledDocument.appendString("  ").appendString(" ", starAttribute)
     }
 
     private fun Viewer.setFoldedText(text: String) {
@@ -589,14 +563,6 @@ abstract class TranslationPane<T : JComponent>(
                 .andTransparent()
                 .addToLeft(left)
                 .addToRight(right)
-        }
-
-        private fun getStarButtonToolTipText(favoriteId: Long?): String {
-            return if (favoriteId == null) {
-                message("tooltip.addToWordBook")
-            } else {
-                message("tooltip.removeFromWordBook")
-            }
         }
     }
 }

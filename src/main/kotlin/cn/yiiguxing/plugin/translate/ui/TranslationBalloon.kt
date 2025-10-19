@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TTSEngine
+import cn.yiiguxing.plugin.translate.ui.UI.setIcons
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.icon.Spinner
@@ -19,6 +20,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
+import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.util.ui.*
 import java.awt.AWTEvent
@@ -48,7 +50,9 @@ class TranslationBalloon(
     private val processPane = ProcessComponent(Spinner(), JBUI.insets(INSETS, INSETS * 2))
     private val translationContentPane = NonOpaquePanel(FrameLayout())
     private val translationPane = BalloonTranslationPane(project, Settings.getInstance(), getMaxWidth(project))
-    private val pinButton = ActionLink(icon = AllIcons.General.Pin_tab) { pin() }
+    private val buttonsBar = NonOpaquePanel(HorizontalLayout(5.scaled))
+    private val pinButton = ActionLink { pin() }.apply { setIcons(AllIcons.General.Pin_tab) }
+    private val starButton = WordFavoritesUi.createStarLabel()
 
     private val balloon: Balloon
 
@@ -62,7 +66,7 @@ class TranslationBalloon(
             val inside = isInsideBalloon(RelativePoint(it))
             if (inside != lastMoveWasInsideBalloon) {
                 lastMoveWasInsideBalloon = inside
-                pinButton.isVisible = inside
+                buttonsBar.isVisible = inside
             }
         }
     }
@@ -102,14 +106,17 @@ class TranslationBalloon(
         presenter.supportedLanguages.let { (source, target) ->
             translationPane.setSupportedLanguages(source, target)
         }
+        buttonsBar.apply {
+            border = JBEmptyBorder(5, 0, 0, 0)
+            isVisible = false
+            alignmentX = RIGHT_ALIGNMENT
+            alignmentY = TOP_ALIGNMENT
 
+            add(starButton)
+            add(pinButton)
+        }
         translationContentPane.apply {
-            add(pinButton.apply {
-                border = JBEmptyBorder(5, 0, 0, 0)
-                isVisible = false
-                alignmentX = RIGHT_ALIGNMENT
-                alignmentY = TOP_ALIGNMENT
-            })
+            add(buttonsBar)
             add(translationPane)
         }
     }
@@ -118,17 +125,16 @@ class TranslationBalloon(
         with(translationPane) {
             onRevalidate { if (!disposed) balloon.revalidate() }
             onLanguageChanged { src, target ->
-                run {
-                    presenter.updateLastLanguages(src, target)
-                    translate(src, target)
-                }
+                presenter.updateLastLanguages(src, target)
+                translate(src, target)
             }
             onNewTranslate { text, src, target ->
                 invokeLater { showOnTranslationDialog(text, src, target) }
             }
             onSpellFixed { spell ->
-                val targetLang = presenter.getTargetLang(spell)
-                invokeLater { showOnTranslationDialog(spell, Lang.AUTO, targetLang) }
+                val sourceLang = presenter.getSourceLang(spell)
+                val targetLang = presenter.getTargetLang(sourceLang, spell)
+                invokeLater { showOnTranslationDialog(spell, sourceLang, targetLang) }
             }
         }
 
@@ -188,8 +194,9 @@ class TranslationBalloon(
     }
 
     private fun onTranslate() {
-        val targetLang = presenter.getTargetLang(text)
-        translate(Lang.AUTO, targetLang)
+        val sourceLang = presenter.getSourceLang(text)
+        val targetLang = presenter.getTargetLang(sourceLang, text)
+        translate(sourceLang, targetLang)
     }
 
     private fun translate(srcLang: Lang, targetLang: Lang) = presenter.translate(text, srcLang, targetLang)
@@ -243,10 +250,13 @@ class TranslationBalloon(
     }
 
     override fun showTranslation(request: Presenter.Request, translation: Translation, fromCache: Boolean) {
-        if (!disposed) {
-            translationPane.translation = translation
-            showCard(CARD_TRANSLATION)
+        if (disposed) {
+            return
         }
+
+        translationPane.translation = translation
+        WordFavoritesUi.updateStarLabel(project, starButton, translation, this)
+        showCard(CARD_TRANSLATION)
     }
 
     override fun showError(request: Presenter.Request, throwable: Throwable) {

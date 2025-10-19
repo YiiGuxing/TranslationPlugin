@@ -40,7 +40,7 @@ internal class WordBookTableView : TableView<WordBookItem>() {
         }
         addKeyListener(KeyHandler())
 
-        TableSpeedSearch(this)
+        TableSpeedSearch.installOn(this)
     }
 
     fun onWordDoubleClick(handler: (WordBookItem) -> Unit) {

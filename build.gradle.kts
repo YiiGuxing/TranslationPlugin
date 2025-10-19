@@ -65,7 +65,6 @@ repositories {
 dependencies {
     implementation(libs.jsoup)
     implementation(libs.dbutils)
-    implementation(libs.ideaCompat)
     implementation(libs.websocket) { exclude(module = "slf4j-api") }
     implementation(libs.mp3spi) { exclude(module = "junit") }
     testImplementation(libs.junit)
@@ -175,6 +174,27 @@ tasks {
     wrapper {
         gradleVersion = properties("gradleVersion").get()
         distributionType = Wrapper.DistributionType.ALL
+    }
+
+    val createOpenApiSourceJar by registering(Jar::class) {
+        // Kotlin source
+        from(kotlin.sourceSets.main.get().kotlin) {
+            include("**/cn/yiiguxing/plugin/translate/openapi/**/*.kt")
+        }
+        manifest {
+            attributes(
+                "OpenApi-Version" to properties("openApiVersion")
+            )
+        }
+
+        includeEmptyDirs = false
+        destinationDirectory.set(layout.buildDirectory.dir("libs"))
+        archiveClassifier.set("src")
+    }
+
+    buildPlugin {
+        dependsOn(createOpenApiSourceJar)
+        from(createOpenApiSourceJar) { into("lib/src") }
     }
 
     processResources {

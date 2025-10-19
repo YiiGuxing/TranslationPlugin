@@ -2,7 +2,7 @@ package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.action.TranslationEngineActionGroup
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.trans.TranslateException
+import cn.yiiguxing.plugin.translate.trans.TranslationException
 import cn.yiiguxing.plugin.translate.util.DisposableRef
 import cn.yiiguxing.plugin.translate.util.concurrent.*
 import com.intellij.icons.AllIcons
@@ -146,7 +146,7 @@ class TranslationFailedComponent : JPanel(), Disposable {
     }
 
     fun update(throwable: Throwable?) {
-        val errorInfo = (throwable as? TranslateException)?.errorInfo
+        val errorInfo = (throwable as? TranslationException)?.errorInfo
         val errorMessage = errorInfo?.message
         this.errorInfo.apply {
             text = errorMessage

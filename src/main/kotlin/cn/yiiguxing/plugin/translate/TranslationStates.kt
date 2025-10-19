@@ -28,9 +28,9 @@ class TranslationStates : PersistentStateComponent<TranslationStates> {
     @MapAnnotation
     private val languageScores: MutableMap<Lang, Int> = EnumMap(Lang::class.java)
 
-    val lastLanguages: LanguagePair = LanguagePair()
+    var lastLanguages: LanguagePair = LanguagePair()
 
-    var lastReplacementTargetLanguage: Lang? = null
+    var lastReplacementLanguages: LanguagePair? = null
 
     var pinTranslationDialog: Boolean = false
     var translationDialogLocationX: Int? = null

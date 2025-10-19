@@ -157,13 +157,13 @@ internal object JBCefScrollbarsHelper {
 
 
     private val trackSizePx: Int
-        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 14 else 10) * UISettingsUtils.instance.currentIdeScale).toInt()
+        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 14 else 10) * UISettingsUtils.getInstance().currentIdeScale).toInt()
 
     private val thumbPaddingPx: Int
-        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 3 else 1) * UISettingsUtils.instance.currentIdeScale).toInt()
+        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 3 else 1) * UISettingsUtils.getInstance().currentIdeScale).toInt()
 
     private val thumbRadiusPx: Int
-        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 7 else 5) * UISettingsUtils.instance.currentIdeScale).toInt()
+        get() = (JBCefApp.normalizeScaledSize(if (SystemInfo.isMac) 7 else 5) * UISettingsUtils.getInstance().currentIdeScale).toInt()
 
 
     private fun getScrollbarAlpha(colorKey: ColorKey?): Int? {
