@@ -3,6 +3,7 @@
 
 <h2 class="versions">버전</h2>
 
+* [v3.8 (2025-10-20)](/ko/updates/v3.8.md)
 * [v3.7 (2025-02-26)](/ko/updates/v3.7.md)
 * [v3.6 (2024-05-20)](/ko/updates/v3.6.md)
 * [v3.5 (2023-06-01)](/ko/updates/v3.5.md)
