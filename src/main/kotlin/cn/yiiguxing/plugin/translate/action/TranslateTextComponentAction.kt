@@ -26,13 +26,13 @@ class TranslateTextComponentAction :
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = adaptedMessage("action.TranslateTextComponent.text")
-        templatePresentation.description = message("action.description.textComponent")
+        templatePresentation.text = adaptedMessage("action.TranslateTextComponentAction.text")
+        templatePresentation.description = message("action.TranslateTextComponentAction.description")
     }
 
     private class Handler : EditorActionHandler() {
 
-        public override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
+        override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
             val text = when {
                 editor.selectionModel.hasSelection() -> editor.selectionModel.selectedText
                 !editor.isViewer -> editor.getSelectionFromCurrentCaret(Settings.getInstance().autoSelectionMode)?.let {
@@ -45,7 +45,7 @@ class TranslateTextComponentAction :
             text?.processBeforeTranslate()?.let { TranslationUIManager.showDialog(editor.project).translate(it) }
         }
 
-        public override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =
+        override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =
             when {
                 editor.selectionModel.hasSelection() -> !editor.selectionModel.selectedText.isNullOrBlank()
                 !editor.isViewer -> editor.canPreSelectFromCurrentCaret()

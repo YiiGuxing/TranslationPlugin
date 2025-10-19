@@ -33,9 +33,6 @@ object TranslationIcons {
     val StarOff: Icon = load("/icons/starOff.svg")
 
     @JvmField
-    val StarOffGray: Icon = load("/icons/starOffGray.svg")
-
-    @JvmField
     val StarOn: Icon = load("/icons/starOn.svg")
 
     @JvmField
@@ -48,13 +45,22 @@ object TranslationIcons {
     val Swap: Icon = load("/icons/swap.svg")
 
     @JvmField
+    val Transform: Icon = load("/icons/transform.svg")
+
+    @JvmField
     val Translation: Icon = load("/icons/translation.svg")
+
+    @JvmField
+    val TranslationFailed: Icon = load("/icons/translationFailed.svg")
 
     @JvmField
     val TranslationInactivated: Icon = load("/icons/translationInactivated.svg")
 
     @JvmField
     val TranslationReplace: Icon = load("/icons/translationReplace.svg")
+
+    @JvmField
+    val TranslationSmall: Icon = load("/icons/translationSmall.svg")
 
     @JvmField
     val Wordbook: Icon = load("/icons/wordbook.svg")

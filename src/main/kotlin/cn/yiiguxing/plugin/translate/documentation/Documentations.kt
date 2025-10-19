@@ -1,13 +1,12 @@
 package cn.yiiguxing.plugin.translate.documentation
 
-import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.provider.IgnoredDocumentationElementProvider
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter
+import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.ui.scaled
-import com.intellij.codeInsight.documentation.DocumentationComponent
 import com.intellij.lang.Language
 import com.intellij.ui.ColorUtil
-import com.intellij.util.ui.JBUI
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -22,6 +21,58 @@ import javax.swing.text.html.HTMLEditorKit
 internal object Documentations {
 
     /**
+     * Checks whether the specified [documentation] is translated.
+     *
+     * @param parse Whether to parse the [documentation] string into a [Document] before checking.
+     */
+    fun isTranslated(documentation: String, parse: Boolean = false): Boolean {
+        return if (parse) {
+            isTranslated(parseDocumentation(documentation))
+        } else {
+            documentation.startsWith("<html $ATTR_TRANSLATED ", ignoreCase = true) ||
+                    TRANSLATED_DOCUMENTATION_REGEX.containsMatchIn(documentation)
+        }
+    }
+
+    /**
+     * Checks whether the specified [documentation] is translated.
+     */
+    fun isTranslated(documentation: Document): Boolean {
+        val htmlAttributes = documentation.htmlEl?.attributes() ?: return false
+        return htmlAttributes.hasKeyIgnoreCase(ATTR_TRANSLATED) &&
+                htmlAttributes.getIgnoreCase(ATTR_TRANSLATED).let {
+                    it.isEmpty() || it.equals("true", true)
+                }
+    }
+
+    /**
+     * Sets the translated status of the specified [documentation].
+     *
+     * @param provider The translation provider. If `null`, the translated status will be removed.
+     * @return The modified [documentation] object.
+     */
+    fun setTranslated(documentation: Document, provider: String?): Document {
+        val htmlEl = documentation.htmlEl ?: Element(TAG_HTML).also { documentation.appendChild(it) }
+        val attributes = htmlEl.attributes()
+        if (provider != null) {
+            attributes.put(ATTR_TRANSLATED, null)
+            attributes.put(ATTR_TRANSLATION_PROVIDER, provider)
+        } else {
+            attributes.remove(ATTR_TRANSLATED)
+            attributes.remove(ATTR_TRANSLATION_PROVIDER)
+        }
+
+        return documentation
+    }
+
+    /**
+     * Returns the translation provider of the specified [documentation], or `null` if not set.
+     */
+    fun getTranslationProvider(documentation: Document): String? {
+        return documentation.htmlEl?.attr(ATTR_TRANSLATION_PROVIDER)
+    }
+
+    /**
      * Parses the specified [documentation] string.
      */
     fun parseDocumentation(documentation: String): Document = Jsoup.parse(documentation)
@@ -33,29 +84,51 @@ internal object Documentations {
      */
     fun getDocumentationString(documentation: Document, prettyPrint: Boolean = false): String {
         documentation.outputSettings().prettyPrint(prettyPrint)
-        return documentation.outerHtml().fixHtml()
+        return documentation.html()
     }
 
     /**
      * Adds the specified inline [message] to the [documentation].
      */
-    fun addMessage(documentation: String, message: String, color: Color): String {
-        return parseDocumentation(documentation)
-            .addMessage(message, color)
-            .documentationString
+    fun addMessage(
+        documentation: String,
+        message: String,
+        color: Color,
+        icon: String = "AllIcons.General.Information"
+    ): String {
+        return addMessage(parseDocumentation(documentation), message, color, icon).documentationString
     }
 
+    /**
+     * Adds the specified inline [message] to the [documentation].
+     */
+    fun addMessage(
+        documentation: Document,
+        message: String,
+        color: Color,
+        icon: String = "AllIcons.General.Information"
+    ): Document {
+        return documentation.addMessage(message, color, icon)
+    }
 }
 
 
-private const val CSS_QUERY_DEFINITION = ".definition"
-private const val CSS_QUERY_CONTENT = ".content"
+internal const val CSS_QUERY_DEFINITION = ".definition"
+internal const val CSS_QUERY_CONTENT = ".content"
+internal const val CSS_QUERY_BOTTOM = ".bottom"
 
+private const val ID_BOTTOM = "bottom"
+
+private const val TAG_HTML = "html"
+private const val TAG_DIV = "div"
 private const val TAG_PRE = "pre"
 private const val ATTR_TRANSLATED = "translated"
+private const val ATTR_TRANSLATION_PROVIDER = "translation-provider"
 
-private const val FIX_HTML_CLASS_EXPRESSION_REPLACEMENT = "<${'$'}{tag} class='${'$'}{class}'>"
-private val fixHtmlClassExpressionRegex = Regex("""<(?<tag>.+?) class="(?<class>.+?)">""")
+private val TRANSLATED_DOCUMENTATION_REGEX = Regex(
+    """^<html\b[^>]*\b$ATTR_TRANSLATED\b(\s*=\s*(['"]?)true\2)?(?=\s|>|/)[^>]*>""",
+    RegexOption.IGNORE_CASE
+)
 
 
 /**
@@ -65,57 +138,47 @@ internal val Document.documentationString: String
     get() = Documentations.getDocumentationString(this, false)
 
 
-internal fun Translator.getTranslatedDocumentation(documentation: String, language: Language?): String {
+internal fun Translator.translateDocumentation(documentation: String, language: Language?): String {
     val document: Document = Documentations.parseDocumentation(documentation)
-    if (document.body().hasAttr(ATTR_TRANSLATED)) {
-        return documentation
-    }
+    translateDocumentation(document, language)
 
-    val translatedDocumentation = try {
-        if (this is DocumentationTranslator) {
-            getTranslatedDocumentation(document, language)
-        } else {
-            getTranslatedDocumentation(document)
-        }
-    } catch (e: ContentLengthLimitException) {
-        document.addLimitHint()
-    } catch (e: TranslateException) {
-        if (e.cause is ContentLengthLimitException) {
-            document.addLimitHint()
-        } else {
-            throw e
-        }
-    }
-
-    translatedDocumentation.body().attributes().put(ATTR_TRANSLATED, true)
-
-    return translatedDocumentation.documentationString
+    return document.documentationString
 }
 
-private fun Document.addLimitHint(): Document {
-    val hintColor = JBUI.CurrentTheme.Label.disabledForeground()
-    return addMessage(message("translate.documentation.limitHint"), hintColor)
+internal fun Translator.translateDocumentation(documentation: Document, language: Language?) {
+    if (Documentations.isTranslated(documentation)) {
+        return
+    }
+
+    if (this is DocumentationTranslator) {
+        translateDocumentationInner(documentation, language)
+    } else {
+        translateDocumentationInner(documentation)
+    }
+    Documentations.setTranslated(documentation, id)
 }
 
-private fun Document.addMessage(message: String, color: Color): Document = apply {
-    val colorHex = ColorUtil.toHex(color)
+private val Document.htmlEl: Element?
+    get() = firstElementChild()
+        ?.takeIf { it.nodeName().equals(TAG_HTML, true) }
+        ?: selectFirst(TAG_HTML)
+
+private fun Document.addMessage(
+    message: String,
+    color: Color,
+    icon: String = "AllIcons.General.Information"
+): Document = apply {
+    val colorHex = ColorUtil.toHtmlColor(color)
     val contentEl = body().selectFirst(CSS_QUERY_CONTENT) ?: return@apply
     val messageEl = contentEl.prependElement("div")
         .attr("style", "color: $colorHex; margin: ${3.scaled}px 0px;")
-    messageEl.appendElement("icon")
-        .attr("src", "AllIcons.General.Information")
+    messageEl.appendElement("icon").attr("src", icon)
     messageEl.append("&nbsp;").appendText(message)
 }
 
-/**
- * 修复HTML格式。[DocumentationComponent]识别不了 `class="class"` 的表达形式，
- * 只识别 `class='class'`，导致样式显示异常。
- */
-private fun String.fixHtml(): String = replace(fixHtmlClassExpressionRegex, FIX_HTML_CLASS_EXPRESSION_REPLACEMENT)
-
 private fun Element.isEmptyParagraph(): Boolean = "p".equals(tagName(), true) && html().isBlank()
 
-private fun DocumentationTranslator.getTranslatedDocumentation(document: Document, language: Language?): Document {
+private fun DocumentationTranslator.translateDocumentationInner(document: Document, language: Language?) {
     val body = document.body()
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)
     val definitions = definition
@@ -133,39 +196,39 @@ private fun DocumentationTranslator.getTranslatedDocumentation(document: Documen
         ?.takeIf { it.isEmptyParagraph() }
         ?.remove()
 
+    // Remove the `bottom` section of the documentation and replace it with an empty element
+    // so that it can be restored after translation. Whether the `bottom` section of all
+    // documentation should be excluded from translation still needs to be confirmed.
+    val bottom = body.selectFirst(CSS_QUERY_BOTTOM)
+    bottom?.replaceWith(Element(TAG_DIV).attr("id", ID_BOTTOM))
+
     val preElements = body.select(TAG_PRE)
     preElements.forEachIndexed { index, element ->
         element.replaceWith(Element(TAG_PRE).attr("id", index.toString()))
     }
 
-    val ignoredElementProvider = language?.let { IgnoredDocumentationElementProvider.forLanguage(it) }
-    val ignoredElements = ignoredElementProvider?.ignoreElements(body)
+    val ignoredElementProvider = language?.let { DocumentationElementFilter.forLanguage(it) }
+    val ignoredElements = ignoredElementProvider?.filterElements(document)
 
     val translatedDocument = translateDocumentation(document, Lang.AUTO, (this as Translator).primaryLanguage)
     val translatedBody = translatedDocument.body()
 
+    bottom?.let { translatedBody.selectFirst("#$ID_BOTTOM")?.replaceWith(it) }
     preElements.forEachIndexed { index, element ->
         translatedBody.selectFirst("""${TAG_PRE}[id="$index"]""")?.replaceWith(element)
     }
-    ignoredElements?.let { ignoredElementProvider.restoreIgnoredElements(translatedBody, it) }
+    ignoredElements?.let { ignoredElementProvider.restoreElements(translatedBody, it) }
     definitions?.let { translatedBody.prependChildren(it) }
-
-    return translatedDocument
+    body.replaceWith(translatedBody)
 }
 
-private fun Translator.getTranslatedDocumentation(document: Document): Document {
+private fun Translator.translateDocumentationInner(document: Document) {
     val body = document.body()
 
     val definition = body.selectFirst(CSS_QUERY_DEFINITION)?.apply { remove() }
 
     val htmlDocument = HTMLDocument().also { HTMLEditorKit().read(StringReader(body.html()), it, 0) }
-    val formatted = try {
-        val content = htmlDocument.getText(0, htmlDocument.length).trim()
-        checkContentLength(content, contentLengthLimit)
-    } catch (e: ContentLengthLimitException) {
-        definition?.let { body.insertChildren(0, it) }
-        throw e
-    }
+    val formatted = htmlDocument.getText(0, htmlDocument.length).trim()
     val translation =
         if (formatted.isEmpty()) ""
         else translate(formatted, Lang.AUTO, primaryLanguage).translation ?: ""
@@ -176,8 +239,5 @@ private fun Translator.getTranslatedDocumentation(document: Document): Document 
     val contentEl = Element("div").addClass("content")
     translation.lines().forEach { contentEl.appendElement("p").appendText(it) }
     newBody.appendChild(contentEl)
-
     body.replaceWith(newBody)
-
-    return document
 }

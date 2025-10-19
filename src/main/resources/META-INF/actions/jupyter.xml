@@ -1,0 +1,20 @@
+<idea-plugin>
+    <actions>
+        <group id="Translation.JupyterEditorPopupActions">
+            <separator/>
+            <reference ref="Translation.EditorTranslateAction"/>
+            <reference ref="Translation.ReplaceWithTranslationAction"/>
+            <separator/>
+
+            <add-to-group group-id="JupyterEditorPopupActions" relative-to-action="EditorCopy" anchor="before"/>
+            <add-to-group group-id="JupyterConsoleEditorPopupActions" anchor="first"/>
+        </group>
+        <group id="Translation.JupyterOutputPopupActions">
+            <separator/>
+            <reference ref="Translation.TranslateTextComponentAction"/>
+            <separator/>
+
+            <add-to-group group-id="JupyterTextOutputPopupActions" anchor="first"/>
+        </group>
+    </actions>
+</idea-plugin>

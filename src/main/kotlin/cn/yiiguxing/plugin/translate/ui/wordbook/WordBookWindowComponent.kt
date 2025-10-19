@@ -12,6 +12,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.openapi.ui.LoadingDecorator
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.PopupMenuListenerAdapter
 import com.intellij.ui.components.JBLabel
@@ -31,7 +32,17 @@ import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 
 class WordBookWindowComponent(private val parentDisposable: Disposable) :
-    LoadingPanel(BorderLayout(), { parent -> WordBookWindowLoadingDecorator(parent, parentDisposable) }) {
+    LoadingPanel(
+        manager = BorderLayout(),
+        onCreateLoadingDecorator = { parent ->
+            LoadingDecorator(
+                content = parent,
+                parent = parentDisposable,
+                startDelayMs = -1,
+                icon = AsyncProcessIcon.Big("Loading")
+            )
+        }
+    ) {
 
     private val emptyPanel = JPanel()
 

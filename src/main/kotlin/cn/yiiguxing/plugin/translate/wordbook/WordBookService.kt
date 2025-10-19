@@ -137,7 +137,7 @@ class WordBookService : Disposable {
                 val title = message("wordbook.service.notification.title")
                 val message =
                     message("wordbook.service.notification.message.failed.to.switch.storage.path", errorMsg)
-                invokeLater(ModalityState.NON_MODAL) {
+                invokeLater(ModalityState.nonModal()) {
                     LOGGER.w("Failed to switch storage path", error)
                     Notifications.showErrorNotification(title, message)
                 }
@@ -657,7 +657,7 @@ class WordBookService : Disposable {
             return try {
                 Class.forName(SQLITE_DATA_SOURCE, false, this)
                 true
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 false
             }
         }

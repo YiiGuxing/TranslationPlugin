@@ -25,14 +25,12 @@ import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import com.intellij.openapi.components.service
 import icons.TranslationIcons
-import java.util.*
 import javax.swing.Icon
 
 enum class TranslationEngine(
     val id: String,
     val translatorName: String,
     val icon: Icon,
-    val contentLengthLimit: Int = -1,
     val intervalLimit: Int = 500
 ) {
 
@@ -40,18 +38,16 @@ enum class TranslationEngine(
         "translate.microsoft",
         message("translation.engine.microsoft.name"),
         TranslationIcons.Engines.Microsoft,
-        50000
     ),
     GOOGLE("translate.google", message("translation.engine.google.name"), TranslationIcons.Engines.Google),
-    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao, 5000),
-    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 10000, 1000),
-    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali, 5000),
-    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 131072, 1000),
+    YOUDAO("ai.youdao", message("translation.engine.youdao.name"), TranslationIcons.Engines.Youdao),
+    BAIDU("fanyi.baidu", message("translation.engine.baidu.name"), TranslationIcons.Engines.Baidu, 1000),
+    ALI("translate.ali", message("translation.engine.ali.name"), TranslationIcons.Engines.Ali),
+    DEEPL("translate.deepl", message("translation.engine.deepl.name"), TranslationIcons.Engines.Deepl, 1000),
     OPEN_AI(
         "translate.openai",
         message("translation.engine.openai.name"),
         TranslationIcons.Engines.OpenAI,
-        10000,
         1000
     );
 
@@ -85,6 +81,7 @@ enum class TranslationEngine(
             else -> true
         }
 
+    fun supportedSourceLanguages(): List<Lang> = translator.supportedSourceLanguages
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
 
     fun isConfigured(): Boolean {
@@ -136,8 +133,6 @@ enum class TranslationEngine(
     }
 
     companion object {
-        val DEFAULT: TranslationEngine by lazy {
-            if (Locale.getDefault() == Locale.CHINA) MICROSOFT else GOOGLE
-        }
+        val DEFAULT: TranslationEngine = MICROSOFT
     }
 }

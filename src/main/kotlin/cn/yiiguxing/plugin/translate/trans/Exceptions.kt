@@ -1,12 +1,16 @@
 package cn.yiiguxing.plugin.translate.trans
 
-class TranslateException(
+import cn.yiiguxing.plugin.translate.message
+
+class TranslationException(
     @Suppress("MemberVisibilityCanBePrivate")
     val translatorId: String,
     val translatorName: String,
     val errorInfo: ErrorInfo,
     cause: Throwable? = null
-) : RuntimeException("$translatorName[$translatorId] :: ${errorInfo.message}", cause)
+) : RuntimeException("$translatorName[$translatorId] :: ${errorInfo.message}", cause) {
+    val translationErrorMessage: String get() = errorInfo.message
+}
 
 class UnsupportedLanguageException(
     val lang: Lang,
@@ -15,13 +19,10 @@ class UnsupportedLanguageException(
 
 open class TranslationResultException(val code: Int) : RuntimeException("Translation result code: $code")
 
-class ContentLengthLimitException(message: String = "Content length limit exceeded") : Exception(message) {
-    constructor(limit: Int, actual: Int) : this("Content length limit exceeded, limit:$limit, actual:$actual")
-}
-
-fun checkContentLength(value: String, limit: Int): String {
-    if (limit > 0 && value.length > limit) {
-        throw ContentLengthLimitException(limit, value.length)
-    }
-    return value
+fun getTranslationErrorMessage(cause: Throwable): String {
+    val errorMessage = when (cause) {
+        is TranslationException -> cause.translationErrorMessage
+        else -> cause.message
+    }?.takeIf { it.isNotBlank() } ?: message("error.unknown")
+    return message("documentation.message.translation.failed.with.message", errorMessage)
 }

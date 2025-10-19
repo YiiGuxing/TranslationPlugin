@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  *
  * [documentation](https://platform.openai.com/docs/api-reference/chat/create)
  */
-data class ChatChoice internal constructor(
+data class ChatChoice(
     /**
      * Chat choice index.
      */
