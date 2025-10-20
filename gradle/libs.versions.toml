@@ -10,7 +10,7 @@ websocket = "1.6.0"
 # Warning: Kotlin plugin 2.2.x is incompatible and will result in a startup crash
 # (NoClassDefFoundError: kotlin/coroutines/jvm/internal/SpillingKt in ProjectActivity).
 # Please upgrade only when compiling against a compatible version of IDEA.
-kotlin = "2.1.21"
+kotlin = "2.2.10"
 kover = "0.9.3"
 changelog = "2.4.0"
 gradleIntelliJPlugin = "1.17.4"
