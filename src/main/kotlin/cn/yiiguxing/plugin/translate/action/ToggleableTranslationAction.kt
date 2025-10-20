@@ -2,16 +2,18 @@
 
 package cn.yiiguxing.plugin.translate.action
 
-import cn.yiiguxing.intellij.compat.action.UpdateInBackgroundCompatAction
+import com.intellij.openapi.actionSystem.ActionUpdateThread
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsActions
 import icons.TranslationIcons
 import java.util.function.Supplier
+import javax.swing.Icon
 
 
-abstract class ToggleableTranslationAction : UpdateInBackgroundCompatAction {
+abstract class ToggleableTranslationAction : AnAction {
 
     constructor() : super()
 
@@ -28,7 +30,9 @@ abstract class ToggleableTranslationAction : UpdateInBackgroundCompatAction {
     constructor(
         dynamicText: Supplier<@NlsActions.ActionText String?>,
         dynamicDescription: Supplier<@NlsActions.ActionDescription String?> = Presentation.NULL_STRING,
-    ) : super(dynamicText, dynamicDescription, null)
+    ) : super(dynamicText, dynamicDescription, null as Icon?)
+
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     protected abstract fun isSelected(event: AnActionEvent): Boolean
 

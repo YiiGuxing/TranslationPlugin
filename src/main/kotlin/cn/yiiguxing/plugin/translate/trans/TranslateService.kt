@@ -99,7 +99,7 @@ class TranslateService private constructor() : Disposable {
                     }
                 }
             } catch (error: Throwable) {
-                if (error is TranslateException) {
+                if (error is TranslationException) {
                     // 已知异常，仅记录日志
                     LOG.w("Translation error", error)
                 } else {

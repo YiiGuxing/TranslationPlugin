@@ -34,7 +34,9 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
 
     override val sourceLangComboBox: LangComboBoxLink = LangComboBoxLink()
     override val targetLangComboBox: LangComboBoxLink = LangComboBoxLink()
-    override val swapButton: LinkLabel<Void> = LinkLabel()
+    override val swapButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        toolTipText = message("translation.dialog.swap.languages")
+    }
     override val inputTextArea: JTextArea = JBTextArea(1, 1)
     override val translationTextArea: JTextArea = TranslationTextArea(topPanel.background)
 
@@ -57,10 +59,18 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
 
     override val inputTTSButton: TTSButton = TTSButton(project)
     override val translationTTSButton: TTSButton = TTSButton(project)
-    override val clearButton: LinkLabel<Void> = LinkLabel()
-    override val copyButton: LinkLabel<Void> = LinkLabel()
-    override val starButton: LinkLabel<Void> = LinkLabel()
-    override val historyButton: LinkLabel<Void> = LinkLabel()
+    override val clearButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        isEnabled = false
+        toolTipText = message("translation.dialog.clear.text")
+    }
+    override val copyButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        isEnabled = false
+        toolTipText = message("translation.dialog.copy.translation")
+    }
+    override val starButton = WordFavoritesUi.createStarLabel()
+    override val historyButton: LinkLabel<Void> = LinkLabel<Void>().apply {
+        toolTipText = message("translation.dialog.history")
+    }
     override val detectedLanguageLabel: JLabel = JLabel()
     override val lightningLabel: JLabel = JLabel().apply {
         isOpaque = false
@@ -286,7 +296,7 @@ class TranslationDialogUiImpl(project: Project?, uiProvider: TranslationDialogUi
         copyButton.setIcons(AllIcons.Actions.Copy)
         clearButton.setIcons(AllIcons.Actions.GC)
         historyButton.setIcons(AllIcons.Vcs.History)
-        starButton.setIcons(TranslationIcons.StarOffGray)
+        starButton.setIcons(TranslationIcons.StarOff)
     }
 
     private fun createScrollPane(component: JComponent, fadingFlag: Int = ScrollPane.FADING_ALL): JScrollPane =

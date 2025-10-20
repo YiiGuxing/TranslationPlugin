@@ -13,8 +13,8 @@ private object LanguageBundle : TranslationDynamicBundle(LANGUAGE_BUNDLE)
 
 @Tag("language-pair")
 data class LanguagePair(
-    @Attribute var source: Lang = Lang.AUTO,
-    @Attribute var target: Lang = Lang.AUTO
+    @Attribute val source: Lang = Lang.AUTO,
+    @Attribute val target: Lang = Lang.ENGLISH
 )
 
 
@@ -459,7 +459,7 @@ enum class Lang(
             values()
                 .asSequence()
                 .filter { it != UNKNOWN }
-                .sortedBy { if (it == AUTO) "" else it.localeName }
+                .sortedBy { if (it == AUTO) "" else it.languageName }
                 .toList()
                 .let { Collections.unmodifiableList(it) }
         }

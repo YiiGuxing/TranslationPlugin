@@ -50,7 +50,9 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     override val providerComboBox: ComboBox<ServiceProvider> =
         ComboBox(CollectionComboBoxModel(ServiceProvider.values().toList())).apply {
             renderer = SimpleListCellRenderer.create { label, model, _ ->
-                label.text = model.name
+                label.text = model.name + if (model == ServiceProvider.Azure) {
+                    message("openai.settings.dialog.not.recommended")
+                } else ""
                 label.icon = getProviderIcon(model)
             }
         }

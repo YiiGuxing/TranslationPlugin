@@ -28,6 +28,10 @@ interface Presenter {
      */
     val supportedLanguages: SupportedLanguagesData
 
+    val isExplicitSourceLanguage: Boolean
+
+    val isExplicitTargetLanguage: Boolean
+
     /**
      * 检测指定的源语言是否被支持
      */
@@ -46,9 +50,14 @@ interface Presenter {
     data class Request(val text: String, val srcLang: Lang, val targetLang: Lang, val translatorId: String)
 
     /**
+     * 返回源语言
+     */
+    fun getSourceLang(text: String): Lang
+
+    /**
      * 返回目标语言
      */
-    fun getTargetLang(text: String): Lang
+    fun getTargetLang(sourceLanguage: Lang, text: String): Lang
 
     /**
      * 更新最后使用的语言

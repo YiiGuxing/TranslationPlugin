@@ -1,31 +1,13 @@
 <idea-plugin>
     <extensions defaultExtensionNs="cn.yiiguxing.plugin.translate">
-        <ignoredDocumentationElementProvider
+        <documentation.elementFilter
                 language="JavaScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
-        <ignoredDocumentationElementProvider
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.filter.JavaScriptDocumentationElementFilter"/>
+        <documentation.elementFilter
                 language="TypeScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
-        <ignoredDocumentationElementProvider
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.filter.JavaScriptDocumentationElementFilter"/>
+        <documentation.elementFilter
                 language="Flow JS"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.JavaScriptIgnoredDocumentationElementProvider"/>
-    </extensions>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <lang.documentationProvider
-                id="Translation.TranslatedDocumentationProvider.JavaScript"
-                order="first"
-                language="JavaScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
-        <lang.documentationProvider
-                id="Translation.TranslatedDocumentationProvider.TypeScript"
-                order="first"
-                language="TypeScript"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
-        <lang.documentationProvider
-                id="Translation.TranslatedDocumentationProvider.FlowJS"
-                order="first"
-                language="Flow JS"
-                implementationClass="cn.yiiguxing.plugin.translate.provider.TranslatedDocumentationProvider"/>
+                implementationClass="cn.yiiguxing.plugin.translate.documentation.filter.JavaScriptDocumentationElementFilter"/>
     </extensions>
 </idea-plugin>

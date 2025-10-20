@@ -31,9 +31,8 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override val icon: Icon = YOUDAO.icon
 
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = YOUDAO.intervalLimit
-
-    override val contentLengthLimit: Int = YOUDAO.contentLengthLimit
 
     override val defaultLangForLocale: Lang
         get() = when (Locale.getDefault()) {
@@ -126,7 +125,7 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
         srcLang: Lang,
         targetLang: Lang
     ): Document = checkError {
-        // Youdao does not support auto detection language for documentation translation
+        // Youdao does not support auto-detection language for documentation translation
         val fixedSrcLang = srcLang.takeIf { it != Lang.AUTO } ?: Lang.ENGLISH
         val fixedTargetLang = targetLang.takeIf { it != Lang.AUTO } ?: super.defaultLangForLocale
         documentation.translateBody { bodyHTML -> translateDocumentation(bodyHTML, fixedSrcLang, fixedTargetLang) }

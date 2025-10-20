@@ -1,7 +1,8 @@
 package cn.yiiguxing.plugin.translate
 
-import cn.yiiguxing.plugin.translate.TargetLanguageSelection.*
+import cn.yiiguxing.plugin.translate.LanguageSelection.*
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
 import cn.yiiguxing.plugin.translate.util.NON_LATIN_CONDITION
 import cn.yiiguxing.plugin.translate.util.any
@@ -28,6 +29,22 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
             SupportedLanguagesData(supportedSourceLanguages, supportedTargetLanguages)
         }
 
+    override val isExplicitSourceLanguage: Boolean
+        get() = when (settings.sourceLanguageSelection) {
+            null -> settings.sourceLanguage?.isExplicit() ?: false
+            LAST_USED -> states.lastLanguages.source.isExplicit()
+            PRIMARY -> true
+            else -> false
+        }
+
+    override val isExplicitTargetLanguage: Boolean
+        get() = when (settings.targetLanguageSelection) {
+            null -> settings.targetLanguage?.isExplicit() ?: false
+            LAST_USED -> states.lastLanguages.target.isExplicit()
+            PRIMARY -> true
+            else -> false
+        }
+
     override fun isSupportedSourceLanguage(sourceLanguage: Lang): Boolean {
         return translator.supportedSourceLanguages.contains(sourceLanguage)
     }
@@ -40,21 +57,41 @@ class TranslationPresenter(private val view: View, private val recordHistory: Bo
         return translateService.getCache(text, srcLang, targetLang)
     }
 
-    override fun getTargetLang(text: String): Lang {
-        return when (settings.targetLanguageSelection) {
-            DEFAULT -> Lang.AUTO.takeIf { isSupportedTargetLanguage(it) }
-                ?: if (text.isEmpty() || text.any(NON_LATIN_CONDITION)) Lang.ENGLISH else primaryLanguage
+    override fun getSourceLang(text: String): Lang {
+        return when (settings.sourceLanguageSelection) {
+            MAIN_OR_ENGLISH -> if (text.isNotBlank() && text.any(NON_LATIN_CONDITION)) {
+                primaryLanguage
+            } else {
+                Lang.ENGLISH
+            }
 
-            PRIMARY_LANGUAGE -> primaryLanguage
-            LAST -> states.lastLanguages.target.takeIf { isSupportedTargetLanguage(it) } ?: primaryLanguage
-        }
+            PRIMARY -> primaryLanguage
+            LAST_USED -> states.lastLanguages.source
+            else -> settings.sourceLanguage ?: Lang.AUTO
+        }.takeIf { isSupportedSourceLanguage(it) } ?: primaryLanguage
+    }
+
+    override fun getTargetLang(sourceLanguage: Lang, text: String): Lang {
+        return when (settings.targetLanguageSelection) {
+            MAIN_OR_ENGLISH -> {
+                val sourceIsEnglish = sourceLanguage == Lang.ENGLISH
+                val sourceSameAsPrimary = sourceLanguage == primaryLanguage
+                val blankOrNotLatin = text.isBlank() || text.any(NON_LATIN_CONDITION)
+                if (sourceSameAsPrimary || (!sourceIsEnglish && blankOrNotLatin)) {
+                    Lang.ENGLISH
+                } else {
+                    primaryLanguage
+                }
+            }
+
+            PRIMARY -> primaryLanguage
+            LAST_USED -> states.lastLanguages.target
+            else -> settings.targetLanguage
+        }?.takeIf { isSupportedTargetLanguage(it) } ?: primaryLanguage
     }
 
     override fun updateLastLanguages(srcLang: Lang, targetLang: Lang) {
-        with(states.lastLanguages) {
-            source = srcLang
-            target = targetLang
-        }
+        states.lastLanguages = LanguagePair(srcLang, targetLang)
     }
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang) {

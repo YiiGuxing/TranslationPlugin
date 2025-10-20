@@ -40,9 +40,8 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override val icon: Icon = ALI.icon
 
+    @Deprecated("""Use "RateLimiter" in the "translate" implementation.""")
     override val intervalLimit: Int = ALI.intervalLimit
-
-    override val contentLengthLimit: Int = ALI.contentLengthLimit
 
     override val primaryLanguage: Lang
         get() = ALI.primaryLanguage
@@ -75,8 +74,6 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
         targetLang: Lang
     ): Document = checkError {
         documentation.translateBody { bodyHTML ->
-            checkContentLength(bodyHTML, contentLengthLimit)
-
             val client = SimpleTranslateClient(
                 this,
                 { _, _, _ -> callTranslate(bodyHTML, srcLang, targetLang, true) },
@@ -214,7 +211,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
             exception.errorText
                 ?.let { Gson().fromJson(it, AliMTResponse::class.java) }
                 ?.let { "[${it.code}] ${it.message}" }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

@@ -54,10 +54,14 @@ object UI {
     @JvmStatic
     fun getBorderColor(): Color = JBUI.CurrentTheme.Popup.borderColor(true)
 
-    fun <T> LinkLabel<T>.setIcons(baseIcon: Icon) {
-        icon = baseIcon
-        disabledIcon = IconLoader.getDisabledIcon(baseIcon)
-        setHoveringIcon(IconUtil.darker(baseIcon, 3))
+    fun <T> LinkLabel<T>.setIcons(
+        base: Icon?,
+        hovering: Icon? = base?.let { IconUtil.darker(it, 3) },
+        disabled: Icon? = base?.let { IconLoader.getDisabledIcon(it) }
+    ) {
+        icon = base
+        disabledIcon = disabled
+        setHoveringIcon(hovering)
     }
 
     fun migLayout(gapX: String = "0!", gapY: String = "0!", insets: String = "0", lcBuilder: (LC.() -> Unit)? = null) =

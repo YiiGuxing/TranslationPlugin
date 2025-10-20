@@ -1,7 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
 import cn.yiiguxing.plugin.translate.TTSSource
-import cn.yiiguxing.plugin.translate.TargetLanguageSelection
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
@@ -29,6 +28,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.panel.ComponentPanelBuilder
+import com.intellij.openapi.ui.popup.ListSeparator
 import com.intellij.ui.*
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
@@ -48,14 +48,17 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
-abstract class SettingsUi {
+internal abstract class SettingsUi {
     protected val wholePanel: JPanel = JPanel()
 
     protected val translationEngineComboBox: ComboBox<TranslationEngine> = comboBox<TranslationEngine>().apply {
-        renderer = SimpleListCellRenderer.create { label, value, _ ->
-            label.text = value.translatorName
-            label.icon = value.icon
+        isSwingPopup = false
+        renderer = object : GroupedComboBoxRenderer<TranslationEngine>() {
+            override fun getIcon(item: TranslationEngine): Icon = item.icon
+            override fun getText(item: TranslationEngine): String = item.translatorName
+            override fun separatorFor(value: TranslationEngine): ListSeparator? = null
         }
+
         addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
                 fixEngineConfigurationComponent()
@@ -75,9 +78,11 @@ abstract class SettingsUi {
     }
 
     protected val ttsEngineComboBox: ComboBox<TTSEngine> = comboBox<TTSEngine>().apply {
-        renderer = SimpleListCellRenderer.create { label, value, _ ->
-            label.text = value.ttsName
-            label.icon = value.icon
+        isSwingPopup = false
+        renderer = object : GroupedComboBoxRenderer<TTSEngine>() {
+            override fun getIcon(item: TTSEngine): Icon = item.icon
+            override fun getText(item: TTSEngine): String = item.ttsName
+            override fun separatorFor(value: TTSEngine): ListSeparator? = null
         }
         addItemListener {
             if (it.stateChange == ItemEvent.SELECTED) {
@@ -98,15 +103,15 @@ abstract class SettingsUi {
     }
 
     protected val primaryLanguageComboBox: ComboBox<Lang> = comboBox<Lang>().apply {
-        renderer = SimpleListCellRenderer.create { label, lang, _ ->
-            label.text = lang.localeName
+        isSwingPopup = false
+        renderer = object : GroupedComboBoxRenderer<Lang>() {
+            override fun getText(item: Lang): String = item.localeName
+            override fun separatorFor(value: Lang): ListSeparator? = null
         }
     }
 
-    protected val targetLangSelectionComboBox: ComboBox<TargetLanguageSelection> =
-        comboBox<TargetLanguageSelection>().apply {
-            renderer = SimpleListCellRenderer.create("") { it.displayName }
-        }
+    protected val sourceLanguageComboBox = LanguageSelectionComboBox()
+    protected val targetLanguageComboBox = LanguageSelectionComboBox()
 
     protected val takeWordCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.take.word.when.translation.dialog.opens"))
@@ -149,7 +154,7 @@ abstract class SettingsUi {
     protected val foldOriginalCheckBox: JBCheckBox = JBCheckBox(message("settings.options.foldOriginal"))
 
     protected val ttsSourceComboBox: ComboBox<TTSSource> =
-        ComboBox(CollectionComboBoxModel(TTSSource.values().asList())).apply {
+        ComboBox(CollectionComboBoxModel(TTSSource.entries)).apply {
             renderer = SimpleListCellRenderer.create("") { it.displayName }
         }
 
@@ -162,7 +167,10 @@ abstract class SettingsUi {
     protected val autoReplaceCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoReplace"))
     protected val showReplacementActionCheckBox: JBCheckBox =
         JBCheckBox(message("settings.options.show.replacement.action"))
-    protected val selectTargetLanguageCheckBox: JBCheckBox = JBCheckBox(message("settings.options.selectLanguage"))
+    protected val replacementTranslateLanguageSelectionCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.options.pre-translation.language.selection"))
+    protected val useLastReplacementTranslateLanguageCheckBox: JBCheckBox =
+        JBCheckBox(message("settings.options.use.last.replacement.translate.languages"))
     protected val showWordsOnStartupCheckBox: JBCheckBox = JBCheckBox(message("settings.options.showWordsOnStartup"))
     protected val wordbookStoragePathField: TextFieldWithBrowseButton = TextFieldWithBrowseButton().apply {
         isEditable = false
@@ -220,8 +228,11 @@ abstract class SettingsUi {
             add(JLabel(message("settings.label.primaryLanguage")))
             add(primaryLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
 
+            add(JLabel(message("settings.label.source.language")))
+            add(sourceLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
+
             add(JLabel(message("settings.label.targetLanguage")))
-            add(targetLangSelectionComboBox, wrap().sizeGroupX(comboboxGroup))
+            add(targetLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
         }
         val textSelectionPanel = titledPanel(message("settings.panel.title.text.selection"), true) {
             add(keepFormatCheckBox, wrap().span(4))
@@ -288,9 +299,10 @@ abstract class SettingsUi {
             )
         }
 
-        val translateAndReplacePanel = titledPanel(message("settings.panel.title.translate.and.replace")) {
+        val translateAndReplacePanel = titledPanel(message("settings.panel.title.replace.with.translation")) {
+            add(replacementTranslateLanguageSelectionCheckBox, wrap().span(3))
+            add(useLastReplacementTranslateLanguageCheckBox, wrap().span(3).gapBefore(migSize(20)))
             add(showReplacementActionCheckBox, wrap().span(3))
-            add(selectTargetLanguageCheckBox, wrap().span(3))
             add(autoReplaceCheckBox, wrap().span(3))
             add(JLabel(message("settings.label.separators")))
             add(separatorTextField)
