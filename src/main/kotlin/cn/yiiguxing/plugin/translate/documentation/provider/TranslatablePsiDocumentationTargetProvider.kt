@@ -50,7 +50,7 @@ private fun translatablePsiDocumentationTarget(
         ?: TranslatableDocumentationTarget(
             project = psiElement.project,
             language = psiElement.language,
-            delegate = target,
+            wrapped = target,
             psiElement = psiElement
         )
 }

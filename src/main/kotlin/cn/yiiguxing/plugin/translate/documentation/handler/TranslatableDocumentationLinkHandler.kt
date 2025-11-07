@@ -28,7 +28,7 @@ class TranslatableDocumentationLinkHandler : DocumentationLinkHandler {
             return null
         }
 
-        val originalTarget = target.delegate
+        val originalTarget = target.wrapped
         return resolve {
             val resolved = resolveLink(originalTarget, url) ?: return@resolve null
             try {
@@ -50,7 +50,7 @@ class TranslatableDocumentationLinkHandler : DocumentationLinkHandler {
             return null
         }
 
-        val originalTarget = target.delegate
+        val originalTarget = target.wrapped
         return resolve { contentUpdater(originalTarget, url) }
     }
 }
@@ -78,7 +78,7 @@ private fun createTranslatableDocumentationTarget(
     return TranslatableDocumentationTarget(
         project = originTarget.project,
         language = originTarget.language,
-        delegate = target
+        wrapped = target
     )
 }
 

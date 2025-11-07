@@ -38,6 +38,10 @@
     <depends optional="true" config-file="docs/xpath-doc.xml">XPathView</depends>
     <depends optional="true" config-file="docs/yaml-doc.xml">org.jetbrains.plugins.yaml</depends>
 
+    <!-- Depends on the "C++ Language Support via ReSharper" plugin for quick documentation translation in CLion. -->
+    <!-- See: cn.yiiguxing.plugin.translate.documentation.provider.DocumentationTargetProviderFactory -->
+    <depends optional="true">org.jetbrains.plugins.clion.radler</depends>
+
     <extensionPoints>
         <extensionPoint name="documentation.elementFilter"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
