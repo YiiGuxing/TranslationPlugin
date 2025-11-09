@@ -14,6 +14,10 @@
     <depends optional="true" config-file="docs/javaScript-doc.xml">JavaScript</depends>
     <depends optional="true" config-file="docs/php-doc.xml">com.jetbrains.php</depends>
 
+    <!-- Depends on the "C++ Language Support via ReSharper" plugin for quick documentation translation in CLion. -->
+    <!-- See: cn.yiiguxing.plugin.translate.documentation.provider.DocumentationTargetProviderFactory -->
+    <depends optional="true">org.jetbrains.plugins.clion.radler</depends>
+
     <extensionPoints>
         <extensionPoint name="documentation.elementFilter"
                         beanClass="com.intellij.lang.LanguageExtensionPoint"
@@ -67,8 +71,8 @@
                     factoryClass="cn.yiiguxing.plugin.translate.wordbook.WordBookToolWindowFactoryImpl"/>
 
         <backgroundPostStartupActivity implementation="cn.yiiguxing.plugin.translate.update.UpdateManager"/>
-        <!--<backgroundPostStartupActivity
-                implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>-->
+        <backgroundPostStartupActivity
+                implementation="cn.yiiguxing.plugin.translate.activity.IdeaVersionUpgradeNoticeActivity"/>
         <backgroundPostStartupActivity
                 implementation="cn.yiiguxing.plugin.translate.activity.WordOfTheDayStartupActivity"/>
         <actionPromoter implementation="cn.yiiguxing.plugin.translate.action.TranslationPromoter"/>
