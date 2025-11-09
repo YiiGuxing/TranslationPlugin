@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- Add support for quick document translation in Rider and CLion.
+- Add support for quick documentation translation in Rider and CLion.
 - Fixed the issue where hover documentation in Rider and CLion was not working.
 - 添加对 Rider 和 CLion 快速文档翻译的支持
 - 修复了 Rider 和 CLion 悬停文档无效的问题
