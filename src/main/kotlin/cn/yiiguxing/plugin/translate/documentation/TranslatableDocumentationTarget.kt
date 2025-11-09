@@ -44,27 +44,27 @@ internal interface TranslatableTarget {
  */
 @Suppress("UnstableApiUsage")
 internal class TranslatableDocumentationTarget private constructor(
-    val delegate: DocumentationTarget,
+    val wrapped: DocumentationTarget,
     private val pointer: TranslatableDocumentationTargetPointer
-) : DocumentationTarget by delegate, TranslatableTarget by pointer {
+) : DocumentationTarget by wrapped, TranslatableTarget by pointer {
 
     init {
-        check(delegate !is TranslatableDocumentationTarget) {
-            "TranslatableDocumentationTarget should not be nested: $delegate"
+        check(wrapped !is TranslatableDocumentationTarget) {
+            "TranslatableDocumentationTarget should not be nested: $wrapped"
         }
     }
 
     constructor(
         project: Project,
         language: Language,
-        delegate: DocumentationTarget,
+        wrapped: DocumentationTarget,
         translate: Boolean = service<Settings>().translateDocumentation
     ) : this(
-        delegate = delegate,
+        wrapped = wrapped,
         pointer = DefaultTranslatableDocumentationTargetPointer(
             project = project,
             language = language,
-            delegatePointer = createPointer(delegate),
+            wrappedPointer = createPointer(wrapped),
             translate = translate
         )
     )
@@ -72,14 +72,14 @@ internal class TranslatableDocumentationTarget private constructor(
     constructor(
         project: Project,
         language: Language,
-        delegate: DocumentationTarget,
+        wrapped: DocumentationTarget,
         psiElement: PsiElement
     ) : this(
-        delegate = delegate,
+        wrapped = wrapped,
         pointer = TranslatablePsiDocumentationTargetPointer(
             project = project,
             language = language,
-            delegatePointer = createPointer(delegate),
+            wrappedPointer = createPointer(wrapped),
             psiElementPointer = psiElement.createSmartPointer()
         )
     )
@@ -87,7 +87,7 @@ internal class TranslatableDocumentationTarget private constructor(
     override fun createPointer(): Pointer<out DocumentationTarget> = pointer
 
     override fun computeDocumentation(): DocumentationResult? {
-        val originalResult = delegate.computeDocumentation()
+        val originalResult = wrapped.computeDocumentation()
         if (!translate ||
             originalResult == null ||
             !(originalResult is AsyncDocumentation || originalResult is DocumentationData)
@@ -148,11 +148,11 @@ internal class TranslatableDocumentationTarget private constructor(
     private class DefaultTranslatableDocumentationTargetPointer(
         override val project: Project,
         override val language: Language,
-        private val delegatePointer: Pointer<out DocumentationTarget>,
+        private val wrappedPointer: Pointer<out DocumentationTarget>,
         @Volatile override var translate: Boolean
     ) : TranslatableDocumentationTargetPointer {
         override fun dereference(): TranslatableDocumentationTarget? {
-            val target = delegatePointer.dereference() ?: return null
+            val target = wrappedPointer.dereference() ?: return null
             return TranslatableDocumentationTarget(target, this)
         }
     }
@@ -160,7 +160,7 @@ internal class TranslatableDocumentationTarget private constructor(
     private class TranslatablePsiDocumentationTargetPointer(
         override val project: Project,
         override val language: Language,
-        private val delegatePointer: Pointer<out DocumentationTarget>,
+        private val wrappedPointer: Pointer<out DocumentationTarget>,
         private val psiElementPointer: Pointer<out PsiElement>
     ) : TranslatableDocumentationTargetPointer {
 
@@ -175,7 +175,7 @@ internal class TranslatableDocumentationTarget private constructor(
             }
 
         override fun dereference(): TranslatableDocumentationTarget? {
-            val target = delegatePointer.dereference() ?: return null
+            val target = wrappedPointer.dereference() ?: return null
             psiElementPointer.dereference() ?: return null
 
             return TranslatableDocumentationTarget(target, this)

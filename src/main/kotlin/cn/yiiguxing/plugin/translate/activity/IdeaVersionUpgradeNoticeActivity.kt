@@ -12,7 +12,7 @@ import icons.TranslationIcons
 class IdeaVersionUpgradeNoticeActivity : BaseStartupActivity(true, false) {
 
     override suspend fun onBeforeRunActivity(project: Project): Boolean {
-        return IdeVersion < IdeVersion.IDE2023_1 && !Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY)
+        return IdeVersion < IdeVersion.IDE2024_1 && !Notifications.isDoNotShowAgain(DO_NOT_NOTIFY_AGAIN_KEY)
     }
 
     override suspend fun onRunActivity(project: Project) {
