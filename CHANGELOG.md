@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Add support for quick document translation in Rider and CLion.
+- Fixed the issue where hover documentation in Rider and CLion was not working.
+- 添加对 Rider 和 CLion 快速文档翻译的支持
+- 修复了 Rider 和 CLion 悬停文档无效的问题
+
 ## [3.8.0] (2025/10/20)
 
 - Added Kotlin K2 mode documentation translation support.
