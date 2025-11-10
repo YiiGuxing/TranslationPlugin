@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.8.1] (2025/11/10)
+
 - Add support for quick documentation translation in Rider and CLion.
 - Fixed the issue where hover documentation in Rider and CLion was not working.
 - 添加对 Rider 和 CLion 快速文档翻译的支持
@@ -588,7 +590,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.0...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.1...HEAD
+[3.8.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.0...v3.8.1
 [3.8.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.3...v3.8.0
 [3.7.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.7.1...v3.7.2
