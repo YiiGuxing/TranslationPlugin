@@ -1,6 +1,6 @@
 [versions]
 # libraries
-jsoup = "1.21.2"
+jsoup = "1.22.1"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 junit = "4.13.2"
