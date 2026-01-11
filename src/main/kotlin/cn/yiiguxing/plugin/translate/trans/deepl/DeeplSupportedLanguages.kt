@@ -14,6 +14,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
      */
     override val sourceLanguages: List<Lang> = listOf(
         Lang.AUTO,
+        Lang.VIETNAMESE,
         Lang.ARABIC,
         Lang.BULGARIAN,
         Lang.CHINESE,
@@ -50,6 +51,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
      * The supported target languages.
      */
     override val targetLanguages: List<Lang> = listOf(
+        Lang.VIETNAMESE,
         Lang.ARABIC,
         Lang.BULGARIAN,
         Lang.CHINESE_SIMPLIFIED,
