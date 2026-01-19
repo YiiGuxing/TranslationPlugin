@@ -44,6 +44,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.SWEDISH,
         Lang.TURKISH,
         Lang.UKRAINIAN,
+        Lang.VIETNAMESE,
     )
 
     /**
@@ -84,6 +85,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.SWEDISH,
         Lang.TURKISH,
         Lang.UKRAINIAN,
+        Lang.VIETNAMESE,
     )
 }
 
@@ -129,6 +131,7 @@ private val adapter = object : BaseLanguageAdapter() {
         "SV" to Lang.SWEDISH,
         "TR" to Lang.TURKISH,
         "UK" to Lang.UKRAINIAN,
+        "VI" to Lang.VIETNAMESE,
     )
 }
 
