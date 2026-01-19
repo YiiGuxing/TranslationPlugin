@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.util
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -17,6 +18,16 @@ interface RateLimiter {
      * this function will suspend until permission is granted.
      */
     suspend fun acquire()
+
+    /**
+     * Attempts to acquire permission to proceed within the specified [timeout].
+     * If the rate limit has been reached, this function will suspend until either
+     * permission is granted or the timeout expires.
+     *
+     * @param timeout The maximum time to wait for permission.
+     * @return `true` if permission was granted within the timeout, `false` otherwise.
+     */
+    suspend fun tryAcquire(timeout: Duration): Boolean
 
     companion object {
         private val NONE = NoneRateLimiter()
@@ -71,8 +82,16 @@ private class RateLimiterImpl(private val interval: Long) : RateLimiter {
             lastCallTime = System.currentTimeMillis()
         }
     }
+
+    override suspend fun tryAcquire(timeout: Duration): Boolean {
+        return withTimeoutOrNull(timeout) {
+            acquire()
+            true
+        } ?: false
+    }
 }
 
 private class NoneRateLimiter : RateLimiter {
     override suspend fun acquire() = Unit
+    override suspend fun tryAcquire(timeout: Duration) = true
 }
