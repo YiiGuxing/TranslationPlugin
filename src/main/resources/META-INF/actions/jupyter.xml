@@ -6,7 +6,9 @@
             <reference ref="Translation.ReplaceWithTranslationAction"/>
             <separator/>
 
+            <!--suppress PluginXmlValidity -->
             <add-to-group group-id="JupyterEditorPopupActions" relative-to-action="EditorCopy" anchor="before"/>
+            <!--suppress PluginXmlValidity -->
             <add-to-group group-id="JupyterConsoleEditorPopupActions" anchor="first"/>
         </group>
         <group id="Translation.JupyterOutputPopupActions">
@@ -14,6 +16,7 @@
             <reference ref="Translation.TranslateTextComponentAction"/>
             <separator/>
 
+            <!--suppress PluginXmlValidity -->
             <add-to-group group-id="JupyterTextOutputPopupActions" anchor="first"/>
         </group>
     </actions>
