@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Added support for Hebrew, Thai, and Vietnamese to the DeepL translator.
+- Bug fixes.
+- DeepL 翻译器新增对希伯来语、泰语和越南语的支持
+- Bug 修复
+
 ## [3.8.1] (2025/11/10)
 
 - Add support for quick documentation translation in Rider and CLion.
