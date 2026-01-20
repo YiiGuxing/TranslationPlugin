@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Bug fixes.
+- Bug 修复
+
 ## [3.8.1] (2025/11/10)
 
 - Add support for quick documentation translation in Rider and CLion.
