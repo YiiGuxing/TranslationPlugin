@@ -20,7 +20,7 @@ object Http {
 
     const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
 
-    const val CHROMIUM_VERSION = "130.0.2849.68"
+    const val CHROMIUM_VERSION = "144.0.3719.92"
 
     val CHROMIUM_MAJOR_VERSION: Int = CHROMIUM_VERSION.substringBefore('.').toInt()
 
