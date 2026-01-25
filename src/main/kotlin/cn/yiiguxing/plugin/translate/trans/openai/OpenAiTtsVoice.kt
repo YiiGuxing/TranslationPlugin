@@ -12,8 +12,11 @@ enum class OpenAiTtsVoice(val value: String, val voiceName: String) {
     CORAL("coral", "Coral"),
     ECHO("echo", "Echo"),
     FABLE("fable", "Fable"),
-    ONYX("onyx", "Onyx"),
     NOVA("nova", "Nova"),
+    ONYX("onyx", "Onyx"),
     SAGE("sage", "Sage"),
     SHIMMER("shimmer", "Shimmer"),
+    VERSE("verse", "Verse"),
+    MARIN("marin", "Marin"),
+    CEDAR("cedar", "Cedar"),
 }
