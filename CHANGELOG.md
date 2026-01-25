@@ -2,8 +2,10 @@
 
 ## [Unreleased]
 
+- Added new OpenAI TTS voices: Verse, Marin, and Cedar.
 - Added support for Hebrew, Thai, and Vietnamese to the DeepL translator.
 - Bug fixes.
+- 新增 OpenAI TTS 语音：Verse、Marin 与 Cedar
 - DeepL 翻译器新增对希伯来语、泰语和越南语的支持
 - Bug 修复
 
