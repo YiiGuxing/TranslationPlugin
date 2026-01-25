@@ -98,10 +98,12 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
     }
 
     override fun speech(text: String, indicator: ProgressIndicator?): ByteArray {
+        val supportedVoices = options.ttsModel.getSupportedVoices()
+        val fixedVoice = options.ttsVoice.takeIf { it in supportedVoices } ?: supportedVoices.first()
         val request = SpeechRequest(
             model = options.ttsModel.modelId,
             input = text,
-            voice = options.ttsVoice.value,
+            voice = fixedVoice.value,
             speed = OpenAiTTSSpeed.get(options.ttsSpeed)
         )
         val endpoint = with(options) { if (useSeparateTtsApiSettings) ttsEndpoint else endpoint }
