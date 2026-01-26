@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.hint.HintManagerImpl
@@ -44,8 +45,15 @@ class TranslateQuickDocSelectionAction :
         getSelectedQuickDocText(e)
             ?.processBeforeTranslate()
             ?.let {
-                e.project.let { project ->
-                    TranslationUIManager.showDialog(project).translate(it)
+                val project = e.project
+                // Defer showing the translation dialog until the next AWT event dispatch.
+                // This prevents focus issues that can occur when this action is executed
+                // from a popup window, which may cause the dialog to fail to close when
+                // pressing ESC.
+                invokeLater {
+                    if (project?.isDisposed != true) {
+                        TranslationUIManager.showDialog(project).translate(it)
+                    }
                 }
             }
     }

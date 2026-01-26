@@ -6,6 +6,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.canPreSelectFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
+import cn.yiiguxing.plugin.translate.util.invokeLater
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.codeInsight.hint.HintManagerImpl
 import com.intellij.openapi.actionSystem.DataContext
@@ -42,7 +43,18 @@ class TranslateTextComponentAction :
                 else -> null
             }
 
-            text?.processBeforeTranslate()?.let { TranslationUIManager.showDialog(editor.project).translate(it) }
+            val project = editor.project
+            text?.processBeforeTranslate()?.let {
+                // Defer showing the translation dialog until the next AWT event dispatch.
+                // This prevents focus issues that can occur when this action is executed
+                // from a popup window, which may cause the dialog to fail to close when
+                // pressing ESC.
+                invokeLater {
+                    if (project?.isDisposed != true) {
+                        TranslationUIManager.showDialog(project).translate(it)
+                    }
+                }
+            }
         }
 
         override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?) =
