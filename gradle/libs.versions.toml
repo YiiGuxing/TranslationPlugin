@@ -1,6 +1,6 @@
 [versions]
 # libraries
-jsoup = "1.21.2"
+jsoup = "1.22.1"
 dbutils = "1.8.1"
 mp3spi = "1.9.5.4"
 junit = "4.13.2"
@@ -11,8 +11,8 @@ websocket = "1.6.0"
 # (NoClassDefFoundError: kotlin/coroutines/jvm/internal/SpillingKt in ProjectActivity).
 # Please upgrade only when compiling against a compatible version of IDEA.
 kotlin = "2.1.21"
-kover = "0.9.3"
-changelog = "2.4.0"
+kover = "0.9.4"
+changelog = "2.5.0"
 gradleIntelliJPlugin = "1.17.4"
 
 [libraries]

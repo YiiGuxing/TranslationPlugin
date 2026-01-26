@@ -26,6 +26,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.FRENCH,
         Lang.GERMAN,
         Lang.GREEK,
+        Lang.HEBREW,
         Lang.HUNGARIAN,
         Lang.INDONESIAN,
         Lang.ITALIAN,
@@ -42,8 +43,10 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.SLOVENIAN,
         Lang.SPANISH,
         Lang.SWEDISH,
+        Lang.THAI,
         Lang.TURKISH,
         Lang.UKRAINIAN,
+        Lang.VIETNAMESE,
     )
 
     /**
@@ -65,6 +68,7 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.FRENCH,
         Lang.GERMAN,
         Lang.GREEK,
+        Lang.HEBREW,
         Lang.HUNGARIAN,
         Lang.INDONESIAN,
         Lang.ITALIAN,
@@ -82,8 +86,10 @@ object DeeplSupportedLanguages : SupportedLanguages {
         Lang.SLOVENIAN,
         Lang.SPANISH,
         Lang.SWEDISH,
+        Lang.THAI,
         Lang.TURKISH,
         Lang.UKRAINIAN,
+        Lang.VIETNAMESE,
     )
 }
 
@@ -105,6 +111,7 @@ private val adapter = object : BaseLanguageAdapter() {
         "FR" to Lang.FRENCH,
         "DE" to Lang.GERMAN,
         "EL" to Lang.GREEK,
+        "HE" to Lang.HEBREW,
         "HU" to Lang.HUNGARIAN,
         "IT" to Lang.ITALIAN,
         "ID" to Lang.INDONESIAN,
@@ -127,8 +134,10 @@ private val adapter = object : BaseLanguageAdapter() {
         "SL" to Lang.SLOVENIAN,
         "ES" to Lang.SPANISH,
         "SV" to Lang.SWEDISH,
+        "TH" to Lang.THAI,
         "TR" to Lang.TURKISH,
         "UK" to Lang.UKRAINIAN,
+        "VI" to Lang.VIETNAMESE,
     )
 }
 

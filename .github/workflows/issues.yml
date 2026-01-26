@@ -17,7 +17,7 @@ jobs:
     steps:
 
       - name: Fetch Sources
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Label Issue
         uses: Videndum/super-labeler-action@1.1.0
