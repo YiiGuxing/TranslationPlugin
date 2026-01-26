@@ -7,7 +7,6 @@
             <separator/>
 
             <add-to-group group-id="JupyterEditorPopupActions" relative-to-action="EditorCopy" anchor="before"/>
-            <add-to-group group-id="JupyterConsoleEditorPopupActions" anchor="first"/>
         </group>
         <group id="Translation.JupyterOutputPopupActions">
             <separator/>

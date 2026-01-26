@@ -12,6 +12,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
+import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.GotItTooltip
 import com.intellij.util.containers.orNull
@@ -132,8 +133,10 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                     ConfigType.TRANSLATOR -> openAiState.model =
                         it.item as? OpenAiGPTModel ?: OpenAiGPTModel.values().first()
 
-                    ConfigType.TTS -> commonStates.ttsModel =
-                        it.item as? OpenAiTTSModel ?: OpenAiTTSModel.values().first()
+                    ConfigType.TTS -> {
+                        commonStates.ttsModel = it.item as? OpenAiTTSModel ?: OpenAiTTSModel.values().first()
+                        updateVoicesAndFixSelection()
+                    }
                 }
             }
         }
@@ -305,7 +308,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
         updateApiEndpoint()
         if (configType == ConfigType.TTS) {
             ui.modelComboBox.selected = commonStates.ttsModel
-            ui.ttsVoiceComboBox.selected = commonStates.ttsVoice
+            updateVoicesAndFixSelection()
             ui.ttsSpeedSlicer.value = commonStates.ttsSpeed
             ui.apiEndpointField.isEnabled = isAzure ||
                     ui.ttsApiSettingsTypeComboBox.selected === OpenAISettingsUI.TtsApiSettingsType.SEPARATE
@@ -318,6 +321,15 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             else -> OpenAISettingsUI.ComponentType.OPEN_AI
         }
         ui.showComponents(componentType)
+    }
+
+    private fun updateVoicesAndFixSelection() {
+        val currentVoice = commonStates.ttsVoice
+        val supportedVoices = commonStates.ttsModel.getSupportedVoices()
+        if (currentVoice !in supportedVoices) {
+            commonStates.ttsVoice = supportedVoices.first()
+        }
+        ui.ttsVoiceComboBox.model = CollectionComboBoxModel(supportedVoices, commonStates.ttsVoice)
     }
 
     private fun showTipsIfAzureChecked() {

@@ -12,8 +12,27 @@ enum class OpenAiTtsVoice(val value: String, val voiceName: String) {
     CORAL("coral", "Coral"),
     ECHO("echo", "Echo"),
     FABLE("fable", "Fable"),
-    ONYX("onyx", "Onyx"),
     NOVA("nova", "Nova"),
+    ONYX("onyx", "Onyx"),
     SAGE("sage", "Sage"),
     SHIMMER("shimmer", "Shimmer"),
+    VERSE("verse", "Verse"),
+    MARIN("marin", "Marin"),
+    CEDAR("cedar", "Cedar");
+
+    companion object {
+        private val unsupportedForClassic = setOf(
+            BALLAD,
+            VERSE,
+            MARIN,
+            CEDAR
+        )
+
+        /**
+         * Returns a list of voices that are supported by the classic TTS models (e.g. tts-1 and tts-1-hd).
+         */
+        fun getClassicVoices(): List<OpenAiTtsVoice> {
+            return values().filter { it !in unsupportedForClassic }
+        }
+    }
 }
