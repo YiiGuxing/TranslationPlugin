@@ -1,8 +1,6 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
-import cn.yiiguxing.plugin.translate.adaptedMessage
-import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
 import cn.yiiguxing.plugin.translate.util.canPreSelectFromCurrentCaret
 import cn.yiiguxing.plugin.translate.util.getSelectionFromCurrentCaret
@@ -26,8 +24,6 @@ class TranslateTextComponentAction :
 
     init {
         isEnabledInModalContext = true
-        templatePresentation.text = adaptedMessage("action.TranslateTextComponentAction.text")
-        templatePresentation.description = message("action.TranslateTextComponentAction.description")
     }
 
     private class Handler : EditorActionHandler() {

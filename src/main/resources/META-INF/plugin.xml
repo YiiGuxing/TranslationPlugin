@@ -129,7 +129,8 @@
         <action id="Translation.ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
         <action id="Translation.TranslateQuickDocSelectionAction"
-                class="cn.yiiguxing.plugin.translate.documentation.actions.TranslateQuickDocSelectionAction"
+                icon="TranslationIcons.Translation"
+                class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.ShowTranslatedQuickDocInfoAction"
                 icon="TranslationIcons.Translation"
