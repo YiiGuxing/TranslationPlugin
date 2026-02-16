@@ -2,9 +2,11 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.RegistryKeys
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import com.google.gson.Gson
 import com.intellij.openapi.util.SystemInfoRt
+import com.intellij.openapi.util.registry.RegistryManager
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import java.io.InputStreamReader
@@ -20,9 +22,9 @@ object Http {
 
     const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
 
-    const val CHROMIUM_VERSION = "144.0.3719.92"
+    const val DEFAULT_CHROMIUM_VERSION = "145.0.3800.58"
 
-    val CHROMIUM_MAJOR_VERSION: Int = CHROMIUM_VERSION.substringBefore('.').toInt()
+    private val CHROMIUM_VERSION_REGEX = Regex("^\\d+(\\.\\d+){3}$")
 
     val defaultGson = Gson()
 
@@ -158,9 +160,16 @@ object Http {
         return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
     }
 
+    fun getAgentChromiumVersion(): String = RegistryManager.getInstance()
+        .stringValue(RegistryKeys.HTTP_AGENT_CHROMIUM_VERSION)
+        ?.trim()
+        ?.takeIf { it.isNotEmpty() && it.matches(CHROMIUM_VERSION_REGEX) }
+        ?: DEFAULT_CHROMIUM_VERSION
+
     fun getUserAgent(): String {
-        val chrome = "Chrome/$CHROMIUM_MAJOR_VERSION.0.0.0"
-        val edge = "Edg/$CHROMIUM_MAJOR_VERSION.0.0.0"
+        val chromiumMajorVersion = getAgentChromiumVersion().substringBefore('.').toInt()
+        val chrome = "Chrome/$chromiumMajorVersion.0.0.0"
+        val edge = "Edg/$chromiumMajorVersion.0.0.0"
         val safari = "Safari/537.36"
         val appleWebKit = "AppleWebKit/537.36"
         val mozilla = "Mozilla/5.0"

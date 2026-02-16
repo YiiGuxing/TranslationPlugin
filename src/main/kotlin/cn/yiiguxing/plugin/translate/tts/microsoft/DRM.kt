@@ -12,7 +12,7 @@ internal object DRM {
      * Returns the Sec-MS-GEC version.
      */
     fun getSecMsGecVersion(): String {
-        return "1-${Http.CHROMIUM_VERSION}"
+        return "1-${Http.getAgentChromiumVersion()}"
     }
 
     /**

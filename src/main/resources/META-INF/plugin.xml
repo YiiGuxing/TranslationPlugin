@@ -100,8 +100,10 @@
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Translation Plugin updated" displayType="STICKY_BALLOON" isLogByDefault="false"/>
 
-        <registryKey defaultValue="false" description="Enable DevTools menu item in WebView."
-                     key="cn.yiiguxing.plugin.translate.webview.debug"/>
+        <registryKey key="cn.yiiguxing.plugin.translate.http.agent.chromium.version" defaultValue=""
+                     description="HTTP user agent chromium version override"/>
+        <registryKey key="cn.yiiguxing.plugin.translate.webview.debug" defaultValue="false"
+                     description="Enable DevTools menu item in WebView."/>
 
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
