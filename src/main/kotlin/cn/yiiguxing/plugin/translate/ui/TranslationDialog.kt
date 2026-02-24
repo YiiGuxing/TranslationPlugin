@@ -28,6 +28,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
+import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.JBPopupListener
 import com.intellij.openapi.ui.popup.LightweightWindowEvent
@@ -51,6 +53,7 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.PopupMenuEvent
 import kotlin.properties.Delegates
+import kotlin.time.Duration.Companion.seconds
 
 class TranslationDialog(
     private val project: Project?,
@@ -555,6 +558,16 @@ class TranslationDialog(
             ?: translationText
         if (textToCopy.isNotEmpty()) {
             CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
+            Popups.showBalloonForComponent(
+                component = copyButton,
+                message = message("translation.dialog.copied"),
+                type = MessageType.INFO,
+                position = Balloon.Position.above,
+                anchor = disposable,
+                icon = null,
+                offsetY = -(3.scaled),
+                autoHideDelay = 2.seconds
+            )
         }
     }
 
