@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- User interaction experience optimization and improvement.
+- Bug fixes.
+- 用户交互体验优化与改进
+- Bug 修复
+
 ## [3.8.2] (2026/01/26)
 
 - Added new OpenAI TTS voices: Verse, Marin, and Cedar.
