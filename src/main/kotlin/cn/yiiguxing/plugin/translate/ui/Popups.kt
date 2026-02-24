@@ -197,3 +197,10 @@ fun JBPopup.showBelow(component: JComponent, offsetX: Int = 0, offsetY: Int = 0)
     })
     show(belowLocation)
 }
+
+fun JBPopup.showInBestPositionFixed(editor: Editor) {
+    when (editor) {
+        is TextComponentEditor -> show(editor.guessBestPopupLocation)
+        else -> showInBestPositionFor(editor)
+    }
+}
