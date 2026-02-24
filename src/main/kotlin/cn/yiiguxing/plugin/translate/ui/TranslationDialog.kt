@@ -560,7 +560,7 @@ class TranslationDialog(
             CopyPasteManager.getInstance().setContents(StringSelection(textToCopy))
             Popups.showBalloonForComponent(
                 component = copyButton,
-                message = message("translation.dialog.copied"),
+                message = message("translation.dialog.translation.copied"),
                 type = MessageType.INFO,
                 position = Balloon.Position.above,
                 anchor = disposable,
