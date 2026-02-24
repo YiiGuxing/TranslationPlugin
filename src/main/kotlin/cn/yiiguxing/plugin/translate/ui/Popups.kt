@@ -7,6 +7,8 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.textarea.TextComponentEditor
@@ -16,10 +18,12 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.*
 import com.intellij.openapi.ui.popup.Balloon.Position.*
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.ui.ScreenUtil
 import com.intellij.ui.awt.RelativePoint
+import com.intellij.util.Alarm
 import com.intellij.util.ui.JBUI
 import java.awt.Component
 import java.awt.Dimension
@@ -29,12 +33,16 @@ import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JTextField
 import javax.swing.text.JTextComponent
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 
 /**
  * Popups
  */
 object Popups {
+
+    private val alarm = Alarm()
 
     private val LOG = Logger.getInstance(Popups::class.java)
 
@@ -63,10 +71,31 @@ object Popups {
         position: Balloon.Position = below,
         offsetX: Int = 0,
         offsetY: Int = 0
-    ) {
+    ): Balloon = showBalloonForComponent(
+        component = component,
+        message = message,
+        type = type,
+        position = position,
+        anchor = TranslationUIManager.disposable(project),
+        offsetX = offsetX,
+        offsetY = offsetY
+    )
+
+    fun showBalloonForComponent(
+        component: Component,
+        message: String,
+        type: MessageType,
+        position: Balloon.Position,
+        anchor: Disposable,
+        icon: Icon? = type.defaultIcon,
+        offsetX: Int = 0,
+        offsetY: Int = 0,
+        autoHideDelay: Duration = 0.milliseconds
+    ): Balloon {
         val balloon = JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder(message, type, null)
-            .setDisposable(TranslationUIManager.disposable(project))
+            .createHtmlTextBalloonBuilder(message, icon, type.titleForeground, type.popupBackground, null)
+            .setBorderColor(type.borderColor)
+            .setDisposable(anchor)
             .createBalloon()
         val point = component.size?.let { size ->
             var x = 0
@@ -87,6 +116,15 @@ object Popups {
             Point(x + offsetX, y + offsetY)
         } ?: Point(offsetX, offsetY)
         balloon.show(RelativePoint(component, point), position)
+
+        val delayMillis = autoHideDelay.inWholeMilliseconds
+        if (delayMillis > 0) {
+            val hideRequest = { balloon.hide() }
+            Disposer.register(balloon) { alarm.cancelRequest(hideRequest) }
+            alarm.addRequest(hideRequest, delayMillis, ModalityState.stateForComponent(component))
+        }
+
+        return balloon
     }
 }
 
