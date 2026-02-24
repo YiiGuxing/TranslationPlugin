@@ -5,10 +5,7 @@ import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.ui.LanguageSelectPopupUI
-import cn.yiiguxing.plugin.translate.ui.LanguageSelectPopups
-import cn.yiiguxing.plugin.translate.ui.SpeedSearchListPopupStep
-import cn.yiiguxing.plugin.translate.ui.showListPopup
+import cn.yiiguxing.plugin.translate.ui.*
 import cn.yiiguxing.plugin.translate.util.*
 import com.intellij.codeInsight.lookup.*
 import com.intellij.lang.Language
@@ -257,7 +254,7 @@ class ReplaceWithTranslationAction : AutoSelectAction(true, NON_WHITESPACE_CONDI
             ui.setTargetLanguages(targetLanguages, target)
             val popup = LanguageSelectPopups.createPopup(ui)
             check(popup.canShow())
-            popup.showInBestPositionFor(this)
+            popup.showInBestPositionFixed(this)
         }
 
         fun Editor.canShowPopup(selectionRange: TextRange, targetText: String): Boolean {
