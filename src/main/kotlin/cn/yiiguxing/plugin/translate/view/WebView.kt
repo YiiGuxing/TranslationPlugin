@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.view
 
-import cn.yiiguxing.plugin.translate.TranslationPlugin
+import cn.yiiguxing.plugin.translate.RegistryKeys
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
 import cn.yiiguxing.plugin.translate.view.WebViewProvider.LoadingPageStrategy
@@ -192,7 +192,7 @@ internal class WebView(
         group.add(BackAction())
         group.add(ForwardAction())
 
-        if (RegistryManager.getInstance().`is`(TranslationPlugin.generateId("webview.debug"))) {
+        if (RegistryManager.getInstance().`is`(RegistryKeys.WEBVIEW_DEBUG)) {
             group.addSeparator()
             group.add(object : AnAction("DevTools") {
                 override fun actionPerformed(e: AnActionEvent) {
