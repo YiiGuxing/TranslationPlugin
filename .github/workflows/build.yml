@@ -251,10 +251,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH="${{ github.ref_name }}"
-          gh release create v${{ needs.build.outputs.version }} \
+          TAG="v${{ needs.build.outputs.version }}"
+
+          if DRAFT="$(gh api repos/{owner}/{repo}/releases/tags/$TAG --jq '.draft' 2>/dev/null)"; then
+            if [ "$DRAFT" = "false" ]; then
+              echo "Release $TAG already exists. Skipping draft creation."
+              exit 0
+            fi
+          fi
+
+          gh release create "$TAG" \
             --target "$BRANCH" \
             --draft \
-            --title "v${{ needs.build.outputs.version }}" \
+            --title "$TAG" \
             --notes "$(cat << 'EOM'
           ## What's Changed
 
