@@ -63,7 +63,7 @@ jobs:
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
         if: steps.properties.outputs.publishChannel == 'snapshot'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.artifact.outputs.filename }}
           path: ./build/distributions/content/*/*
