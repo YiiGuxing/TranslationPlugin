@@ -131,10 +131,10 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             if (it.stateChange == ItemEvent.SELECTED) {
                 when (configType) {
                     ConfigType.TRANSLATOR -> openAiState.model =
-                        it.item as? OpenAiGPTModel ?: OpenAiGPTModel.values().first()
+                        it.item as? OpenAiGPTModel ?: OpenAiGPTModel.getDefault()
 
                     ConfigType.TTS -> {
-                        commonStates.ttsModel = it.item as? OpenAiTTSModel ?: OpenAiTTSModel.values().first()
+                        commonStates.ttsModel = it.item as? OpenAiTTSModel ?: OpenAiTTSModel.getDefault()
                         updateVoicesAndFixSelection()
                     }
                 }

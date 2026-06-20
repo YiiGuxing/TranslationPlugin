@@ -73,7 +73,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     private val modelWrapper = JPanel(UI.migLayout(gapX = UI.migSize(10), lcBuilder = { hideMode(3) }))
     override val modelComboBox: ComboBox<OpenAiModel> = ComboBox<OpenAiModel>().apply {
         val models = when (configType) {
-            ConfigType.TRANSLATOR -> OpenAiGPTModel.values().toList()
+            ConfigType.TRANSLATOR -> OpenAiGPTModel.values().toList().reversed()
             ConfigType.TTS -> OpenAiTTSModel.values().toList()
         }
         model = CollectionComboBoxModel(models)
