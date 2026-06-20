@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- User interaction experience optimization and improvement.
+- Bug fixes.
+- 用户交互体验优化与改进
+- Bug 修复
+
 ## [3.8.3] (2026/02/25)
 
 - User interaction experience optimization and improvement.
