@@ -22,7 +22,7 @@ object Http {
 
     const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
 
-    const val DEFAULT_CHROMIUM_VERSION = "145.0.3800.58"
+    const val DEFAULT_CHROMIUM_VERSION = "150.0.4078.83"
 
     private val CHROMIUM_VERSION_REGEX = Regex("^\\d+(\\.\\d+){3}$")
 
