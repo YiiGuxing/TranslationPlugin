@@ -3,7 +3,6 @@ package cn.yiiguxing.plugin.translate.documentation.actions
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
-import cn.yiiguxing.plugin.translate.documentation.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
 import cn.yiiguxing.plugin.translate.util.findElementAroundOffset
@@ -11,7 +10,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.readAction
 import com.intellij.openapi.editor.Editor
-import com.intellij.psi.PsiDocCommentBase
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.SmartPsiElementPointer
@@ -96,7 +95,7 @@ internal class TranslateRenderedDocAction(
 
     private fun rerender(
         psiFile: PsiFile,
-        pointer: SmartPsiElementPointer<PsiDocCommentBase>,
+        pointer: SmartPsiElementPointer<PsiComment>,
         info: InlineDocTranslationInfo?,
         modalityState: ModalityState = ModalityState.current()
     ) {
@@ -112,8 +111,8 @@ internal class TranslateRenderedDocAction(
         return psiDocumentManager.getPsiFile(editor.document)
     }
 
-    private fun getPsiDocComment(editor: Editor, psiFile: PsiFile): PsiDocCommentBase? {
+    private fun getPsiDocComment(editor: Editor, psiFile: PsiFile): PsiComment? {
         val offset = editor.takeUnless { it.isDisposed }?.caretModel?.offset ?: return null
-        return psiFile.findElementAroundOffset<PsiDocCommentBase>(offset)
+        return psiFile.findElementAroundOffset<PsiComment>(offset)
     }
 }
