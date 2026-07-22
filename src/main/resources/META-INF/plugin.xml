@@ -9,7 +9,7 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
-    <depends optional="true" config-file="empty.xml">com.intellij.modules.jcef</depends>
+    <depends optional="true" config-file="includes/jcef.xml">com.intellij.modules.jcef</depends>
     <depends optional="true" config-file="actions/lang.xml">com.intellij.modules.lang</depends>
     <depends optional="true" config-file="actions/jupyter.xml">intellij.jupyter</depends>
     <depends optional="true" config-file="docs/javaScript-doc.xml">JavaScript</depends>
@@ -17,7 +17,7 @@
 
     <!-- Depends on the "C++ Language Support via ReSharper" plugin for quick documentation translation in CLion. -->
     <!-- See: cn.yiiguxing.plugin.translate.documentation.provider.DocumentationTargetProviderFactory -->
-    <depends optional="true">org.jetbrains.plugins.clion.radler</depends>
+    <depends optional="true" config-file="includes/radler.xml">org.jetbrains.plugins.clion.radler</depends>
 
     <extensionPoints>
         <extensionPoint name="documentation.elementFilter"
