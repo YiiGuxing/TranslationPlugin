@@ -9,6 +9,7 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true" config-file="empty.xml">com.intellij.modules.jcef</depends>
     <depends optional="true" config-file="actions/lang.xml">com.intellij.modules.lang</depends>
     <depends optional="true" config-file="actions/jupyter.xml">intellij.jupyter</depends>
     <depends optional="true" config-file="docs/javaScript-doc.xml">JavaScript</depends>
