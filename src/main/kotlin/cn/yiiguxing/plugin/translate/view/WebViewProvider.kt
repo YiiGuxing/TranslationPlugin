@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.view
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.view.utils.JsQueryDispatcher
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorPolicy
@@ -27,7 +28,7 @@ import javax.swing.Icon
 class WebViewProvider : FileEditorProvider, DumbAware {
 
     override fun accept(project: Project, file: VirtualFile): Boolean =
-        JBCefApp.isSupported() && file.fileType === WebViewFileType
+        file.fileType === WebViewFileType && isCefSupported()
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor =
         // Create a new instance of WebView with every request, do not cache it.
@@ -49,6 +50,14 @@ class WebViewProvider : FileEditorProvider, DumbAware {
     companion object {
         @JvmStatic
         private val REQUEST_KEY: Key<Request> = Key.create("translation.webview.request.key")
+
+        @JvmStatic
+        internal fun isCefSupported(): Boolean = try {
+            JBCefApp.isSupported()
+        } catch (e: Throwable) {
+            thisLogger().warn("Failed to check if JBCefApp is supported", e)
+            false
+        }
 
         @JvmStatic
         fun open(
