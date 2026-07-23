@@ -9,8 +9,9 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
-    <depends optional="true" config-file="includes/jcef.xml">com.intellij.modules.jcef</depends>
     <depends optional="true" config-file="includes/lang.xml">com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="includes/jcef.xml">com.intellij.modules.jcef</depends>
+    <depends optional="true" config-file="includes/rider.xml">com.intellij.modules.rider</depends>
     <depends optional="true" config-file="includes/jupyter.xml">intellij.jupyter</depends>
     <depends optional="true" config-file="includes/javaScript-doc.xml">JavaScript</depends>
     <depends optional="true" config-file="includes/php-doc.xml">com.jetbrains.php</depends>
