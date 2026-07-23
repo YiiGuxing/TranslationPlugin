@@ -84,6 +84,7 @@ private object DocumentationTargetProviderFactory {
 
     private fun riderDocumentationTargetProvider(project: Project): IdeDocumentationTargetProvider? {
         return try {
+            // Rider/lib/intellij.rider.rdclient.dotnet.jar
             Class.forName("com.jetbrains.rider.quickDoc.RiderDocumentationTargetProvider")
                 .getConstructor(Project::class.java)
                 .newInstance(project) as IdeDocumentationTargetProvider
