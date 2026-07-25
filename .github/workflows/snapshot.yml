@@ -22,7 +22,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Setup Java 11 environment for the next steps
       - name: Setup Java
@@ -63,7 +63,7 @@ jobs:
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
         if: steps.properties.outputs.publishChannel == 'snapshot'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.artifact.outputs.filename }}
           path: ./build/distributions/content/*/*

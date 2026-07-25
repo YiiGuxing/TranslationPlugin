@@ -3,12 +3,10 @@ package cn.yiiguxing.plugin.translate.view
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.util.UrlTrackingParametersProvider
 import cn.yiiguxing.plugin.translate.util.urlEncode
-import cn.yiiguxing.plugin.translate.view.WebPages.updates
 import cn.yiiguxing.plugin.translate.view.utils.CefStreamResourceHandler
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
-import com.intellij.ui.jcef.JBCefApp
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefResourceHandler
@@ -99,7 +97,7 @@ object WebPages {
     /**
      * Whether the IDE can browse in the webview.
      */
-    fun canBrowseInWebView(): Boolean = JBCefApp.isSupported()
+    fun canBrowseInWebView(): Boolean = WebViewProvider.isCefSupported()
 
     fun browseReleaseNotesPage(project: Project?, title: String = TranslationPlugin.name): Boolean {
         if (project == null || !canBrowseInWebView()) {
