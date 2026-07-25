@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.documentation
 import cn.yiiguxing.plugin.translate.util.findElementOfTypeAt
 import com.intellij.openapi.util.Key
 import com.intellij.platform.backend.documentation.InlineDocumentation
-import com.intellij.psi.PsiDocCommentBase
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiFile
 import org.jetbrains.annotations.Nls
 
@@ -14,7 +14,7 @@ private val TRANSLATION_INFO_KEY = Key.create<InlineDocTranslationInfo>("transla
  * Sets the inline documentation translation [info] for the given PSI [comment].
  */
 internal fun setPsiInlineDocumentationTranslationInfo(
-    comment: PsiDocCommentBase,
+    comment: PsiComment,
     info: InlineDocTranslationInfo?
 ) {
     comment.putUserData(TRANSLATION_INFO_KEY, info)
@@ -23,7 +23,7 @@ internal fun setPsiInlineDocumentationTranslationInfo(
 /**
  * Returns the inline documentation translation info for the given PSI [comment].
  */
-internal fun getPsiInlineDocumentationTranslationInfo(comment: PsiDocCommentBase): InlineDocTranslationInfo? {
+internal fun getPsiInlineDocumentationTranslationInfo(comment: PsiComment): InlineDocTranslationInfo? {
     return comment.getUserData(TRANSLATION_INFO_KEY)
 }
 
@@ -70,7 +70,7 @@ internal class TranslatableInlineDocumentation(
 
         @Suppress("OverrideOnly")
         val offset = documentationRange.startOffset
-        val comment = file.findElementOfTypeAt<PsiDocCommentBase>(offset) ?: return renderText
+        val comment = file.findElementOfTypeAt<PsiComment>(offset) ?: return renderText
 
         return getPsiInlineDocumentationTranslationInfo(comment)?.let { info ->
             info.translatedText?.takeIf { !info.isDisabled }

@@ -10,7 +10,6 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.trans.text.ExampleDocument
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
-import cn.yiiguxing.plugin.translate.util.e
 import com.intellij.openapi.diagnostic.thisLogger
 import org.jsoup.nodes.Document
 import javax.swing.Icon
@@ -19,8 +18,6 @@ import javax.swing.Icon
  * Microsoft translator.
  */
 object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
-
-    private const val ERROR_INVALID_LANGUAGE_PAIR = 400023
 
     override val id: String = MICROSOFT.id
     override val name: String = MICROSOFT.translatorName
@@ -69,10 +66,8 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         }
         return try {
             MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
-        } catch (e: MicrosoftStatusException) {
-            if (e.error?.code != ERROR_INVALID_LANGUAGE_PAIR) {
-                thisLogger().e("Failed to lookup dictionary", e)
-            }
+        } catch (e: Exception) {
+            thisLogger().warn("Failed to lookup dictionary", e)
             null
         }
     }
@@ -82,7 +77,12 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         sourceLang: Lang,
         targetLang: Lang
     ): NamedTranslationDocument<ExampleDocument>? {
-        val dictionaryExamples = MicrosoftTranslatorService.dictionaryExamples(dictionaryLookup, sourceLang, targetLang)
+        val dictionaryExamples = try {
+            MicrosoftTranslatorService.dictionaryExamples(dictionaryLookup, sourceLang, targetLang)
+        } catch (e: Exception) {
+            thisLogger().warn("Failed to get dictionary examples", e)
+            return null
+        }
         return MicrosoftExampleDocumentFactory.getDocument(dictionaryExamples)?.let {
             NamedTranslationDocument(message("examples.document.name"), it)
         }

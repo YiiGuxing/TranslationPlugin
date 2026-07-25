@@ -77,7 +77,7 @@ private class RateLimiterImpl(private val interval: Long) : RateLimiter {
             val now = System.currentTimeMillis()
             val elapsed = now - lastCallTime
             if (elapsed < interval) {
-                delay(interval - elapsed)
+                delay((interval - elapsed).milliseconds)
             }
             lastCallTime = System.currentTimeMillis()
         }

@@ -2,7 +2,6 @@ package cn.yiiguxing.plugin.translate.documentation.actions
 
 import cn.yiiguxing.plugin.translate.action.editor
 import cn.yiiguxing.plugin.translate.documentation.*
-import cn.yiiguxing.plugin.translate.documentation.translateInlineDocumentation
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
 import cn.yiiguxing.plugin.translate.trans.TranslateService
@@ -34,7 +33,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
-import com.intellij.psi.PsiDocCommentBase
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiFile
 import com.intellij.ui.AnimatedIcon
 import icons.TranslationIcons
@@ -266,10 +265,10 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
                 ?.disabled(false)
         }
 
-        private fun getPsiDocComment(item: RenderItem, psiFile: PsiFile): PsiDocCommentBase? {
+        private fun getPsiDocComment(item: RenderItem, psiFile: PsiFile): PsiComment? {
             val offset = item.range.takeIf { it.isValid }?.startOffset ?: return null
             return psiFile.takeIf { it.isValid }
-                ?.findElementAroundOffset<PsiDocCommentBase>(offset)
+                ?.findElementAroundOffset<PsiComment>(offset)
         }
 
         private fun applyTranslationResult(
@@ -289,7 +288,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
 
                 for (item in result) {
                     val offset = item.range.takeIf { it.isValid }?.startOffset ?: continue
-                    psiFile.findElementAroundOffset<PsiDocCommentBase>(offset)?.let { comment ->
+                    psiFile.findElementAroundOffset<PsiComment>(offset)?.let { comment ->
                         setPsiInlineDocumentationTranslationInfo(comment, item.translationInfo)
                     }
                 }
