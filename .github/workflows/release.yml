@@ -1,19 +1,22 @@
-# GitHub Actions Workflow created for handling the release process based on the draft release prepared with the Build workflow.
-# Running the publishPlugin task requires all-following secrets to be provided: PUBLISH_TOKEN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN.
+# GitHub Actions Workflow created for handling the release process
+# based on the draft release prepared with the Build workflow.
+#
+# Running the publishPlugin task requires all the following secrets to be provided:
+# - PUBLISH_TOKEN
+# - PRIVATE_KEY
+# - PRIVATE_KEY_PASSWORD
+# - CERTIFICATE_CHAIN
+#
 # See https://plugins.jetbrains.com/docs/intellij/plugin-signing.html for more information.
 
 name: Release
-
 on:
   release:
-    types: [ released ]
-
-env:
-  AUTO_SNAPSHOT_VERSION: false
+    types: [ prereleased, released ]
 
 jobs:
 
-  # Prepare and publish the plugin to the Marketplace repository
+  # Prepare and publish the plugin to JetBrains Marketplace repository
   release:
     name: Publish Plugin
     runs-on: ubuntu-latest
@@ -22,100 +25,87 @@ jobs:
       pull-requests: write
     steps:
 
+      # Free GitHub Actions Environment Disk Space
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
       # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      # Set up Java environment for the next steps
+      # Set up the Java environment for the next steps
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.6.0
         with:
           distribution: zulu
-          java-version: 17
+          java-version: 21
 
       # Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
-          gradle-home-cache-cleanup: true
+          cache-read-only: true
 
-      # Set environment variables
-      - name: Export Properties
-        id: properties
-        shell: bash
-        run: |
-          PROPERTIES="$(./gradlew properties --console=plain -q)"
-          PLUGIN_VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
-          PLUGIN_PRERELEASE_VERSION="$(echo "$PROPERTIES" | grep "^pluginPreReleaseVersion:" | cut -f2- -d ' ')"
-          PLUGIN_BUILD_METADATA="$(echo "$PROPERTIES" | grep "^pluginBuildMetadata:" | cut -f2- -d ' ')"
-          CHANGELOG="$(cat << 'EOM' | sed -e "/## What's Changed/d" -e 's/^[[:space:]]*$//g' -e '/./,$!d'
-          ${{ github.event.release.body }}
-          EOM
-          )"
-          
-          echo "pluginVersion: $PLUGIN_VERSION"
-          echo "pluginPrereleaseVersion: $PLUGIN_PRERELEASE_VERSION"
-          echo "pluginBuildMetadata: $PLUGIN_BUILD_METADATA"
-          echo "changelog:"
-          echo "$CHANGELOG"
-          
-          echo "pluginVersion=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
-          echo "pluginPrereleaseVersion=$PLUGIN_PRERELEASE_VERSION" >> $GITHUB_OUTPUT
-          echo "pluginBuildMetadata=$PLUGIN_BUILD_METADATA" >> $GITHUB_OUTPUT
-          
-          echo 'changelog<<EOF' >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
-
-      # Update the unreleased section with the current release note
+      # Update the Unreleased section with the current release note
       - name: Patch Changelog
-        if: steps.properties.outputs.pluginBuildMetadata == '' && steps.properties.outputs.changelog != ''
+        if: ${{ github.event.release.body != '' && !contains(github.event.release.tag_name, '+') }}
         env:
-          CHANGELOG: ${{ steps.properties.outputs.changelog }}
+          CHANGELOG: ${{ github.event.release.body }}
         run: |
-          ./gradlew patchChangelog --release-note="$CHANGELOG"
+          RELEASE_NOTE="./build/tmp/release_note.txt"
+          mkdir -p "$(dirname "$RELEASE_NOTE")"
+          echo "$CHANGELOG" > $RELEASE_NOTE
 
-      # Publish the plugin to the Marketplace
+          ./gradlew -Prelease=true patchChangelog --release-note-file=$RELEASE_NOTE
+
+      # Publish the plugin to JetBrains Marketplace
       - name: Publish Plugin
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-        run: ./gradlew publishPlugin
+        run: ./gradlew -Prelease=true publishPlugin
 
-      # Upload artifact as a release asset
+      # Upload an artifact as a release asset
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload v${{ steps.properties.outputs.pluginVersion }} ./build/distributions/*
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION%%+*}"
+          gh release upload "$VERSION" ./build/distributions/*
 
-      # Create pull request
+      # Create a pull request
       - name: Create Pull Request
-        if: steps.properties.outputs.pluginBuildMetadata == '' && steps.properties.outputs.changelog != ''
+        if: ${{ github.event.release.body != '' && !contains(github.event.release.tag_name, '+') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ github.event.release.tag_name }}"
           BRANCH="changelog-update-$VERSION"
           LABEL="release changelog 📑"
-          
+
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          
+
           git checkout -b $BRANCH
-          git commit -am ":rocket: ${VERSION}" -m "[skip ci]"
+          git commit -am "Changelog update - $VERSION" -m "[skip ci]"
           git push --set-upstream origin $BRANCH
-          
+
           gh label create "$LABEL" \
             --color B39DDB \
             --description "Pull requests with release changelog update" \
+            --force \
             || true
-          
+
           gh pr create \
-            --title ":rocket: \`$VERSION\`" \
+            --title "Changelog update - \`$VERSION\`" \
             --body "Current pull request contains patched \`CHANGELOG.md\` file for the \`$VERSION\` version." \
             --base "${{ github.event.release.target_commitish }}" \
             --label "$LABEL" \
@@ -123,20 +113,20 @@ jobs:
 
       # Close the milestone
       - name: Close Milestone
-        if: steps.properties.outputs.pluginPrereleaseVersion == '' && steps.properties.outputs.pluginBuildMetadata == ''
+        if: ${{ !contains(github.event.release.tag_name, '-') && !contains(github.event.release.tag_name, '+') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/{owner}/{repo}/milestones \
             --jq '.[] | select(.title == "${{ github.event.release.tag_name }}") | .number' \
-            | xargs -I '{}' gh api -X PATCH repos/{owner}/{repo}/milestones/{} -F state='closed'
+            | xargs -r -I '{}' gh api -X PATCH repos/{owner}/{repo}/milestones/{} -F state='closed'
 
       # Delete the release if the version has build metadata
       - name: Delete Release
-        if: steps.properties.outputs.pluginBuildMetadata != ''
+        if: ${{ contains(github.event.release.tag_name, '+') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/{owner}/{repo}/releases \
             --jq ".[] | select(.tag_name == \"${{ github.event.release.tag_name }}\") | .id" \
-            | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
+            | xargs -r -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}

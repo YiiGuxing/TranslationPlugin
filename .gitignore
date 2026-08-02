@@ -4,6 +4,6 @@
 !.idea/vcs.xml
 .gradle
 .kotlin
-.qodana
+.intellijPlatform
 build
 sandbox

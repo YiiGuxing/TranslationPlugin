@@ -1,65 +1,24 @@
 import org.apache.tools.ant.filters.EscapeUnicode
-import org.jetbrains.changelog.Changelog
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 
 plugins {
-    id("java") // Java support
-    alias(libs.plugins.kotlin) // Kotlin support
-    alias(libs.plugins.kover) // Gradle Kover Plugin
-    alias(libs.plugins.changelog) // Gradle Changelog Plugin
-    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.intellij.platform")
+    id("org.jetbrains.changelog")
 }
 
 
-fun properties(key: String) = providers.gradleProperty(key)
-fun environment(key: String) = providers.environmentVariable(key)
-fun dateValue(pattern: String): String =
-    LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
+val baseVersion = properties("version").get()
+val isReleaseBuild = properties("release").map(String::toBoolean).getOrElse(false)
+val snapshotId = properties("snapshotId").orNull
 
-val autoSnapshotVersionEnv: Provider<Boolean> = environment("AUTO_SNAPSHOT_VERSION").map(String::toBoolean).orElse(true)
-val snapshotVersionPart: Provider<String> = properties("autoSnapshotVersion")
-    .map(String::toBoolean)
-    .orElse(false)
-    .zip(autoSnapshotVersionEnv, Boolean::and)
-    .map { if (it) "SNAPSHOT.${dateValue("yyMMdd")}" else "" }
-val preReleaseVersion: Provider<String> = properties("pluginPreReleaseVersion")
-    .flatMap { prv -> prv.takeIf(String::isNotBlank)?.let { provider { it } } ?: snapshotVersionPart }
-val preReleaseVersionPart: Provider<String> = preReleaseVersion.map { prv ->
-    prv.takeIf(String::isNotBlank)?.let { "-$it" } ?: ""
-}
-val buildMetadataPart: Provider<String> = properties("pluginBuildMetadata")
-    .map { part -> part.takeIf(String::isNotBlank)?.let { "+$it" } ?: "" }
-val pluginVersion: Provider<String> = properties("pluginMajorVersion").zip(preReleaseVersionPart, String::plus)
-val fullPluginVersion: Provider<String> = pluginVersion.zip(buildMetadataPart, String::plus)
-
-val versionRegex =
-    Regex("""^((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}""")
-if (!versionRegex.matches(fullPluginVersion.get())) {
-    throw GradleException("Plugin version '${fullPluginVersion.get()}' does not match the pattern '$versionRegex'")
-}
-
-val publishChannel: Provider<String> = preReleaseVersion.map { preReleaseVersion: String ->
-    preReleaseVersion.takeIf(String::isNotEmpty)?.split(".")?.firstOrNull()?.lowercase() ?: "default"
-}
-
-extra["pluginVersion"] = pluginVersion.get()
-extra["pluginPreReleaseVersion"] = preReleaseVersion.get()
-extra["fullPluginVersion"] = fullPluginVersion.get()
-extra["publishChannel"] = publishChannel.get()
-
-group = properties("pluginGroup").get()
-version = fullPluginVersion.get()
-
-repositories {
-    mavenLocal()
-    maven(url = "https://maven.aliyun.com/repository/public")
-    maven(url = "https://maven-central.storage-download.googleapis.com/repos/central/data/")
-    maven(url = "https://www.jetbrains.com/intellij-repository/releases")
-    maven(url = "https://jitpack.io")
-    mavenCentral()
+version = when {
+    isReleaseBuild -> baseVersion
+    else -> "$baseVersion-SNAPSHOT" + (snapshotId?.let { ".$it" } ?: "")
 }
 
 dependencies {
@@ -68,89 +27,29 @@ dependencies {
     implementation(libs.websocket) { exclude(module = "slf4j-api") }
     implementation(libs.mp3spi) { exclude(module = "junit") }
     testImplementation(libs.junit)
-}
 
-// Set the JVM language level used to build the project.
-kotlin {
-    jvmToolchain(17)
-}
-
-// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    pluginName = properties("pluginName")
-    version = properties("platformVersion")
-    type = properties("platformType")
-
-    // Plugin Dependencies. Use `platformPlugins` property from the gradle.properties file.
-    plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
-}
-
-// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-changelog {
-    header = provider { "${version.get()} (${dateValue("yyyy/MM/dd")})" }
-    groups.empty()
-    repositoryUrl = properties("pluginRepositoryUrl")
-}
-
-// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
-kover {
-    reports {
-        total {
-            xml { onCheck = true }
-            html { onCheck = true }
-        }
-    }
-}
-
-tasks {
-    runIde {
-        systemProperty("idea.is.internal", true)
-        systemProperty("idea.log.trace.categories", "cn.yiiguxing.plugin.translate")
-        systemProperty("idea.log.debug.categories", "cn.yiiguxing.plugin.translate")
-
-        jvmArgs = listOf(
-            // Run the IDE in a specified language.
-            // "-Duser.language=en"
-        )
+    // IntelliJ Platform Gradle Plugin Dependencies Extension.
+    // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
+    intellijPlatform {
+        intellijIdea(properties("platformVersion"))
+        testFramework(TestFrameworkType.Platform)
 
         // Path to IDE distribution that will be used to run the IDE with the plugin.
-        // ideDir.set(File("path to IDE-dependency"))
+        // local("path to IDE-dependency")
     }
+}
 
-    buildSearchableOptions {
-        enabled = properties("intellij.buildSearchableOptions.enabled").map(String::toBoolean).getOrElse(true)
-    }
-
-    patchPluginXml {
-        version = fullPluginVersion
-        sinceBuild = properties("pluginSinceBuild")
-        untilBuild = properties("pluginUntilBuild")
-        pluginDescription = projectDir.resolve("DESCRIPTION.md").readText()
-
-        // local variable for configuration cache compatibility
-        val changelog = project.changelog
-        // Get the latest available change notes from the changelog file
-        changeNotes = pluginVersion.map { pluginVersion ->
-            with(changelog) {
-                renderItem(
-                    (getOrNull(pluginVersion) ?: getUnreleased())
-                        .withHeader(false)
-                        .withEmptySections(false),
-                    Changelog.OutputType.HTML
-                )
-            }
+// IntelliJ Platform Gradle Plugin Platform Extension.
+// Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = properties("sinceBuild")
+            untilBuild = properties("untilBuild").map { it.ifBlank { null } }
         }
     }
 
-    signPlugin {
-        certificateChain = environment("CERTIFICATE_CHAIN")
-        privateKey = environment("PRIVATE_KEY")
-        password = environment("PRIVATE_KEY_PASSWORD")
-    }
-
-    publishPlugin {
-        dependsOn("patchChangelog")
-        token = environment("PUBLISH_TOKEN")
+    publishing {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel,
@@ -163,33 +62,33 @@ tasks {
         // Snapshot repositories:
         // https://plugins.jetbrains.com/plugins/snapshot/list
         // https://plugins.jetbrains.com/plugins/snapshot/8579
-        channels = publishChannel.map { listOf(it) }
+        channels = provider { listOf(getReleaseChannel(version.toString())) }
     }
+}
 
-    wrapper {
-        gradleVersion = properties("gradleVersion").get()
-        distributionType = Wrapper.DistributionType.ALL
-    }
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    changelog.header = provider { "${version.get()} (${date("yyyy/MM/dd")})" }
+    groups.empty()
+}
 
-    val createOpenApiSourceJar by registering(Jar::class) {
-        // Kotlin source
-        from(kotlin.sourceSets.main.get().kotlin) {
-            include("**/cn/yiiguxing/plugin/translate/openapi/**/*.kt")
-        }
-        manifest {
-            attributes(
-                "OpenApi-Version" to properties("openApiVersion")
+tasks {
+    runIde {
+        systemProperty("idea.log.trace.categories", project.group)
+        systemProperty("idea.log.debug.categories", project.group)
+
+        jvmArgumentProviders += CommandLineArgumentProvider {
+            listOf(
+                // Run the IDE in a specified language.
+                // "-Duser.language=en"
             )
         }
-
-        includeEmptyDirs = false
-        destinationDirectory.set(layout.buildDirectory.dir("libs"))
-        archiveClassifier.set("src")
     }
 
+    val openApiSourceTask = registerOpenApiSourceTask()
     buildPlugin {
-        dependsOn(createOpenApiSourceJar)
-        from(createOpenApiSourceJar) { into("lib/src") }
+        dependsOn(openApiSourceTask)
+        from(openApiSourceTask) { into("lib/src") }
     }
 
     processResources {
@@ -197,4 +96,46 @@ tasks {
             filter(EscapeUnicode::class)
         }
     }
+
+    withType<AbstractArchiveTask>().configureEach {
+        if (name != openApiSourceTask.name) {
+            archiveBaseName.set(project.name.toArchiveFileSegment())
+        }
+    }
 }
+
+
+fun properties(key: String): Provider<String> = providers.gradleProperty(key)
+
+fun date(pattern: String): String =
+    LocalDate.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern(pattern))
+
+fun getReleaseChannel(version: String): String {
+    val preRelease = version.substringBefore('+').substringAfter('-', "")
+    return when {
+        version.contains("-snapshot", ignoreCase = true) -> "snapshot"
+        preRelease.isEmpty() -> "default"
+        else -> preRelease.substringBefore('.').lowercase()
+    }
+}
+
+fun registerOpenApiSourceTask(): TaskProvider<Jar> = tasks.register<Jar>("createOpenApiSourceJar") {
+    description = "Create a source JAR for the OpenAPI module."
+    // Kotlin source
+    from(kotlin.sourceSets.main.get().kotlin) {
+        include("**/cn/yiiguxing/plugin/translate/openapi/**/*.kt")
+    }
+    manifest {
+        attributes(
+            "Version" to properties("openApiVersion")
+        )
+    }
+
+    includeEmptyDirs = false
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+    archiveBaseName.set("openapi")
+    archiveVersion.set(provider { null })
+    archiveClassifier.set("sources")
+}
+
+fun String.toArchiveFileSegment(): String = trim().lowercase().replace(Regex("\\s+"), "-")
