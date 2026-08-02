@@ -8,20 +8,20 @@ class VersionTest {
     @Test
     fun `test version parsing`() {
         Version("1.2.3-beta.0+b1-2.3").let {
-            Assert.assertEquals("Major", it.major, 1)
-            Assert.assertEquals("Minor", it.minor, 2)
-            Assert.assertEquals("Patch", it.patch, 3)
-            Assert.assertEquals("Prerelease", it.prerelease, "beta.0")
-            Assert.assertEquals("Build metadata", it.buildMetadata, "b1-2.3")
+            Assert.assertEquals("Major", 1, it.major)
+            Assert.assertEquals("Minor", 2, it.minor)
+            Assert.assertEquals("Patch", 3, it.patch)
+            Assert.assertEquals("Prerelease", "beta.0", it.prerelease)
+            Assert.assertEquals("Build metadata", "b1-2.3", it.buildMetadata)
         }
     }
 
     @Test
     fun `test version forms`() {
         Version("1.2.3-beta.0+b1-2.3").let {
-            Assert.assertEquals("Feature update version", it.getFeatureUpdateVersion(), "1.2")
-            Assert.assertEquals("Stable version", it.getStableVersion(), "1.2.3")
-            Assert.assertEquals("Version without build metadata", it.getVersionWithoutBuildMetadata(), "1.2.3-beta.0")
+            Assert.assertEquals("Feature update version", "1.2", it.getFeatureUpdateVersion())
+            Assert.assertEquals("Stable version", "1.2.3", it.getStableVersion())
+            Assert.assertEquals("Version without build metadata", "1.2.3-beta.0", it.getVersionWithoutBuildMetadata())
         }
     }
 

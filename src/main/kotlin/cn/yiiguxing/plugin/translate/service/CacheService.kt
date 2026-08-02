@@ -87,7 +87,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
     private fun trimDiskCachesIfNeed() {
         val now = System.currentTimeMillis()
         val duration = now - state.lastTrimTime
-        if (duration < 0 || duration > TRIM_INTERVAL) {
+        if (duration !in 0..TRIM_INTERVAL) {
             state.lastTrimTime = now
             executeOnPooledThread {
                 try {
@@ -111,7 +111,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
             .sortedBy { file ->
                 try {
                     Files.readAttributes(file, BasicFileAttributes::class.java).lastAccessTime().toMillis()
-                } catch (e: NoSuchFileException) {
+                } catch (_: NoSuchFileException) {
                     -1L
                 }
             }
@@ -119,7 +119,7 @@ class CacheService : PersistentStateComponent<CacheService.State> {
             .forEach { file ->
                 try {
                     Files.deleteIfExists(file)
-                } catch (e: DirectoryNotEmptyException) {
+                } catch (_: DirectoryNotEmptyException) {
                     // ignore
                 }
             }
@@ -133,21 +133,19 @@ class CacheService : PersistentStateComponent<CacheService.State> {
             .list { _, name -> !name.endsWith(".tmp") }
             ?: return 0
 
-        return names.asSequence()
-            .map { name ->
-                try {
-                    Files.size(getCacheFilePath(name))
-                } catch (e: IOException) {
-                    0L
-                }
+        return names.asSequence().sumOf { name ->
+            try {
+                Files.size(getCacheFilePath(name))
+            } catch (_: IOException) {
+                0L
             }
-            .sum()
+        }
     }
 
     fun evictAllDiskCaches() {
         try {
             TranslationStorages.CACHE_DIRECTORY.delete(true)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             // ignore
         }
     }

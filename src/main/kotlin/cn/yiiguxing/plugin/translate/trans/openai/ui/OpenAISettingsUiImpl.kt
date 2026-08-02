@@ -48,7 +48,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     }
 
     override val providerComboBox: ComboBox<ServiceProvider> =
-        ComboBox(CollectionComboBoxModel(ServiceProvider.values().toList())).apply {
+        ComboBox(CollectionComboBoxModel(ServiceProvider.entries)).apply {
             renderer = SimpleListCellRenderer.create { label, model, _ ->
                 label.text = model.name + if (model == ServiceProvider.Azure) {
                     message("openai.settings.dialog.not.recommended")
@@ -65,7 +65,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
 
     private val ttsApiSettingsTypeLabel = JLabel(message("openai.settings.dialog.label.api.settings"))
     override val ttsApiSettingsTypeComboBox: ComboBox<TtsApiSettingsType> = ComboBox<TtsApiSettingsType>().apply {
-        model = CollectionComboBoxModel(TtsApiSettingsType.values().toList())
+        model = CollectionComboBoxModel(TtsApiSettingsType.entries)
         renderer = SimpleListCellRenderer.create { label, type, _ -> label.text = type.displayName }
     }
 
@@ -73,8 +73,8 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     private val modelWrapper = JPanel(UI.migLayout(gapX = UI.migSize(10), lcBuilder = { hideMode(3) }))
     override val modelComboBox: ComboBox<OpenAiModel> = ComboBox<OpenAiModel>().apply {
         val models = when (configType) {
-            ConfigType.TRANSLATOR -> OpenAiGPTModel.values().toList().reversed()
-            ConfigType.TTS -> OpenAiTTSModel.values().toList()
+            ConfigType.TRANSLATOR -> OpenAiGPTModel.entries.reversed()
+            ConfigType.TTS -> OpenAiTTSModel.entries
         }
         model = CollectionComboBoxModel(models)
         renderer = SimpleListCellRenderer.create { label, model, _ ->
@@ -88,7 +88,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
         JLabel(message("openai.settings.dialog.label.api.version")).apply { isVisible = false }
     override val azureApiVersionComboBox: ComboBox<AzureServiceVersion> = ComboBox<AzureServiceVersion>().apply {
         val versions = when (configType) {
-            ConfigType.TRANSLATOR -> AzureServiceVersion.values().toList()
+            ConfigType.TRANSLATOR -> AzureServiceVersion.entries
             ConfigType.TTS -> AzureServiceVersion.previewVersions()
         }
         model = CollectionComboBoxModel(versions)
@@ -166,7 +166,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     }
 
     private fun initTtsComponents() {
-        ttsVoiceComboBox = ComboBox(OpenAiTtsVoice.values()).apply {
+        ttsVoiceComboBox = ComboBox(OpenAiTtsVoice.entries.toTypedArray()).apply {
             renderer = SimpleListCellRenderer.create { label, voice, _ ->
                 label.text = voice.voiceName
             }

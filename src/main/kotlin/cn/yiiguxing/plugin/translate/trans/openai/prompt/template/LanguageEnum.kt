@@ -18,10 +18,10 @@ import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isUnknown
     ReplaceWith("cn.yiiguxing.plugin.translate.trans.Lang")
 )
 internal class LanguageEnum {
-    private val languages = Lang.values().associateBy { lang -> lang.name }
+    private val languages = Lang.entries.associateBy { lang -> lang.name }
 
     /** Returns an array containing the language enumeration constants. */
-    val values: Array<out Lang> get() = Lang.values()
+    val values: Array<out Lang> get() = Lang.entries.toTypedArray()
 
     /** @see Lang.Companion.default */
     val default: Lang get() = Lang.default

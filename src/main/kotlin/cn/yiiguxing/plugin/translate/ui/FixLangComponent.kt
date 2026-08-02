@@ -31,13 +31,11 @@ class FixLangComponent : JPanel() {
     fun updateOnTranslation(translation: Translation?) {
         lastTranslation = translation
         val sourceLanguages = translation?.sourceLanguages
-        if (sourceLanguages != null && !sourceLanguages.contains(translation.srcLang)) {
-            isVisible = sourceLanguages.firstOrNull()?.localeName.let {
-                actionLink.text = it
-                !it.isNullOrEmpty()
-            }
-        } else {
-            isVisible = false
-        }
+        isVisible = sourceLanguages != null &&
+                !sourceLanguages.contains(translation.srcLang) &&
+                sourceLanguages.firstOrNull()?.localeName.let {
+                    actionLink.text = it
+                    !it.isNullOrEmpty()
+                }
     }
 }

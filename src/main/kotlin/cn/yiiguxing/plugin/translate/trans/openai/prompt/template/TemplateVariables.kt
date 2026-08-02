@@ -8,7 +8,7 @@ enum class TemplateVariable(val description: String) {
      * so that it is not treated as a prefix of a template variable.
      */
     DS(
-        "Dollar sign (\$). This variable is used to escape the dollar character, " +
+        "Dollar sign ($). This variable is used to escape the dollar character, " +
                 "so that it is not treated as a prefix of a template variable."
     ),
 

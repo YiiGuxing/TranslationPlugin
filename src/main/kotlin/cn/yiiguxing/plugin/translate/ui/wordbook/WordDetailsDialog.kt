@@ -212,7 +212,7 @@ class WordDetailsDialog(
         getButton(action)?.let { IdeFocusManager.findInstance().requestFocus(it, true) }
     }
 
-    private inner class CloseAction : DialogWrapper.DialogWrapperAction(message("close.action.name")) {
+    private inner class CloseAction : DialogWrapperAction(message("close.action.name")) {
         init {
             putValue(DEFAULT_ACTION, TRUE)
             putValue(FOCUSED_ACTION, TRUE)
@@ -221,11 +221,11 @@ class WordDetailsDialog(
         override fun doAction(e: ActionEvent) = close(OK_EXIT_CODE)
     }
 
-    private inner class SaveAction : DialogWrapper.DialogWrapperAction(message("word.details.action.edit.save")) {
+    private inner class SaveAction : DialogWrapperAction(message("word.details.action.edit.save")) {
         override fun doAction(e: ActionEvent) = saveEditing()
     }
 
-    private inner class CancelAction : DialogWrapper.DialogWrapperAction(message("word.details.action.edit.cancel")) {
+    private inner class CancelAction : DialogWrapperAction(message("word.details.action.edit.cancel")) {
         override fun doAction(e: ActionEvent) = cancelEditing()
     }
 

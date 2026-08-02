@@ -10,7 +10,7 @@ enum class AzureServiceVersion(val value: String) {
     V2025_01_01_PREVIEW("2025-01-01-preview");
 
     companion object {
-        fun previewVersions() = AzureServiceVersion.values().filter {
+        fun previewVersions() = entries.filter {
             it.value.endsWith("preview", ignoreCase = true)
         }
     }

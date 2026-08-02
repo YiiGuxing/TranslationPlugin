@@ -131,10 +131,7 @@ class TranslationDialog(
 
         fun isInside(event: MouseEvent): Boolean {
             val target = RelativePoint(event)
-            if (UIUtil.isDescendingFrom(target.originalComponent, win)) {
-                return true
-            }
-            return target.screenPoint.let { point ->
+            return UIUtil.isDescendingFrom(target.originalComponent, win) || target.screenPoint.let { point ->
                 SwingUtilities.convertPointFromScreen(point, win)
                 win.contains(point)
             }

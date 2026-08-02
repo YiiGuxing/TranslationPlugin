@@ -34,8 +34,7 @@ class YoudaoDictDocument private constructor(
         val metrics = getFontMetrics(font)
         val tabWidth = wordStrings.asSequence()
             .filter { it is StyledString && it.style == POS_STYLE }
-            .map { metrics.stringWidth(" $it") }
-            .maxOrNull()
+            .maxOfOrNull { metrics.stringWidth(" $it") }
             ?: return
 
         val attrs = SimpleAttributeSet()
