@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.TranslationStates
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.message
@@ -30,7 +31,6 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.ReadonlyStatusHandler
 import com.intellij.ui.JBColor
 import com.intellij.util.concurrency.EdtScheduledExecutorService
-import icons.TranslationIcons
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.TimeUnit

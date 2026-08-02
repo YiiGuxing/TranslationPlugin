@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.update
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.action.GettingStartedAction
 import cn.yiiguxing.plugin.translate.action.SupportAction
@@ -31,7 +32,6 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.awt.Color

@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui
 
 import cn.yiiguxing.plugin.translate.BUNDLE
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.view.WebPages
@@ -17,7 +18,6 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
 import org.jetbrains.annotations.PropertyKey

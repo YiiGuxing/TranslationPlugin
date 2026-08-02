@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.youdao
 
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
@@ -24,7 +25,6 @@ import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
 import javax.swing.JComponent
 import javax.swing.JLabel

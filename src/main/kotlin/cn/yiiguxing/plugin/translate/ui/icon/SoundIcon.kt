@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.icon
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import com.intellij.ui.AnimatedIcon
-import icons.TranslationIcons
 import javax.swing.Icon
 
 private const val DELAY = 300

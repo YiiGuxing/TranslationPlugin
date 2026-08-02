@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.openai.ui
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsUI.TtsApiSettingsType
@@ -15,7 +16,6 @@ import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
 import java.awt.Dimension

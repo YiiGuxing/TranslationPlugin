@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationTranslationService
 import cn.yiiguxing.plugin.translate.service.ITPCoroutineService
@@ -20,7 +21,6 @@ import com.intellij.platform.backend.documentation.*
 import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.createSmartPointer
 import com.intellij.ui.JBColor
-import icons.TranslationIcons
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onCompletion

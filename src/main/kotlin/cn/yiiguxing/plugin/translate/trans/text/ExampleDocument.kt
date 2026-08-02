@@ -1,11 +1,11 @@
 package cn.yiiguxing.plugin.translate.trans.text
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.StyledViewer
 import cn.yiiguxing.plugin.translate.util.text.*
 import com.intellij.ui.JBColor
 import com.intellij.ui.scale.JBUIScale
-import icons.TranslationIcons
 import java.awt.Color
 import java.awt.Component
 import java.awt.Graphics
