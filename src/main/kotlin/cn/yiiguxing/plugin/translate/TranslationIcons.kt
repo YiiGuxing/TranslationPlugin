@@ -1,4 +1,4 @@
-package icons
+package cn.yiiguxing.plugin.translate
 
 import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon

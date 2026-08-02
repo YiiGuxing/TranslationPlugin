@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.HelpTopic
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
@@ -19,7 +20,6 @@ import com.intellij.util.Alarm
 import com.intellij.util.io.HttpRequests
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
 import java.awt.Color
 import java.io.IOException

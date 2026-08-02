@@ -115,7 +115,7 @@
                                 order="before LineSeparator, after Position, before lineSeparatorWidget, after positionWidget"
                                 implementation="cn.yiiguxing.plugin.translate.ui.TranslationWidgetFactory"/>
         <toolWindow id="Translation.Wordbook"
-                    icon="TranslationIcons.Wordbook"
+                    icon="cn.yiiguxing.plugin.translate.TranslationIcons.Wordbook"
                     anchor="right"
                     secondary="true"
                     doNotActivateOnStart="true"
@@ -151,7 +151,7 @@
 
     <actions resource-bundle="messages.TranslationBundle">
         <action id="Translation.ShowTranslationDialogAction"
-                icon="TranslationIcons.Translation"
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.ShowTranslationDialogAction"
                 use-shortcut-of="Translation.EditorTranslateAction">
             <add-to-group group-id="MainToolbarRight" relative-to-action="SearchEverywhere" anchor="before"/>
@@ -165,14 +165,14 @@
         </action>
         <action id="Translation.EditorTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.EditorTranslateAction"
-                icon="TranslationIcons.Translation">
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.Translation">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Y"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta U" replace-all="true"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta U" replace-all="true"/>
         </action>
         <action id="Translation.ReplaceWithTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.ReplaceWithTranslationAction"
-                icon="TranslationIcons.TranslationReplace">
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.TranslationReplace">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift X"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control meta O"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control meta O" replace-all="true"/>
@@ -182,11 +182,11 @@
         <action id="Translation.ExclusiveTranslateAction"
                 class="cn.yiiguxing.plugin.translate.action.ExclusiveTranslateAction"/>
         <action id="Translation.TranslateQuickDocSelectionAction"
-                icon="TranslationIcons.Translation"
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.ShowTranslatedQuickDocInfoAction"
-                icon="TranslationIcons.Translation"
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.documentation.actions.ShowTranslatedQuickDocInfoAction">
             <keyboard-shortcut keymap="$default" first-keystroke="control shift Q"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="control Q" replace-all="true"/>
@@ -199,12 +199,12 @@
                 class="cn.yiiguxing.plugin.translate.documentation.actions.TranslateRenderedDocSelectionAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TranslateTextComponentAction"
-                icon="TranslationIcons.Translation"
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.Translation"
                 class="cn.yiiguxing.plugin.translate.action.TranslateTextComponentAction"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.TerminalTranslationAction"
                 class="cn.yiiguxing.plugin.translate.action.TerminalTranslationAction"
-                icon="TranslationIcons.Translation"
+                icon="cn.yiiguxing.plugin.translate.TranslationIcons.Translation"
                 use-shortcut-of="Translation.EditorTranslateAction"/>
         <action id="Translation.ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"
@@ -258,7 +258,7 @@
         </group>
         <group id="Translation.HelpGroup">
             <separator/>
-            <group id="Translation.HelpActionGroup" text="Translation" icon="TranslationIcons.Logo" popup="true">
+            <group id="Translation.HelpActionGroup" text="Translation" icon="cn.yiiguxing.plugin.translate.TranslationIcons.Logo" popup="true">
                 <reference ref="Translation.WhatsNewAction"/>
                 <reference ref="Translation.GettingStartAction"/>
                 <reference ref="Translation.SupportAction"/>

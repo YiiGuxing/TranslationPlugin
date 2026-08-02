@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TTSSource.ORIGINAL
 import cn.yiiguxing.plugin.translate.TTSSource.TRANSLATION
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
@@ -30,7 +31,6 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel
-import icons.TranslationIcons
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.FocusAdapter

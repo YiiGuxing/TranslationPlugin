@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
@@ -16,7 +17,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.util.ui.EDT
-import icons.TranslationIcons
 import java.lang.ref.WeakReference
 import java.util.*
 

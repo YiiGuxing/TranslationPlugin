@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.TextToSpeech
@@ -14,7 +15,6 @@ import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.util.ui.JBDimension
-import icons.TranslationIcons
 import javax.swing.SwingConstants
 
 /**

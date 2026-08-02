@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.action.ToggleableTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.documentation.*
@@ -17,7 +18,6 @@ import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.refactoring.suggested.createSmartPointer
 import com.intellij.ui.AnimatedIcon
 import com.intellij.util.concurrency.ThreadingAssertions
-import icons.TranslationIcons
 import kotlinx.coroutines.Dispatchers
 
 internal class TranslateRenderedDocAction(

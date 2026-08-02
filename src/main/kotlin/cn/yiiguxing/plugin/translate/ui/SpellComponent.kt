@@ -1,9 +1,9 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel
-import icons.TranslationIcons
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 

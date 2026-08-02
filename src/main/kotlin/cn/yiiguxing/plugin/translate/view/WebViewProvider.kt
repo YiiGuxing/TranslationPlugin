@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.view
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.view.utils.JsQueryDispatcher
 import com.intellij.openapi.Disposable
@@ -17,7 +18,6 @@ import com.intellij.openapi.util.NlsContexts.DialogTitle
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.jcef.JBCefApp
-import icons.TranslationIcons
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefResourceRequestHandler

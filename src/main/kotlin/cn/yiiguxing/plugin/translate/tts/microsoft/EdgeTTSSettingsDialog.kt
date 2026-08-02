@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts.microsoft
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
@@ -10,7 +11,6 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.*
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
 import java.awt.event.MouseEvent
 import java.util.*

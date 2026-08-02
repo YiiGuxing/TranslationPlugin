@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
@@ -17,7 +18,6 @@ import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.Alarm
-import icons.TranslationIcons
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
