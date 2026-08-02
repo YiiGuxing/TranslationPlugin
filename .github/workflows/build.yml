@@ -171,7 +171,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v7
         with:
-          name: pluginVerifier-report
+          name: plugin-verifier-report
           path: ${{ github.workspace }}/build/reports/pluginVerifier
 
   # Prepare a draft release for GitHub Releases page for the manual verification
