@@ -2,6 +2,7 @@
 
 package cn.yiiguxing.plugin.translate.util
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.util.PropertiesComponent
@@ -9,7 +10,6 @@ import com.intellij.notification.*
 import com.intellij.notification.impl.NotificationFullContent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
-import icons.TranslationIcons
 import javax.swing.Icon
 import javax.swing.event.HyperlinkEvent
 

@@ -3,6 +3,7 @@ package cn.yiiguxing.plugin.translate.ui.settings
 import cn.yiiguxing.plugin.translate.AppKeySettings
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.Settings
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
@@ -24,7 +25,6 @@ import cn.yiiguxing.plugin.translate.trans.youdao.YoudaoTranslator
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsDialog
 import cn.yiiguxing.plugin.translate.ui.AppKeySettingsPanel
 import com.intellij.openapi.components.service
-import icons.TranslationIcons
 import javax.swing.Icon
 
 enum class TranslationEngine(

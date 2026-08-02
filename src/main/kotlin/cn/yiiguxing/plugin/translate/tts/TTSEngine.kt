@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
@@ -8,7 +9,6 @@ import cn.yiiguxing.plugin.translate.trans.openai.ServiceProvider
 import cn.yiiguxing.plugin.translate.trans.openai.ui.OpenAISettingsDialog
 import cn.yiiguxing.plugin.translate.tts.microsoft.EdgeTTSSettingsDialog
 import com.intellij.openapi.components.service
-import icons.TranslationIcons
 import javax.swing.Icon
 
 enum class TTSEngine(

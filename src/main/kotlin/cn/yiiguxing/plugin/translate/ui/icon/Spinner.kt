@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.translate.ui.icon
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import com.intellij.util.ui.AnimatedIcon
 import com.intellij.util.ui.JBDimension
-import icons.TranslationIcons
 import java.awt.Dimension
 
 internal class Spinner : AnimatedIcon("Spinner", ICONS, STEP_PASSIVE, CYCLE_LENGTH) {

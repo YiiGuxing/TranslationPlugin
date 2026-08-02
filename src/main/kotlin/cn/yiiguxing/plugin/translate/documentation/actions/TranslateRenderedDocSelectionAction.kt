@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.action.ACTION_HIGH_PRIORITY
 import cn.yiiguxing.plugin.translate.action.EditorTranslateAction
 import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
@@ -14,7 +15,6 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.PositionTracker
-import icons.TranslationIcons
 import java.awt.Point
 import java.lang.reflect.Method
 import javax.swing.JEditorPane

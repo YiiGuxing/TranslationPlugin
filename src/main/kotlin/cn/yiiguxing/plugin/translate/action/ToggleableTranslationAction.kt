@@ -2,13 +2,13 @@
 
 package cn.yiiguxing.plugin.translate.action
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsActions
-import icons.TranslationIcons
 import java.util.function.Supplier
 import javax.swing.Icon
 

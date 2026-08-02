@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation.actions
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.action.editor
 import cn.yiiguxing.plugin.translate.documentation.*
 import cn.yiiguxing.plugin.translate.message
@@ -36,7 +37,6 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiFile
 import com.intellij.ui.AnimatedIcon
-import icons.TranslationIcons
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin

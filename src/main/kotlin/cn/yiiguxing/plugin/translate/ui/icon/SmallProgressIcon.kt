@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.ui.icon
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import com.intellij.util.ui.AnimatedIcon
-import icons.TranslationIcons
 
 class SmallProgressIcon : AnimatedIcon("SmallProgress", ICONS, STEP_PASSIVE, CYCLE_LENGTH) {
 

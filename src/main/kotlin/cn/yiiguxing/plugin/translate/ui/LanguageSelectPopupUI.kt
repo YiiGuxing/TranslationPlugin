@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui
 
+import cn.yiiguxing.plugin.translate.TranslationIcons
 import cn.yiiguxing.plugin.translate.trans.Lang
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
@@ -13,7 +14,6 @@ import com.intellij.ui.GroupedComboBoxRenderer
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.panels.HorizontalLayout
 import com.intellij.util.ui.JBUI
-import icons.TranslationIcons
 import java.awt.Component
 import java.awt.Container
 import java.awt.DefaultFocusTraversalPolicy
