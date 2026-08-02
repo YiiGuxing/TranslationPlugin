@@ -32,7 +32,7 @@ enum class OpenAiTtsVoice(val value: String, val voiceName: String) {
          * Returns a list of voices that are supported by the classic TTS models (e.g. tts-1 and tts-1-hd).
          */
         fun getClassicVoices(): List<OpenAiTtsVoice> {
-            return values().filter { it !in unsupportedForClassic }
+            return entries.filter { it !in unsupportedForClassic }
         }
     }
 }

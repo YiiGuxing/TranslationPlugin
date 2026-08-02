@@ -41,7 +41,7 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
     private val appIdField: JBTextField = JBTextField()
     private val appKeyField: JBPasswordField = JBPasswordField()
     private val domainComboBox: ComboBox<YoudaoDomain> =
-        ComboBox(CollectionComboBoxModel(YoudaoDomain.values().toList())).apply {
+        ComboBox(CollectionComboBoxModel(YoudaoDomain.entries)).apply {
             renderer = SimpleListCellRenderer.create { label, domain, _ ->
                 label.text = domain.displayName
             }

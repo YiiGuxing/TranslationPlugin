@@ -42,8 +42,8 @@ class CefStreamResourceHandler(
     override fun getResponseHeaders(response: CefResponse, responseLength: IntRef, redirectUrl: StringRef) {
         response.mimeType = mimeType
         response.status = 200
-        for (header in headers) {
-            response.setHeaderByName(header.key, header.value, true /* overwrite */)
+        for ((key, value) in headers) {
+            response.setHeaderByName(key, value, true)
         }
     }
 

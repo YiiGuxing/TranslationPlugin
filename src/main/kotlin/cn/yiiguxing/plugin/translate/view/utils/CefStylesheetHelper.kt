@@ -14,12 +14,12 @@ object CefStylesheetHelper {
     val CARD_BG_COLOR = JBColor(0xF7F7F7, 0x3C3F41)
 
     fun buildBaseStyle(): String {
-        val baseColorAlpha = (10..90 step 10).asSequence().map {
+        val baseColorAlpha = (10..90 step 10).joinToString("\n                ") {
             buildAlphaProperty("--base-color", BASE_COLOR, it)
-        }.joinToString("\n                ")
-        val primaryColorAlpha = (10..90 step 10).asSequence().map {
+        }
+        val primaryColorAlpha = (10..90 step 10).joinToString("\n                ") {
             buildAlphaProperty("--primary-color", PRIMARY_COLOR, it)
-        }.joinToString("\n                ")
+        }
 
         val backgroundHex = BACKGROUND.toRGBHex()
         val baseColorHex = BASE_COLOR.toRGBHex()

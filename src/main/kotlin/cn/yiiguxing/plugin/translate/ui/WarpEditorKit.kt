@@ -26,8 +26,8 @@ class WarpEditorKit : StyledEditorKit() {
 
         override fun getMinimumSpan(axis: Int): Float {
             return when (axis) {
-                View.X_AXIS -> 0f
-                View.Y_AXIS -> super.getMinimumSpan(axis)
+                X_AXIS -> 0f
+                Y_AXIS -> super.getMinimumSpan(axis)
                 else -> throw IllegalArgumentException("Invalid axis: $axis")
             }
         }

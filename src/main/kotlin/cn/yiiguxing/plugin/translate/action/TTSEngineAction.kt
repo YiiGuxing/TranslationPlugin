@@ -11,7 +11,7 @@ class TTSEngineAction(private val engine: TTSEngine) : FixedIconToggleAction(eng
 
     fun isAvailable(): Boolean = engine == settings.ttsEngine || try {
         engine.isConfigured()
-    } catch (e: Throwable) {
+    } catch (_: Throwable) {
         false
     }
 
@@ -30,8 +30,10 @@ class TTSEngineAction(private val engine: TTSEngine) : FixedIconToggleAction(eng
         }
     }
 
+    @Suppress("CompanionObjectInExtension")
     companion object {
-        fun actions(): List<TTSEngineAction> = TTSEngine.values().toList().map { engine ->
+        @JvmStatic
+        fun actions(): List<TTSEngineAction> = TTSEngine.entries.map { engine ->
             TTSEngineAction(engine)
         }
     }

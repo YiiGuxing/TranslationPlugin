@@ -84,7 +84,7 @@ internal class WebView(
                 isDownload: Boolean,
                 requestInitiator: String?,
                 disableDefaultHandling: BoolRef?
-            ): CefResourceRequestHandler? {
+            ): CefResourceRequestHandler {
                 return request.resourceRequestHandler
                     ?.invoke(browser, frame, cefRequest, this@WebView)
                     ?: itpResources

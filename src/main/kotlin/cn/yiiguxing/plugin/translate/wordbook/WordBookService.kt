@@ -646,15 +646,10 @@ class WordBookService : Disposable {
 
         private fun ClassLoader.canDriveService(default: Boolean = true): Boolean {
             // 老版本内置的SQLite驱动不支持Mac M1
-            if (default &&
-                IdeVersion < IdeVersion.IDE2024_1 &&
-                SystemInfo.isMac &&
-                /* Mac M1 */ SystemInfo.OS_ARCH.equals("aarch64", ignoreCase = true)
-            ) {
-                return false
-            }
-
-            return try {
+            return !(default &&
+                    IdeVersion < IdeVersion.IDE2024_1 &&
+                    SystemInfo.isMac &&
+                    /* Mac M1 */ SystemInfo.OS_ARCH.equals("aarch64", ignoreCase = true)) && try {
                 Class.forName(SQLITE_DATA_SOURCE, false, this)
                 true
             } catch (_: Throwable) {

@@ -37,11 +37,7 @@ object DeeplTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = DeeplSupportedLanguages.targetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || !DeeplCredential.isAuthKeySet) {
-            return DEEPL.showConfigurationDialog()
-        }
-
-        return true
+        return !(force || !DeeplCredential.isAuthKeySet) || DEEPL.showConfigurationDialog()
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {

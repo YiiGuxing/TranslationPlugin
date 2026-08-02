@@ -72,13 +72,9 @@ object YoudaoTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.getInstance().youdaoTranslateSettings.let {
-                it.appId.isEmpty() || it.getAppKey().isEmpty()
-            }) {
-            return YOUDAO.showConfigurationDialog()
-        }
-
-        return true
+        return !(force || Settings.getInstance().youdaoTranslateSettings.let {
+            it.appId.isEmpty() || it.getAppKey().isEmpty()
+        }) || YOUDAO.showConfigurationDialog()
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {

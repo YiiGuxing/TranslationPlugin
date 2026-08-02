@@ -15,7 +15,6 @@ import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.util.ui.JBDimension
-import javax.swing.SwingConstants
 
 /**
  * TTSButton
@@ -31,7 +30,7 @@ class TTSButton(
     init {
         myPaintUnderline = false
         toolTipText = message("tooltip.listen")
-        horizontalAlignment = SwingConstants.CENTER
+        horizontalAlignment = CENTER
         preferredSize = JBDimension(16, 16)
         disabledIcon = SoundIcon.DISABLED
 

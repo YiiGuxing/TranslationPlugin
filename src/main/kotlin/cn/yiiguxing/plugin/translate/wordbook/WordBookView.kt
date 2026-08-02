@@ -167,7 +167,7 @@ class WordBookView {
 
                     override fun onWordsUpdated(service: WordBookService, words: List<WordBookItem>) {
                         assertIsDispatchThread()
-                        val wordsMap = words.asSequence().map { it.id to it }.toMap()
+                        val wordsMap = words.associateBy { it.id }
                         this@WordBookView.words.replaceAll { wordsMap[it.id] ?: it }
                         notifyWordsChanged()
                         selectWord(words.first())

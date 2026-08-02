@@ -101,15 +101,6 @@ object TKK {
 
         return value1 to value2
     }
-
-    internal fun testConnection(): Boolean = try {
-        getElementJsRequest(googleApiServerUrl).tryConnect()
-        true
-    } catch (e: Throwable) {
-        false
-    }.also {
-        log.i("TKK connection test: ${if (it) "OK" else "FAILURE"}")
-    }
 }
 
 /**
