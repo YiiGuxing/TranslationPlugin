@@ -85,8 +85,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: plugin-distribution
           path: ./build/distributions/*.zip
+          archive: false
 
   # Run tests and upload test reports on failure
   test:
