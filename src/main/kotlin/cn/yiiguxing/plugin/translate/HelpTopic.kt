@@ -29,7 +29,7 @@ enum class HelpTopic(id: String, val url: String) {
 
     companion object {
         fun of(helpTopicId: String): HelpTopic {
-            for (helpTopic in values()) if (helpTopic.id == helpTopicId) {
+            for (helpTopic in entries) if (helpTopic.id == helpTopicId) {
                 return helpTopic
             }
 

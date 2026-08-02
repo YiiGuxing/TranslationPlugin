@@ -15,7 +15,7 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.SmartPsiElementPointer
-import com.intellij.refactoring.suggested.createSmartPointer
+import com.intellij.psi.createSmartPointer
 import com.intellij.ui.AnimatedIcon
 import com.intellij.util.concurrency.ThreadingAssertions
 import kotlinx.coroutines.Dispatchers

@@ -18,7 +18,6 @@ import java.awt.Point
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 import javax.swing.ListSelectionModel
-import javax.swing.SwingConstants
 
 class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTriangle) {
 
@@ -35,7 +34,7 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
     private val listeners: MutableList<(Lang?, Lang?, Boolean) -> Unit> = arrayListOf()
 
     init {
-        horizontalTextPosition = SwingConstants.LEADING
+        horizontalTextPosition = LEADING
         myPaintUnderline = false
         border = emptyBorder(0, leftAndRight = 5)
     }

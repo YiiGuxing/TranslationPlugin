@@ -51,13 +51,9 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = AliLanguageAdapter.targetLanguages
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force ||
-            Settings.getInstance().aliTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }
-        ) {
-            return ALI.showConfigurationDialog()
-        }
-
-        return true
+        return !(force || Settings.getInstance().aliTranslateSettings.let {
+            it.appId.isEmpty() || it.getAppKey().isEmpty()
+        }) || ALI.showConfigurationDialog()
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {

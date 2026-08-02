@@ -35,7 +35,7 @@ object WordFavoritesUi {
         parentDisposable: Disposable
     ) {
         EDT.assertIsEdt()
-        favoriteDisposables.get(starLabel)?.let { Disposer.dispose(it) }
+        favoriteDisposables[starLabel]?.let { Disposer.dispose(it) }
         updatePresentation(starLabel, translation?.favoriteId)
 
         starLabel.isEnabled = isEnable(project, translation)

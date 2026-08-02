@@ -46,6 +46,7 @@ open class CefLocalResourceRequestHandler(
         frame: CefFrame?,
         request: CefRequest
     ): CefResourceHandler? {
+        @Suppress("DEPRECATION")
         val url = URL(request.url)
         if (!url.protocol.equals(protocol) || !url.authority.equals(authority)) {
             return null

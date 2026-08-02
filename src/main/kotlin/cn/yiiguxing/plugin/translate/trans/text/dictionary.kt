@@ -24,8 +24,7 @@ class DictionaryDocument(private val dictionaryGroups: List<DictionaryGroup>) : 
 
     override val translations: Set<String>
         get() = dictionaryGroups.asSequence()
-            .map { it.entries }
-            .flatten()
+            .flatMap { it.entries }
             .sortedByDescending { it.score }
             .map { it.word }
             .toSet()

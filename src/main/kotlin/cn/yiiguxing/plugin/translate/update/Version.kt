@@ -133,8 +133,8 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
         result = 31 * result + major
         result = 31 * result + minor
         result = 31 * result + patch
-        result = 31 * result + (prerelease?.hashCode() ?: 0)
-        result = 31 * result + (buildMetadata?.hashCode() ?: 0)
+        result = 31 * result + prerelease.hashCode()
+        result = 31 * result + buildMetadata.hashCode()
         return result
     }
 
@@ -156,7 +156,7 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
         private const val PRERELEASE = "prerelease"
         private const val BUILD_METADATA = "buildMetadata"
         private val VERSION_REGEX =
-            """^(?<$MAJOR>0|[1-9]\d*)\.(?<$MINOR>0|[1-9]\d*)\.(?<$PATCH>0|[1-9]\d*)(?:-(?<$PRERELEASE>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<$BUILD_METADATA>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?${'$'}""".toRegex()
+            """^(?<$MAJOR>0|[1-9]\d*)\.(?<$MINOR>0|[1-9]\d*)\.(?<$PATCH>0|[1-9]\d*)(?:-(?<$PRERELEASE>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<$BUILD_METADATA>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$""".toRegex()
 
         /**
          * Returns current version.
@@ -171,7 +171,7 @@ class Version(val version: String = INITIAL_VERSION) : Comparable<Version> {
         inline fun getOrElse(version: String, defaultValue: () -> Version): Version {
             return try {
                 Version(version)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 defaultValue()
             }
         }

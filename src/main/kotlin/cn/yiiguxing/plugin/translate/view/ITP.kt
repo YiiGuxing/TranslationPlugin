@@ -29,11 +29,7 @@ internal object ITP {
     fun createCefHyperlinkHandler(project: Project, handler: CefHyperlinkHandler? = null): CefHyperlinkHandler {
         return object : DefaultCefHyperlinkHandler(project) {
             override fun onHyperlinkActivated(url: String): Boolean {
-                if (super.onHyperlinkActivated(url)) {
-                    return true
-                }
-
-                return handler?.onHyperlinkActivated(url) ?: false
+                return super.onHyperlinkActivated(url) || handler?.onHyperlinkActivated(url) ?: false
             }
         }
     }

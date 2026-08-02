@@ -97,7 +97,7 @@ class Settings : PersistentStateComponent<Settings> {
     /**
      * 翻译时需要忽略的内容
      */
-    var ignoreRegex: String by Delegates.observable("[\\*/#\$]") { _, oldValue: String, newValue: String ->
+    var ignoreRegex: String by Delegates.observable("[\\*/#$]") { _, oldValue: String, newValue: String ->
         if (isInitialized && oldValue != newValue) {
             ignoreRegexPattern = newValue.toIgnoreRegex()
         }

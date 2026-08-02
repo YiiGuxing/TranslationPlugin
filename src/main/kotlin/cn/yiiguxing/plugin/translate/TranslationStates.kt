@@ -73,15 +73,6 @@ class TranslationStates : PersistentStateComponent<TranslationStates> {
         languageScores[lang] = score
     }
 
-    /**
-     * 增加语言常用评分
-     */
-    fun accumulateLanguageScore(lang: Lang) {
-        if (lang != Lang.AUTO) {
-            languageScores[lang] = languageScores.getOrDefault(lang, 0) + 1
-        }
-    }
-
     private fun trimHistoriesSize(maxSize: Int) {
         if (histories.trimToSize(maxSize)) {
             dataChangePublisher.onHistoriesChanged()

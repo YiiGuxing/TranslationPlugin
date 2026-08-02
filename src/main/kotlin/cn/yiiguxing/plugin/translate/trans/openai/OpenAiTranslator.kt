@@ -33,11 +33,7 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
 
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || !OPEN_AI.isConfigured()) {
-            return OPEN_AI.showConfigurationDialog()
-        }
-
-        return true
+        return !(force || !OPEN_AI.isConfigured()) || OPEN_AI.showConfigurationDialog()
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {

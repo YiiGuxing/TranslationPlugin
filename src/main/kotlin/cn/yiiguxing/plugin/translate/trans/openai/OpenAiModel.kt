@@ -50,5 +50,5 @@ enum class OpenAiTTSModel(
 fun OpenAiTTSModel.getSupportedVoices(): List<OpenAiTtsVoice> = if (isClassic) {
     OpenAiTtsVoice.getClassicVoices()
 } else {
-    OpenAiTtsVoice.values().toList()
+    OpenAiTtsVoice.entries
 }

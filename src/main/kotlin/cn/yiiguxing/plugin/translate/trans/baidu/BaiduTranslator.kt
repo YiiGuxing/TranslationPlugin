@@ -62,11 +62,9 @@ object BaiduTranslator : AbstractTranslator() {
     }
 
     override fun checkConfiguration(force: Boolean): Boolean {
-        if (force || Settings.getInstance().baiduTranslateSettings.let { it.appId.isEmpty() || it.getAppKey().isEmpty() }) {
-            return BAIDU.showConfigurationDialog()
-        }
-
-        return true
+        return !(force || Settings.getInstance().baiduTranslateSettings.let {
+            it.appId.isEmpty() || it.getAppKey().isEmpty()
+        }) || BAIDU.showConfigurationDialog()
     }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
