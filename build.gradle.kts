@@ -1,5 +1,6 @@
 import org.apache.tools.ant.filters.EscapeUnicode
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -63,6 +64,13 @@ intellijPlatform {
         // https://plugins.jetbrains.com/plugins/snapshot/list
         // https://plugins.jetbrains.com/plugins/snapshot/8579
         channels = provider { listOf(getReleaseChannel(version.toString())) }
+    }
+
+    pluginVerification {
+        failureLevel = FailureLevel.ALL.filterNot {
+            it == FailureLevel.INTERNAL_API_USAGES ||
+                it == FailureLevel.OVERRIDE_ONLY_API_USAGES
+        }
     }
 }
 
