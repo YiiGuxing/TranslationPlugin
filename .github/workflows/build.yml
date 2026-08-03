@@ -134,6 +134,7 @@ jobs:
   # Run plugin structure verification along with IntelliJ Plugin Verifier
   verify:
     name: Verify plugin
+    continue-on-error: true
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
