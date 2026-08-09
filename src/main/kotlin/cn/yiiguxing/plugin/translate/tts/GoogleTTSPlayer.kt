@@ -1,9 +1,10 @@
 package cn.yiiguxing.plugin.translate.tts
 
 import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.google.googleApiUrl
-import cn.yiiguxing.plugin.translate.trans.google.googleReferer
-import cn.yiiguxing.plugin.translate.trans.google.tk
+import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslateClient
+import cn.yiiguxing.plugin.translate.trans.google.googleLanguageCode
+import cn.yiiguxing.plugin.translate.trans.google.googleTranslateApiKey
+import cn.yiiguxing.plugin.translate.trans.google.googleTranslateApiUrl
 import cn.yiiguxing.plugin.translate.tts.sound.AudioPlayer
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackController
 import cn.yiiguxing.plugin.translate.tts.sound.PlaybackStatus
@@ -11,11 +12,13 @@ import cn.yiiguxing.plugin.translate.tts.sound.source.DefaultPlaybackSource
 import cn.yiiguxing.plugin.translate.tts.sound.source.PlaybackLoader
 import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
+import cn.yiiguxing.plugin.translate.util.Observable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.util.io.HttpRequests
 import java.io.IOException
+import java.util.*
 
 
 /**
@@ -62,11 +65,13 @@ class GoogleTTSPlayer private constructor(
         override fun hasNext(): Boolean = index < sentences.size
 
         override fun onLoad(): ByteArray {
-            val url = getTtsUrl(sentences[index], lang, index++, sentences.size)
-            return HttpRequests.request(url)
+            val url = getTtsUrl(sentences[index++], lang)
+            val response: TextToSpeechResponse = HttpRequests.request(url)
                 .setUserAgent()
-                .googleReferer()
-                .readBytes(indicator)
+                .connect {
+                    Http.defaultGson.fromJson(it.getReader(indicator), TextToSpeechResponse::class.java)
+                }
+            return Base64.getDecoder().decode(response.audioContent)
         }
 
         override fun onError(error: Throwable) {
@@ -78,8 +83,10 @@ class GoogleTTSPlayer private constructor(
         }
     }
 
+    private data class TextToSpeechResponse(val audioContent: String)
+
     companion object {
-        private const val TTS_API_PATH = "/translate_tts"
+        private const val TTS_API_PATH = "/v1/textToSpeech"
 
         private val LOGGER = Logger.getInstance(GoogleTTSPlayer::class.java)
 
@@ -102,18 +109,14 @@ class GoogleTTSPlayer private constructor(
             return GoogleTTSPlayer(project, text, lang)
         }
 
-        private fun getTtsUrl(sentence: String, lang: Lang, index: Int, total: Int): String {
-            val ttsUrl = googleApiUrl(TTS_API_PATH)
-            @Suppress("SpellCheckingInspection")
+        private fun getTtsUrl(sentence: String, lang: Lang): String {
+            val ttsUrl = googleTranslateApiUrl(TTS_API_PATH)
             return UrlBuilder(ttsUrl)
-                .addQueryParameter("client", "gtx")
-                .addQueryParameter("ie", "UTF-8")
-                .addQueryParameter("tl", lang.code)
-                .addQueryParameter("total", total.toString())
-                .addQueryParameter("idx", index.toString())
-                .addQueryParameter("textlen", sentence.length.toString())
-                .addQueryParameter("tk", sentence.tk())
-                .addQueryParameter("q", sentence)
+                .addQueryParameter("client", GoogleTranslateClient.GTX.value)
+                .addQueryParameter("language", lang.googleLanguageCode)
+                .addQueryParameter("text", sentence)
+                .addQueryParameter("voice_speed", "1")
+                .addQueryParameter("key", googleTranslateApiKey(GoogleTranslateClient.GTX))
                 .build()
         }
     }

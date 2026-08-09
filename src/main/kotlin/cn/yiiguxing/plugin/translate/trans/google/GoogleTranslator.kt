@@ -19,16 +19,14 @@ import javax.swing.Icon
  */
 object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
-    private const val TRANSLATE_API_PATH = "/translate_a/single"
-    private const val DOCUMENTATION_TRANSLATION_API_PATH = "/translate_a/t"
-
+    private const val TRANSLATE_API_PATH = "/v1/translate"
+    private const val DOCUMENTATION_TRANSLATION_API_PATH = "/v1/translateHtml"
 
     private val logger: Logger = Logger.getInstance(GoogleTranslator::class.java)
 
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
         .registerTypeAdapter(GDocTranslation::class.java, GDocTranslationDeserializer)
-        .registerTypeAdapter(GSentence::class.java, GSentenceDeserializer)
         .create()
 
     override val id: String = GOOGLE.id
@@ -49,11 +47,36 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return SimpleTranslateClient(
+        val client = SimpleTranslateClient(
             this,
-            { _, _, _ -> call(text, srcLang, targetLang, false) },
-            GoogleTranslator::parseTranslation
-        ).execute(text, srcLang, targetLang)
+            ::callTranslate,
+            ::parseTranslation
+        )
+        client.updateCacheKey { it.update("v2".toByteArray()) }
+        return client.execute(text, srcLang, targetLang)
+    }
+
+    private fun callTranslate(text: String, srcLang: Lang, targetLang: Lang): String {
+        val urlBuilder = UrlBuilder(googleTranslateApiUrl(TRANSLATE_API_PATH))
+            .addQueryParameter("params.client", GoogleTranslateClient.GTX.value)
+            .addQueryParameter("query.text", text)
+            .addQueryParameter("query.source_language", srcLang.googleLanguageCode)
+            .addQueryParameter("query.target_language", targetLang.googleLanguageCode)
+            .addQueryParameter("query.display_language", primaryLanguage.googleLanguageCode)
+            .addQueryParameter("key", googleTranslateApiKey(GoogleTranslateClient.GTX))
+            .addQueryParameters(
+                "data_types",
+                GoogleTranslateDataType.TRANSLATION.value,
+                GoogleTranslateDataType.BILINGUAL_DICTIONARY.value,
+                GoogleTranslateDataType.ROMANIZATION_SOURCE.value,
+                GoogleTranslateDataType.ROMANIZATION_TARGET.value,
+                GoogleTranslateDataType.QUERY_CORRECTION.value,
+                GoogleTranslateDataType.SENTENCE_SPLITS.value,
+                GoogleTranslateDataType.EXAMPLE_SENTENCE.value,
+                GoogleTranslateDataType.ALTERNATIVE_TRANSLATIONS.value
+            )
+
+        return Http.get(urlBuilder.build()) { setUserAgent() }
     }
 
     override fun translateDocumentation(
@@ -69,40 +92,27 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
         val client = SimpleTranslateClient(
             this,
-            { _, _, _ -> call(documentation, srcLang, targetLang, true) },
-            GoogleTranslator::parseDocTranslation
+            ::callTranslateDocumentation,
+            ::parseDocTranslation
         )
-        client.updateCacheKey { it.update("DOCUMENTATION".toByteArray()) }
+        client.updateCacheKey { it.update("DOCUMENTATION.v2".toByteArray()) }
         return client.execute(documentation, srcLang, targetLang).translation ?: ""
     }
 
-    private fun call(text: String, srcLang: Lang, targetLang: Lang, isDocumentation: Boolean): String {
-        val apiPath = if (isDocumentation) DOCUMENTATION_TRANSLATION_API_PATH else TRANSLATE_API_PATH
-        val urlBuilder = UrlBuilder(googleApiUrl(apiPath))
-            .addQueryParameter("sl", srcLang.googleLanguageCode)
-            .addQueryParameter("tl", targetLang.googleLanguageCode)
-
-        if (isDocumentation) {
-            urlBuilder
-                .addQueryParameter("client", "te_lib")
-                .addQueryParameter("format", "html")
-        } else {
-            urlBuilder
-                .addQueryParameter("client", "gtx")
-                .addQueryParameters("dt", "t", /*"at",*/ "bd", "rm", "qca", "ex")
-                .addQueryParameter("dj", "1")
-                .addQueryParameter("ie", "UTF-8")
-                .addQueryParameter("oe", "UTF-8")
-                .addQueryParameter("hl", primaryLanguage.googleLanguageCode) // 词性的语言
-        }
-
-        val url = urlBuilder
-            .addQueryParameter("tk", text.tk())
-            .build()
-            .also { logger.i("Translate url: $it") }
-
-        return Http.post(url, "q" to text) {
-            setUserAgent().googleReferer()
+    private fun callTranslateDocumentation(text: String, srcLang: Lang, targetLang: Lang): String {
+        val data = arrayOf(
+            arrayOf(arrayOf(text), srcLang.googleLanguageCode, targetLang.googleLanguageCode),
+            GoogleTranslateClient.TE_LIB.value
+        )
+        return Http.post(
+            googleTranslateApiUrl(DOCUMENTATION_TRANSLATION_API_PATH),
+            "application/json+protobuf",
+            Http.defaultGson.toJson(data)
+        ) {
+            setUserAgent()
+            tuner {
+                it.setRequestProperty("X-Goog-Api-Key", googleTranslateApiKey(GoogleTranslateClient.TE_LIB))
+            }
         }
     }
 
@@ -172,23 +182,5 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     private object LangDeserializer : JsonDeserializer<Lang> {
         override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext)
                 : Lang = Lang.fromGoogleLanguageCode(jsonElement.asString)
-    }
-
-    @Suppress("SpellCheckingInspection")
-    private object GSentenceDeserializer : JsonDeserializer<GSentence> {
-        override fun deserialize(jsonElement: JsonElement, type: Type, context: JsonDeserializationContext): GSentence {
-            val jsonObject = jsonElement.asJsonObject
-            return when {
-                jsonObject.has("trans") -> {
-                    context.deserialize<GTransSentence>(jsonElement, GTransSentence::class.java)
-                }
-
-                jsonObject.has("translit") || jsonObject.has("src_translit") -> {
-                    context.deserialize<GTranslitSentence>(jsonElement, GTranslitSentence::class.java)
-                }
-
-                else -> throw JsonParseException("Cannot deserialize to type GSentence: $jsonElement")
-            }
-        }
     }
 }

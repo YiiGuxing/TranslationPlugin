@@ -10,7 +10,7 @@ import cn.yiiguxing.plugin.translate.trans.text.TranslationDocument
  */
 object GoogleDictionaryDocumentFactory : TranslationDocument.Factory<GoogleTranslation, DictionaryDocument> {
     override fun getDocument(input: GoogleTranslation): DictionaryDocument? {
-        val dictionaries = input.dict?.map { gDict ->
+        val dictionaries = input.bilingualDictionary?.map { gDict ->
             val entries = gDict.entry?.map {
                 DictionaryEntry(it.word, it.reverseTranslation ?: emptyList(), it.score)
             } ?: emptyList()

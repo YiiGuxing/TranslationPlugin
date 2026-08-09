@@ -96,6 +96,10 @@
                      description="HTTP user agent chromium version override"/>
         <registryKey key="cn.yiiguxing.plugin.translate.webview.debug" defaultValue="false"
                      description="Enable DevTools menu item in WebView."/>
+        <registryKey key="google.translate.gtx.apiKey" defaultValue=""
+                     description="API key for the GTX client used with Google Translate."/>
+        <registryKey key="google.translate.teLib.apiKey" defaultValue=""
+                     description="API key for the TE_LIB client used with Google Translate."/>
 
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>

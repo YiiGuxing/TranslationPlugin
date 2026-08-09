@@ -3,15 +3,8 @@ package cn.yiiguxing.plugin.translate.trans.google
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.LogoHeaderPanel
 import cn.yiiguxing.plugin.translate.ui.UI
-import cn.yiiguxing.plugin.translate.util.w
 import com.intellij.openapi.components.service
-import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.progress.ProcessCanceledException
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
@@ -60,7 +53,6 @@ class GoogleSettingsDialog : DialogWrapper(true) {
                 IdeFocusManager.getInstance(null).requestFocus(serverUrlField, true)
             }
         }
-        testButton.addActionListener { testServer() }
 
         val updateAction = ::update
         serverUrlField.document.addDocumentListener(object : DocumentAdapter() {
@@ -90,7 +82,6 @@ class GoogleSettingsDialog : DialogWrapper(true) {
         return JPanel(UI.migLayout(UI.migSize(4))).apply {
             add(customServerCheckBox)
             add(serverUrlField, UI.cc().width(UI.migSize(400)))
-            add(testButton)
         }
     }
 
@@ -115,37 +106,6 @@ class GoogleSettingsDialog : DialogWrapper(true) {
 
         setErrorText(message("google.settings.dialog.error.invalid.server.url"), serverUrlField)
         return false
-    }
-
-    private fun testServer() {
-        val url = serverUrl ?: return
-        val title = message("google.settings.test.result.title")
-        try {
-            TestTask(rootPane, url).run()
-
-            val message = message("google.settings.test.result.success.message")
-            Messages.showInfoMessage(rootPane, message, title)
-        } catch (e: ProcessCanceledException) {
-            // ignore
-        } catch (e: Throwable) {
-            thisLogger().w("Failed to test server: $url", e)
-            val errorMessage = message("google.settings.test.result.error.message", e.message ?: "")
-            Messages.showErrorDialog(rootPane, errorMessage, title)
-        }
-    }
-
-    private class TestTask(parentComponent: JComponent, private val serverUrl: String) :
-        Task.WithResult<Unit, Exception>(null, parentComponent, message("google.settings.test.task.title"), true) {
-        override fun compute(indicator: ProgressIndicator) {
-            indicator.isIndeterminate = true
-            indicator.checkCanceled()
-            TKK.fetchTKK(serverUrl)
-            indicator.checkCanceled()
-        }
-
-        fun run() {
-            ProgressManager.getInstance().run(this)
-        }
     }
 
     private companion object {
