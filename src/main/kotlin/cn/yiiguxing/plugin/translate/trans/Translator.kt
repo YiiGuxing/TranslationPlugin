@@ -5,7 +5,7 @@ import javax.swing.Icon
 /**
  * Translator
  */
-interface Translator {
+interface Translator : TextTranslator {
 
     val id: String
 
@@ -23,8 +23,6 @@ interface Translator {
     val intervalLimit: Int
 
     fun checkConfiguration(force: Boolean = false): Boolean = true
-
-    fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation
 
     val defaultLangForLocale: Lang
 
