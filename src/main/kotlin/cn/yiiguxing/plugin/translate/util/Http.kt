@@ -163,7 +163,7 @@ object Http {
     fun getAgentChromiumVersion(): String = RegistryManager.getInstance()
         .stringValue(RegistryKeys.HTTP_AGENT_CHROMIUM_VERSION)
         ?.trim()
-        ?.takeIf { it.isNotEmpty() && it.matches(CHROMIUM_VERSION_REGEX) }
+        ?.takeIf { it.isNotEmpty() && it.matches(CHROMIUM_VERSION_REGEX) && it > DEFAULT_CHROMIUM_VERSION }
         ?: DEFAULT_CHROMIUM_VERSION
 
     fun getUserAgent(): String {
