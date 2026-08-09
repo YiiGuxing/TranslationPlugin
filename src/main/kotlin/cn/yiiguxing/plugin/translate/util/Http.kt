@@ -25,6 +25,7 @@ object Http {
     const val DEFAULT_CHROMIUM_VERSION = "150.0.4078.83"
 
     private val CHROMIUM_VERSION_REGEX = Regex("^\\d+(\\.\\d+){3}$")
+    private val DEFAULT_CHROMIUM_VERSION_PARTS = DEFAULT_CHROMIUM_VERSION.split('.')
 
     val defaultGson = Gson()
 
@@ -160,10 +161,28 @@ object Http {
         return InputStreamReader(stream, Charsets.UTF_8).use { it.readText() }
     }
 
+    private fun isVersionGreaterThanDefault(version: String): Boolean {
+        val versionParts = version.split('.')
+        for (index in versionParts.indices) {
+            val comparison = compareVersionPart(versionParts[index], DEFAULT_CHROMIUM_VERSION_PARTS[index])
+            if (comparison != 0) return comparison > 0
+        }
+        return false
+    }
+
+    private fun compareVersionPart(left: String, right: String): Int {
+        val normalizedLeft = left.trimStart('0').ifEmpty { "0" }
+        val normalizedRight = right.trimStart('0').ifEmpty { "0" }
+        return normalizedLeft.length.compareTo(normalizedRight.length).takeIf { it != 0 }
+            ?: normalizedLeft.compareTo(normalizedRight)
+    }
+
     fun getAgentChromiumVersion(): String = RegistryManager.getInstance()
         .stringValue(RegistryKeys.HTTP_AGENT_CHROMIUM_VERSION)
         ?.trim()
-        ?.takeIf { it.isNotEmpty() && it.matches(CHROMIUM_VERSION_REGEX) && it > DEFAULT_CHROMIUM_VERSION }
+        ?.takeIf {
+            it.isNotEmpty() && it.matches(CHROMIUM_VERSION_REGEX) && isVersionGreaterThanDefault(it)
+        }
         ?: DEFAULT_CHROMIUM_VERSION
 
     fun getUserAgent(): String {
@@ -174,7 +193,6 @@ object Http {
         val appleWebKit = "AppleWebKit/537.36"
         val mozilla = "Mozilla/5.0"
         val systemInfo = "Windows NT ${if (SystemInfoRt.isWindows) SystemInfoRt.OS_VERSION else "10.0"}; Win64; x64"
-        @Suppress("SpellCheckingInspection")
         return "$mozilla ($systemInfo) $appleWebKit (KHTML, like Gecko) $chrome $safari $edge"
     }
 
