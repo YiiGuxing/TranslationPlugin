@@ -1,9 +1,11 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import org.jsoup.nodes.Document
 
 interface DocumentationTranslator {
 
+    @RequiresBackgroundThread
     fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document
 
 }
