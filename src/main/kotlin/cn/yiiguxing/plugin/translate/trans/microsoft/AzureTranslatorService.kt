@@ -1,27 +1,38 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
+import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.TextTranslator
+import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.type
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
-
+import org.jsoup.nodes.Document
 
 /**
- * Service for the Microsoft Translator API.
+ * Service for the Azure Translator API.
  */
-internal object MicrosoftTranslatorService {
+internal class AzureTranslatorService(
+    private val authentication: () -> AzureAuthentication
+) : TextTranslator, DocumentationTranslator {
 
-    private const val API_BASE_URL = "https://api.cognitive.microsofttranslator.com"
-    private const val TRANSLATE_API_URL = "$API_BASE_URL/translate"
-    private const val DICTIONARY_LOOKUP_API_URL = "$API_BASE_URL/dictionary/lookup"
-    private const val DICTIONARY_EXAMPLES_API_URL = "$API_BASE_URL/dictionary/examples"
+    companion object {
+        private const val API_BASE_URL = "https://api.cognitive.microsofttranslator.com"
+        private const val TRANSLATE_API_URL = "$API_BASE_URL/translate"
+        private const val DICTIONARY_LOOKUP_API_URL = "$API_BASE_URL/dictionary/lookup"
+        private const val DICTIONARY_EXAMPLES_API_URL = "$API_BASE_URL/dictionary/examples"
 
-    /** The maximum length of the text that can be looked up in the dictionary. */
-    private const val MAX_DICT_INPUT_TEXT_LENGTH = 100
+        /** The maximum length of the text that can be looked up in the dictionary. */
+        private const val MAX_DICT_INPUT_TEXT_LENGTH = 100
 
-    /** The maximum number of items that can be looked up in the dictionary examples. */
-    private const val MAX_DICT_EXAMPLE_INPUT_ITEM_COUNT = 10
+        /** The maximum number of items that can be looked up in the dictionary examples. */
+        private const val MAX_DICT_EXAMPLE_INPUT_ITEM_COUNT = 10
+    }
+
+
+    constructor(authentication: AzureAuthentication) : this({ authentication })
+
 
     /**
      * Translates the [text] from [from] language to [to] language.
@@ -43,13 +54,11 @@ internal object MicrosoftTranslatorService {
             addQueryParameter("textType", textType.value)
         }
 
-        val accessToken = MicrosoftEdgeAuthService.service().getAccessToken()
         return MicrosoftHttp.post<Array<out MicrosoftTranslation>>(
             translateUrl,
-            AzureAuthentication.AccessToken(accessToken),
+            authentication(),
             listOf(InputText(text))
-        )
-            .firstOrNull()
+        ).firstOrNull()
     }
 
     /**
@@ -72,10 +81,9 @@ internal object MicrosoftTranslatorService {
             addQueryParameter("to", to.microsoftLanguageCode)
         }
 
-        val accessToken = MicrosoftEdgeAuthService.service().getAccessToken()
         return MicrosoftHttp.post<Array<out DictionaryLookup>>(
             lookupUrl,
-            AzureAuthentication.AccessToken(accessToken),
+            authentication(),
             arrayOf(InputText(text)),
         ).first()
     }
@@ -106,10 +114,9 @@ internal object MicrosoftTranslatorService {
             addQueryParameter("to", to.microsoftLanguageCode)
         }
 
-        val accessToken = MicrosoftEdgeAuthService.service().getAccessToken()
         return MicrosoftHttp.post(
             lookupUrl,
-            AzureAuthentication.AccessToken(accessToken),
+            authentication(),
             request,
             typeOfT = type<List<DictionaryExample>>()
         )
@@ -120,5 +127,21 @@ internal object MicrosoftTranslatorService {
             .addQueryParameter("api-version", "3.0")
             .apply(block)
             .build()
+    }
+
+    override fun translate(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Translation {
+        TODO("Not yet implemented")
+    }
+
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document {
+        TODO("Not yet implemented")
     }
 }

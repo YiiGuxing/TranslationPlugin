@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.service.CacheService
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.AzureAuthentication
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftError
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.util.Http
@@ -21,17 +22,17 @@ internal object MicrosoftHttp {
 
     inline fun <reified T> post(
         url: String,
-        token: String,
+        authentication: AzureAuthentication,
         data: Any,
         cache: Boolean = true,
         noinline builder: RequestBuilder.() -> Unit = {}
     ): T {
-        return post(url, token, data, T::class.java, cache, builder)
+        return post(url, authentication, data, T::class.java, cache, builder)
     }
 
     fun <T> post(
         url: String,
-        token: String,
+        authentication: AzureAuthentication,
         data: Any,
         typeOfT: Type,
         cache: Boolean = true,
@@ -49,7 +50,7 @@ internal object MicrosoftHttp {
             }
         }
 
-        val resultJson = post(url, token, json, builder)
+        val resultJson = post(url, authentication, json, builder)
         val result: T = try {
             Http.defaultGson.fromJson(resultJson, typeOfT)
         } catch (e: JsonParseException) {
@@ -71,14 +72,28 @@ internal object MicrosoftHttp {
 
     private fun post(
         url: String,
-        token: String,
+        authentication: AzureAuthentication,
         dataJson: String,
         builder: RequestBuilder.() -> Unit
     ): String {
         return try {
             HttpRequests.post(url, Http.MIME_TYPE_JSON)
                 .accept(Http.MIME_TYPE_JSON)
-                .tuner { it.setRequestProperty("Authorization", "Bearer $token") }
+                .tuner { connection ->
+                    when (authentication) {
+                        is AzureAuthentication.AccessToken -> connection.setRequestProperty(
+                            "Authorization",
+                            "Bearer ${authentication.value}"
+                        )
+
+                        is AzureAuthentication.SubscriptionKey -> {
+                            connection.setRequestProperty("Ocp-Apim-Subscription-Key", authentication.key)
+                            authentication.region?.let { region ->
+                                connection.setRequestProperty("Ocp-Apim-Subscription-Region", region)
+                            }
+                        }
+                    }
+                }
                 .apply(builder)
                 .send(dataJson) { it.readString() }
         } catch (e: Http.StatusException) {
