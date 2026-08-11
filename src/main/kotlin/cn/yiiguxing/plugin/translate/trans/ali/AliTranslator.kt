@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.trans.ali
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.orUnknown
 import cn.yiiguxing.plugin.translate.trans.ali.models.AliMTRequest
 import cn.yiiguxing.plugin.translate.trans.ali.models.AliMTResponse
 import cn.yiiguxing.plugin.translate.trans.ali.models.AliTranslation
@@ -107,7 +107,7 @@ object AliTranslator : AbstractTranslator(), DocumentationTranslator {
     ): Translation {
         logger.i("Translate result: $translation")
 
-        val explicitSrcLang = srcLang.toExplicit()
+        val explicitSrcLang = srcLang.orUnknown()
         // 可能会返回一个空JSON对象：`{}`
         if (translation.isBlank() || translation.trim().matches(EMPTY_RESPONSE_REGEX)) {
             return Translation(original, original, explicitSrcLang, targetLang, listOf(explicitSrcLang))

@@ -507,10 +507,9 @@ enum class Lang(
         fun Lang.isExplicit(): Boolean = this != AUTO && this != UNKNOWN
 
         /**
-         * Try to convert to an explicit language: Returns [UNKNOWN] (even though [UNKNOWN]
-         * is not an explicit language) if it is [AUTO], otherwise return itself.
+         * Returns [UNKNOWN] if this language is [AUTO], otherwise returns itself.
          */
-        fun Lang.toExplicit(): Lang = when (this) {
+        fun Lang.orUnknown(): Lang = when (this) {
             AUTO -> UNKNOWN
             else -> this
         }

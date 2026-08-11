@@ -3,7 +3,7 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
-import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.orUnknown
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.DictionaryLookup
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
@@ -35,12 +35,12 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         }
 
         val msTranslation = MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN)
-            ?: return Translation(text, text, srcLang.toExplicit(), targetLang)
+            ?: return Translation(text, text, srcLang.orUnknown(), targetLang)
 
         val translation = msTranslation.translations.first()
         val sourceLang = msTranslation.detectedLanguage?.language
             ?.let { Lang.fromMicrosoftLanguageCode(it) }
-            ?: srcLang.toExplicit()
+            ?: srcLang.orUnknown()
 
         val dictionaryLookup = getDictionaryLookup(text, sourceLang, targetLang)
         val dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument)
