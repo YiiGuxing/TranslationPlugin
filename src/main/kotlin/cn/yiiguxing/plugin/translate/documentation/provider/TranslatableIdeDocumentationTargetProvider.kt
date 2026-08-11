@@ -62,7 +62,7 @@ class TranslatableIdeDocumentationTargetProvider(
 @Suppress("UnstableApiUsage")
 private object DocumentationTargetProviderFactory {
     private const val RIDER_PRODUCT_CODE = "RD"
-    private const val PLUGIN_ID_RADLER = "org.jetbrains.plugins.clion.radler"
+    private val RADLER_PLUGIN_ID = PluginId.getId("org.jetbrains.plugins.clion.radler")
 
     fun createProvider(project: Project): IdeDocumentationTargetProvider {
         val productCode = ApplicationInfo.getInstance().build.productCode
@@ -72,7 +72,9 @@ private object DocumentationTargetProviderFactory {
             // In CLion, it actually uses Rider's documentation target provider, which is provided by
             // the "C++ Language Support via ReSharper" plugin (ID: org.jetbrains.plugins.clion.radler).
             // And the "CLion C and C++" plugin has been supported in IDEA since version 2025.3.
-            else -> if (PluginManagerCore.isPluginInstalled(PluginId.getId(PLUGIN_ID_RADLER))) {
+            else -> if (PluginManagerCore.isPluginInstalled(RADLER_PLUGIN_ID)
+                && !PluginManagerCore.isDisabled(RADLER_PLUGIN_ID)
+            ) {
                 riderDocumentationTargetProvider(project)
             } else null
         } ?: defaultProvider(project)
