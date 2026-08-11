@@ -1,16 +1,19 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.type
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
+import org.jsoup.nodes.Document
 
 
 /**
  * Service for the Microsoft Translator API.
  */
-internal object MicrosoftTranslatorService {
+internal object MicrosoftTranslatorService : TextTranslator, DocumentationTranslator {
 
     private const val API_BASE_URL = "https://api.cognitive.microsofttranslator.com"
     private const val TRANSLATE_API_URL = "$API_BASE_URL/translate"
@@ -120,5 +123,66 @@ internal object MicrosoftTranslatorService {
             .addQueryParameter("api-version", "3.0")
             .apply(block)
             .build()
+    }
+
+    override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        if (!targetLang.isExplicit()) {
+            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.localeName}")
+        }
+
+        val msTranslation = translate(text, srcLang, targetLang, TextType.PLAIN)
+
+        val (dictionaryLookup, dictionaryExamples) = msTranslation?.let { mt ->
+            val sourceLang = MicrosoftTranslationFactory.detectedSourceLang(mt, srcLang)
+            val lookup = getDictionaryLookup(text, sourceLang, targetLang)
+            lookup to lookup?.let { getDictionaryExamples(it, sourceLang, targetLang) }
+        } ?: (null to null)
+
+        return MicrosoftTranslationFactory.toTranslation(
+            text,
+            srcLang,
+            targetLang,
+            msTranslation,
+            dictionaryLookup,
+            dictionaryExamples
+        )
+    }
+
+    private fun getDictionaryLookup(text: String, sourceLang: Lang, targetLang: Lang): DictionaryLookup? {
+        if (!sourceLang.isExplicit() || sourceLang == targetLang || !canLookupDictionary(text)) {
+            return null
+        }
+
+        return try {
+            dictionaryLookup(text, sourceLang, targetLang)
+        } catch (e: Exception) {
+            thisLogger().warn("Failed to lookup dictionary", e)
+            null
+        }
+    }
+
+    private fun getDictionaryExamples(
+        dictionaryLookup: DictionaryLookup,
+        sourceLang: Lang,
+        targetLang: Lang
+    ): List<DictionaryExample>? {
+        return try {
+            dictionaryExamples(dictionaryLookup, sourceLang, targetLang)
+        } catch (e: Exception) {
+            thisLogger().warn("Failed to get dictionary examples", e)
+            null
+        }
+    }
+
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document = documentation.translateBody { bodyHTML ->
+        translate(bodyHTML, srcLang, targetLang, TextType.HTML)
+            ?.translations
+            ?.firstOrNull()
+            ?.text
+            ?: bodyHTML
     }
 }

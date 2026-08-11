@@ -1,12 +1,11 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.Lang
-import cn.yiiguxing.plugin.translate.trans.TextTranslator
-import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.type
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import org.jsoup.nodes.Document
 
@@ -24,7 +23,7 @@ internal class AzureTranslatorService(
         private const val DICTIONARY_EXAMPLES_API_URL = "$API_BASE_URL/dictionary/examples"
 
         /** The maximum length of the text that can be looked up in the dictionary. */
-        private const val MAX_DICT_INPUT_TEXT_LENGTH = 100
+        private const val MAX_DICT_INPUT_TEXT_LENGTH = 50
 
         /** The maximum number of items that can be looked up in the dictionary examples. */
         private const val MAX_DICT_EXAMPLE_INPUT_ITEM_COUNT = 10
@@ -129,19 +128,64 @@ internal class AzureTranslatorService(
             .build()
     }
 
-    override fun translate(
-        text: String,
-        srcLang: Lang,
+    override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation {
+        if (!targetLang.isExplicit()) {
+            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.localeName}")
+        }
+
+        val msTranslation = translate(text, srcLang, targetLang, TextType.PLAIN)
+
+        val (dictionaryLookup, dictionaryExamples) = msTranslation?.let { mt ->
+            val sourceLang = MicrosoftTranslationFactory.detectedSourceLang(mt, srcLang)
+            val lookup = getDictionaryLookup(text, sourceLang, targetLang)
+            lookup to lookup?.let { getDictionaryExamples(it, sourceLang, targetLang) }
+        } ?: (null to null)
+
+        return MicrosoftTranslationFactory.toTranslation(
+            text,
+            srcLang,
+            targetLang,
+            msTranslation,
+            dictionaryLookup,
+            dictionaryExamples
+        )
+    }
+
+    private fun getDictionaryLookup(text: String, sourceLang: Lang, targetLang: Lang): DictionaryLookup? {
+        if (!sourceLang.isExplicit() || sourceLang == targetLang || !canLookupDictionary(text)) {
+            return null
+        }
+
+        return try {
+            dictionaryLookup(text, sourceLang, targetLang)
+        } catch (e: Exception) {
+            thisLogger().warn("Failed to lookup dictionary", e)
+            null
+        }
+    }
+
+    private fun getDictionaryExamples(
+        dictionaryLookup: DictionaryLookup,
+        sourceLang: Lang,
         targetLang: Lang
-    ): Translation {
-        TODO("Not yet implemented")
+    ): List<DictionaryExample>? {
+        return try {
+            dictionaryExamples(dictionaryLookup, sourceLang, targetLang)
+        } catch (e: Exception) {
+            thisLogger().warn("Failed to get dictionary examples", e)
+            null
+        }
     }
 
     override fun translateDocumentation(
         documentation: Document,
         srcLang: Lang,
         targetLang: Lang
-    ): Document {
-        TODO("Not yet implemented")
+    ): Document = documentation.translateBody { bodyHTML ->
+        translate(bodyHTML, srcLang, targetLang, TextType.HTML)
+            ?.translations
+            ?.firstOrNull()
+            ?.text
+            ?: bodyHTML
     }
 }
