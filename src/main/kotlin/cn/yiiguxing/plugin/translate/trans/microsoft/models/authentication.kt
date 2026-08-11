@@ -9,7 +9,21 @@ internal sealed interface AzureAuthentication {
 
     data class SubscriptionKey(val key: String, val region: String? = null) : AzureAuthentication
 
+    companion object {
+        const val HEADER_AUTHORIZATION = "Authorization"
+
+        @Suppress("SpellCheckingInspection")
+        const val HEADER_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key"
+
+        @Suppress("SpellCheckingInspection")
+        const val HEADER_SUBSCRIPTION_REGION = "Ocp-Apim-Subscription-Region"
+
+        const val AUTHORIZATION_BEARER_PREFIX = "Bearer "
+    }
 }
+
+internal fun AzureAuthentication.AccessToken.authorizationHeaderValue(): String =
+    AzureAuthentication.AUTHORIZATION_BEARER_PREFIX + value
 
 internal data class BingAuthentication(
     val ig: String,
