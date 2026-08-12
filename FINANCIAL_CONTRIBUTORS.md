@@ -67,6 +67,7 @@ Support this project by becoming a sponsor! Your logo will show up here with a l
 | Wali |  | 64.00 CNY |
 | SWmachine |  | 60.00 CNY |
 | Kagada | [github.com/kagada](https://github.com/kagada) | 60.00 CNY |
+| 清羽 | [github.com/buffcow](https://github.com/buffcow) | 50.00 CNY |
 | 吃土少年 |  | 50.00 CNY |
 | 王俊涛 |  | 50.00 CNY |
 | Yadong | [github.com/yadonglives](https://github.com/yadonglives) | 50.00 CNY |
