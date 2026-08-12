@@ -52,7 +52,7 @@ internal object MicrosoftTranslatorService : TextTranslator, DocumentationTransl
             AzureAuthentication.AccessToken(accessToken),
             listOf(InputText(text))
         )
-            .firstOrNull()
+            ?.firstOrNull()
     }
 
     /**
@@ -69,7 +69,7 @@ internal object MicrosoftTranslatorService : TextTranslator, DocumentationTransl
      * [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-lookup)
      */
     @RequiresBackgroundThread
-    fun dictionaryLookup(text: String, from: Lang, to: Lang): DictionaryLookup {
+    fun dictionaryLookup(text: String, from: Lang, to: Lang): DictionaryLookup? {
         val lookupUrl = requestUrl(DICTIONARY_LOOKUP_API_URL) {
             addQueryParameter("from", from.microsoftLanguageCode)
             addQueryParameter("to", to.microsoftLanguageCode)
@@ -80,7 +80,7 @@ internal object MicrosoftTranslatorService : TextTranslator, DocumentationTransl
             lookupUrl,
             AzureAuthentication.AccessToken(accessToken),
             arrayOf(InputText(text)),
-        ).first()
+        )?.first()
     }
 
     /**
@@ -91,7 +91,7 @@ internal object MicrosoftTranslatorService : TextTranslator, DocumentationTransl
      * [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-examples)
      */
     @RequiresBackgroundThread
-    fun dictionaryExamples(dictionaryLookup: DictionaryLookup, from: Lang, to: Lang): List<DictionaryExample> {
+    fun dictionaryExamples(dictionaryLookup: DictionaryLookup, from: Lang, to: Lang): List<DictionaryExample>? {
         val request = dictionaryLookup.translations
             .asSequence()
             .sortedByDescending { it.confidence }

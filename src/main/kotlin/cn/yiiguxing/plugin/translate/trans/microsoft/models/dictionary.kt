@@ -35,8 +35,6 @@ internal data class DictionaryExampleInputText(
 )
 
 internal data class DictionaryExample(
-    @SerializedName("normalizedSource") val normalizedSource: String,
-    @SerializedName("normalizedTarget") val normalizedTarget: String,
     @SerializedName("examples") val examples: List<DictionaryExampleItem>,
 )
 

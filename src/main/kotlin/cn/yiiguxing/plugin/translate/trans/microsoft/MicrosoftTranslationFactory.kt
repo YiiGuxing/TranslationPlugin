@@ -30,7 +30,8 @@ internal object MicrosoftTranslationFactory {
         targetLang: Lang,
         msTranslation: MicrosoftTranslation?,
         dictionaryLookup: DictionaryLookup? = null,
-        dictionaryExamples: List<DictionaryExample>? = null
+        dictionaryExamples: List<DictionaryExample>? = null,
+        spell: String? = null
     ): Translation {
         if (msTranslation == null) {
             return Translation(text, text, srcLang.orUnknown(), targetLang)
@@ -50,6 +51,7 @@ internal object MicrosoftTranslationFactory {
             translation.text,
             sourceLang,
             Lang.fromMicrosoftLanguageCode(translation.to),
+            spell = spell,
             dictDocument = dictDocument,
             extraDocuments = extraDocuments
         )

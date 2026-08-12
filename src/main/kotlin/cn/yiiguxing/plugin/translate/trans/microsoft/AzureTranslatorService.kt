@@ -45,6 +45,8 @@ internal class AzureTranslatorService(
      */
     @RequiresBackgroundThread
     fun translate(text: String, from: Lang, to: Lang, textType: TextType = TextType.PLAIN): MicrosoftTranslation? {
+        checkTargetLanguage(to)
+
         val translateUrl = requestUrl(TRANSLATE_API_URL) {
             if (from != Lang.AUTO) {
                 addQueryParameter("from", from.microsoftLanguageCode)
@@ -57,7 +59,7 @@ internal class AzureTranslatorService(
             translateUrl,
             authentication(),
             listOf(InputText(text))
-        ).firstOrNull()
+        )?.firstOrNull()
     }
 
     /**
@@ -74,7 +76,9 @@ internal class AzureTranslatorService(
      * [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-lookup)
      */
     @RequiresBackgroundThread
-    fun dictionaryLookup(text: String, from: Lang, to: Lang): DictionaryLookup {
+    fun dictionaryLookup(text: String, from: Lang, to: Lang): DictionaryLookup? {
+        checkTargetLanguage(to)
+
         val lookupUrl = requestUrl(DICTIONARY_LOOKUP_API_URL) {
             addQueryParameter("from", from.microsoftLanguageCode)
             addQueryParameter("to", to.microsoftLanguageCode)
@@ -84,7 +88,7 @@ internal class AzureTranslatorService(
             lookupUrl,
             authentication(),
             arrayOf(InputText(text)),
-        ).first()
+        )?.first()
     }
 
     /**
@@ -95,7 +99,9 @@ internal class AzureTranslatorService(
      * [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/reference/v3-0-dictionary-examples)
      */
     @RequiresBackgroundThread
-    fun dictionaryExamples(dictionaryLookup: DictionaryLookup, from: Lang, to: Lang): List<DictionaryExample> {
+    fun dictionaryExamples(dictionaryLookup: DictionaryLookup, from: Lang, to: Lang): List<DictionaryExample>? {
+        checkTargetLanguage(to)
+
         val request = dictionaryLookup.translations
             .asSequence()
             .sortedByDescending { it.confidence }
@@ -121,6 +127,12 @@ internal class AzureTranslatorService(
         )
     }
 
+    private fun checkTargetLanguage(targetLang: Lang) {
+        if (!targetLang.isExplicit()) {
+            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.localeName}")
+        }
+    }
+
     private inline fun requestUrl(baseUrl: String, block: UrlBuilder.() -> Unit): String {
         return UrlBuilder(baseUrl)
             .addQueryParameter("api-version", "3.0")
@@ -129,9 +141,7 @@ internal class AzureTranslatorService(
     }
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        if (!targetLang.isExplicit()) {
-            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.localeName}")
-        }
+        checkTargetLanguage(targetLang)
 
         val msTranslation = translate(text, srcLang, targetLang, TextType.PLAIN)
 

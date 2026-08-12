@@ -27,7 +27,7 @@ internal object MicrosoftHttp {
         data: Any,
         cache: Boolean = true,
         noinline builder: RequestBuilder.() -> Unit = {}
-    ): T {
+    ): T? {
         return post(url, authentication, data, T::class.java, cache, builder)
     }
 
@@ -38,7 +38,7 @@ internal object MicrosoftHttp {
         typeOfT: Type,
         cache: Boolean = true,
         builder: RequestBuilder.() -> Unit = {}
-    ): T {
+    ): T? {
         val json = Http.defaultGson.toJson(data)
         return post(url, Http.MIME_TYPE_JSON, json, typeOfT, cache) {
             tuner { connection ->
@@ -72,7 +72,7 @@ internal object MicrosoftHttp {
         data: String,
         cache: Boolean = true,
         noinline builder: RequestBuilder.() -> Unit = {}
-    ): T {
+    ): T? {
         return post(url, contentType, data, T::class.java, cache, builder)
     }
 
@@ -83,7 +83,7 @@ internal object MicrosoftHttp {
         typeOfT: Type,
         cache: Boolean = true,
         builder: RequestBuilder.() -> Unit = {}
-    ): T {
+    ): T? {
         return postWithCache(url, contentType, data, cache, typeOfT) {
             post(url, contentType, data, builder)
         }
@@ -96,7 +96,7 @@ internal object MicrosoftHttp {
         cache: Boolean,
         typeOfT: Type,
         send: () -> String
-    ): T {
+    ): T? {
         if (cache) {
             val cacheKey = getDiskCacheKey(url, contentType, requestData)
             CacheService.getInstance().getDiskCache(cacheKey)?.let {
@@ -109,7 +109,7 @@ internal object MicrosoftHttp {
         }
 
         val resultJson = send()
-        val result: T = try {
+        val result: T? = if (resultJson.isBlank()) null else try {
             Http.defaultGson.fromJson(resultJson, typeOfT)
         } catch (e: JsonParseException) {
             logJsonParseError(e, requestData, resultJson)
