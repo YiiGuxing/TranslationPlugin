@@ -166,9 +166,11 @@ internal class BingEdgeTranslatorService(
             return null
         }
 
-        val results = chunks.map { chunk ->
-            scope.async(Dispatchers.IO) { translateTextInner(chunk, from, to) }
-        }.awaitAll()
+        val results = coroutineScope {
+            chunks.map { chunk ->
+                async { translateTextInner(chunk, from, to) }
+            }.awaitAll()
+        }
 
         val failedCount = results.count { it == null }
         if (failedCount > 0) {
