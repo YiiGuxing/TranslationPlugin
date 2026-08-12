@@ -65,7 +65,9 @@ internal class BingEdgeTranslatorService(
     private val authService: AsyncExpiringData<BingAuthentication> =
         object : AsyncExpiringData<BingAuthentication>(scope) {
             override suspend fun load(): BingAuthentication {
-                val html = HttpRequests.request(BING_TRANSLATOR_URL).setUserAgent().readString()
+                val html = withContext(Dispatchers.IO) {
+                    HttpRequests.request(BING_TRANSLATOR_URL).setUserAgent().readString()
+                }
                 return parseBingAuthentication(html)
             }
 
@@ -243,11 +245,13 @@ internal class BingEdgeTranslatorService(
             "to" to to.microsoftLanguageCode,
         )
 
-        return MicrosoftHttp.post<Array<out MicrosoftTranslation>>(
-            url = translateUrl,
-            contentType = Http.MIME_TYPE_FORM,
-            data = formData
-        )?.firstOrNull()
+        return withContext(Dispatchers.IO) {
+            MicrosoftHttp.post<Array<out MicrosoftTranslation>>(
+                url = translateUrl,
+                contentType = Http.MIME_TYPE_FORM,
+                data = formData
+            )?.firstOrNull()
+        }
     }
 
     /**
@@ -271,11 +275,13 @@ internal class BingEdgeTranslatorService(
             "fromLang" to lang.microsoftLanguageCode,
         )
 
-        return MicrosoftHttp.post<SpellCheckResult>(
-            url = spellCheckUrl,
-            contentType = Http.MIME_TYPE_FORM,
-            data = formData
-        )?.correctedText
+        return withContext(Dispatchers.IO) {
+            MicrosoftHttp.post<SpellCheckResult>(
+                url = spellCheckUrl,
+                contentType = Http.MIME_TYPE_FORM,
+                data = formData
+            )?.correctedText
+        }
     }
 
     /**
@@ -317,12 +323,14 @@ internal class BingEdgeTranslatorService(
             "translatedtext" to translatedText
         )
 
-        return MicrosoftHttp.post<List<DictionaryLookup>>(
-            url = lookupUrl,
-            contentType = Http.MIME_TYPE_FORM,
-            data = formData,
-            typeOfT = type<List<DictionaryLookup>>()
-        )?.firstOrNull()
+        return withContext(Dispatchers.IO) {
+            MicrosoftHttp.post<List<DictionaryLookup>>(
+                url = lookupUrl,
+                contentType = Http.MIME_TYPE_FORM,
+                data = formData,
+                typeOfT = type<List<DictionaryLookup>>()
+            )?.firstOrNull()
+        }
     }
 
     /**
@@ -355,12 +363,14 @@ internal class BingEdgeTranslatorService(
             "translation" to translation
         )
 
-        return MicrosoftHttp.post<List<DictionaryExample>>(
-            url = exampleUrl,
-            contentType = Http.MIME_TYPE_FORM,
-            data = formData,
-            typeOfT = type<List<DictionaryExample>>()
-        )
+        return withContext(Dispatchers.IO) {
+            MicrosoftHttp.post<List<DictionaryExample>>(
+                url = exampleUrl,
+                contentType = Http.MIME_TYPE_FORM,
+                data = formData,
+                typeOfT = type<List<DictionaryExample>>()
+            )
+        }
     }
 
     @RequiresBackgroundThread
