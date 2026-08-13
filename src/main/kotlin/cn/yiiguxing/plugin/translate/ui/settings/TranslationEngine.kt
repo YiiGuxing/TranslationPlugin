@@ -14,6 +14,8 @@ import cn.yiiguxing.plugin.translate.trans.deepl.DeeplTranslator
 import cn.yiiguxing.plugin.translate.trans.google.GoogleSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.google.GoogleTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslator
+import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftSettings
+import cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftSettingsDialog
 import cn.yiiguxing.plugin.translate.trans.openai.ConfigType
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiCredentials
 import cn.yiiguxing.plugin.translate.trans.openai.OpenAiSettings
@@ -76,10 +78,7 @@ enum class TranslationEngine(
         }
 
     val hasConfiguration: Boolean
-        get() = when (this) {
-            MICROSOFT -> false
-            else -> true
-        }
+        get() = true
 
     fun supportedSourceLanguages(): List<Lang> = translator.supportedSourceLanguages
     fun supportedTargetLanguages(): List<Lang> = translator.supportedTargetLanguages
@@ -87,7 +86,10 @@ enum class TranslationEngine(
     fun isConfigured(): Boolean {
         val settings = Settings.getInstance()
         return when (this) {
-            MICROSOFT, GOOGLE -> true
+            MICROSOFT -> MicrosoftSettings.getInstance().translator !=
+                    cn.yiiguxing.plugin.translate.trans.microsoft.MicrosoftTranslatorType.AZURE ||
+                    MicrosoftSettings.getInstance().isSubscriptionKeySet
+            GOOGLE -> true
             YOUDAO -> isConfigured(settings.youdaoTranslateSettings)
             BAIDU -> isConfigured(settings.baiduTranslateSettings)
             ALI -> isConfigured(settings.aliTranslateSettings)
@@ -125,6 +127,7 @@ enum class TranslationEngine(
             ).showAndGet()
 
             GOOGLE -> GoogleSettingsDialog().showAndGet()
+            MICROSOFT -> MicrosoftSettingsDialog().showAndGet()
             DEEPL -> DeeplSettingsDialog().showAndGet()
             OPEN_AI -> OpenAISettingsDialog(ConfigType.TRANSLATOR).showAndGet()
 
