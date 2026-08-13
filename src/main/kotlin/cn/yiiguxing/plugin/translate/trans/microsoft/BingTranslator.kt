@@ -282,7 +282,7 @@ internal class BingTranslator(
                 url = spellCheckUrl,
                 contentType = Http.MIME_TYPE_FORM,
                 data = formData
-            )?.correctedText
+            )?.correctedText?.takeIf { it.isNotBlank() }
         }
     }
 
