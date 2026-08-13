@@ -99,7 +99,7 @@ internal object MicrosoftHttp {
     ): T? {
         if (cache) {
             val cacheKey = getDiskCacheKey(url, contentType, requestData)
-            CacheService.getInstance().getDiskCache(cacheKey)?.let {
+            CacheService.getInstance().getDiskCache(cacheKey)?.takeIf { it.isNotBlank() }?.let {
                 try {
                     return Http.defaultGson.fromJson(it, typeOfT)
                 } catch (_: Exception) {
@@ -110,13 +110,13 @@ internal object MicrosoftHttp {
 
         val resultJson = send()
         val result: T? = if (resultJson.isBlank()) null else try {
-            Http.defaultGson.fromJson(resultJson, typeOfT)
+            Http.defaultGson.fromJson<T>(resultJson, typeOfT)
         } catch (e: JsonParseException) {
             logJsonParseError(e, requestData, resultJson)
             throw e
         }
 
-        if (cache) {
+        if (cache && resultJson.isNotBlank()) {
             val cacheKey = getDiskCacheKey(url, contentType, requestData)
             CacheService.getInstance().putDiskCache(cacheKey, resultJson)
         }
