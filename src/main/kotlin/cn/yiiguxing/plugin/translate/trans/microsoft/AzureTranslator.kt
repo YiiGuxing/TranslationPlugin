@@ -10,9 +10,10 @@ import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import org.jsoup.nodes.Document
 
 /**
- * Service for the Azure Translator API.
+ * Azure Translator.
  */
-internal class AzureTranslatorService(
+@Suppress("unused")
+internal class AzureTranslator(
     private val authentication: () -> AzureAuthentication
 ) : TextTranslator, DocumentationTranslator {
 

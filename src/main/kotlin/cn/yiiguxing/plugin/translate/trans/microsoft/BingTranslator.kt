@@ -2,9 +2,12 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.openapi.data.AsyncExpiringData
 import cn.yiiguxing.plugin.translate.openapi.data.CachePolicy
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
-import cn.yiiguxing.plugin.translate.trans.microsoft.BingEdgeTranslatorService.Companion.MAX_CHARS_PER_REQUEST
+import cn.yiiguxing.plugin.translate.trans.TextTranslator
+import cn.yiiguxing.plugin.translate.trans.Translation
+import cn.yiiguxing.plugin.translate.trans.UnsupportedLanguageException
+import cn.yiiguxing.plugin.translate.trans.microsoft.BingTranslator.Companion.MAX_CHARS_PER_REQUEST
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
@@ -14,19 +17,16 @@ import cn.yiiguxing.plugin.translate.util.type
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.io.HttpRequests
 import kotlinx.coroutines.*
-import org.jsoup.nodes.Document
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * A translation service backed by the Bing Translator and the Edge Translator
- * HTTP endpoints. It is used to translate text and documentation, check spelling,
- * and look up dictionary entries / example sentences.
+ * Bing Translator.
  *
  * @property scope the [CoroutineScope] used to run background HTTP requests.
  */
-internal class BingEdgeTranslatorService(
-    private val scope: CoroutineScope,
-) : TextTranslator, DocumentationTranslator {
+internal class BingTranslator(
+    private val scope: CoroutineScope
+) : TextTranslator {
 
     companion object {
         private const val BING_ORIGIN = "https://www.bing.com"
@@ -43,7 +43,7 @@ internal class BingEdgeTranslatorService(
         private val ABUSE_PREVENTION_REGEX =
             """params_AbusePreventionHelper\s*=\s*\[\s*(\d+)\s*,\s*"([^"]+)"\s*,\s*(\d+)\s*]""".toRegex()
         private val IG_REGEX = """IG\s*:\s*"([A-Fa-f0-9]+)"""".toRegex()
-        private val IID_REGEX = """data-iid\\s*=\\s*"([^"]+)"""".toRegex()
+        private val IID_REGEX = """data-iid\s*=\s*"([^"]+)"""".toRegex()
 
         /** The safety margin subtracted from the server-provided TTL before caching. */
         private const val EXPIRY_SAFETY_MARGIN_MS = 60_000L // 1 minute
@@ -415,14 +415,5 @@ internal class BingEdgeTranslatorService(
                 dictionaryExamples = dictionaryExamplesDeferred.await()
             )
         }
-    }
-
-    @RequiresBackgroundThread
-    override fun translateDocumentation(
-        documentation: Document,
-        srcLang: Lang,
-        targetLang: Lang
-    ): Document {
-        TODO("Not yet implemented")
     }
 }

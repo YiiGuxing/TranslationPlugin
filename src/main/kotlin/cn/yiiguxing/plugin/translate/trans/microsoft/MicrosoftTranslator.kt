@@ -4,6 +4,7 @@ import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
+import com.intellij.openapi.components.service
 import org.jsoup.nodes.Document
 import javax.swing.Icon
 
@@ -23,7 +24,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedTargetLanguages: List<Lang> = MicrosoftLanguageAdapter.targetLanguages
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        return MicrosoftTranslatorService.translate(text, srcLang, targetLang)
+        return service<MicrosoftTranslationService>().translate(text, srcLang, targetLang)
     }
 
     override fun translateDocumentation(
@@ -31,7 +32,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         srcLang: Lang,
         targetLang: Lang
     ): Document = checkError {
-        MicrosoftTranslatorService.translateDocumentation(documentation, srcLang, targetLang)
+        service<MicrosoftTranslationService>().translateDocumentation(documentation, srcLang, targetLang)
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
