@@ -9,7 +9,6 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.service
-import com.intellij.openapi.util.Disposer
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Transient
 

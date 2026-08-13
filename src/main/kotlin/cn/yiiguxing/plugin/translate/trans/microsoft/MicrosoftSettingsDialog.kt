@@ -2,14 +2,13 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
+import cn.yiiguxing.plugin.translate.util.credential.StringCredentialManager
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.components.JBPasswordField
-import com.intellij.ui.components.JBTextField
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.DocumentAdapter
 import javax.swing.JComponent
-import javax.swing.JComboBox
 
 internal class MicrosoftSettingsDialog : DialogWrapper(false) {
 
@@ -17,7 +16,7 @@ internal class MicrosoftSettingsDialog : DialogWrapper(false) {
     private var selectedTranslator = settings.translator
     private var selectedRegion = settings.region
     private val keyEditor = CredentialEditor(disposable) {
-        object : cn.yiiguxing.plugin.translate.util.credential.StringCredentialManager {
+        object : StringCredentialManager {
             override var credential: String?
                 get() = settings.getSubscriptionKey()
                 set(value) = settings.setSubscriptionKey(value)
@@ -25,9 +24,7 @@ internal class MicrosoftSettingsDialog : DialogWrapper(false) {
                 get() = settings.isSubscriptionKeySet
         }
     }
-    private lateinit var translatorComboBox: JComboBox<MicrosoftTranslatorType>
     private lateinit var subscriptionKeyField: JBPasswordField
-    private lateinit var regionField: JBTextField
 
     init {
         title = message("microsoft.settings.dialog.title")
@@ -38,7 +35,6 @@ internal class MicrosoftSettingsDialog : DialogWrapper(false) {
         row(message("microsoft.settings.dialog.label.translator")) {
             comboBox(MicrosoftTranslatorType.values().toList())
                 .component.apply {
-                    translatorComboBox = this
                     selectedItem = selectedTranslator
                     renderer = SimpleListCellRenderer.create { label, value, _ -> label.text = value.displayName }
                     addItemListener { selectedTranslator = selectedItem as MicrosoftTranslatorType }
@@ -53,7 +49,6 @@ internal class MicrosoftSettingsDialog : DialogWrapper(false) {
         row(message("microsoft.settings.dialog.label.region")) {
             textField()
                 .component.apply {
-                    regionField = this
                     text = selectedRegion
                     document.addDocumentListener(object : DocumentAdapter() {
                         override fun textChanged(e: javax.swing.event.DocumentEvent) {
