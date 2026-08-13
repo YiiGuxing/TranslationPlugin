@@ -71,9 +71,10 @@ internal object MicrosoftHttp {
         contentType: String,
         data: String,
         cache: Boolean = true,
+        cacheKey: String? = null,
         noinline builder: RequestBuilder.() -> Unit = {}
     ): T? {
-        return post(url, contentType, data, T::class.java, cache, builder)
+        return post(url, contentType, data, T::class.java, cache, cacheKey, builder)
     }
 
     fun <T> post(
@@ -82,9 +83,10 @@ internal object MicrosoftHttp {
         data: String,
         typeOfT: Type,
         cache: Boolean = true,
+        cacheKey: String? = null,
         builder: RequestBuilder.() -> Unit = {}
     ): T? {
-        return postWithCache(url, contentType, data, cache, typeOfT) {
+        return postWithCache(url, contentType, data, cache, cacheKey, typeOfT) {
             post(url, contentType, data, builder)
         }
     }
@@ -94,12 +96,13 @@ internal object MicrosoftHttp {
         contentType: String,
         requestData: String,
         cache: Boolean,
+        cacheKey: String?,
         typeOfT: Type,
         send: () -> String
     ): T? {
         if (cache) {
-            val cacheKey = getDiskCacheKey(url, contentType, requestData)
-            CacheService.getInstance().getDiskCache(cacheKey)?.takeIf { it.isNotBlank() }?.let {
+            val diskCacheKey = cacheKey ?: getDiskCacheKey(url, contentType, requestData)
+            CacheService.getInstance().getDiskCache(diskCacheKey)?.takeIf { it.isNotBlank() }?.let {
                 try {
                     return Http.defaultGson.fromJson(it, typeOfT)
                 } catch (_: Exception) {
@@ -117,8 +120,8 @@ internal object MicrosoftHttp {
         }
 
         if (cache && resultJson.isNotBlank()) {
-            val cacheKey = getDiskCacheKey(url, contentType, requestData)
-            CacheService.getInstance().putDiskCache(cacheKey, resultJson)
+            val diskCacheKey = cacheKey ?: getDiskCacheKey(url, contentType, requestData)
+            CacheService.getInstance().putDiskCache(diskCacheKey, resultJson)
         }
 
         return result

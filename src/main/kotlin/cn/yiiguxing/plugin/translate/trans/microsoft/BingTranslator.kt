@@ -12,11 +12,13 @@ import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
+import cn.yiiguxing.plugin.translate.util.md5
 import cn.yiiguxing.plugin.translate.util.splitSentence
 import cn.yiiguxing.plugin.translate.util.type
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.io.HttpRequests
 import kotlinx.coroutines.*
+import kotlin.text.any
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -140,13 +142,22 @@ internal class BingTranslator(
      * @param params the request-specific form parameters.
      * @return the URL-encoded form body.
      */
-    private fun requestForm(auth: BingAuthentication, vararg params: Pair<String, String>): String {
+    private fun requestForm(auth: BingAuthentication, params: Map<String, String>): String {
         return Http.getFormUrlEncoded(
-            params.toMap() + mapOf(
+            params + mapOf(
                 "token" to auth.token,
                 "key" to auth.key
             )
         )
+    }
+
+    /**
+     * Builds a stable disk-cache key that does not depend on the ephemeral
+     * [BingAuthentication] values (`IG`, `IID`, `token` and `key`), so that
+     * the cache remains valid across requests and IDE sessions.
+     */
+    private fun cacheKey(baseUrl: String, params: Map<String, String>): String {
+        return "$baseUrl;${Http.MIME_TYPE_FORM};${Http.getFormUrlEncoded(params.toSortedMap())}".md5()
     }
 
     /**
@@ -240,18 +251,19 @@ internal class BingTranslator(
 
         val auth = authService.get()
         val translateUrl = requestUrl(BING_TRANSLATOR_API_URL, auth)
-        val formData = requestForm(
-            auth,
+        val params = mapOf(
             "text" to text,
             "fromLang" to (if (from.isExplicit()) from.microsoftLanguageCode else "auto-detect"),
             "to" to to.microsoftLanguageCode,
         )
+        val formData = requestForm(auth, params)
 
         return withContext(Dispatchers.IO) {
             MicrosoftHttp.post<Array<out MicrosoftTranslation>>(
                 url = translateUrl,
                 contentType = Http.MIME_TYPE_FORM,
-                data = formData
+                data = formData,
+                cacheKey = cacheKey(BING_TRANSLATOR_API_URL, params)
             )?.firstOrNull()
         }
     }
@@ -271,17 +283,18 @@ internal class BingTranslator(
 
         val auth = authService.get()
         val spellCheckUrl = requestUrl(BING_SPELLCHECK_API_URL, auth)
-        val formData = requestForm(
-            auth,
+        val params = mapOf(
             "text" to text,
             "fromLang" to lang.microsoftLanguageCode,
         )
+        val formData = requestForm(auth, params)
 
         return withContext(Dispatchers.IO) {
             MicrosoftHttp.post<SpellCheckResult>(
                 url = spellCheckUrl,
                 contentType = Http.MIME_TYPE_FORM,
-                data = formData
+                data = formData,
+                cacheKey = cacheKey(BING_SPELLCHECK_API_URL, params)
             )?.correctedText?.takeIf { it.isNotBlank() }
         }
     }
@@ -317,19 +330,20 @@ internal class BingTranslator(
         val lookupUrl = requestUrl(BING_DICTIONARY_LOOKUP_API_URL, auth)
 
         @Suppress("SpellCheckingInspection")
-        val formData = requestForm(
-            auth,
+        val params = mapOf(
             "from" to from.microsoftLanguageCode,
             "to" to to.microsoftLanguageCode,
             "text" to text,
             "translatedtext" to translatedText
         )
+        val formData = requestForm(auth, params)
 
         return withContext(Dispatchers.IO) {
             MicrosoftHttp.post<List<DictionaryLookup>>(
                 url = lookupUrl,
                 contentType = Http.MIME_TYPE_FORM,
                 data = formData,
+                cacheKey = cacheKey(BING_DICTIONARY_LOOKUP_API_URL, params),
                 typeOfT = type<List<DictionaryLookup>>()
             )?.firstOrNull()
         }
@@ -357,19 +371,20 @@ internal class BingTranslator(
 
         val auth = authService.get()
         val exampleUrl = requestUrl(BING_EXAMPLE_API_URL, auth)
-        val formData = requestForm(
-            auth,
+        val params = mapOf(
             "from" to from.microsoftLanguageCode,
             "to" to to.microsoftLanguageCode,
             "text" to text,
             "translation" to translation
         )
+        val formData = requestForm(auth, params)
 
         return withContext(Dispatchers.IO) {
             MicrosoftHttp.post<List<DictionaryExample>>(
                 url = exampleUrl,
                 contentType = Http.MIME_TYPE_FORM,
                 data = formData,
+                cacheKey = cacheKey(BING_EXAMPLE_API_URL, params),
                 typeOfT = type<List<DictionaryExample>>()
             )
         }
