@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Fixed the issue where Microsoft Translator failed.
+- Fixed the issue where Google Translate document translation failed.
+- 修复了微软翻译失败的问题
+- 修复了谷歌翻译文档翻译失败的问题
+
 ## [3.8.4] (2026/07/25)
 
 - Compatible with 2026.2.
