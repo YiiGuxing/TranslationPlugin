@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent

@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.HtmlDocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.UnsupportedLanguageException

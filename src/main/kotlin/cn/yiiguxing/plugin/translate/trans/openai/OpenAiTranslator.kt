@@ -3,6 +3,8 @@ package cn.yiiguxing.plugin.translate.trans.openai
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIStatusException
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.EmptyPromptException
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.Prompt

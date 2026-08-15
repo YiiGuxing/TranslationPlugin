@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans
 
+import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode

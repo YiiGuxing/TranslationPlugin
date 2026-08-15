@@ -1,4 +1,4 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.documentation
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

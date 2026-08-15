@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.openapi.documentation.DocumentationElementFilter
-import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.ui.scaled

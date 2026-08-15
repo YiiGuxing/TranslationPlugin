@@ -2,6 +2,8 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.*
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
 import cn.yiiguxing.plugin.translate.util.type

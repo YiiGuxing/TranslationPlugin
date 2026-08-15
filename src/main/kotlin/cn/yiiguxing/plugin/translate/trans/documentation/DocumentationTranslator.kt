@@ -1,5 +1,6 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.documentation
 
+import cn.yiiguxing.plugin.translate.trans.Lang
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import org.jsoup.nodes.Document
 

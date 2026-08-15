@@ -8,6 +8,8 @@ import cn.yiiguxing.plugin.translate.trans.ali.models.AliMTRequest
 import cn.yiiguxing.plugin.translate.trans.ali.models.AliMTResponse
 import cn.yiiguxing.plugin.translate.trans.ali.models.AliTranslation
 import cn.yiiguxing.plugin.translate.trans.ali.models.AliTranslationInput
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.ALI
 import cn.yiiguxing.plugin.translate.util.*
 import com.google.gson.Gson

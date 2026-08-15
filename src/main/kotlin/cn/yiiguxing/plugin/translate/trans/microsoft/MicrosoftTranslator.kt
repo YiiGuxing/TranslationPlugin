@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
 import com.intellij.openapi.components.service

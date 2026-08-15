@@ -3,6 +3,8 @@ package cn.yiiguxing.plugin.translate.trans.youdao
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.YOUDAO
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.i

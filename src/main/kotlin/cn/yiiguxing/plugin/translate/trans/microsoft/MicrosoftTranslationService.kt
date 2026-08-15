@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.TextTranslator
 import cn.yiiguxing.plugin.translate.trans.Translation
