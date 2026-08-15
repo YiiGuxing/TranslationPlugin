@@ -29,5 +29,10 @@ internal fun translateInlineDocumentation(
     }
 
     val translatedText = Documentations.getDocumentationString(document)
-    return InlineDocTranslationInfo.translated(translatedText, translator.id, hasError)
+    return InlineDocTranslationInfo.translated(
+        translatedText = translatedText,
+        translatorId = translator.id,
+        translationCacheToken = translator.translationCacheToken,
+        hasError = hasError
+    )
 }
