@@ -13,13 +13,14 @@ internal class MicrosoftTranslationService(
     scope: CoroutineScope
 ) : TextTranslator, DocumentationTranslator {
 
-    private val bingTranslator = BingTranslator(scope)
+    private val bingTranslator: TextTranslator = BingTranslator(scope)
+    private val documentationTranslator: DocumentationTranslator = EdgeDocumentationTranslator()
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         return bingTranslator.translate(text, srcLang, targetLang)
     }
 
     override fun translateDocumentation(documentation: Document, srcLang: Lang, targetLang: Lang): Document {
-        return documentation
+        return documentationTranslator.translateDocumentation(documentation, srcLang, targetLang)
     }
 }

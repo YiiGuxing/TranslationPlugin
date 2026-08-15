@@ -1,0 +1,93 @@
+package cn.yiiguxing.plugin.translate.trans.microsoft
+
+import cn.yiiguxing.plugin.translate.trans.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.HtmlDocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
+import cn.yiiguxing.plugin.translate.trans.UnsupportedLanguageException
+import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftTranslation
+import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
+import cn.yiiguxing.plugin.translate.util.UrlBuilder
+import org.jsoup.nodes.Document
+
+/**
+ * Documentation translator that uses the Microsoft Edge translation service.
+ *
+ * Unlike translating the whole HTML body at once, the body is traversed and only
+ * the text content of translatable elements is translated, keeping the document
+ * structure, styles and links intact. See [HtmlDocumentationTranslator].
+ *
+ * @property keepOriginal Whether to keep the original text after translation.
+ */
+internal class EdgeDocumentationTranslator(
+    private val keepOriginal: Boolean = false
+) : DocumentationTranslator {
+
+    companion object {
+        private const val TRANSLATION_URL = "https://edge.microsoft.com/translate/translatetext"
+
+        /** The maximum number of texts in a single translation request. */
+        private const val MAX_TEXTS_PER_REQUEST = 100
+    }
+
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document {
+        checkTargetLanguage(targetLang)
+
+        HtmlDocumentationTranslator { texts ->
+            translateTextsInBatches(texts, srcLang, targetLang)
+        }.translateDocument(documentation, keepOriginal)
+
+        return documentation
+    }
+
+    private fun translateTextsInBatches(texts: List<String>, from: Lang, to: Lang): List<String> {
+        return texts.chunked(MAX_TEXTS_PER_REQUEST).flatMap { batch ->
+            val translations = translateTexts(batch, from, to)
+            batch.indices.map { index ->
+                translations.getOrNull(index)
+                    ?.translations
+                    ?.firstOrNull()
+                    ?.text
+                    .orEmpty()
+            }
+        }
+    }
+
+    private fun translateTexts(texts: List<String>, from: Lang, to: Lang): List<MicrosoftTranslation> {
+        checkTargetLanguage(to)
+        return MicrosoftHttp
+            .post<Array<out MicrosoftTranslation>>(
+                url = getTranslationUrl(from, to),
+                data = texts
+            ) {
+                setUserAgent()
+            }
+            ?.toList()
+            ?: emptyList()
+    }
+
+    private fun checkTargetLanguage(lang: Lang) {
+        if (!lang.isExplicit()) {
+            throw UnsupportedLanguageException(
+                lang,
+                "Microsoft Edge Translator does not support automatic language detection for target language."
+            )
+        }
+    }
+
+    private fun getTranslationUrl(from: Lang, to: Lang): String {
+        val urlBuilder = UrlBuilder(TRANSLATION_URL)
+        if (from.isExplicit()) {
+            urlBuilder.addQueryParameter("from", from.microsoftLanguageCode)
+        }
+
+        return urlBuilder
+            .addQueryParameter("to", to.microsoftLanguageCode)
+            .addQueryParameter("isEnterpriseClient", false.toString())
+            .build()
+    }
+}

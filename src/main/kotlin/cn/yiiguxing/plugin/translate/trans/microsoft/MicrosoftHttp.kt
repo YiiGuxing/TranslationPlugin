@@ -10,6 +10,7 @@ import cn.yiiguxing.plugin.translate.util.Http.send
 import cn.yiiguxing.plugin.translate.util.d
 import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.JsonParseException
+import com.intellij.ide.plugins.marketplace.setHeadersViaTuner
 import com.intellij.openapi.diagnostic.Attachment
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
@@ -41,6 +42,7 @@ internal object MicrosoftHttp {
     ): T? {
         val json = Http.defaultGson.toJson(data)
         return post(url, Http.MIME_TYPE_JSON, json, typeOfT, cache) {
+            setHeadersViaTuner()
             tuner { connection ->
                 when (authentication) {
                     is AzureAuthentication.AccessToken -> connection.setRequestProperty(
@@ -75,6 +77,17 @@ internal object MicrosoftHttp {
         noinline builder: RequestBuilder.() -> Unit = {}
     ): T? {
         return post(url, contentType, data, T::class.java, cache, cacheKey, builder)
+    }
+
+    inline fun <reified T> post(
+        url: String,
+        data: Any,
+        cache: Boolean = true,
+        cacheKey: String? = null,
+        noinline builder: RequestBuilder.() -> Unit = {}
+    ): T? {
+        val json = Http.defaultGson.toJson(data)
+        return post(url, Http.MIME_TYPE_JSON, json, T::class.java, cache, cacheKey, builder)
     }
 
     fun <T> post(
