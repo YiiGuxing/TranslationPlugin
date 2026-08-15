@@ -56,11 +56,18 @@ internal class AzureTranslator(
             addQueryParameter("textType", textType.value)
         }
 
-        return MicrosoftHttp.post<Array<out MicrosoftTranslation>>(
-            translateUrl,
-            authentication(),
-            listOf(InputText(text))
-        )?.firstOrNull()
+        return MicrosoftHttp
+            .post<Array<out MicrosoftTranslation>>(
+                translateUrl,
+                authentication(),
+                listOf(InputText(text))
+            )
+            ?.firstOrNull()
+            ?.apply {
+                if (sourceText == null) {
+                    sourceText = SourceText(text)
+                }
+            }
     }
 
     /**
