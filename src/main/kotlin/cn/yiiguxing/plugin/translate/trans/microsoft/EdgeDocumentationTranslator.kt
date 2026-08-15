@@ -1,13 +1,14 @@
 package cn.yiiguxing.plugin.translate.trans.microsoft
 
-import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.UnsupportedLanguageException
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftTranslation
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
+import kotlinx.coroutines.*
 import org.jsoup.nodes.Document
 
 /**
@@ -17,9 +18,11 @@ import org.jsoup.nodes.Document
  * the text content of translatable elements is translated, keeping the document
  * structure, styles and links intact. See [HtmlDocumentationTranslator].
  *
+ * @property scope the [CoroutineScope] used to run background translation requests.
  * @property keepOriginal Whether to keep the original text after translation.
  */
 internal class EdgeDocumentationTranslator(
+    private val scope: CoroutineScope,
     private val keepOriginal: Boolean = false
 ) : DocumentationTranslator {
 
@@ -45,15 +48,26 @@ internal class EdgeDocumentationTranslator(
     }
 
     private fun translateTextsInBatches(texts: List<String>, from: Lang, to: Lang): List<String> {
-        return texts.chunked(MAX_TEXTS_PER_REQUEST).flatMap { batch ->
-            val translations = translateTexts(batch, from, to)
-            batch.indices.map { index ->
-                translations.getOrNull(index)
-                    ?.translations
-                    ?.firstOrNull()
-                    ?.text
-                    .orEmpty()
-            }
+        val batches = texts.chunked(MAX_TEXTS_PER_REQUEST)
+        if (batches.size <= 1) {
+            return translateBatch(batches.firstOrNull().orEmpty(), from, to)
+        }
+
+        return runBlocking {
+            batches.map { batch ->
+                scope.async(Dispatchers.IO) { translateBatch(batch, from, to) }
+            }.awaitAll().flatten()
+        }
+    }
+
+    private fun translateBatch(batch: List<String>, from: Lang, to: Lang): List<String> {
+        val translations = translateTexts(batch, from, to)
+        return batch.indices.map { index ->
+            translations.getOrNull(index)
+                ?.translations
+                ?.firstOrNull()
+                ?.text
+                .orEmpty()
         }
     }
 
