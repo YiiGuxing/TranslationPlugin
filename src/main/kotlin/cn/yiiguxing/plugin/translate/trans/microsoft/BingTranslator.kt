@@ -264,7 +264,7 @@ internal class BingTranslator(
                 contentType = Http.MIME_TYPE_FORM,
                 data = formData,
                 cacheKey = cacheKey(BING_TRANSLATOR_API_URL, params)
-            )?.firstOrNull()
+            ) { setUserAgent() }?.firstOrNull()
         }
     }
 
@@ -290,12 +290,17 @@ internal class BingTranslator(
         val formData = requestForm(auth, params)
 
         return withContext(Dispatchers.IO) {
-            MicrosoftHttp.post<SpellCheckResult>(
-                url = spellCheckUrl,
-                contentType = Http.MIME_TYPE_FORM,
-                data = formData,
-                cacheKey = cacheKey(BING_SPELLCHECK_API_URL, params)
-            )?.correctedText?.takeIf { it.isNotBlank() }
+            MicrosoftHttp
+                .post<SpellCheckResult>(
+                    url = spellCheckUrl,
+                    contentType = Http.MIME_TYPE_FORM,
+                    data = formData,
+                    cacheKey = cacheKey(BING_SPELLCHECK_API_URL, params)
+                ) {
+                    setUserAgent()
+                }
+                ?.correctedText
+                ?.takeIf { it.isNotBlank() }
         }
     }
 
@@ -345,7 +350,7 @@ internal class BingTranslator(
                 data = formData,
                 cacheKey = cacheKey(BING_DICTIONARY_LOOKUP_API_URL, params),
                 typeOfT = type<List<DictionaryLookup>>()
-            )?.firstOrNull()
+            ) { setUserAgent() }?.firstOrNull()
         }
     }
 
@@ -386,7 +391,9 @@ internal class BingTranslator(
                 data = formData,
                 cacheKey = cacheKey(BING_EXAMPLE_API_URL, params),
                 typeOfT = type<List<DictionaryExample>>()
-            )
+            ) {
+                setUserAgent()
+            }
         }
     }
 
