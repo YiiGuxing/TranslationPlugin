@@ -33,6 +33,7 @@ internal class EdgeDocumentationTranslator(
         private const val MAX_TEXTS_PER_REQUEST = 100
     }
 
+    @Suppress("unused")
     constructor(scope: CoroutineScope, keepOriginal: Boolean = false) : this(scope, { keepOriginal })
 
     override fun translateDocumentation(

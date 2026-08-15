@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.TextTranslator
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import kotlinx.coroutines.CoroutineScope
 import org.jsoup.nodes.Document
 
@@ -14,7 +15,9 @@ internal class MicrosoftTranslationService(
 ) : TextTranslator, DocumentationTranslator {
 
     private val bingTranslator: TextTranslator = BingTranslator(scope)
-    private val documentationTranslator: DocumentationTranslator = EdgeDocumentationTranslator(scope)
+    private val documentationTranslator: DocumentationTranslator = EdgeDocumentationTranslator(scope) {
+        service<MicrosoftTranslatorSettings>().keepOriginal
+    }
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         return bingTranslator.translate(text, srcLang, targetLang)
