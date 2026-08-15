@@ -19,11 +19,11 @@ import org.jsoup.nodes.Document
  * structure, styles and links intact. See [HtmlDocumentationTranslator].
  *
  * @property scope the [CoroutineScope] used to run background translation requests.
- * @property keepOriginal Whether to keep the original text after translation.
+ * @property keepOriginal Provides whether to keep the original text after translation.
  */
 internal class EdgeDocumentationTranslator(
     private val scope: CoroutineScope,
-    private val keepOriginal: Boolean = false
+    private val keepOriginal: () -> Boolean
 ) : DocumentationTranslator {
 
     companion object {
@@ -32,6 +32,8 @@ internal class EdgeDocumentationTranslator(
         /** The maximum number of texts in a single translation request. */
         private const val MAX_TEXTS_PER_REQUEST = 100
     }
+
+    constructor(scope: CoroutineScope, keepOriginal: Boolean = false) : this(scope, { keepOriginal })
 
     override fun translateDocumentation(
         documentation: Document,
@@ -42,7 +44,7 @@ internal class EdgeDocumentationTranslator(
 
         HtmlDocumentationTranslator { texts ->
             translateTextsInBatches(texts, srcLang, targetLang)
-        }.translateDocument(documentation, keepOriginal)
+        }.translateDocument(documentation, keepOriginal())
 
         return documentation
     }
