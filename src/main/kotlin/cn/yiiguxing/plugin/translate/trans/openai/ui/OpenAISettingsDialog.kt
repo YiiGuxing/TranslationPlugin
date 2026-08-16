@@ -3,10 +3,8 @@ package cn.yiiguxing.plugin.translate.trans.openai.ui
 import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.message
-import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.ui.selected
-import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComponentValidator
@@ -402,20 +400,7 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
 
         applyApiKeys()
 
-        val oldProvider = settings.provider
-        val newProvider = provider
-        if (oldProvider != newProvider ||
-            openAiState.useCustomModel != settings.openAi.useCustomModel ||
-            (!openAiState.useCustomModel && openAiState.model != settings.openAi.model) ||
-            (openAiState.useCustomModel && openAiState.customModel != settings.openAi.customModel) ||
-            azureState.deployment != settings.azure.deployment
-        ) {
-            service<CacheService>().removeMemoryCache { key, _ ->
-                key.translator == TranslationEngine.OPEN_AI.id
-            }
-        }
-
-        settings.provider = newProvider
+        settings.provider = provider
         settings.openAi.copyFrom(openAiState)
         settings.azure.copyFrom(azureState)
 

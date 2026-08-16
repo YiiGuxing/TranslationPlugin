@@ -2,7 +2,10 @@ package cn.yiiguxing.plugin.translate.trans.openai
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.service.CacheService
-import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.AbstractTranslator
+import cn.yiiguxing.plugin.translate.trans.ErrorInfo
+import cn.yiiguxing.plugin.translate.trans.Lang
+import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIStatusException
@@ -33,6 +36,17 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
     private val settings: OpenAiSettings get() = service<OpenAiSettings>()
     private val promptService: PromptService get() = service<PromptService>()
 
+
+    override val translationCacheToken: String
+        get() = when (val options = settings.getOptions(settings.provider)) {
+            is OpenAiService.OpenAIOptions -> {
+                "model=${if (options.useCustomModel) options.customModel ?: "" else options.model.modelId}"
+            }
+
+            is OpenAiService.AzureOptions -> {
+                "deployment=${options.deployment ?: ""};apiVersion=${options.apiVersion.value}"
+            }
+        }
 
     override fun checkConfiguration(force: Boolean): Boolean {
         if (force || !OPEN_AI.isConfigured()) {
@@ -87,14 +101,8 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun getCacheKey(prompt: Prompt): String {
-        val provider = settings.provider
-        val model = when (val options = settings.getOptions(provider)) {
-            is OpenAiService.OpenAIOptions -> options.model.modelId
-            is OpenAiService.AzureOptions -> options.deployment ?: ""
-        }
-        val text = prompt.messages.joinToString { "${it.role} ${it.content}" }
-
-        return "$id$provider$model$text".md5()
+        val text = prompt.messages.joinToString(";") { "${it.role}:${it.content}" }
+        return "$id;$translationCacheToken;$text".md5()
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
