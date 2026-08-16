@@ -1,6 +1,5 @@
 package cn.yiiguxing.plugin.translate.trans.documentation
 
-import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator.Companion.SKIP_TAGS
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
