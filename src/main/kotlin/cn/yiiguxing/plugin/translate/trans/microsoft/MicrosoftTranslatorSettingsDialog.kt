@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.JBDimension
 import icons.TranslationIcons
 import javax.swing.JComponent
 
@@ -27,7 +28,9 @@ class MicrosoftTranslatorSettingsDialog : DialogWrapper(true) {
         return LogoHeaderPanel(
             TranslationIcons.load("/image/microsoft_translator_logo.svg"),
             configurationPanel
-        )
+        ).apply {
+            minimumSize = JBDimension(400, 100)
+        }
     }
 
     private fun createConfigurationPanel(): DialogPanel {
@@ -35,7 +38,10 @@ class MicrosoftTranslatorSettingsDialog : DialogWrapper(true) {
             row {
                 checkBox(message("microsoft.settings.dialog.keep.original"))
                     .bindSelected(settings::keepOriginal)
-                    .comment(message("microsoft.settings.dialog.keep.original.experimental"))
+                    .comment(
+                        comment = message("microsoft.settings.dialog.keep.original.experimental"),
+                        maxLineLength = 50
+                    )
             }
         }
     }
