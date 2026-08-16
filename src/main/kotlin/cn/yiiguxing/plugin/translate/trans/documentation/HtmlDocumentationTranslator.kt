@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.trans.documentation
 
+import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator.Companion.SKIP_TAGS
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -182,7 +183,10 @@ class HtmlDocumentationTranslator(
         }
 
         val classes = className().split(Regex("\\s+")).map { it.lowercase() }
-        return classes.any { it == "notranslate" || it == "skiptranslate" }
+        return classes.any {
+            @Suppress("SpellCheckingInspection")
+            it == "notranslate" || it == "skiptranslate"
+        }
     }
 
     /**
@@ -213,12 +217,19 @@ class HtmlDocumentationTranslator(
     }
 
     /**
-     * Writes the translated text of [translatedHtml] back to the given [nodes].
+     * Rebuilds the translated content of [translatedHtml] according to the
+     * original structure of [nodes].
      *
-     * @return `true` if the translation was applied; `false` if [translatedHtml]
-     *   could not be parsed and the original nodes were left untouched.
+     * The translated text is parsed into a list of text nodes and placeholder
+     * elements. Placeholder elements are mapped back to their original elements
+     * by index, while text nodes are copied verbatim. The whole segment is
+     * rebuilt from scratch instead of patching text nodes in place, so that a
+     * reordered or otherwise reshaped translation is applied correctly.
+     *
+     * @return the rebuilt nodes, or `null` if [translatedHtml] could not be
+     *   parsed and the original nodes should be left untouched.
      */
-    private fun denormalize(nodes: List<Node>, translatedHtml: String): Boolean {
+    private fun rebuild(nodes: List<Node>, translatedHtml: String): List<Node>? {
         val sanitized = escapeNonPlaceholderTags(translatedHtml)
         val normalized = sanitized.replace(PLACEHOLDER_TAG_REGEX) { match ->
             val groups = match.groupValues
@@ -227,37 +238,38 @@ class HtmlDocumentationTranslator(
 
         val translatedNodes = Jsoup.parseBodyFragment(normalized).body().childNodes().toList()
         if (translatedNodes.isEmpty()) {
-            return false
+            return null
         }
 
-        denormalizeNodeList(nodes, translatedNodes)
-        return true
+        return rebuildNodeList(nodes, translatedNodes)
     }
 
-    private fun denormalizeNodeList(nodes: List<Node>, translatedNodes: List<Node>) {
+    private fun rebuildNodeList(nodes: List<Node>, translatedNodes: List<Node>): List<Node> {
         val originalElements = nodes.filterIsInstance<Element>()
-        val originalTextNodes = nodes.filterIsInstance<TextNode>().toMutableList()
-        var textIndex = 0
+        val result = mutableListOf<Node>()
 
         for (child in translatedNodes) {
             when (child) {
-                is TextNode -> {
-                    val target = originalTextNodes.getOrNull(textIndex)
-                    if (target != null) {
-                        target.text(child.text())
-                        textIndex++
-                    }
-                }
-
+                is TextNode -> result.add(TextNode(child.text()))
                 is Element -> {
                     val placeholder = parsePlaceholderTag(child.tagName()) ?: continue
                     val original = originalElements.getOrNull(placeholder.second) ?: continue
-                    if (original.tagName().lowercase() !in PROTECTED_INLINE_TAGS) {
-                        denormalizeNodeList(original.childNodes(), child.childNodes())
-                    }
+                    result.add(rebuildElement(original, child))
                 }
             }
         }
+        return result
+    }
+
+    private fun rebuildElement(original: Element, placeholder: Element): Element {
+        val rebuilt = original.clone()
+        if (rebuilt.tagName().lowercase() !in PROTECTED_INLINE_TAGS) {
+            rebuilt.empty()
+            rebuildNodeList(original.childNodes(), placeholder.childNodes()).forEach {
+                rebuilt.appendChild(it)
+            }
+        }
+        return rebuilt
     }
 
     private fun parsePlaceholderTag(tagName: String): Pair<Int, Int>? {
@@ -294,13 +306,12 @@ class HtmlDocumentationTranslator(
                 return
             }
 
+            val rebuiltNodes = rebuild(nodes, translatedText) ?: return
+
             if (keepOriginal) {
-                val translatedNodes = nodes.map { it.clone() }
-                if (denormalize(translatedNodes, translatedText)) {
-                    appendTranslation(translatedNodes)
-                }
+                appendTranslation(rebuiltNodes)
             } else {
-                denormalize(nodes, translatedText)
+                replaceNodes(nodes, rebuiltNodes)
             }
         }
 
@@ -314,6 +325,18 @@ class HtmlDocumentationTranslator(
                 anchor.after(node)
                 anchor = node
             }
+        }
+
+        private fun replaceNodes(originalNodes: List<Node>, newNodes: List<Node>) {
+            if (originalNodes.isEmpty() || newNodes.isEmpty()) {
+                return
+            }
+
+            val anchor = originalNodes.first()
+            for (node in newNodes) {
+                anchor.before(node)
+            }
+            originalNodes.forEach { it.remove() }
         }
     }
 }
