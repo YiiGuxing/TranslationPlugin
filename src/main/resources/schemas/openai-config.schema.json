@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://yiiguxing.github.io/TranslationPlugin/schemas/openai-config.schema.json",
+  "title": "OpenAI-Compatible Chat Completions Request Configuration",
+  "description": "Configuration file for customizing chat completions requests of OpenAI-compatible APIs (Translation only, not TTS).\n\n- 'default' applies to all models, 'models' entries are merged into (and override) 'default'.\n- The request 'model' and 'messages' fields are always forced by the plugin and cannot be configured.\n- String values in 'body' and 'headers' may reference the placeholders ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. Use $${...} to escape a literal ${...}.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this JSON Schema. Added automatically by the plugin when editing the config file."
+    },
+    "version": {
+      "type": "integer",
+      "description": "The configuration version."
+    },
+    "default": {
+      "$ref": "#/definitions/modelConfig",
+      "description": "The default request configuration, shared by all models."
+    },
+    "models": {
+      "type": "object",
+      "description": "Per-model request configurations, keyed by the request model id (the selected model's id, or the custom model name). Each entry is merged into 'default', overriding the same keys.",
+      "additionalProperties": {
+        "$ref": "#/definitions/modelConfig"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "modelConfig": {
+      "type": "object",
+      "description": "Request customization for a model. The request body 'model' and 'messages' fields cannot be configured and are always ignored.",
+      "properties": {
+        "languageMapping": {
+          "type": "object",
+          "description": "Maps plugin languages to provider-specific language definitions.\nKeys are either the Lang enum names (e.g. 'CHINESE_SIMPLIFIED') or the language codes (e.g. 'zh-CN'); values are the language strings used in requests and prompt templates. Unmapped languages fall back to the language's English name.",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "examples": [
+            {
+              "zh-CN": "Simplified Chinese",
+              "zh-TW": "Traditional Chinese",
+              "auto": "auto"
+            }
+          ]
+        },
+        "prompt": {
+          "type": "object",
+          "description": "Prompt template file paths, relative to this config file or absolute. If not configured, the default prompt templates are used.",
+          "properties": {
+            "translator": {
+              "type": "string",
+              "description": "Path to the translator prompt template file (Apache Velocity template)."
+            },
+            "document": {
+              "type": "string",
+              "description": "Path to the document translator prompt template file (Apache Velocity template)."
+            }
+          },
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "description": "Extra HTTP request headers. String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "body": {
+          "type": "object",
+          "description": "Extra request body fields (any JSON value). String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. The 'model' and 'messages' fields are ignored.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

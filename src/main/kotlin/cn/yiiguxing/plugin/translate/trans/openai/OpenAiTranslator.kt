@@ -8,6 +8,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
+import cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigService
 import cn.yiiguxing.plugin.translate.trans.openai.exception.OpenAIStatusException
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.EmptyPromptException
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.Prompt
@@ -35,12 +36,19 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private val settings: OpenAiSettings get() = service<OpenAiSettings>()
     private val promptService: PromptService get() = service<PromptService>()
+    private val requestConfigService: OpenAiRequestConfigService get() = service<OpenAiRequestConfigService>()
+
+    private val currentModelId: String?
+        get() = when (val options = settings.getOptions()) {
+            is OpenAiService.OpenAIOptions -> options.modelId
+            is OpenAiService.AzureOptions -> null
+        }
 
 
     override val translationCacheToken: String
         get() = when (val options = settings.getOptions(settings.provider)) {
             is OpenAiService.OpenAIOptions -> {
-                "model=${if (options.useCustomModel) options.customModel ?: "" else options.model.modelId}"
+                "model=${options.modelId};config=${requestConfigService.configHash() ?: ""}"
             }
 
             is OpenAiService.AzureOptions -> {
@@ -58,9 +66,10 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         val prompt = promptService.let { service ->
-            service.getTranslatorPromptTemplate(text, srcLang, targetLang).let(service::render)
+            service.getTranslatorPromptTemplate(text, srcLang, targetLang, currentModelId)
+                .let { service.render(it, currentModelId) }
         }
-        val translation = translate(prompt)
+        val translation = translate(prompt, text, srcLang, targetLang)
         return Translation(text, translation, srcLang, targetLang)
     }
 
@@ -71,9 +80,10 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
     ): Document = checkError {
         documentation.translateBody { bodyHTML ->
             val prompt = promptService.let { service ->
-                service.getDocumentPromptTemplate(bodyHTML, srcLang, targetLang).let(service::render)
+                service.getDocumentPromptTemplate(bodyHTML, srcLang, targetLang, currentModelId)
+                    .let { service.render(it, currentModelId) }
             }
-            translate(prompt).trim().let { translated ->
+            translate(prompt, bodyHTML, srcLang, targetLang).trim().let { translated ->
                 if (translated.startsWith("```html\n") && translated.endsWith("\n```")) {
                     translated.substring(8, translated.length - 4)
                 } else {
@@ -83,7 +93,7 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
         }
     }
 
-    private fun translate(prompt: Prompt): String {
+    private fun translate(prompt: Prompt, text: String, srcLang: Lang, targetLang: Lang): String {
         prompt.checkNotEmpty()
 
         val cacheService = service<CacheService>()
@@ -93,7 +103,8 @@ object OpenAiTranslator : AbstractTranslator(), DocumentationTranslator {
             return cache
         }
 
-        val chatCompletion = OpenAiService.get(settings.getOptions()).chatCompletion(prompt)
+        val chatCompletion = OpenAiService.get(settings.getOptions())
+            .chatCompletion(prompt, ChatRequestContext(text, srcLang, targetLang))
         val result = chatCompletion.choices?.first()?.message?.content ?: return ""
         cacheService.putDiskCache(cacheKey, result)
 

@@ -9,6 +9,7 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.json</depends>
     <depends optional="true" config-file="includes/lang.xml">com.intellij.modules.lang</depends>
     <depends optional="true" config-file="includes/jcef.xml">com.intellij.modules.jcef</depends>
     <depends optional="true" config-file="includes/rider.xml">com.intellij.modules.rider</depends>

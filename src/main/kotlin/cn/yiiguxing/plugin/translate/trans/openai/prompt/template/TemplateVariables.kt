@@ -37,7 +37,17 @@ enum class TemplateVariable(val description: String) {
     /**
      * The [target language][Lang] to be translated into.
      */
-    TARGET_LANGUAGE("The target language to be translated into.");
+    TARGET_LANGUAGE("The target language to be translated into."),
+
+    /**
+     * The source language name mapped by the language mapping table.
+     */
+    MAPPED_SOURCE_LANGUAGE("The source language name mapped by the language mapping table."),
+
+    /**
+     * The target language name mapped by the language mapping table.
+     */
+    MAPPED_TARGET_LANGUAGE("The target language name mapped by the language mapping table.");
 
     companion object {
         fun commonVariables(): Map<TemplateVariable, Any> {

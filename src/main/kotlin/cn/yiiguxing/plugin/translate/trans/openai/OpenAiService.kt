@@ -1,10 +1,14 @@
 package cn.yiiguxing.plugin.translate.trans.openai
 
+import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.openai.audio.SpeechRequest
 import cn.yiiguxing.plugin.translate.trans.openai.chat.ChatCompletion
 import cn.yiiguxing.plugin.translate.trans.openai.chat.chatCompletionRequest
+import cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigService
+import cn.yiiguxing.plugin.translate.trans.openai.config.buildChatRequestBody
 import cn.yiiguxing.plugin.translate.trans.openai.prompt.Prompt
 import cn.yiiguxing.plugin.translate.util.Http.sendJson
+import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.io.RequestBuilder
@@ -18,6 +22,19 @@ private const val AZURE_OPEN_AI_BASE_API_PATH = "openai/deployments"
 private const val AZURE_OPEN_AI_CHAT_API_PATH = "chat/completions"
 private const val AZURE_OPEN_AI_SPEECH_API_PATH = "audio/speech"
 
+/**
+ * The context of a chat completion request.
+ *
+ * @property text The text to be translated.
+ * @property sourceLanguage The source language of the [text].
+ * @property targetLanguage The target language to be translated into.
+ */
+data class ChatRequestContext(
+    val text: String,
+    val sourceLanguage: Lang,
+    val targetLanguage: Lang,
+)
+
 //TODO [Refactor] Separate translation service and TTS service
 interface OpenAiService {
 
@@ -25,7 +42,7 @@ interface OpenAiService {
      * [Chat Completion](https://platform.openai.com/docs/api-reference/chat/create)
      */
     @RequiresBackgroundThread
-    fun chatCompletion(prompt: Prompt): ChatCompletion
+    fun chatCompletion(prompt: Prompt, context: ChatRequestContext): ChatCompletion
 
     /**
      * Generates audio from the input text.
@@ -53,9 +70,7 @@ interface OpenAiService {
         val ttsEndpoint: String?
         val ttsApiPath: String?
         val useSeparateTtsApiSettings: Boolean
-    }
-
-    interface AzureOptions : Options, TTSBaseOptions {
+    }    interface AzureOptions : Options, TTSBaseOptions {
         val deployment: String?
         val ttsDeployment: String?
         val apiVersion: AzureServiceVersion
@@ -73,6 +88,14 @@ interface OpenAiService {
 }
 
 
+/**
+ * The model id of the request: the custom model name if a custom model is used,
+ * otherwise the id of the selected built-in model.
+ */
+val OpenAiService.OpenAIOptions.modelId: String
+    get() = if (useCustomModel) customModel.orEmpty() else model.modelId
+
+
 class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
     private fun getApiUrl(endpoint: String?, path: String): String {
         return (endpoint ?: DEFAULT_OPEN_AI_API_ENDPOINT).trimEnd('/') + path
@@ -82,17 +105,22 @@ class OpenAI(private val options: OpenAiService.OpenAIOptions) : OpenAiService {
         tuner { it.setRequestProperty("Authorization", "Bearer ${apiKey ?: ""}") }
     }
 
-    override fun chatCompletion(prompt: Prompt): ChatCompletion {
-        val model = when {
-            options.useCustomModel -> options.customModel
-            else -> options.model.modelId
-        }
-        val request = chatCompletionRequest {
-            this.model = model
-            this.messages = prompt.messages
-        }
+    override fun chatCompletion(prompt: Prompt, context: ChatRequestContext): ChatCompletion {
+        val model = options.modelId
+
+        val configService = service<OpenAiRequestConfigService>()
+        val body = buildChatRequestBody(
+            configService.resolveRequestBody(model, context),
+            model,
+            prompt.messages
+        )
+
+        val headers = configService.resolveRequestHeaders(model, context)
         val path = options.apiPath?.trim()?.takeIf { it.isNotEmpty() } ?: OPEN_AI_API_PATH
-        return OpenAiHttp.post(getApiUrl(options.endpoint, path), request) {
+        return OpenAiHttp.post(getApiUrl(options.endpoint, path), body) {
+            headers.forEach { (name, value) ->
+                tuner { it.setRequestProperty(name, value) }
+            }
             auth(OpenAiCredentials.manager(ServiceProvider.OpenAI).credential)
         }
     }
@@ -122,7 +150,7 @@ class Azure(private val options: OpenAiService.AzureOptions) : OpenAiService {
         tuner { it.setRequestProperty("api-key", apiKey) }
     }
 
-    override fun chatCompletion(prompt: Prompt): ChatCompletion {
+    override fun chatCompletion(prompt: Prompt, context: ChatRequestContext): ChatCompletion {
         val request = chatCompletionRequest(false) {
             this.messages = prompt.messages
         }

@@ -4,18 +4,26 @@ import cn.yiiguxing.plugin.translate.HelpTopic
 import cn.yiiguxing.plugin.translate.TranslationPlugin
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.openai.*
+import cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigService
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
+import com.intellij.ide.DataManager
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.components.service
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.GotItTooltip
 import com.intellij.util.containers.orNull
+import java.awt.event.ActionEvent
 import java.awt.event.ItemEvent
 import java.util.function.Supplier
+import javax.swing.AbstractAction
+import javax.swing.Action
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
@@ -93,6 +101,29 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
     }
 
     override fun createCenterPanel(): JComponent = ui.component
+
+    override fun createLeftSideActions(): Array<Action> {
+        if (configType != ConfigType.TRANSLATOR) {
+            return super.createLeftSideActions()
+        }
+
+        return arrayOf(object : AbstractAction(message("openai.settings.dialog.action.edit.request.config")) {
+            override fun actionPerformed(e: ActionEvent?) {
+                if (!OpenAiRequestConfigService.prepareConfigFilesForEditing()) {
+                    Messages.showErrorDialog(
+                        contentPanel,
+                        message("openai.config.editor.dialog.error.prepare.failed"),
+                        message("error.title")
+                    )
+                    return
+                }
+
+                val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(window))
+                    ?: ProjectManager.getInstance().defaultProject
+                OpenAiConfigFileEditorDialog(project).showAndGet()
+            }
+        })
+    }
 
     private fun initListeners() {
         ui.providerComboBox.addItemListener { event ->
