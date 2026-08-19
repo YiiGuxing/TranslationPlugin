@@ -7,6 +7,7 @@ import cn.yiiguxing.plugin.translate.trans.openai.*
 import cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigService
 import cn.yiiguxing.plugin.translate.ui.selected
 import cn.yiiguxing.plugin.translate.ui.util.CredentialEditor
+import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.components.service
@@ -107,7 +108,8 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
             return super.createLeftSideActions()
         }
 
-        return arrayOf(object : AbstractAction(message("openai.settings.dialog.action.edit.request.config")) {
+        val name = message("openai.settings.dialog.action.edit.request.config")
+        return arrayOf(object : AbstractAction(name, AllIcons.FileTypes.Config) {
             override fun actionPerformed(e: ActionEvent?) {
                 if (!OpenAiRequestConfigService.prepareConfigFilesForEditing()) {
                     Messages.showErrorDialog(
@@ -118,7 +120,8 @@ class OpenAISettingsDialog(private val configType: ConfigType) : DialogWrapper(f
                     return
                 }
 
-                val project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(window))
+                val dataContext = DataManager.getInstance().getDataContext(window)
+                val project = CommonDataKeys.PROJECT.getData(dataContext)
                     ?: ProjectManager.getInstance().defaultProject
                 OpenAiConfigFileEditorDialog(project).showAndGet()
             }

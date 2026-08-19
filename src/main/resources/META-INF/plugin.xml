@@ -88,6 +88,11 @@
         <fileEditorProvider implementation="cn.yiiguxing.plugin.translate.view.WebViewProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
+        <fileIconProvider
+                implementation="cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigFileIconProvider"/>
+        <editorTabTitleProvider
+                implementation="cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigEditorTabTitleProvider"/>
+
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>

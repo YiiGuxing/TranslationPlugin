@@ -5,16 +5,22 @@ import cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigServ
 import cn.yiiguxing.plugin.translate.util.Http
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
+import com.intellij.icons.AllIcons
 import com.intellij.json.JsonFileType
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.ui.JBUI
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
+import javax.swing.Action
 import javax.swing.JComponent
 
 /**
@@ -27,6 +33,7 @@ import javax.swing.JComponent
  */
 class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper(project) {
 
+    private val virtualFile: VirtualFile
     private val editor: Editor
     private val originalConfig: String
 
@@ -35,9 +42,10 @@ class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper
         title = message("openai.config.editor.dialog.title")
 
         val configFile = OpenAiRequestConfigService.CONFIG_FILE
-        val virtualFile = LocalFileSystem.getInstance()
+        virtualFile = LocalFileSystem.getInstance()
             .refreshAndFindFileByIoFile(configFile.toFile())
             ?: throw IllegalStateException("Failed to find the OpenAI request config file: $configFile")
+        virtualFile.isWritable = true
         val document = FileDocumentManager.getInstance().getDocument(virtualFile)
             ?: throw IllegalStateException("Failed to open the OpenAI request config file: $configFile")
         originalConfig = document.text
@@ -48,6 +56,20 @@ class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper
 
     override fun createCenterPanel(): JComponent = editor.component.apply {
         preferredSize = JBUI.size(720, 560)
+    }
+
+    override fun createLeftSideActions(): Array<Action> {
+        val name = message("openai.config.editor.dialog.action.open.in.editor")
+        return arrayOf(object : AbstractAction(name, AllIcons.FileTypes.Config) {
+            override fun actionPerformed(e: ActionEvent?) {
+                FileEditorManager.getInstance(project).openFile(virtualFile, true)
+                Messages.showInfoMessage(
+                    project,
+                    message("openai.config.editor.dialog.message.open.in.editor"),
+                    message("openai.config.editor.dialog.title")
+                )
+            }
+        })
     }
 
     override fun doOKAction() {
