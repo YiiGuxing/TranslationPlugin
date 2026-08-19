@@ -6,8 +6,10 @@ import cn.yiiguxing.plugin.translate.util.Http
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.intellij.icons.AllIcons
+import com.intellij.ide.BrowserUtil
 import com.intellij.json.JsonFileType
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
@@ -32,6 +34,10 @@ import javax.swing.JComponent
  * before creating this dialog.
  */
 class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper(project) {
+
+    private companion object {
+        val LOG = logger<OpenAiConfigFileEditorDialog>()
+    }
 
     private val virtualFile: VirtualFile
     private val editor: Editor
@@ -59,8 +65,10 @@ class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper
     }
 
     override fun createLeftSideActions(): Array<Action> {
-        val name = message("openai.config.editor.dialog.action.open.in.editor")
-        return arrayOf(object : AbstractAction(name, AllIcons.FileTypes.Config) {
+        val openInEditorAction = object : AbstractAction(
+            message("openai.config.editor.dialog.action.open.in.editor"),
+            AllIcons.FileTypes.Config
+        ) {
             override fun actionPerformed(e: ActionEvent?) {
                 FileEditorManager.getInstance(project).openFile(virtualFile, true)
                 Messages.showInfoMessage(
@@ -69,7 +77,25 @@ class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper
                     message("openai.config.editor.dialog.title")
                 )
             }
-        })
+        }
+        val openConfigDirectoryAction = object : AbstractAction(
+            message("openai.config.editor.dialog.action.open.config.directory"),
+            AllIcons.Nodes.Folder
+        ) {
+            override fun actionPerformed(e: ActionEvent?) {
+                try {
+                    BrowserUtil.browse(OpenAiRequestConfigService.CONFIG_DIRECTORY.toFile())
+                } catch (exception: Exception) {
+                    LOG.warn("Failed to open the OpenAI request config directory.", exception)
+                    Messages.showErrorDialog(
+                        editor.component,
+                        message("openai.config.editor.dialog.error.open.config.directory"),
+                        message("error.title")
+                    )
+                }
+            }
+        }
+        return arrayOf(openInEditorAction, openConfigDirectoryAction)
     }
 
     override fun doOKAction() {
