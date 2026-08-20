@@ -5,13 +5,13 @@ import cn.yiiguxing.plugin.translate.action.EditorTranslateAction
 import cn.yiiguxing.plugin.translate.action.ImportantTranslationAction
 import cn.yiiguxing.plugin.translate.adaptedMessage
 import cn.yiiguxing.plugin.translate.service.TranslationUIManager
-import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import cn.yiiguxing.plugin.translate.util.processBeforeTranslate
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.popup.Balloon
+import com.intellij.ui.BalloonImpl
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.PositionTracker
 import icons.TranslationIcons
@@ -90,7 +90,7 @@ internal class TranslateRenderedDocSelectionAction : AnAction(), ImportantTransl
 
             val visibleArea = editor.scrollingModel.visibleArea
             val isInVisibleArea = visibleArea.contains(x, y)
-            (balloon as? BalloonImpl)?.setLostPointer(!isInVisibleArea)
+            (balloon as? BalloonImpl)?.setShowPointer(isInVisibleArea)
 
             return if (isInVisibleArea) {
                 RelativePoint(editor.contentComponent, Point(x.toInt(), y.toInt()))

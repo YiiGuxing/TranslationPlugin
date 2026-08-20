@@ -1,10 +1,10 @@
 package cn.yiiguxing.plugin.translate.ui
 
-import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.RangeMarker
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.BalloonImpl
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.PositionTracker
 import java.awt.Point
@@ -30,7 +30,7 @@ class BalloonPositionTracker(
     override fun recalculateLocation(balloon: Balloon): RelativePoint {
         val last = lastLocation
         val location = editor.getBalloonLocation(balloon as? BalloonImpl, caretRangeMarker, position)
-        (balloon as? BalloonImpl)?.setLostPointer(location == null)
+        (balloon as? BalloonImpl)?.setShowPointer(location != null)
         if (last != null && location == null) {
             return last
         }
