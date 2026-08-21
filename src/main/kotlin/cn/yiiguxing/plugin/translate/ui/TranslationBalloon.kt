@@ -6,8 +6,6 @@ import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.trans.Translation
 import cn.yiiguxing.plugin.translate.tts.TTSEngine
 import cn.yiiguxing.plugin.translate.ui.UI.setIcons
-import cn.yiiguxing.plugin.translate.ui.balloon.BalloonImpl
-import cn.yiiguxing.plugin.translate.ui.balloon.BalloonPopupBuilder
 import cn.yiiguxing.plugin.translate.ui.icon.Spinner
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine
 import cn.yiiguxing.plugin.translate.util.invokeLater
@@ -16,8 +14,10 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
+import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.WindowManager
+import com.intellij.ui.BalloonImpl
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.panels.HorizontalLayout
@@ -275,7 +275,8 @@ class TranslationBalloon(
         private const val CARD_ERROR = "error"
         private const val CARD_TRANSLATION = "translation"
 
-        private fun createBalloon(content: JComponent): Balloon = BalloonPopupBuilder(content)
+        private fun createBalloon(content: JComponent): Balloon = JBPopupFactory.getInstance()
+            .createBalloonBuilder(content)
             .setShadow(true)
             .setDialogMode(true)
             .setRequestFocus(true)
@@ -287,8 +288,9 @@ class TranslationBalloon(
             .setBlockClicksThroughBalloon(true)
             .setCloseButtonEnabled(false)
             .setAnimationCycle(200)
-            .setBorderColor(Color.darkGray.toAlpha(35))
+            .setBorderColor(Color.darkGray.toAlpha(55))
             .setFillColor(JBUI.CurrentTheme.CustomFrameDecorations.paneBackground())
+            .setPointerSize(JBDimension(30, 5))
             .createBalloon()
             .apply {
                 this as BalloonImpl
