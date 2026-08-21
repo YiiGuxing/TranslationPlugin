@@ -184,6 +184,7 @@ class OpenAiRequestConfigTest {
         val configuredBody = mapOf(
             "model" to "configured-model",
             "messages" to listOf("configured"),
+            "stream" to true,
             "temperature" to 0.5
         )
         val messages = listOf(ChatMessage(ChatRole.USER, "hello"))
@@ -191,6 +192,7 @@ class OpenAiRequestConfigTest {
         val body = buildChatRequestBody(configuredBody, "gpt-5.4-mini", messages)
         assertEquals("gpt-5.4-mini", body["model"])
         assertEquals(messages, body["messages"])
+        assertEquals(false, body["stream"])
         assertEquals(0.5, body["temperature"])
     }
 

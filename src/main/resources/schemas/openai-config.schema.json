@@ -69,7 +69,7 @@
         },
         "body": {
           "type": "object",
-          "description": "Extra request body fields (any JSON value). String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. The 'model' and 'messages' fields are ignored.",
+          "description": "Extra request body fields (any JSON value). String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. The 'model' and 'messages' fields are ignored, and 'stream' is always forced to false since streaming is not supported.",
           "additionalProperties": true
         }
       },
