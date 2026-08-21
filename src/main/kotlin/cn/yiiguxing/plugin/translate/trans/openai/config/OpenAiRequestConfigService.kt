@@ -131,8 +131,10 @@ class OpenAiRequestConfigService {
     /**
      * Resolves the request body for the [modelId], with placeholders resolved.
      *
-     * The `model` and `messages` fields are not included; they are always
-     * forced by the caller and cannot be configured.
+     * The resolved body may contain the `model` field from the configuration,
+     * which overrides the model id selected in the UI. The final request body
+     * is built by [buildChatRequestBody], which forces the `messages` field
+     * and the `stream` field.
      */
     @RequiresBackgroundThread
     fun resolveRequestBody(modelId: String, context: ChatRequestContext): Map<String, Any?> {

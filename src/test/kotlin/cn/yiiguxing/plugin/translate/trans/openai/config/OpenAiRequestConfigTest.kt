@@ -180,9 +180,8 @@ class OpenAiRequestConfigTest {
     }
 
     @Test
-    fun testBuildChatRequestBodyForcesModelAndMessages() {
+    fun testBuildChatRequestBodyForcesMessagesAndStream() {
         val configuredBody = mapOf(
-            "model" to "configured-model",
             "messages" to listOf("configured"),
             "stream" to true,
             "temperature" to 0.5
@@ -191,6 +190,23 @@ class OpenAiRequestConfigTest {
 
         val body = buildChatRequestBody(configuredBody, "gpt-5.4-mini", messages)
         assertEquals("gpt-5.4-mini", body["model"])
+        assertEquals(messages, body["messages"])
+        assertEquals(false, body["stream"])
+        assertEquals(0.5, body["temperature"])
+    }
+
+    @Test
+    fun testBuildChatRequestBodyAllowsModelOverride() {
+        val configuredBody = mapOf(
+            "model" to "M1",
+            "stream" to true,
+            "temperature" to 0.5
+        )
+        val messages = listOf(ChatMessage(ChatRole.USER, "hello"))
+
+        // The configured model overrides the model id selected in the UI.
+        val body = buildChatRequestBody(configuredBody, "A/M1", messages)
+        assertEquals("M1", body["model"])
         assertEquals(messages, body["messages"])
         assertEquals(false, body["stream"])
         assertEquals(0.5, body["temperature"])

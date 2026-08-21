@@ -36,17 +36,21 @@ private fun OpenAiRequestConfig.ModelConfig?.orEmpty(): OpenAiRequestConfig.Mode
 /**
  * Builds the final chat completion request body.
  *
- * The [model], [messages] and `stream` are always forced and override
+ * The [messages] and `stream` are always forced and override
  * any same-named fields in the [configuredBody]. The `stream` parameter
  * is always `false` since streaming is not supported.
+ *
+ * The `model` may be overridden by the [configuredBody], which is useful
+ * when a provider exposes the same model under a different id;
+ * the [defaultModel] is used if it is not configured.
  */
 internal fun buildChatRequestBody(
     configuredBody: Map<String, Any?>,
-    model: String,
+    defaultModel: String,
     messages: List<ChatMessage>,
 ): Map<String, Any?> {
     val body = LinkedHashMap<String, Any?>(configuredBody)
-    body["model"] = model
+    body["model"] = (body["model"] as? String)?.takeIf { it.isNotEmpty() } ?: defaultModel
     body["messages"] = messages
     body["stream"] = false
     return body
