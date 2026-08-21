@@ -288,8 +288,9 @@ class TranslationBalloon(
             .setBlockClicksThroughBalloon(true)
             .setCloseButtonEnabled(false)
             .setAnimationCycle(200)
-            .setBorderColor(Color.darkGray.toAlpha(35))
+            .setBorderColor(Color.darkGray.toAlpha(55))
             .setFillColor(JBUI.CurrentTheme.CustomFrameDecorations.paneBackground())
+            .setPointerSize(JBDimension(30, 5))
             .createBalloon()
             .apply {
                 this as BalloonImpl

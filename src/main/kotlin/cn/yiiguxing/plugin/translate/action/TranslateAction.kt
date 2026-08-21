@@ -89,7 +89,7 @@ open class TranslateAction(checkSelection: Boolean = false) :
 
             val caretRangeMarker = editor.createCaretRangeMarker(selectionRange)
             val tracker = BalloonPositionTracker(editor, caretRangeMarker)
-            val balloon = TranslationUIManager.showBalloon(editor, text, tracker, tracker.position)
+            val balloon = TranslationUIManager.showBalloon(editor, text, tracker)
 
             if (balloon.disposed) {
                 markupModel.removeHighlighters(highlighters)
