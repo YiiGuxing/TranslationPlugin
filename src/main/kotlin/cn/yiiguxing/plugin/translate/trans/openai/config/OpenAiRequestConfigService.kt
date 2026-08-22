@@ -142,7 +142,8 @@ class OpenAiRequestConfigService {
         val mergedConfig = OpenAiRequestConfigResolver.merge(config.default, config.models?.get(modelId))
         val languageMapping = mergedConfig.languageMapping
         val body = LinkedHashMap<String, Any?>()
-        mergedConfig.body
+        mergedConfig.request
+            ?.body
             .orEmpty()
             .forEach { (key, value) ->
                 body[key] = OpenAiRequestConfigResolver.resolvePlaceholders(
@@ -164,7 +165,8 @@ class OpenAiRequestConfigService {
         val config = loadConfig().config ?: return emptyMap()
         val mergedConfig = OpenAiRequestConfigResolver.merge(config.default, config.models?.get(modelId))
         val languageMapping = mergedConfig.languageMapping
-        return mergedConfig.headers
+        return mergedConfig.request
+            ?.headers
             .orEmpty()
             .mapValues { (_, value) ->
                 OpenAiRequestConfigResolver.resolvePlaceholders(

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://yiiguxing.github.io/TranslationPlugin/schemas/openai-config.schema.json",
   "title": "OpenAI-Compatible Chat Completions Request Configuration",
-  "description": "Configuration file for customizing chat completions requests of OpenAI-compatible APIs (Translation only, not TTS).\n\n- 'default' applies to all models, 'models' entries are merged into (and override) 'default'.\n- The request 'messages' field is always forced by the plugin and cannot be configured.\n- The request body 'model' field may be configured to override the model id selected in the UI (useful when a provider exposes the same model under a different id).\n- String values in 'body' and 'headers' may reference the placeholders ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. Use $${...} to escape a literal ${...}.",
+  "description": "Configuration file for customizing chat completions requests of OpenAI-compatible APIs (Translation only, not TTS).\n\n- 'default' applies to all models, 'models' entries are merged into (and override) 'default'.\n- The request 'messages' field is always forced by the plugin and cannot be configured.\n- The request body 'model' field may be configured to override the model id selected in the UI (useful when a provider exposes the same model under a different id).\n- String values in 'request.body' and 'request.headers' may reference the placeholders ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. Use $${...} to escape a literal ${...}.",
   "type": "object",
   "properties": {
     "$schema": {
@@ -60,17 +60,24 @@
           },
           "additionalProperties": false
         },
-        "headers": {
+        "request": {
           "type": "object",
-          "description": "Extra HTTP request headers. String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}.",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "body": {
-          "type": "object",
-          "description": "Extra request body fields (any JSON value). String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. The 'model' field overrides the model id selected in the UI (useful when a provider exposes the same model under a different id). The 'messages' field is ignored, and 'stream' is always forced to false since streaming is not supported.",
-          "additionalProperties": true
+          "description": "HTTP request customization for the chat completions API.",
+          "properties": {
+            "headers": {
+              "type": "object",
+              "description": "Extra HTTP request headers. String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}.",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "body": {
+              "type": "object",
+              "description": "Extra request body fields (any JSON value). String values may reference ${TEXT}, ${SOURCE_LANGUAGE} and ${TARGET_LANGUAGE}. The 'model' field overrides the model id selected in the UI (useful when a provider exposes the same model under a different id). The 'messages' field is ignored, and 'stream' is always forced to false since streaming is not supported.",
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

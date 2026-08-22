@@ -25,9 +25,14 @@ internal data class OpenAiRequestConfig(
     internal data class ModelConfig(
         val languageMapping: Map<String, String>? = null,
         val prompt: PromptConfig? = null,
-        val headers: Map<String, String>? = null,
-        val body: Map<String, Any?>? = null,
-    )
+        val request: RequestConfig? = null,
+    ) {
+
+        internal data class RequestConfig(
+            val headers: Map<String, String>? = null,
+            val body: Map<String, Any?>? = null,
+        )
+    }
 }
 
 private fun OpenAiRequestConfig.ModelConfig?.orEmpty(): OpenAiRequestConfig.ModelConfig =
@@ -94,14 +99,18 @@ internal object OpenAiRequestConfigResolver {
         val modelConfig = model.orEmpty()
         val defaultPrompt = defaultConfig.prompt
         val modelPrompt = modelConfig.prompt
+        val defaultRequest = defaultConfig.request
+        val modelRequest = modelConfig.request
         return OpenAiRequestConfig.ModelConfig(
             languageMapping = defaultConfig.languageMapping.orEmpty() + modelConfig.languageMapping.orEmpty(),
             prompt = OpenAiRequestConfig.PromptConfig(
                 translator = modelPrompt?.translator ?: defaultPrompt?.translator,
                 document = modelPrompt?.document ?: defaultPrompt?.document,
             ).takeIf { it.translator != null || it.document != null },
-            headers = defaultConfig.headers.orEmpty() + modelConfig.headers.orEmpty(),
-            body = deepMerge(defaultConfig.body.orEmpty(), modelConfig.body.orEmpty()),
+            request = OpenAiRequestConfig.ModelConfig.RequestConfig(
+                headers = defaultRequest?.headers.orEmpty() + modelRequest?.headers.orEmpty(),
+                body = deepMerge(defaultRequest?.body.orEmpty(), modelRequest?.body.orEmpty()),
+            ).takeIf { !it.headers.isNullOrEmpty() || !it.body.isNullOrEmpty() },
         )
     }
 

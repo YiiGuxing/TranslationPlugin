@@ -28,8 +28,10 @@ class OpenAiRequestConfigTest {
                   "translator": "prompts/translator.prompt",
                   "document": "prompts/document.prompt"
                 },
-                "headers": { "X-Api-Version": "2024-01-01" },
-                "body": { "temperature": 0.3 }
+                "request": {
+                  "headers": { "X-Api-Version": "2024-01-01" },
+                  "body": { "temperature": 0.3 }
+                }
               },
               "models": {
                 "gpt-5.4-mini": {
@@ -39,7 +41,9 @@ class OpenAiRequestConfigTest {
                   "prompt": {
                     "translator": "prompts/mini-translator.prompt"
                   },
-                  "body": { "temperature": 0.7 }
+                  "request": {
+                    "body": { "temperature": 0.7 }
+                  }
                 }
               }
             }
@@ -52,11 +56,11 @@ class OpenAiRequestConfigTest {
         assertEquals("Traditional Chinese", config.default?.languageMapping?.get("CHINESE_TRADITIONAL"))
         assertEquals("prompts/translator.prompt", config.default?.prompt?.translator)
         assertEquals("prompts/document.prompt", config.default?.prompt?.document)
-        assertEquals("2024-01-01", config.default?.headers?.get("X-Api-Version"))
-        assertEquals(0.3, config.default?.body?.get("temperature"))
+        assertEquals("2024-01-01", config.default?.request?.headers?.get("X-Api-Version"))
+        assertEquals(0.3, config.default?.request?.body?.get("temperature"))
         assertEquals("Chinese", config.models?.get("gpt-5.4-mini")?.languageMapping?.get("zh-CN"))
         assertEquals("prompts/mini-translator.prompt", config.models?.get("gpt-5.4-mini")?.prompt?.translator)
-        assertEquals(0.7, config.models?.get("gpt-5.4-mini")?.body?.get("temperature"))
+        assertEquals(0.7, config.models?.get("gpt-5.4-mini")?.request?.body?.get("temperature"))
     }
 
     @Test
@@ -67,11 +71,13 @@ class OpenAiRequestConfigTest {
                 translator = "prompts/translator.prompt",
                 document = "prompts/document.prompt"
             ),
-            headers = mapOf("X-A" to "1", "X-B" to "2"),
-            body = mapOf(
-                "temperature" to 0.3,
-                "nested" to mapOf("a" to 1, "b" to 2),
-                "list" to listOf(1, 2)
+            request = OpenAiRequestConfig.ModelConfig.RequestConfig(
+                headers = mapOf("X-A" to "1", "X-B" to "2"),
+                body = mapOf(
+                    "temperature" to 0.3,
+                    "nested" to mapOf("a" to 1, "b" to 2),
+                    "list" to listOf(1, 2)
+                )
             )
         )
         val model = OpenAiRequestConfig.ModelConfig(
@@ -79,10 +85,12 @@ class OpenAiRequestConfigTest {
             prompt = OpenAiRequestConfig.PromptConfig(
                 translator = "prompts/mini-translator.prompt"
             ),
-            headers = mapOf("X-B" to "20", "X-C" to "3"),
-            body = mapOf(
-                "temperature" to 0.7,
-                "nested" to mapOf("b" to 20, "c" to 3)
+            request = OpenAiRequestConfig.ModelConfig.RequestConfig(
+                headers = mapOf("X-B" to "20", "X-C" to "3"),
+                body = mapOf(
+                    "temperature" to 0.7,
+                    "nested" to mapOf("b" to 20, "c" to 3)
+                )
             )
         )
 
@@ -94,9 +102,12 @@ class OpenAiRequestConfigTest {
         // The model's translator overrides the default, the document falls back to the default.
         assertEquals("prompts/mini-translator.prompt", merged.prompt?.translator)
         assertEquals("prompts/document.prompt", merged.prompt?.document)
-        assertEquals(mapOf("X-A" to "1", "X-B" to "20", "X-C" to "3"), merged.headers)
 
-        val mergedBody = merged.body
+        val mergedRequest = merged.request
+        assertNotNull(mergedRequest)
+        assertEquals(mapOf("X-A" to "1", "X-B" to "20", "X-C" to "3"), mergedRequest?.headers)
+
+        val mergedBody = mergedRequest?.body
         assertNotNull(mergedBody)
         assertEquals(0.7, mergedBody?.get("temperature"))
         assertEquals(listOf(1, 2), mergedBody?.get("list"))
