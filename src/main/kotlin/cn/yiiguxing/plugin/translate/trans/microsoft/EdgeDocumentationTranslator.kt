@@ -5,6 +5,7 @@ import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
 import cn.yiiguxing.plugin.translate.trans.UnsupportedLanguageException
 import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.PlaceholderHtmlTranslationStrategy
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.MicrosoftTranslation
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
 import cn.yiiguxing.plugin.translate.util.UrlBuilder
@@ -43,7 +44,7 @@ internal class EdgeDocumentationTranslator(
     ): Document {
         checkTargetLanguage(targetLang)
 
-        HtmlDocumentationTranslator { texts ->
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { texts ->
             translateTextsInBatches(texts, srcLang, targetLang)
         }.translateDocument(documentation, keepOriginal())
 

@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.trans
 
 import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.PlaceholderHtmlTranslationStrategy
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
@@ -39,7 +40,7 @@ class HtmlDocumentationTranslatorTest {
                     """<p>Use the <samp>config</samp> file and <var>${'$'}value</var> variable.</p>"""
         )
         val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator { input ->
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { input ->
             texts.addAll(input)
             input.map(::fakeTranslate)
         }.translateElement(body)
@@ -67,7 +68,7 @@ class HtmlDocumentationTranslatorTest {
     fun testSegmentWithOnlyProtectedInlineTagsIsNotTranslated() {
         val body = parseBody("""<p>Before</p><p><code>onlyCode</code></p><p>After</p>""")
         val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator { input ->
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { input ->
             texts.addAll(input)
             input.map(::fakeTranslate)
         }.translateElement(body)
@@ -160,7 +161,7 @@ class HtmlDocumentationTranslatorTest {
     fun testSerializedTextsAreNotWrappedWithTopLevelPlaceholder() {
         val body = parseBody("""<p>text 1</p><p>text 1, <b>text 2</b></p>""")
         val texts = mutableListOf<List<String>>()
-        HtmlDocumentationTranslator { input ->
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { input ->
             texts.add(input)
             input
         }.translateElement(body)
@@ -222,7 +223,7 @@ class HtmlDocumentationTranslatorTest {
     fun testInvertedPunctuationIsTranslatable() {
         val body = parseBody("""<p>¿</p><p>¡</p>""")
         val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator { input ->
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { input ->
             texts.addAll(input)
             input.map(::fakeTranslate)
         }.translateElement(body)
@@ -235,7 +236,7 @@ class HtmlDocumentationTranslatorTest {
     }
 
     private fun translate(body: Element, keepOriginal: Boolean = false) {
-        HtmlDocumentationTranslator { texts -> texts.map(::fakeTranslate) }
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { texts -> texts.map(::fakeTranslate) }
             .translateElement(body, keepOriginal)
     }
 
