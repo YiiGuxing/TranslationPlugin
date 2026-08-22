@@ -78,7 +78,7 @@
 想要使用基于 Qwen3 模型优化的机器翻译大语言模型 Qwen-MT，以 `qwen-mt-flash` 为例，可按以下步骤配置：
 
 - 升级插件到 3.8.5 版本以上
-- 在**OpenAI 翻译设置对话框**配置 Qwen-MT 模型为：`qwen-mt-flash`
+- 在**OpenAI 翻译设置对话框**配置自定义模型为 Qwen-MT 模型：`qwen-mt-flash`
 - 在配置目录（可在 **OpenAI 翻译设置对话框** ⇒ <kbd>编辑请求配置...</kbd> ⇒ <kbd>打开配置目录</kbd> 快速打开）下创建文件 `prompts/qwen-mt.prompt`，文件内容为：
 ```
 $TEXT

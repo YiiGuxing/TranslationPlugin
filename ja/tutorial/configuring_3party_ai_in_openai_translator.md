@@ -78,7 +78,7 @@
 Qwen3 モデルを基に最適化された機械翻訳 LLM「Qwen-MT」を使用する場合、`qwen-mt-flash` を例に、以下の手順で設定します：
 
 - プラグインを 3.8.5 以降にアップグレードします
-- **OpenAI 翻訳設定ダイアログ**で Qwen-MT モデルを `qwen-mt-flash` に設定します
+- **OpenAI 翻訳設定ダイアログ**でカスタムモデルを Qwen-MT モデルとして設定します：`qwen-mt-flash`
 - 設定ディレクトリ（**OpenAI 翻訳設定ダイアログ** ⇒ <kbd>リクエスト設定を編集...</kbd> ⇒ <kbd>エディターで開く</kbd> で素早く開けます）に `prompts/qwen-mt.prompt` ファイルを作成し、内容を次のようにします：
 ```
 $TEXT

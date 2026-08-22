@@ -78,7 +78,7 @@ For configuration details, see [Custom Request Configuration](#custom-request-co
 To use Qwen-MT, an LLM optimized for machine translation based on the Qwen3 model, take `qwen-mt-flash` as an example and follow the steps below:
 
 - Upgrade the plugin to version 3.8.5 or later.
-- In the **OpenAI Translator Settings dialog**, set the Qwen-MT model to `qwen-mt-flash`.
+- In the **OpenAI Translator Settings dialog**, configure a custom model as the Qwen-MT model: `qwen-mt-flash`.
 - In the configuration directory (which can be opened quickly via the **OpenAI Translator Settings dialog** ⇒ <kbd>Edit Request Config...</kbd> ⇒ <kbd>Open Config Directory</kbd>), create a file `prompts/qwen-mt.prompt` with the following content:
 ```
 $TEXT

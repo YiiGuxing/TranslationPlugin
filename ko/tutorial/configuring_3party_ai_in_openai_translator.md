@@ -78,7 +78,7 @@
 Qwen3 모델을 기반으로 최적화된 기계 번역 LLM인 Qwen-MT를 사용하려면 `qwen-mt-flash`를 예로 들어 다음 단계에 따라 구성하세요:
 
 - 플러그인을 3.8.5 버전 이상으로 업그레이드합니다
-- **OpenAI 번역 설정 대화상자**에서 Qwen-MT 모델을 `qwen-mt-flash`로 설정합니다
+- **OpenAI 번역 설정 대화상자**에서 사용자 정의 모델을 Qwen-MT 모델로 설정합니다: `qwen-mt-flash`
 - 구성 디렉토리 (**OpenAI 번역 설정 대화상자** ⇒ <kbd>요청 설정 편집...</kbd> ⇒ <kbd>구성 디렉토리 열기</kbd>로 빠르게 열 수 있습니다)에 `prompts/qwen-mt.prompt` 파일을 만들고 내용을 다음과 같이 작성합니다:
 ```
 $TEXT
