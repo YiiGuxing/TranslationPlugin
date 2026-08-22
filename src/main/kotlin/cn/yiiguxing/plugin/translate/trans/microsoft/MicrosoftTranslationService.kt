@@ -16,7 +16,7 @@ internal class MicrosoftTranslationService(
 
     private val bingTranslator: TextTranslator = BingTranslator(scope)
     private val documentationTranslator: DocumentationTranslator = EdgeDocumentationTranslator(scope) {
-        service<MicrosoftTranslatorSettings>().keepOriginal
+        service<MicrosoftTranslatorSettings>().keepOriginalDocumentation
     }
 
     override fun translate(text: String, srcLang: Lang, targetLang: Lang): Translation {

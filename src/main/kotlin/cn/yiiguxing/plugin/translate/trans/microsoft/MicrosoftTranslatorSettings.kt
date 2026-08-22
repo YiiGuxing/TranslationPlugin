@@ -13,10 +13,10 @@ import com.intellij.util.xmlb.annotations.OptionTag
 class MicrosoftTranslatorSettings : BaseState(), PersistentStateComponent<MicrosoftTranslatorSettings> {
 
     /**
-     * Whether to keep the original text after translation.
+     * Whether to keep the original text after documentation translation.
      */
-    @get:OptionTag("KEEP_ORIGINAL")
-    var keepOriginal: Boolean by property(false)
+    @get:OptionTag("KEEP_ORIGINAL_DOCUMENTATION")
+    var keepOriginalDocumentation: Boolean by property(false)
 
     override fun getState(): MicrosoftTranslatorSettings = this
 
