@@ -171,6 +171,10 @@
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"/>
 
+        <action id="Translation.TranslationEngineSettingsAction"
+                icon="TranslationIcons.Config"
+                class="cn.yiiguxing.plugin.translate.action.TranslationEngineSettingsAction"/>
+
         <action id="Translation.WhatsNewAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
         <action id="Translation.GettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>
         <action id="Translation.SupportAction" class="cn.yiiguxing.plugin.translate.action.SupportAction"/>
