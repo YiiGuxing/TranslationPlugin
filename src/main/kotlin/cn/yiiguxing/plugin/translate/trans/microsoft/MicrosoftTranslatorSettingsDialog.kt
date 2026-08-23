@@ -28,7 +28,7 @@ class MicrosoftTranslatorSettingsDialog : DialogWrapper(true) {
                 checkBox(message("settings.documentation.translation.keep.original"))
                     .bindSelected(settings::keepOriginalDocumentation)
                     .comment(
-                        comment = message("settings.documentation.translation.keep.original.experimental"),
+                        comment = message("settings.documentation.translation.keep.original.description"),
                         maxLineLength = 50
                     )
             }
