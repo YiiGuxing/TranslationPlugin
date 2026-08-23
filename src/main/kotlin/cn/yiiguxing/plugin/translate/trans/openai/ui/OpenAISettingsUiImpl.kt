@@ -14,6 +14,7 @@ import com.intellij.ui.ContextHelpLabel
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
+import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import net.miginfocom.layout.LC
@@ -49,11 +50,19 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
 
     override val providerComboBox: ComboBox<ServiceProvider> =
         ComboBox(CollectionComboBoxModel(ServiceProvider.values().toList())).apply {
-            renderer = SimpleListCellRenderer.create { label, model, _ ->
-                label.text = model.name + if (model == ServiceProvider.Azure) {
-                    message("openai.settings.dialog.not.recommended")
-                } else ""
-                label.icon = getProviderIcon(model)
+            renderer = object : SimpleListCellRenderer<ServiceProvider>() {
+                override fun customize(
+                    list: JList<out ServiceProvider?>,
+                    value: ServiceProvider,
+                    index: Int,
+                    selected: Boolean,
+                    hasFocus: Boolean
+                ) {
+                    text = value.name + if (value == ServiceProvider.Azure) {
+                        message("openai.settings.dialog.not.recommended")
+                    } else ""
+                    icon = getProviderIcon(value)
+                }
             }
         }
 
@@ -66,7 +75,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
     private val ttsApiSettingsTypeLabel = JLabel(message("openai.settings.dialog.label.api.settings"))
     override val ttsApiSettingsTypeComboBox: ComboBox<TtsApiSettingsType> = ComboBox<TtsApiSettingsType>().apply {
         model = CollectionComboBoxModel(TtsApiSettingsType.values().toList())
-        renderer = SimpleListCellRenderer.create { label, type, _ -> label.text = type.displayName }
+        renderer = textListCellRenderer<TtsApiSettingsType> { it.displayName }
     }
 
     private val modelLabel = JLabel(message("openai.settings.dialog.label.model"))
@@ -77,9 +86,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
             ConfigType.TTS -> OpenAiTTSModel.values().toList()
         }
         model = CollectionComboBoxModel(models)
-        renderer = SimpleListCellRenderer.create { label, model, _ ->
-            label.text = model.modelName
-        }
+        renderer = textListCellRenderer<OpenAiModel> { it.modelName }
     }
     override val customModelField: JBTextField = JBTextField()
     override val customModelCheckbox: JCheckBox = JCheckBox(message("openai.settings.dialog.checkbox.custom.model"))
@@ -92,9 +99,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
             ConfigType.TTS -> AzureServiceVersion.previewVersions()
         }
         model = CollectionComboBoxModel(versions)
-        renderer = SimpleListCellRenderer.create { label, model, _ ->
-            label.text = model.value
-        }
+        renderer = textListCellRenderer<AzureServiceVersion> { it.value }
     }
 
     private val azureDeploymentLabel =
@@ -167,9 +172,7 @@ internal class OpenAISettingsUiImpl(private val configType: ConfigType) : OpenAI
 
     private fun initTtsComponents() {
         ttsVoiceComboBox = ComboBox(OpenAiTtsVoice.values()).apply {
-            renderer = SimpleListCellRenderer.create { label, voice, _ ->
-                label.text = voice.voiceName
-            }
+            renderer = textListCellRenderer<OpenAiTtsVoice> { it.voiceName }
         }
         ttsSpeedSlicer = JSlider(OpenAiTTSSpeed.MIN, OpenAiTTSSpeed.MAX, OpenAiTTSSpeed.NORMAL).apply {
             majorTickSpacing = 100

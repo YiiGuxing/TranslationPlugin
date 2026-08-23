@@ -17,6 +17,7 @@ import java.awt.Color
 import java.awt.Point
 import java.util.stream.Collectors
 import java.util.stream.IntStream
+import javax.swing.JList
 import javax.swing.ListSelectionModel
 import javax.swing.SwingConstants
 
@@ -89,10 +90,18 @@ class LangComboBoxLink : LinkLabel<Lang>("Empty", AllIcons.General.ButtonDropTri
                 .setVisibleRowCount(8)
                 .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
                 .setItemChosenCallback { langLink.onItemChosen(it, true) }
-                .setRenderer(SimpleListCellRenderer.create { label, value: Lang, _ ->
-                    label.text = value.localeName
-                    label.border = langLink.border
-                    label.font = langLink.font
+                .setRenderer(object : SimpleListCellRenderer<Lang>() {
+                    override fun customize(
+                        list: JList<out Lang?>,
+                        value: Lang,
+                        index: Int,
+                        selected: Boolean,
+                        hasFocus: Boolean
+                    ) {
+                        text = value.localeName
+                        border = langLink.border
+                        font = langLink.font
+                    }
                 })
                 .addListener(object : JBPopupListener {
                     override fun beforeShown(event: LightweightWindowEvent) {

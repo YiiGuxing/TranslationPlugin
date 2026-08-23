@@ -8,7 +8,11 @@ import cn.yiiguxing.plugin.translate.util.concurrent.*
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.*
+import com.intellij.ui.AnimatedIcon
+import com.intellij.ui.ClickListener
+import com.intellij.ui.JBColor
+import com.intellij.ui.MutableCollectionComboBoxModel
+import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
@@ -54,12 +58,8 @@ internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
     }
 
     private fun initVoiceComboBox() {
-        val default = message("default")
-        voiceComboBox.apply {
-            renderer = SimpleListCellRenderer.create { label, voice, _ ->
-                label.text = voice?.friendlyName ?: default
-            }
-        }
+        val default: String = message("default")
+        voiceComboBox.renderer = textListCellRenderer { it?.friendlyName ?: default }
 
         object : ClickListener() {
             override fun onClick(event: MouseEvent, clickCount: Int): Boolean {
