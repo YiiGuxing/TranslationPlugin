@@ -1,5 +1,5 @@
 (function () {
-  var lastPluginVersion = "v3.8";
+  var lastPluginVersion = "v3.9";
 
   var RESOURCES_BASE_URL = "";
   var __DEV__ = localStorage.getItem("dev") === "true";

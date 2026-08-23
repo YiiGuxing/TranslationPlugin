@@ -4,7 +4,7 @@
 
 > 提示：插件默认的提示词在不同的 AI 服务中的表现可能会有所不同，您可以通过自定义提示词模板来自行调整，以获得更好的翻译体验。详见：[《如何自定义 OpenAI 翻译提示词》](/tutorial/how_to_customize_translation_prompts.md)。
 
-> 提示：自 3.8.5 版本起，支持通过请求配置文件为不同的 AI 服务或模型自定义请求参数、请求头、提示词模板与语言映射等。详见：[自定义请求配置](#custom-request-config)。
+> 提示：自 [3.9](#/updates/v3.9 ':ignore :target=_blank') 版本起，支持通过请求配置文件为不同的 AI 服务或模型自定义请求参数、请求头、提示词模板与语言映射等。详见：[自定义请求配置](#custom-request-config)。
 
 ## DeepSeek :id=deepseek
 
@@ -12,7 +12,7 @@
 - **API 端点**：`https://api.deepseek.com` `/v1/chat/completions`
 - **API 密钥**：[API key](https://platform.deepseek.com/api_keys)
 
-关闭思考模式配置（插件版本 3.8.5 以上）：
+关闭思考模式配置（插件版本 [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) 以上）：
 
 ```json
 {
@@ -77,7 +77,7 @@
 
 想要使用基于 Qwen3 模型优化的机器翻译大语言模型 Qwen-MT，以 `qwen-mt-flash` 为例，可按以下步骤配置：
 
-- 升级插件到 3.8.5 版本以上
+- 升级插件到 [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) 版本以上
 - 在**OpenAI 翻译设置对话框**配置自定义模型为 Qwen-MT 模型：`qwen-mt-flash`
 - 在配置目录（可在 **OpenAI 翻译设置对话框** ⇒ <kbd>编辑请求配置...</kbd> ⇒ <kbd>打开配置目录</kbd> 快速打开）下创建文件 `prompts/qwen-mt.prompt`，文件内容为：
 ```
@@ -115,7 +115,7 @@ $TEXT
 
 ## 自定义请求配置 :id=custom-request-config
 
-不同厂商的 API 虽然兼容 OpenAI Chat Completions API，但它们可能会有自定义的参数（位于请求体中或请求头上），且不同的模型可能有不同的参数要求。自 3.8.5 版本起，您可以通过请求配置文件为不同的 AI 服务或模型自定义请求参数、请求头、提示词模板和语言映射等。
+不同厂商的 API 虽然兼容 OpenAI Chat Completions API，但它们可能会有自定义的参数（位于请求体中或请求头上），且不同的模型可能有不同的参数要求。自 [3.9](#/updates/v3.9 ':ignore :target=_blank') 版本起，您可以通过请求配置文件为不同的 AI 服务或模型自定义请求参数、请求头、提示词模板和语言映射等。
 
 !> 请求配置仅对翻译（Chat Completions）生效，TTS 和服务商选 Azure 时不支持。
 
@@ -169,7 +169,7 @@ $TEXT
 
 ### Schema
 
-Schema:  [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.8.5/src/main/resources/schemas/openai-config.schema.json)
+Schema:  [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.9.0/src/main/resources/schemas/openai-config.schema.json)
 
 您的编辑器应该能够基于该 Schema 进行验证和自动补全。
 

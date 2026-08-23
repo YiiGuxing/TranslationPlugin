@@ -4,7 +4,7 @@
 
 > ヒント：プラグインのデフォルトのプロンプトは、AI サービスによって動作が異なる場合があります。プロンプトテンプレートをカスタマイズして調整することで、より良い翻訳体験を得られます。詳細は [OpenAI 翻訳プロンプトのカスタマイズ方法](/ja/tutorial/how_to_customize_translation_prompts.md) をご参照ください。
 
-> ヒント：3.8.5 バージョン以降、リクエスト設定ファイルを使用して、AI サービスやモデルごとにリクエストパラメータ、リクエストヘッダー、プロンプトテンプレート、言語マッピングなどをカスタマイズできます。詳細は [カスタムリクエスト設定](#custom-request-config) をご参照ください。
+> ヒント：[3.9](#/ja/updates/v3.9 ':ignore :target=_blank') バージョン以降、リクエスト設定ファイルを使用して、AI サービスやモデルごとにリクエストパラメータ、リクエストヘッダー、プロンプトテンプレート、言語マッピングなどをカスタマイズできます。詳細は [カスタムリクエスト設定](#custom-request-config) をご参照ください。
 
 ## DeepSeek :id=deepseek
 
@@ -12,7 +12,7 @@
 - **API エンドポイント**：`https://api.deepseek.com` `/v1/chat/completions`
 - **API キー**：[API key](https://platform.deepseek.com/api_keys)
 
-思考モードを無効にする設定（プラグイン 3.8.5 以降）：
+思考モードを無効にする設定（プラグイン [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) 以降）：
 
 ```json
 {
@@ -77,7 +77,7 @@
 
 Qwen3 モデルを基に最適化された機械翻訳 LLM「Qwen-MT」を使用する場合、`qwen-mt-flash` を例に、以下の手順で設定します：
 
-- プラグインを 3.8.5 以降にアップグレードします
+- プラグインを [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) 以降にアップグレードします
 - **OpenAI 翻訳設定ダイアログ**でカスタムモデルを Qwen-MT モデルとして設定します：`qwen-mt-flash`
 - 設定ディレクトリ（**OpenAI 翻訳設定ダイアログ** ⇒ <kbd>リクエスト設定を編集...</kbd> ⇒ <kbd>エディターで開く</kbd> で素早く開けます）に `prompts/qwen-mt.prompt` ファイルを作成し、内容を次のようにします：
 ```
@@ -115,7 +115,7 @@ $TEXT
 
 ## カスタムリクエスト設定 :id=custom-request-config
 
-各ベンダーの API は OpenAI Chat Completions API と互換性がありますが、カスタムパラメータ（リクエストボディまたはリクエストヘッダー内）を持つ場合があり、モデルによって必要なパラメータが異なる場合があります。3.8.5 バージョン以降、リクエスト設定ファイルを使用して、AI サービスやモデルごとにリクエストパラメータ、リクエストヘッダー、プロンプトテンプレート、言語マッピングなどをカスタマイズできます。
+各ベンダーの API は OpenAI Chat Completions API と互換性がありますが、カスタムパラメータ（リクエストボディまたはリクエストヘッダー内）を持つ場合があり、モデルによって必要なパラメータが異なる場合があります。[3.9](#/en/updates/v3.9 ':ignore :target=_blank') バージョン以降、リクエスト設定ファイルを使用して、AI サービスやモデルごとにリクエストパラメータ、リクエストヘッダー、プロンプトテンプレート、言語マッピングなどをカスタマイズできます。
 
 !> リクエスト設定は翻訳（Chat Completions）にのみ有効です。TTS とプロバイダーが Azure の場合はサポートされません。
 
@@ -169,7 +169,7 @@ OpenAI 翻訳設定ダイアログの左下にある **リクエスト設定を�
 
 ### Schema
 
-Schema: [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.8.5/src/main/resources/schemas/openai-config.schema.json)
+Schema: [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.9.0/src/main/resources/schemas/openai-config.schema.json)
 
 お使いのエディタは、この Schema に基づいて検証と自動補完ができるはずです。
 

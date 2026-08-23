@@ -3,6 +3,7 @@
 
 <h2 class="versions">Versions</h2>
 
+* [v3.9 (2026-08-23)](/en/updates/v3.9.md)
 * [v3.8 (2025-10-20)](/en/updates/v3.8.md)
 * [v3.7 (2025-02-26)](/en/updates/v3.7.md)
 * [v3.6 (2024-05-20)](/en/updates/v3.6.md)

@@ -4,7 +4,7 @@
 
 > 팁: 플러그인의 기본 프롬프트는 AI 서비스에 따라 동작이 다를 수 있습니다. 프롬프트 템플릿을 사용자 정의하여 조정하면 더 나은 번역 경험을 얻을 수 있습니다. 자세한 내용은 [OpenAI 번역 프롬프트 사용자 정의 방법](/ko/tutorial/how_to_customize_translation_prompts.md)을 참조하세요.
 
-> 팁: 3.8.5 버전부터 요청 구성 파일을 통해 AI 서비스나 모델별로 요청 파라미터, 요청 헤더, 프롬프트 템플릿, 언어 매핑 등을 사용자 정의할 수 있습니다. 자세한 내용은 [사용자 정의 요청 구성](#custom-request-config)을 참조하세요.
+> 팁: [3.9](#/ko/updates/v3.9 ':ignore :target=_blank') 버전부터 요청 구성 파일을 통해 AI 서비스나 모델별로 요청 파라미터, 요청 헤더, 프롬프트 템플릿, 언어 매핑 등을 사용자 정의할 수 있습니다. 자세한 내용은 [사용자 정의 요청 구성](#custom-request-config)을 참조하세요.
 
 ## DeepSeek :id=deepseek
 
@@ -12,7 +12,7 @@
 - **API 엔드포인트**: `https://api.deepseek.com` `/v1/chat/completions`
 - **API 키**: [API key](https://platform.deepseek.com/api_keys)
 
-사고 모드 비활성화 구성 (플러그인 3.8.5 이상):
+사고 모드 비활성화 구성 (플러그인 [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) 이상):
 
 ```json
 {
@@ -77,7 +77,7 @@
 
 Qwen3 모델을 기반으로 최적화된 기계 번역 LLM인 Qwen-MT를 사용하려면 `qwen-mt-flash`를 예로 들어 다음 단계에 따라 구성하세요:
 
-- 플러그인을 3.8.5 버전 이상으로 업그레이드합니다
+- 플러그인을 [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) 버전 이상으로 업그레이드합니다
 - **OpenAI 번역 설정 대화상자**에서 사용자 정의 모델을 Qwen-MT 모델로 설정합니다: `qwen-mt-flash`
 - 구성 디렉토리 (**OpenAI 번역 설정 대화상자** ⇒ <kbd>요청 설정 편집...</kbd> ⇒ <kbd>구성 디렉토리 열기</kbd>로 빠르게 열 수 있습니다)에 `prompts/qwen-mt.prompt` 파일을 만들고 내용을 다음과 같이 작성합니다:
 ```
@@ -115,7 +115,7 @@ $TEXT
 
 ## 사용자 정의 요청 구성 :id=custom-request-config
 
-다양한 벤더의 API는 OpenAI Chat Completions API와 호환되지만, 커스텀 파라미터(요청 본문 또는 요청 헤더에 있음)가 있을 수 있으며 모델마다 파라미터 요구 사항이 다를 수 있습니다. 3.8.5 버전부터 요청 구성 파일을 통해 AI 서비스나 모델별로 요청 파라미터, 요청 헤더, 프롬프트 템플릿, 언어 매핑 등을 사용자 정의할 수 있습니다.
+다양한 벤더의 API는 OpenAI Chat Completions API와 호환되지만, 커스텀 파라미터(요청 본문 또는 요청 헤더에 있음)가 있을 수 있으며 모델마다 파라미터 요구 사항이 다를 수 있습니다. [3.9](#/ko/updates/v3.9 ':ignore :target=_blank') 버전부터 요청 구성 파일을 통해 AI 서비스나 모델별로 요청 파라미터, 요청 헤더, 프롬프트 템플릿, 언어 매핑 등을 사용자 정의할 수 있습니다.
 
 !> 요청 구성은 번역(Chat Completions)에만 적용됩니다. TTS 및 공급자가 Azure인 경우에는 지원되지 않습니다.
 
@@ -169,7 +169,7 @@ OpenAI 번역 설정 대화상자 왼쪽 하단의 **요청 설정 편집...** �
 
 ### Schema
 
-Schema: [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.8.5/src/main/resources/schemas/openai-config.schema.json)
+Schema: [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.9.0/src/main/resources/schemas/openai-config.schema.json)
 
 에디터는 이 Schema를 기반으로 검증과 자동 완성을 수행할 수 있어야 합니다.
 

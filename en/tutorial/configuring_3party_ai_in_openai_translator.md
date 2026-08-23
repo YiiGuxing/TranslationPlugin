@@ -1,10 +1,10 @@
 # Configuring Third-Party AI in OpenAI Translator
 
-In version [3.7](#/updates/v3.7 ':ignore :target=_blank'), we enhanced the configurability of the OpenAI translation engine. You can now configure the API endpoint and AI model to use more third-party AI services compatible with the OpenAI Chat Completions API. This tutorial will list the configuration methods for some common third-party AI services.
+In version [3.7](#/en/updates/v3.7 ':ignore :target=_blank'), we enhanced the configurability of the OpenAI translation engine. You can now configure the API endpoint and AI model to use more third-party AI services compatible with the OpenAI Chat Completions API. This tutorial will list the configuration methods for some common third-party AI services.
 
 > Tip: The default prompts in the plugin may perform differently across various AI services. You can adjust them by customizing the prompt template to achieve a better translation experience. For more details, see: [How to Customize OpenAI Translation Prompts](/en/tutorial/how_to_customize_translation_prompts.md).
 
-> Tip: Since version 3.8.5, you can customize request parameters, request headers, prompt templates, and language mappings for different AI services or models via request configuration files. For more details, see: [Custom Request Configuration](#custom-request-config).
+> Tip: Since version [3.9](#/en/updates/v3.9 ':ignore :target=_blank'), you can customize request parameters, request headers, prompt templates, and language mappings for different AI services or models via request configuration files. For more details, see: [Custom Request Configuration](#custom-request-config).
 
 ## DeepSeek :id=deepseek
 
@@ -12,7 +12,7 @@ In version [3.7](#/updates/v3.7 ':ignore :target=_blank'), we enhanced the confi
 - **API Endpoint**: `https://api.deepseek.com` `/v1/chat/completions`
 - **API Key**: [API key](https://platform.deepseek.com/api_keys)
 
-To disable thinking mode (plugin version 3.8.5 or later):
+To disable thinking mode (plugin version [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) or later):
 
 ```json
 {
@@ -77,7 +77,7 @@ For configuration details, see [Custom Request Configuration](#custom-request-co
 
 To use Qwen-MT, an LLM optimized for machine translation based on the Qwen3 model, take `qwen-mt-flash` as an example and follow the steps below:
 
-- Upgrade the plugin to version 3.8.5 or later.
+- Upgrade the plugin to version [3.9.0](https://plugins.jetbrains.com/plugin/8579-translation/versions) or later.
 - In the **OpenAI Translator Settings dialog**, configure a custom model as the Qwen-MT model: `qwen-mt-flash`.
 - In the configuration directory (which can be opened quickly via the **OpenAI Translator Settings dialog** ⇒ <kbd>Edit Request Config...</kbd> ⇒ <kbd>Open Config Directory</kbd>), create a file `prompts/qwen-mt.prompt` with the following content:
 ```
@@ -115,7 +115,7 @@ For configuration details, see [Custom Request Configuration](#custom-request-co
 
 ## Custom Request Configuration :id=custom-request-config
 
-Although APIs from different vendors are compatible with the OpenAI Chat Completions API, they may have custom parameters (in the request body or request headers), and different models may have different parameter requirements. Since version 3.8.5, you can customize request parameters, request headers, prompt templates, and language mappings for different AI services or models via request configuration files.
+Although APIs from different vendors are compatible with the OpenAI Chat Completions API, they may have custom parameters (in the request body or request headers), and different models may have different parameter requirements. Since version [3.9](#/en/updates/v3.9 ':ignore :target=_blank'), you can customize request parameters, request headers, prompt templates, and language mappings for different AI services or models via request configuration files.
 
 !> Request configuration only applies to translation (Chat Completions). It is not supported for TTS or when Azure is selected as the provider.
 
@@ -169,7 +169,7 @@ You can edit this configuration file by clicking the **Edit Request Config...** 
 
 ### Schema
 
-Schema: [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.8.5/src/main/resources/schemas/openai-config.schema.json)
+Schema: [openai-config.schema.json](https://raw.githubusercontent.com/YiiGuxing/TranslationPlugin/refs/tags/v3.9.0/src/main/resources/schemas/openai-config.schema.json)
 
 Your editor should be able to validate and autocomplete based on this Schema.
 
