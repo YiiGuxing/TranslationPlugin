@@ -65,6 +65,32 @@ class HtmlDocumentationTranslatorTest {
     }
 
     @Test
+    fun testEmptyPlaceholderKeepsProtectedInlineElementContentEmpty() {
+        val body = parseBody(
+            """<p>The first descendant element of <code class="s-c">baseElement</code> which """ +
+                    """matches the specified group of <code>selectors</code>.</p>"""
+        )
+        HtmlDocumentationTranslator(PlaceholderHtmlTranslationStrategy) { input ->
+            input.map { text ->
+                text.replace("<b10>baseElement</b10>", "<b10></b10>")
+                    .replace("<b11>selectors</b11>", "<b11>选择器</b11>")
+            }
+        }.translateElement(body)
+
+        val p = body.selectFirst("p")!!
+        assertEquals("The first descendant element of ", (p.childNode(0) as TextNode).text())
+        val emptiedCode = p.childNode(1) as Element
+        assertEquals("code", emptiedCode.tagName())
+        assertEquals("", emptiedCode.text())
+        assertEquals("s-c", emptiedCode.attr("class"))
+        assertEquals(" which matches the specified group of ", (p.childNode(2) as TextNode).text())
+        val code = p.childNode(3) as Element
+        assertEquals("code", code.tagName())
+        assertEquals("selectors", code.text())
+        assertEquals(".", (p.childNode(4) as TextNode).text())
+    }
+
+    @Test
     fun testSegmentWithOnlyProtectedInlineTagsIsNotTranslated() {
         val body = parseBody("""<p>Before</p><p><code>onlyCode</code></p><p>After</p>""")
         val texts = mutableListOf<String>()
