@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.translate.trans.openai.ui
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigService
+import cn.yiiguxing.plugin.translate.util.Application
 import cn.yiiguxing.plugin.translate.util.Http
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
@@ -51,7 +52,11 @@ class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper
         virtualFile = LocalFileSystem.getInstance()
             .refreshAndFindFileByIoFile(configFile.toFile())
             ?: throw IllegalStateException("Failed to find the OpenAI request config file: $configFile")
-        virtualFile.isWritable = true
+
+        runCatching {
+            Application.runWriteAction { virtualFile.isWritable = true }
+        }
+
         val document = FileDocumentManager.getInstance().getDocument(virtualFile)
             ?: throw IllegalStateException("Failed to open the OpenAI request config file: $configFile")
         originalConfig = document.text
