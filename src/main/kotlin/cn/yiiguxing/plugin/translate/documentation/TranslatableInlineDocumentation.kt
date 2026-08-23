@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.trans.TranslationCacheType
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.findElementOfTypeAt
 import com.intellij.openapi.util.Key
@@ -41,7 +42,8 @@ internal data class InlineDocTranslationInfo(
      * Checks whether this cached info can be reused with the given [translator].
      */
     fun isCacheUsable(translator: Translator): Boolean {
-        return translatorId == translator.id && translationCacheToken == translator.translationCacheToken
+        return translatorId == translator.id
+                && translationCacheToken == translator.translationCacheToken(TranslationCacheType.DOCUMENTATION)
     }
 
     fun disabled(disabled: Boolean): InlineDocTranslationInfo {

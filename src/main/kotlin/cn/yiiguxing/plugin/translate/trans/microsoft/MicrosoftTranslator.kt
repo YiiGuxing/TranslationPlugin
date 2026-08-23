@@ -24,8 +24,11 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedSourceLanguages: List<Lang> = MicrosoftLanguageAdapter.sourceLanguages
     override val supportedTargetLanguages: List<Lang> = MicrosoftLanguageAdapter.targetLanguages
 
-    override val translationCacheToken: String
-        get() = "keepOriginal=${service<MicrosoftTranslatorSettings>().keepOriginalDocumentation}"
+    override fun translationCacheToken(cacheType: TranslationCacheType): String? = when (cacheType) {
+        TranslationCacheType.TEXT -> null
+        TranslationCacheType.DOCUMENTATION ->
+            "keepOriginalDocumentation=${service<MicrosoftTranslatorSettings>().keepOriginalDocumentation}"
+    }
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
         return service<MicrosoftTranslationService>().translate(text, srcLang, targetLang)

@@ -1,6 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
 import cn.yiiguxing.plugin.translate.trans.TranslateService
+import cn.yiiguxing.plugin.translate.trans.TranslationCacheType
 import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.trans.getTranslationErrorMessage
 import com.intellij.lang.Language
@@ -32,7 +33,7 @@ internal fun translateInlineDocumentation(
     return InlineDocTranslationInfo.translated(
         translatedText = translatedText,
         translatorId = translator.id,
-        translationCacheToken = translator.translationCacheToken,
+        translationCacheToken = translator.translationCacheToken(TranslationCacheType.DOCUMENTATION),
         hasError = hasError
     )
 }

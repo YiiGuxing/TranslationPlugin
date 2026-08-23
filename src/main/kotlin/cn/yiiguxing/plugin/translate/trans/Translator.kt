@@ -26,16 +26,31 @@ interface Translator : TextTranslator {
 
     /**
      * Returns a token identifying the current state of this translator's
-     * configuration which may affect translation results. Cached translation
-     * results are only reused when the token recorded at cache creation time
-     * matches the current token.
+     * configuration which may affect translation results for the given [cacheType].
+     * Cached translation results are only reused when the token recorded at cache
+     * creation time matches the current token.
      *
      * Returns `null` if the translator has no configuration-dependent
      * translation behavior (default).
      */
-    val translationCacheToken: String?
-        get() = null
+    fun translationCacheToken(cacheType: TranslationCacheType): String? = null
 
     val defaultLangForLocale: Lang
 
+}
+
+/**
+ * The type of translation cache.
+ */
+enum class TranslationCacheType {
+
+    /**
+     * Cache for text translation.
+     */
+    TEXT,
+
+    /**
+     * Cache for documentation translation.
+     */
+    DOCUMENTATION
 }

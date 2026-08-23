@@ -48,8 +48,11 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
     override val supportedTargetLanguages: List<Lang> = GoogleLanguageAdapter.targetLanguages
 
-    override val translationCacheToken: String
-        get() = "keepOriginalDocumentation=${service<GoogleSettings>().keepOriginalDocumentation}"
+    override fun translationCacheToken(cacheType: TranslationCacheType): String? = when (cacheType) {
+        TranslationCacheType.TEXT -> null
+        TranslationCacheType.DOCUMENTATION ->
+            "keepOriginalDocumentation=${service<GoogleSettings>().keepOriginalDocumentation}"
+    }
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
