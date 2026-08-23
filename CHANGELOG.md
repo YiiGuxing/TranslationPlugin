@@ -4,10 +4,12 @@
 
 - Added support for preserving the original text during document translation with Google Translate and Microsoft Translator.
 - Added advanced configuration support for the OpenAI Translator engine. (Experimental)
+- Added a quick access entry to the current translation engine's configuration in the translation engine list popup.
 - Fixed the issue where Microsoft Translator failed.
 - Fixed the issue where Google Translate document translation failed.
 - 谷歌翻译和微软翻译新增文档翻译时保留原文的支持
 - OpenAI 翻译引擎新增高级配置支持（实验性）
+- 在翻译引擎列表弹窗中添加当前翻译引擎配置的快速入口
 - 修复了微软翻译失败的问题
 - 修复了谷歌翻译文档翻译失败的问题
 
