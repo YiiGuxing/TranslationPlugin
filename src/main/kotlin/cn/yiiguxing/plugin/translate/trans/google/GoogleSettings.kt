@@ -18,6 +18,12 @@ class GoogleSettings : BaseState(), PersistentStateComponent<GoogleSettings> {
     @get:OptionTag("SERVER_URL")
     var serverUrl: String? by string(null)
 
+    /**
+     * Whether to keep the original text after documentation translation.
+     */
+    @get:OptionTag("KEEP_ORIGINAL_DOCUMENTATION")
+    var keepOriginalDocumentation: Boolean by property(false)
+
     override fun getState(): GoogleSettings = this
 
     override fun loadState(state: GoogleSettings) {

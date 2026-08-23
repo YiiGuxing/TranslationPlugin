@@ -73,6 +73,15 @@ class GoogleSettingsDialog : DialogWrapper(true) {
                         .component
                 }
             }
+
+            row {
+                checkBox(message("settings.documentation.translation.keep.original"))
+                    .bindSelected(settings::keepOriginalDocumentation)
+                    .comment(
+                        comment = message("settings.documentation.translation.keep.original.experimental"),
+                        maxLineLength = 50
+                    )
+            }
         }
     }
 }

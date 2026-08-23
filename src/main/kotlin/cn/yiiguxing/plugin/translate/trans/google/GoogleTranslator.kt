@@ -1,15 +1,16 @@
 package cn.yiiguxing.plugin.translate.trans.google
 
 import cn.yiiguxing.plugin.translate.message
+import cn.yiiguxing.plugin.translate.service.CacheService
 import cn.yiiguxing.plugin.translate.trans.*
 import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
+import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.RawHtmlTranslationStrategy
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.GOOGLE
-import cn.yiiguxing.plugin.translate.util.Http
+import cn.yiiguxing.plugin.translate.util.*
 import cn.yiiguxing.plugin.translate.util.Http.setUserAgent
-import cn.yiiguxing.plugin.translate.util.UrlBuilder
-import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.*
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import org.jsoup.nodes.Document
 import java.lang.reflect.Type
@@ -28,7 +29,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Lang::class.java, LangDeserializer)
-        .registerTypeAdapter(GDocTranslation::class.java, GDocTranslationDeserializer)
+        .registerTypeAdapter(GDocTranslations::class.java, GDocTranslationsDeserializer)
         .create()
 
     override val id: String = GOOGLE.id
@@ -46,6 +47,9 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedSourceLanguages: List<Lang> = GoogleLanguageAdapter.sourceLanguages
 
     override val supportedTargetLanguages: List<Lang> = GoogleLanguageAdapter.targetLanguages
+
+    override val translationCacheToken: String
+        get() = "keepOriginalDocumentation=${service<GoogleSettings>().keepOriginalDocumentation}"
 
 
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
@@ -86,24 +90,39 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         srcLang: Lang,
         targetLang: Lang
     ): Document = checkError {
-        documentation.translateBody { bodyHTML ->
-            translateDocumentation(bodyHTML, srcLang, targetLang)
+        documentation.also { document ->
+            HtmlDocumentationTranslator(RawHtmlTranslationStrategy) { texts ->
+                translateDocumentation(texts, srcLang, targetLang)
+            }.translateDocument(document, service<GoogleSettings>().keepOriginalDocumentation)
         }
     }
 
-    private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
-        val client = SimpleTranslateClient(
-            this,
-            ::callTranslateDocumentation,
-            ::parseDocTranslation
-        )
-        client.updateCacheKey { it.update("DOCUMENTATION.v2".toByteArray()) }
-        return client.execute(documentation, srcLang, targetLang).translation ?: ""
+    private fun translateDocumentation(texts: List<String>, srcLang: Lang, targetLang: Lang): List<String> {
+        val cacheService = service<CacheService>()
+        val cacheKey = getDocumentationDiskCacheKey(texts, srcLang, targetLang)
+        cacheService.getDiskCache(cacheKey)
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { cached ->
+                try {
+                    return parseDocTranslations(cached, texts)
+                } catch (e: Throwable) {
+                    logger.w("Failed to parse from disk cache.", e)
+                }
+            }
+
+        val translation = callTranslateDocumentation(texts, srcLang, targetLang)
+        val result = parseDocTranslations(translation, texts)
+        cacheService.putDiskCache(cacheKey, translation)
+        return result
     }
 
-    private fun callTranslateDocumentation(text: String, srcLang: Lang, targetLang: Lang): String {
+    private fun getDocumentationDiskCacheKey(texts: List<String>, srcLang: Lang, targetLang: Lang): String {
+        return "$id;${texts.joinToString { "," }};$srcLang;$targetLang".md5()
+    }
+
+    private fun callTranslateDocumentation(texts: List<String>, srcLang: Lang, targetLang: Lang): String {
         val data = arrayOf(
-            arrayOf(arrayOf(text), srcLang.googleLanguageCode, targetLang.googleLanguageCode),
+            arrayOf(texts, srcLang.googleLanguageCode, targetLang.googleLanguageCode),
             GoogleTranslateClient.TE_LIB.value
         )
         return Http.post(
@@ -136,21 +155,15 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         }.toTranslation()
     }
 
-    private fun parseDocTranslation(
-        translation: String,
-        original: String,
-        srcLang: Lang,
-        targetLang: Lang,
-    ): BaseTranslation {
+    private fun parseDocTranslations(translation: String, texts: List<String>): List<String> {
         logger.i("Translate result: $translation")
 
         if (translation.isBlank()) {
-            return Translation(original, original, srcLang, targetLang, listOf(srcLang))
+            return texts
         }
 
-        val (translatedText, lang) = gson.fromJson(translation, GDocTranslation::class.java)
-        val sLang = lang?.takeIf { srcLang == Lang.AUTO } ?: srcLang
-        return BaseTranslation(original, sLang, targetLang, translatedText)
+        val translations = gson.fromJson(translation, GDocTranslations::class.java).translations
+        return texts.indices.map { index -> translations.getOrNull(index).orEmpty() }
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {
@@ -161,23 +174,24 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
         return super.createErrorInfo(throwable)
     }
 
-    private data class GDocTranslation(val translatedText: String, val lang: Lang?)
+    private data class GDocTranslations(val translations: List<String>)
 
-    private object GDocTranslationDeserializer : JsonDeserializer<GDocTranslation> {
+    private object GDocTranslationsDeserializer : JsonDeserializer<GDocTranslations> {
         override fun deserialize(
             json: JsonElement,
             typeOfT: Type,
             context: JsonDeserializationContext
-        ): GDocTranslation {
-            var array = json.asJsonArray
-            while (true) {
-                val firstElement = array.first()
-                array = if (firstElement.isJsonArray) firstElement.asJsonArray else break
-            }
-
-            val translatedText = array.first().asString
-            val lang = if (array.size() > 1) Lang.fromGoogleLanguageCode(array[1].asString) else null
-            return GDocTranslation(translatedText, lang)
+        ): GDocTranslations {
+            // The response format is `[[translation1, translation2, ...], [detected languages, ...]]`,
+            // where the first array element is the list of translations in the input order.
+            val translations = json.asJsonArray
+                .firstOrNull()
+                ?.asJsonArray
+                ?.map { element ->
+                    element.takeIf { it.isJsonPrimitive }?.asString.orEmpty()
+                }
+                .orEmpty()
+            return GDocTranslations(translations)
         }
     }
 
