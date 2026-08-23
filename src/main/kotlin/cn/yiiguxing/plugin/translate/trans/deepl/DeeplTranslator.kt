@@ -4,6 +4,8 @@ package cn.yiiguxing.plugin.translate.trans.deepl
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.translateBody
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.DEEPL
 import cn.yiiguxing.plugin.translate.util.i
 import com.google.gson.Gson

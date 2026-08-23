@@ -1,5 +1,7 @@
 package cn.yiiguxing.plugin.translate.documentation
 
+import cn.yiiguxing.plugin.translate.trans.TranslationCacheType
+import cn.yiiguxing.plugin.translate.trans.Translator
 import cn.yiiguxing.plugin.translate.util.findElementOfTypeAt
 import com.intellij.openapi.util.Key
 import com.intellij.platform.backend.documentation.InlineDocumentation
@@ -30,10 +32,19 @@ internal fun getPsiInlineDocumentationTranslationInfo(comment: PsiComment): Inli
 internal data class InlineDocTranslationInfo(
     val translatedText: String? = null,
     val translatorId: String? = null,
+    val translationCacheToken: String? = null,
     val isLoading: Boolean = false,
     val isDisabled: Boolean = false,
     val hasError: Boolean = false,
 ) {
+
+    /**
+     * Checks whether this cached info can be reused with the given [translator].
+     */
+    fun isCacheUsable(translator: Translator): Boolean {
+        return translatorId == translator.id
+                && translationCacheToken == translator.translationCacheToken(TranslationCacheType.DOCUMENTATION)
+    }
 
     fun disabled(disabled: Boolean): InlineDocTranslationInfo {
         check(!isLoading && !hasError && translatedText != null) {
@@ -48,11 +59,13 @@ internal data class InlineDocTranslationInfo(
         fun translated(
             translatedText: String,
             translatorId: String,
+            translationCacheToken: String?,
             hasError: Boolean = false
         ): InlineDocTranslationInfo {
             return InlineDocTranslationInfo(
                 translatedText = translatedText,
                 translatorId = translatorId,
+                translationCacheToken = translationCacheToken,
                 hasError = hasError
             )
         }

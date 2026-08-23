@@ -450,14 +450,13 @@ enum class Lang(
     val adaptiveLocalName: String by lazy { LanguageBundle.getAdaptedMessage(localeNameKey) }
 
     companion object {
-        private val mapping: Map<String, Lang> by lazy { values().associateBy { it.code } }
+        private val mapping: Map<String, Lang> by lazy { entries.associateBy { it.code } }
 
         /**
          * Sorted languages (excluding [UNKNOWN]) by their locale names.
          */
         val sortedLanguages: List<Lang> by lazy {
-            values()
-                .asSequence()
+            entries.asSequence()
                 .filter { it != UNKNOWN }
                 .sortedBy { if (it == AUTO) "" else it.languageName }
                 .toList()
@@ -474,15 +473,17 @@ enum class Lang(
                     if (dynamicBundleLanguage != Locale.ENGLISH.language) dynamicBundleLanguage
                     else Locale.getDefault().language
 
-                return when (localeLanguage) {
-                    Locale.CHINESE.language -> when (Locale.getDefault().country) {
-                        "HK", "TW" -> CHINESE_TRADITIONAL
-                        else -> CHINESE_SIMPLIFIED
+                if (localeLanguage == Locale.ENGLISH.language || localeLanguage == Locale.CHINESE.language) {
+                    when (Locale.getDefault().country) {
+                        "HK", "TW" -> return CHINESE_TRADITIONAL
+                        "CN" -> return CHINESE_SIMPLIFIED
                     }
-
-                    else -> values().find { Locale(it.code).language.equals(localeLanguage, ignoreCase = true) }
-                        ?: ENGLISH
                 }
+
+                return entries.find {
+                    @Suppress("DEPRECATION")
+                    Locale(it.code).language.equals(localeLanguage, ignoreCase = true)
+                } ?: ENGLISH
             }
 
         /**
@@ -506,10 +507,9 @@ enum class Lang(
         fun Lang.isExplicit(): Boolean = this != AUTO && this != UNKNOWN
 
         /**
-         * Try to convert to an explicit language: Returns [UNKNOWN] (even though [UNKNOWN]
-         * is not an explicit language) if it is [AUTO], otherwise return itself.
+         * Returns [UNKNOWN] if this language is [AUTO], otherwise returns itself.
          */
-        fun Lang.toExplicit(): Lang = when (this) {
+        fun Lang.orUnknown(): Lang = when (this) {
             AUTO -> UNKNOWN
             else -> this
         }

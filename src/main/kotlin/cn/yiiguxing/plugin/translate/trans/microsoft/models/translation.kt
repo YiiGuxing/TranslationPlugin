@@ -16,10 +16,13 @@ internal data class SourceText(@SerializedName("text") val text: String)
 
 internal data class DetectedLanguage(
     @SerializedName("language") val language: String,
-    @SerializedName("score") val score: Float
 )
 
 internal data class TranslationItem(
     @SerializedName("to") val to: String,
     @SerializedName("text") val text: String
+)
+
+internal data class SpellCheckResult(
+    @SerializedName("correctedText") val correctedText: String
 )

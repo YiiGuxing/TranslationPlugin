@@ -9,6 +9,7 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.json</depends>
     <depends optional="true" config-file="includes/lang.xml">com.intellij.modules.lang</depends>
     <depends optional="true" config-file="includes/jcef.xml">com.intellij.modules.jcef</depends>
     <depends optional="true" config-file="includes/rider.xml">com.intellij.modules.rider</depends>
@@ -87,6 +88,11 @@
         <fileEditorProvider implementation="cn.yiiguxing.plugin.translate.view.WebViewProvider"/>
         <webHelpProvider implementation="cn.yiiguxing.plugin.translate.provider.HelpProvider"/>
 
+        <fileIconProvider
+                implementation="cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigFileIconProvider"/>
+        <editorTabTitleProvider
+                implementation="cn.yiiguxing.plugin.translate.trans.openai.config.OpenAiRequestConfigEditorTabTitleProvider"/>
+
         <notificationGroup id="Translation Plugin" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Documentation translation failed" displayType="BALLOON" isLogByDefault="true"/>
         <notificationGroup id="Word Book Import/Export" displayType="BALLOON" isLogByDefault="true"/>
@@ -96,6 +102,10 @@
                      description="HTTP user agent chromium version override"/>
         <registryKey key="cn.yiiguxing.plugin.translate.webview.debug" defaultValue="false"
                      description="Enable DevTools menu item in WebView."/>
+        <registryKey key="google.translate.gtx.apiKey" defaultValue=""
+                     description="API key for the GTX client used with Google Translate."/>
+        <registryKey key="google.translate.teLib.apiKey" defaultValue=""
+                     description="API key for the TE_LIB client used with Google Translate."/>
 
         <iconMapper mappingFile="TranslationIconMappings.json"/>
     </extensions>
@@ -160,6 +170,10 @@
         <action id="Translation.ShowWordOfTheDayAction"
                 icon="AllIcons.Actions.IntentionBulb"
                 class="cn.yiiguxing.plugin.translate.action.ShowWordOfTheDayAction"/>
+
+        <action id="Translation.TranslationEngineSettingsAction"
+                icon="TranslationIcons.Config"
+                class="cn.yiiguxing.plugin.translate.action.TranslationEngineSettingsAction"/>
 
         <action id="Translation.WhatsNewAction" class="cn.yiiguxing.plugin.translate.action.WhatsNewAction"/>
         <action id="Translation.GettingStartAction" class="cn.yiiguxing.plugin.translate.action.GettingStartedAction"/>

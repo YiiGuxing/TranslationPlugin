@@ -260,7 +260,7 @@ class FileInlineDocumentationTranslateActionProvider : InspectionWidgetActionPro
                 }
             }
                 ?.takeIf {
-                    !it.isLoading && it.translatedText != null && it.isDisabled && it.translatorId == translator.id
+                    !it.isLoading && it.translatedText != null && it.isDisabled && it.isCacheUsable(translator)
                 }
                 ?.disabled(false)
         }

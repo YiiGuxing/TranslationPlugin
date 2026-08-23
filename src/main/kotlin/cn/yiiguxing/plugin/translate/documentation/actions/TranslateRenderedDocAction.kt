@@ -58,7 +58,7 @@ internal class TranslateRenderedDocAction(
         val newInfo = when {
             info?.isLoading == true -> null
             info?.translatedText != null && !info.hasError -> when {
-                state && info.translatorId == TranslateService.getInstance().translator.id -> info.disabled(false)
+                state && info.isCacheUsable(TranslateService.getInstance().translator) -> info.disabled(false)
                 state -> InlineDocTranslationInfo.loading()
                 info.translatedText == renderedText -> info.disabled(true)
                 else -> null

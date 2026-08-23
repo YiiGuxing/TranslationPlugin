@@ -15,6 +15,9 @@ object TranslationIcons {
     val AutoAwesome: Icon = load("/icons/autoAwesome.svg")
 
     @JvmField
+    val Config: Icon = load("/icons/config.svg")
+
+    @JvmField
     val Documentation: Icon = load("/icons/documentation.svg")
 
     @JvmField

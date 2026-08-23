@@ -13,145 +13,121 @@ import cn.yiiguxing.plugin.translate.trans.TranslationAdapter
 import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import com.google.gson.annotations.SerializedName
 
-private val ZERO_WIDTH_SPACE = Regex("​+")
-
 data class GoogleTranslation(
     var original: String? = null,
-    @SerializedName("src")
+    @SerializedName("sourceLanguage")
     val src: Lang,
     var target: Lang? = null,
+    @SerializedName("translation")
+    val translation: String,
+    @SerializedName("sourceTransliteration")
+    val sourceTransliteration: String,
+    @SerializedName("targetTransliteration")
+    val targetTransliteration: String,
     @SerializedName("sentences")
     val sentences: List<GSentence>?,
-    @SerializedName("dict")
-    val dict: List<GDict>?,
-    @SerializedName("spell")
-    val spell: GSpell?,
-    @SerializedName("ld_result")
-    val languageDetectionResult: GLanguageDetectionResult,
-    @SerializedName("alternative_translations")
-    val alternativeTranslations: List<GAlternativeTranslations>? = null,
-    @SerializedName("examples")
-    val examples: GExamples? = null
+    @SerializedName("bilingualDictionary")
+    val bilingualDictionary: List<GBilingualDictionary>?,
+    @SerializedName("queryCorrection")
+    val queryCorrection: GQueryCorrection?,
+    @SerializedName("detectedLanguages")
+    val detectedLanguages: GDetectedLanguages,
+    @SerializedName("alternativeTranslations")
+    val alternativeTranslations: List<GAlternativeTranslation>? = null,
+    @SerializedName("sourceExamples")
+    val sourceExamples: List<GSourceExample>? = null
 ) : TranslationAdapter {
 
     override fun toTranslation(): Translation {
         check(original != null) { "Cannot convert to Translation: original=null" }
         check(target != null) { "Cannot convert to Translation: target=null" }
 
-        val sentences = sentences ?: emptyList()
-        val translit: GTranslitSentence? = sentences.find { it is GTranslitSentence } as? GTranslitSentence
-        val trans = sentences.asSequence()
-            .mapNotNull { (it as? GTransSentence)?.trans }
-            .joinToString("")
-            .replace(ZERO_WIDTH_SPACE, "")
-
-        val extraDocuments = GoogleExampleDocumentFactory.getDocument(examples)?.let {
+        val extraDocuments = GoogleExampleDocumentFactory.getDocument(sourceExamples)?.let {
             listOf(NamedTranslationDocument(message("examples.document.name"), it))
         } ?: emptyList()
 
         return Translation(
             original!!,
-            trans,
+            translation,
             src,
             target!!,
-            languageDetectionResult.srclangs,
-            translit?.srcTranslit,
-            translit?.translit,
-            spell?.spell,
+            detectedLanguages.srclangs,
+            sourceTransliteration,
+            targetTransliteration,
+            queryCorrection?.spellRes,
             GoogleDictionaryDocumentFactory.getDocument(this),
             extraDocuments
         )
     }
 }
 
-sealed class GSentence
 
-data class GTransSentence(
+data class GSentence(
     @SerializedName("orig")
-    val orig: String,
+    val original: String,
     @SerializedName("trans")
-    val trans: String,
-    @SerializedName("backend")
-    val backend: Int
-) : GSentence()
+    val translation: String,
+)
 
-data class GTranslitSentence(
-    @SerializedName("src_translit")
-    val srcTranslit: String?,
-    @SerializedName("translit")
-    val translit: String?
-) : GSentence()
-
-data class GDict(
+data class GBilingualDictionary(
     @SerializedName("pos")
     val pos: String,
     @SerializedName("entry")
-    val entry: List<GDictEntry>?
+    val entry: List<GBilingualDictionaryEntry>?
 )
 
-data class GDictEntry(
+data class GBilingualDictionaryEntry(
     @SerializedName("word")
     val word: String,
-    @SerializedName("reverse_translation")
+    @SerializedName("reverseTranslation")
     val reverseTranslation: List<String>?,
     @SerializedName("score")
     val score: Float
 )
 
-data class GLanguageDetectionResult(
+data class GDetectedLanguages(
     @SerializedName("srclangs")
     val srclangs: List<Lang>,
-    @SerializedName("srclangs_confidences")
-    val srclangsConfidences: List<Float>
+    @SerializedName("srclangsConfidences")
+    val srclangsConfidences: List<Float>,
+    @SerializedName("extendedSrclangs")
+    val extendedSrclangs: List<Lang>
 )
 
-//region For dt=at
-data class GAlternativeTranslations(
-    @SerializedName("src_phrase")
+data class GAlternativeTranslation(
+    @SerializedName("srcPhrase")
     val srcPhrase: String,
-    @SerializedName("raw_src_segment")
+    @SerializedName("rawSrcSegment")
     val rawSrcSegment: String,
     @SerializedName("alternative")
-    val alternative: List<GAlternative>
+    val alternative: List<GAlternative>,
+    @SerializedName("startPos")
+    val startPos: Int,
+    @SerializedName("endPos")
+    val endPos: Int
 )
 
 data class GAlternative(
-    @SerializedName("word_postproc")
+    @SerializedName("wordPostproc")
     val wordPostproc: String,
-    @SerializedName("score")
-    val score: Float,
-    @SerializedName("has_preceding_space")
+    @SerializedName("hasPrecedingSpace")
     val hasPrecedingSpace: Boolean,
-    @SerializedName("attach_to_next_token")
+    @SerializedName("attachToNextToken")
     val attachToNextToken: Boolean
 )
-//endregion
 
-//region For dt=qca
-data class GSpell(
-    @SerializedName("spell_res")
-    val spell: String
-)
-//endregion
-
-
-//region For dt=ex
-data class GExamples(
-    @SerializedName("example")
-    val examples: List<GExample>
+data class GQueryCorrection(
+    @SerializedName("spellRes")
+    val spellRes: String,
+    @SerializedName("spellHtmlRes")
+    val spellHtmlRes: String,
+    @SerializedName("correctionType")
+    val correctionType: List<String>,
+    @SerializedName("confident")
+    val confident: Boolean
 )
 
-data class GExample(
+data class GSourceExample(
     @SerializedName("text")
     val text: String,
-    @SerializedName("source_type")
-    val sourceType: Int,
-    @SerializedName("label_info")
-    val labelInfo: GLabelInfo? = null
 )
-
-data class GLabelInfo(
-    @SerializedName("subject")
-    val subject: List<String>
-)
-//endregion

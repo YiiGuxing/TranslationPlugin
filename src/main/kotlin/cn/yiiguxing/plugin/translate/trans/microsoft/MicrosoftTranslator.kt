@@ -2,15 +2,10 @@ package cn.yiiguxing.plugin.translate.trans.microsoft
 
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
-import cn.yiiguxing.plugin.translate.trans.Lang.Companion.isExplicit
-import cn.yiiguxing.plugin.translate.trans.Lang.Companion.toExplicit
-import cn.yiiguxing.plugin.translate.trans.microsoft.models.DictionaryLookup
-import cn.yiiguxing.plugin.translate.trans.microsoft.models.TextType
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
 import cn.yiiguxing.plugin.translate.trans.microsoft.models.presentableError
-import cn.yiiguxing.plugin.translate.trans.text.ExampleDocument
-import cn.yiiguxing.plugin.translate.trans.text.NamedTranslationDocument
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.MICROSOFT
-import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.components.service
 import org.jsoup.nodes.Document
 import javax.swing.Icon
 
@@ -29,63 +24,14 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
     override val supportedSourceLanguages: List<Lang> = MicrosoftLanguageAdapter.sourceLanguages
     override val supportedTargetLanguages: List<Lang> = MicrosoftLanguageAdapter.targetLanguages
 
+    override fun translationCacheToken(cacheType: TranslationCacheType): String? = when (cacheType) {
+        TranslationCacheType.TEXT -> null
+        TranslationCacheType.DOCUMENTATION ->
+            "keepOriginalDocumentation=${service<MicrosoftTranslatorSettings>().keepOriginalDocumentation}"
+    }
+
     override fun doTranslate(text: String, srcLang: Lang, targetLang: Lang): Translation {
-        if (!targetLang.isExplicit()) {
-            throw UnsupportedLanguageException(targetLang, "Unsupported target language: ${targetLang.localeName}")
-        }
-
-        val msTranslation = MicrosoftTranslatorService.translate(text, srcLang, targetLang, TextType.PLAIN)
-            ?: return Translation(text, text, srcLang.toExplicit(), targetLang)
-
-        val translation = msTranslation.translations.first()
-        val sourceLang = msTranslation.detectedLanguage?.language
-            ?.let { Lang.fromMicrosoftLanguageCode(it) }
-            ?: srcLang.toExplicit()
-
-        val dictionaryLookup = getDictionaryLookup(text, sourceLang, targetLang)
-        val dictDocument = dictionaryLookup?.let(MicrosoftDictionaryDocumentFactory::getDocument)
-        val exampleDocument = dictionaryLookup?.let { getExampleDocument(it, sourceLang, targetLang) }
-        val extraDocuments = exampleDocument?.let { listOf(it) } ?: emptyList()
-
-        return Translation(
-            text,
-            translation.text,
-            sourceLang,
-            Lang.fromMicrosoftLanguageCode(translation.to),
-            dictDocument = dictDocument,
-            extraDocuments = extraDocuments
-        )
-    }
-
-    private fun getDictionaryLookup(text: String, sourceLang: Lang, targetLang: Lang): DictionaryLookup? {
-        if (!sourceLang.isExplicit() ||
-            sourceLang == targetLang ||
-            !MicrosoftTranslatorService.canLookupDictionary(text)
-        ) {
-            return null
-        }
-        return try {
-            MicrosoftTranslatorService.dictionaryLookup(text, sourceLang, targetLang)
-        } catch (e: Exception) {
-            thisLogger().warn("Failed to lookup dictionary", e)
-            null
-        }
-    }
-
-    private fun getExampleDocument(
-        dictionaryLookup: DictionaryLookup,
-        sourceLang: Lang,
-        targetLang: Lang
-    ): NamedTranslationDocument<ExampleDocument>? {
-        val dictionaryExamples = try {
-            MicrosoftTranslatorService.dictionaryExamples(dictionaryLookup, sourceLang, targetLang)
-        } catch (e: Exception) {
-            thisLogger().warn("Failed to get dictionary examples", e)
-            return null
-        }
-        return MicrosoftExampleDocumentFactory.getDocument(dictionaryExamples)?.let {
-            NamedTranslationDocument(message("examples.document.name"), it)
-        }
+        return service<MicrosoftTranslationService>().translate(text, srcLang, targetLang)
     }
 
     override fun translateDocumentation(
@@ -93,17 +39,7 @@ object MicrosoftTranslator : AbstractTranslator(), DocumentationTranslator {
         srcLang: Lang,
         targetLang: Lang
     ): Document = checkError {
-        documentation.translateBody { bodyHTML ->
-            translateDocumentation(bodyHTML, srcLang, targetLang)
-        }
-    }
-
-    private fun translateDocumentation(documentation: String, srcLang: Lang, targetLang: Lang): String {
-        return MicrosoftTranslatorService.translate(documentation, srcLang, targetLang, TextType.HTML)
-            ?.translations
-            ?.firstOrNull()
-            ?.text
-            ?: documentation
+        service<MicrosoftTranslationService>().translateDocumentation(documentation, srcLang, targetLang)
     }
 
     override fun createErrorInfo(throwable: Throwable): ErrorInfo? {

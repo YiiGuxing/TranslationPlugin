@@ -1,11 +1,7 @@
 package cn.yiiguxing.plugin.translate.action
 
 import cn.yiiguxing.plugin.translate.message
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.actionSystem.PlatformCoreDataKeys
-import com.intellij.openapi.actionSystem.PopupAction
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.NlsActions
@@ -30,6 +26,7 @@ class TranslationEngineActionGroup(
         addSeparator()
         add(TTSEngineActionGroup())
         addSeparator()
+        ActionManager.getInstance().getAction(TranslationEngineSettingsAction.ACTION_ID)?.let { add(it) }
         add(SettingsAction(message("action.TranslationEngineActionGroup.manage.translators"), null))
     }
 

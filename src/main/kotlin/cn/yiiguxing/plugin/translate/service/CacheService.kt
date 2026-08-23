@@ -29,8 +29,15 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         this.state.lastTrimTime = state.lastTrimTime
     }
 
-    fun putMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String, translation: Translation) {
-        memoryCache.put(MemoryCacheKey(text, srcLang, targetLang, translatorId), translation)
+    fun putMemoryCache(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        translatorId: String,
+        translationCacheToken: String?,
+        translation: Translation
+    ) {
+        memoryCache.put(MemoryCacheKey(text, srcLang, targetLang, translatorId, translationCacheToken), translation)
 
         val srcLangToCache = when {
             srcLang.isExplicit() -> srcLang
@@ -43,12 +50,21 @@ class CacheService : PersistentStateComponent<CacheService.State> {
             else -> return
         }
         if (srcLangToCache != srcLang || targetLangToCache != targetLang) {
-            memoryCache.put(MemoryCacheKey(text, srcLangToCache, targetLangToCache, translatorId), translation)
+            memoryCache.put(
+                MemoryCacheKey(text, srcLangToCache, targetLangToCache, translatorId, translationCacheToken),
+                translation
+            )
         }
     }
 
-    fun getMemoryCache(text: String, srcLang: Lang, targetLang: Lang, translatorId: String): Translation? {
-        return memoryCache[MemoryCacheKey(text, srcLang, targetLang, translatorId)]
+    fun getMemoryCache(
+        text: String,
+        srcLang: Lang,
+        targetLang: Lang,
+        translatorId: String,
+        translationCacheToken: String?
+    ): Translation? {
+        return memoryCache[MemoryCacheKey(text, srcLang, targetLang, translatorId, translationCacheToken)]
     }
 
     fun removeMemoryCache(
@@ -159,7 +175,8 @@ class CacheService : PersistentStateComponent<CacheService.State> {
         val text: String,
         val srcLang: Lang,
         val targetLang: Lang,
-        val translator: String = "unknown"
+        val translator: String = "unknown",
+        val translationCacheToken: String? = null
     )
 
     data class State(@Volatile var lastTrimTime: Long = System.currentTimeMillis())
