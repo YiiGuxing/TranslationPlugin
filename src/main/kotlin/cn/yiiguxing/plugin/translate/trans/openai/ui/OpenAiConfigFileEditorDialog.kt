@@ -7,7 +7,7 @@ import cn.yiiguxing.plugin.translate.util.Http
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.intellij.icons.AllIcons
-import com.intellij.ide.BrowserUtil
+import com.intellij.ide.actions.RevealFileAction
 import com.intellij.json.JsonFileType
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.logger
@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.Action
 import javax.swing.JComponent
+import kotlin.io.path.createDirectories
+import kotlin.io.path.exists
 
 /**
  * Dialog for editing the OpenAI request config file
@@ -88,16 +90,10 @@ class OpenAiConfigFileEditorDialog(private val project: Project) : DialogWrapper
             AllIcons.Nodes.Folder
         ) {
             override fun actionPerformed(e: ActionEvent?) {
-                try {
-                    BrowserUtil.browse(OpenAiRequestConfigService.CONFIG_DIRECTORY.toFile())
-                } catch (exception: Exception) {
-                    LOG.warn("Failed to open the OpenAI request config directory.", exception)
-                    Messages.showErrorDialog(
-                        editor.component,
-                        message("openai.config.editor.dialog.error.open.config.directory"),
-                        message("error.title")
-                    )
+                if (!OpenAiRequestConfigService.CONFIG_DIRECTORY.exists()) {
+                    OpenAiRequestConfigService.CONFIG_DIRECTORY.createDirectories()
                 }
+                RevealFileAction.openDirectory(OpenAiRequestConfigService.CONFIG_DIRECTORY.toFile())
             }
         }
         return arrayOf(openInEditorAction, openConfigDirectoryAction)
