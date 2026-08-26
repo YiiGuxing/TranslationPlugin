@@ -120,7 +120,7 @@ object GoogleTranslator : AbstractTranslator(), DocumentationTranslator {
     }
 
     private fun getDocumentationDiskCacheKey(texts: List<String>, srcLang: Lang, targetLang: Lang): String {
-        return "$id;${texts.joinToString { "," }};$srcLang;$targetLang".md5()
+        return "$id;${texts.joinToString(";")};$srcLang;$targetLang".md5()
     }
 
     private fun callTranslateDocumentation(texts: List<String>, srcLang: Lang, targetLang: Lang): String {

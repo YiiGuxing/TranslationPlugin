@@ -20,9 +20,9 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.panel.ComponentPanelBuilder
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.JBColor
-import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
+import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 import com.intellij.util.ui.JBUI
 import icons.TranslationIcons
 import org.jetbrains.concurrency.runAsync
@@ -42,9 +42,7 @@ class YoudaoSettingsDialog : DialogWrapper(true) {
     private val appKeyField: JBPasswordField = JBPasswordField()
     private val domainComboBox: ComboBox<YoudaoDomain> =
         ComboBox(CollectionComboBoxModel(YoudaoDomain.values().toList())).apply {
-            renderer = SimpleListCellRenderer.create { label, domain, _ ->
-                label.text = domain.displayName
-            }
+            renderer = textListCellRenderer<YoudaoDomain> { it.displayName }
         }
 
     private var appKey: String?

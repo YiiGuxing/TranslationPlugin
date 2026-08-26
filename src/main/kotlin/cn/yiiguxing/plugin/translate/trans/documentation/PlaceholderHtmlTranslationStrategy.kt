@@ -115,6 +115,8 @@ object PlaceholderHtmlTranslationStrategy : HtmlTranslationStrategy {
             rebuildNodeList(original.childNodes(), placeholder.childNodes()).forEach {
                 rebuilt.appendChild(it)
             }
+        } else if (placeholder.childNodes().isEmpty()) {
+            rebuilt.empty()
         }
         return rebuilt
     }

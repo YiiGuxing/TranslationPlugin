@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [3.9.1] (2026/08/26)
+
+- Fixed the issue of cache conflicts in document translation for Google Translate.
+- Optimized the handling of protected inline tags in documentation translation.
+- 修复了谷歌翻译文档翻译缓存冲突的问题
+- 优化了文档翻译中受保护内联标签的处理
+
 ## [3.9.0] (2026/08/23)
 
 - Added support for preserving the original text during document translation with Google Translate and Microsoft Translator.
@@ -628,7 +635,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.0...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.1...HEAD
+[3.9.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.0...v3.9.1
 [3.9.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.4...v3.9.0
 [3.8.4]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.3...v3.8.4
 [3.8.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.2...v3.8.3

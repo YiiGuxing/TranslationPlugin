@@ -35,6 +35,7 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.panels.HorizontalLayout
+import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -155,7 +156,7 @@ internal abstract class SettingsUi {
 
     protected val ttsSourceComboBox: ComboBox<TTSSource> =
         ComboBox(CollectionComboBoxModel(TTSSource.entries)).apply {
-            renderer = SimpleListCellRenderer.create("") { it.displayName }
+            renderer = textListCellRenderer<TTSSource> { it.displayName }
         }
 
     protected val autoPlayTTSCheckBox: JBCheckBox = JBCheckBox(message("settings.options.autoPlayTTS")).apply {
@@ -197,7 +198,7 @@ internal abstract class SettingsUi {
         JBCheckBox(message("settings.options.show.actions.only.with.selection"))
 
     protected val translationWindowLocationComboBox: ComboBox<WindowLocation> = comboBox<WindowLocation>().apply {
-        renderer = SimpleListCellRenderer.create("") { it.displayName }
+        renderer = textListCellRenderer { it.displayName }
     }
 
     protected val supportLinkLabel: LinkLabel<*> =
