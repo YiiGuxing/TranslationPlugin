@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Fixed the issue of cache conflicts in document translation for Google Translate.
+- Optimized the handling of protected inline tags in documentation translation.
+- 修复了谷歌翻译文档翻译缓存冲突的问题
+- 优化了文档翻译中受保护内联标签的处理
+
 ## [3.9.0] (2026/08/23)
 
 - Added support for preserving the original text during document translation with Google Translate and Microsoft Translator.
