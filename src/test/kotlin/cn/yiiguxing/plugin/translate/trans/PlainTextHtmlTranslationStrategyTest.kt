@@ -4,7 +4,9 @@ import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTransl
 import cn.yiiguxing.plugin.translate.trans.documentation.PlainTextHtmlTranslationStrategy
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
@@ -13,7 +15,22 @@ import org.junit.Test
 class PlainTextHtmlTranslationStrategyTest {
 
     @Test
-    fun testEachLeafIsTranslatedSeparatelyAsPlainText() {
+    fun testSegmentsAreSerializedAsPlainTextWithoutTags() {
+        val body = parseBody("""<p class="p-doc">See <a href="https://example.com/doc">the documentation</a> now</p>""")
+        val texts = mutableListOf<String>()
+        HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
+            texts.addAll(input)
+            input.map(::fakeTranslate)
+        }.translateElement(body)
+
+        assertEquals(listOf("See the documentation now"), texts)
+        assertNull(body.selectFirst("a"))
+        assertEquals("p-doc", body.selectFirst("p")?.attr("class"))
+        assertEquals("[See the documentation now]", body.selectFirst("p")?.text())
+    }
+
+    @Test
+    fun testAdjacentNodesAreMergedAndTagsAreStripped() {
         val body = parseBody("""<p>Hello <b>bold</b> world</p>""")
         val texts = mutableListOf<String>()
         HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
@@ -21,26 +38,13 @@ class PlainTextHtmlTranslationStrategyTest {
             input.map(::fakeTranslate)
         }.translateElement(body)
 
-        assertEquals(listOf("Hello ", "bold", " world"), texts)
-        assertEquals("[Hello ][bold][ world]", body.selectFirst("p")?.text())
+        assertEquals(listOf("Hello bold world"), texts)
+        assertNull(body.selectFirst("b"))
+        assertEquals("[Hello bold world]", body.selectFirst("p")?.text())
     }
 
     @Test
-    fun testNoHtmlTagsAreSentToTranslator() {
-        val body = parseBody("""<p>See <a href="https://example.com/doc">the documentation</a> now</p>""")
-        val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
-            texts.addAll(input)
-            input.map(::fakeTranslate)
-        }.translateElement(body)
-
-        assertEquals(listOf("See ", "the documentation", " now"), texts)
-        assertEquals("https://example.com/doc", body.selectFirst("a")?.attr("href"))
-        assertEquals("[the documentation]", body.selectFirst("a")?.text())
-    }
-
-    @Test
-    fun testProtectedInlineTagsAreNotTranslated() {
+    fun testProtectedInlineTagsAreNotRestored() {
         val body = parseBody("""<p>The <code>body</code> element.</p>""")
         val texts = mutableListOf<String>()
         HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
@@ -48,9 +52,9 @@ class PlainTextHtmlTranslationStrategyTest {
             input.map(::fakeTranslate)
         }.translateElement(body)
 
-        assertEquals(listOf("The ", " element."), texts)
-        assertEquals("body", body.selectFirst("code")?.text())
-        assertEquals("[The ]body[ element.]", body.selectFirst("p")?.text())
+        assertEquals(listOf("The body element."), texts)
+        assertNull(body.selectFirst("code"))
+        assertEquals("[The body element.]", body.selectFirst("p")?.text())
     }
 
     @Test
@@ -58,11 +62,10 @@ class PlainTextHtmlTranslationStrategyTest {
         val body = parseBody("""<p>Hello</p>""")
         translate(body, keepOriginal = true)
 
-        val paragraphs = body.select("p")
-        assertEquals(2, paragraphs.size)
-        assertEquals("Hello", paragraphs[0].text())
-        assertEquals("br", paragraphs[0].nextElementSibling()?.tagName())
-        assertEquals("[Hello]", paragraphs[1].text())
+        val p = body.selectFirst("p")!!
+        assertEquals("Hello", (p.childNode(0) as TextNode).text())
+        assertEquals("br", (p.childNode(1) as Element).tagName())
+        assertEquals("[Hello]", (p.childNode(2) as TextNode).text())
     }
 
     @Test
