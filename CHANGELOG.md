@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Optimized Baidu Translate document translation to preserve the basic document formatting.
+- 优化了百度文档翻译，保留文档的基础格式
+
 ## [3.9.1] (2026/08/26)
 
 - Fixed the issue of cache conflicts in document translation for Google Translate.
