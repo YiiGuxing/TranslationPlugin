@@ -1,7 +1,5 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.documentation
 
-import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.documentation.LeafPlainTextHtmlTranslationStrategy
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.junit.Assert.assertEquals
