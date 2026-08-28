@@ -411,15 +411,15 @@ internal class BingTranslator(
             val translatedText = msTranslation?.translations?.firstOrNull()?.text
 
             // Query spelling check, dictionary lookup and example lookup in parallel.
-            val spellDeferred = async {
+            val spellDeferred = scope.async {
                 runCatching { checkSpelling(text, sourceLang) }.getOrNull()
             }
-            val dictionaryLookupDeferred = async {
+            val dictionaryLookupDeferred = scope.async {
                 translatedText?.let {
                     runCatching { lookupDictionary(text, it, sourceLang, targetLang) }.getOrNull()
                 }
             }
-            val dictionaryExamplesDeferred = async {
+            val dictionaryExamplesDeferred = scope.async {
                 translatedText?.let {
                     runCatching { lookupExample(text, it, sourceLang, targetLang) }.getOrNull()
                 }
