@@ -5,6 +5,9 @@ package cn.yiiguxing.plugin.translate.trans.baidu
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.message
 import cn.yiiguxing.plugin.translate.trans.*
+import cn.yiiguxing.plugin.translate.trans.documentation.DocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
+import cn.yiiguxing.plugin.translate.trans.documentation.PlainTextHtmlTranslationStrategy
 import cn.yiiguxing.plugin.translate.ui.settings.TranslationEngine.BAIDU
 import cn.yiiguxing.plugin.translate.util.Http
 import cn.yiiguxing.plugin.translate.util.i
@@ -12,13 +15,18 @@ import cn.yiiguxing.plugin.translate.util.md5
 import com.google.gson.Gson
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
+import org.jsoup.nodes.Document
 import java.util.*
 import javax.swing.Icon
 
 /**
  * Baidu translator
  */
-object BaiduTranslator : AbstractTranslator() {
+object BaiduTranslator : AbstractTranslator(), DocumentationTranslator {
 
     private const val BAIDU_TRANSLATE_API_URL = "https://fanyi-api.baidu.com/api/trans/vip/translate"
     private const val BAIDU_FANYI_PRODUCT_URL = "https://fanyi-api.baidu.com/choose"
@@ -75,6 +83,26 @@ object BaiduTranslator : AbstractTranslator() {
             srcLang,
             targetLang
         )
+    }
+
+    override fun translateDocumentation(
+        documentation: Document,
+        srcLang: Lang,
+        targetLang: Lang
+    ): Document = checkError {
+        documentation.also { document ->
+            HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { texts ->
+                translateDocumentation(texts, srcLang, targetLang)
+            }.translateDocument(document)
+        }
+    }
+
+    private fun translateDocumentation(texts: List<String>, srcLang: Lang, targetLang: Lang): List<String> {
+        return runBlocking {
+            texts.map { text ->
+                async(Dispatchers.IO) { doTranslate(text, srcLang, targetLang).translation ?: "" }
+            }.awaitAll()
+        }
     }
 
     private fun call(text: String, srcLang: Lang, targetLang: Lang): String {
