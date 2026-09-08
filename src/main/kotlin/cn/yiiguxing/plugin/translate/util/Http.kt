@@ -24,7 +24,7 @@ object Http {
 
     const val MIME_TYPE_FORM = "application/x-www-form-urlencoded"
 
-    const val DEFAULT_CHROMIUM_VERSION = "150.0.4078.83"
+    const val DEFAULT_CHROMIUM_VERSION = "152.0.4191.66"
 
     const val DEFAULT_MAX_REDIRECTS = 5
 
