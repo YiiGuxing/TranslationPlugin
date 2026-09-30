@@ -210,7 +210,13 @@ internal abstract class SettingsUi {
         renderer = textListCellRenderer { it.displayName }
     }
 
-    protected val proxyHostField: JTextField = JTextField()
+    /**
+     * 代理主机。使用 [JBTextField] 的占位提示来展示期望的格式：这里只接受裸主机名或 IP，
+     * 带 `http://` 前缀会让 [java.net.InetSocketAddress] 解析失败。
+     */
+    protected val proxyHostField: JBTextField = JBTextField().apply {
+        emptyText.text = "127.0.0.1"
+    }
 
     protected val proxyPortField: JTextField = JTextField().apply {
         document = object : PlainDocument() {
@@ -266,6 +272,16 @@ internal abstract class SettingsUi {
             add(JLabel(message("settings.label.proxy.host")))
             add(proxyHostField, fillX().wrap())
             setMinWidth(proxyHostField, JBUIScale.scale(250))
+
+            val hostComment = ComponentPanelBuilder.createCommentComponent(
+                message("settings.comment.proxy.host"), true
+            )
+            val hostCommentCC = fillX()
+                .gapBefore(JBUIScale.scale(2).toString())
+                .gapTop(JBUIScale.scale(2).toString())
+                .span(2)
+                .wrap()
+            add(hostComment, hostCommentCC)
 
             add(JLabel(message("settings.label.proxy.port")))
             add(proxyPortField, wrap())

@@ -340,7 +340,11 @@ class ProxySettings {
     var type: ProxyType = ProxyType.HTTP
 
     /**
-     * 代理主机
+     * 代理主机。
+     *
+     * 只填主机名或 IP 地址，**不要带 `http://` 之类的协议前缀**：该值会直接传给
+     * [InetSocketAddress]，带前缀时整个字符串会被当作主机名去解析，得到未解析地址，
+     * 最终在连接阶段报出与代理配置看不出关联的错误。代理协议由 [type] 决定。
      */
     var host: String = ""
 
@@ -351,6 +355,8 @@ class ProxySettings {
 
     /**
      * 返回用于创建连接的代理，未启用或配置不完整时返回 `null`。
+     *
+     * [host] 与 [port] 直接用于构造 [InetSocketAddress]，因此 [host] 必须是裸主机名或 IP。
      */
     fun toProxyOrNull(): Proxy? {
         if (!enabled || host.isBlank() || port !in MIN_PORT..MAX_PORT) {
