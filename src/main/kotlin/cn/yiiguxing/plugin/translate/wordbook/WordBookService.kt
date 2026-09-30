@@ -19,7 +19,6 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.util.SystemInfo
-import com.intellij.util.io.HttpRequests
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.commons.dbutils.ResultSetHandler
 import org.jetbrains.concurrency.runAsync
@@ -286,7 +285,7 @@ class WordBookService : Disposable {
             val tempFile = Files.createTempFile(TranslationStorages.DATA_DIRECTORY, "download.", ".tmp")
             downloadedFile = tempFile
 
-            HttpRequests.request(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
+            Http.newRequest(DRIVER_FILE_URL).saveToFile(tempFile.toFile(), indicator)
             indicator.checkCanceled()
             indicator.fraction = 1.0
             indicator.isIndeterminate = true

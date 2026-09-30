@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Added a proxy setting for translation requests.
+- 新增翻译请求的代理设置
+
 ## [3.9.1] (2026/08/26)
 
 - Fixed the issue of cache conflicts in document translation for Google Translate.

@@ -16,7 +16,6 @@ import cn.yiiguxing.plugin.translate.util.Observable
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.project.Project
-import com.intellij.util.io.HttpRequests
 import java.io.IOException
 import java.util.*
 
@@ -66,7 +65,7 @@ class GoogleTTSPlayer private constructor(
 
         override fun onLoad(): ByteArray {
             val url = getTtsUrl(sentences[index++], lang)
-            val response: TextToSpeechResponse = HttpRequests.request(url)
+            val response: TextToSpeechResponse = Http.newRequest(url)
                 .setUserAgent()
                 .connect {
                     Http.defaultGson.fromJson(it.getReader(indicator), TextToSpeechResponse::class.java)

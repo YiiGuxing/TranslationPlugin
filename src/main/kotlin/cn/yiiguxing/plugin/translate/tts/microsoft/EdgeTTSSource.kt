@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.tts.microsoft
 
+import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.trans.Lang
 import cn.yiiguxing.plugin.translate.tts.sound.source.PushablePlaybackSource
 import cn.yiiguxing.plugin.translate.util.Http
@@ -50,6 +51,7 @@ internal class EdgeTTSSource(
         private val settings: EdgeTTSSettings by lazy { EdgeTTSSettings.instance() }
 
         init {
+            Settings.getInstance().proxySettings.toProxyOrNull()?.let { setProxy(it) }
             addHeader("Pragma", "no-cache")
             addHeader("Cache-Control", "no-cache")
             addHeader("Accept-Encoding", "gzip, deflate, br")

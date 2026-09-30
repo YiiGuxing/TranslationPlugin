@@ -9,7 +9,6 @@ import com.google.gson.JsonParseException
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 
 internal object OpenAiHttp {
@@ -27,7 +26,7 @@ internal object OpenAiHttp {
     fun <T> post(url: String, block: RequestBuilder.() -> T): T {
         return try {
             block(
-                HttpRequests.post(url, Http.MIME_TYPE_JSON)
+                Http.newRequest(url, Http.MIME_TYPE_JSON)
                     .accept(Http.MIME_TYPE_JSON)
             )
         } catch (e: Http.StatusException) {

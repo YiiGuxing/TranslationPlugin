@@ -24,6 +24,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.Transient
 import org.jetbrains.concurrency.runAsync
+import java.net.InetSocketAddress
+import java.net.Proxy
 import kotlin.properties.Delegates
 
 /**
@@ -186,6 +188,11 @@ class Settings : PersistentStateComponent<Settings> {
      */
     var translationWindowLocation: WindowLocation = WindowLocation.MOUSE_SCREEN
 
+    /**
+     * 网络代理
+     */
+    var proxySettings: ProxySettings = ProxySettings()
+
     override fun getState(): Settings = this
 
     override fun loadState(state: Settings) {
@@ -307,6 +314,60 @@ class BaiduTranslateSettings : AppKeySettings(BAIDU_APP_KEY)
  * 阿里云翻译选项
  */
 class AliTranslateSettings : AppKeySettings(ALI_APP_KEY)
+
+/**
+ * 代理类型
+ */
+enum class ProxyType(val displayName: String) {
+    HTTP(message("settings.proxy.type.http")),
+    SOCKS(message("settings.proxy.type.socks"))
+}
+
+/**
+ * 网络代理选项
+ */
+@Tag("proxy")
+class ProxySettings {
+
+    /**
+     * 是否启用代理
+     */
+    var enabled: Boolean = false
+
+    /**
+     * 代理类型
+     */
+    var type: ProxyType = ProxyType.HTTP
+
+    /**
+     * 代理主机
+     */
+    var host: String = ""
+
+    /**
+     * 代理端口
+     */
+    var port: Int = 0
+
+    /**
+     * 返回用于创建连接的代理，未启用或配置不完整时返回 `null`。
+     */
+    fun toProxyOrNull(): Proxy? {
+        if (!enabled || host.isBlank() || port !in MIN_PORT..MAX_PORT) {
+            return null
+        }
+        val javaType = when (type) {
+            ProxyType.HTTP -> Proxy.Type.HTTP
+            ProxyType.SOCKS -> Proxy.Type.SOCKS
+        }
+        return Proxy(javaType, InetSocketAddress(host, port))
+    }
+
+    companion object {
+        private const val MIN_PORT = 1
+        private const val MAX_PORT = 65535
+    }
+}
 
 enum class TTSSource(val displayName: String) {
     ORIGINAL(message("settings.item.original")),

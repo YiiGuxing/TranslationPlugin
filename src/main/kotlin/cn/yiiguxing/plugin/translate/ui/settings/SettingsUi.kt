@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
+import cn.yiiguxing.plugin.translate.ProxyType
 import cn.yiiguxing.plugin.translate.TTSSource
 import cn.yiiguxing.plugin.translate.TranslationStorages
 import cn.yiiguxing.plugin.translate.message
@@ -201,6 +202,27 @@ internal abstract class SettingsUi {
         renderer = textListCellRenderer { it.displayName }
     }
 
+    protected val proxyCheckBox: JBCheckBox = JBCheckBox(message("settings.proxy.enabled")).apply {
+        addItemListener { fixProxyComponentsEnabled() }
+    }
+
+    protected val proxyTypeComboBox: ComboBox<ProxyType> = comboBox<ProxyType>().apply {
+        renderer = textListCellRenderer { it.displayName }
+    }
+
+    protected val proxyHostField: JTextField = JTextField()
+
+    protected val proxyPortField: JTextField = JTextField().apply {
+        document = object : PlainDocument() {
+            override fun insertString(offset: Int, str: String?, attr: AttributeSet?) {
+                val digits = str?.filter(Char::isDigit)?.take(5) ?: return
+                if (digits.isNotEmpty()) {
+                    super.insertString(offset, digits, attr)
+                }
+            }
+        }
+    }
+
     protected val supportLinkLabel: LinkLabel<*> =
         LinkLabel<Any>(message("support.or.donate"), TranslationIcons.Support).apply {
             border = JBUI.Borders.emptyTop(20)
@@ -235,6 +257,20 @@ internal abstract class SettingsUi {
             add(JLabel(message("settings.label.targetLanguage")))
             add(targetLanguageComboBox, wrap().sizeGroupX(comboboxGroup))
         }
+        val proxyPanel = titledPanel(message("settings.panel.title.proxy")) {
+            add(proxyCheckBox, wrap().span(2))
+
+            add(JLabel(message("settings.label.proxy.type")))
+            add(proxyTypeComboBox, wrap())
+
+            add(JLabel(message("settings.label.proxy.host")))
+            add(proxyHostField, fillX().wrap())
+            setMinWidth(proxyHostField, JBUIScale.scale(250))
+
+            add(JLabel(message("settings.label.proxy.port")))
+            add(proxyPortField, wrap())
+        }
+
         val textSelectionPanel = titledPanel(message("settings.panel.title.text.selection"), true) {
             add(keepFormatCheckBox, wrap().span(4))
             add(takeNearestWordCheckBox, wrap().span(4))
@@ -355,6 +391,7 @@ internal abstract class SettingsUi {
 
         wholePanel.addVertically(
             generalPanel,
+            proxyPanel,
             fontsPanel,
             textSelectionPanel,
             translationPopupPanel,
@@ -365,11 +402,20 @@ internal abstract class SettingsUi {
             otherPanel,
             supportLinkLabel
         )
+
+        fixProxyComponentsEnabled()
     }
 
     fun createMainPanel(): JPanel {
         doLayout()
         return wholePanel
+    }
+
+    private fun fixProxyComponentsEnabled() {
+        val enabled = proxyCheckBox.isSelected
+        proxyTypeComboBox.isEnabled = enabled
+        proxyHostField.isEnabled = enabled
+        proxyPortField.isEnabled = enabled
     }
 
     private fun fixEngineConfigurationComponent() {

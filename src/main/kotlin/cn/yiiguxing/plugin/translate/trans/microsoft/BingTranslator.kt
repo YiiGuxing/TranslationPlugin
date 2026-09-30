@@ -16,7 +16,6 @@ import cn.yiiguxing.plugin.translate.util.md5
 import cn.yiiguxing.plugin.translate.util.splitSentence
 import cn.yiiguxing.plugin.translate.util.type
 import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
-import com.intellij.util.io.HttpRequests
 import kotlinx.coroutines.*
 import kotlin.text.any
 import kotlin.time.Duration.Companion.milliseconds
@@ -68,7 +67,7 @@ internal class BingTranslator(
         object : AsyncExpiringData<BingAuthentication>(scope) {
             override suspend fun load(): BingAuthentication {
                 val html = withContext(Dispatchers.IO) {
-                    HttpRequests.request(BING_TRANSLATOR_URL).setUserAgent().readString()
+                    Http.newRequest(BING_TRANSLATOR_URL).setUserAgent().readString()
                 }
                 return parseBingAuthentication(html)
             }

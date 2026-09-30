@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.translate.ui.settings
 
+import cn.yiiguxing.plugin.translate.ProxyType
 import cn.yiiguxing.plugin.translate.Settings
 import cn.yiiguxing.plugin.translate.TTSSource
 import cn.yiiguxing.plugin.translate.TranslationStates
@@ -241,7 +242,13 @@ internal class SettingsPanel(
                     || settings.showActionsInContextMenuOnlyWithSelection != showActionsInContextMenuOnlyWithSelectionCheckbox.isSelected
                     || states.maxHistorySize != maxHistoriesSizeComboBox.item
                     || settings.translationWindowLocation != translationWindowLocationComboBox.selected
+                    || settings.proxySettings.enabled != proxyCheckBox.isSelected
+                    || settings.proxySettings.type != proxyTypeComboBox.selected
+                    || settings.proxySettings.host != proxyHostField.text.trim()
+                    || settings.proxySettings.port != proxyPort
         }
+
+    private val proxyPort: Int get() = proxyPortField.text.trim().toIntOrNull() ?: 0
 
     private fun getConfigurationPath(vararg configurations: String): String = configurations.joinToString("|") {
         it.trim(' ', '\n', ':', '：')
@@ -301,6 +308,29 @@ internal class SettingsPanel(
             ignoreRegex = this@SettingsPanel.ignoreRegExp.text
             translationWindowLocation = translationWindowLocationComboBox.selected ?: WindowLocation.MOUSE_SCREEN
         }
+
+        applyProxySettings()
+    }
+
+    private fun applyProxySettings() {
+        val enabled = proxyCheckBox.isSelected
+        val host = proxyHostField.text.trim()
+        val port = proxyPort
+        if (enabled && (host.isEmpty() || port !in 1..65535)) {
+            throw ConfigurationException(
+                message(
+                    "settings.invalid.configuration",
+                    getConfigurationPath(message("settings.panel.title.proxy"))
+                )
+            )
+        }
+
+        with(settings.proxySettings) {
+            this.enabled = enabled
+            type = proxyTypeComboBox.selected ?: ProxyType.HTTP
+            this.host = host
+            this.port = port
+        }
     }
 
     private fun throwConfigurationException(name: String): Nothing {
@@ -338,6 +368,13 @@ internal class SettingsPanel(
         takeWordCheckBox.isSelected = settings.takeWordWhenDialogOpens
         wordbookStoragePathField.text = settings.wordbookStoragePath ?: ""
         translationWindowLocationComboBox.selected = settings.translationWindowLocation
+
+        with(settings.proxySettings) {
+            proxyCheckBox.isSelected = enabled
+            proxyTypeComboBox.selected = type
+            proxyHostField.text = host
+            proxyPortField.text = port.takeIf { it > 0 }?.toString().orEmpty()
+        }
     }
 
     companion object {

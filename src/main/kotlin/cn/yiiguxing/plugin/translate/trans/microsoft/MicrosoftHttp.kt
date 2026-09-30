@@ -14,7 +14,6 @@ import com.intellij.ide.plugins.marketplace.setHeadersViaTuner
 import com.intellij.openapi.diagnostic.Attachment
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.util.io.HttpRequests
 import com.intellij.util.io.RequestBuilder
 import java.lang.reflect.Type
 
@@ -151,7 +150,7 @@ internal object MicrosoftHttp {
         builder: RequestBuilder.() -> Unit
     ): String {
         return try {
-            HttpRequests.post(url, contentType)
+            Http.newRequest(url, contentType)
                 .accept(Http.MIME_TYPE_JSON)
                 .apply(builder)
                 .send(data) { it.readString() }
