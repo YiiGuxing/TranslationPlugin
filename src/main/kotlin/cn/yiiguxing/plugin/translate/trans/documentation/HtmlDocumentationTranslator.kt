@@ -18,7 +18,8 @@ import org.jsoup.nodes.TextNode
  *   translatable segments are serialized for the translation service and how
  *   translations are applied back. See [HtmlTranslationStrategy] and its
  *   implementations: [PlaceholderHtmlTranslationStrategy],
- *   [RawHtmlTranslationStrategy] and [PlainTextHtmlTranslationStrategy].
+ *   [RawHtmlTranslationStrategy], [PlainTextHtmlTranslationStrategy] and
+ *   [LeafPlainTextHtmlTranslationStrategy].
  * @param translate the function used to translate the collected texts; the
  *   returned list must have the same size and order as the input list.
  *   Blank entries at any position leave the corresponding original text

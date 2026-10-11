@@ -1,22 +1,20 @@
-package cn.yiiguxing.plugin.translate.trans
+package cn.yiiguxing.plugin.translate.trans.documentation
 
-import cn.yiiguxing.plugin.translate.trans.documentation.HtmlDocumentationTranslator
-import cn.yiiguxing.plugin.translate.trans.documentation.PlainTextHtmlTranslationStrategy
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * PlainTextHtmlTranslationStrategyTest
+ * LeafPlainTextHtmlTranslationStrategyTest
  */
-class PlainTextHtmlTranslationStrategyTest {
+class LeafPlainTextHtmlTranslationStrategyTest {
 
     @Test
     fun testEachLeafIsTranslatedSeparatelyAsPlainText() {
         val body = parseBody("""<p>Hello <b>bold</b> world</p>""")
         val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
+        HtmlDocumentationTranslator(LeafPlainTextHtmlTranslationStrategy) { input ->
             texts.addAll(input)
             input.map(::fakeTranslate)
         }.translateElement(body)
@@ -29,7 +27,7 @@ class PlainTextHtmlTranslationStrategyTest {
     fun testNoHtmlTagsAreSentToTranslator() {
         val body = parseBody("""<p>See <a href="https://example.com/doc">the documentation</a> now</p>""")
         val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
+        HtmlDocumentationTranslator(LeafPlainTextHtmlTranslationStrategy) { input ->
             texts.addAll(input)
             input.map(::fakeTranslate)
         }.translateElement(body)
@@ -43,7 +41,7 @@ class PlainTextHtmlTranslationStrategyTest {
     fun testProtectedInlineTagsAreNotTranslated() {
         val body = parseBody("""<p>The <code>body</code> element.</p>""")
         val texts = mutableListOf<String>()
-        HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { input ->
+        HtmlDocumentationTranslator(LeafPlainTextHtmlTranslationStrategy) { input ->
             texts.addAll(input)
             input.map(::fakeTranslate)
         }.translateElement(body)
@@ -83,7 +81,7 @@ class PlainTextHtmlTranslationStrategyTest {
     }
 
     private fun translate(body: Element, keepOriginal: Boolean = false) {
-        HtmlDocumentationTranslator(PlainTextHtmlTranslationStrategy) { texts -> texts.map(::fakeTranslate) }
+        HtmlDocumentationTranslator(LeafPlainTextHtmlTranslationStrategy) { texts -> texts.map(::fakeTranslate) }
             .translateElement(body, keepOriginal)
     }
 

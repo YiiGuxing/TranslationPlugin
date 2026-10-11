@@ -17,7 +17,11 @@ import org.jsoup.nodes.TextNode
  * - [RawHtmlTranslationStrategy]: for translation services that can recognize
  *   HTML tags in any form.
  * - [PlainTextHtmlTranslationStrategy]: for translation services that cannot
- *   recognize any tags.
+ *   recognize any tags; consecutive translatable nodes are translated together
+ *   as plain text and no tag structure is restored.
+ * - [LeafPlainTextHtmlTranslationStrategy]: for translation services that cannot
+ *   recognize any tags; each text node and leaf element is translated
+ *   separately.
  */
 interface HtmlTranslationStrategy {
 

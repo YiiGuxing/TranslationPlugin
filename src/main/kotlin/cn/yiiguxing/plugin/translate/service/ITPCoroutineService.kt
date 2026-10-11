@@ -3,10 +3,7 @@ package cn.yiiguxing.plugin.translate.service
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -40,12 +37,30 @@ import kotlin.coroutines.EmptyCoroutineContext
 @Service(Service.Level.APP, Service.Level.PROJECT)
 internal class ITPCoroutineService private constructor(private val coroutineScope: CoroutineScope) {
 
+    /**
+     * Launches a new coroutine without blocking the current thread.
+     *
+     * @see CoroutineScope.launch
+     */
     fun launch(
         context: CoroutineContext = EmptyCoroutineContext,
         start: CoroutineStart = CoroutineStart.DEFAULT,
         block: suspend CoroutineScope.() -> Unit
     ): Job {
         return coroutineScope.launch(context, start, block)
+    }
+
+    /**
+     * Creates a new coroutine and returns its future result as a [Deferred].
+     *
+     * @see CoroutineScope.async
+     */
+    fun <T> async(
+        context: CoroutineContext = EmptyCoroutineContext,
+        start: CoroutineStart = CoroutineStart.DEFAULT,
+        block: suspend CoroutineScope.() -> T
+    ): Deferred<T> {
+        return coroutineScope.async(context, start, block)
     }
 
     companion object {

@@ -5,32 +5,30 @@ import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
 
 /**
- * Translates the text content of each leaf element as plain text for translation
- * services that cannot recognize any HTML tags.
+ * Translates translatable segments as plain text for translation services that
+ * cannot recognize any HTML tags.
  *
- * A translatable leaf element is a true leaf element: an element without any
- * element children. Each text node and leaf element is translated separately,
- * which may reduce the translation quality due to the loss of context, but it
- * is the only viable approach for translation services without HTML support.
+ * Consecutive translatable nodes are merged into a single translation unit to
+ * preserve the sentence context, but all tags (including protected tags) are
+ * stripped when the segment is serialized: only the text content is passed to
+ * the translation service. The translated text is written back as plain text
+ * without restoring any tag structure.
  */
 object PlainTextHtmlTranslationStrategy : HtmlTranslationStrategy {
 
-    override val mergeAdjacentTranslatableNodes: Boolean = false
+    override val mergeAdjacentTranslatableNodes: Boolean = true
 
     override fun isTranslatableLeafElement(element: Element): Boolean {
-        return element.children().isEmpty()
-    }
-
-    override fun shouldTraverseElement(element: Element): Boolean {
-        return !element.shouldSkipTranslation() &&
-                element.tagName().lowercase() !in PROTECTED_INLINE_TAGS
+        return isTranslatableInlineLeafElement(element)
     }
 
     override fun serialize(nodes: List<Node>): String {
-        return when (val node = nodes.firstOrNull()) {
-            is TextNode -> node.text()
-            is Element -> node.text()
-            else -> ""
+        return nodes.joinToString("") { node ->
+            when (node) {
+                is TextNode -> node.text()
+                is Element -> node.text()
+                else -> ""
+            }
         }
     }
 
@@ -39,17 +37,6 @@ object PlainTextHtmlTranslationStrategy : HtmlTranslationStrategy {
             return null
         }
 
-        val original = originalNodes.firstOrNull() ?: return null
-        return listOf(
-            when (original) {
-                is TextNode -> TextNode(translatedText)
-                is Element -> original.clone().apply {
-                    empty()
-                    appendText(translatedText)
-                }
-
-                else -> original
-            }
-        )
+        return listOf(TextNode(translatedText))
     }
 }
