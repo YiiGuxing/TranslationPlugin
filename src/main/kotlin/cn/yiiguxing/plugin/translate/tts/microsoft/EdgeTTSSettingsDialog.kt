@@ -22,6 +22,10 @@ import javax.swing.*
 
 internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
 
+    companion object {
+        private const val MIN_WIDTH = 800
+    }
+
     private val settings = EdgeTTSSettings.instance()
 
     private val speedSlicer: JSlider = JSlider(
@@ -169,9 +173,5 @@ internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
             }
         }
         super.show()
-    }
-
-    companion object {
-        private const val MIN_WIDTH = 700
     }
 }
