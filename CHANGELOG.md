@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Migrated EdgeTTS to the new API endpoint.
+- 迁移 EdgeTTS 至新 API 端点
+
 ## [3.9.2] (2026/10/12)
 
 - Optimized Baidu Translate document translation to preserve the basic document formatting.
