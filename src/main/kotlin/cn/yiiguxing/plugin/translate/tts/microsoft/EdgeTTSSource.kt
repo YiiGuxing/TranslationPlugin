@@ -55,7 +55,7 @@ internal class EdgeTTSSource(
             addHeader("Accept-Encoding", "gzip, deflate, br")
             addHeader("Accept-Language", getLanguages())
             addHeader("User-Agent", Http.getUserAgent())
-            @Suppress("SpellCheckingInspection")
+            addHeader("Sec-WebSocket-Version", "13")
             addHeader("Origin", "chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold")
         }
 
@@ -144,7 +144,6 @@ internal class EdgeTTSSource(
 
         private const val CODE_UNSUPPORTED_VOICE = 1007
 
-        @Suppress("SpellCheckingInspection")
         // language=JSON
         private val SPEECH_CONFIG = """
             {
@@ -165,7 +164,7 @@ internal class EdgeTTSSource(
         private fun getWSSUri(): URI {
             return URI(
                 EDGE_TTS_WSS_URL +
-                        "?TrustedClientToken=$TRUSTED_CLIENT_TOKEN" +
+                        "?Ocp-Apim-Subscription-Key=$TRUSTED_CLIENT_TOKEN" +
                         "&Sec-MS-GEC=${DRM.generateSecMsGecToken()}" +
                         "&Sec-MS-GEC-Version=${DRM.getSecMsGecVersion()}" +
                         "&ConnectionId=${generateUuid()}"
@@ -177,7 +176,6 @@ internal class EdgeTTSSource(
         }
 
         private fun getTimestamp(): String {
-            @Suppress("SpellCheckingInspection")
             val sdfMain = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z ", Locale.ENGLISH)
 
             @Suppress("SpellCheckingInspection")
