@@ -22,7 +22,7 @@ import java.util.*
 internal object EdgeTTSVoiceManager {
 
     private val TTS_DIR = TranslationStorages.DATA_DIRECTORY.resolve("tts")
-    private val VOICES_FILE = TTS_DIR.resolve("ms-edge-tts-voices.json")
+    private val VOICES_FILE = TTS_DIR.resolve("ms-edge-tts-voices-v2.json")
 
 
     // https://github.com/microsoft/cognitive-services-speech-sdk-js/blob/master/src/sdk/Synthesizer.ts#L92
@@ -248,7 +248,10 @@ internal object EdgeTTSVoiceManager {
      */
     @RequiresBackgroundThread
     fun fetchVoiceList(): List<EdgeTTSVoice> {
-        val url = "$EDGE_TTS_VOICES_URL?TrustedClientToken=$TRUSTED_CLIENT_TOKEN"
+        val url = EDGE_TTS_VOICES_URL +
+                "?Ocp-Apim-Subscription-Key=$TRUSTED_CLIENT_TOKEN" +
+                "&Sec-MS-GEC=${DRM.generateSecMsGecToken()}" +
+                "&Sec-MS-GEC-Version=${DRM.getSecMsGecVersion()}"
         return Http.request<List<EdgeTTSVoice>>(url, typeOfT = type<List<EdgeTTSVoice>>()) { setUserAgent() }
             .toImmutableList()
             .also { saveVoicesToLocale(it) }
@@ -271,7 +274,7 @@ internal object EdgeTTSVoiceManager {
             Files.newBufferedReader(VOICES_FILE).use {
                 Gson().fromJson(it, type<List<EdgeTTSVoice>>())
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

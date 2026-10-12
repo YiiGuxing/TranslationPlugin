@@ -104,7 +104,7 @@ internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
 
         voiceModel.update(voiceList)
         if (!current.isNullOrEmpty()) {
-            voiceModel.selectedItem = voices.firstOrNull { it.name == current }
+            voiceModel.selectedItem = voices.firstOrNull { it.shortName == current }
         }
 
         pack()
@@ -155,7 +155,7 @@ internal class EdgeTTSSettingsDialog : DialogWrapper(false) {
     override fun doOKAction() {
         settings.apply {
             speed = speedSlicer.value
-            voice = (voiceModel.selectedItem as? EdgeTTSVoice)?.name
+            voice = (voiceModel.selectedItem as? EdgeTTSVoice)?.shortName
         }
 
         super.doOKAction()

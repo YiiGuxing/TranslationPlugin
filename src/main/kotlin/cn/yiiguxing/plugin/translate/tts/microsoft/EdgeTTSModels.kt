@@ -122,25 +122,26 @@ internal data class EdgeTTSMessage(
 internal data class EdgeTTSVoice(
     @SerializedName("Name")
     val name: String,
+    @SerializedName("DisplayName")
+    val displayName: String,
+    @SerializedName("LocalName")
+    val localName: String,
     @SerializedName("ShortName")
     val shortName: String,
-    @SerializedName("FriendlyName")
-    val friendlyName: String,
     @SerializedName("Gender")
     val gender: String,
     @SerializedName("Locale")
     val locale: String,
-    @SerializedName("SuggestedCodec")
-    val suggestedCodec: String,
+    @SerializedName("LocaleName")
+    val localeName: String,
+    @SerializedName("StyleList")
+    val styleList: List<String>,
+    @SerializedName("SampleRateHertz")
+    val sampleRateHertz: String,
+    @SerializedName("VoiceType")
+    val voiceType: String,
     @SerializedName("Status")
-    val status: String,
-    @SerializedName("VoiceTag")
-    val voiceTag: VoiceTag = VoiceTag(),
+    val status: String
 )
 
-internal data class VoiceTag(
-    @SerializedName("ContentCategories")
-    val contentCategories: List<String> = emptyList(),
-    @SerializedName("VoicePersonalities")
-    val voicePersonalities: List<String> = emptyList(),
-)
+internal val EdgeTTSVoice.friendlyName: String get() = "Microsoft $localName Online ($voiceType) - $localeName"
