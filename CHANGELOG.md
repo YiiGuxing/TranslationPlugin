@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.9.3] (2026/10/13)
+
 - Migrated EdgeTTS to the new API endpoint.
 - 迁移 EdgeTTS 至新 API 端点
 
@@ -643,7 +645,8 @@
 - 支持单词拆分。翻译变量名或方法名时更方便
 - Bug修复
 
-[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.2...HEAD
+[Unreleased]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.3...HEAD
+[3.9.3]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.2...v3.9.3
 [3.9.2]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.1...v3.9.2
 [3.9.1]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.9.0...v3.9.1
 [3.9.0]: https://github.com/YiiGuxing/TranslationPlugin/compare/v3.8.4...v3.9.0
