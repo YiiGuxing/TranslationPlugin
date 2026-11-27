@@ -23,6 +23,7 @@ private val LOG = logger<TranslatableDocumentationLinkHandler>()
 
 class TranslatableDocumentationLinkHandler : DocumentationLinkHandler {
 
+    @Suppress("OverrideOnly")
     override fun resolveLink(target: DocumentationTarget, url: String): LinkResolveResult? {
         if (target !is TranslatableDocumentationTarget) {
             return null
@@ -44,7 +45,7 @@ class TranslatableDocumentationLinkHandler : DocumentationLinkHandler {
         }
     }
 
-    @Suppress("UnstableApiUsage")
+    @Suppress("JetBrainsInternalApiUsage", "OverrideOnly")
     override fun contentUpdater(target: DocumentationTarget, url: String): ContentUpdater? {
         if (target !is TranslatableDocumentationTarget) {
             return null
@@ -57,7 +58,7 @@ class TranslatableDocumentationLinkHandler : DocumentationLinkHandler {
 
 
 private inline fun <T> resolve(block: DocumentationLinkHandler.() -> T?): T? {
-    @Suppress("UnstableApiUsage")
+    @Suppress("JetBrainsInternalApiUsage")
     for (handler in DocumentationLinkHandler.EP_NAME.extensionList) {
         ProgressManager.checkCanceled()
         if (handler is TranslatableDocumentationLinkHandler) {
