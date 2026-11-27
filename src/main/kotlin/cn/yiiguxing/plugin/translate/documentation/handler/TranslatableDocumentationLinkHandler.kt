@@ -91,7 +91,9 @@ private fun handleResolvedTarget(
     resolved: LinkResolveResult
 ): LinkResolveResult {
     val target: DocumentationTarget = TARGET_PROPERTY.getAs(resolved) ?: return resolved
-    return LinkResolveResult.resolvedTarget(createTranslatableDocumentationTarget(originTarget, target))
+    val translatableTarget = target as? TranslatableDocumentationTarget
+        ?: createTranslatableDocumentationTarget(originTarget, target)
+    return LinkResolveResult.resolvedTarget(translatableTarget)
 }
 
 
@@ -135,7 +137,9 @@ private suspend fun handleAsyncResolvedTarget(
         val target = pointer.dereference() as? DocumentationTarget
             ?: return@readAction resolved
 
-        LinkResolveResult.Async.resolvedTarget(createTranslatableDocumentationTarget(originTarget, target))
+        val translatableTarget = target as? TranslatableDocumentationTarget
+            ?: createTranslatableDocumentationTarget(originTarget, target)
+        LinkResolveResult.Async.resolvedTarget(translatableTarget)
     }
 }
 
